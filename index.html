@@ -58,6 +58,9 @@
     .deliver-hero-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.6rem); text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 16px; }
     .deliver-hero-body { color: #D4D4D4; font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 24px; }
     .deliver-hero-badge { display: inline-block; border: 1px solid var(--yellow); color: var(--yellow); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 16px; }
+    .screenshot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-bottom: 3px; }
+    .screenshot-frame { background: var(--dark); border: 2px solid var(--yellow); overflow: hidden; height: clamp(200px, 28vw, 320px); position: relative; }
+    .screenshot-frame img { width: 100%; height: 200%; object-fit: cover; object-position: top center; display: block; }
     .deliver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
     .deliver-card { background: var(--gray); padding: 36px 32px; border-left: 3px solid transparent; transition: border-color 0.2s; }
     .deliver-card:hover { border-left-color: var(--yellow); }
@@ -134,6 +137,8 @@
       .story-card { grid-template-columns: 80px 1fr; padding: 28px 24px; }
       .story-price { padding: 40px 28px; }
       .who-cards { grid-template-columns: 1fr; }
+      .screenshot-row { grid-template-columns: 1fr; }
+      .screenshot-frame { height: clamp(220px, 50vw, 280px); }
       .deliver-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
@@ -268,6 +273,17 @@
         <h3 class="deliver-hero-title">Your Custom Diet</h3>
         <p class="deliver-hero-body">Answer a few questions about your body composition, your job, your workouts, and your daily activity. The Burn Engine calculates your protein, carbohydrates, and fat — then converts them into simple daily servings across Protein, Dairy, Grains, Starches, Veggies, Fruits, and Fats. No calorie counting. No guesswork. Athlete-tested since 1982.</p>
         <span class="deliver-hero-badge">Proven Since 1982</span>
+      </div>
+      <div class="screenshot-row">
+        <div class="screenshot-frame">
+          <img src="images/homeview.png" alt="Burn &amp; Build app home screen" loading="lazy" />
+        </div>
+        <div class="screenshot-frame">
+          <img src="images/customfoodplan.png" alt="Burn &amp; Build custom diet screen" loading="lazy" />
+        </div>
+        <div class="screenshot-frame">
+          <img src="images/grocerylist.png" alt="Burn &amp; Build grocery list screen" loading="lazy" />
+        </div>
       </div>
       <div class="deliver-grid">
         <div class="deliver-card">
