@@ -59,7 +59,7 @@
     .deliver-hero-body { color: #D4D4D4; font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 24px; }
     .deliver-hero-badge { display: inline-block; border: 1px solid var(--yellow); color: var(--yellow); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 16px; }
     .screenshot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin: 3px 0; }
-    .screenshot-frame { background: var(--dark); overflow: hidden; height: clamp(200px, 28vw, 320px); position: relative; }
+    .screenshot-frame { background: var(--dark); overflow: hidden; height: clamp(260px, 32vw, 400px); position: relative; }
     .screenshot-frame img { width: 100%; height: 200%; object-fit: cover; object-position: top center; display: block; }
     .deliver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
     .deliver-card { background: var(--gray); padding: 36px 32px; border-left: 3px solid transparent; transition: border-color 0.2s; }
@@ -137,8 +137,9 @@
       .story-card { grid-template-columns: 80px 1fr; padding: 28px 24px; }
       .story-price { padding: 40px 28px; }
       .who-cards { grid-template-columns: 1fr; }
-      .screenshot-row { grid-template-columns: 1fr; }
-      .screenshot-frame { height: clamp(220px, 50vw, 280px); }
+      .screenshot-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 12px; margin: 3px 0; padding: 4px 0 12px; scrollbar-width: none; }
+      .screenshot-row::-webkit-scrollbar { display: none; }
+      .screenshot-frame { flex: 0 0 clamp(150px, 42vw, 200px); height: clamp(200px, 52vw, 280px); scroll-snap-align: center; }
       .deliver-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
