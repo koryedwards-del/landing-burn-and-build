@@ -31,14 +31,20 @@
 
     .hero-stories { padding: 40px 40px 20px; background: var(--black); }
     .stories-inner { max-width: 1100px; margin: 0 auto; }
-    .stories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    .stories-grid { display: grid; grid-template-columns: 1fr minmax(240px, 300px) 1fr; gap: 24px; align-items: stretch; }
     .story-card { background: var(--gray); border-left: 4px solid var(--yellow); padding: 32px; display: grid; grid-template-columns: 100px 1fr; gap: 24px; align-items: start; }
+    .story-price { background: var(--gray); padding: 32px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .story-price-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A; margin-bottom: 12px; }
+    .story-price-amount { font-family: Impact, 'Arial Narrow', sans-serif; font-size: clamp(3.5rem, 8vw, 5rem); color: var(--yellow); line-height: 1; margin-bottom: 8px; }
+    .story-price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow-dim); margin-bottom: 20px; }
+    .story-price-body { color: var(--text-light); font-size: 0.92rem; line-height: 1.65; margin-bottom: 24px; }
+    .story-price-cta { display: inline-block; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yellow); border: 2px solid var(--yellow); padding: 14px 24px; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .story-price-cta:hover { background: var(--yellow); color: var(--black); }
     .story-photo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--yellow); object-fit: cover; background: var(--dark); display: block; }
     .story-photo.placeholder { display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 2rem; color: var(--yellow); }
     .story-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; }
     .story-quote { color: var(--text-light); font-size: 0.97rem; line-height: 1.7; margin-bottom: 14px; font-style: italic; }
     .story-author { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); }
-    .hero-cta-wrap { text-align: center; }
     .hero-cta { display: inline-block; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); border: 2px solid var(--yellow); padding: 18px 48px; text-decoration: none; transition: background 0.2s, color 0.2s; }
     .hero-cta:hover { background: var(--yellow); color: var(--black); }
 
@@ -119,7 +125,10 @@
     .calc-disclaimer { font-size: 0.78rem; color: #D4D4D4; line-height: 1.6; margin-top: 24px; }
 
     @media (max-width: 900px) {
-      .stories-grid, .who-cards { grid-template-columns: 1fr; }
+      .stories-grid { grid-template-columns: 1fr; }
+      .story-card { grid-template-columns: 80px 1fr; padding: 28px 24px; }
+      .story-price { padding: 40px 28px; }
+      .who-cards { grid-template-columns: 1fr; }
       .deliver-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
@@ -175,6 +184,13 @@
             <p class="story-author">Paul — 40 Years on the Plan</p>
           </div>
         </article>
+        <article class="story-price">
+          <p class="story-price-label">Your Custom Diet</p>
+          <p class="story-price-amount">$149</p>
+          <p class="story-price-period">One-Time Purchase</p>
+          <p class="story-price-body">A precision diet built for your body — lose fat, keep muscle, no guesswork.</p>
+          <a class="story-price-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/">Create Your Diet &rarr;</a>
+        </article>
         <article class="story-card">
           <img class="story-photo" src="images/dave.jpg" alt="Dave McAferty" width="100" height="100" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'story-photo placeholder',textContent:'D'}))" />
           <div>
@@ -183,9 +199,6 @@
             <p class="story-author">Dave McAferty — Client Since 1990</p>
           </div>
         </article>
-      </div>
-      <div class="hero-cta-wrap">
-        <a class="hero-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/">Create Your Diet &rarr;</a>
       </div>
     </div>
   </section>
