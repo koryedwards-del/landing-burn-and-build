@@ -6,7 +6,7 @@ alwaysApply: true
 # Project context
 
 - Full map: `~/operatingmanual/PROJECTS.md`
-- This repo: **Burn & Build** landing on GitHub Pages → gettheburnandbuildapp.com
-- No app repo — landing only (Hardkor Diet is the successor product)
+- This repo: **Burn & Build** landing on GitHub Pages → burnandbuilddiet.com
+- No app repo — landing only
 
 Push to `main` deploys via GitHub Pages.
