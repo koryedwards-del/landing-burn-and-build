@@ -54,6 +54,7 @@
   --page-max-narrow: 760px;
   --card-pad:       48px 36px;
   --card-pad-sm:    36px 32px;
+  --card-radius:    8px;
 }
 
 /* ------------------------------------------------------------
