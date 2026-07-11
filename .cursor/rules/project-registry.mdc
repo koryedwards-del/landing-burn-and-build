@@ -6,7 +6,8 @@ alwaysApply: true
 # Project context
 
 - Full map: `~/operatingmanual/PROJECTS.md`
-- This repo: **Burn & Build** landing on GitHub Pages → burnandbuilddiet.com
-- No app repo — landing only
+- This repo: **Burn & Build** marketing landing on GitHub Pages → burnandbuilddiet.com
+- App/creator: `pwa-burn-and-build` on Render → program-creator-3tzd.onrender.com
+- Reference only: `landing-hardkor` (Hardkor layout source — not deployed)
 
 Push to `main` deploys via GitHub Pages.
