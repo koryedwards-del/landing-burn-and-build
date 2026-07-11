@@ -92,7 +92,9 @@
     .price-box { border: 2px solid var(--yellow); padding: 0; margin: 0; text-align: center; overflow: hidden; }
     .price-includes { list-style: none; margin: 0; display: flex; flex-direction: column; }
     .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 14px 24px; border-bottom: 1px solid var(--gray-mid); }
-    .price-cta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); background: transparent; border: none; border-top: 2px solid var(--yellow); padding: 20px 24px; text-decoration: none; transition: background 0.2s, color 0.2s; width: 100%; box-sizing: border-box; margin: 0; }
+    .price-includes li:last-child { border-bottom: none; }
+    .price-cta-wrap { padding: 28px 32px 32px; display: flex; justify-content: center; }
+    .price-cta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); background: transparent; border: 2px solid var(--yellow); padding: 18px 40px; text-decoration: none; transition: background 0.2s, color 0.2s; box-sizing: border-box; min-width: 220px; }
     .price-cta .cta-arrow { font-size: 1.2rem; line-height: 1; }
     .price-cta:hover { background: var(--yellow); color: var(--black); }
 
@@ -142,7 +144,7 @@
       .calculator { padding: 80px 20px; }
       .calc-row { grid-template-columns: 1fr; gap: 16px; }
       .pricing { padding: 80px 20px; }
-      .price-box { padding: 0; }
+      .price-cta-wrap { padding: 24px 20px 28px; }
     }
   </style>
 </head>
@@ -369,7 +371,9 @@
           <li>Lean Body Analysis</li>
           <li>Weekly Newsletter (Optional)</li>
         </ul>
-        <a class="price-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/"><span>Create Your Diet</span><span class="cta-arrow">&rarr;</span></a>
+        <div class="price-cta-wrap">
+          <a class="price-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/"><span>Create Your Diet</span><span class="cta-arrow">&rarr;</span></a>
+        </div>
       </div>
     </div>
   </section>
