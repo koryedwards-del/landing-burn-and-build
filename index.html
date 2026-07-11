@@ -87,13 +87,14 @@
     .price-includes { list-style: none; margin: 32px 0; display: flex; flex-direction: column; gap: 12px; text-align: left; }
     .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 10px 0; border-bottom: 1px solid var(--gray-mid); }
 
-    .calculator { padding: 20px 40px 80px; background: var(--black); }
-    .calc-inner { max-width: 680px; margin: 0 auto; }
-    .calc-heading { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(1.4rem, 2.5vw, 2rem); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.1; color: #8A8A8A; margin-bottom: 16px; text-align: center; }
-    .calc-intro { color: #D4D4D4; font-size: 1rem; line-height: 1.65; margin-bottom: 36px; }
-    .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; align-items: end; }
+    .calculator { padding: 100px 40px; background: var(--black); }
+    .calc-inner { max-width: 1100px; margin: 0 auto; }
+    .calc-header { text-align: center; margin-bottom: 56px; }
+    .calc-header .section-body { margin-bottom: 0; }
+    .calc-form { max-width: 680px; margin: 0 auto; }
+    .calc-results { display: none; margin-top: 40px; border-top: 1px solid var(--gray-mid); padding-top: 32px; max-width: 680px; margin-left: auto; margin-right: auto; }
     .calc-col { display: flex; flex-direction: column; }
-    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px; }
     .gender-tabs { display: flex; height: 50px; border: 1.5px solid var(--gray-mid); box-sizing: border-box; }
     .gender-tab { flex: 1; padding: 0; height: 100%; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: color 0.15s; background: var(--black); color: var(--text-dim); }
     .gender-tab:first-child { border-right: 1px solid var(--gray-mid); }
@@ -104,10 +105,10 @@
     .calc-input:focus { border-color: var(--yellow); }
     .calc-input::-webkit-outer-spin-button, .calc-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .calc-input[type=number] { -moz-appearance: textfield; }
-    .calc-btn { display: block; width: 100%; background: none; color: var(--yellow); border: none; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 0; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; }
-    .calc-btn:hover { opacity: 0.75; }
-    .calc-results { display: none; margin-top: 40px; border-top: 1px solid var(--gray-mid); padding-top: 32px; }
+    .calc-btn { display: block; width: 100%; background: none; color: var(--yellow); border: 2px solid var(--yellow); font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 0; cursor: pointer; transition: background 0.2s, color 0.2s; margin-top: 8px; }
+    .calc-btn:hover { background: var(--yellow); color: var(--black); }
     .calc-results.visible { display: block; }
+    .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; align-items: end; }
     .calc-narrative { font-size: 1.05rem; color: #D4D4D4; line-height: 1.7; margin-bottom: 32px; }
     .calc-narrative strong { color: #D4D4D4; font-weight: 700; }
     .calc-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
@@ -127,6 +128,7 @@
       .story-photo { margin: 0 auto; }
       .deliver-grid { grid-template-columns: 1fr; }
       .deliver-hero { padding: 36px 24px; }
+      .calculator { padding: 80px 20px; }
       .calc-row { grid-template-columns: 1fr; gap: 16px; }
       .who-card { padding: 40px 28px; }
     }
@@ -190,10 +192,16 @@
     </div>
   </section>
 
+  <div class="divider"></div>
+
   <section class="calculator" id="calculator">
     <div class="calc-inner">
-      <h2 class="calc-heading">What Can Burn &amp; Build Do for You?</h2>
-      <p class="calc-intro">A precision diet built to maximize fat loss and preserve every ounce of muscle. Based on thousands of clients over 40 years, the average person on Burn &amp; Build loses approximately 3% body fat per month — while increasing strength and energy.</p>
+      <div class="calc-header">
+        <p class="section-label">What's Possible</p>
+        <h2 class="section-title">What Can Burn &amp; Build Do <span>for You?</span></h2>
+        <p class="section-body">A precision diet built to maximize fat loss and preserve every ounce of muscle. Based on thousands of clients over 40 years, the average person on Burn &amp; Build loses approximately 3% body fat per month — while increasing strength and energy.</p>
+      </div>
+      <div class="calc-form">
       <div class="calc-row">
         <div class="calc-col">
           <div class="calc-label">Gender</div>
@@ -213,6 +221,7 @@
         </div>
       </div>
       <button class="calc-btn" id="calc-btn" type="button">Show Me What's Possible &rarr;</button>
+      </div>
       <div class="calc-results" id="calc-results">
         <p class="calc-narrative" id="calc-narrative"></p>
         <table class="calc-table">
