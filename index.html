@@ -4,23 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Burn & Build — The Fastest Way to Lose Fat and Build Muscle</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <meta name="description" content="A custom eating plan built from your lean body mass, job, lifestyle, and activities. No calorie counting. No guesswork. Proven since 1982." />
+  <meta name="theme-color" content="#000000" />
+  <link rel="canonical" href="https://gettheburnandbuildapp.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gettheburnandbuildapp.com/" />
+  <meta property="og:title" content="Burn & Build — The Fastest Way to Lose Fat and Build Muscle" />
+  <meta property="og:description" content="A custom eating plan built from your lean body mass, job, lifestyle, and activities. No calorie counting. No guesswork. Proven since 1982." />
+  <meta property="og:image" content="https://gettheburnandbuildapp.com/images/BBclearlogo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Burn & Build — The Fastest Way to Lose Fat and Build Muscle" />
+  <meta name="twitter:description" content="A custom eating plan built from your lean body mass, job, lifestyle, and activities. No calorie counting. No guesswork. Proven since 1982." />
+  <meta name="twitter:image" content="https://gettheburnandbuildapp.com/images/BBclearlogo.png" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --fire: #E8671A;
       --dark: #000000;
-      --dark2: #000000;
-      --dark3: #000000;
+      --card: #1A1A1A;
       --text: #FFFFFF;
       --muted: #999999;
       --border: rgba(255,255,255,0.08);
+      --nav-height: 56px;
     }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-height);
+    }
     body {
       background: var(--dark);
       color: var(--text);
@@ -37,9 +54,10 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 40px;
-      height: 56px;
+      height: var(--nav-height);
       background: rgba(13,13,13,0.95);
       backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
     }
     .nav-brand {
       font-family: 'Oswald', sans-serif;
@@ -59,7 +77,15 @@
       font-weight: 600;
       transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover,
+    .nav-links a:focus-visible { color: var(--text); }
+    .nav-links a:focus-visible,
+    .nav-brand:focus-visible,
+    .footer-brand:focus-visible,
+    .footer-links a:focus-visible {
+      outline: 2px solid var(--fire);
+      outline-offset: 3px;
+    }
 
     /* ── HERO ── */
     .hero {
@@ -69,13 +95,24 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 20px 20px;
+      padding: calc(var(--nav-height) + 48px) 20px 32px;
       position: relative;
       overflow: hidden;
     }
-
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(900px, 120vw);
+      height: 500px;
+      background: radial-gradient(ellipse 60% 70% at 50% 40%, rgba(232,103,26,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
     .hero-logo {
       width: min(218px, 43vw);
+      height: auto;
       margin-bottom: 36px;
       position: relative;
       z-index: 1;
@@ -97,54 +134,72 @@
       max-width: 600px;
       width: 100%;
       line-height: 1.75;
-    }
-    .hero-cta {
-      margin-top: 40px;
       position: relative;
       z-index: 1;
-    }
-    .btn-hero {
-      display: inline-block;
-      border: 1px solid var(--fire);
-      color: var(--fire);
-      background: transparent;
-      font-family: 'Oswald', sans-serif;
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      padding: 16px 52px;
-      border-radius: 50px;
-      text-decoration: none;
-      transition: background 0.22s, color 0.22s;
-    }
-    .btn-hero:hover { background: var(--fire); color: #fff; }
-    .hero-cta-sub {
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--muted);
     }
 
     /* ── PHONES ── */
     .phones-section {
-      padding: 20px 20px 30px;
+      padding: 8px 20px 24px;
       display: flex;
       justify-content: center;
+      position: relative;
+    }
+    .phones-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(700px, 90vw);
+      height: 200px;
+      background: radial-gradient(ellipse 80% 100% at 50% 100%, rgba(232,103,26,0.08) 0%, transparent 70%);
+      pointer-events: none;
     }
     .phones {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      max-width: 480px;
+      max-width: 520px;
       width: 100%;
       align-items: end;
+      position: relative;
+      z-index: 1;
     }
     .phone-wrap img {
       width: 100%;
       height: auto;
       border-radius: 0;
       display: block;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.65);
+      transition: transform 0.3s ease;
+    }
+    .phone-wrap:nth-child(1) img { transform: rotate(-2deg) translateY(8px); }
+    .phone-wrap:nth-child(2) img { transform: translateY(-4px); }
+    .phone-wrap:nth-child(3) img { transform: rotate(2deg) translateY(8px); }
+
+    /* ── COMING SOON ── */
+    .coming-soon {
+      text-align: center;
+      padding: 16px 20px 32px;
+    }
+    .coming-soon-badge {
+      display: inline-block;
+      border: 1px solid var(--fire);
+      color: var(--fire);
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(16px, 3vw, 20px);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 18px 56px;
+      border-radius: 50px;
+    }
+    .coming-soon-sub {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
     }
 
     /* ── SECTION SHARED ── */
@@ -162,27 +217,27 @@
       font-weight: 900;
       font-size: clamp(25px, 4vw, 46px);
       line-height: 1.1;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     .section-divider {
       width: 60px;
       height: 3px;
       background: var(--fire);
-      margin: 8px auto;
-      opacity: 1;
+      margin: 0 auto 24px;
     }
+    .section-divider.left { margin-left: 0; margin-right: 0; }
 
     /* ── FEATURES ── */
     .features {
-      padding: 24px 20px 40px;
-      background: var(--dark2);
+      padding: 48px 20px 56px;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
     }
     .features-inner { max-width: 960px; margin: 0 auto; }
     .features-text { text-align: left; margin-bottom: 40px; }
 
-    /* Hero feature card */
     .feature-main {
-      background: #1A1A1A;
+      background: var(--card);
       border-radius: 12px;
       padding: 40px 36px;
       margin-bottom: 16px;
@@ -225,20 +280,22 @@
       border-radius: 4px;
     }
 
-    /* Feature grid */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
     }
     .feat-card {
-      background: #1A1A1A;
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 26px 22px;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .feat-card:hover { border-color: rgba(232,103,26,0.25); }
+    .feat-card:hover {
+      border-color: rgba(232,103,26,0.25);
+      transform: translateY(-2px);
+    }
     .feat-icon { font-size: 26px; margin-bottom: 10px; display: block; }
     .feat-card h4 {
       font-family: 'Oswald', sans-serif;
@@ -250,28 +307,24 @@
 
     /* ── TESTIMONIALS ── */
     .testimonials {
-      padding: 40px 20px 20px;
+      padding: 56px 20px;
       background: var(--dark);
+      border-top: 1px solid var(--border);
     }
     .testimonials-inner { max-width: 960px; margin: 0 auto; text-align: center; }
-    .testi-carousel {
-      position: relative;
-      overflow: hidden;
+    .testi-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
       max-width: 700px;
       margin: 0 auto;
     }
-    .testi-track {
-      display: flex;
-      transition: transform 0.4s ease;
-    }
     .testi-card {
-      min-width: 100%;
-      background: #1A1A1A;
+      background: var(--card);
       border-radius: 10px;
       border: 1px solid var(--border);
       border-left: 3px solid var(--fire);
       padding: 36px 32px;
-      box-sizing: border-box;
       text-align: left;
     }
     .testi-quote {
@@ -291,37 +344,20 @@
       text-transform: uppercase;
       color: var(--fire);
     }
-    .testi-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 24px;
-    }
-    .testi-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #444;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.2s;
-    }
-    .testi-dot.active { background: var(--fire); }
 
     /* ── PRICING ── */
     .pricing {
-      padding: 20px 20px 40px;
-      background: var(--dark2);
+      padding: 56px 20px;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
       text-align: center;
     }
     .pricing-inner { max-width: 520px; margin: 0 auto; }
     .pricing-card {
-      background: #1A1A1A;
+      background: var(--card);
       border: 1px solid var(--fire);
       border-radius: 14px;
       padding: 56px 60px;
-      margin-top: 0;
       position: relative;
       overflow: hidden;
     }
@@ -337,8 +373,14 @@
       font-size: 76px;
       line-height: 1;
       margin-bottom: 8px;
+      position: relative;
     }
-    .pricing-label { color: #888; font-size: 15px; margin-bottom: 14px; }
+    .pricing-label {
+      color: #888;
+      font-size: 15px;
+      margin-bottom: 14px;
+      position: relative;
+    }
     .pricing-tag {
       font-family: 'Oswald', sans-serif;
       font-weight: 700;
@@ -346,6 +388,7 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--fire);
+      position: relative;
     }
 
     /* ── FOOTER ── */
@@ -396,17 +439,22 @@
       border-radius: 2px;
       transition: background 0.2s;
     }
-    .nav-toggle:hover span { background: #fff; }
+    .nav-toggle:hover span,
+    .nav-toggle:focus-visible span { background: #fff; }
+    .nav-toggle:focus-visible {
+      outline: 2px solid var(--fire);
+      outline-offset: 3px;
+    }
 
     /* ── MOBILE ── */
     @media (max-width: 680px) {
-      nav { padding: 0 18px; position: relative; }
+      nav { padding: 0 18px; }
       .nav-toggle { display: flex; }
       .nav-links {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 64px;
+        top: var(--nav-height);
         left: 0;
         right: 0;
         background: rgba(0,0,0,0.97);
@@ -416,8 +464,16 @@
         z-index: 200;
       }
       .nav-links.open { display: flex; }
-      .nav-links li { list-style: none; }
-      .phones { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
+      .phones {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+        margin: 0 auto;
+      }
+      .phone-wrap:nth-child(1) img,
+      .phone-wrap:nth-child(2) img,
+      .phone-wrap:nth-child(3) img {
+        transform: none;
+      }
       .features-grid { grid-template-columns: 1fr; }
       .feature-main { padding: 28px 22px; }
       .pricing-card { padding: 40px 28px; }
@@ -425,160 +481,186 @@
       footer { flex-direction: column; align-items: center; text-align: center; padding: 28px 20px; }
       .footer-links { justify-content: center; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .feat-card,
+      .phone-wrap img { transition: none; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-    <nav>
+  <nav>
     <a class="nav-brand" href="/">BURN &amp; BUILD</a>
-    <button class="nav-toggle" onclick="this.nextElementSibling.classList.toggle('open')" aria-label="Menu">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
       <span></span><span></span><span></span>
     </button>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/#features">Features</a></li>
+      <li><a href="/#testimonials">Testimonials</a></li>
       <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/privacypolicy">Privacy Policy</a></li>
       <li><a href="/support">Support</a></li>
     </ul>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <img class="hero-logo" src="images/BBclearlogo.png" alt="Burn & Build" />
-    <h1>
-      <span class="line1">Your Food Plan.</span>
-      <span class="line2">Built for Your Body.</span>
-    </h1>
-    <p class="hero-sub">A custom eating plan calculated from your lean body mass, your job, your lifestyle, and your activities. Not a guess. Not a template. Yours.</p>
-  </section>
+  <main>
+    <section class="hero">
+      <img class="hero-logo" src="images/BBclearlogo.png" alt="Burn & Build logo" width="218" height="268" fetchpriority="high" />
+      <h1>
+        <span class="line1">Your Food Plan.</span>
+        <span class="line2">Built for Your Body.</span>
+      </h1>
+      <p class="hero-sub">A custom eating plan calculated from your lean body mass, your job, your lifestyle, and your activities. Not a guess. Not a template. Yours.</p>
+    </section>
 
-  <!-- PHONES -->
-  <section class="phones-section">
-    <div class="phones">
-      <div class="phone-wrap">
-        <img src="images/homeview.png" alt="App Home Screen" />
-      </div>
-      <div class="phone-wrap">
-        <img src="images/customfoodplan.png" alt="Custom Food Plan" />
-      </div>
-      <div class="phone-wrap">
-        <img src="images/grocerylist.png" alt="Grocery List" />
-      </div>
-    </div>
-  </section>
-
-  <!-- COMING SOON -->
-  <section style="text-align: center; padding: 10px 20px 16px;">
-    <span style="display: inline-block; border: 1px solid var(--fire); color: var(--fire); font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.16em; text-transform: uppercase; padding: 20px 72px; border-radius: 50px;">Coming Soon</span>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="features" id="features">
-    <div class="features-inner">
-      <div class="features-text">
-        <p class="section-eyebrow">What You Get</p>
-        <h2 class="section-title">Everything you need to lose fat and keep the muscle.</h2>
-      </div>
-      <div class="feature-main">
-        <span class="feature-tag">The Engine</span>
-        <h3>Your Custom Food Plan</h3>
-        <p>During onboarding, you enter your lean body mass, your job, your lifestyle, and your activities. The Burn Engine computes your exact daily macros — then converts them into simple servings of Protein, Grains, Starches, Veggies, Fruits, and Fats. No calorie counting. No guesswork. The same system that's produced results since 1982.</p>
-        <span class="proven-pill">Proven Since 1982</span>
-      </div>
-      <div class="features-grid">
-        <div class="feat-card">
-          <span class="feat-icon">🥩</span>
-          <h4>278 Curated Foods</h4>
-          <p>We searched the entire USDA database — 350,000 foods — and found 278 that will help you burn fat and build muscle.</p>
+    <section class="phones-section" aria-label="App screenshots">
+      <div class="phones">
+        <div class="phone-wrap">
+          <img src="images/homeview.png" alt="Burn & Build home screen showing daily food plan" width="796" height="1643" loading="lazy" />
         </div>
-        <div class="feat-card">
-          <span class="feat-icon">👆</span>
-          <h4>Tap Tap Tap</h4>
-          <p>Tap your food choice to create your meal and build your shopping list at the same time.</p>
+        <div class="phone-wrap">
+          <img src="images/customfoodplan.png" alt="Custom food plan with macro servings" width="795" height="1642" loading="lazy" />
         </div>
-        <div class="feat-card">
-          <span class="feat-icon">🛒</span>
-          <h4>Grocery List</h4>
-          <p>Your daily food selections build your weekly grocery list automatically. Every item, every amount, organized by category. Walk in, buy it, done.</p>
-        </div>
-        <div class="feat-card">
-          <span class="feat-icon">🔥</span>
-          <h4>Fat Points</h4>
-          <p>How much fat do you burn in a day? Now you'll know. Burn &amp; Build's custom food plan helps you track your fat points. Stay under your number and you lose fat.</p>
-        </div>
-        <div class="feat-card">
-          <span class="feat-icon">⏰</span>
-          <h4>Meal Timing</h4>
-          <p>Your meal timing is designed to maximize strength, energy, and fat loss. Turn on reminders and your phone keeps you on track all day.</p>
-        </div>
-
-        <div class="feat-card">
-          <span class="feat-icon">⚡</span>
-          <h4>For Best Results</h4>
-          <p>Every tip, note, and insight from 40+ years of coaching — pulled from the original food sheets and built into the app. The details that turn good results into great ones.</p>
-        </div>
-        <div class="feat-card">
-          <span class="feat-icon">🍳</span>
-          <h4>Food Prep Ideas</h4>
-          <p>Simple, practical prep strategies so your plan stays on track during a busy week. No complicated recipes. No extra effort.</p>
-        </div>
-        <div class="feat-card">
-          <span class="feat-icon">📖</span>
-          <h4>Recipes</h4>
-          <p>Meals built around your plan's food groups. Delicious, on-plan options that keep things fresh without throwing off your macros.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="testimonials" id="testimonials">
-    <div class="testimonials-inner">
-      <p class="section-eyebrow">Real People. Real Results.</p>
-      <h2 class="section-title">What They're Saying</h2>
-      <div style="display: flex; flex-direction: column; gap: 18px; max-width: 700px; margin: 0 auto;">
-        <div class="testi-card">
-          <p class="testi-quote">First Impressions of Apps is everything, and my First Impression is a 10 out of 10.</p>
-          <p class="testi-name">Scott Horan</p>
-        </div>
-        <div class="testi-card">
-          <p class="testi-quote">I learned this program in 1992 and it has been invaluable! I almost bought in to the chatter "you just have to eat less as you get older" and then I remembered what I learned all those years ago — and now it's an app! So excited! At 67 years old, I am confident that I can maintain and even build muscle and lose fat! Let's go!</p>
-          <p class="testi-name">Linda Kay &mdash; Client Since 1992</p>
-        </div>
-        <div class="testi-card">
-          <p class="testi-quote">If you want to see real results like you never thought possible, this is the plan to be on because it dials everything in for each person. It's not a cookie cutter diet.</p>
-          <p class="testi-name">Dave McAferty &mdash; Client Since 1990</p>
+        <div class="phone-wrap">
+          <img src="images/grocerylist.png" alt="Auto-generated grocery list organized by category" width="795" height="1642" loading="lazy" />
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PRICING -->
-  <section class="pricing" id="pricing">
-    <div class="pricing-inner">
-      <p class="section-eyebrow">Try It Free for 30 Days.</p>
-      <h2 class="section-title">Then just $39.99 a year.</h2>
-      <div class="pricing-card">
-        <div class="pricing-price">$39.99</div>
-        <p class="pricing-label">Per year — 30-day free trial</p>
-        <p class="pricing-tag">Everything Included</p>
+    <section class="coming-soon" aria-label="Availability">
+      <span class="coming-soon-badge">Coming Soon</span>
+      <p class="coming-soon-sub">iOS &amp; Android</p>
+    </section>
+
+    <section class="features" id="features">
+      <div class="features-inner">
+        <div class="features-text">
+          <p class="section-eyebrow">What You Get</p>
+          <h2 class="section-title">Everything you need to lose fat and keep the muscle.</h2>
+          <div class="section-divider left"></div>
+        </div>
+        <div class="feature-main">
+          <span class="feature-tag">The Engine</span>
+          <h3>Your Custom Food Plan</h3>
+          <p>During onboarding, you enter your lean body mass, your job, your lifestyle, and your activities. The Burn Engine computes your exact daily macros — then converts them into simple servings of Protein, Grains, Starches, Veggies, Fruits, and Fats. No calorie counting. No guesswork. The same system that's produced results since 1982.</p>
+          <span class="proven-pill">Proven Since 1982</span>
+        </div>
+        <div class="features-grid">
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">🥩</span>
+            <h4>278 Curated Foods</h4>
+            <p>We searched the entire USDA database — 350,000 foods — and found 278 that will help you burn fat and build muscle.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">👆</span>
+            <h4>Tap Tap Tap</h4>
+            <p>Tap your food choice to create your meal and build your shopping list at the same time.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">🛒</span>
+            <h4>Grocery List</h4>
+            <p>Your daily food selections build your weekly grocery list automatically. Every item, every amount, organized by category. Walk in, buy it, done.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">🔥</span>
+            <h4>Fat Points</h4>
+            <p>How much fat do you burn in a day? Now you'll know. Burn &amp; Build's custom food plan helps you track your fat points. Stay under your number and you lose fat.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">⏰</span>
+            <h4>Meal Timing</h4>
+            <p>Your meal timing is designed to maximize strength, energy, and fat loss. Turn on reminders and your phone keeps you on track all day.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">⚡</span>
+            <h4>For Best Results</h4>
+            <p>Every tip, note, and insight from 40+ years of coaching — pulled from the original food sheets and built into the app. The details that turn good results into great ones.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">🍳</span>
+            <h4>Food Prep Ideas</h4>
+            <p>Simple, practical prep strategies so your plan stays on track during a busy week. No complicated recipes. No extra effort.</p>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon" aria-hidden="true">📖</span>
+            <h4>Recipes</h4>
+            <p>Meals built around your plan's food groups. Delicious, on-plan options that keep things fresh without throwing off your macros.</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
-    <footer>
+    <section class="testimonials" id="testimonials">
+      <div class="testimonials-inner">
+        <p class="section-eyebrow">Real People. Real Results.</p>
+        <h2 class="section-title">What They're Saying</h2>
+        <div class="section-divider"></div>
+        <div class="testi-list">
+          <div class="testi-card">
+            <p class="testi-quote">First Impressions of Apps is everything, and my First Impression is a 10 out of 10.</p>
+            <p class="testi-name">Scott Horan</p>
+          </div>
+          <div class="testi-card">
+            <p class="testi-quote">I learned this program in 1992 and it has been invaluable! I almost bought in to the chatter "you just have to eat less as you get older" and then I remembered what I learned all those years ago — and now it's an app! So excited! At 67 years old, I am confident that I can maintain and even build muscle and lose fat! Let's go!</p>
+            <p class="testi-name">Linda Kay &mdash; Client Since 1992</p>
+          </div>
+          <div class="testi-card">
+            <p class="testi-quote">If you want to see real results like you never thought possible, this is the plan to be on because it dials everything in for each person. It's not a cookie cutter diet.</p>
+            <p class="testi-name">Dave McAferty &mdash; Client Since 1990</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="pricing-inner">
+        <p class="section-eyebrow">Try It Free for 30 Days.</p>
+        <h2 class="section-title">Then just $39.99 a year.</h2>
+        <div class="section-divider"></div>
+        <div class="pricing-card">
+          <div class="pricing-price">$39.99</div>
+          <p class="pricing-label">Per year — 30-day free trial</p>
+          <p class="pricing-tag">Everything Included</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
     <a class="footer-brand" href="/">BURN &amp; BUILD</a>
     <ul class="footer-links">
       <li><a href="/">Home</a></li>
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/privacypolicy">Privacy Policy</a></li>
       <li><a href="/support">Contact &amp; Support</a></li>
     </ul>
-    <p class="footer-copy">© 2026 Burn &amp; Build. All rights reserved.</p>
+    <p class="footer-copy">&copy; 2026 Burn &amp; Build. All rights reserved.</p>
   </footer>
 
+  <script>
+    (function () {
+      var toggle = document.getElementById('nav-toggle');
+      var links = document.getElementById('nav-links');
+      if (!toggle || !links) return;
+
+      toggle.addEventListener('click', function () {
+        var open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open);
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          links.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open menu');
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
