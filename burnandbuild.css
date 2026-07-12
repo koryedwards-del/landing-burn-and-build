@@ -12,6 +12,7 @@
   /* Colors */
   --yellow:        #FDC500;
   --yellow-dim:    #B8900A;
+  --yellow-border: rgba(253, 197, 0, 0.2);
   --black:         #0A0A0A;
   --dark:          #111111;
   --gray:          #1A1A1A;
