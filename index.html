@@ -3,105 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Burn & Build — Burn Fat. Build Muscle.</title>
+<link rel="canonical" href="https://burnandbuilddiet.com/" />
   <meta name="description" content="A custom diet built from your body composition, job, workouts, and daily activity. No calorie counting. No guesswork. Athlete-tested since 1982." />
   <meta name="theme-color" content="#0A0A0A" />
-  <link rel="canonical" href="https://burnandbuilddiet.com/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://burnandbuilddiet.com/" />
-  <meta property="og:title" content="Burn & Build — Burn Fat. Build Muscle." />
-  <meta property="og:description" content="A custom diet built from your body composition, job, workouts, and daily activity. No calorie counting. No guesswork. Athlete-tested since 1982." />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <title>Burn &amp; Build — Keep the Muscle. Lose the Fat.</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="burnandbuild.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="hardkor.css" />
   <style>
     .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 40px 20px; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(253,197,0,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(253,197,0,0.03) 60px, rgba(253,197,0,0.03) 61px); pointer-events: none; }
-    .hero-logo { width: min(240px, 48vw); height: auto; margin-bottom: 20px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards; position: relative; z-index: 1; display: block; }
-    .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; position: relative; z-index: 1; }
-    .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: #8A8A8A; position: relative; z-index: 1; }
-    .hero-headline span { color: var(--yellow); }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,204,0,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,204,0,0.03) 60px, rgba(255,204,0,0.03) 61px); pointer-events: none; }
+
+    .hero-logo { width: min(280px, 72vw); height: auto; margin-bottom: 12px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards; }
+
+    .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; }
+    .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: var(--gray-heading); }
+    .hero-headline .hero-line-accent { color: var(--yellow); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
-    .hero-stories { padding: 40px 40px 20px; background: var(--black); }
-    .stories-inner { max-width: 1100px; margin: 0 auto; }
-    .stories-grid { display: grid; grid-template-columns: 1fr minmax(240px, 300px) 1fr; gap: 24px; align-items: stretch; }
-    .story-card { background: var(--gray); border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); padding: 32px; display: grid; grid-template-columns: 100px 1fr; gap: 24px; align-items: start; }
-    .story-price { background: var(--gray); border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); padding: 32px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .story-price-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: #FFFFFF; margin-bottom: 12px; }
-    .story-price-amount { font-family: Impact, 'Arial Narrow', sans-serif; font-size: clamp(3.5rem, 8vw, 5rem); color: var(--yellow); line-height: 1; margin-bottom: 8px; }
-    .story-price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow-dim); margin-bottom: 20px; }
-    .story-price-body { color: var(--text-light); font-size: 0.92rem; line-height: 1.65; margin-bottom: 24px; }
-    .story-price-cta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yellow); border: 2px solid var(--yellow); padding: 14px 28px; text-decoration: none; transition: background 0.2s, color 0.2s; width: 100%; max-width: 220px; box-sizing: border-box; }
-    .story-price-cta .cta-arrow { font-size: 1.1rem; line-height: 1; }
-    .story-price-cta:hover { background: var(--yellow); color: var(--black); }
-    .story-photo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--yellow); object-fit: cover; background: var(--dark); display: block; }
-    .story-photo.placeholder { display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 2rem; color: var(--yellow); }
-    .story-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; }
-    .story-quote { color: var(--text-light); font-size: 0.97rem; line-height: 1.7; margin-bottom: 14px; font-style: italic; }
-    .story-author { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); }
-    .hero-cta { display: inline-block; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); border: 2px solid var(--yellow); padding: 18px 48px; text-decoration: none; transition: background 0.2s, color 0.2s; }
-    .hero-cta:hover { background: var(--yellow); color: var(--black); }
+    .btn-cta {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 16px 32px;
+      border: 2px solid var(--yellow);
+      color: var(--yellow);
+      font-family: Impact, 'Arial Narrow', sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .btn-cta:hover { opacity: 0.75; }
 
     .philosophy { background: var(--black); padding: 100px 40px; text-align: center; }
+
+    .guide { padding: 60px 40px 40px; background: var(--black); }
+    .guide-inner { max-width: 1100px; margin: 0 auto; }
+    .guide-row {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+      align-items: stretch;
+    }
+    .testi.guide-cta::before { display: none; }
+    .guide-cta {
+      border-left: 3px solid var(--yellow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .guide-cta-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    .guide-cta-price {
+      font-family: Impact, 'Arial Narrow', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .guide-cta-period {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+    .guide-cta-body { color: #D4D4D4; font-size: 0.97rem; line-height: 1.65; margin-bottom: 28px; max-width: 280px; }
+    .guide-cta .btn-cta { margin-top: 0; }
+    .guide-photo-label { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .guide-photo-label .testi-photo { margin-bottom: 0; }
+    .guide-wordmark {
+      font-family: Impact, 'Arial Narrow', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .guide-wordmark--burn { color: var(--yellow); }
+    .guide-wordmark--build { color: var(--gray-heading); }
+
     .how { padding: 100px 40px; background: var(--black); }
     .how-inner { max-width: 1100px; margin: 0 auto; }
     .how-header { text-align: center; margin-bottom: 72px; }
-    .deliver-hero { background: var(--gray); border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); padding: 48px 40px; margin-bottom: 24px; }
-    .deliver-hero-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
-    .deliver-hero-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.6rem); text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 16px; }
-    .deliver-hero-body { color: #FFFFFF; font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 24px; }
-    .deliver-hero-badge { display: inline-block; border: 1px solid var(--yellow); color: var(--yellow); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 16px; }
-    .deliver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .deliver-card { background: var(--gray); padding: 36px 32px; border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); }
-    .deliver-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; }
-    .deliver-body { color: #FFFFFF; font-size: 0.92rem; line-height: 1.6; }
-
-    .who { padding: 100px 40px; background: var(--black); }
-    .who-inner { max-width: 1100px; margin: 0 auto; }
-    .who-header { text-align: center; margin-bottom: 72px; }
-    .who-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .who-card { background: var(--gray); padding: 56px 48px; border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); }
-    .who-card-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
-    .who-card-title { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 2.4rem; text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 20px; }
-    .who-card-body { color: #FFFFFF; font-size: 0.95rem; line-height: 1.7; }
-    .who-list { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .who-list li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; padding-left: 20px; position: relative; color: var(--yellow); }
-    .who-list li::before { content: '▶'; position: absolute; left: 0; color: var(--yellow); font-size: 0.6rem; top: 3px; }
 
     .testimonials { padding: 100px 40px; background: var(--black); }
     .testimonials-inner { max-width: 1000px; margin: 0 auto; }
     .testimonials-header { text-align: center; margin-bottom: 64px; }
     .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .testi { background: var(--gray); padding: 40px 36px; position: relative; border: 1px solid var(--yellow-border); border-left: 4px solid var(--yellow); }
+    .testi { background: var(--gray); padding: 40px 36px; position: relative; border-left: 3px solid transparent; transition: border-color 0.2s; }
+    .testi:hover { border-left-color: var(--yellow); }
     .testi::before { content: '"'; font-family: Impact, sans-serif; font-size: 6rem; color: var(--yellow); line-height: 1; opacity: 0.2; position: absolute; top: 16px; left: 28px; }
-    .testi-text { color: #FFFFFF; font-size: 0.97rem; line-height: 1.7; margin-bottom: 24px; position: relative; z-index: 1; }
+    .testi:has(.testi-photo)::before { display: none; }
+    .testi-text { color: var(--text); font-size: 0.97rem; line-height: 1.7; margin-bottom: 24px; position: relative; z-index: 1; }
     .testi-author { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow); }
+    .testi-photo { display: block; width: 88px; height: 88px; object-fit: cover; object-position: center 12%; border-radius: 50%; margin: 0 0 20px; border: 2px solid var(--yellow); position: relative; z-index: 1; }
 
     .pricing { padding: 100px 40px; background: var(--black); text-align: center; }
     .pricing-inner { max-width: 560px; margin: 0 auto; }
-    .pricing-intro { color: #FFFFFF; font-size: 0.95rem; line-height: 1.65; margin-bottom: 32px; }
-    .price-box { border: 2px solid var(--yellow); padding: 0; margin: 0; text-align: center; overflow: hidden; }
-    .price-includes { list-style: none; margin: 0; display: flex; flex-direction: column; }
-    .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #FFFFFF; padding: 14px 24px; border-bottom: 1px solid var(--gray-mid); }
-    .price-includes li:last-child { border-bottom: none; }
-    .price-cta-wrap { padding: 28px 32px 32px; display: flex; justify-content: center; }
-    .price-cta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); background: transparent; border: 2px solid var(--yellow); padding: 18px 40px; text-decoration: none; transition: background 0.2s, color 0.2s; box-sizing: border-box; min-width: 220px; }
-    .price-cta .cta-arrow { font-size: 1.2rem; line-height: 1; }
-    .price-cta:hover { background: var(--yellow); color: var(--black); }
+    .price-box { border: 2px solid var(--yellow); padding: 64px 48px 48px; margin: 48px 0; overflow: hidden; }
+    .price-amount { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 6rem; color: var(--yellow); line-height: 1; margin-bottom: 8px; }
+    .price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 40px; }
+    .price-includes { list-style: none; margin-bottom: 8px; display: flex; flex-direction: column; gap: 12px; }
+    .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 10px 0; border-bottom: 1px solid var(--gray-mid); }
 
-    .calculator { padding: 100px 40px; background: var(--black); }
-    .calc-inner { max-width: 1100px; margin: 0 auto; }
-    .calc-header { text-align: center; margin-bottom: 56px; }
-    .calc-header .section-body { margin-bottom: 0; }
-    .calc-form { max-width: 680px; margin: 0 auto; }
-    .calc-results { display: none; margin-top: 40px; border-top: 1px solid var(--gray-mid); padding-top: 32px; max-width: 680px; margin-left: auto; margin-right: auto; }
+    .calculator { padding: 100px 40px 80px; background: var(--black); }
+    .calc-header { text-align: center; margin-bottom: 12px; }
+    .calc-inner { max-width: 680px; margin: 0 auto; }
+    .calc-intro { color: #D4D4D4; font-size: 1rem; line-height: 1.65; margin-bottom: 36px; }
+    .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; align-items: end; }
     .calc-col { display: flex; flex-direction: column; }
-    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px; }
+    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
     .gender-tabs { display: flex; height: 50px; border: 1.5px solid var(--gray-mid); box-sizing: border-box; }
     .gender-tab { flex: 1; padding: 0; height: 100%; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: color 0.15s; background: var(--black); color: var(--text-dim); }
     .gender-tab:first-child { border-right: 1px solid var(--gray-mid); }
@@ -112,35 +142,53 @@
     .calc-input:focus { border-color: var(--yellow); }
     .calc-input::-webkit-outer-spin-button, .calc-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .calc-input[type=number] { -moz-appearance: textfield; }
-    .calc-btn { display: block; width: 100%; background: none; color: var(--yellow); border: 2px solid var(--yellow); font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 0; cursor: pointer; transition: background 0.2s, color 0.2s; margin-top: 8px; }
-    .calc-btn:hover { background: var(--yellow); color: var(--black); }
+    .calc-btn { display: block; width: 100%; background: none; color: var(--yellow); border: none; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 0; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; }
+    .calc-btn:hover { opacity: 0.75; }
+    .calc-results { display: none; margin-top: 40px; border-top: 1px solid var(--gray-mid); padding-top: 32px; }
     .calc-results.visible { display: block; }
-    .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; align-items: end; }
-    .calc-narrative { font-size: 1.05rem; color: #FFFFFF; line-height: 1.7; margin-bottom: 32px; }
-    .calc-narrative strong { color: #FFFFFF; font-weight: 700; }
+    .calc-narrative { font-size: 1.05rem; color: #D4D4D4; line-height: 1.7; margin-bottom: 32px; }
+    .calc-narrative strong { color: #D4D4D4; font-weight: 700; }
     .calc-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
     .calc-table th { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); padding: 0 0 12px; text-align: left; border-bottom: 1px solid var(--gray-mid); }
-    .calc-table td { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.97rem; color: #FFFFFF; vertical-align: middle; }
-    .calc-table tr.row-current td { font-weight: 700; color: #FFFFFF; }
+    .calc-table td { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.97rem; color: var(--text); vertical-align: middle; }
+    .calc-table tr.row-current td { font-weight: 700; color: #8A8A8A; }
     .ace-badge { display: inline-block; background: transparent; color: var(--yellow); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px; margin-left: 8px; vertical-align: middle; }
-    .calc-disclaimer { font-size: 0.78rem; color: #FFFFFF; line-height: 1.6; margin-top: 24px; }
+    .calc-disclaimer { font-size: 0.78rem; color: #D4D4D4; line-height: 1.6; margin-top: 24px; }
+
+    .deliver-hero { background: var(--dark); border-left: 4px solid var(--yellow); padding: 48px 40px; margin-bottom: 3px; }
+    .deliver-hero-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
+    .deliver-hero-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.6rem); text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 16px; }
+    .deliver-hero-body { color: #D4D4D4; font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 24px; }
+    .deliver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+    .deliver-card { background: var(--gray); padding: 36px 32px; border-left: 3px solid transparent; transition: border-color 0.2s; }
+    .deliver-card:hover { border-left-color: var(--yellow); }
+    .deliver-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; }
+    .deliver-body { color: #8A8A8A; font-size: 0.92rem; line-height: 1.6; }
+
+    .who { padding: 100px 40px; background: var(--black); }
+    .who-inner { max-width: 1100px; margin: 0 auto; }
+    .who-header { text-align: center; margin-bottom: 72px; }
+    .who-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .who-card { background: var(--gray); padding: 56px 48px; }
+    .who-card-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
+    .who-card-title { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 2.4rem; text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 20px; }
+    .who-card-body { color: #D4D4D4; font-size: 0.95rem; line-height: 1.7; }
+    .who-list { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .who-list li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; padding-left: 20px; position: relative; color: var(--yellow); }
+    .who-list li::before { content: '▶'; position: absolute; left: 0; color: var(--yellow); font-size: 0.6rem; top: 3px; }
 
     @media (max-width: 900px) {
-      .stories-grid { grid-template-columns: 1fr; }
-      .story-card { grid-template-columns: 80px 1fr; padding: 28px 24px; }
-      .story-price { padding: 40px 28px; }
-      .who-cards { grid-template-columns: 1fr; }
       .deliver-grid { grid-template-columns: 1fr 1fr; }
+      .who-cards { grid-template-columns: 1fr; }
+      .guide-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 60px; }
-      .who-card { padding: 40px 28px; }
       .deliver-grid { grid-template-columns: 1fr; }
       .deliver-hero { padding: 36px 24px; }
-      .calculator { padding: 80px 20px; }
+      .who-card { padding: 40px 28px; }
       .calc-row { grid-template-columns: 1fr; gap: 16px; }
-      .pricing { padding: 80px 20px; }
-      .price-cta-wrap { padding: 24px 20px 28px; }
+      .gender-tabs { max-width: 200px; }
     }
   </style>
 </head>
@@ -154,7 +202,9 @@
       <li><a href="#who">Who It's For</a></li>
       <li><a href="#pricing">Get Started</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
     <a href="#calculator">What's Possible</a>
@@ -167,56 +217,56 @@
 
   <section class="hero">
     <p class="hero-eyebrow">Contest Prep Diet Program</p>
-    <img class="hero-logo" src="images/BBclearlogo.png" alt="Burn &amp; Build" width="218" height="268" fetchpriority="high" />
-    <h1 class="hero-headline">Burn Fat<br /><span>Build Muscle</span></h1>
+    <img class="hero-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" />
+    <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
   </section>
 
-  <section class="hero-stories" id="stories">
-    <div class="stories-inner">
-      <div class="stories-grid">
-        <article class="story-card">
-          <img class="story-photo" src="images/paulmix62.png" alt="Paul" width="100" height="100" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'story-photo placeholder',textContent:'P'}))" />
-          <div>
-            <p class="story-label">Burn</p>
-            <p class="story-quote">Nutrition is everything. You got the science figured out years before anyone else. At 62, I still weigh and measure every meal every day — 40 years and counting.</p>
-            <p class="story-author">Paul — 40 Years on the Plan</p>
+  <section class="guide" id="guide">
+    <div class="guide-inner">
+      <p class="section-label" style="text-align:center;">Real People. Real Results.</p>
+      <div class="guide-row">
+        <div class="testi">
+          <div class="guide-photo-label">
+            <img class="testi-photo" src="images/testimonials/paul.png" alt="Paul" width="88" height="88" />
+            <span class="guide-wordmark guide-wordmark--burn">Burn</span>
           </div>
-        </article>
-        <article class="story-price">
-          <p class="story-price-label">Your Custom Diet</p>
-          <p class="story-price-amount">$149</p>
-          <p class="story-price-period">One-Time Purchase</p>
-          <p class="story-price-body">A precision diet built for your body — lose fat, build muscle, no guesswork.</p>
-          <a class="story-price-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/"><span>Create Your Diet</span><span class="cta-arrow">&rarr;</span></a>
-        </article>
-        <article class="story-card">
-          <img class="story-photo" src="images/dave.jpg" alt="Dave McAferty" width="100" height="100" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'story-photo placeholder',textContent:'D'}))" />
-          <div>
-            <p class="story-label">Build</p>
-            <p class="story-quote">If you want to see real results like you never thought possible, this is the plan to be on because it dials everything in for each person. It's not a cookie cutter diet.</p>
-            <p class="story-author">Dave McAferty — Client Since 1990</p>
+          <p class="testi-text">Nutrition is everything. You got the science figured out years before anyone else. At 62, I still weigh and measure every meal every day — 40 years and counting.</p>
+          <div class="testi-author">Paul — 40 Years on the Plan</div>
+        </div>
+        <div class="testi guide-cta">
+          <h3 class="guide-cta-title">Your Custom Diet</h3>
+          <div class="guide-cta-price">$149</div>
+          <p class="guide-cta-period">One-Time Purchase</p>
+          <p class="guide-cta-body">A precision diet built for your body — lose fat, keep muscle, no guesswork.</p>
+          <a class="btn-cta" href="https://gettheburnandbuildapp.com/createyourfoodplan/?browse=1">Create Your Diet &rarr;</a>
+        </div>
+        <div class="testi">
+          <div class="guide-photo-label">
+            <img class="testi-photo" src="images/testimonials/dave-mcaferty.png" alt="Dave McAferty" width="88" height="88" />
+            <span class="guide-wordmark guide-wordmark--build">Build</span>
           </div>
-        </article>
+          <p class="testi-text">If you want to see real results like you never thought possible, this is the plan to be on. It dials everything in for each person. It's not a cookie-cutter diet.</p>
+          <div class="testi-author">Dave McAferty — Client Since 1990</div>
+        </div>
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
 
   <section class="calculator" id="calculator">
     <div class="calc-inner">
       <div class="calc-header">
         <p class="section-label">What's Possible</p>
-        <h2 class="section-title">What Can Burn &amp; Build Do <span>for You?</span></h2>
-        <p class="section-body">A precision diet built to maximize fat loss and preserve every ounce of muscle. Based on thousands of clients over 40 years, bodies can lose up to 2.8% body fat per month — while increasing strength and energy.</p>
+        <h2 class="section-title">What Can <span>Burn &amp; Build</span> Do for You?</h2>
       </div>
-      <div class="calc-form">
+      <p class="calc-intro">A precision diet built to maximize fat loss and preserve every ounce of muscle. Based on thousands of clients over 40 years, the average person on Burn &amp; Build loses approximately 3% body fat per month — while increasing strength and energy.</p>
+
       <div class="calc-row">
         <div class="calc-col">
           <div class="calc-label">Gender</div>
           <div class="gender-tabs">
-            <button class="gender-tab active" id="tab-male" type="button">Male</button>
-            <button class="gender-tab" id="tab-female" type="button">Female</button>
+            <button type="button" class="gender-tab active" id="tab-male">Male</button>
+            <button type="button" class="gender-tab" id="tab-female">Female</button>
           </div>
           <input type="hidden" id="calc-gender" value="male" />
         </div>
@@ -229,19 +279,25 @@
           <input class="calc-input" id="calc-bf" type="number" min="1" max="70" placeholder="Enter body fat %" />
         </div>
       </div>
-      <button class="calc-btn" id="calc-btn" type="button">Show Me What's Possible &rarr;</button>
-      </div>
+
+      <button type="button" class="calc-btn" id="calc-btn">Show Me What's Possible &rarr;</button>
+
       <div class="calc-results" id="calc-results">
         <p class="calc-narrative" id="calc-narrative"></p>
         <table class="calc-table">
-          <thead><tr><th>Timeline</th><th>Body Fat %</th><th>Bodyweight</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Timeline</th>
+              <th>Body Fat %</th>
+              <th>Bodyweight</th>
+            </tr>
+          </thead>
           <tbody id="calc-tbody"></tbody>
         </table>
         <p class="calc-disclaimer">Results may vary. This tool is for informational purposes only and does not constitute medical or nutritional advice. Individual results depend on starting body composition, program adherence, diet, exercise, and other factors. Consult a qualified healthcare professional before beginning any diet or exercise program.</p>
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
 
   <section class="philosophy">
@@ -259,17 +315,16 @@
       <div class="deliver-hero">
         <div class="deliver-hero-label">The Engine</div>
         <h3 class="deliver-hero-title">Your Custom Diet</h3>
-        <p class="deliver-hero-body">Answer a few questions about your body composition, your job, your workouts, and your daily activity. The Burn Engine calculates your protein, carbohydrates, and fat — then converts them into daily servings across Protein, Dairy, Grains, Starches, Veggies, Fruits, and Fats. No calorie counting. No guesswork. Athlete-tested since 1982.</p>
-        <span class="deliver-hero-badge">Proven Since 1982</span>
+        <p class="deliver-hero-body">Enter your lean body mass, your job, your lifestyle, and your activities. The Burn Engine computes your exact daily macros — then converts them into simple servings across five food groups. No calorie counting. No guesswork. The same system that's produced results since 1982.</p>
       </div>
       <div class="deliver-grid">
         <div class="deliver-card">
           <div class="deliver-title">278 Curated Foods</div>
-          <p class="deliver-body">A list of 278 foods specifically chosen from the USDA 350,000 item database. A Burn &amp; Build exclusive.</p>
+          <p class="deliver-body">Every food chosen for a reason. 278 pulled from 350,000 in the USDA database — the ones that burn fat and protect muscle.</p>
         </div>
         <div class="deliver-card">
           <div class="deliver-title">Tap to Build Your Meals</div>
-          <p class="deliver-body">Select your foods with a tap. Your daily diet builds itself. Your grocery list builds itself. No thinking required.</p>
+          <p class="deliver-body">Select your foods with a tap. Your daily plan builds itself. Your grocery list builds itself. No thinking required.</p>
         </div>
         <div class="deliver-card">
           <div class="deliver-title">Grocery List</div>
@@ -277,20 +332,19 @@
         </div>
         <div class="deliver-card">
           <div class="deliver-title">When-to-Eat Reminders</div>
-          <p class="deliver-body">When you eat matters as much as what you eat. Your diet includes optimized meal timing with reminders to keep you on track all day.</p>
+          <p class="deliver-body">When you eat matters as much as what you eat. Your plan includes optimized meal timing with reminders to keep you on track all day.</p>
         </div>
         <div class="deliver-card">
           <div class="deliver-title">Lean Body Analysis</div>
-          <p class="deliver-body">Tracks your lean body mass and body fat percentage separately — not just scale weight. See your projected weight at every stage, from where you are now to competition-ready.</p>
+          <p class="deliver-body">Your muscle. Your fat. Your roadmap to competition weight.</p>
         </div>
         <div class="deliver-card">
-          <div class="deliver-title">Weekly Newsletter (Optional)</div>
-          <p class="deliver-body">Tips, updates, and insights from 40+ years of coaching — delivered to your inbox when you want them.</p>
+          <div class="deliver-title">Weekly Newsletter (optional)</div>
+          <p class="deliver-body">A quick hit of motivation from Coach Kory before the weekend — the reminder that keeps you on plan when it gets hard. Opt in when you create your plan; unsubscribe anytime.</p>
         </div>
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
 
   <section class="who" id="who">
@@ -300,13 +354,13 @@
         <h2 class="section-title">Built for <span>Everyone</span> Who's Serious</h2>
       </div>
       <div class="who-cards">
-        <div class="who-card">
+        <div class="who-card featured">
           <div class="who-card-label">Competitor Track</div>
-          <h3 class="who-card-title">Competition Athletes</h3>
+          <h3 class="who-card-title">Contest Prep Athletes</h3>
           <p class="who-card-body">Burn &amp; Build was built in the gym. This is the same precision approach used by competitive bodybuilders to peak on stage.</p>
           <ul class="who-list">
             <li>Bodybuilding &amp; Physique Competitors</li>
-            <li>Athletes Competing in Weight Classes</li>
+            <li>Powerlifters Cutting for a Weight Class</li>
             <li>Fitness &amp; Figure Athletes</li>
             <li>Anyone Chasing a Competition Peak</li>
           </ul>
@@ -317,7 +371,7 @@
           <p class="who-card-body">You don't need to step on stage to want real results. Burn &amp; Build works for anyone willing to commit. The science doesn't care who you are — it just works.</p>
           <ul class="who-list">
             <li>Serious About Real Body Transformation</li>
-            <li>Tired of Diets That Don't Deliver</li>
+            <li>Tired of Plans That Don't Deliver</li>
             <li>Ready to Follow a Proven System</li>
             <li>Done Making Excuses</li>
           </ul>
@@ -325,36 +379,30 @@
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
 
-  <section class="testimonials">
+  <section class="testimonials" id="testimonials">
     <div class="testimonials-inner">
       <div class="testimonials-header">
         <p class="section-label">Real People. Real Results.</p>
         <h2 class="section-title">What They're <span>Saying</span></h2>
       </div>
       <div class="testi-grid">
-        <div class="testi">
-          <p class="testi-text">I learned this program in 1992 and it has been invaluable. I almost bought into the chatter that you just have to eat less as you get older — and then I remembered what I learned all those years ago. At 67, I am confident I can maintain and even build muscle and lose fat.</p>
-          <div class="testi-author">Linda Kay — Client Since 1992</div>
-        </div>
-        <div class="testi">
-          <p class="testi-text">First impressions are everything, and my first impression is a 10 out of 10. This is exactly what I've been looking for — precision, not guesswork.</p>
-          <div class="testi-author">Scott Horan</div>
-        </div>
+        <div class="testi"><p class="testi-text">Nutrition is everything. You got the science figured out years before anyone else. At 62, I still weigh and measure every meal every day — 40 years and counting.</p><div class="testi-author">Paul — 40 Years on the Plan</div></div>
+        <div class="testi"><p class="testi-text">First impressions are everything, and my first impression is a 10 out of 10. This is exactly what I've been looking for — precision, not guesswork.</p><div class="testi-author">Scott Horan</div></div>
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
 
   <section class="pricing" id="pricing">
     <div class="pricing-inner">
       <p class="section-label">Get Started</p>
-      <h2 class="section-title">One-Time Purchase. You Own It. <span>Forever.</span></h2>
-      <p class="pricing-intro">This is a difficult program. It is not for everyone.<br />One-time purchase — if you commit, it works.</p>
+      <h2 class="section-title">One-Time Purchase.<br />You Own It.<br /><span>Forever.</span></h2>
+      <p style="color:#D4D4D4;font-size:0.95rem;margin-bottom:32px;">This is a difficult program. It is not for everyone.<br />One-time purchase — if you commit, it works.</p>
       <div class="price-box">
+        <div class="price-amount">$149</div>
+        <div class="price-period">The Burn &amp; Build Diet</div>
         <ul class="price-includes">
           <li>Your Custom Diet</li>
           <li>278 Curated Foods</li>
@@ -362,11 +410,9 @@
           <li>Grocery List</li>
           <li>When-to-Eat Reminders</li>
           <li>Lean Body Analysis</li>
-          <li>Weekly Newsletter (Optional)</li>
+          <li>Weekly Newsletter (optional)</li>
         </ul>
-        <div class="price-cta-wrap">
-          <a class="price-cta" href="https://program-creator-3tzd.onrender.com/createyourfoodplan/"><span>Create Your Diet</span><span class="cta-arrow">&rarr;</span></a>
-        </div>
+        <a class="btn-cta" href="https://gettheburnandbuildapp.com/createyourfoodplan/?browse=1">Create Your Diet &rarr;</a>
       </div>
     </div>
   </section>
@@ -395,8 +441,11 @@
 
     function aceBadge(bf, gender, isFloor) {
       if (isFloor) return { label: 'Showtime', cls: '' };
-      if (gender === 'male') { if (bf <= 24 && bf > 13) return { label: 'Average', cls: '' }; }
-      else { if (bf <= 31 && bf > 20) return { label: 'Average', cls: '' }; }
+      if (gender === 'male') {
+        if (bf <= 24 && bf > 13) return { label: 'Average', cls: '' };
+      } else {
+        if (bf <= 31 && bf > 20) return { label: 'Average', cls: '' };
+      }
       return null;
     }
 
@@ -405,52 +454,70 @@
       var weight = parseFloat(document.getElementById('calc-weight').value);
       var bf = parseFloat(document.getElementById('calc-bf').value);
       var targetBf = gender === 'male' ? 4.68 : 8.95;
-      var dropPerMonth = 2.8;
-      var weeksPerCycle = 8;
-      var dropPerCycle = dropPerMonth * (weeksPerCycle / 4);
+      var dropPerCycle = 6;
+
       if (!weight || weight <= 0 || !bf || bf <= targetBf || bf > 70) return;
+
       var lbm = weight * (1 - bf / 100);
       var finalWeight = lbm / (1 - targetBf / 100);
+
       var fullCycles = Math.floor((bf - targetBf) / dropPerCycle);
       var remainder = (bf - targetBf) % dropPerCycle;
       var partialWeeks = remainder > 0 ? (remainder / dropPerCycle) * 8 : 0;
       var totalWeeks = fullCycles * 8 + partialWeeks;
       var wholeWeeks = Math.round(totalWeeks);
+      var timeStr = wholeWeeks + ' weeks';
+
       document.getElementById('calc-narrative').innerHTML =
-        '<strong>Pro Tip:</strong> Transforming your body is a balance of lean body mass (muscle shape) and how much body fat is covering it up. Based on the data you provided, Burn &amp; Build can take you from <strong>' +
+        '<strong>Pro Tip:</strong> Transforming your body is a balance of lean body mass (muscle shape) and how much body fat is covering it up. Based on your current weight and body fat, Burn &amp; Build can take you from <strong>' +
         weight.toFixed(0) + ' lbs at ' + bf.toFixed(0) + '%</strong> to <strong>' +
-        finalWeight.toFixed(1) + ' lbs at ' + targetBf + '%</strong> in <strong>' + wholeWeeks + ' weeks</strong> — while increasing your strength and energy. If the projected body weight at your desired body fat seems too low, it means you need more muscle. Participate in weight training and follow your Burn &amp; Build diet for fastest results.';
+        finalWeight.toFixed(1) + ' lbs at ' + targetBf + '%</strong> in <strong>' + timeStr +
+        '</strong> — while increasing your strength and energy. If the projected body weight at your desired body fat seems too low, it means you need more muscle. Participate in weight training and follow your Burn &amp; Build program for fastest results.';
+
       var tbody = '';
       var curBf = bf;
       var shownBadges = {};
+
       tbody += '<tr class="row-current"><td>Current</td><td>' + bf.toFixed(0) + '%</td><td>' + weight.toFixed(0) + ' lbs</td></tr>';
+
       var cycleWeeks = 0;
       while (curBf > targetBf) {
         var newBf = curBf - dropPerCycle;
         var isFloor = false;
         var isPartial = false;
         if (newBf <= targetBf) { newBf = targetBf; isFloor = true; }
-        if (isFloor && remainder > 0) isPartial = true;
+        if (isFloor && remainder > 0) { isPartial = true; }
         var newWeight = lbm / (1 - newBf / 100);
+
         var badge = aceBadge(newBf, gender, isFloor);
         var bHtml = '';
-        if (badge && !shownBadges[badge.label]) { shownBadges[badge.label] = true; bHtml = '<span class="ace-badge">' + badge.label + '</span>'; }
+        if (badge && !shownBadges[badge.label]) {
+          shownBadges[badge.label] = true;
+          bHtml = '<span class="ace-badge ' + badge.cls + '">' + badge.label + '</span>';
+        }
+
         if (isPartial) {
           cycleWeeks += partialWeeks;
-          tbody += '<tr><td>' + Math.round(cycleWeeks) + ' weeks</td><td>' + targetBf + '%' + bHtml + '</td><td>' + newWeight.toFixed(1) + ' lbs</td></tr>';
+          var pWholeWeeks = Math.round(cycleWeeks);
+          tbody += '<tr><td>' + pWholeWeeks + ' weeks</td><td>' + targetBf + '%' + bHtml + '</td><td>' + newWeight.toFixed(1) + ' lbs</td></tr>';
         } else {
           cycleWeeks += 8;
           tbody += '<tr><td>' + cycleWeeks + ' weeks</td><td>' + newBf.toFixed(0) + '%' + bHtml + '</td><td>' + newWeight.toFixed(1) + ' lbs</td></tr>';
         }
+
         curBf = newBf;
       }
+
       document.getElementById('calc-tbody').innerHTML = tbody;
       document.getElementById('calc-results').classList.add('visible');
     });
-
+  </script>
+  <script>
     var ham = document.getElementById('hamburger');
     var mobileNav = document.getElementById('mobile-nav');
-    ham.addEventListener('click', function() { mobileNav.classList.toggle('open'); });
+    ham.addEventListener('click', function() {
+      mobileNav.classList.toggle('open');
+    });
     mobileNav.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() { mobileNav.classList.remove('open'); });
     });
