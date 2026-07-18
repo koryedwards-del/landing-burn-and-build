@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Burn &amp; Build — Business Card</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 48px;
+      gap: 28px;
+      font-family: system-ui, sans-serif;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .card-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      max-width: min(100%, 560px);
+    }
+
+    .card-stack img {
+      width: 100%;
+      height: auto;
+      display: block;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+      max-width: 420px;
+      line-height: 1.5;
+    }
+
+    .hint a { color: #FFCC00; }
+  </style>
+</head>
+<body>
+  <h1>Burn &amp; Build Business Card</h1>
+  <div class="card-stack">
+    <img src="img/brand/business-card-front.png" alt="Business card front" />
+    <img src="img/brand/business-card-back.png" alt="Business card back" />
+  </div>
+  <p class="hint">Tap and hold an image to save. Need a print file? Use the <a href="business-card-mockup.html">print mockup</a>.</p>
+</body>
+</html>
