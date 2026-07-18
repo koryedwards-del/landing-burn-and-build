@@ -15,23 +15,13 @@
       background: #141414;
       color: var(--gray-light);
       font-family: 'Barlow', sans-serif;
-      padding: 48px 24px 80px;
+      padding: 32px 24px 64px;
     }
 
     .page-header {
-      max-width: 560px;
-      margin: 0 auto 40px;
+      max-width: 640px;
+      margin: 0 auto 28px;
       text-align: center;
-    }
-
-    .page-header h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray-heading);
-      margin-bottom: 12px;
     }
 
     .print-note {
@@ -41,13 +31,26 @@
 
     .print-note a { color: var(--yellow); }
 
+    /* Scale cards up on screen — print stays true 3.5″ × 2″ */
+    .card-viewport {
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+    }
+
     .cards-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 40px;
-      max-width: 560px;
-      margin: 0 auto;
+      transform-origin: top center;
+    }
+
+    @media screen {
+      .cards-stage {
+        transform: scale(1.72);
+        margin-bottom: 2.8in;
+      }
     }
 
     /* Standard US business card: 3.5" × 2" */
@@ -55,7 +58,6 @@
       width: 3.5in;
       height: 2in;
       background: var(--black);
-      border: 1px solid #222;
       box-shadow:
         0 24px 48px rgba(0, 0, 0, 0.55),
         0 4px 12px rgba(0, 0, 0, 0.35);
@@ -68,8 +70,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 0.14in 0.2in 0.18in;
+      justify-content: center;
+      padding: 0.14in 0.22in 0.16in;
       text-align: center;
     }
 
@@ -86,36 +88,37 @@
     .card-eyebrow {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: 0.46rem;
-      letter-spacing: 0.22em;
+      font-size: 0.44rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--yellow);
       margin-bottom: 0.05in;
+      line-height: 1.2;
     }
 
     .card-logo {
-      width: 1.22in;
-      height: 1.22in;
+      width: 1.3in;
+      height: 1.3in;
       object-fit: contain;
       display: block;
-      margin-bottom: 0.04in;
+      margin-bottom: 0.05in;
     }
 
     .card-tagline {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 900;
       font-size: 0.58rem;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
       color: var(--gray-light);
-      line-height: 1.3;
+      line-height: 1.32;
     }
 
     .card-tagline .accent { color: var(--yellow); }
 
     .card-since {
       position: absolute;
-      bottom: 0.12in;
+      bottom: 0.11in;
       right: 0.18in;
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 600;
@@ -128,9 +131,9 @@
     /* ── BACK ── */
     .card-back {
       display: grid;
-      grid-template-columns: 1.05in 1fr;
-      gap: 0.16in;
-      padding: 0.2in 0.22in 0.18in;
+      grid-template-columns: 1.08in 1fr;
+      gap: 0.14in;
+      padding: 0.18in 0.2in 0.16in;
       align-items: center;
     }
 
@@ -145,8 +148,8 @@
     }
 
     .qr-block img {
-      width: 1.02in;
-      height: 1.02in;
+      width: 1.06in;
+      height: 1.06in;
       display: block;
       background: #fff;
       padding: 4px;
@@ -155,13 +158,13 @@
     .back-copy {
       display: flex;
       flex-direction: column;
-      gap: 0.05in;
+      gap: 0.045in;
       min-width: 0;
     }
 
     .back-logo {
-      width: 0.48in;
-      height: 0.48in;
+      width: 0.5in;
+      height: 0.5in;
       object-fit: contain;
       display: block;
     }
@@ -169,7 +172,7 @@
     .back-url {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       letter-spacing: 0.03em;
       color: var(--yellow);
       text-transform: lowercase;
@@ -178,8 +181,8 @@
     .back-cta {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
+      font-size: 0.64rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--gray-light);
       line-height: 1.15;
@@ -188,7 +191,7 @@
     .back-price {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 600;
-      font-size: 0.44rem;
+      font-size: 0.43rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--gray-muted);
@@ -204,7 +207,7 @@
     .back-name {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
-      font-size: 0.54rem;
+      font-size: 0.52rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--gray-light);
@@ -212,7 +215,7 @@
 
     .back-email {
       font-family: 'Barlow', sans-serif;
-      font-size: 0.44rem;
+      font-size: 0.43rem;
       color: var(--gray-muted);
       letter-spacing: 0.02em;
     }
@@ -220,7 +223,11 @@
     @media print {
       body { background: #fff; padding: 0.5in; }
       .page-header { display: none; }
-      .cards-stage { gap: 0.25in; }
+      .cards-stage {
+        transform: none;
+        margin-bottom: 0;
+        gap: 0.25in;
+      }
       .biz-card {
         box-shadow: none;
         border: 1px dashed #ccc;
@@ -232,33 +239,34 @@
 <body>
 
   <header class="page-header">
-    <h1>Business Card — 3.5″ × 2″</h1>
-    <p class="print-note">Print at 100% scale — no “fit to page.” <a href="#" onclick="window.print(); return false;">Print</a></p>
+    <p class="print-note"><a href="#" onclick="window.print(); return false;">Print card</a> — 100% scale, no fit to page</p>
   </header>
 
-  <div class="cards-stage">
-    <div class="biz-card card-front">
-      <p class="card-eyebrow">The Premier Body Recomp Diet</p>
-      <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" width="384" height="384" />
-      <p class="card-tagline">
-        <span class="accent">Lose Fat.</span><br />
-        Keep Your Muscle.
-      </p>
-      <span class="card-since">Since 1982</span>
-    </div>
-
-    <div class="biz-card card-back">
-      <div class="qr-block">
-        <img src="img/brand/qr-burnandbuilddiet.png" width="1000" height="1000" alt="QR code — burnandbuilddiet.com" />
+  <div class="card-viewport">
+    <div class="cards-stage">
+      <div class="biz-card card-front">
+        <p class="card-eyebrow">The Premier Body Recomp Diet</p>
+        <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" width="384" height="384" />
+        <p class="card-tagline">
+          <span class="accent">Lose Fat.</span><br />
+          Keep Your Muscle.
+        </p>
+        <span class="card-since">Since 1982</span>
       </div>
-      <div class="back-copy">
-        <img class="back-logo" src="img/brand/bblogo.png" alt="" width="156" height="156" aria-hidden="true" />
-        <div class="back-url">burnandbuilddiet.com</div>
-        <div class="back-cta">Create Your Diet</div>
-        <div class="back-price">$149 • One-Time Purchase</div>
-        <div class="back-divider"></div>
-        <div class="back-name">KORY EDWARDS</div>
-        <div class="back-email">kory@burnandbuilddiet.com</div>
+
+      <div class="biz-card card-back">
+        <div class="qr-block">
+          <img src="img/brand/qr-burnandbuilddiet.png" width="1000" height="1000" alt="QR code — burnandbuilddiet.com" />
+        </div>
+        <div class="back-copy">
+          <img class="back-logo" src="img/brand/bblogo.png" alt="" width="156" height="156" aria-hidden="true" />
+          <div class="back-url">burnandbuilddiet.com</div>
+          <div class="back-cta">Create Your Diet</div>
+          <div class="back-price">$149 • One-Time Purchase</div>
+          <div class="back-divider"></div>
+          <div class="back-name">KORY EDWARDS</div>
+          <div class="back-email">kory@burnandbuilddiet.com</div>
+        </div>
       </div>
     </div>
   </div>
