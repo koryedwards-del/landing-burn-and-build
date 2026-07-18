@@ -113,7 +113,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 0.22in 0.28in;
+      padding: 0.16in 0.24in 0.2in;
       text-align: center;
     }
 
@@ -130,36 +130,25 @@
     .card-eyebrow {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: 0.52rem;
+      font-size: 0.48rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--yellow);
-      margin-bottom: 0.12in;
+      margin-bottom: 0.06in;
     }
 
     .card-logo {
-      width: 1.55in;
-      height: auto;
-      margin-bottom: 0.1in;
+      width: 1.28in;
+      height: 1.28in;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 0.06in;
     }
-
-    .card-logo-fallback {
-      font-family: Impact, 'Arial Narrow', sans-serif;
-      font-size: 1.05rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      line-height: 1.1;
-      margin-bottom: 0.1in;
-    }
-
-    .card-logo-fallback .burn { color: var(--logo-burn); }
-    .card-logo-fallback .amp { color: var(--gray-heading); font-size: 0.85rem; }
-    .card-logo-fallback .build { color: var(--logo-build); }
 
     .card-tagline {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
-      font-size: 0.62rem;
+      font-size: 0.56rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--gray-light);
@@ -226,8 +215,16 @@
     .back-copy {
       display: flex;
       flex-direction: column;
-      gap: 0.07in;
+      gap: 0.06in;
       min-width: 0;
+    }
+
+    .back-logo {
+      width: 0.52in;
+      height: 0.52in;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 0.02in;
     }
 
     .back-url {
@@ -352,11 +349,7 @@
       <span class="card-label">Front</span>
       <div class="biz-card card-front">
         <p class="card-eyebrow">Contest Prep Diet Program</p>
-        <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-        <div class="card-logo-fallback" style="display:none;" aria-hidden="true">
-          <span class="burn">Burn</span> <span class="amp">&amp;</span> <span class="build">Build</span>
-        </div>
+        <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" width="384" height="384" />
         <p class="card-tagline">
           <span class="accent">Lose the Fat.</span><br />
           Keep the Muscle.
@@ -373,6 +366,7 @@
           <span class="qr-caption">Scan to start</span>
         </div>
         <div class="back-copy">
+          <img class="back-logo" src="img/brand/bblogo.png" alt="" width="156" height="156" aria-hidden="true" />
           <div class="back-url">burnandbuilddiet.com</div>
           <div class="back-cta" id="back-cta">Create Your Diet</div>
           <div class="back-price">$149 · One-Time Purchase</div>
