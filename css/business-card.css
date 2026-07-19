@@ -139,7 +139,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 14px;
+  gap: 0;
 }
 
 .back-logo {
@@ -147,55 +147,61 @@
   height: 130px;
   object-fit: contain;
   display: block;
+  margin-bottom: 22px;
 }
 
 .back-url {
   font-weight: 800;
-  font-size: 38px;
-  letter-spacing: 0.04em;
+  font-size: 30px;
+  letter-spacing: 0.02em;
   color: #FFCC00;
   text-transform: lowercase;
+  margin-bottom: 8px;
 }
 
 .back-cta {
   font-weight: 800;
-  font-size: 44px;
-  letter-spacing: 0.05em;
+  font-size: 52px;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #D4D4D4;
-  line-height: 1.15;
+  color: #FFFFFF;
+  line-height: 1.05;
+  margin-bottom: 12px;
 }
 
 .back-price {
-  font-weight: 600;
-  font-size: 24px;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #8A8A8A;
+  color: #8E8E8E;
+  margin-bottom: 16px;
 }
 
 .back-divider {
   width: 100%;
-  max-width: 420px;
+  max-width: 380px;
   height: 2px;
   background: #2A2A2A;
-  margin: 8px 0;
+  margin: 0 0 16px;
 }
 
 .back-name {
   font-weight: 800;
-  font-size: 34px;
-  letter-spacing: 0.1em;
+  font-size: 38px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #D4D4D4;
+  color: #FFFFFF;
+  margin-bottom: 10px;
 }
 
 .back-email {
-  font-family: 'Barlow', sans-serif;
-  font-weight: 400;
-  font-size: 24px;
-  color: #888888;
-  letter-spacing: 0.02em;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #8E8E8E;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
 }
 
 [contenteditable="true"] {
