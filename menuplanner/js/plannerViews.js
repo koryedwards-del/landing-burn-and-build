@@ -794,6 +794,12 @@ function renderSavedMealCard(meal) {
       >${escapeHtml(meal.name)}</button>
       <button
         type="button"
+        class="saved-meal__edit"
+        data-meal-edit="${meal.id}"
+        aria-label="Edit ${escapeHtml(meal.name)}"
+      >Edit</button>
+      <button
+        type="button"
         class="saved-meal__delete"
         data-meal-delete="${meal.id}"
         aria-label="Delete ${escapeHtml(meal.name)}"
@@ -840,8 +846,8 @@ function renderSavedMeals() {
     ? (state.makerSourceMealId
       ? '<p class="saved-meals__browse-hint">Editing in meal maker — save when ready</p>'
       : state.foodBrowseMode === 'meal' && state.activeMealSlot
-        ? '<p class="saved-meals__browse-hint">Tap a saved meal to fill the selected slot</p>'
-        : '<p class="saved-meals__browse-hint">Tap a saved meal to review or edit</p>')
+        ? '<p class="saved-meals__browse-hint">Tap meal name to fill slot · Edit to open in meal maker</p>'
+        : '<p class="saved-meals__browse-hint">Tap meal name to review or edit in meal maker</p>')
     : '';
   const emptyHint = '<p class="saved-meals__hint">Build a meal in the maker and save it here. Tap a saved meal to review or edit, or drag onto the grid.</p>';
   container.innerHTML = browseHint + (meals.length
@@ -862,6 +868,14 @@ function initSavedMealsPanel() {
       event.preventDefault();
       event.stopPropagation();
       deleteSavedMeal(deleteBtn.getAttribute('data-meal-delete'));
+      return;
+    }
+
+    const editBtn = event.target.closest('[data-meal-edit]');
+    if (editBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      loadSavedMealIntoMaker(editBtn.getAttribute('data-meal-edit'));
       return;
     }
 

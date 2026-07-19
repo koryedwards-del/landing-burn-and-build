@@ -967,6 +967,27 @@ button.mini-card.week-matrix__cell.mini-card--empty.week-matrix__cell--selected 
   color: var(--gold);
 }
 
+.saved-meal__edit {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.saved-meal__edit:hover {
+  border-color: var(--gold-muted);
+  color: var(--gold);
+  background: var(--gold-select-bg);
+}
+
 .saved-meal__delete {
   position: static;
   flex-shrink: 0;
