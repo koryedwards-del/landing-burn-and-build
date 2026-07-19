@@ -353,25 +353,24 @@ function clearMealMaker() {
   refreshFoodsPanel();
 }
 
-function addSavedMealToGrid(mealId) {
-  if (state.foodBrowseMode !== 'meal') return;
-  if (!state.activeMealSlot || !isMealMealSlot(state.activeMealSlot)) return;
-  const meal = state.savedMeals.find((item) => item.id === mealId);
-  if (!meal) return;
-  if (!savedMealFitsMealSlot(meal, state.activeMealSlot)) {
-    showPlannerToast('That saved meal is not complete.', { variant: 'error' });
-    return;
-  }
-  applySavedMealToMealSlot(state.activeWeekDay, state.activeMealSlot, meal);
+function clearGridCellSelection() {
+  state.activeMealSlot = null;
+  state.foodBrowseMode = null;
+  state.activeFoodCategory = null;
+  renderWeekGrid();
+  renderSavedMeals();
+  refreshFoodsPanel();
 }
 
 function loadSavedMealIntoMaker(mealId) {
   const meal = state.savedMeals.find((item) => item.id === mealId);
   if (!meal || !applySavedMealItemsToMakerDraft(meal)) return;
 
+  state.activeMealSlot = null;
   state.activeMakerSlot = null;
   state.foodBrowseMode = null;
   state.activeFoodCategory = null;
+  renderWeekGrid();
   renderMealMaker();
   renderSavedMeals();
   refreshFoodsPanel();
@@ -639,7 +638,12 @@ function bindWeekGridCellInteractions() {
     if (cell.dataset.gridCellBound) return;
     cell.dataset.gridCellBound = '1';
     cell.addEventListener('click', () => {
-      selectGridCell(cell.dataset.weekDay, cell.dataset.mealSlot);
+      const { weekDay, mealSlot } = cell.dataset;
+      if (state.activeMealSlot === mealSlot && state.activeWeekDay === weekDay) {
+        clearGridCellSelection();
+        return;
+      }
+      selectGridCell(weekDay, mealSlot);
     });
   });
 }
@@ -794,12 +798,6 @@ function renderSavedMealCard(meal) {
       >${escapeHtml(meal.name)}</button>
       <button
         type="button"
-        class="saved-meal__edit"
-        data-meal-edit="${meal.id}"
-        aria-label="Edit ${escapeHtml(meal.name)}"
-      >Edit</button>
-      <button
-        type="button"
         class="saved-meal__delete"
         data-meal-delete="${meal.id}"
         aria-label="Delete ${escapeHtml(meal.name)}"
@@ -846,8 +844,8 @@ function renderSavedMeals() {
     ? (state.makerSourceMealId
       ? '<p class="saved-meals__browse-hint">Editing in meal maker — save when ready</p>'
       : state.foodBrowseMode === 'meal' && state.activeMealSlot
-        ? '<p class="saved-meals__browse-hint">Tap meal name to fill slot · Edit to open in meal maker</p>'
-        : '<p class="saved-meals__browse-hint">Tap meal name to review or edit in meal maker</p>')
+        ? '<p class="saved-meals__browse-hint">Drag meal onto grid to fill · Tap to edit · Tap cell again to deselect</p>'
+        : '<p class="saved-meals__browse-hint">Tap a saved meal to review or edit in meal maker</p>')
     : '';
   const emptyHint = '<p class="saved-meals__hint">Build a meal in the maker and save it here. Tap a saved meal to review or edit, or drag onto the grid.</p>';
   container.innerHTML = browseHint + (meals.length
@@ -871,27 +869,10 @@ function initSavedMealsPanel() {
       return;
     }
 
-    const editBtn = event.target.closest('[data-meal-edit]');
-    if (editBtn) {
-      event.preventDefault();
-      event.stopPropagation();
-      loadSavedMealIntoMaker(editBtn.getAttribute('data-meal-edit'));
-      return;
-    }
-
     const applyBtn = event.target.closest('[data-meal-source]');
     if (!applyBtn || event.target.closest('[data-meal-delete]')) return;
     if (applyBtn.dataset.mealWasDragged === '1') return;
-    const mealId = applyBtn.getAttribute('data-meal-id');
-    if (state.makerSourceMealId) {
-      loadSavedMealIntoMaker(mealId);
-      return;
-    }
-    if (state.foodBrowseMode === 'meal' && state.activeMealSlot && isMealMealSlot(state.activeMealSlot)) {
-      addSavedMealToGrid(mealId);
-      return;
-    }
-    loadSavedMealIntoMaker(mealId);
+    loadSavedMealIntoMaker(applyBtn.getAttribute('data-meal-id'));
   });
 }
 
