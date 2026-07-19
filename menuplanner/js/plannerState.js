@@ -157,8 +157,6 @@ function resetPlannerState() {
   state.mealMakerDraft = createEmptyMealMakerDraft();
   state.makerSourceMealId = null;
   state.activeMakerSlot = null;
-  state.activeMealSlot = null;
-  state.foodBrowseMode = null;
   state.activeFoodCategory = null;
   state.weekGridCollapsed = false;
 }
@@ -187,21 +185,11 @@ function restoreSessionGridUi(sessionUi) {
   if (sessionUi.activeWeekDay && WEEK_DAYS.some((day) => day.id === sessionUi.activeWeekDay)) {
     state.activeWeekDay = sessionUi.activeWeekDay;
   }
-  if (sessionUi.activeMealSlot && DAY_SLOTS.some((slot) => slot.id === sessionUi.activeMealSlot)) {
-    state.activeMealSlot = sessionUi.activeMealSlot;
-  }
-  if (sessionUi.foodBrowseMode === 'fruit' || sessionUi.foodBrowseMode === 'meal') {
-    state.foodBrowseMode = sessionUi.foodBrowseMode;
-  }
 }
 
 function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
   const sessionUi = preserveSessionUi
-    ? {
-      activeWeekDay: state.activeWeekDay,
-      activeMealSlot: state.activeMealSlot,
-      foodBrowseMode: state.foodBrowseMode,
-    }
+    ? { activeWeekDay: state.activeWeekDay }
     : null;
   resetPlannerState();
   if (!saved || typeof saved !== 'object') return;
@@ -234,7 +222,6 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     state.activeMakerSlot = saved.activeMakerSlot;
   }
   restoreSessionGridUi(sessionUi);
-  // On cold load, sessionUi is null — dashed selection appears only after a grid tap.
 }
 
 function persistPlannerToProgram({ immediate = false } = {}) {
@@ -337,8 +324,7 @@ function escapeHtml(text) {
 }
 
 function slotFoodCategories() {
-  if (state.foodBrowseMode === 'fruit') return ['fruit'];
-  if (!state.activeMakerSlot) return [];
+  if (!state.activeMakerSlot) return ['fruit'];
   return SLOT_META[state.activeMakerSlot].categories;
 }
 
@@ -733,8 +719,6 @@ export const state = {
   mealMakerDraft: createEmptyMealMakerDraft(),
   makerSourceMealId: null,
   activeMakerSlot: null,
-  activeMealSlot: null,
-  foodBrowseMode: null,
   activeFoodCategory: null,
   foodSearchQuery: '',
   weekPlan: {},
