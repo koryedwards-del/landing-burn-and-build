@@ -3,7 +3,7 @@ const path = require('path');
 
 (async () => {
   const out = path.join(__dirname, '..', 'img/brand/burn-and-build-card-from-html.png');
-  const url = 'http://127.0.0.1:8766/business-card-export.html';
+  const url = 'http://127.0.0.1:8766/business-card-mockup.html';
 
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/google-chrome-stable',
@@ -12,7 +12,7 @@ const path = require('path');
   });
 
   const page = await browser.newPage();
-  await page.setViewport({ width: 1050, height: 1300, deviceScaleFactor: 2 });
+  await page.setViewport({ width: 1200, height: 1500, deviceScaleFactor: 2 });
   await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
   await page.evaluate(() =>
     Promise.all([...document.images].map((img) => {

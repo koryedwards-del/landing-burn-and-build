@@ -6,11 +6,8 @@
   <title>Burn &amp; Build — Card Editor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/tokens.css" />
-  <link rel="stylesheet" href="burnandbuild.css" />
+  <link rel="stylesheet" href="css/business-card.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       min-height: 100vh;
       background: #141414;
@@ -67,211 +64,6 @@
     .editor-actions button:hover,
     .editor-actions a:hover { border-color: #FFCC00; }
 
-    .card-viewport {
-      display: flex;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    .cards-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-      transform-origin: top center;
-    }
-
-    @media screen {
-      .cards-stage {
-        transform: scale(1.72);
-        margin-bottom: 2.8in;
-      }
-    }
-
-    .biz-card {
-      width: 3.5in;
-      height: 2in;
-      background: var(--black);
-      border: 1px solid #222;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-front {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.22in 0.28in 0.18in;
-      text-align: center;
-    }
-
-    .card-front::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--yellow);
-    }
-
-    .card-eyebrow {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.52rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 0.1in;
-    }
-
-    .card-logo {
-      width: 1.55in;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      margin-bottom: 0.08in;
-    }
-
-    .card-tagline {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-      line-height: 1.35;
-      max-width: 2.8in;
-    }
-
-    .card-tagline .accent { color: var(--yellow); }
-
-    .card-since {
-      position: absolute;
-      bottom: 0.14in;
-      right: 0.2in;
-      font-family: var(--font-heading);
-      font-weight: 600;
-      font-size: 0.45rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray-muted);
-    }
-
-    .card-back {
-      display: grid;
-      grid-template-columns: 0.95in 1fr;
-      gap: 0.18in;
-      padding: 0.22in 0.24in;
-      align-items: center;
-    }
-
-    .card-back::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--yellow);
-    }
-
-    .qr-block {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .qr-block img {
-      width: 0.82in;
-      height: 0.82in;
-      display: block;
-      background: #fff;
-      padding: 3px;
-    }
-
-    .back-copy {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0.06in;
-      min-width: 0;
-    }
-
-    .back-logo {
-      width: 0.52in;
-      height: 0.52in;
-      object-fit: contain;
-      display: block;
-    }
-
-    .back-url {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      color: var(--yellow);
-    }
-
-    .back-cta {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-      line-height: 1.2;
-    }
-
-    .back-price {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.5rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gray-heading);
-    }
-
-    .back-divider {
-      width: 100%;
-      height: 1px;
-      background: var(--gray-mid);
-      margin: 0.02in 0;
-    }
-
-    .back-name {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.52rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-    }
-
-    .back-email {
-      font-family: var(--font-body);
-      font-size: 0.46rem;
-      color: var(--gray-muted);
-      letter-spacing: 0.02em;
-    }
-
-    [contenteditable="true"] {
-      outline: none;
-      border-radius: 2px;
-      cursor: text;
-    }
-
-    [contenteditable="true"]:hover {
-      box-shadow: 0 0 0 1px rgba(255, 204, 0, 0.35);
-    }
-
-    [contenteditable="true"]:focus {
-      box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.75);
-    }
-
     .saved-toast {
       position: fixed;
       bottom: 24px;
@@ -292,18 +84,7 @@
     @media print {
       body { background: #fff; padding: 0.5in; }
       .editor-bar, .saved-toast { display: none; }
-      .cards-stage {
-        transform: none;
-        margin-bottom: 0;
-        gap: 0.25in;
-      }
-      .biz-card {
-        box-shadow: none;
-        border: 1px dashed #ccc;
-        break-inside: avoid;
-      }
-      [contenteditable="true"]:hover,
-      [contenteditable="true"]:focus { box-shadow: none; }
+      .biz-card { box-shadow: none; border: 1px dashed #ccc; }
     }
   </style>
 </head>
@@ -311,17 +92,16 @@
 
   <header class="editor-bar">
     <h1>Card Editor</h1>
-    <p>Click any text on the card to edit it. Changes save in this browser automatically.</p>
+    <p>Click any text to edit. Saves in this browser automatically.</p>
     <div class="editor-actions">
       <button type="button" onclick="window.print()">Print card</button>
       <button type="button" id="btn-reset">Reset text</button>
-      <a href="business-card-mockup.html">View HTML file</a>
-      <a href="business-card.html">View PNG</a>
+      <a href="business-card-mockup.html">View HTML</a>
     </div>
   </header>
 
   <div class="card-viewport">
-    <div class="cards-stage" id="cards-root">
+    <div class="card-stage">
       <div class="biz-card card-front">
         <p class="card-eyebrow" contenteditable="true" data-field="eyebrow">The Premier Body Recomp Diet</p>
         <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" />

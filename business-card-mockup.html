@@ -3,345 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Burn &amp; Build — Business Card Mockup</title>
+  <title>Burn &amp; Build — Business Card</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/tokens.css" />
-  <link rel="stylesheet" href="burnandbuild.css" />
+  <link rel="stylesheet" href="css/business-card.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       min-height: 100vh;
       background: #141414;
-      color: var(--gray-light);
+      color: #D4D4D4;
       font-family: 'Barlow', sans-serif;
-      padding: 48px 24px 80px;
+      padding: 24px 20px 64px;
     }
 
-    .page-header {
-      max-width: 960px;
-      margin: 0 auto 40px;
+    .page-bar {
+      max-width: 640px;
+      margin: 0 auto 28px;
       text-align: center;
-    }
-
-    .page-header h1 {
-      font-family: Impact, 'Arial Narrow', sans-serif;
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 8px;
-    }
-
-    .page-header p {
-      color: var(--gray-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      max-width: 560px;
-      margin: 0 auto 24px;
-    }
-
-    .print-note {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 16px;
-    }
-
-    .print-note a { color: var(--yellow); }
-
-    .card-viewport {
-      display: flex;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    .cards-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-      transform-origin: top center;
-    }
-
-    @media screen {
-      .cards-stage {
-        transform: scale(1.72);
-        margin-bottom: 2.8in;
-      }
-    }
-
-    .card-wrap {
-      display: contents;
-    }
-
-    .card-label {
-      display: none;
-    }
-
-    /* Standard US business card: 3.5" × 2" */
-    .biz-card {
-      width: 3.5in;
-      height: 2in;
-      background: var(--black);
-      border: 1px solid #222;
-      box-shadow:
-        0 24px 48px rgba(0, 0, 0, 0.55),
-        0 4px 12px rgba(0, 0, 0, 0.35);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* ── FRONT ── */
-    .card-front {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.22in 0.28in 0.18in;
-      text-align: center;
-    }
-
-    .card-front::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--yellow);
-    }
-
-    .card-eyebrow {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.52rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 0.1in;
-    }
-
-    .card-logo {
-      width: 1.55in;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      margin-bottom: 0.08in;
-    }
-
-    .card-tagline {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-      line-height: 1.35;
-      max-width: 2.8in;
-    }
-
-    .card-tagline .accent { color: var(--yellow); }
-
-    .card-since {
-      position: absolute;
-      bottom: 0.14in;
-      right: 0.2in;
-      font-family: var(--font-heading);
-      font-weight: 600;
-      font-size: 0.45rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray-muted);
-    }
-
-    /* ── BACK ── */
-    .card-back {
-      display: grid;
-      grid-template-columns: 0.95in 1fr;
-      gap: 0.18in;
-      padding: 0.22in 0.24in;
-      align-items: center;
-    }
-
-    .card-back::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--yellow);
-    }
-
-    .qr-block {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .qr-block img {
-      width: 0.82in;
-      height: 0.82in;
-      display: block;
-      background: #fff;
-      padding: 3px;
-    }
-
-    .qr-caption {
-      display: none;
-    }
-
-    .back-copy {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0.06in;
-      min-width: 0;
-    }
-
-    .back-logo {
-      width: 0.52in;
-      height: 0.52in;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .back-url {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      color: var(--yellow);
-      text-transform: lowercase;
-    }
-
-    .back-cta {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-      line-height: 1.2;
-    }
-
-    .back-price {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.5rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gray-heading);
-    }
-
-    .back-divider {
-      width: 100%;
-      height: 1px;
-      background: var(--gray-mid);
-      margin: 0.02in 0;
-    }
-
-    .back-name {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.52rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-    }
-
-    .back-email {
-      font-family: var(--font-body);
-      font-size: 0.46rem;
-      color: var(--gray-muted);
-      letter-spacing: 0.02em;
-    }
-
-    .specs {
-      max-width: 960px;
-      margin: 56px auto 0;
-      padding: 28px 32px;
-      background: var(--gray);
-      border-left: 3px solid var(--yellow);
-    }
-
-    .specs h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
       font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 16px;
+      color: #888;
     }
 
-    .specs dl {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px 24px;
-      font-size: 0.88rem;
-      line-height: 1.5;
-    }
-
-    .specs dt {
-      font-weight: 600;
-      color: var(--gray-heading);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .specs dd { color: var(--gray-light); margin: 0; }
+    .page-bar a { color: #FFCC00; }
 
     @media print {
       body { background: #fff; padding: 0.5in; }
-      .page-header, .specs { display: none; }
-      .cards-stage {
-        transform: none;
-        margin-bottom: 0;
-        gap: 0.25in;
-      }
-      .biz-card {
-        box-shadow: none;
-        border: 1px dashed #ccc;
-        break-inside: avoid;
-      }
-      .card-label { color: #666; }
+      .page-bar { display: none; }
+      .biz-card { box-shadow: none; border: 1px dashed #ccc; }
     }
   </style>
 </head>
 <body>
 
-  <header class="page-header">
-    <p class="print-note"><a href="business-card-editor.html">Edit card visually</a> · <a href="#" onclick="window.print(); return false;">Print</a> — 100% scale, no fit to page</p>
-  </header>
+  <p class="page-bar">
+    <a href="business-card-editor.html">Edit visually</a> ·
+    <a href="#" onclick="window.print(); return false;">Print</a> (100% scale, no fit to page)
+  </p>
 
   <div class="card-viewport">
-  <div class="cards-stage">
-    <div class="card-wrap">
-      <span class="card-label">Front</span>
+    <div class="card-stage">
       <div class="biz-card card-front">
         <p class="card-eyebrow">The Premier Body Recomp Diet</p>
-        <img class="card-logo" src="img/brand/bblogo1.png" alt="Burn &amp; Build" width="384" height="384" />
+        <img class="card-logo" src="img/brand/bblogo.png" alt="Burn &amp; Build" />
         <p class="card-tagline">
           <span class="accent">Lose Fat.</span><br />
           Keep Your Muscle.
         </p>
         <span class="card-since">Since 1982</span>
       </div>
-    </div>
 
-    <div class="card-wrap">
-      <span class="card-label">Back</span>
       <div class="biz-card card-back">
         <div class="qr-block">
-          <img src="img/brand/qr-burnandbuilddiet.png" width="1000" height="1000" alt="QR code — burnandbuilddiet.com" />
+          <img src="img/brand/qr-burnandbuilddiet.png" alt="QR code — burnandbuilddiet.com" />
         </div>
         <div class="back-copy">
-          <img class="back-logo" src="img/brand/bblogo.png" alt="" width="156" height="156" aria-hidden="true" />
+          <img class="back-logo" src="img/brand/bblogo.png" alt="" aria-hidden="true" />
           <div class="back-url">burnandbuilddiet.com</div>
           <div class="back-cta">Create Your Diet</div>
           <div class="back-price">$149 • One-Time Purchase</div>
@@ -352,53 +68,6 @@
       </div>
     </div>
   </div>
-  </div>
-
-  <section class="specs">
-    <h2>Print Spec (for vendor)</h2>
-    <dl>
-      <div>
-        <dt>Size</dt>
-        <dd>3.5″ × 2″ (US standard)</dd>
-      </div>
-      <div>
-        <dt>Stock</dt>
-        <dd>16–32 pt matte black (suggested: 18 pt)</dd>
-      </div>
-      <div>
-        <dt>Finish</dt>
-        <dd>Spot UV or gloss on logo + yellow elements</dd>
-      </div>
-      <div>
-        <dt>Colors</dt>
-        <dd>Black #0A0A0A · Yellow #FFCC00 · Gray #8A8A8A</dd>
-      </div>
-      <div>
-        <dt>Fonts</dt>
-        <dd>Impact (logo) · Barlow Condensed (type)</dd>
-      </div>
-      <div>
-        <dt>Bleed</dt>
-        <dd>0.125″ all sides if full-bleed black</dd>
-      </div>
-      <div>
-        <dt>QR (networking)</dt>
-        <dd><code>img/brand/qr-burnandbuilddiet.png</code> → burnandbuilddiet.com</dd>
-      </div>
-      <div>
-        <dt>QR (referral)</dt>
-        <dd><code>img/brand/qr-createyourfoodplan.png</code> → createyourfoodplan</dd>
-      </div>
-      <div>
-        <dt>Contact</dt>
-        <dd>kory@burnandbuilddiet.com</dd>
-      </div>
-      <div>
-        <dt>Eyebrow</dt>
-        <dd>The Premier Body Recomp Diet</dd>
-      </div>
-    </dl>
-  </section>
 
 </body>
 </html>
