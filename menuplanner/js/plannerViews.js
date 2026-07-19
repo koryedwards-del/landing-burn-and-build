@@ -353,6 +353,18 @@ function clearMealMaker() {
   refreshFoodsPanel();
 }
 
+function addSavedMealToGrid(mealId) {
+  if (state.foodBrowseMode !== 'meal') return;
+  if (!state.activeMealSlot || !isMealMealSlot(state.activeMealSlot)) return;
+  const meal = state.savedMeals.find((item) => item.id === mealId);
+  if (!meal) return;
+  if (!savedMealFitsMealSlot(meal, state.activeMealSlot)) {
+    showPlannerToast('That saved meal is not complete.', { variant: 'error' });
+    return;
+  }
+  applySavedMealToMealSlot(state.activeWeekDay, state.activeMealSlot, meal);
+}
+
 function loadSavedMealIntoMaker(mealId) {
   const meal = state.savedMeals.find((item) => item.id === mealId);
   if (!meal || !applySavedMealItemsToMakerDraft(meal)) return;
@@ -827,7 +839,9 @@ function renderSavedMeals() {
   const browseHint = meals.length
     ? (state.makerSourceMealId
       ? '<p class="saved-meals__browse-hint">Editing in meal maker — save when ready</p>'
-      : '<p class="saved-meals__browse-hint">Tap a saved meal to review or edit</p>')
+      : state.foodBrowseMode === 'meal' && state.activeMealSlot
+        ? '<p class="saved-meals__browse-hint">Tap a saved meal to fill the selected slot</p>'
+        : '<p class="saved-meals__browse-hint">Tap a saved meal to review or edit</p>')
     : '';
   const emptyHint = '<p class="saved-meals__hint">Build a meal in the maker and save it here. Tap a saved meal to review or edit, or drag onto the grid.</p>';
   container.innerHTML = browseHint + (meals.length
@@ -854,7 +868,16 @@ function initSavedMealsPanel() {
     const applyBtn = event.target.closest('[data-meal-source]');
     if (!applyBtn || event.target.closest('[data-meal-delete]')) return;
     if (applyBtn.dataset.mealWasDragged === '1') return;
-    loadSavedMealIntoMaker(applyBtn.getAttribute('data-meal-id'));
+    const mealId = applyBtn.getAttribute('data-meal-id');
+    if (state.makerSourceMealId) {
+      loadSavedMealIntoMaker(mealId);
+      return;
+    }
+    if (state.foodBrowseMode === 'meal' && state.activeMealSlot && isMealMealSlot(state.activeMealSlot)) {
+      addSavedMealToGrid(mealId);
+      return;
+    }
+    loadSavedMealIntoMaker(mealId);
   });
 }
 
