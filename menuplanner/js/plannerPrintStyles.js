@@ -33,6 +33,8 @@ const PRINT_SHELL_BASE = `
   .print-page {
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+    padding: 36px 44px 36px;
   }
   .print-page--break,
   .print-page--sheet + .print-page--sheet {
@@ -48,8 +50,8 @@ const PRINT_SHELL_BASE = `
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e8e8e8;
   }
   .print-logo {
@@ -57,11 +59,6 @@ const PRINT_SHELL_BASE = `
     width: 72px;
     height: auto;
     flex-shrink: 0;
-  }
-  .print-header--personalized,
-  .print-header--generic {
-    margin-bottom: 14px;
-    padding-bottom: 12px;
   }
   .print-header--personalized .print-header-title,
   .print-header--generic .print-header-title {
@@ -123,6 +120,9 @@ const PRINT_SHELL_BASE = `
       margin: 0;
       max-width: none;
     }
+    .print-page {
+      padding: 36px 44px 36px;
+    }
     .print-watermark {
       position: fixed;
       inset: 0;
@@ -134,9 +134,6 @@ const PRINT_SHELL_BASE = `
 `;
 
 const WEEK_CONTENT_STYLES = `
-  .print-body--week .print-document {
-    padding: 36px 44px 52px;
-  }
   .agenda-section-title {
     font-family: Oswald, system-ui, sans-serif;
     font-size: 1rem;
@@ -249,7 +246,6 @@ const WEEK_CONTENT_STYLES = `
 
 const SHOPPING_CONTENT_STYLES = `
   .print-body--shopping .print-document {
-    padding: 36px 44px 52px;
     max-width: 540px;
   }
   h2 {
@@ -307,14 +303,6 @@ const SHOPPING_CONTENT_STYLES = `
 `;
 
 const FOODLIST_CONTENT_STYLES = `
-  .print-body--foodlist .print-document {
-    padding: 36px 44px 36px;
-  }
-  .food-list-section + .food-list-section {
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid #e8e8e8;
-  }
   .food-list-columns {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -363,25 +351,16 @@ const FOODLIST_CONTENT_STYLES = `
     color: #222;
   }
   @media print {
-    .print-body--foodlist .print-page--sheet {
-      box-sizing: border-box;
-      position: relative;
-    }
     .food-list-col-title { margin-bottom: 6px; }
     .print-page + .print-page,
     .food-list-section + .food-list-section {
       margin-top: 0;
-      padding-top: 0;
       border-top: none;
     }
   }
 `;
 
 const QA_CONTENT_STYLES = `
-  .print-body--bestresults .print-document,
-  .print-body--faq .print-document {
-    padding: 36px 44px 36px;
-  }
   .faq-page {
     display: flex;
     flex-direction: column;
