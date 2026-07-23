@@ -25,4 +25,23 @@ Push to `main` deploys static site via GitHub Pages.
 
 **Product name:** Menu planner (never “meal planner” in user-facing copy).
 
+## Print Shop (menu planner)
+
+Five print documents, **two header templates**:
+
+| Header | Documents |
+|--------|-----------|
+| **Personalized** (name + date) | Weekly meal plan, Grocery list |
+| **Generic** (brand + title) | Food list, For Best Results, FAQ |
+
+**Generic doc content is fixed** — do not ad lib or refactor copy/layout unless explicitly requested. Source data:
+
+| Document | Data |
+|----------|------|
+| Food list | Column layout + tips Q&A in `data/*TipsPrintout.js`; food names from program |
+| For Best Results | `data/forBestResultsPrintout.js` |
+| FAQ | `data/handbookFaqPrintout.js` |
+
+Personalized docs (weekly, grocery) change with the user's plan.
+
 **Deprecated:** `pwa-burn-and-build` (archived), `gettheburnandbuildapp.com`, `/myplan/` phone app.
