@@ -374,6 +374,7 @@ function buildPrintDocumentHtml(view = 'week') {
     * { box-sizing: border-box; margin: 0; padding: 0; }
     @page portrait-page { size: portrait; margin: 0.5in; }
     @page landscape-page { size: landscape; margin: 0.35in; }
+    @page foodlist-page { size: landscape; margin: 0.25in; }
     body {
       font-family: "Open Sans", system-ui, sans-serif;
       background: #ececec;
@@ -387,7 +388,7 @@ function buildPrintDocumentHtml(view = 'week') {
       page: landscape-page;
     }
     body.view-foodlist {
-      page: landscape-page;
+      page: foodlist-page;
     }
     .assistant-document {
       background: #ffffff;
@@ -403,6 +404,26 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     body.view-foodlist .assistant-document {
       max-width: none;
+      padding: 18px 24px 16px;
+    }
+    body.view-foodlist .assistant-doc-header {
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      gap: 14px;
+    }
+    body.view-foodlist .assistant-logo {
+      width: 48px;
+    }
+    body.view-foodlist .assistant-doc-brand {
+      font-size: 0.58rem;
+      margin-bottom: 2px;
+    }
+    body.view-foodlist .assistant-doc-title {
+      font-size: 1.35rem;
+      margin-bottom: 2px;
+    }
+    body.view-foodlist .assistant-doc-meta {
+      font-size: 0.68rem;
     }
     .assistant-doc-header {
       display: flex;
@@ -667,7 +688,7 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     .food-list-col {
       position: relative;
-      padding: 0 18px;
+      padding: 0 12px;
       border-left: 2px solid #111;
     }
     .food-list-col:first-child {
@@ -679,13 +700,13 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     .food-list-col-title {
       font-family: Oswald, system-ui, sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.82rem;
       font-weight: 700;
       font-style: italic;
       letter-spacing: 0.04em;
       text-align: center;
       color: #111;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
     .food-list-items {
       list-style: none;
@@ -697,10 +718,10 @@ function buildPrintDocumentHtml(view = 'week') {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 8px;
-      font-size: 0.68rem;
-      line-height: 1.45;
-      padding: 3px 0;
+      gap: 6px;
+      font-size: 0.56rem;
+      line-height: 1.2;
+      padding: 1px 0;
       border-bottom: 1px solid #eee;
     }
     .food-list-name {
@@ -735,11 +756,11 @@ function buildPrintDocumentHtml(view = 'week') {
       z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
     .food-list-tips p {
-      font-size: 0.72rem;
-      line-height: 1.55;
+      font-size: 0.62rem;
+      line-height: 1.4;
       color: #222;
     }
     @media print {
@@ -758,6 +779,16 @@ function buildPrintDocumentHtml(view = 'week') {
       }
       .assistant-doc-name {
         font-size: 1.85rem;
+      }
+      body.view-foodlist .assistant-doc-header {
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+      }
+      body.view-foodlist .assistant-logo {
+        width: 44px;
+      }
+      .food-list-col-title {
+        margin-bottom: 6px;
       }
       .agenda-row-head,
       .agenda-cell {
