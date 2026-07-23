@@ -423,7 +423,6 @@ function buildPrintDocumentHtml(view = 'week') {
   const logoUrl = printLogoUrl();
   const styles = buildPrintStylesForView(view);
   const headerHtml = buildViewHeaderHtml(view);
-  const name = escapeHtml(programClientName(state.programPackage));
 
   let bodyHtml = '';
   if (view === 'shopping') {
@@ -439,15 +438,9 @@ function buildPrintDocumentHtml(view = 'week') {
   } else if (view === 'faq') {
     bodyHtml = buildHandbookFaqContent();
   } else {
-    const weekFooterHtml = `
-      <footer class="print-doc-footer">
-        <span>Burn &amp; Build Diet</span>
-        <span>Weekly Meal Plan · ${name}</span>
-      </footer>
-    `;
     bodyHtml = buildPrintPageShell({
       headerHtml,
-      bodyHtml: `${buildWeekAgendaContent()}${weekFooterHtml}`,
+      bodyHtml: buildWeekAgendaContent(),
     });
   }
 
