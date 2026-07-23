@@ -2,7 +2,7 @@
 export const PROTEIN_TIPS_QA = [
   {
     q: 'How many times a day should I eat protein?',
-    a: 'Spread protein servings fairly even across the day — at least three feedings among breakfast, lunch, and dinner. At least one-third of your daily protein should come from dairy on this list.',
+    a: 'Your program divides protein servings evenly across breakfast, lunch, and dinner for best results. Eat your full protein prescription each day using foods from this list.',
   },
   {
     q: 'Do I measure before or after cooking?',
@@ -10,11 +10,11 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: "What if I don't eat meat?",
-    a: 'Meat is not required. Use egg whites and dairy from this list to reach your daily protein servings.',
+    a: 'Meat is not required. Use egg whites and, if you tolerate dairy, foods from the dairy column on this list to reach your daily protein servings.',
   },
   {
     q: "What if I don't eat dairy?",
-    a: 'Dairy is strongly recommended for calcium and protein. If you omit it, replace those servings with other protein foods on this list and discuss calcium with your doctor.',
+    a: "That's a personal choice. Many people skip dairy today. Replace those servings with other protein foods on this list — meats, fish, and egg whites.",
   },
   {
     q: "Why isn't salmon on this list?",
