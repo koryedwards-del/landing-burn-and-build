@@ -2,21 +2,20 @@
 
 import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi.js';
 
-/** @typedef {'generic' | 'personalized' | 'report'} PrintHeaderVariant */
+/** @typedef {'generic' | 'personalized'} PrintHeaderVariant */
 
 /**
  * Print view config. Content builders live in plannerPrint.js; this file owns the shell.
  * headerVariant:
- *   generic      — logo + brand + title (reference docs)
- *   personalized — logo + brand + title + prepared-for line (client-specific lists)
- *   report       — weekly report layout (name prominent, week plan subtitle)
+ *   generic      — logo + brand + title (reference docs; no name or date)
+ *   personalized — same layout + "Prepared for [name] · [date]" (user-specific data)
  */
 export const PRINT_VIEW_CONFIG = {
   week: {
     docTitle: 'Weekly',
     pageSize: 'landscape',
     pageMargin: '0.35in',
-    headerVariant: 'report',
+    headerVariant: 'personalized',
     headerTitle: 'Week Plan',
     contentClass: 'print-content--week',
   },
@@ -25,7 +24,7 @@ export const PRINT_VIEW_CONFIG = {
     pageSize: 'portrait',
     pageMargin: '0.5in',
     headerVariant: 'personalized',
-    headerTitle: 'Shopping List',
+    headerTitle: 'Grocery List',
     contentClass: 'print-content--shopping',
   },
   foodlist: {
@@ -69,22 +68,6 @@ export function buildPrintWatermarkHtml(logoUrl) {
 }
 
 export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage } = {}) {
-  if (variant === 'report') {
-    const name = escapeHtml(programClientName(programPackage));
-    const date = escapeHtml(formatPrintDateTime(new Date()));
-    return `
-      <header class="print-header print-header--report">
-        <img class="print-logo" src="${logoUrl}" alt="Burn &amp; Build" width="72" height="72" />
-        <div class="print-header-text">
-          <p class="print-header-eyebrow">Personalized nutrition plan for</p>
-          <h1 class="print-header-name">${name}</h1>
-          <p class="print-header-guide">Burn &amp; Build Diet · Week Plan</p>
-          <p class="print-header-date">${date}</p>
-        </div>
-      </header>
-    `;
-  }
-
   const name = escapeHtml(programClientName(programPackage));
   const date = escapeHtml(formatPrintDateTime(new Date()));
   const metaLine = variant === 'personalized'
@@ -92,7 +75,7 @@ export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage }
     : '';
 
   return `
-    <header class="print-header print-header--standard">
+    <header class="print-header">
       <img class="print-logo" src="${logoUrl}" alt="Burn &amp; Build" width="72" height="72" />
       <div class="print-header-text">
         <p class="print-header-brand">Burn &amp; Build Diet</p>

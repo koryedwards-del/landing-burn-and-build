@@ -52,9 +52,6 @@ const PRINT_SHELL_BASE = `
     padding-bottom: 16px;
     border-bottom: 1px solid #e8e8e8;
   }
-  .print-header--report {
-    align-items: flex-start;
-  }
   .print-logo {
     display: block;
     width: 72px;
@@ -84,38 +81,6 @@ const PRINT_SHELL_BASE = `
     font-size: 0.82rem;
     color: #666;
     letter-spacing: 0.01em;
-  }
-  .print-header-eyebrow {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 6px;
-  }
-  .print-header-name {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 2.15rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #111;
-    line-height: 1.05;
-    margin-bottom: 8px;
-  }
-  .print-header-guide {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #444;
-    margin-bottom: 4px;
-  }
-  .print-header-date {
-    font-size: 0.8rem;
-    color: #666;
   }
   .print-doc-footer {
     display: flex;
@@ -264,7 +229,6 @@ const WEEK_CONTENT_STYLES = `
     flex-shrink: 0;
   }
   @media print {
-    .print-header-name { font-size: 1.85rem; }
     .print-logo { width: 64px; }
     .agenda-row-head,
     .agenda-cell {
