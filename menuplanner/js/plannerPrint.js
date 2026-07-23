@@ -359,7 +359,8 @@ function buildFoodListContent() {
 function buildQaPrintContent(title, pages) {
   const headerHtml = buildAssistantHeaderHtml(title, { showMeta: false });
   return pages.map((page, index) => `
-    <section class="faq-page${index > 0 ? ' faq-page--break' : ''}">
+    <section class="faq-page print-page print-page--sheet${index > 0 ? ' faq-page--break' : ''}">
+      ${buildPrintWatermarkHtml()}
       ${headerHtml}
       ${page.items.map((item) => `
         <article class="faq-item">
@@ -466,7 +467,8 @@ function buildPrintDocumentHtml(view = 'week') {
   `;
   const documentContent = view === 'shopping'
     ? `
-      <section class="assistant-panel">
+      <section class="assistant-panel print-page print-page--sheet">
+        ${buildPrintWatermarkHtml()}
         ${shoppingHeaderHtml}
         ${shoppingHtml}
       </section>
@@ -490,7 +492,8 @@ function buildPrintDocumentHtml(view = 'week') {
       </section>
     `
       : `
-      <section class="assistant-panel">
+      <section class="assistant-panel print-page print-page--flow">
+        ${buildPrintWatermarkHtml({ repeat: true })}
         ${weekHeaderHtml}
         ${weekHtml}
         ${weekFooterHtml}
@@ -507,7 +510,6 @@ function buildPrintDocumentHtml(view = 'week') {
   <style>${buildPrintStylesForView(view)}</style>
 </head>
 <body>
-  ${view === 'week' || view === 'shopping' || view === 'bestresults' || view === 'faq' ? buildPrintWatermarkHtml({ repeat: true }) : ''}
   <article class="assistant-document">
     ${documentContent}
   </article>

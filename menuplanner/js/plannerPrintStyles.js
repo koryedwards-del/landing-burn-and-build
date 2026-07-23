@@ -1,5 +1,71 @@
 /** Independent print CSS templates — one per Print Shop document. */
 
+const PRINT_WATERMARK_BASE = `
+  .assistant-doc-watermark {
+    z-index: 0;
+    pointer-events: none;
+  }
+  .assistant-doc-watermark img {
+    width: 240px;
+    height: auto;
+    opacity: 0.06;
+  }
+  .assistant-doc-watermark--page {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .assistant-doc-watermark--repeat {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .print-page {
+    position: relative;
+  }
+  .print-page--sheet > .assistant-doc-header,
+  .print-page--sheet > .assistant-section,
+  .print-page--sheet > .assistant-doc-header--report,
+  .print-page--sheet > .agenda-section,
+  .print-page--sheet > .assistant-doc-footer,
+  .print-page--sheet > .assistant-empty,
+  .print-page--sheet > .faq-item,
+  .print-page--flow > .assistant-doc-header,
+  .print-page--flow > .assistant-doc-header--report,
+  .print-page--flow > .assistant-section,
+  .print-page--flow > .agenda-section,
+  .print-page--flow > .assistant-doc-footer,
+  .print-page--flow > .assistant-empty,
+  .print-page .faq-item {
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+const PRINT_SHEET_WATERMARK_MEDIA = `
+  .print-page--sheet {
+    min-height: 10in;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .print-page--sheet.faq-page--break,
+  .print-page--sheet + .print-page--sheet {
+    break-before: page;
+    page-break-before: always;
+  }
+  .print-page--sheet > .assistant-doc-watermark--page {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
 function buildWeekPrintStyles() {
   return `
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -10,22 +76,7 @@ function buildWeekPrintStyles() {
       color: #111111;
       margin: 0;
     }
-    .assistant-doc-watermark {
-      z-index: 0;
-      pointer-events: none;
-    }
-    .assistant-doc-watermark img {
-      width: 240px;
-      height: auto;
-      opacity: 0.06;
-    }
-    .assistant-doc-watermark--repeat {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    ${PRINT_WATERMARK_BASE}
     .assistant-document {
       background: #ffffff;
       color: #111111;
@@ -33,11 +84,9 @@ function buildWeekPrintStyles() {
       padding: 36px 44px 52px;
       max-width: none;
       position: relative;
-      z-index: 1;
     }
     .assistant-panel {
       position: relative;
-      z-index: 1;
     }
     .assistant-doc-header {
       display: flex;
@@ -220,17 +269,18 @@ function buildWeekPrintStyles() {
     }
     @media print {
       body { background: #fff; }
-      .assistant-doc-watermark--repeat {
+      .assistant-document {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        max-width: none;
+      }
+      .print-page--flow > .assistant-doc-watermark--repeat {
         position: fixed;
         inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-      .assistant-document {
-        padding: 0;
-        margin: 0;
-        max-width: none;
       }
       .assistant-doc-header {
         margin-bottom: 20px;
@@ -261,22 +311,7 @@ function buildShoppingPrintStyles() {
       color: #111111;
       margin: 0;
     }
-    .assistant-doc-watermark {
-      z-index: 0;
-      pointer-events: none;
-    }
-    .assistant-doc-watermark img {
-      width: 240px;
-      height: auto;
-      opacity: 0.06;
-    }
-    .assistant-doc-watermark--repeat {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    ${PRINT_WATERMARK_BASE}
     .assistant-document {
       background: #ffffff;
       color: #111111;
@@ -284,11 +319,9 @@ function buildShoppingPrintStyles() {
       padding: 36px 44px 52px;
       max-width: 540px;
       position: relative;
-      z-index: 1;
     }
     .assistant-panel {
       position: relative;
-      z-index: 1;
     }
     .assistant-doc-header {
       display: flex;
@@ -382,18 +415,13 @@ function buildShoppingPrintStyles() {
     .assistant-empty { color: #666; font-size: 0.9rem; }
     @media print {
       body { background: #fff; }
-      .assistant-doc-watermark--repeat {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
       .assistant-document {
+        background: transparent;
         padding: 0;
         margin: 0;
         max-width: none;
       }
+      ${PRINT_SHEET_WATERMARK_MEDIA}
       .assistant-doc-header {
         margin-bottom: 20px;
         padding-bottom: 16px;
@@ -620,22 +648,7 @@ function buildFaqPrintStyles() {
       color: #111111;
       margin: 0;
     }
-    .assistant-doc-watermark {
-      z-index: 0;
-      pointer-events: none;
-    }
-    .assistant-doc-watermark img {
-      width: 240px;
-      height: auto;
-      opacity: 0.06;
-    }
-    .assistant-doc-watermark--repeat {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    ${PRINT_WATERMARK_BASE}
     .assistant-document {
       background: #ffffff;
       color: #111111;
@@ -643,20 +656,14 @@ function buildFaqPrintStyles() {
       padding: 18px 24px 20px;
       max-width: none;
       position: relative;
-      z-index: 1;
     }
     .assistant-panel {
       position: relative;
-      z-index: 1;
     }
     .faq-page {
       display: flex;
       flex-direction: column;
       gap: 5px;
-    }
-    .faq-page--break {
-      break-before: page;
-      page-break-before: always;
     }
     .faq-item {
       break-inside: avoid;
@@ -714,18 +721,13 @@ function buildFaqPrintStyles() {
     }
     @media print {
       body { background: #fff; }
-      .assistant-doc-watermark--repeat {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
       .assistant-document {
+        background: transparent;
         padding: 0;
         margin: 0;
         max-width: none;
       }
+      ${PRINT_SHEET_WATERMARK_MEDIA}
       .assistant-doc-header {
         margin-bottom: 6px;
         padding-bottom: 4px;
