@@ -1,6 +1,6 @@
 /** Print Shop styles — one shell template + content-only extensions. */
 
-import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN, PRINT_PAGE_PADDING } from './plannerPrintShell.js';
+import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN, PRINT_PAGE_PADDING, PRINT_SHEET_MIN_HEIGHT } from './plannerPrintShell.js';
 
 const PRINT_SHELL_STYLES = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,13 +18,37 @@ const PRINT_SHELL_STYLES = `
   }
   .print-page-surface {
     position: relative;
+    z-index: 1;
     background: transparent;
+  }
+  .print-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .print-watermark img {
+    display: block;
+    width: 240px;
+    height: auto;
+    opacity: 0.06;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   .print-page {
     position: relative;
     box-sizing: border-box;
     padding: ${PRINT_PAGE_PADDING};
     background: #ffffff;
+  }
+  .print-body--foodlist .print-page--sheet {
+    min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
+  }
+  .print-body--faq .print-page--sheet {
+    min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
   }
   .print-page--break,
   .print-page--sheet + .print-page--sheet {
@@ -101,7 +125,9 @@ const PRINT_SHELL_STYLES = `
     .print-logo {
       width: 72px;
     }
-    .print-body::after {
+    .print-body--week::after,
+    .print-body--shopping::after,
+    .print-body--bestresults::after {
       content: '';
       position: fixed;
       top: 50%;
@@ -114,6 +140,12 @@ const PRINT_SHELL_STYLES = `
       pointer-events: none;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+    }
+    .print-body--foodlist .print-page--sheet {
+      min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
+    }
+    .print-body--faq .print-page--sheet {
+      min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
     }
   }
 `;

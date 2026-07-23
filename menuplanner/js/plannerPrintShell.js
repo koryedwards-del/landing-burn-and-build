@@ -6,15 +6,26 @@ import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi
 export const PRINT_PAGE_MARGIN = '0.35in';
 export const PRINT_PAGE_PADDING = '36px 44px 36px';
 
+/** Letter content area inside @page margins (0.35in top + bottom). */
+export const PRINT_SHEET_MIN_HEIGHT = {
+  portrait: '10.3in',
+  landscape: '7.8in',
+};
+
 /** @typedef {'generic' | 'personalized'} PrintHeaderVariant */
+/** @typedef {'sheet' | 'flow'} PrintWatermarkMode */
 
 /**
- * Print view config. Shell owns page wrapper, header, margins, watermark (CSS).
- * Each page shell: transparent surface (header + body).
+ * Print view config. Shell owns page wrapper, header, margins, watermark.
+ * Each page shell: watermark (sheet docs) + transparent surface (header + body).
  *
  * headerVariant:
  *   generic      — logo + brand + title
  *   personalized — logo + title + prepared-for line
+ *
+ * watermarkMode:
+ *   sheet — one printed page per shell; watermark embedded in each page
+ *   flow  — content paginates; watermark via body CSS on print
  */
 export const PRINT_VIEW_CONFIG = {
   week: {
@@ -22,30 +33,35 @@ export const PRINT_VIEW_CONFIG = {
     pageSize: 'landscape',
     headerVariant: 'personalized',
     headerTitle: 'Weekly Meal Plan',
+    watermarkMode: 'flow',
   },
   shopping: {
     docTitle: 'Grocery List',
     pageSize: 'portrait',
     headerVariant: 'personalized',
     headerTitle: 'Grocery List',
+    watermarkMode: 'flow',
   },
   foodlist: {
     docTitle: 'Food List',
     pageSize: 'landscape',
     headerVariant: 'generic',
     headerTitle: 'Food List',
+    watermarkMode: 'sheet',
   },
   bestresults: {
     docTitle: 'For Best Results',
     pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'For Best Results',
+    watermarkMode: 'flow',
   },
   faq: {
     docTitle: 'Frequently Asked Questions',
     pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'Frequently Asked Questions',
+    watermarkMode: 'sheet',
   },
 };
 
@@ -53,6 +69,14 @@ export function printDocumentTitle(view, programPackage) {
   const name = programClientName(programPackage);
   const docName = PRINT_VIEW_CONFIG[view]?.docTitle || 'Weekly';
   return `B&B- ${docName} - ${name}`;
+}
+
+export function buildPrintWatermarkHtml(logoUrl) {
+  return `
+    <div class="print-watermark" aria-hidden="true">
+      <img src="${logoUrl}" alt="" width="240" height="240" />
+    </div>
+  `;
 }
 
 export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage } = {}) {
@@ -85,6 +109,7 @@ export function buildPrintViewHeaderHtml(view, context) {
 export function buildPrintPageShell({
   headerHtml,
   bodyHtml,
+  logoUrl = '',
   breakBefore = false,
   sheet = false,
   sectionClass = '',
@@ -95,9 +120,11 @@ export function buildPrintPageShell({
     sheet ? 'print-page--sheet' : '',
     breakBefore ? 'print-page--break' : '',
   ].filter(Boolean).join(' ');
+  const watermarkHtml = sheet && logoUrl ? buildPrintWatermarkHtml(logoUrl) : '';
 
   return `
     <section class="${classes}">
+      ${watermarkHtml}
       <div class="print-page-surface">
         ${headerHtml}
         ${bodyHtml}
@@ -113,7 +140,10 @@ export function buildPrintDocumentHtml({
   styles,
   bodyHtml,
 }) {
-  const watermarkVar = escapeHtml(logoHref);
+  const config = PRINT_VIEW_CONFIG[view] || PRINT_VIEW_CONFIG.week;
+  const watermarkVar = config.watermarkMode === 'flow'
+    ? `--print-watermark: url('${escapeHtml(logoHref)}');`
+    : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,7 +153,7 @@ export function buildPrintDocumentHtml({
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>${styles}</style>
 </head>
-<body class="print-body print-body--${view}" style="--print-watermark: url('${watermarkVar}')">
+<body class="print-body print-body--${view}" style="${watermarkVar}">
   <article class="print-document">
     ${bodyHtml}
   </article>
