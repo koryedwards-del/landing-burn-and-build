@@ -51,6 +51,7 @@ let lastRenderedRows = [];
 let lastRenderedActiveId = null;
 let libraryMounted = false;
 let libraryReady = false;
+let dietPlansExpanded = false;
 
 function libraryCacheKey(email) {
   return `${LIBRARY_CACHE_KEY}:${email}`;
@@ -84,12 +85,30 @@ function bindLibraryEvents() {
   list.dataset.libraryBound = '1';
 
   list.addEventListener('click', (event) => {
+    const toggleBtn = event.target.closest('[data-diet-plans-toggle]');
+    if (toggleBtn) {
+      const group = toggleBtn.closest('.pb-nav__group--diet-plans');
+      if (!group) return;
+      dietPlansExpanded = !dietPlansExpanded;
+      group.classList.toggle('is-expanded', dietPlansExpanded);
+      toggleBtn.setAttribute('aria-expanded', dietPlansExpanded ? 'true' : 'false');
+      return;
+    }
+
     const switchBtn = event.target.closest('[data-switch-program]');
     if (!switchBtn || switchBtn.disabled) return;
     const programId = switchBtn.getAttribute('data-switch-program');
     if (!programId) return;
     switchProgram(programId).catch((err) => console.error(err));
   });
+}
+
+function syncDietPlansExpandedState() {
+  const group = navListEl()?.querySelector('.pb-nav__group--diet-plans');
+  if (!group) return;
+  group.classList.toggle('is-expanded', dietPlansExpanded);
+  group.querySelector('[data-diet-plans-toggle]')
+    ?.setAttribute('aria-expanded', dietPlansExpanded ? 'true' : 'false');
 }
 
 function removeDietPlansFromNav() {
@@ -101,7 +120,12 @@ function libraryGroupHtml(programRowsHtml = '') {
   return `
     <li class="pb-nav__item pb-nav__group pb-nav__group--diet-plans">
       <div class="pb-nav__diet-panel">
-        <span class="pb-nav__btn pb-nav__btn--group-head">Your diet plans</span>
+        <button
+          type="button"
+          class="pb-nav__btn pb-nav__btn--group-head"
+          data-diet-plans-toggle
+          aria-expanded="false"
+        >Your diet plans</button>
         <ul class="pb-nav__group-list pb-nav__group-list--diet-plans">
           ${programRowsHtml}
         </ul>
@@ -135,6 +159,7 @@ function mountLibraryGroup(rows, activeId, { errorMessage = '' } = {}) {
       </li>`
     : nestedRowsHtml(rows, activeId);
   list.insertAdjacentHTML('beforeend', libraryGroupHtml(rowsHtml));
+  syncDietPlansExpandedState();
   libraryMounted = true;
 }
 
