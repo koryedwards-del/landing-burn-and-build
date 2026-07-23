@@ -265,7 +265,6 @@ function buildFoodListRow({
 }) {
   return buildPrintPageShell({
     headerHtml,
-    logoUrl: printLogoUrl(),
     bodyHtml: `
       <div class="food-list-columns">
         ${buildFoodListColumn(leftTitle, leftFoods)}
@@ -359,7 +358,6 @@ function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } 
       `;
     return buildPrintPageShell({
       headerHtml,
-      logoUrl: printLogoUrl(),
       bodyHtml,
       breakBefore: index > 0,
       sheet,
@@ -427,7 +425,6 @@ const PRINT_BODY_BUILDERS = {
 
 function buildPrintDocumentHtml(view = 'week') {
   const title = printDocumentTitle(view, state.programPackage);
-  const logoUrl = printLogoUrl();
   const styles = buildPrintStylesForView(view);
   const buildBody = PRINT_BODY_BUILDERS[view] || PRINT_BODY_BUILDERS.week;
 
@@ -435,7 +432,6 @@ function buildPrintDocumentHtml(view = 'week') {
   if (view === 'week' || view === 'shopping') {
     bodyHtml = buildPrintPageShell({
       headerHtml: buildPrintViewHeaderHtml(view, printShellContext()),
-      logoUrl: printLogoUrl(),
       bodyHtml: buildBody(),
     });
   } else {
@@ -445,7 +441,7 @@ function buildPrintDocumentHtml(view = 'week') {
   return buildPrintShellDocumentHtml({
     view,
     title,
-    logoUrl,
+    logoHref: printLogoHref(),
     styles,
     bodyHtml,
   });

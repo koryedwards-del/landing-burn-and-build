@@ -6,17 +6,11 @@ import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi
 export const PRINT_PAGE_MARGIN = '0.35in';
 export const PRINT_PAGE_PADDING = '36px 44px 36px';
 
-/** Letter page content height after @page top/bottom margins (0.35in each). */
-export const PRINT_SHEET_MIN_HEIGHT = {
-  portrait: '10.3in',
-  landscape: '7.8in',
-};
-
 /** @typedef {'generic' | 'personalized'} PrintHeaderVariant */
 
 /**
- * Print view config. Shell owns watermark, page wrapper, header, margins.
- * Content builders in plannerPrint.js only supply body HTML.
+ * Print view config. Shell owns page wrapper, header, margins, watermark (CSS).
+ * Each page shell: transparent surface (header + body).
  *
  * headerVariant:
  *   generic      — logo + brand + title
@@ -61,14 +55,6 @@ export function printDocumentTitle(view, programPackage) {
   return `B&B- ${docName} - ${name}`;
 }
 
-export function buildPrintWatermarkHtml(logoUrl) {
-  return `
-    <div class="print-watermark" aria-hidden="true">
-      <img src="${logoUrl}" alt="" />
-    </div>
-  `;
-}
-
 export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage } = {}) {
   const name = escapeHtml(programClientName(programPackage));
   const date = escapeHtml(formatPrintDateTime(new Date()));
@@ -99,7 +85,6 @@ export function buildPrintViewHeaderHtml(view, context) {
 export function buildPrintPageShell({
   headerHtml,
   bodyHtml,
-  logoUrl,
   breakBefore = false,
   sheet = false,
   sectionClass = '',
@@ -113,7 +98,6 @@ export function buildPrintPageShell({
 
   return `
     <section class="${classes}">
-      ${buildPrintWatermarkHtml(logoUrl)}
       <div class="print-page-surface">
         ${headerHtml}
         ${bodyHtml}
@@ -125,10 +109,11 @@ export function buildPrintPageShell({
 export function buildPrintDocumentHtml({
   view,
   title,
-  logoUrl,
+  logoHref,
   styles,
   bodyHtml,
 }) {
+  const watermarkVar = escapeHtml(logoHref);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,7 +123,7 @@ export function buildPrintDocumentHtml({
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>${styles}</style>
 </head>
-<body class="print-body print-body--${view}">
+<body class="print-body print-body--${view}" style="--print-watermark: url('${watermarkVar}')">
   <article class="print-document">
     ${bodyHtml}
   </article>

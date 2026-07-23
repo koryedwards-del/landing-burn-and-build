@@ -1,6 +1,6 @@
 /** Print Shop styles — one shell template + content-only extensions. */
 
-import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN, PRINT_PAGE_PADDING, PRINT_SHEET_MIN_HEIGHT } from './plannerPrintShell.js';
+import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN, PRINT_PAGE_PADDING } from './plannerPrintShell.js';
 
 const PRINT_SHELL_STYLES = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,25 +16,8 @@ const PRINT_SHELL_STYLES = `
     margin: 0 auto;
     position: relative;
   }
-  .print-watermark {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .print-watermark img {
-    width: 240px;
-    height: auto;
-    opacity: 0.06;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
   .print-page-surface {
     position: relative;
-    z-index: 1;
     background: transparent;
   }
   .print-page {
@@ -42,12 +25,6 @@ const PRINT_SHELL_STYLES = `
     box-sizing: border-box;
     padding: ${PRINT_PAGE_PADDING};
     background: #ffffff;
-  }
-  .print-body--foodlist .print-page--sheet {
-    min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
-  }
-  .print-body--faq .print-page--sheet {
-    min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
   }
   .print-page--break,
   .print-page--sheet + .print-page--sheet {
@@ -124,19 +101,19 @@ const PRINT_SHELL_STYLES = `
     .print-logo {
       width: 72px;
     }
-    .print-page--sheet .print-watermark {
-      position: absolute;
-      inset: 0;
-    }
-    .print-page:not(.print-page--sheet) .print-watermark {
+    .print-body::after {
+      content: '';
       position: fixed;
-      inset: 0;
-    }
-    .print-body--foodlist .print-page--sheet {
-      min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
-    }
-    .print-body--faq .print-page--sheet {
-      min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
+      top: 50%;
+      left: 50%;
+      width: 240px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      background: var(--print-watermark) center / contain no-repeat;
+      opacity: 0.06;
+      pointer-events: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
   }
 `;
