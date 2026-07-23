@@ -4,6 +4,7 @@ import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { PROTEIN_TIPS_QA } from '../../data/proteinTipsPrintout.js';
 import { GRAINS_STARCHES_TIPS_QA } from '../../data/grainsStarchesTipsPrintout.js';
 import { VEGETABLE_TIPS_QA } from '../../data/vegetableTipsPrintout.js';
+import { FRUIT_TIPS_QA } from '../../data/fruitTipsPrintout.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
   printDocumentTitle,
@@ -202,13 +203,6 @@ function weekPlanHasContent() {
   return found;
 }
 
-const FRUIT_TIPS = [
-  'Fruit servings are eaten at snack times on the Burn & Build Diet. Divide your daily fruit servings among your morning, afternoon, and evening snacks.',
-  'Fresh, frozen, and canned fruit without added sugar all count toward your servings.',
-  'Dried fruit and fruit juice are not included on this food list unless listed separately.',
-  'Measure your serving size as indicated on the food list.',
-];
-
 function splitFoodsInHalf(foods) {
   const splitAt = Math.ceil(foods.length / 2);
   return [foods.slice(0, splitAt), foods.slice(splitAt)];
@@ -321,7 +315,7 @@ function buildFoodListContent() {
       leftTitle: 'Fruit',
       leftFoods: foodsByCategory('fruit'),
       tipsTitle: 'Fruit Tips',
-      tips: FRUIT_TIPS,
+      qaItems: FRUIT_TIPS_QA,
     })}
   `;
 }
