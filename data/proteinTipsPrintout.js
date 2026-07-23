@@ -17,7 +17,7 @@ export const PROTEIN_TIPS_QA = [
     a: 'Dairy is strongly recommended for calcium and protein. If you omit it, replace those servings with other protein foods on this list and discuss calcium with your doctor.',
   },
   {
-    q: 'Can I count beans, rice, or nuts as protein?',
-    a: 'No. On this program, beans and lentils are starches, rice and grains are grains, and nuts are fats — not protein. Use the meats, fish, egg whites, and dairy here for protein servings.',
+    q: "Why isn't salmon on this list?",
+    a: 'Stick to the lean fish on this list during fat loss. Salmon and other higher-fat fish are better choices for maintenance.',
   },
 ];
