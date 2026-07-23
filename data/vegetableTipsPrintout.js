@@ -2,7 +2,7 @@
 export const VEGETABLE_TIPS_QA = [
   {
     q: 'When can I eat my vegetable servings?',
-    a: 'Vegetable servings can be eaten anytime, with or without a meal. Choose a variety from this list throughout the week.',
+    a: 'Vegetable servings can be eaten anytime, with or without a meal.',
   },
   {
     q: 'Do I measure before or after cooking?',
