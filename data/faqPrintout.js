@@ -1,4 +1,4 @@
-/** Frequently Asked Questions — 3-page printout (handbook pages 12–17). */
+/** Frequently Asked Questions — 2-page printout (handbook pages 12–17). */
 export const FAQ_PRINT_PAGES = [
   {
     page: 1,
@@ -43,11 +43,6 @@ export const FAQ_PRINT_PAGES = [
         q: 'What about foods not on the list?',
         a: 'Stay with foods on the Burn & Build list so serving sizes stay accurate. Foods not on the list have not been portioned for this program and can throw off your daily totals.',
       },
-    ],
-  },
-  {
-    page: 2,
-    items: [
       {
         q: 'How should I divide my meals through the day?',
         a: 'Eat on a regular schedule. Main meals include protein and grains/starches. Snacks include fruit. Dinner adds your vegetable servings. Spreading feedings through the day helps keep energy steady and supports lean mass.',
@@ -68,6 +63,11 @@ export const FAQ_PRINT_PAGES = [
         q: 'What about alcohol?',
         a: 'Alcohol is listed separately on the food plan when included. If alcohol is not part of your prescription, avoid it. It adds empty calories and interferes with fat loss and recovery.',
       },
+    ],
+  },
+  {
+    page: 2,
+    items: [
       {
         q: 'How much should I exercise on this program?',
         a: 'Your questionnaire captures weight training, cardio, and fat-burn activity. Those inputs are part of how your servings were calculated. Follow the training plan you reported and avoid adding unplanned activity that increases energy needs beyond your prescription.',
@@ -88,11 +88,6 @@ export const FAQ_PRINT_PAGES = [
         q: 'Should I consult my doctor?',
         a: 'Yes. Burn & Build is informative, not a medical prescription. Consult your physician before changing diet or exercise, especially if you have a medical condition, take medication, or are pregnant or nursing.',
       },
-    ],
-  },
-  {
-    page: 3,
-    items: [
       {
         q: 'Can vegetarians follow this program?',
         a: 'Yes. Meat is not required. Use egg whites, dairy, and other approved protein foods to reach your daily protein servings. The food list includes non-meat protein options.',

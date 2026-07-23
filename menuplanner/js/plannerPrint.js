@@ -288,6 +288,7 @@ function buildFoodListRow({
 }) {
   return `
     <div class="print-page food-list-section">
+      ${buildPrintWatermarkHtml()}
       ${headerHtml}
       <div class="food-list-columns">
         ${buildFoodListColumn(leftTitle, leftFoods)}
@@ -345,6 +346,7 @@ function buildFaqContent() {
   const headerHtml = buildAssistantHeaderHtml('Frequently Asked Questions', { showMeta: false });
   return FAQ_PRINT_PAGES.map((page) => `
     <section class="print-page faq-section">
+      ${buildPrintWatermarkHtml()}
       ${headerHtml}
       ${page.items.map((item) => `
         <article class="faq-item">
@@ -513,10 +515,6 @@ function buildPrintDocumentHtml(view = 'week') {
       position: relative;
     }
     .assistant-doc-watermark {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       z-index: 0;
       pointer-events: none;
     }
@@ -524,6 +522,30 @@ function buildPrintDocumentHtml(view = 'week') {
       width: 240px;
       height: auto;
       opacity: 0.06;
+    }
+    .assistant-document > .assistant-doc-watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .print-page > .assistant-doc-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .print-page > .assistant-doc-header,
+    .print-page > .food-list-columns,
+    .print-page > .faq-item,
+    .print-page .faq-item {
+      position: relative;
+      z-index: 1;
     }
     .assistant-panel {
       position: relative;
@@ -907,24 +929,24 @@ function buildPrintDocumentHtml(view = 'week') {
     .faq-section {
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 7px;
     }
     .faq-item {
       break-inside: avoid;
     }
     .faq-question {
       font-family: Oswald, system-ui, sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
       color: #111;
-      line-height: 1.25;
-      margin-bottom: 2px;
+      line-height: 1.2;
+      margin-bottom: 1px;
     }
     .faq-answer {
-      font-size: 0.66rem;
-      line-height: 1.45;
+      font-size: 0.64rem;
+      line-height: 1.4;
       color: #333;
     }
     @media print {
@@ -986,7 +1008,7 @@ function buildPrintDocumentHtml(view = 'week') {
 </head>
 <body class="${bodyClass}">
   <article class="assistant-document">
-    ${buildPrintWatermarkHtml()}
+    ${view === 'week' || view === 'shopping' ? buildPrintWatermarkHtml() : ''}
     ${documentContent}
   </article>
 </body>
