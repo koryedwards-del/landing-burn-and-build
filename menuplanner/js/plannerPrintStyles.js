@@ -613,7 +613,7 @@ function buildFoodListPrintStyles() {
 function buildFaqPrintStyles() {
   return `
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    @page { size: portrait; margin: 0.4in; }
+    @page { size: portrait; margin: 0.35in; }
     body {
       font-family: "Open Sans", system-ui, sans-serif;
       background: #ececec;
@@ -652,7 +652,7 @@ function buildFaqPrintStyles() {
     .faq-page {
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 5px;
     }
     .faq-page--break {
       break-before: page;
@@ -727,11 +727,25 @@ function buildFaqPrintStyles() {
         max-width: none;
       }
       .assistant-doc-header {
-        margin-bottom: 8px;
-        padding-bottom: 6px;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
       }
       .assistant-logo {
-        width: 40px;
+        width: 36px;
+      }
+      .assistant-doc-title {
+        font-size: 1.05rem;
+      }
+      .faq-page {
+        gap: 3px;
+      }
+      .faq-question {
+        font-size: 0.6rem;
+        margin-bottom: 0;
+      }
+      .faq-answer {
+        font-size: 0.56rem;
+        line-height: 1.28;
       }
     }
   `;

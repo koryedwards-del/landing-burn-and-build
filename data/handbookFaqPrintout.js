@@ -1,177 +1,44 @@
-/** Frequently Asked Questions — handbook pages 12–17 (2023 ETLF Food Sheets). */
+/** Frequently Asked Questions — 2-page printout (handbook pages 12–17). */
+const HANDBOOK_FAQ_ITEMS = [
+  { q: "What about artificial sweeteners?", a: "Artificial sweeteners are great for giving good food a little flavor. They will not speed up your fat loss, but if used carelessly, they could slow it down. Low-calorie or no-calorie products often leave a person hungry, which causes them to overeat later. Another trap people fall into is thinking that because this product is low-calorie, they can eat more of it. Be sure you eat your quality food and just use the artificial sweeteners to enhance the flavor." },
+  { q: "What do I put on salads?", a: "Many Eat to Lose Fat clients don’t eat “salads,” per se. They eat plain, raw vegetables that are generally found in salads. We’ve found that by skipping the lettuce, it’s easy to skip the dressing. When we do eat salads with lettuce, seasonings such as salt, pepper, and Mrs. Dash Table Blend." },
+  { q: "How do I cook eggs?", a: "We have found that simply frying eggs in a non-stick pan, lightly sprayed with cooking spray, works best for us. We recommend buying a heavyweight quality pan with a nonstick surface. When you vacation, be sure to bring along your good frying pan. You can always find eggs, but you can’t always find a good pan." },
+  { q: "What if I don’t eat meat?", a: "You don’t have to be a meat eater to lose fat, although we do recommend that you be willing to eat dairy products and eggs. The more foods you are willing to eat, the less likely you are to get bored with your choices." },
+  { q: "What if I have food allergies or have gluten sensitivities?", a: "That’s why this program is based on lists of foods rather than menu plans. If you have food allergies, pick foods from the list that you can safely eat." },
+  { q: "What about salt?", a: "Salt is good for enhancing the flavors of food. People get a lot of salt from their food choices. For example, chips, cheese, margarine, bacon, sausage, fast food, etc., are loaded with salt. When you reduce your fat intake, you usually reduce your salt intake as well." },
+  { q: "Can I have salmon?", a: "Salmon is higher-fat protein food and is not recommended for fastest fat loss. Even healthy fat will slow down fat loss. Higher-fat foods like salmon are terrific choices for maintenance." },
+  { q: "What about nonfat sour cream?", a: "Although nonfat dairy products are made from skim milk, we do not recommend using them during your construction phase. These types of products are great choices for maintenance." },
+  { q: "Is yogurt okay?", a: "People who use yogurt have mixed success. We suspect it’s partly because some yogurts have a high sugar or fruit juice content and because yogurt isn’t very filling. Since yogurt has little staying power, people may overeat other foods to satisfy their hunger. For maximum results, do not depend on yogurt." },
+  { q: "What if I change my exercise?", a: "We strongly recommend not changing your exercise. Your Eat to Lose Fat food plan has been structured to match your exercise and activities. Consistency is the key to success." },
+  { q: "What if I don’t do as much exercise as I intended?", a: "It’s common for people to have emergencies, illness, or other distractions that take away from their exercise routine. If it’s temporary—less than a week—you’ll be okay. If it’s going to be a long-term change, you should have your food plan recalculated." },
+  { q: "What about diet pop?", a: "Diet pop will not affect your fat loss. However, regular pop—loaded with sugar—will slow your fat loss. In addition, most brands of pop have a high phosphorus content, which may deplete the body of calcium." },
+  { q: "Can I have coffee and tea?", a: "Yes, but skip the sugar and cream. Also, be sure that you are not using these drinks as a way to go long periods without eating. A safe habit to develop is to consume these beverages with your meals." },
+  { q: "What if I get hungry?", a: "If you are getting hungry, you’re most likely not eating all your servings, or you are going too long between meals and snacks, or your activity level is higher than what we used to calculate your volume of food. Consult your trainer/coach for guidance." },
+  { q: "What if I can’t eat all my servings?", a: "It can be difficult to get all the food in. Try dividing your meals into four meals instead of three meals throughout the day. Eat four meals with three fruit snacks in between." },
+  { q: "What if I eat all my servings for the day too soon?", a: "For most people, this won’t happen. But for your busier and longer days, you will need to add some extra food. Add in some more of the same foods you have been eating—eat another half-sandwich or an extra slice of bread. Adding extra food today doesn’t take any food away from tomorrow. Start tomorrow with your normal food servings." },
+  { q: "What should I do if I miss a meal?", a: "You can’t make up for what you have missed, but you can get back on track." },
+  { q: "What exercise is best for losing fat?", a: "Pick any exercise you enjoy. However, remember to think in terms of exercising to work the body and eating properly to reduce the body fat." },
+  { q: "What about eating late at night?", a: "If you are up late, it is likely that you will need a snack or another meal. Our bodies get hungry about every three hours or sooner. Have another small meal or a fruit snack. If you don’t choose good food, you will still eat bad food." },
+  { q: "Should I eat just before going to bed?", a: "Consider when you ate last. If it’s been close to three hours, you are probably getting hungry. Eating before bed will not cause weight gain unless it’s high-fat or high-sugar. Of course, these types of foods will cause a weight gain no matter when you eat them." },
+  { q: "Can I skip the fruit servings?", a: "It’s not a good idea. Fruits are in your plan for a reason. They provide the body with the necessary energy to get to the next meal. Leaving them out will slow down the fat burning." },
+  { q: "What about soups?", a: "We don’t recommend soups for losing fat. The servings are difficult to calculate, and because soups are liquid, they have no staying power." },
+  { q: "Can I have fat-free salad dressing?", a: "No. We recommend avoiding fat-free dressings because they are high in sugar. Corn syrup is the second ingredient in most fat-free dressings. That’s why people who use fat-free diet products don’t have much success losing fat." },
+  { q: "Can we eat the same food every day?", a: "Yes. Most people eat the same food every day anyway. All we want you to do is choose food that helps you feel good and lose fat. We meet people who have eaten a breakfast of coffee and a donut every day for 20 years and didn’t give it a second thought. But when we talk to them about eating good food, they are concerned about having the same food every day." },
+  { q: "What if I get too low in body fat?", a: "What a great problem to have. Don’t worry about that. If you get too low in body fat you can always put fat back on by eating some butter, mayonnaise, salad dressing, sour cream, cheese, seeds and nuts." },
+  { q: "Don’t I need some fat in my diet?", a: "Yes. They are called essential fatty acids. There are two of them and they are removed from grains to increase shelf life. You can get essential fatty acids by simply eating unrefined grains. Eating extra fat such as butter, margarine, mayonnaise, dressings, etc., isn’t necessary to be healthy. And you can ensure you are getting the essential fats by taking a quality vitamin supplement that includes the three essential fatty acids. Consult your trainer/coach for more information of essential fatty acids." },
+  { q: "What is lean body weight?", a: "Lean body weight is everything about you that is not fat. This includes your muscles, bones, organs, skin, hair, and fingernails. It is also your body chemistry; hormones, immune system, digestive enzymes, etc. Have you ever noticed how people tend to get really tired and irritable when they are dieting? Lack of energy is the first sign that you are losing lean body mass—your health and personality." },
+  { q: "If I’ve lost lean body mass, can I get it back?", a: "Yes. It is important to know the volume of food necessary to sustain your lean body mass, to make good food choices, and to actually eat the volume of food needed to build muscle." },
+  { q: "How much fat can I lose fat?", a: "Over the course of eight weeks, visualize taking enough fat off your body to fill three 3-pound cans of Crisco. That would equal losing nine pounds of body fat in those same eight weeks. Some people are capable of losing even more than nine pounds during our eight-week program. Go back to page 6 for a reminder." },
+  { q: "How much exercise should I do?", a: "If you are exercising strictly for fat loss and general fitness, you don’t need more than a total of three hours per week. This can be three 1-hour sessions, six half-hour sessions, or 15 minutes twice a day, six days per week. All add up to a total of three hours. Consistency is more important than quantity. Small amounts of activity on a regular basis will be more beneficial than a long bout of exercise all at once. Above all else, pick an activity or exercise that you enjoy." },
+  { q: "What is a “sugar craving”?", a: "Do you “crave” to go to the bathroom? No, because you go when you need to. We normally don’t postpone relieving ourselves, but we are apt to postpone eating. Cravings are caused by postponing our natural tendencies to eat, sleep and go to the bathroom. Postponing eating will create sugar cravings. Basically your body is craving carbs that you should have eaten earlier and more often during the day. Following your Eat to Lose Fat food plan will eliminate sugar cravings." },
+  { q: "What kind of bread can I use?", a: "Any kind or brand of bread will work well. Do not mistake donuts and muffins for bread, even though they are made with flour. Most breads follow a standard recipe with a few nuts and seeds or extra grains thrown in for good measure. Find a quality wheat bread that tastes good plain. The most important thing to know is the serving size. One serving of bread is 1 ounce, or 28 grams. Measure your bread slices. Some brands’ slices may be 1½ to 2 ounces. Homemade bread can be used simply by measuring the serving." },
+  { q: "Why aren’t beans in the protein section?", a: "Although beans do have some protein, they are primarily a carbohydrate. One ounce of chicken provides 8 grams of protein and zero carbohydrates. One-half cup of beans provides 8 grams of protein plus an additional 18 carbohydrates. Eighteen carbohydrates is equal to 1¼ slices of bread. If you need three protein servings for your meal and choose beans as your source of protein, you would need to eat 1½ cups of cooked beans to get three protein servings. However, this 1½ cups of beans would also provide enough carbohydrates to equal 3¾ slices of bread. It’s very easy to overeat the carbohydrates and slow down your fat loss when you use beans as your protein source." },
+  { q: "How much water do I need?", a: "Experts recommend you drink half your body weight in ounces. We make it simple. Drink one 8 oz glass of cool clean water for every protein serving. It comes out really close to the experts recommendation." },
+  { q: "What about rice as a source of protein?", a: "If you’re wondering about using rice as source of protein, 1⅓ cups of cooked rice provides the same protein content as 1 ounce of meat. This rice serving also provides 61 carbohydrates, which equals 4½ slices of bread. Most people find it easier and more beneficial for fat loss to balance their proteins and carbohydrates by using egg whites and/or cottage cheese for their proteins and using the beans and rice for their carbohydrates. Any proteins that are in the beans and rice are a bonus." },
+  { q: "What about GMOs?", a: "You should do your best to avoid GMO foods regardless of the diet you are using. The world is always changing so this list may change. The eight GM food crops are Corn, Soybeans, Canola, Cottonseed, Sugar Beets, Hawaiian Papaya (most) and a small amount of Zucchini and Yellow Squash. To get started look for this, the USDA Organic symbol. Also use the PLU code for produce. Organic produce will start with a 9. Genetically Modified will start with an 8. For example; conventionally grown banana has a PLU of 4078, an organic corn is 94078 and GMO corn is 84078." },
+];
+
 export const HANDBOOK_FAQ_PRINT_PAGES = [
-  {
-    page: 12,
-    items: [
-      {
-        q: 'What about artificial sweeteners?',
-        a: 'Artificial sweeteners are great for giving good food a little flavor. They will not speed up your fat loss, but if used carelessly, they could slow it down. Low-calorie or no-calorie products often leave a person hungry, which causes them to overeat later. Another trap people fall into is thinking that because this product is low-calorie, they can eat more of it. Be sure you eat your quality food and just use the artificial sweeteners to enhance the flavor.',
-      },
-      {
-        q: 'What do I put on salads?',
-        a: 'Many Eat to Lose Fat clients don\u2019t eat \u201csalads,\u201d per se. They eat plain, raw vegetables that are generally found in salads. We\u2019ve found that by skipping the lettuce, it\u2019s easy to skip the dressing. When we do eat salads with lettuce, seasonings such as salt, pepper, and Mrs. Dash Table Blend.',
-      },
-      {
-        q: 'How do I cook eggs?',
-        a: 'We have found that simply frying eggs in a non-stick pan, lightly sprayed with cooking spray, works best for us. We recommend buying a heavyweight quality pan with a nonstick surface. When you vacation, be sure to bring along your good frying pan. You can always find eggs, but you can\u2019t always find a good pan.',
-      },
-      {
-        q: 'What if I don\u2019t eat meat?',
-        a: 'You don\u2019t have to be a meat eater to lose fat, although we do recommend that you be willing to eat dairy products and eggs. The more foods you are willing to eat, the less likely you are to get bored with your choices.',
-      },
-      {
-        q: 'What if I have food allergies or have gluten sensitivities?',
-        a: 'That\u2019s why this program is based on lists of foods rather than menu plans. If you have food allergies, pick foods from the list that you can safely eat.',
-      },
-      {
-        q: 'What about salt?',
-        a: 'Salt is good for enhancing the flavors of food. People get a lot of salt from their food choices. For example, chips, cheese, margarine, bacon, sausage, fast food, etc., are loaded with salt. When you reduce your fat intake, you usually reduce your salt intake as well.',
-      },
-    ],
-  },
-  {
-    page: 13,
-    items: [
-      {
-        q: 'Can I have salmon?',
-        a: 'Salmon is higher-fat protein food and is not recommended for fastest fat loss. Even healthy fat will slow down fat loss. Higher-fat foods like salmon are terrific choices for maintenance.',
-      },
-      {
-        q: 'What about nonfat sour cream?',
-        a: 'Although nonfat dairy products are made from skim milk, we do not recommend using them during your construction phase. These types of products are great choices for maintenance.',
-      },
-      {
-        q: 'Is yogurt okay?',
-        a: 'People who use yogurt have mixed success. We suspect it\u2019s partly because some yogurts have a high sugar or fruit juice content and because yogurt isn\u2019t very filling. Since yogurt has little staying power, people may overeat other foods to satisfy their hunger. For maximum results, do not depend on yogurt.',
-      },
-      {
-        q: 'What if I change my exercise?',
-        a: 'We strongly recommend not changing your exercise. Your Eat to Lose Fat food plan has been structured to match your exercise and activities. Consistency is the key to success.',
-      },
-      {
-        q: 'What if I don\u2019t do as much exercise as I intended?',
-        a: 'It\u2019s common for people to have emergencies, illness, or other distractions that take away from their exercise routine. If it\u2019s temporary\u2014less than a week\u2014you\u2019ll be okay. If it\u2019s going to be a long-term change, you should have your food plan recalculated.',
-      },
-      {
-        q: 'What about diet pop?',
-        a: 'Diet pop will not affect your fat loss. However, regular pop\u2014loaded with sugar\u2014will slow your fat loss. In addition, most brands of pop have a high phosphorus content, which may deplete the body of calcium.',
-      },
-      {
-        q: 'Can I have coffee and tea?',
-        a: 'Yes, but skip the sugar and cream. Also, be sure that you are not using these drinks as a way to go long periods without eating. A safe habit to develop is to consume these beverages with your meals.',
-      },
-      {
-        q: 'What if I get hungry?',
-        a: 'If you are getting hungry, you\u2019re most likely not eating all your servings, or you are going too long between meals and snacks, or your activity level is higher than what we used to calculate your volume of food. Consult your trainer/coach for guidance.',
-      },
-    ],
-  },
-  {
-    page: 14,
-    items: [
-      {
-        q: 'What if I can\u2019t eat all my servings?',
-        a: 'It can be difficult to get all the food in. Try dividing your meals into four meals instead of three meals throughout the day. Eat four meals with three fruit snacks in between.',
-      },
-      {
-        q: 'What if I eat all my servings for the day too soon?',
-        a: 'For most people, this won\u2019t happen. But for your busier and longer days, you will need to add some extra food. Add in some more of the same foods you have been eating\u2014eat another half-sandwich or an extra slice of bread. Adding extra food today doesn\u2019t take any food away from tomorrow. Start tomorrow with your normal food servings.',
-      },
-      {
-        q: 'What should I do if I miss a meal?',
-        a: 'You can\u2019t make up for what you have missed, but you can get back on track.',
-      },
-      {
-        q: 'What exercise is best for losing fat?',
-        a: 'Pick any exercise you enjoy. However, remember to think in terms of exercising to work the body and eating properly to reduce the body fat.',
-      },
-      {
-        q: 'What about eating late at night?',
-        a: 'If you are up late, it is likely that you will need a snack or another meal. Our bodies get hungry about every three hours or sooner. Have another small meal or a fruit snack. If you don\u2019t choose good food, you will still eat bad food.',
-      },
-      {
-        q: 'Should I eat just before going to bed?',
-        a: 'Consider when you ate last. If it\u2019s been close to three hours, you are probably getting hungry. Eating before bed will not cause weight gain unless it\u2019s high-fat or high-sugar. Of course, these types of foods will cause a weight gain no matter when you eat them.',
-      },
-      {
-        q: 'Can I skip the fruit servings?',
-        a: 'It\u2019s not a good idea. Fruits are in your plan for a reason. They provide the body with the necessary energy to get to the next meal. Leaving them out will slow down the fat burning.',
-      },
-      {
-        q: 'What about soups?',
-        a: 'We don\u2019t recommend soups for losing fat. The servings are difficult to calculate, and because soups are liquid, they have no staying power.',
-      },
-    ],
-  },
-  {
-    page: 15,
-    items: [
-      {
-        q: 'Can I have fat-free salad dressing?',
-        a: 'No. We recommend avoiding fat-free dressings because they are high in sugar. Corn syrup is the second ingredient in most fat-free dressings. That\u2019s why people who use fat-free diet products don\u2019t have much success losing fat.',
-      },
-      {
-        q: 'Can we eat the same food every day?',
-        a: 'Yes. Most people eat the same food every day anyway. All we want you to do is choose food that helps you feel good and lose fat. We meet people who have eaten a breakfast of coffee and a donut every day for 20 years and didn\u2019t give it a second thought. But when we talk to them about eating good food, they are concerned about having the same food every day.',
-      },
-      {
-        q: 'What if I get too low in body fat?',
-        a: 'What a great problem to have. Don\u2019t worry about that. If you get too low in body fat you can always put fat back on by eating some butter, mayonnaise, salad dressing, sour cream, cheese, seeds and nuts.',
-      },
-      {
-        q: 'Don\u2019t I need some fat in my diet?',
-        a: 'Yes. They are called essential fatty acids. There are two of them and they are removed from grains to increase shelf life. You can get essential fatty acids by simply eating unrefined grains. Eating extra fat such as butter, margarine, mayonnaise, dressings, etc., isn\u2019t necessary to be healthy. And you can ensure you are getting the essential fats by taking a quality vitamin supplement that includes the three essential fatty acids. Consult your trainer/coach for more information of essential fatty acids.',
-      },
-      {
-        q: 'What is lean body weight?',
-        a: 'Lean body weight is everything about you that is not fat. This includes your muscles, bones, organs, skin, hair, and fingernails. It is also your body chemistry; hormones, immune system, digestive enzymes, etc. Have you ever noticed how people tend to get really tired and irritable when they are dieting? Lack of energy is the first sign that you are losing lean body mass\u2014your health and personality.',
-      },
-      {
-        q: 'If I\u2019ve lost lean body mass, can I get it back?',
-        a: 'Yes. It is important to know the volume of food necessary to sustain your lean body mass, to make good food choices, and to actually eat the volume of food needed to build muscle.',
-      },
-    ],
-  },
-  {
-    page: 16,
-    items: [
-      {
-        q: 'How much fat can I lose fat?',
-        a: 'Over the course of eight weeks, visualize taking enough fat off your body to fill three 3-pound cans of Crisco. That would equal losing nine pounds of body fat in those same eight weeks. Some people are capable of losing even more than nine pounds during our eight-week program. Go back to page 6 for a reminder.',
-      },
-      {
-        q: 'How much exercise should I do?',
-        a: 'If you are exercising strictly for fat loss and general fitness, you don\u2019t need more than a total of three hours per week. This can be three 1-hour sessions, six half-hour sessions, or 15 minutes twice a day, six days per week. All add up to a total of three hours. Consistency is more important than quantity. Small amounts of activity on a regular basis will be more beneficial than a long bout of exercise all at once. Above all else, pick an activity or exercise that you enjoy.',
-      },
-      {
-        q: 'What is a \u201csugar craving\u201d?',
-        a: 'Do you \u201ccrave\u201d to go to the bathroom? No, because you go when you need to. We normally don\u2019t postpone relieving ourselves, but we are apt to postpone eating. Cravings are caused by postponing our natural tendencies to eat, sleep and go to the bathroom. Postponing eating will create sugar cravings. Basically your body is craving carbs that you should have eaten earlier and more often during the day. Following your Eat to Lose Fat food plan will eliminate sugar cravings.',
-      },
-      {
-        q: 'What kind of bread can I use?',
-        a: 'Any kind or brand of bread will work well. Do not mistake donuts and muffins for bread, even though they are made with flour. Most breads follow a standard recipe with a few nuts and seeds or extra grains thrown in for good measure. Find a quality wheat bread that tastes good plain. The most important thing to know is the serving size. One serving of bread is 1 ounce, or 28 grams. Measure your bread slices. Some brands\u2019 slices may be 1\u00bd to 2 ounces. Homemade bread can be used simply by measuring the serving.',
-      },
-    ],
-  },
-  {
-    page: 17,
-    items: [
-      {
-        q: 'Why aren\u2019t beans in the protein section?',
-        a: 'Although beans do have some protein, they are primarily a carbohydrate. One ounce of chicken provides 8 grams of protein and zero carbohydrates. One-half cup of beans provides 8 grams of protein plus an additional 18 carbohydrates. Eighteen carbohydrates is equal to 1\u00bc slices of bread. If you need three protein servings for your meal and choose beans as your source of protein, you would need to eat 1\u00bd cups of cooked beans to get three protein servings. However, this 1\u00bd cups of beans would also provide enough carbohydrates to equal 3\u00be slices of bread. It\u2019s very easy to overeat the carbohydrates and slow down your fat loss when you use beans as your protein source.',
-      },
-      {
-        q: 'How much water do I need?',
-        a: 'Experts recommend you drink half your body weight in ounces. We make it simple. Drink one 8 oz glass of cool clean water for every protein serving. It comes out really close to the experts recommendation.',
-      },
-      {
-        q: 'What about rice as a source of protein?',
-        a: 'If you\u2019re wondering about using rice as source of protein, 1\u2153 cups of cooked rice provides the same protein content as 1 ounce of meat. This rice serving also provides 61 carbohydrates, which equals 4\u00bd slices of bread. Most people find it easier and more beneficial for fat loss to balance their proteins and carbohydrates by using egg whites and/or cottage cheese for their proteins and using the beans and rice for their carbohydrates. Any proteins that are in the beans and rice are a bonus.',
-      },
-      {
-        q: 'What about GMOs?',
-        a: 'You should do your best to avoid GMO foods regardless of the diet you are using. The world is always changing so this list may change. The eight GM food crops are Corn, Soybeans, Canola, Cottonseed, Sugar Beets, Hawaiian Papaya (most) and a small amount of Zucchini and Yellow Squash. To get started look for this, the USDA Organic symbol. Also use the PLU code for produce. Organic produce will start with a 9. Genetically Modified will start with an 8. For example; conventionally grown banana has a PLU of 4078, an organic corn is 94078 and GMO corn is 84078.',
-      },
-    ],
-  },
+  { page: 1, items: HANDBOOK_FAQ_ITEMS.slice(0, 18) },
+  { page: 2, items: HANDBOOK_FAQ_ITEMS.slice(18) },
 ];
