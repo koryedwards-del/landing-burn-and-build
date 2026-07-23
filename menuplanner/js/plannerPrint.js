@@ -277,6 +277,7 @@ function buildFoodListTipsColumn(title, tips) {
 }
 
 function buildFoodListRow({
+  headerHtml,
   leftTitle,
   leftFoods,
   middleTitle = '',
@@ -286,7 +287,8 @@ function buildFoodListRow({
   hideMiddleTitle = false,
 }) {
   return `
-    <div class="food-list-section">
+    <div class="print-page food-list-section">
+      ${headerHtml}
       <div class="food-list-columns">
         ${buildFoodListColumn(leftTitle, leftFoods)}
         ${buildFoodListColumn(middleTitle, middleFoods, { hideTitle: hideMiddleTitle })}
@@ -297,10 +299,12 @@ function buildFoodListRow({
 }
 
 function buildFoodListContent() {
+  const headerHtml = buildAssistantHeaderHtml('Food List', { showMeta: false });
   const [vegetablesLeft, vegetablesRight] = splitFoodsInHalf(foodsByCategory('vegetable'));
 
   return `
     ${buildFoodListRow({
+      headerHtml,
       leftTitle: 'Protein',
       leftFoods: foodsByCategory('protein'),
       middleTitle: 'Dairy',
@@ -309,6 +313,7 @@ function buildFoodListContent() {
       tips: PROTEIN_TIPS,
     })}
     ${buildFoodListRow({
+      headerHtml,
       leftTitle: 'Grains',
       leftFoods: foodsByCategory('grain'),
       middleTitle: 'Starches',
@@ -317,6 +322,7 @@ function buildFoodListContent() {
       tips: GRAINS_STARCHES_TIPS,
     })}
     ${buildFoodListRow({
+      headerHtml,
       leftTitle: 'Vegetables',
       leftFoods: vegetablesLeft,
       middleTitle: 'Vegetables',
@@ -326,6 +332,7 @@ function buildFoodListContent() {
       tips: VEGETABLE_TIPS,
     })}
     ${buildFoodListRow({
+      headerHtml,
       leftTitle: 'Fruit',
       leftFoods: foodsByCategory('fruit'),
       tipsTitle: 'Fruit Tips',
@@ -335,8 +342,10 @@ function buildFoodListContent() {
 }
 
 function buildFaqContent() {
-  return FAQ_PRINT_PAGES.map((page, index) => `
-    <section class="faq-section${index ? ' faq-section--break' : ''}">
+  const headerHtml = buildAssistantHeaderHtml('Frequently Asked Questions', { showMeta: false });
+  return FAQ_PRINT_PAGES.map((page) => `
+    <section class="print-page faq-section">
+      ${headerHtml}
       ${page.items.map((item) => `
         <article class="faq-item">
           <h2 class="faq-question">${escapeHtml(item.q)}</h2>
@@ -425,8 +434,6 @@ function buildPrintDocumentHtml(view = 'week') {
   const faqHtml = buildFaqContent();
   const weekHeaderHtml = buildWeekPlanReportHeaderHtml();
   const shoppingHeaderHtml = buildAssistantHeaderHtml('Shopping List');
-  const foodListHeaderHtml = buildAssistantHeaderHtml('Food List', { showMeta: false });
-  const faqHeaderHtml = buildAssistantHeaderHtml('Frequently Asked Questions', { showMeta: false });
   const weekFooterHtml = `
     <footer class="assistant-doc-footer">
       <span>Burn &amp; Build Diet</span>
@@ -450,14 +457,12 @@ function buildPrintDocumentHtml(view = 'week') {
     : view === 'foodlist'
       ? `
       <section class="assistant-panel">
-        ${foodListHeaderHtml}
         ${foodListHtml}
       </section>
     `
       : view === 'faq'
         ? `
       <section class="assistant-panel">
-        ${faqHeaderHtml}
         ${faqHtml}
       </section>
     `
@@ -828,6 +833,14 @@ function buildPrintDocumentHtml(view = 'week') {
       text-align: right;
       flex-shrink: 0;
     }
+    .print-page {
+      position: relative;
+      z-index: 1;
+    }
+    .print-page + .print-page {
+      break-before: page;
+      page-break-before: always;
+    }
     .food-list-section + .food-list-section {
       margin-top: 18px;
       padding-top: 18px;
@@ -881,9 +894,6 @@ function buildPrintDocumentHtml(view = 'week') {
     .food-list-col--empty {
       min-height: 1px;
     }
-    .food-list-col--tips {
-      min-height: 100%;
-    }
     .food-list-tips {
       display: flex;
       flex-direction: column;
@@ -898,11 +908,6 @@ function buildPrintDocumentHtml(view = 'week') {
       display: flex;
       flex-direction: column;
       gap: 9px;
-    }
-    .faq-section--break {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #e8e8e8;
     }
     .faq-item {
       break-inside: avoid;
@@ -949,8 +954,14 @@ function buildPrintDocumentHtml(view = 'week') {
       .food-list-col-title {
         margin-bottom: 6px;
       }
-      .food-list-section + .food-list-section {
+      .print-page + .print-page {
+        break-before: page;
         page-break-before: always;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+      .food-list-section + .food-list-section {
         margin-top: 0;
         padding-top: 0;
         border-top: none;
@@ -964,12 +975,6 @@ function buildPrintDocumentHtml(view = 'week') {
       }
       body.view-faq .assistant-document {
         padding: 0;
-      }
-      .faq-section--break {
-        page-break-before: always;
-        margin-top: 0;
-        padding-top: 0;
-        border-top: none;
       }
       .agenda-row-head,
       .agenda-cell {
