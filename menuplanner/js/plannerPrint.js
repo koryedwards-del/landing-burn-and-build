@@ -274,6 +274,7 @@ function buildFoodListRow({
     `,
     sheet: true,
     sectionClass: 'food-list-section',
+    logoUrl: printLogoUrl(),
   });
 }
 
@@ -322,6 +323,7 @@ function buildFoodListContent() {
 
 function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } = {}) {
   const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
+  const pageLogoUrl = view === 'bestresults' ? '' : printLogoUrl();
   let questionNumber = 0;
   return pages.map((page, index) => {
     const bodyHtml = variant === 'newspaper'
@@ -360,6 +362,7 @@ function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } 
       bodyHtml,
       breakBefore: index > 0,
       sheet: true,
+      logoUrl: pageLogoUrl,
     });
   }).join('');
 }

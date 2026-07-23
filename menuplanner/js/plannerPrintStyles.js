@@ -19,11 +19,17 @@ const PRINT_SHELL_STYLES = `
   .print-watermark {
     z-index: 0;
     pointer-events: none;
-    position: fixed;
-    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .print-watermark--page {
+    position: absolute;
+    inset: 0;
+  }
+  .print-watermark--fixed {
+    position: fixed;
+    inset: 0;
   }
   .print-watermark img {
     width: 240px;
@@ -110,8 +116,15 @@ const PRINT_SHELL_STYLES = `
     .print-logo {
       width: 72px;
     }
-    .print-watermark {
+    .print-watermark--fixed {
       position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .print-watermark--page {
+      position: absolute;
       inset: 0;
       display: flex;
       align-items: center;

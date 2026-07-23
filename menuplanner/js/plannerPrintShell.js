@@ -55,9 +55,9 @@ export function printDocumentTitle(view, programPackage) {
   return `B&B- ${docName} - ${name}`;
 }
 
-export function buildPrintWatermarkHtml(logoUrl) {
+export function buildPrintWatermarkHtml(logoUrl, mode = 'fixed') {
   return `
-    <div class="print-watermark" aria-hidden="true">
+    <div class="print-watermark print-watermark--${mode}" aria-hidden="true">
       <img src="${logoUrl}" alt="" />
     </div>
   `;
@@ -96,6 +96,7 @@ export function buildPrintPageShell({
   breakBefore = false,
   sheet = false,
   sectionClass = '',
+  logoUrl = '',
 } = {}) {
   const classes = [
     'print-page',
@@ -103,9 +104,11 @@ export function buildPrintPageShell({
     sheet ? 'print-page--sheet' : '',
     breakBefore ? 'print-page--break' : '',
   ].filter(Boolean).join(' ');
+  const watermarkHtml = logoUrl ? buildPrintWatermarkHtml(logoUrl, 'page') : '';
 
   return `
     <section class="${classes}">
+      ${watermarkHtml}
       ${headerHtml}
       ${bodyHtml}
     </section>
@@ -119,6 +122,9 @@ export function buildPrintDocumentHtml({
   styles,
   bodyHtml,
 }) {
+  const useFixedWatermark = view === 'week' || view === 'shopping' || view === 'bestresults';
+  const fixedWatermarkHtml = useFixedWatermark ? buildPrintWatermarkHtml(logoUrl, 'fixed') : '';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,7 +136,7 @@ export function buildPrintDocumentHtml({
 </head>
 <body class="print-body print-body--${view}">
   <article class="print-document">
-    ${buildPrintWatermarkHtml(logoUrl)}
+    ${fixedWatermarkHtml}
     ${bodyHtml}
   </article>
 </body>
