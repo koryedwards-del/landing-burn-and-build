@@ -198,6 +198,63 @@ function weekPlanHasContent() {
   return found;
 }
 
+const PROTEIN_TIPS = [
+  'You should eat the protein servings in equal amounts a minimum of three times throughout the day. The Burn & Build Diet food plan suggests a practical way to break down the protein servings. The servings are divided fairly even among breakfast, lunch, and dinner.',
+  'The protein group includes meat, fish, poultry, and dairy products. We recommend you eat at least one-third of your daily protein servings from the dairy section. We strongly recommend eating the daily servings to ensure calcium intake.',
+  'It is not necessary to use any meat products on this program. If you do not eat meat, you should use egg whites and other dairy products.',
+  'Measure your serving size after cooking.',
+];
+
+function foodsByCategory(categoryId) {
+  return state.foods
+    .filter((food) => food.category === categoryId)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function buildFoodListColumn(title, foods) {
+  return `
+    <div class="food-list-col">
+      <h2 class="food-list-col-title">${escapeHtml(title)}</h2>
+      <ul class="food-list-items">
+        ${foods.map((food) => `
+          <li>
+            <span class="food-list-name">${escapeHtml(food.name)}</span>
+            <span class="food-list-serving">${escapeHtml(scaledLabel(food, 1))}</span>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function buildProteinTipsColumn() {
+  const logoUrl = printLogoUrl();
+  return `
+    <div class="food-list-col food-list-col--tips">
+      <div class="food-list-watermark" aria-hidden="true">
+        <img src="${logoUrl}" alt="" />
+      </div>
+      <h2 class="food-list-col-title food-list-col-title--tips">Protein Tips</h2>
+      <div class="food-list-tips">
+        ${PROTEIN_TIPS.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function buildFoodListContent() {
+  const proteinFoods = foodsByCategory('protein');
+  const dairyFoods = foodsByCategory('dairy');
+
+  return `
+    <div class="food-list-columns">
+      ${buildFoodListColumn('Protein', proteinFoods)}
+      ${buildFoodListColumn('Dairy', dairyFoods)}
+      ${buildProteinTipsColumn()}
+    </div>
+  `;
+}
+
 function buildShoppingListContent() {
   const totals = buildShoppingTotals();
   const categoryOrder = FOOD_CATEGORIES.map((cat) => cat.id);
@@ -260,21 +317,30 @@ function printDocumentTitle(view) {
   if (view === 'shopping') {
     return `Burn & Build — Grocery List — ${name}`;
   }
+  if (view === 'foodlist') {
+    return `Burn & Build — Food List — ${name}`;
+  }
   return `Burn & Build — Weekly — ${name}`;
 }
 
 function buildPrintDocumentHtml(view = 'week') {
   const shoppingHtml = buildShoppingListContent();
   const weekHtml = buildWeekAgendaContent();
+  const foodListHtml = buildFoodListContent();
   const weekHeaderHtml = buildWeekPlanReportHeaderHtml();
   const shoppingHeaderHtml = buildAssistantHeaderHtml('Shopping List');
+  const foodListHeaderHtml = buildAssistantHeaderHtml('Food List');
   const weekFooterHtml = `
     <footer class="assistant-doc-footer">
       <span>Burn &amp; Build Diet</span>
       <span>Week Plan · ${escapeHtml(programClientName(state.programPackage))}</span>
     </footer>
   `;
-  const bodyClass = view === 'shopping' ? 'view-shopping' : 'view-week';
+  const bodyClass = view === 'shopping'
+    ? 'view-shopping'
+    : view === 'foodlist'
+      ? 'view-foodlist'
+      : 'view-week';
   const documentContent = view === 'shopping'
     ? `
       <section class="assistant-panel">
@@ -282,7 +348,14 @@ function buildPrintDocumentHtml(view = 'week') {
         ${shoppingHtml}
       </section>
     `
-    : `
+    : view === 'foodlist'
+      ? `
+      <section class="assistant-panel">
+        ${foodListHeaderHtml}
+        ${foodListHtml}
+      </section>
+    `
+      : `
       <section class="assistant-panel">
         ${weekHeaderHtml}
         ${weekHtml}
@@ -313,6 +386,9 @@ function buildPrintDocumentHtml(view = 'week') {
     body.view-week {
       page: landscape-page;
     }
+    body.view-foodlist {
+      page: landscape-page;
+    }
     .assistant-document {
       background: #ffffff;
       color: #111111;
@@ -323,6 +399,9 @@ function buildPrintDocumentHtml(view = 'week') {
       max-width: 540px;
     }
     body.view-week .assistant-document {
+      max-width: none;
+    }
+    body.view-foodlist .assistant-document {
       max-width: none;
     }
     .assistant-doc-header {
@@ -579,6 +658,89 @@ function buildPrintDocumentHtml(view = 'week') {
       color: #111;
       text-align: right;
       flex-shrink: 0;
+    }
+    .food-list-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      align-items: start;
+    }
+    .food-list-col {
+      position: relative;
+      padding: 0 18px;
+      border-left: 2px solid #111;
+    }
+    .food-list-col:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+    .food-list-col:last-child {
+      padding-right: 0;
+    }
+    .food-list-col-title {
+      font-family: Oswald, system-ui, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: #111;
+      margin-bottom: 14px;
+    }
+    .food-list-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .food-list-items li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.68rem;
+      line-height: 1.45;
+      padding: 3px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .food-list-name {
+      flex: 1;
+      min-width: 0;
+    }
+    .food-list-serving {
+      flex-shrink: 0;
+      font-weight: 600;
+      color: #333;
+      text-align: right;
+    }
+    .food-list-col--tips {
+      min-height: 100%;
+    }
+    .food-list-watermark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .food-list-watermark img {
+      width: 180px;
+      height: auto;
+      opacity: 0.06;
+    }
+    .food-list-tips {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .food-list-tips p {
+      font-size: 0.72rem;
+      line-height: 1.55;
+      color: #222;
     }
     @media print {
       body { background: #fff; }
