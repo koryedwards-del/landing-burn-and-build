@@ -357,9 +357,8 @@ function buildFoodListContent() {
 
 function buildFaqContent() {
   const headerHtml = buildAssistantHeaderHtml('Frequently Asked Questions', { showMeta: false });
-  return FAQ_PRINT_PAGES.map((page) => `
-    <section class="print-page faq-section">
-      ${buildPrintWatermarkHtml()}
+  return FAQ_PRINT_PAGES.map((page, index) => `
+    <section class="faq-page${index > 0 ? ' faq-page--break' : ''}">
       ${headerHtml}
       ${page.items.map((item) => `
         <article class="faq-item">
@@ -490,7 +489,7 @@ function buildPrintDocumentHtml(view = 'week') {
   <style>${buildPrintStylesForView(view)}</style>
 </head>
 <body>
-  ${view === 'week' ? buildPrintWatermarkHtml({ repeat: true }) : ''}
+  ${view === 'week' || view === 'shopping' || view === 'faq' ? buildPrintWatermarkHtml({ repeat: true }) : ''}
   <article class="assistant-document">
     ${documentContent}
   </article>
