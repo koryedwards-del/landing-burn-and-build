@@ -288,7 +288,6 @@ function buildFoodListRow({
 }) {
   return `
     <div class="print-page food-list-section">
-      ${buildPrintWatermarkHtml()}
       ${headerHtml}
       <div class="food-list-columns">
         ${buildFoodListColumn(leftTitle, leftFoods)}
@@ -528,6 +527,11 @@ function buildPrintDocumentHtml(view = 'week') {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+    body.view-foodlist .assistant-panel,
+    body.view-foodlist .print-page {
+      position: relative;
+      z-index: 1;
     }
     .print-page > .assistant-doc-watermark {
       position: absolute;
@@ -951,6 +955,12 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     @media print {
       body { background: #fff; }
+      body.view-foodlist .assistant-document > .assistant-doc-watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
       .assistant-document {
         padding: 0;
         margin: 0;
@@ -1008,7 +1018,7 @@ function buildPrintDocumentHtml(view = 'week') {
 </head>
 <body class="${bodyClass}">
   <article class="assistant-document">
-    ${view === 'week' || view === 'shopping' ? buildPrintWatermarkHtml() : ''}
+    ${view === 'week' || view === 'shopping' || view === 'foodlist' ? buildPrintWatermarkHtml() : ''}
     ${documentContent}
   </article>
 </body>
