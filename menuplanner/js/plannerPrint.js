@@ -314,7 +314,7 @@ function buildFoodListContent() {
       middleFoods: vegetablesRight,
       hideMiddleTitle: true,
       tipsTitle: 'Vegetable Tips',
-      tips: VEGETABLE_TIPS,
+      qaItems: VEGETABLE_TIPS_QA,
     })}
     ${buildFoodListRow({
       headerHtml,
