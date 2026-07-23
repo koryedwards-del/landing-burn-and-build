@@ -183,10 +183,13 @@ function preloadPrintAssets() {
   img.src = printLogoHref();
 }
 
-function buildPrintWatermarkHtml() {
+function buildPrintWatermarkHtml({ repeat = false } = {}) {
   const logoUrl = printLogoUrl();
+  const variantClass = repeat
+    ? 'assistant-doc-watermark assistant-doc-watermark--repeat'
+    : 'assistant-doc-watermark assistant-doc-watermark--page';
   return `
-    <div class="assistant-doc-watermark" aria-hidden="true">
+    <div class="${variantClass}" aria-hidden="true">
       <img src="${logoUrl}" alt="" />
     </div>
   `;
@@ -296,7 +299,7 @@ function buildFoodListRow({
   hideMiddleTitle = false,
 }) {
   return `
-    <div class="print-page food-list-section">
+    <div class="print-page print-page--sheet food-list-section">
       ${buildPrintWatermarkHtml()}
       ${headerHtml}
       <div class="food-list-columns">
@@ -354,7 +357,7 @@ function buildFoodListContent() {
 function buildFaqContent() {
   const headerHtml = buildAssistantHeaderHtml('Frequently Asked Questions', { showMeta: false });
   return FAQ_PRINT_PAGES.map((page) => `
-    <section class="print-page faq-section">
+    <section class="print-page print-page--sheet faq-section">
       ${buildPrintWatermarkHtml()}
       ${headerHtml}
       ${page.items.map((item) => `
@@ -460,7 +463,7 @@ function buildPrintDocumentHtml(view = 'week') {
         : 'view-week';
   const documentContent = view === 'shopping'
     ? `
-      <section class="assistant-panel">
+      <section class="assistant-panel print-page print-page--flow">
         ${shoppingHeaderHtml}
         ${shoppingHtml}
       </section>
@@ -478,7 +481,7 @@ function buildPrintDocumentHtml(view = 'week') {
       </section>
     `
       : `
-      <section class="assistant-panel">
+      <section class="assistant-panel print-page print-page--flow">
         ${weekHeaderHtml}
         ${weekHtml}
         ${weekFooterHtml}
@@ -532,43 +535,37 @@ function buildPrintDocumentHtml(view = 'week') {
       height: auto;
       opacity: 0.06;
     }
-    .assistant-document > .assistant-doc-watermark {
+    .assistant-doc-watermark--repeat {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    body.view-foodlist .food-list-section {
-      position: relative;
-      z-index: 1;
-    }
-    body.view-foodlist .food-list-section > .assistant-doc-watermark {
+    .assistant-doc-watermark--page {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 0;
     }
-    body.view-foodlist .food-list-section > .assistant-doc-header,
-    body.view-foodlist .food-list-section > .food-list-columns {
+    body.view-shopping .assistant-document,
+    body.view-week .assistant-document {
       position: relative;
       z-index: 1;
     }
-    .print-page > .assistant-doc-watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .print-page {
+      position: relative;
     }
-    .print-page > .assistant-doc-header,
-    .print-page > .food-list-columns,
-    .print-page > .faq-item,
+    .print-page--sheet > .assistant-doc-header,
+    .print-page--sheet > .food-list-columns,
+    .print-page--sheet > .faq-item,
+    .print-page--flow > .assistant-doc-header,
+    .print-page--flow > .assistant-doc-header--report,
+    .print-page--flow > .assistant-section,
+    .print-page--flow > .agenda-section,
+    .print-page--flow > .assistant-doc-footer,
+    .print-page--flow > .assistant-empty,
     .print-page .faq-item {
       position: relative;
       z-index: 1;
@@ -977,18 +974,29 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     @media print {
       body { background: #fff; }
-      body.view-foodlist .food-list-section {
-        min-height: 7.5in;
+      body.view-shopping { --print-page-min-height: 10in; }
+      body.view-faq { --print-page-min-height: 10in; }
+      body.view-week { --print-page-min-height: 7.5in; }
+      body.view-foodlist { --print-page-min-height: 7.5in; }
+      .assistant-doc-watermark--repeat {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .print-page--sheet {
+        min-height: var(--print-page-min-height);
         box-sizing: border-box;
         position: relative;
         break-before: page;
         page-break-before: always;
       }
-      body.view-foodlist .food-list-section:first-child {
+      .print-page--sheet:first-child {
         break-before: auto;
         page-break-before: auto;
       }
-      body.view-foodlist .food-list-section > .assistant-doc-watermark {
+      .print-page--sheet > .assistant-doc-watermark--page {
         position: absolute;
         inset: 0;
         display: flex;
@@ -1032,6 +1040,10 @@ function buildPrintDocumentHtml(view = 'week') {
         padding-top: 0;
         border-top: none;
       }
+      body.view-faq .print-page--sheet + .print-page--sheet {
+        margin-top: 0;
+        padding-top: 0;
+      }
       body.view-faq .assistant-doc-header {
         margin-bottom: 8px;
         padding-bottom: 6px;
@@ -1051,8 +1063,8 @@ function buildPrintDocumentHtml(view = 'week') {
   </style>
 </head>
 <body class="${bodyClass}">
+  ${view === 'week' || view === 'shopping' ? buildPrintWatermarkHtml({ repeat: true }) : ''}
   <article class="assistant-document">
-    ${view === 'week' || view === 'shopping' ? buildPrintWatermarkHtml() : ''}
     ${documentContent}
   </article>
 </body>
