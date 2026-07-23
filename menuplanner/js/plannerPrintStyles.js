@@ -385,11 +385,45 @@ const QA_CONTENT_STYLES = `
   }
 `;
 
+const BESTRESULTS_CONTENT_STYLES = `
+  .print-qa-page {
+    display: flex;
+    flex-direction: column;
+  }
+  .print-qa-item {
+    break-inside: avoid;
+    margin-bottom: 2em;
+  }
+  .print-qa-item:last-child {
+    margin-bottom: 0;
+  }
+  .print-qa-question {
+    font-family: "Open Sans", system-ui, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    color: #111;
+    margin-bottom: 0.4em;
+  }
+  .print-qa-answer {
+    font-family: Merriweather, Georgia, "Times New Roman", serif;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #222;
+  }
+  @media print {
+    .print-qa-item { margin-bottom: 2em; }
+    .print-qa-question { font-size: 0.74rem; }
+    .print-qa-answer { font-size: 0.68rem; line-height: 1.5; }
+  }
+`;
+
 const CONTENT_STYLES = {
   week: WEEK_CONTENT_STYLES,
   shopping: SHOPPING_CONTENT_STYLES,
   foodlist: FOODLIST_CONTENT_STYLES,
-  bestresults: QA_CONTENT_STYLES,
+  bestresults: BESTRESULTS_CONTENT_STYLES,
   faq: QA_CONTENT_STYLES,
 };
 

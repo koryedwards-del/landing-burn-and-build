@@ -320,26 +320,41 @@ function buildFoodListContent() {
   `;
 }
 
-function buildQaPrintContent(view, pages, { numbered = false } = {}) {
+function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } = {}) {
   const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
   let questionNumber = 0;
   return pages.map((page, index) => {
-    const bodyHtml = `
-      <div class="faq-page">
-        ${page.items.map((item) => {
-          questionNumber += 1;
-          const questionPrefix = numbered
-            ? `<span class="faq-question-num">${questionNumber}.</span> `
-            : '';
-          return `
-            <article class="faq-item">
-              <h2 class="faq-question">${questionPrefix}${escapeHtml(item.q)}</h2>
-              <p class="faq-answer">${escapeHtml(item.a)}</p>
-            </article>
-          `;
-        }).join('')}
-      </div>
-    `;
+    const bodyHtml = variant === 'newspaper'
+      ? `
+        <div class="print-qa-page">
+          ${page.items.map((item) => {
+            questionNumber += 1;
+            const questionPrefix = numbered ? `${questionNumber}. ` : '';
+            return `
+              <article class="print-qa-item">
+                <h2 class="print-qa-question">${questionPrefix}${escapeHtml(item.q)}</h2>
+                <p class="print-qa-answer">${escapeHtml(item.a)}</p>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `
+      : `
+        <div class="faq-page">
+          ${page.items.map((item) => {
+            questionNumber += 1;
+            const questionPrefix = numbered
+              ? `<span class="faq-question-num">${questionNumber}.</span> `
+              : '';
+            return `
+              <article class="faq-item">
+                <h2 class="faq-question">${questionPrefix}${escapeHtml(item.q)}</h2>
+                <p class="faq-answer">${escapeHtml(item.a)}</p>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `;
     return buildPrintPageShell({
       headerHtml,
       bodyHtml,
@@ -350,7 +365,8 @@ function buildQaPrintContent(view, pages, { numbered = false } = {}) {
 }
 
 function buildForBestResultsContent() {
-  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES);
+  const items = FOR_BEST_RESULTS_PRINT_PAGES.flatMap((page) => page.items);
+  return buildQaPrintContent('bestresults', [{ items }], { numbered: true, variant: 'newspaper' });
 }
 
 function buildHandbookFaqContent() {

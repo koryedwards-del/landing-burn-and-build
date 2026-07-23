@@ -1,4 +1,4 @@
-/** For Best Results — 2-page program tips printout. */
+/** For Best Results — program tips printout (flows across pages at print time). */
 export const FOR_BEST_RESULTS_PRINT_PAGES = [
   {
     page: 1,
