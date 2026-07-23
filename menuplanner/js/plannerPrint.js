@@ -11,6 +11,7 @@ import {
   buildPrintViewHeaderHtml,
   buildPrintPageShell,
   buildPrintDocumentHtml as buildPrintShellDocumentHtml,
+  PRINT_VIEW_CONFIG,
 } from './plannerPrintShell.js';
 import { programClientName } from '../../js/programBridgeUi.js';
 import {
@@ -323,7 +324,7 @@ function buildFoodListContent() {
 
 function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } = {}) {
   const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
-  const sheet = view !== 'bestresults';
+  const sheet = PRINT_VIEW_CONFIG[view]?.watermarkMode === 'sheet';
   let questionNumber = 0;
   return pages.map((page, index) => {
     const bodyHtml = variant === 'newspaper'
@@ -368,8 +369,7 @@ function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } 
 }
 
 function buildForBestResultsContent() {
-  const items = FOR_BEST_RESULTS_PRINT_PAGES.flatMap((page) => page.items);
-  return buildQaPrintContent('bestresults', [{ items }], { numbered: true, variant: 'newspaper' });
+  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES, { numbered: true, variant: 'newspaper' });
 }
 
 function buildHandbookFaqContent() {
