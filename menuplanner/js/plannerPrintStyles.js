@@ -47,6 +47,7 @@ const PRINT_SHELL_STYLES = `
   .print-body--foodlist .print-page--sheet {
     min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
   }
+  .print-body--bestresults .print-page--sheet,
   .print-body--faq .print-page--sheet {
     min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
   }
@@ -126,8 +127,7 @@ const PRINT_SHELL_STYLES = `
       width: 72px;
     }
     .print-body--week::after,
-    .print-body--shopping::after,
-    .print-body--bestresults::after {
+    .print-body--shopping::after {
       content: '';
       position: fixed;
       top: 50%;
@@ -144,6 +144,7 @@ const PRINT_SHELL_STYLES = `
     .print-body--foodlist .print-page--sheet {
       min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
     }
+    .print-body--bestresults .print-page--sheet,
     .print-body--faq .print-page--sheet {
       min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
     }

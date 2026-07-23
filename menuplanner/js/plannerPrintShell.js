@@ -20,15 +20,10 @@ export const PRINT_SHEET_MIN_HEIGHT = {
  * Each page shell: watermark (sheet docs) + transparent surface (header + body).
  *
  * headerVariant:
-<<<<<<< Updated upstream
- *   generic      — logo + brand + title
- *   personalized — logo + title + prepared-for line
-=======
  *   generic      — logo + brand + title (food list, For Best Results, FAQ)
  *   personalized — logo + title + prepared-for line (weekly, grocery)
  *
- * Generic doc body copy is static — see data/*Printout.js; do not ad lib.
->>>>>>> Stashed changes
+ * Generic docs: static copy + exact pagination in data/*Printout.js
  *
  * watermarkMode:
  *   sheet — one printed page per shell; watermark embedded in each page
@@ -61,7 +56,7 @@ export const PRINT_VIEW_CONFIG = {
     pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'For Best Results',
-    watermarkMode: 'flow',
+    watermarkMode: 'sheet',
   },
   faq: {
     docTitle: 'Frequently Asked Questions',
