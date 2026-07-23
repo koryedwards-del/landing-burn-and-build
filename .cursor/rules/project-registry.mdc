@@ -42,6 +42,6 @@ Five print documents, **two header templates**:
 | For Best Results | `data/forBestResultsPrintout.js` |
 | FAQ | `data/handbookFaqPrintout.js` |
 
-Personalized docs (weekly, grocery) change with the user's plan.
+**Generic print pipeline:** `menuplanner/js/genericPrintEngine.js` — each page is a fixed letter-size sheet (`@page margin: 0`); pagination authored in data files; opens in a new window for print (not iframe).
 
 **Deprecated:** `pwa-burn-and-build` (archived), `gettheburnandbuildapp.com`, `/myplan/` phone app.
