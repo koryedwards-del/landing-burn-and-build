@@ -375,16 +375,9 @@ const FOODLIST_CONTENT_STYLES = `
     color: #222;
   }
   @media print {
-    .print-page--sheet {
-      min-height: 7.5in;
+    .print-body--foodlist .print-page--sheet {
       box-sizing: border-box;
       position: relative;
-      break-before: page;
-      page-break-before: always;
-    }
-    .print-page--sheet:first-child {
-      break-before: auto;
-      page-break-before: auto;
     }
     .print-body--foodlist .print-logo { width: 44px; }
     .food-list-col-title { margin-bottom: 6px; }
