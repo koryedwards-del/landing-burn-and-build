@@ -20,4 +20,8 @@ export const PROTEIN_TIPS_QA = [
     q: 'Can I have salmon?',
     a: 'Stick to the lean fish on this list.',
   },
+  {
+    q: 'Can I count beans, rice, or nuts as protein?',
+    a: 'Even though beans, rice, and nuts contain protein, they are predominantly complex carbohydrates or fats on this program — not protein. Use the meats, fish, egg whites, and dairy on this list for protein servings.',
+  },
 ];
