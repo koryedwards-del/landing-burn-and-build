@@ -133,12 +133,8 @@ function buildWeekAgendaContent() {
     return '<p class="assistant-empty">No meals planned for this week yet. Fill in your menu planner, then open Print Shop again.</p>';
   }
 
-  const name = escapeHtml(programClientName(state.programPackage));
-
   return `
     <div class="agenda-section">
-      <h2 class="agenda-section-title">Weekly Meal Schedule</h2>
-      <p class="agenda-section-sub">Burn &amp; Build Diet · Meal schedule for ${name}</p>
       <table class="agenda-table">
         <thead>
           <tr>
@@ -446,7 +442,7 @@ function buildPrintDocumentHtml(view = 'week') {
     const weekFooterHtml = `
       <footer class="print-doc-footer">
         <span>Burn &amp; Build Diet</span>
-        <span>Week Plan · ${name}</span>
+        <span>Weekly Meal Plan · ${name}</span>
       </footer>
     `;
     bodyHtml = buildPrintPageShell({

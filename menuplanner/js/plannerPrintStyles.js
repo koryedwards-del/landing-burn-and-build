@@ -58,6 +58,13 @@ const PRINT_SHELL_BASE = `
     height: auto;
     flex-shrink: 0;
   }
+  .print-header--personalized {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+  .print-header--personalized .print-header-title {
+    margin-bottom: 4px;
+  }
   .print-header-brand {
     font-family: Oswald, system-ui, sans-serif;
     font-size: 0.68rem;

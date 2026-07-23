@@ -8,7 +8,7 @@ import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi
  * Print view config. Content builders live in plannerPrint.js; this file owns the shell.
  * headerVariant:
  *   generic      — logo + brand + title (reference docs; no name or date)
- *   personalized — same layout + "Prepared for [name] · [date]" (user-specific data)
+ *   personalized — logo + title + prepared-for line (client-specific data; no brand eyebrow)
  */
 export const PRINT_VIEW_CONFIG = {
   week: {
@@ -16,7 +16,7 @@ export const PRINT_VIEW_CONFIG = {
     pageSize: 'landscape',
     pageMargin: '0.35in',
     headerVariant: 'personalized',
-    headerTitle: 'Week Plan',
+    headerTitle: 'Weekly Meal Plan',
     contentClass: 'print-content--week',
   },
   shopping: {
@@ -70,15 +70,18 @@ export function buildPrintWatermarkHtml(logoUrl) {
 export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage } = {}) {
   const name = escapeHtml(programClientName(programPackage));
   const date = escapeHtml(formatPrintDateTime(new Date()));
+  const brandLine = variant === 'generic'
+    ? '<p class="print-header-brand">Burn &amp; Build Diet</p>'
+    : '';
   const metaLine = variant === 'personalized'
     ? `<p class="print-header-meta">Prepared for ${name} · ${date}</p>`
     : '';
 
   return `
-    <header class="print-header">
+    <header class="print-header${variant === 'personalized' ? ' print-header--personalized' : ''}">
       <img class="print-logo" src="${logoUrl}" alt="Burn &amp; Build" width="72" height="72" />
       <div class="print-header-text">
-        <p class="print-header-brand">Burn &amp; Build Diet</p>
+        ${brandLine}
         <h1 class="print-header-title">${escapeHtml(title)}</h1>
         ${metaLine}
       </div>
