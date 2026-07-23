@@ -17,7 +17,7 @@ import {
 } from '../../js/programBridgeUi.js';
 import { loadProgramBridge, persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.js';
-import { bootProgramBridgeAside } from '../../js/programLibrary.js';
+import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
 
@@ -180,7 +180,7 @@ function detachPrintShopFromNav() {
   const aside = document.querySelector('.pb-aside');
   const nav = aside?.querySelector('nav');
   if (printShop && aside && nav && printShop.parentElement !== aside) {
-    aside.insertBefore(printShop, aside.querySelector('.pb-aside__dock'));
+    aside.insertBefore(printShop, nav.nextSibling);
   }
 }
 
@@ -191,7 +191,7 @@ function mountPrintShopUnderMenuPlanner(list) {
   const menuItem = list.querySelector('[data-nav-page="3"]')?.closest('.pb-nav__item');
   if (!menuItem) return;
 
-  menuItem.classList.add('pb-nav__group');
+  menuItem.classList.add('pb-nav__group', 'pb-nav__group--menu-planner');
 
   let groupList = menuItem.querySelector('.pb-nav__group-list');
   if (!groupList) {
@@ -219,6 +219,7 @@ function renderNav() {
   list.innerHTML = programNavListHtml(activeId);
   mountPrintShopUnderMenuPlanner(list);
   syncPrintShopNavVisibility();
+  remountProgramLibraryNav();
 }
 
 function renderWelcome(pkg) {

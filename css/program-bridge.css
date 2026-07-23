@@ -37,6 +37,8 @@
 
 .pb-aside > nav {
   flex-shrink: 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px);
 }
 
 .pb-aside__dock {
@@ -185,6 +187,21 @@ a.pb-nav__btn {
   gap: 4px;
 }
 
+.pb-nav__group--menu-planner:has(> .pb-nav__btn.is-active),
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) {
+  background: var(--gold-dim);
+  border: 1px solid rgba(253, 197, 0, 0.35);
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.pb-nav__group--menu-planner:has(> .pb-nav__btn.is-active) > .pb-nav__btn.is-active,
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) > .pb-nav__btn--group-head {
+  background: transparent;
+  border-color: transparent;
+  color: var(--gold);
+}
+
 .pb-nav__group-list {
   list-style: none;
   display: flex;
@@ -196,6 +213,11 @@ a.pb-nav__btn {
   margin-left: 10px;
 }
 
+.pb-nav__group--menu-planner:has(> .pb-nav__btn.is-active) .pb-nav__group-list,
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) .pb-nav__group-list {
+  border-left-color: rgba(253, 197, 0, 0.35);
+}
+
 .pb-nav__btn--group-head {
   display: block;
   box-sizing: border-box;
@@ -203,7 +225,30 @@ a.pb-nav__btn {
   pointer-events: none;
 }
 
+.pb-nav__group--diet-plans > .pb-nav__btn--group-head {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) > .pb-nav__btn--group-head {
+  background: transparent;
+  border-color: transparent;
+}
+
+.pb-nav__group--menu-planner .pb-nav__print-shop .pb-nav__btn {
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(253, 197, 0, 0.18);
+}
+
+.pb-nav__group--menu-planner .pb-nav__print-shop .pb-nav__btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(253, 197, 0, 0.35);
+  color: var(--gold);
+}
+
 .pb-nav__item--nested .pb-nav__btn {
+  display: flex;
   font-size: 0.68rem;
   padding: 8px 10px;
 }
@@ -234,6 +279,7 @@ a.pb-nav__btn {
 }
 
 .pb-nav__btn--aux {
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -390,10 +436,24 @@ a.pb-nav__btn {
 
   .pb-nav__list {
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: stretch;
     gap: 8px;
     padding-bottom: 2px;
+  }
+
+  .pb-nav__group--menu-planner,
+  .pb-nav__group--diet-plans {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .pb-nav__group--menu-planner .pb-nav__group-list,
+  .pb-nav__group--diet-plans .pb-nav__group-list {
+    flex-direction: column;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(253, 197, 0, 0.22);
   }
 
   .pb-nav__item {
@@ -419,6 +479,14 @@ a.pb-nav__btn {
     margin-left: 0;
     padding-left: 0;
     border-left: none;
+  }
+
+  .pb-nav__group--menu-planner .pb-nav__group-list,
+  .pb-nav__group--diet-plans .pb-nav__group-list {
+    flex-direction: column;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(253, 197, 0, 0.22);
   }
 
   .pb-nav__item--nested {

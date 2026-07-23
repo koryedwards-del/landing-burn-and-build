@@ -14,8 +14,8 @@ import { renderSidebarProgramCard } from './programHistoryUi.js';
 import { persistProgramBridge } from './programBridgeHandoff.js';
 import { flushProgramPersist } from './menuPlannerState.js';
 
-function libraryEl() {
-  return document.getElementById('program-library');
+function navListEl() {
+  return document.getElementById('r-nav-list');
 }
 
 function resolveProgramEmail(programPackage) {
@@ -47,6 +47,10 @@ let beforeSwitchHandler = null;
 let getProgramPackageHandler = null;
 const LIBRARY_CACHE_KEY = 'bnb_sidebar_library';
 let lastRenderedSignature = '';
+let lastRenderedRows = [];
+let lastRenderedActiveId = null;
+let libraryMounted = false;
+let libraryReady = false;
 
 function libraryCacheKey(email) {
   return `${LIBRARY_CACHE_KEY}:${email}`;
@@ -75,17 +79,22 @@ function rowsSignature(rows, activeId) {
 }
 
 function bindLibraryEvents() {
-  const library = libraryEl();
-  if (!library || library.dataset.bound === '1') return;
-  library.dataset.bound = '1';
+  const list = navListEl();
+  if (!list || list.dataset.libraryBound === '1') return;
+  list.dataset.libraryBound = '1';
 
-  library.addEventListener('click', (event) => {
+  list.addEventListener('click', (event) => {
     const switchBtn = event.target.closest('[data-switch-program]');
     if (!switchBtn || switchBtn.disabled) return;
     const programId = switchBtn.getAttribute('data-switch-program');
     if (!programId) return;
     switchProgram(programId).catch((err) => console.error(err));
   });
+}
+
+function removeDietPlansFromNav() {
+  navListEl()?.querySelector('.pb-nav__group--diet-plans')?.remove();
+  libraryMounted = false;
 }
 
 function libraryGroupHtml(programRowsHtml = '') {
@@ -98,38 +107,53 @@ function libraryGroupHtml(programRowsHtml = '') {
     </li>`;
 }
 
-function renderLibraryRows(rows, activeId) {
-  const library = libraryEl();
-  if (!library) return;
-
-  const signature = rowsSignature(rows, activeId);
-  if (signature === lastRenderedSignature && library.querySelector('.pb-program-list')) {
-    library.hidden = false;
-    return;
-  }
-  lastRenderedSignature = signature;
-
+function nestedRowsHtml(rows, activeId) {
   if (!rows.length) {
-    library.hidden = false;
-    library.innerHTML = `
-      <ol class="pb-nav__list pb-program-list">
-        ${libraryGroupHtml(`
-          <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
-            <span class="pb-nav__nested-empty">No purchased plans yet.</span>
-          </li>
-        `)}
-      </ol>`;
+    return `
+      <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
+        <span class="pb-nav__nested-empty">No purchased plans yet.</span>
+      </li>`;
+  }
+
+  return rows.map((row) => renderSidebarProgramCard(row, {
+    isActive: row.id === activeId,
+    isOpening: row.id === openingProgramId,
+  })).join('');
+}
+
+function mountLibraryGroup(rows, activeId, { errorMessage = '' } = {}) {
+  const list = navListEl();
+  if (!list) return;
+
+  removeDietPlansFromNav();
+  const rowsHtml = errorMessage
+    ? `
+      <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
+        <span class="pb-nav__nested-empty pb-nav__nested-empty--error">${errorMessage}</span>
+      </li>`
+    : nestedRowsHtml(rows, activeId);
+  list.insertAdjacentHTML('beforeend', libraryGroupHtml(rowsHtml));
+  libraryMounted = true;
+}
+
+function renderLibraryRows(rows, activeId) {
+  const signature = rowsSignature(rows, activeId);
+  if (signature === lastRenderedSignature && libraryMounted) {
     return;
   }
 
-  library.hidden = false;
-  library.innerHTML = `
-    <ol class="pb-nav__list pb-program-list">
-      ${libraryGroupHtml(rows.map((row) => renderSidebarProgramCard(row, {
-        isActive: row.id === activeId,
-        isOpening: row.id === openingProgramId,
-      })).join(''))}
-    </ol>`;
+  lastRenderedSignature = signature;
+  lastRenderedRows = rows;
+  lastRenderedActiveId = activeId;
+  libraryReady = true;
+  mountLibraryGroup(rows, activeId);
+}
+
+/** Re-append diet plans after the main nav list is rebuilt. */
+export function remountProgramLibraryNav() {
+  if (!libraryReady) return;
+  lastRenderedSignature = '';
+  renderLibraryRows(lastRenderedRows, lastRenderedActiveId);
 }
 
 export async function refreshProgramLibrary({
@@ -140,9 +164,11 @@ export async function refreshProgramLibrary({
 
   const email = resolveProgramEmail(programPackage);
   if (!isValidEmail(email)) {
-    const library = libraryEl();
-    if (library) library.hidden = true;
+    removeDietPlansFromNav();
     lastRenderedSignature = '';
+    lastRenderedRows = [];
+    lastRenderedActiveId = null;
+    libraryReady = false;
     return [];
   }
 
@@ -153,20 +179,9 @@ export async function refreshProgramLibrary({
 
   const result = await fetchProgramHistoryFromServer(email);
   if (!result.ok) {
-    const library = libraryEl();
-    if (library) {
-      if (!library.querySelector('.pb-program-list')) {
-        library.hidden = false;
-        library.innerHTML = `
-          <ol class="pb-nav__list pb-program-list">
-            ${libraryGroupHtml(`
-              <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
-                <span class="pb-nav__nested-empty pb-nav__nested-empty--error">${result.message || 'Could not load your plans.'}</span>
-              </li>
-            `)}
-          </ol>`;
-      }
-    }
+    mountLibraryGroup([], activeProgramId, {
+      errorMessage: result.message || 'Could not load your plans.',
+    });
     return [];
   }
 
