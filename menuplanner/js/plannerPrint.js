@@ -3,6 +3,7 @@ import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { PROTEIN_TIPS_QA } from '../../data/proteinTipsPrintout.js';
 import { GRAINS_STARCHES_TIPS_QA } from '../../data/grainsStarchesTipsPrintout.js';
+import { VEGETABLE_TIPS_QA } from '../../data/vegetableTipsPrintout.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
   printDocumentTitle,
@@ -200,13 +201,6 @@ function weekPlanHasContent() {
   });
   return found;
 }
-
-const VEGETABLE_TIPS = [
-  'Vegetable servings are eaten at dinner on the Burn & Build Diet. Choose a variety of colorful vegetables throughout the week.',
-  'Fresh, frozen, and canned vegetables without added fat or sugar all count toward your servings.',
-  'Raw or cooked vegetables may be used. One serving of salad greens counts the same as one serving of cooked vegetables.',
-  'Measure your serving size after cooking.',
-];
 
 const FRUIT_TIPS = [
   'Fruit servings are eaten at snack times on the Burn & Build Diet. Divide your daily fruit servings among your morning, afternoon, and evening snacks.',
