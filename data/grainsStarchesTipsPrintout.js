@@ -6,7 +6,7 @@ export const GRAINS_STARCHES_TIPS_QA = [
   },
   {
     q: 'Do I measure before or after cooking?',
-    a: 'Measure serving sizes after cooking unless the food list says otherwise. Cooking changes weight and volume; portions here are based on prepared amounts.',
+    a: 'Measure serving sizes after cooking. Cooking changes weight and volume.',
   },
   {
     q: 'What kind of bread can I use?',

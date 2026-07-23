@@ -6,7 +6,7 @@ export const FRUIT_TIPS_QA = [
   },
   {
     q: 'Do I measure before or after cooking?',
-    a: 'Measure serving sizes as indicated on the food list.',
+    a: 'Measure serving sizes after cooking. Cooking changes weight and volume.',
   },
   {
     q: 'Can I use fresh, frozen, or canned fruit?',
