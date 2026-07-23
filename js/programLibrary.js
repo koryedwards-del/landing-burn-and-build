@@ -88,10 +88,13 @@ function bindLibraryEvents() {
   });
 }
 
-function libraryHeadHtml() {
+function libraryGroupHtml(programRowsHtml = '') {
   return `
-    <li class="pb-nav__item">
-      <span class="pb-nav__btn pb-nav__btn--static">Your diet plans</span>
+    <li class="pb-nav__item pb-nav__group pb-nav__group--diet-plans">
+      <span class="pb-nav__btn pb-nav__btn--group-head">Your diet plans</span>
+      <ul class="pb-nav__group-list pb-nav__group-list--diet-plans">
+        ${programRowsHtml}
+      </ul>
     </li>`;
 }
 
@@ -100,7 +103,7 @@ function renderLibraryRows(rows, activeId) {
   if (!library) return;
 
   const signature = rowsSignature(rows, activeId);
-  if (signature === lastRenderedSignature && library.querySelector('.pb-program-list, .pb-nav__section-empty')) {
+  if (signature === lastRenderedSignature && library.querySelector('.pb-program-list')) {
     library.hidden = false;
     return;
   }
@@ -110,20 +113,22 @@ function renderLibraryRows(rows, activeId) {
     library.hidden = false;
     library.innerHTML = `
       <ol class="pb-nav__list pb-program-list">
-        ${libraryHeadHtml()}
-      </ol>
-      <p class="pb-nav__section-empty">No purchased plans yet.</p>`;
+        ${libraryGroupHtml(`
+          <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
+            <span class="pb-nav__nested-empty">No purchased plans yet.</span>
+          </li>
+        `)}
+      </ol>`;
     return;
   }
 
   library.hidden = false;
   library.innerHTML = `
     <ol class="pb-nav__list pb-program-list">
-      ${libraryHeadHtml()}
-      ${rows.map((row) => renderSidebarProgramCard(row, {
+      ${libraryGroupHtml(rows.map((row) => renderSidebarProgramCard(row, {
         isActive: row.id === activeId,
         isOpening: row.id === openingProgramId,
-      })).join('')}
+      })).join(''))}
     </ol>`;
 }
 
@@ -154,9 +159,12 @@ export async function refreshProgramLibrary({
         library.hidden = false;
         library.innerHTML = `
           <ol class="pb-nav__list pb-program-list">
-            ${libraryHeadHtml()}
-          </ol>
-          <p class="pb-nav__section-error">${result.message || 'Could not load your plans.'}</p>`;
+            ${libraryGroupHtml(`
+              <li class="pb-nav__item pb-nav__item--nested pb-nav__item--empty">
+                <span class="pb-nav__nested-empty pb-nav__nested-empty--error">${result.message || 'Could not load your plans.'}</span>
+              </li>
+            `)}
+          </ol>`;
       }
     }
     return [];

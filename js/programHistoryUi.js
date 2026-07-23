@@ -17,10 +17,10 @@ export function renderHistoryCardRows(fieldRows = []) {
 export function renderSidebarProgramCard(row, { isActive = false, isOpening = false } = {}) {
   const aria = isActive ? ' aria-current="true"' : '';
   return `
-    <li class="pb-nav__item">
+    <li class="pb-nav__item pb-nav__item--nested${isActive ? ' pb-nav__item--active-plan' : ''}">
       <button
         type="button"
-        class="pb-nav__btn pb-nav__btn--aux${isOpening ? ' is-opening' : ''}"
+        class="pb-nav__btn pb-nav__btn--aux pb-nav__btn--nested${isOpening ? ' is-opening' : ''}${isActive ? ' is-active' : ''}"
         data-switch-program="${row.id}"
         aria-label="Switch to diet from ${row.testDateDisplay}${isActive ? ' (active)' : ''}"${aria}
         ${isActive ? ' disabled' : ''}

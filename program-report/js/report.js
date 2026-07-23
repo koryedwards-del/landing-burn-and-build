@@ -178,9 +178,9 @@ function syncPrintShopNavVisibility() {
 function detachPrintShopFromNav() {
   const printShop = document.getElementById('print-shop');
   const aside = document.querySelector('.pb-aside');
-  const dock = aside?.querySelector('.pb-aside__dock');
-  if (printShop && aside && dock && printShop.parentElement !== aside) {
-    aside.insertBefore(printShop, dock);
+  const nav = aside?.querySelector('nav');
+  if (printShop && aside && nav && printShop.parentElement !== aside) {
+    aside.insertBefore(printShop, aside.querySelector('.pb-aside__dock'));
   }
 }
 
@@ -189,13 +189,26 @@ function mountPrintShopUnderMenuPlanner(list) {
   if (!printShop || !list) return;
 
   const menuItem = list.querySelector('[data-nav-page="3"]')?.closest('.pb-nav__item');
-  let slot = list.querySelector('.pb-nav__item--print-shop');
+  if (!menuItem) return;
+
+  menuItem.classList.add('pb-nav__group');
+
+  let groupList = menuItem.querySelector('.pb-nav__group-list');
+  if (!groupList) {
+    groupList = document.createElement('ul');
+    groupList.className = 'pb-nav__group-list';
+    groupList.setAttribute('aria-label', 'Menu planner tools');
+    menuItem.appendChild(groupList);
+  }
+
+  let slot = groupList.querySelector('.pb-nav__item--print-shop');
   if (!slot) {
     slot = document.createElement('li');
-    slot.className = 'pb-nav__item pb-nav__item--print-shop';
+    slot.className = 'pb-nav__item pb-nav__item--nested pb-nav__item--print-shop';
+    groupList.appendChild(slot);
   }
+
   slot.appendChild(printShop);
-  menuItem?.insertAdjacentElement('afterend', slot);
 }
 
 function renderNav() {
