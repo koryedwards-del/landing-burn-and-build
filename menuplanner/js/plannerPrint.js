@@ -293,7 +293,7 @@ function buildShoppingListContent() {
   `).join('');
 }
 
-function buildAssistantHeaderHtml(title) {
+function buildAssistantHeaderHtml(title, { showMeta = true } = {}) {
   const name = escapeHtml(programClientName(state.programPackage));
   const date = escapeHtml(formatPrintDateTime(new Date()));
   const logoUrl = printLogoUrl();
@@ -303,7 +303,7 @@ function buildAssistantHeaderHtml(title) {
       <div class="assistant-doc-titles">
         <p class="assistant-doc-brand">Burn &amp; Build Diet</p>
         <h1 class="assistant-doc-title">${escapeHtml(title)}</h1>
-        <p class="assistant-doc-meta">Prepared for ${name} · ${date}</p>
+        ${showMeta ? `<p class="assistant-doc-meta">Prepared for ${name} · ${date}</p>` : ''}
       </div>
     </header>
   `;
@@ -315,7 +315,7 @@ function printDocumentTitle(view) {
     return `Burn & Build — Grocery List — ${name}`;
   }
   if (view === 'foodlist') {
-    return `Burn & Build — Food List — ${name}`;
+    return 'Burn & Build — Food List';
   }
   return `Burn & Build — Weekly — ${name}`;
 }
@@ -326,7 +326,7 @@ function buildPrintDocumentHtml(view = 'week') {
   const foodListHtml = buildFoodListContent();
   const weekHeaderHtml = buildWeekPlanReportHeaderHtml();
   const shoppingHeaderHtml = buildAssistantHeaderHtml('Shopping List');
-  const foodListHeaderHtml = buildAssistantHeaderHtml('Food List');
+  const foodListHeaderHtml = buildAssistantHeaderHtml('Food List', { showMeta: false });
   const weekFooterHtml = `
     <footer class="assistant-doc-footer">
       <span>Burn &amp; Build Diet</span>
