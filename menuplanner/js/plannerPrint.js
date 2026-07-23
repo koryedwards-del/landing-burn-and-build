@@ -168,10 +168,19 @@ function buildWeekAgendaContent() {
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 
-function printLogoUrl() {
+function printLogoHref() {
   const url = new URL('/img/brand/bblogo1.png', window.location.origin);
   url.searchParams.set('v', ASSET_VERSION);
-  return escapeHtml(url.href);
+  return url.href;
+}
+
+function printLogoUrl() {
+  return escapeHtml(printLogoHref());
+}
+
+function preloadPrintAssets() {
+  const img = new Image();
+  img.src = printLogoHref();
 }
 
 function buildPrintWatermarkHtml() {
@@ -1027,22 +1036,33 @@ function buildPrintDocumentHtml(view = 'week') {
 
 let printFrame = null;
 
+function triggerFramePrint(frameWin, frameDoc) {
+  frameWin.focus();
+  try {
+    if (frameDoc.execCommand && frameDoc.execCommand('print', false, null)) return;
+  } catch (_) {
+    /* fall through to window.print */
+  }
+  frameWin.print();
+}
+
 function printPlannerDocument(view) {
   persistPlannerToProgram({ immediate: true });
 
-  if (!printFrame) {
-    printFrame = document.createElement('iframe');
-    printFrame.setAttribute('aria-hidden', 'true');
-    printFrame.title = 'Print';
-    Object.assign(printFrame.style, {
-      position: 'fixed',
-      width: '0',
-      height: '0',
-      border: '0',
-      visibility: 'hidden',
-    });
-    document.body.appendChild(printFrame);
-  }
+  // Fresh iframe each print — Safari reuses stale frames and adds a second
+  // "This webpage is trying to print" confirmation on repeat attempts.
+  printFrame?.remove();
+  printFrame = document.createElement('iframe');
+  printFrame.setAttribute('aria-hidden', 'true');
+  printFrame.title = 'Print';
+  Object.assign(printFrame.style, {
+    position: 'fixed',
+    width: '0',
+    height: '0',
+    border: '0',
+    visibility: 'hidden',
+  });
+  document.body.appendChild(printFrame);
 
   const frameWin = printFrame.contentWindow;
   const frameDoc = frameWin.document;
@@ -1050,34 +1070,9 @@ function printPlannerDocument(view) {
   frameDoc.write(buildPrintDocumentHtml(view));
   frameDoc.close();
 
-  const triggerPrint = () => {
-    frameWin.focus();
-    frameWin.print();
-  };
-
-  const waitForImages = () => {
-    const images = Array.from(frameDoc.images || []);
-    if (!images.length) {
-      triggerPrint();
-      return;
-    }
-    let pending = images.length;
-    const done = () => {
-      pending -= 1;
-      if (pending <= 0) triggerPrint();
-    };
-    images.forEach((img) => {
-      if (img.complete) done();
-      else {
-        img.addEventListener('load', done, { once: true });
-        img.addEventListener('error', done, { once: true });
-      }
-    });
-  };
-
-  frameWin.requestAnimationFrame(() => {
-    window.setTimeout(waitForImages, 100);
-  });
+  // Must run in the same turn as the button click. Deferred print() loses the
+  // user gesture and iOS Safari shows an extra "trying to print" prompt.
+  triggerFramePrint(frameWin, frameDoc);
 }
 
 function showPlannerToast(message, { variant = 'info', durationMs = 6000 } = {}) {
@@ -1124,6 +1119,7 @@ function openPrintShop() {
 }
 
 function initPrintShop() {
+  preloadPrintAssets();
   document.getElementById('print-shop-open')?.addEventListener('click', openPrintShop);
   initPrintChoiceDialog();
 }
