@@ -3,9 +3,8 @@ import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
-  PRINT_VIEW_CONFIG,
   printDocumentTitle,
-  buildPrintHeaderHtml,
+  buildPrintViewHeaderHtml,
   buildPrintPageShell,
   buildPrintDocumentHtml as buildPrintShellDocumentHtml,
 } from './plannerPrintShell.js';
@@ -192,11 +191,6 @@ function printShellContext() {
   };
 }
 
-function buildViewHeaderHtml(view) {
-  const config = PRINT_VIEW_CONFIG[view] || PRINT_VIEW_CONFIG.week;
-  return buildPrintHeaderHtml(config.headerVariant, config.headerTitle, printShellContext());
-}
-
 function weekPlanHasContent() {
   let found = false;
   iterWeekFoodSelections(() => {
@@ -298,7 +292,7 @@ function buildFoodListRow({
 }
 
 function buildFoodListContent() {
-  const headerHtml = buildPrintHeaderHtml('generic', 'Food List', printShellContext());
+  const headerHtml = buildPrintViewHeaderHtml('foodlist', printShellContext());
   const [vegetablesLeft, vegetablesRight] = splitFoodsInHalf(foodsByCategory('vegetable'));
 
   return `
@@ -340,8 +334,8 @@ function buildFoodListContent() {
   `;
 }
 
-function buildQaPrintContent(title, pages, { numbered = false } = {}) {
-  const headerHtml = buildPrintHeaderHtml('generic', title, printShellContext());
+function buildQaPrintContent(view, pages, { numbered = false } = {}) {
+  const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
   let questionNumber = 0;
   return pages.map((page, index) => {
     const bodyHtml = `
@@ -370,11 +364,11 @@ function buildQaPrintContent(title, pages, { numbered = false } = {}) {
 }
 
 function buildForBestResultsContent() {
-  return buildQaPrintContent('For Best Results', FOR_BEST_RESULTS_PRINT_PAGES);
+  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES);
 }
 
 function buildHandbookFaqContent() {
-  return buildQaPrintContent('Frequently Asked Questions', HANDBOOK_FAQ_PRINT_PAGES, { numbered: true });
+  return buildQaPrintContent('faq', HANDBOOK_FAQ_PRINT_PAGES, { numbered: true });
 }
 
 function buildShoppingListContent() {
@@ -418,30 +412,28 @@ function buildShoppingListContent() {
   `).join('');
 }
 
+const PRINT_BODY_BUILDERS = {
+  week: buildWeekAgendaContent,
+  shopping: buildShoppingListContent,
+  foodlist: buildFoodListContent,
+  bestresults: buildForBestResultsContent,
+  faq: buildHandbookFaqContent,
+};
+
 function buildPrintDocumentHtml(view = 'week') {
   const title = printDocumentTitle(view, state.programPackage);
   const logoUrl = printLogoUrl();
   const styles = buildPrintStylesForView(view);
-  const headerHtml = buildViewHeaderHtml(view);
+  const buildBody = PRINT_BODY_BUILDERS[view] || PRINT_BODY_BUILDERS.week;
 
   let bodyHtml = '';
-  if (view === 'shopping') {
+  if (view === 'week' || view === 'shopping') {
     bodyHtml = buildPrintPageShell({
-      headerHtml,
-      bodyHtml: buildShoppingListContent(),
-      sheet: true,
+      headerHtml: buildPrintViewHeaderHtml(view, printShellContext()),
+      bodyHtml: buildBody(),
     });
-  } else if (view === 'foodlist') {
-    bodyHtml = buildFoodListContent();
-  } else if (view === 'bestresults') {
-    bodyHtml = buildForBestResultsContent();
-  } else if (view === 'faq') {
-    bodyHtml = buildHandbookFaqContent();
   } else {
-    bodyHtml = buildPrintPageShell({
-      headerHtml,
-      bodyHtml: buildWeekAgendaContent(),
-    });
+    bodyHtml = buildBody();
   }
 
   return buildPrintShellDocumentHtml({

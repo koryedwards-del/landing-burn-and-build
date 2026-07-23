@@ -1,17 +1,20 @@
-/** Shared Print Shop shell — one watermark, two header variants, content dropped in. */
+/** Shared Print Shop shell — one template, content dropped in. */
 
 import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi.js';
 
-/** Shared print margins/padding — identical across all five Print Shop documents. */
+/** Identical across all five Print Shop documents. */
 export const PRINT_PAGE_MARGIN = '0.35in';
+export const PRINT_PAGE_PADDING = '36px 44px 36px';
 
 /** @typedef {'generic' | 'personalized'} PrintHeaderVariant */
 
 /**
- * Print view config. Content builders live in plannerPrint.js; this file owns the shell.
+ * Print view config. Shell owns watermark, page wrapper, header, margins.
+ * Content builders in plannerPrint.js only supply body HTML.
+ *
  * headerVariant:
- *   generic      — logo + brand + title (reference docs; no name or date)
- *   personalized — logo + title + prepared-for line (client-specific data; no brand eyebrow)
+ *   generic      — logo + brand + title
+ *   personalized — logo + title + prepared-for line
  */
 export const PRINT_VIEW_CONFIG = {
   week: {
@@ -19,35 +22,30 @@ export const PRINT_VIEW_CONFIG = {
     pageSize: 'landscape',
     headerVariant: 'personalized',
     headerTitle: 'Weekly Meal Plan',
-    contentClass: 'print-content--week',
   },
   shopping: {
     docTitle: 'Grocery List',
     pageSize: 'portrait',
     headerVariant: 'personalized',
     headerTitle: 'Grocery List',
-    contentClass: 'print-content--shopping',
   },
   foodlist: {
     docTitle: 'Food List',
     pageSize: 'landscape',
     headerVariant: 'generic',
     headerTitle: 'Food List',
-    contentClass: 'print-content--foodlist',
   },
   bestresults: {
     docTitle: 'For Best Results',
     pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'For Best Results',
-    contentClass: 'print-content--qa',
   },
   faq: {
     docTitle: 'Frequently Asked Questions',
     pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'Frequently Asked Questions',
-    contentClass: 'print-content--qa',
   },
 };
 
@@ -87,6 +85,11 @@ export function buildPrintHeaderHtml(variant, title, { logoUrl, programPackage }
   `;
 }
 
+export function buildPrintViewHeaderHtml(view, context) {
+  const config = PRINT_VIEW_CONFIG[view] || PRINT_VIEW_CONFIG.week;
+  return buildPrintHeaderHtml(config.headerVariant, config.headerTitle, context);
+}
+
 export function buildPrintPageShell({
   headerHtml,
   bodyHtml,
@@ -116,8 +119,6 @@ export function buildPrintDocumentHtml({
   styles,
   bodyHtml,
 }) {
-  const config = PRINT_VIEW_CONFIG[view] || PRINT_VIEW_CONFIG.week;
-
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +129,7 @@ export function buildPrintDocumentHtml({
   <style>${styles}</style>
 </head>
 <body class="print-body print-body--${view}">
-  <article class="print-document ${config.contentClass}">
+  <article class="print-document">
     ${buildPrintWatermarkHtml(logoUrl)}
     ${bodyHtml}
   </article>

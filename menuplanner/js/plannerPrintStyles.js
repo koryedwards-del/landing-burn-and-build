@@ -1,11 +1,8 @@
-/** Print Shop styles — shared shell + per-content extensions. */
+/** Print Shop styles — one shell template + content-only extensions. */
 
-import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN } from './plannerPrintShell.js';
+import { PRINT_VIEW_CONFIG, PRINT_PAGE_MARGIN, PRINT_PAGE_PADDING } from './plannerPrintShell.js';
 
-/** Header offset from the printable area — same for all five Print Shop documents. */
-const PRINT_PAGE_PADDING = '36px 44px 36px';
-
-const PRINT_SHELL_BASE = `
+const PRINT_SHELL_STYLES = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Open Sans", system-ui, sans-serif;
@@ -63,10 +60,6 @@ const PRINT_SHELL_BASE = `
     height: auto;
     flex-shrink: 0;
   }
-  .print-header--personalized .print-header-title,
-  .print-header--generic .print-header-title {
-    margin-bottom: 4px;
-  }
   .print-header-brand {
     font-family: Oswald, system-ui, sans-serif;
     font-size: 0.68rem;
@@ -84,24 +77,12 @@ const PRINT_SHELL_BASE = `
     text-transform: uppercase;
     color: #111;
     line-height: 1.05;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .print-header-meta {
     font-size: 0.82rem;
     color: #666;
     letter-spacing: 0.01em;
-  }
-  .print-doc-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 28px;
-    padding-top: 12px;
-    border-top: 1px solid #e8e8e8;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #999;
   }
   .visually-hidden {
     position: absolute;
@@ -126,6 +107,9 @@ const PRINT_SHELL_BASE = `
     .print-page {
       padding: ${PRINT_PAGE_PADDING};
     }
+    .print-logo {
+      width: 72px;
+    }
     .print-watermark {
       position: fixed;
       inset: 0;
@@ -137,20 +121,6 @@ const PRINT_SHELL_BASE = `
 `;
 
 const WEEK_CONTENT_STYLES = `
-  .agenda-section-title {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #111;
-    margin-bottom: 4px;
-  }
-  .agenda-section-sub {
-    font-size: 0.78rem;
-    color: #666;
-    margin-bottom: 18px;
-  }
   .agenda-table {
     width: 100%;
     border-collapse: collapse;
@@ -238,7 +208,6 @@ const WEEK_CONTENT_STYLES = `
     flex-shrink: 0;
   }
   @media print {
-    .print-logo { width: 64px; }
     .agenda-row-head,
     .agenda-cell {
       padding-top: 22px;
@@ -248,10 +217,7 @@ const WEEK_CONTENT_STYLES = `
 `;
 
 const SHOPPING_CONTENT_STYLES = `
-  .print-body--shopping .print-document {
-    max-width: 540px;
-  }
-  h2 {
+  .assistant-section h2 {
     font-family: Oswald, system-ui, sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
@@ -298,10 +264,6 @@ const SHOPPING_CONTENT_STYLES = `
     text-align: right;
     flex-shrink: 0;
     max-width: 38%;
-  }
-  @media print {
-    .print-body--shopping .print-document { max-width: none; }
-    .print-logo { width: 64px; }
   }
 `;
 
@@ -355,11 +317,6 @@ const FOODLIST_CONTENT_STYLES = `
   }
   @media print {
     .food-list-col-title { margin-bottom: 6px; }
-    .print-page + .print-page,
-    .food-list-section + .food-list-section {
-      margin-top: 0;
-      border-top: none;
-    }
   }
 `;
 
@@ -405,7 +362,7 @@ function buildPrintStylesForView(view) {
   const config = PRINT_VIEW_CONFIG[view] || PRINT_VIEW_CONFIG.week;
   const pageRule = `@page { size: ${config.pageSize}; margin: ${PRINT_PAGE_MARGIN}; }`;
   const contentStyles = CONTENT_STYLES[view] || CONTENT_STYLES.week;
-  return `${pageRule}\n${PRINT_SHELL_BASE}\n${contentStyles}`;
+  return `${pageRule}\n${PRINT_SHELL_STYLES}\n${contentStyles}`;
 }
 
 export {
