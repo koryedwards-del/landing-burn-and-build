@@ -1,7 +1,7 @@
-/** Frequently Asked Questions — seminar handbook pages 12–17. */
+/** Frequently Asked Questions — 3-page printout (handbook pages 12–17). */
 export const FAQ_PRINT_PAGES = [
   {
-    page: 12,
+    page: 1,
     items: [
       {
         q: 'What is the Burn & Build Diet?',
@@ -23,11 +23,6 @@ export const FAQ_PRINT_PAGES = [
         q: 'What is lean body mass and why does it matter?',
         a: 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. Burn & Build is built to reduce fat while protecting that lean tissue.',
       },
-    ],
-  },
-  {
-    page: 13,
-    items: [
       {
         q: 'What are servings and how do I use them?',
         a: 'A serving is a measured amount of food from the Burn & Build food list. Each food has a standard serving size. Your plan tells you how many servings to eat from each group each day.',
@@ -51,7 +46,7 @@ export const FAQ_PRINT_PAGES = [
     ],
   },
   {
-    page: 14,
+    page: 2,
     items: [
       {
         q: 'How should I divide my meals through the day?',
@@ -73,11 +68,6 @@ export const FAQ_PRINT_PAGES = [
         q: 'What about alcohol?',
         a: 'Alcohol is listed separately on the food plan when included. If alcohol is not part of your prescription, avoid it. It adds empty calories and interferes with fat loss and recovery.',
       },
-    ],
-  },
-  {
-    page: 15,
-    items: [
       {
         q: 'How much should I exercise on this program?',
         a: 'Your questionnaire captures weight training, cardio, and fat-burn activity. Those inputs are part of how your servings were calculated. Follow the training plan you reported and avoid adding unplanned activity that increases energy needs beyond your prescription.',
@@ -101,7 +91,7 @@ export const FAQ_PRINT_PAGES = [
     ],
   },
   {
-    page: 16,
+    page: 3,
     items: [
       {
         q: 'Can vegetarians follow this program?',
@@ -123,11 +113,6 @@ export const FAQ_PRINT_PAGES = [
         q: 'Can I skip meals or save servings for later?',
         a: 'The plan works best when servings are spread through the day as prescribed. Skipping feedings or banking servings can make it harder to protect lean mass and control hunger.',
       },
-    ],
-  },
-  {
-    page: 17,
-    items: [
       {
         q: 'Is this program safe if I have a medical condition?',
         a: 'Only your physician can answer that for your situation. Bring your food plan and program report to your doctor before starting or continuing the diet.',

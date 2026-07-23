@@ -174,6 +174,15 @@ function printLogoUrl() {
   return escapeHtml(url.href);
 }
 
+function buildPrintWatermarkHtml() {
+  const logoUrl = printLogoUrl();
+  return `
+    <div class="assistant-doc-watermark" aria-hidden="true">
+      <img src="${logoUrl}" alt="" />
+    </div>
+  `;
+}
+
 function buildWeekPlanReportHeaderHtml() {
   const name = escapeHtml(programClientName(state.programPackage));
   const date = escapeHtml(formatPrintDateTime(new Date()));
@@ -257,12 +266,8 @@ function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
 }
 
 function buildFoodListTipsColumn(title, tips) {
-  const logoUrl = printLogoUrl();
   return `
     <div class="food-list-col food-list-col--tips">
-      <div class="food-list-watermark" aria-hidden="true">
-        <img src="${logoUrl}" alt="" />
-      </div>
       <h2 class="food-list-col-title food-list-col-title--tips">${escapeHtml(title)}</h2>
       <div class="food-list-tips">
         ${tips.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -476,6 +481,7 @@ function buildPrintDocumentHtml(view = 'week') {
     @page portrait-page { size: portrait; margin: 0.5in; }
     @page landscape-page { size: landscape; margin: 0.35in; }
     @page foodlist-page { size: landscape; margin: 0.25in; }
+    @page faq-page { size: portrait; margin: 0.4in; }
     body {
       font-family: "Open Sans", system-ui, sans-serif;
       background: #ececec;
@@ -492,13 +498,31 @@ function buildPrintDocumentHtml(view = 'week') {
       page: foodlist-page;
     }
     body.view-faq {
-      page: portrait-page;
+      page: faq-page;
     }
     .assistant-document {
       background: #ffffff;
       color: #111111;
       margin: 0 auto;
       padding: 36px 44px 52px;
+      position: relative;
+    }
+    .assistant-doc-watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .assistant-doc-watermark img {
+      width: 240px;
+      height: auto;
+      opacity: 0.06;
+    }
+    .assistant-panel {
+      position: relative;
+      z-index: 1;
     }
     body.view-shopping .assistant-document {
       max-width: 540px;
@@ -530,23 +554,23 @@ function buildPrintDocumentHtml(view = 'week') {
       font-size: 0.68rem;
     }
     body.view-faq .assistant-document {
-      max-width: 620px;
-      padding: 24px 32px 32px;
+      max-width: none;
+      padding: 18px 24px 20px;
     }
     body.view-faq .assistant-doc-header {
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      gap: 14px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      gap: 12px;
     }
     body.view-faq .assistant-logo {
-      width: 48px;
+      width: 44px;
     }
     body.view-faq .assistant-doc-brand {
-      font-size: 0.58rem;
+      font-size: 0.56rem;
       margin-bottom: 2px;
     }
     body.view-faq .assistant-doc-title {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       margin-bottom: 0;
     }
     .assistant-doc-header {
@@ -860,23 +884,7 @@ function buildPrintDocumentHtml(view = 'week') {
     .food-list-col--tips {
       min-height: 100%;
     }
-    .food-list-watermark {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .food-list-watermark img {
-      width: 180px;
-      height: auto;
-      opacity: 0.06;
-    }
     .food-list-tips {
-      position: relative;
-      z-index: 1;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -889,11 +897,11 @@ function buildPrintDocumentHtml(view = 'week') {
     .faq-section {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 9px;
     }
     .faq-section--break {
-      margin-top: 18px;
-      padding-top: 18px;
+      margin-top: 12px;
+      padding-top: 12px;
       border-top: 1px solid #e8e8e8;
     }
     .faq-item {
@@ -901,16 +909,17 @@ function buildPrintDocumentHtml(view = 'week') {
     }
     .faq-question {
       font-family: Oswald, system-ui, sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.02em;
+      text-transform: uppercase;
       color: #111;
-      line-height: 1.3;
-      margin-bottom: 4px;
+      line-height: 1.25;
+      margin-bottom: 2px;
     }
     .faq-answer {
-      font-size: 0.74rem;
-      line-height: 1.55;
+      font-size: 0.66rem;
+      line-height: 1.45;
       color: #333;
     }
     @media print {
@@ -947,15 +956,14 @@ function buildPrintDocumentHtml(view = 'week') {
         border-top: none;
       }
       body.view-faq .assistant-doc-header {
-        margin-bottom: 12px;
-        padding-bottom: 8px;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
       }
       body.view-faq .assistant-logo {
-        width: 44px;
+        width: 40px;
       }
       body.view-faq .assistant-document {
         padding: 0;
-        max-width: none;
       }
       .faq-section--break {
         page-break-before: always;
@@ -973,6 +981,7 @@ function buildPrintDocumentHtml(view = 'week') {
 </head>
 <body class="${bodyClass}">
   <article class="assistant-document">
+    ${buildPrintWatermarkHtml()}
     ${documentContent}
   </article>
 </body>
