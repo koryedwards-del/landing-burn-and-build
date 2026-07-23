@@ -218,8 +218,14 @@ a.pb-nav__btn {
   border-color: rgba(253, 197, 0, 0.35);
 }
 
-.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) .pb-nav__btn--group-head {
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) .pb-nav__btn--group-head,
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) .pb-nav__btn--nested.is-active {
   color: var(--gold);
+}
+
+.pb-nav__group--diet-plans:has(.pb-nav__btn--nested.is-active) .pb-nav__btn--nested.is-active {
+  background: transparent;
+  border-color: transparent;
 }
 
 .pb-nav__group-list {
