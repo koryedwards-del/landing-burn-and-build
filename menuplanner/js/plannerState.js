@@ -558,6 +558,67 @@ const SAVED_MEAL_SLOT_LABELS = {
   Fruit: 'fruit',
 };
 
+/** Scale saved-meal foods to this slot's required servings (user's plan drives amounts). */
+function mealItemsScaledToSlot(meal, mealSlotId) {
+  if (!meal?.items?.length) return [];
+
+  const groups = { protein: [], gs: [], vegetable: [], fat: [] };
+  meal.items.forEach((item) => {
+    const slotKey = SAVED_MEAL_SLOT_LABELS[item.slot];
+    if (slotKey === 'fat') {
+      groups.fat.push({ ...item });
+      return;
+    }
+    if (slotKey && isSplitServingsMakerSlot(slotKey)) {
+      groups[slotKey].push({ slot: item.slot, foodName: item.foodName });
+    }
+  });
+
+  const scaled = [];
+  for (const slotKey of ['protein', 'gs', 'vegetable']) {
+    const items = groups[slotKey];
+    if (!items.length) continue;
+    const total = requiredServings(mealSlotId, slotKey);
+    if (total <= 0) continue;
+    const each = total / items.length;
+    items.forEach((item) => {
+      scaled.push({ slot: item.slot, foodName: item.foodName, servings: each });
+    });
+  }
+  groups.fat.forEach((item) => scaled.push({ ...item }));
+  return scaled;
+}
+
+function applySavedMealToGridCell(weekDay, mealSlotId, meal) {
+  if (!isMealMealSlot(mealSlotId) || !meal?.items?.length) return;
+
+  MEAL_MAKER_SLOTS.forEach((slotKey) => {
+    categorySelections(mealSlotId, weekDay)[slotKey] = null;
+  });
+  setFatSelections(mealSlotId, [], weekDay);
+
+  const proteinItems = [];
+  const gsItems = [];
+  const vegetableItems = [];
+  const fatItems = [];
+
+  mealItemsScaledToSlot(meal, mealSlotId).forEach((item) => {
+    const slotKey = SAVED_MEAL_SLOT_LABELS[item.slot];
+    const entry = { foodName: item.foodName, servings: item.servings };
+    if (slotKey === 'fat') fatItems.push(entry);
+    else if (slotKey === 'gs') gsItems.push(entry);
+    else if (slotKey === 'vegetable') vegetableItems.push(entry);
+    else if (slotKey === 'protein') proteinItems.push(entry);
+  });
+
+  setSplitGridSelections(mealSlotId, 'protein', proteinItems, weekDay);
+  setSplitGridSelections(mealSlotId, 'gs', gsItems, weekDay);
+  setSplitGridSelections(mealSlotId, 'vegetable', vegetableItems, weekDay);
+  setFatSelections(mealSlotId, fatItems, weekDay);
+  mealSlotMeta(mealSlotId, weekDay).mealName = meal.name;
+  mealSlotMeta(mealSlotId, weekDay).savedMealId = meal.id;
+}
+
 function savedMealSlotKeys(meal) {
   const keys = new Set();
   meal.items.forEach((item) => {
@@ -758,6 +819,8 @@ export {
   fmtServings,
   requiredServings,
   servingHint,
+  applySavedMealToGridCell,
+  mealItemsScaledToSlot,
   savedMealById,
   scaledLabel,
   servingAmountLabel,

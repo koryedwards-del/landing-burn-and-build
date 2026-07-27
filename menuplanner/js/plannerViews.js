@@ -35,6 +35,7 @@ import {
   isMealMealSlot,
   gridCellHasAssignment,
   savedMealFitsMealSlot,
+  applySavedMealToGridCell,
   clearDaySlotMeta,
   clearMealMakerDraft,
   applySavedMealItemsToMakerDraft,
@@ -963,51 +964,9 @@ function removeMakerFatPoint(index) {
 }
 
 function applySavedMealToMealSlot(weekDay, mealSlotId, meal, { trackPick = true } = {}) {
-  if (!isMealMealSlot(mealSlotId) || !savedMealFitsMealSlot(meal, mealSlotId)) return;
+  if (!savedMealFitsMealSlot(meal, mealSlotId)) return;
 
-  const labelToSlot = {
-    Protein: 'protein',
-    'Grains/Starches': 'gs',
-    'G / S': 'gs',
-    Veggie: 'vegetable',
-    'Extra Fat': 'fat',
-    Sugar: 'fat',
-    Alcohol: 'fat',
-  };
-
-  MEAL_MAKER_SLOTS.forEach((slotKey) => {
-    categorySelections(mealSlotId, weekDay)[slotKey] = null;
-  });
-  setFatSelections(mealSlotId, [], weekDay);
-
-  const gsItems = [];
-  const vegetableItems = [];
-  const proteinItems = [];
-  const fatItems = [];
-
-  meal.items.forEach((item) => {
-    const slotKey = labelToSlot[item.slot];
-    const entry = {
-      foodName: item.foodName,
-      servings: item.servings,
-    };
-    if (slotKey === 'fat') {
-      fatItems.push(entry);
-    } else if (slotKey === 'gs') {
-      gsItems.push(entry);
-    } else if (slotKey === 'vegetable') {
-      vegetableItems.push(entry);
-    } else if (slotKey === 'protein') {
-      proteinItems.push(entry);
-    }
-  });
-
-  setSplitGridSelections(mealSlotId, 'protein', proteinItems, weekDay);
-  setSplitGridSelections(mealSlotId, 'gs', gsItems, weekDay);
-  setSplitGridSelections(mealSlotId, 'vegetable', vegetableItems, weekDay);
-  setFatSelections(mealSlotId, fatItems, weekDay);
-  mealSlotMeta(mealSlotId, weekDay).mealName = meal.name;
-  mealSlotMeta(mealSlotId, weekDay).savedMealId = meal.id;
+  applySavedMealToGridCell(weekDay, mealSlotId, meal);
   if (trackPick) meal.pickCount += 1;
   renderWeekGrid();
   renderSavedMeals();

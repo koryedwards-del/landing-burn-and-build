@@ -92,30 +92,16 @@ function categoryFoodLinesForPrint(mealSlotId, weekDay) {
   return lines;
 }
 
-function savedMealFoodLinesForPrint(meal) {
-  if (!meal?.items?.length) return [];
-  return meal.items.map((item) => ({
-    foodName: item.foodName,
-    amount: printFoodAmount(item.foodName, item.servings),
-  }));
-}
-
 function mealFoodLinesForPrint(mealSlotId, weekDay) {
+  const lines = [];
   if (isAssignedMeal(mealSlotId, weekDay)) {
     const meta = mealSlotMeta(mealSlotId, weekDay);
-    const meal = state.savedMeals.find((item) => item.id === meta.savedMealId);
-    const lines = [];
     if (meta.mealName) {
       lines.push({ foodName: meta.mealName, amount: '', isMealTitle: true });
     }
-    if (meal) {
-      lines.push(...savedMealFoodLinesForPrint(meal));
-    } else {
-      lines.push(...categoryFoodLinesForPrint(mealSlotId, weekDay));
-    }
-    return lines;
   }
-  return categoryFoodLinesForPrint(mealSlotId, weekDay);
+  lines.push(...categoryFoodLinesForPrint(mealSlotId, weekDay));
+  return lines;
 }
 
 function renderAgendaCell(foodLines) {
