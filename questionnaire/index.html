@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=63" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=64" />
 </head>
 <body>
   <div class="q-app">
@@ -39,6 +39,16 @@
                 About 10 minutes of intake, then the Burn Engine builds your servings and full program.
               </p>
             </div>
+            <div class="q-callout">
+              <strong>Before you start, have these ready:</strong>
+              <ul>
+                <li>Your <strong>email</strong> — you will use it to open your program after checkout.</li>
+                <li><strong>Scale weight</strong> in pounds (morning weight, before eating, is best).</li>
+                <li><strong>Body fat percentage</strong> from a DEXA scan, calipers, BodPod, or ultrasound if you have one. If not, you can estimate — we explain how on that step.</li>
+                <li>A honest count of the <strong>exercise you will actually do</strong> for the next 8 weeks — not your best week ever.</li>
+              </ul>
+            </div>
+            <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
             <div class="q-intro-actions">
               <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet →</button>
               <a class="q-btn q-btn--ghost" href="../program-report/?preview=1">Preview sample program</a>
@@ -52,24 +62,31 @@
               <h2 class="q-panel__title">Personal information</h2>
               <p class="q-panel__lead">The basics we need before calculating your servings and food plan.</p>
             </div>
+            <div class="q-callout">
+              <strong>Accuracy matters.</strong> Small errors in weight or body fat change your lean body mass, which drives every serving on your plan. Take an extra minute here — it saves guesswork later.
+            </div>
             <div class="q-personal-grid">
               <label class="q-field q-personal-grid__name">
                 <span class="q-label">First name</span>
                 <input class="q-input" name="preferredName" autocomplete="given-name" required />
+                <span class="q-field-hint">Used on your printed meal plan and grocery list. First name only is fine.</span>
               </label>
               <div class="q-field q-personal-grid__date">
                 <span class="q-label">Today's date</span>
                 <p class="q-static-value" id="q-intake-date-display"></p>
                 <input type="hidden" name="intakeDate" />
+                <span class="q-field-hint">Recorded automatically — the day you create this program.</span>
               </div>
 
               <div class="q-personal-grid__stack q-personal-grid__contact-left">
                 <label class="q-field">
                   <span class="q-label">Phone <span class="q-optional">(optional)</span></span>
                   <input class="q-input" type="tel" name="phone" autocomplete="tel" />
+                  <span class="q-field-hint">Optional. We do not use this to unlock your plan — email does that.</span>
                 </label>
                 <div class="q-field" role="group" aria-labelledby="q-gender-label">
                   <span class="q-label" id="q-gender-label">Gender</span>
+                  <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
                   <div class="q-segmented q-segmented--pair">
                     <label class="q-segment"><input type="radio" name="sex" value="female" /> Female</label>
                     <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
@@ -81,6 +98,7 @@
                 <label class="q-field">
                   <span class="q-label">Email</span>
                   <input class="q-input" type="email" name="email" autocomplete="email" required />
+                  <span class="q-field-hint"><strong>Important:</strong> This is how you open your program after purchase and on return visits. Use an address you check — typos lock you out until support helps.</span>
                 </label>
                 <div class="q-newsletter">
                   <p class="q-newsletter__lead">Maybe you&rsquo;d like a touch of motivation going into every weekend.</p>
@@ -99,6 +117,7 @@
                   <input class="q-input q-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" />
                   <span class="q-unit">in</span>
                 </div>
+                <span class="q-field-hint">Example: 5 ft 6 in — enter feet and inches separately. Inches must be 0–11.</span>
               </label>
               <label class="q-field q-personal-grid__weight">
                 <span class="q-label">Weight</span>
@@ -106,14 +125,17 @@
                   <input class="q-input q-input--short" name="weight" inputmode="decimal" required />
                   <span class="q-unit">lbs</span>
                 </div>
+                <span class="q-field-hint">Current body weight on a scale, in pounds. Best: morning, after bathroom, before eating or drinking. Same conditions you would use for a body-composition test.</span>
               </label>
               <label class="q-field q-personal-grid__birth">
                 <span class="q-label">Birthdate</span>
                 <input class="q-input" name="birthDate" type="date" />
+                <span class="q-field-hint">Used to calculate your age and personalized heart-rate zones on the exercise step.</span>
               </label>
               <div class="q-field q-personal-grid__age">
                 <span class="q-label">Age <span class="q-optional">(from birthdate)</span></span>
                 <p class="q-static-value q-static-value--short" id="q-age-display" aria-live="polite"></p>
+                <span class="q-field-hint">Updates automatically when you pick a birthdate.</span>
               </div>
             </div>
           </section>
@@ -124,22 +146,28 @@
               <h2 class="q-panel__title">Workday &amp; occupation</h2>
               <p class="q-panel__lead">How active is your job, and how stressful is a typical day?</p>
             </div>
+            <div class="q-callout">
+              <strong>Think typical week — not your hardest day.</strong> Your job activity and daily stress feed the Burn Engine work-intensity multiplier, which adjusts how many servings you need. When unsure, pick the option that describes most of your workdays.
+            </div>
             <div class="q-workday">
               <div class="q-field q-choice-group">
                 <span class="q-label">Typical exertion at work</span>
+                <span class="q-field-hint">How much does your body move and lift during a normal shift?</span>
                 <div class="q-options q-options--cards">
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="sitting" /><span class="q-radio-card__body"><span class="q-radio-card__title">Sitting</span><span class="q-radio-card__sub">Office, reception, desk work</span></span></label>
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="feet" /><span class="q-radio-card__body"><span class="q-radio-card__title">Moving</span><span class="q-radio-card__sub">Delivery, warehouse, on your feet</span></span></label>
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="carrying" /><span class="q-radio-card__body"><span class="q-radio-card__title">Lifting</span><span class="q-radio-card__sub">Heavy physical lifting and carrying</span></span></label>
+                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="sitting" /><span class="q-radio-card__body"><span class="q-radio-card__title">Sitting</span><span class="q-radio-card__sub">Office, reception, desk work — mostly seated with short walks</span></span></label>
+                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="feet" /><span class="q-radio-card__body"><span class="q-radio-card__title">Moving</span><span class="q-radio-card__sub">Retail, teaching, nursing, restaurant — on your feet most of the day</span></span></label>
+                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="carrying" /><span class="q-radio-card__body"><span class="q-radio-card__title">Lifting</span><span class="q-radio-card__sub">Warehouse, delivery, trades — regular lifting, carrying, or loading</span></span></label>
                 </div>
               </div>
               <div class="q-field q-choice-group">
                 <span class="q-label">Is your typical day…</span>
+                <span class="q-field-hint">Mental and schedule pressure count — not just physical tiredness. A busy desk job can still be “busy.”</span>
                 <div class="q-segmented q-segmented--equal">
                   <label class="q-segment"><input type="radio" name="workStress" value="comfortable" /> Comfortable</label>
                   <label class="q-segment"><input type="radio" name="workStress" value="busy" /> Busy</label>
                   <label class="q-segment"><input type="radio" name="workStress" value="stressful" /> Stressful</label>
                 </div>
+                <span class="q-field-hint"><strong>Comfortable</strong> = relaxed pace most days. <strong>Busy</strong> = steady demands, tired but manageable. <strong>Stressful</strong> = high pressure, you come home drained.</span>
               </div>
             </div>
           </section>
@@ -150,11 +178,20 @@
               <h2 class="q-panel__title">Weekly exercise — next 8 weeks</h2>
               <p class="q-panel__lead">Be realistic about the exercise you will commit to for the next 8 weeks. Conservative is better.</p>
             </div>
-            <p class="q-hint">Enter hours per week down to the quarter hour (15 minutes).</p>
+            <div class="q-callout">
+              <strong>Plan for what you will actually do — not what you wish you would do.</strong>
+              <ul>
+                <li>All three categories can be <strong>0</strong> if you are not doing that type of activity.</li>
+                <li>Enter hours in decimals: <strong>0.25</strong> = 15 min, <strong>0.5</strong> = 30 min, <strong>0.75</strong> = 45 min, <strong>1.25</strong> = 1 hr 15 min.</li>
+                <li>Only count time <strong>moving or under load</strong> — not rest between sets, scrolling on the treadmill, or driving to the gym.</li>
+                <li>Heart-rate zones below update after you enter birthdate on the previous step.</li>
+              </ul>
+            </div>
+            <p class="q-hint">Enter hours per week down to the quarter hour (15 minutes). Overstating exercise lowers your fat servings and makes the plan harder to follow.</p>
             <div class="q-activity-list">
               <label class="q-activity">
                 <span class="q-activity__label">SAG — stop &amp; go</span>
-                <span class="q-activity__desc">Weight training, racquet sports. Count only time under load or moving — not rest between sets.</span>
+                <span class="q-activity__desc"><strong>S</strong>top-&amp;-<strong>G</strong>o activity: weight training, CrossFit, racquet sports, intervals — work bursts with rest. Count only time under load or actively moving (e.g. three 1-hour sessions with ~45 min of actual lifting = about <strong>2.25</strong> hrs, not 3).</span>
                 <div class="q-inline">
                   <input class="q-input q-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" />
                   <span class="q-unit">hrs / week</span>
@@ -162,21 +199,21 @@
               </label>
               <label class="q-activity">
                 <span class="q-activity__label">Vigorous activity</span>
-                <span class="q-activity__desc">Heart rate over 140 BPM — cardiovascular training.</span>
+                <span class="q-activity__desc">Sustained cardio where your heart rate stays in the vigorous zone (roughly 70–85% of max). Running, cycling hard, rowing, stair climbing — not a casual walk.</span>
                 <div class="q-inline">
                   <input class="q-input q-input--short" name="cardioHours" inputmode="decimal" placeholder="0" />
                   <span class="q-unit">hrs / week</span>
                 </div>
-                <span class="q-activity__meta" data-hr-cardio>Target zone — BPM</span>
+                <span class="q-activity__meta" data-hr-cardio>Target zone — BPM (enter birthdate on step 2)</span>
               </label>
               <label class="q-activity">
                 <span class="q-activity__label">Moderate activity</span>
-                <span class="q-activity__desc">Heart rate under 140 BPM — fat burning pace. Housework and errands count.</span>
+                <span class="q-activity__desc">Fat-burning pace: heart rate below vigorous cardio. Brisk walking, easy bike, active housework and yard work. The default <strong>3</strong> hrs/week is a common starting point — lower it if that is not realistic for you.</span>
                 <div class="q-inline">
                   <input class="q-input q-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" />
                   <span class="q-unit">hrs / week</span>
                 </div>
-                <span class="q-activity__meta" data-hr-fat>Target zone — BPM</span>
+                <span class="q-activity__meta" data-hr-fat>Target zone — BPM (enter birthdate on step 2)</span>
               </label>
             </div>
           </section>
@@ -187,20 +224,27 @@
               <h2 class="q-panel__title">Body composition</h2>
               <p class="q-panel__lead">Required for accurate servings. Body composition drives the whole plan.</p>
             </div>
+            <div class="q-callout">
+              <strong>Why this step matters:</strong> Your plan is built from <strong>lean body mass</strong> (weight minus fat). Wrong body fat % = wrong servings from day one. A professional test is worth it if you can get one.
+            </div>
             <fieldset class="q-field">
               <legend class="q-label">How do you know your body composition?</legend>
+              <span class="q-field-hint">Pick the most accurate source you actually have — not the one you wish you had.</span>
               <div class="q-options">
-                <label class="q-option"><input type="radio" name="fatSource" value="dexa" /> DEXA scan</label>
-                <label class="q-option"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
-                <label class="q-option"><input type="radio" name="fatSource" value="guess" /> I'm estimating</label>
+                <label class="q-option"><input type="radio" name="fatSource" value="dexa" /> DEXA scan<span class="q-option-hint">Gold standard — full-body X-ray composition. Most accurate option.</span></label>
+                <label class="q-option"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod<span class="q-option-hint">Professional or gym test within the last few weeks. Use that number.</span></label>
+                <label class="q-option"><input type="radio" name="fatSource" value="guess" /> I'm estimating<span class="q-option-hint">No recent test — you are guessing from mirror, photos, or a scale that estimates body fat. Be honest; rounding down makes the plan too aggressive.</span></label>
               </div>
             </fieldset>
             <label class="q-field">
               <span class="q-label">Body composition</span>
               <div class="q-inline">
-                <input class="q-input q-input--short" name="fatPercent" inputmode="decimal" required />
-                <span class="q-unit">%</span>
+                <input class="q-input q-input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" />
+                <span class="q-unit">% body fat</span>
               </div>
+              <span class="q-field-hint">Enter body fat as a percentage (not BMI). One decimal is fine — e.g. <strong>24.5</strong>.</span>
+              <span class="q-field-hint">Rough reference if you are estimating: many men fall <strong>18–28%</strong>; many women <strong>25–35%</strong>. Athletes and stage-ready competitors are lower. When unsure, estimate slightly <strong>higher</strong> rather than lower — a slightly conservative plan is easier to follow.</span>
+              <span class="q-field-hint">No number yet? Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement. Home scales that estimate body fat are better than pure guesswork but less accurate than DEXA.</span>
             </label>
           </section>
 
@@ -210,6 +254,7 @@
               <h2 class="q-panel__title">Agreement</h2>
               <p class="q-panel__lead">Required before we calculate your program.</p>
             </div>
+            <p class="q-hint">Read the waiver below. Your typed signature must match the name you entered — it acts as your electronic signature.</p>
             <div class="q-waiver">
               <p>I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
             </div>
@@ -221,10 +266,12 @@
               <label class="q-field">
                 <span class="q-label">Signature (type your name)</span>
                 <input class="q-input" name="signature" autocomplete="name" />
+                <span class="q-field-hint">Type your full legal name as you would sign a form — usually first and last.</span>
               </label>
               <label class="q-field">
                 <span class="q-label">Date signed</span>
                 <input class="q-input" type="date" name="signatureDate" />
+                <span class="q-field-hint">Defaults to today. Change only if you are signing on a different date.</span>
               </label>
             </div>
           </section>
@@ -234,6 +281,15 @@
               <p class="q-eyebrow">Step 7</p>
               <h2 class="q-panel__title">Review &amp; continue</h2>
               <p class="q-panel__lead">Confirm your answers, then continue to secure checkout ($149).</p>
+            </div>
+            <div class="q-callout">
+              <strong>Double-check before checkout:</strong>
+              <ul>
+                <li><strong>Email</strong> — correct spelling; this unlocks your program.</li>
+                <li><strong>Body fat %</strong> — the number that drives all servings.</li>
+                <li><strong>Exercise hours</strong> — realistic for the next 8 weeks.</li>
+              </ul>
+              Use <strong>Back</strong> below to fix anything. After payment you can still create a new program later with updated stats.
             </div>
             <dl class="q-review" id="q-review"></dl>
             <button type="button" class="q-btn q-btn--primary" id="q-continue">Complete purchase →</button>
@@ -248,6 +304,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=63"></script>
+  <script type="module" src="js/questionnaire.js?v=64"></script>
 </body>
 </html>

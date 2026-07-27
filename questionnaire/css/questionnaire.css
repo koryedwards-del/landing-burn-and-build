@@ -511,13 +511,19 @@ body {
 
 .q-option {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px 10px;
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
   cursor: pointer;
+}
+
+.q-option input[type="radio"] {
+  margin-top: 3px;
+  flex-shrink: 0;
 }
 
 .q-option:has(input:checked) {
@@ -618,6 +624,55 @@ body {
   font-size: 0.85rem;
   color: var(--muted);
   margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+.q-callout {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(253, 197, 0, 0.25);
+  background: var(--gold-dim);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.q-callout strong {
+  color: var(--text);
+}
+
+.q-callout ul,
+.q-callout ol {
+  margin: 8px 0 0 1.15rem;
+}
+
+.q-callout li {
+  margin-top: 5px;
+}
+
+.q-callout li:first-child {
+  margin-top: 0;
+}
+
+.q-field-hint {
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-hint);
+}
+
+.q-option-hint {
+  display: block;
+  flex: 1 1 100%;
+  margin: 0;
+  padding-left: 26px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-hint);
+  line-height: 1.4;
 }
 
 .q-activity-list {
