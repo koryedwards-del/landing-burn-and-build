@@ -1,4 +1,5 @@
 import { formatGroceryQuantity } from '../../js/groceryEngine.js';
+import { generateMealSlots } from '../../js/burnEngine.js';
 import {
   attachPlannerStateToPackage,
   flushProgramPersist,
@@ -256,8 +257,20 @@ function templateSlots(template) {
 }
 
 function initMealSlotsFromProgram(pkg) {
-  if (!pkg?.plan?.mealSlots) return;
-  pkg.plan.mealSlots.forEach((slot) => {
+  state.mealSlotsById = {};
+  if (!pkg?.plan) return;
+
+  let slots = pkg.plan.mealSlots;
+  if (!Array.isArray(slots) || !slots.length) {
+    const servings = pkg.plan.servings;
+    const wake = pkg.intake?.wakeTime || pkg.intake?.defaultWakeTime || '06:00';
+    if (!servings) return;
+    const [wh, wm] = wake.split(':').map(Number);
+    slots = generateMealSlots(wh, wm, servings);
+    pkg.plan.mealSlots = slots;
+  }
+
+  slots.forEach((slot) => {
     const id = SLOT_LABEL_TO_ID[slot.label];
     if (id) state.mealSlotsById[id] = slot;
   });
