@@ -71,7 +71,6 @@ function readForm() {
     waiverAccepted: data.get('waiverAccepted') === 'on',
     signature: String(data.get('signature') || '').trim(),
     signatureDate: data.get('signatureDate'),
-    newsletterOptIn: data.get('newsletterOptIn') === 'on',
   };
 }
 
@@ -95,7 +94,6 @@ function toOnboardingForm(values) {
     cardioHours: values.cardioHours,
     fatBurningHours: values.fatBurningHours,
     wakeTime: '06:00',
-    newsletterOptIn: values.newsletterOptIn,
   };
 }
 
@@ -175,7 +173,6 @@ function renderReview() {
   const rows = [
     ['Name', values.preferredName || '—'],
     ['Email', values.email || '—'],
-    ['Weekly newsletter', values.newsletterOptIn ? 'Yes' : 'No'],
     ['Height', heightLabel(values)],
     ['Gender', values.sex || '—'],
     ['Age', values.age != null ? String(values.age) : '—'],
