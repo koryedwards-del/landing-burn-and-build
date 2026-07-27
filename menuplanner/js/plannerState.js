@@ -192,34 +192,35 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     ? { activeWeekDay: state.activeWeekDay }
     : null;
   resetPlannerState();
-  if (!saved || typeof saved !== 'object') return;
-  if (saved.weekPlan && typeof saved.weekPlan === 'object') {
-    state.weekPlan = saved.weekPlan;
-    ensureWeekPlanShape();
-  }
-  if (Array.isArray(saved.savedMeals)) {
-    state.savedMeals = cloneSavedMeals(saved.savedMeals);
-    dedupeSavedMeals();
-  }
-  if (saved.activeWeekDay && WEEK_DAYS.some((day) => day.id === saved.activeWeekDay)) {
-    state.activeWeekDay = saved.activeWeekDay;
-  }
-  if (saved.weekGridCollapsed === true) {
-    state.weekGridCollapsed = true;
-  }
-  if (saved.mealMakerDraft && typeof saved.mealMakerDraft === 'object') {
-    state.mealMakerDraft = {
-      ...createEmptyMealMakerDraft(),
-      ...saved.mealMakerDraft,
-      protein: normalizeSelectionList(saved.mealMakerDraft.protein),
-      gs: normalizeSelectionList(saved.mealMakerDraft.gs),
-      vegetable: normalizeSelectionList(saved.mealMakerDraft.vegetable),
-      fat: Array.isArray(saved.mealMakerDraft.fat) ? saved.mealMakerDraft.fat : [],
-    };
-    normalizeMealMakerDraft();
-  }
-  if (saved.activeMakerSlot && MEAL_MAKER_SLOTS.includes(saved.activeMakerSlot)) {
-    state.activeMakerSlot = saved.activeMakerSlot;
+  if (saved && typeof saved === 'object') {
+    if (saved.weekPlan && typeof saved.weekPlan === 'object') {
+      state.weekPlan = saved.weekPlan;
+      ensureWeekPlanShape();
+    }
+    if (Array.isArray(saved.savedMeals)) {
+      state.savedMeals = cloneSavedMeals(saved.savedMeals);
+      dedupeSavedMeals();
+    }
+    if (saved.activeWeekDay && WEEK_DAYS.some((day) => day.id === saved.activeWeekDay)) {
+      state.activeWeekDay = saved.activeWeekDay;
+    }
+    if (saved.weekGridCollapsed === true) {
+      state.weekGridCollapsed = true;
+    }
+    if (saved.mealMakerDraft && typeof saved.mealMakerDraft === 'object') {
+      state.mealMakerDraft = {
+        ...createEmptyMealMakerDraft(),
+        ...saved.mealMakerDraft,
+        protein: normalizeSelectionList(saved.mealMakerDraft.protein),
+        gs: normalizeSelectionList(saved.mealMakerDraft.gs),
+        vegetable: normalizeSelectionList(saved.mealMakerDraft.vegetable),
+        fat: Array.isArray(saved.mealMakerDraft.fat) ? saved.mealMakerDraft.fat : [],
+      };
+      normalizeMealMakerDraft();
+    }
+    if (saved.activeMakerSlot && MEAL_MAKER_SLOTS.includes(saved.activeMakerSlot)) {
+      state.activeMakerSlot = saved.activeMakerSlot;
+    }
   }
   restoreSessionGridUi(sessionUi);
 }

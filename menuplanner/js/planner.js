@@ -4,10 +4,10 @@ import { setActiveProgramId } from '../../js/programActive.js';
 import {
   state,
   initMealSlotsFromProgram,
-  applyPlannerState,
   persistPlannerToProgram,
   normalizeMealMakerDraft,
 } from './plannerState.js';
+import { applyPlannerStateWithDefaults } from './defaultPlannerTemplate.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 
@@ -27,11 +27,15 @@ function applyProgramPackage(pkg) {
   if (state.programPackage?.program?.id) {
     setActiveProgramId(state.programPackage.program.id);
   }
-  applyPlannerState(plannerStateFromPackage(state.programPackage), {
+  initMealSlotsFromProgram(state.programPackage);
+  const saved = plannerStateFromPackage(state.programPackage);
+  const seeded = applyPlannerStateWithDefaults(saved, {
     preserveSessionUi: plannerShellReady,
   });
   normalizeMealMakerDraft();
-  initMealSlotsFromProgram(state.programPackage);
+  if (seeded) {
+    persistPlannerToProgram({ immediate: true });
+  }
   if (!views) return;
   views.renderPlannerMeta();
   if (plannerShellReady) {
