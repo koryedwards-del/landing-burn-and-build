@@ -8,9 +8,9 @@ import {
   WEEK_DAYS,
   DAY_SLOTS,
   applyPlannerState,
+  applySavedMealToGridCell,
   categorySelections,
   mealSlotMeta,
-  setSplitGridSelections,
   setFatSelections,
   clearDaySlotMeta,
   requiredServings,
@@ -97,34 +97,6 @@ function buildDefaultSavedMeals() {
   ];
 }
 
-function assignSavedMealToCell(weekDay, mealSlotId, meal) {
-  const labelToSlot = {
-    Protein: 'protein',
-    'Grains/Starches': 'gs',
-    'G / S': 'gs',
-    Veggie: 'vegetable',
-  };
-
-  const proteinItems = [];
-  const gsItems = [];
-  const vegetableItems = [];
-
-  meal.items.forEach((item) => {
-    const slotKey = labelToSlot[item.slot];
-    const entry = { foodName: item.foodName, servings: item.servings };
-    if (slotKey === 'gs') gsItems.push(entry);
-    else if (slotKey === 'vegetable') vegetableItems.push(entry);
-    else if (slotKey === 'protein') proteinItems.push(entry);
-  });
-
-  setSplitGridSelections(mealSlotId, 'protein', proteinItems, weekDay);
-  setSplitGridSelections(mealSlotId, 'gs', gsItems, weekDay);
-  setSplitGridSelections(mealSlotId, 'vegetable', vegetableItems, weekDay);
-  setFatSelections(mealSlotId, [], weekDay);
-  mealSlotMeta(mealSlotId, weekDay).mealName = meal.name;
-  mealSlotMeta(mealSlotId, weekDay).savedMealId = meal.id;
-}
-
 function assignFruitSnack(weekDay, mealSlotId, foodName) {
   categorySelections(mealSlotId, weekDay).fruit = {
     foodName,
@@ -138,9 +110,9 @@ function fillDefaultWeekGrid(savedMeals) {
   const byId = Object.fromEntries(savedMeals.map((meal) => [meal.id, meal]));
 
   WEEK_DAYS.forEach((day) => {
-    assignSavedMealToCell(day.id, 'breakfast', byId['power-breakfast']);
-    assignSavedMealToCell(day.id, 'lunch', byId['power-lunch']);
-    assignSavedMealToCell(day.id, 'dinner', byId['power-dinner-salad']);
+    applySavedMealToGridCell(day.id, 'breakfast', byId['power-breakfast']);
+    applySavedMealToGridCell(day.id, 'lunch', byId['power-lunch']);
+    applySavedMealToGridCell(day.id, 'dinner', byId['power-dinner-salad']);
 
     const morningFruit = day.id === 'fri' ? SNACK_FRUITS.morningFriday : SNACK_FRUITS.morning;
     assignFruitSnack(day.id, 'morning-snack', morningFruit);
