@@ -50,6 +50,7 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
+import { recipeImageUrl } from '../data/recipeImages.js';
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -719,23 +720,19 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function mealIngredientNames(meal) {
-  return (meal.items || [])
-    .map((item) => item.foodName)
-    .filter(Boolean);
-}
-
 function renderRecipeCard(meal) {
-  const linesHtml = mealIngredientNames(meal).map((name) => `
-    <div class="recipe-card__line">${escapeHtml(name)}</div>
-  `).join('');
-
+  const imgUrl = recipeImageUrl(meal.id);
   return `
     <article class="recipe-card" data-meal-id="${escapeHtml(meal.id)}">
-      <div class="recipe-card__img" aria-hidden="true"></div>
-      <div class="recipe-card__body">
+      <div class="recipe-card__media">
+        <img
+          class="recipe-card__img"
+          src="${escapeHtml(imgUrl)}"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
         <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-        <div class="recipe-card__lines">${linesHtml}</div>
       </div>
     </article>
   `;
