@@ -1,7 +1,7 @@
 import { state, savedMealFitsMealSlot } from './plannerState.js';
 import { RECIPE_COLUMN_ORDER, recipeImageUrl } from '../data/recipeImages.js';
 
-const REEL_CARD_HEIGHT = 104;
+const REEL_CARD_HEIGHT = 136;
 const spinningColumns = new Set();
 const columnPicks = new Map();
 
@@ -28,12 +28,27 @@ export function allMealsForRecipeColumn(mealSlotId) {
   return [...ordered, ...extras];
 }
 
+function mealIngredientNames(meal) {
+  return (meal.items || [])
+    .map((item) => item.foodName)
+    .filter(Boolean);
+}
+
 function reelCardHtml(meal) {
   const imgUrl = recipeImageUrl(meal.id);
+  const ingredientsHtml = mealIngredientNames(meal)
+    .map((name) => `<li class="recipe-reel__card-ingredient">${escapeHtml(name)}</li>`)
+    .join('');
+
   return `
     <div class="recipe-reel__card" data-meal-id="${escapeHtml(meal.id)}">
-      <img class="recipe-reel__card-img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />
-      <p class="recipe-reel__card-name">${escapeHtml(meal.name)}</p>
+      <div class="recipe-reel__card-media">
+        <img class="recipe-reel__card-img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="recipe-reel__card-body">
+        <p class="recipe-reel__card-name">${escapeHtml(meal.name)}</p>
+        <ul class="recipe-reel__card-ingredients">${ingredientsHtml}</ul>
+      </div>
     </div>
   `;
 }

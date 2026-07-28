@@ -463,7 +463,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 104px;
+  height: 136px;
 }
 
 .recipe-reel__empty {
@@ -474,7 +474,7 @@ body {
 }
 
 .recipe-reel__window {
-  --recipe-reel-card-h: 104px;
+  --recipe-reel-card-h: 136px;
   height: var(--recipe-reel-card-h);
   overflow: hidden;
   position: relative;
@@ -514,34 +514,65 @@ body {
 }
 
 .recipe-reel__card {
-  position: relative;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
   height: var(--recipe-reel-card-h);
   overflow: hidden;
+  padding: 8px;
   background: var(--surface-2);
+  box-sizing: border-box;
+}
+
+.recipe-reel__card-media {
+  flex-shrink: 0;
+  width: 72px;
 }
 
 .recipe-reel__card-img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
+  border-radius: 6px;
   background: #262626;
 }
 
+.recipe-reel__card-body {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
 .recipe-reel__card-name {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
   margin: 0;
-  padding: 22px 8px 8px;
   font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1.2;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 55%, transparent 100%);
+}
+
+.recipe-reel__card-ingredients {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.recipe-reel__card-ingredient {
+  font-size: 0.58rem;
+  line-height: 1.3;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recipe-reel__actions {
