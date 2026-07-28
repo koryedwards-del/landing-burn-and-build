@@ -106,6 +106,10 @@ export function refreshRecipeReelStrips() {
 
     if (!meals.length) return;
 
+    if (!columnPicks.has(slotId)) {
+      columnPicks.set(slotId, meals[0]);
+    }
+
     const picked = columnPicks.get(slotId);
     let index = picked ? meals.findIndex((meal) => meal.id === picked.id) : 0;
     if (index < 0) index = 0;

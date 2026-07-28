@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=127" />
-  <link rel="stylesheet" href="css/report.css?v=127" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=127" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=128" />
+  <link rel="stylesheet" href="css/report.css?v=128" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=128" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -134,7 +134,7 @@
               <section class="recipes-panel">
                 <div class="recipes-panel__head">
                   <h3 class="recipes-panel__title">Recipes</h3>
-                  <p class="recipes-panel__hint">Tap a day in the grid, then pick a recipe</p>
+                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap a slot in the grid, then pick a recipe</p>
                 </div>
                 <div class="recipe-cards" id="recipe-cards"></div>
               </section>
@@ -142,7 +142,7 @@
               <aside class="fruits-panel">
                 <div class="fruits-panel__head">
                   <h3 class="fruits-panel__title">Fruits</h3>
-                  <p class="fruits-panel__hint">One per snack</p>
+                  <p class="fruits-panel__hint" id="fruits-panel-hint">Tap a snack slot, then pick a fruit</p>
                 </div>
                 <div class="fruit-list" id="fruit-list"></div>
               </aside>
@@ -230,6 +230,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=127"></script>
+  <script type="module" src="js/report.js?v=128"></script>
 </body>
 </html>

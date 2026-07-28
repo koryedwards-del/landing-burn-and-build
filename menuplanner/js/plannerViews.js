@@ -54,6 +54,7 @@ import { MEAL_SLOT_COLUMNS } from '../data/recipeImages.js';
 import {
   allMealsForRecipeColumn,
   initRecipeReels,
+  pickedMealForColumn,
   refreshRecipeReelStrips,
 } from './recipeReels.js';
 
@@ -508,6 +509,82 @@ function fitWeekGridLabel(text) {
   return raw.charAt(0);
 }
 
+function gridTargetLabel(target) {
+  const day = WEEK_DAYS.find((item) => item.id === target.weekDay);
+  const slot = DAY_SLOTS.find((item) => item.id === target.mealSlotId);
+  return `${day?.label ?? target.weekDay} · ${slot?.label ?? target.mealSlotId}`;
+}
+
+function setActiveGridTarget(weekDay, mealSlotId) {
+  state.activeGridTarget = { weekDay, mealSlotId };
+  state.activeWeekDay = weekDay;
+  updatePickerHints();
+  renderWeekGrid();
+}
+
+function updatePickerHints() {
+  const recipeHint = document.querySelector('.recipes-panel__hint');
+  const fruitHint = document.querySelector('.fruits-panel__hint');
+  const target = state.activeGridTarget;
+
+  if (recipeHint) {
+    recipeHint.textContent = target
+      ? `Selected ${gridTargetLabel(target)} — Spin, then Use`
+      : 'Tap a slot in the grid, then pick a recipe';
+  }
+
+  if (fruitHint) {
+    fruitHint.textContent = target && isSnackMealSlot(target.mealSlotId)
+      ? `Selected ${gridTargetLabel(target)} — tap a fruit`
+      : 'Tap a snack slot, then pick a fruit';
+  }
+}
+
+function applyPickedRecipeToGrid(columnMealSlotId) {
+  const target = state.activeGridTarget;
+  if (!target) {
+    showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
+    return;
+  }
+  if (!isMealMealSlot(target.mealSlotId)) {
+    showPlannerToast('Tap breakfast, lunch, or dinner in the grid.', { variant: 'error' });
+    return;
+  }
+  if (target.mealSlotId !== columnMealSlotId) {
+    const slot = DAY_SLOTS.find((item) => item.id === columnMealSlotId);
+    showPlannerToast(`Tap a ${slot?.label ?? columnMealSlotId} slot in the grid.`, { variant: 'error' });
+    return;
+  }
+
+  const meal = pickedMealForColumn(columnMealSlotId);
+  if (!meal) {
+    showPlannerToast('Spin the reel first.', { variant: 'error' });
+    return;
+  }
+  if (!savedMealFitsMealSlot(meal, target.mealSlotId)) {
+    showPlannerToast('That recipe is not complete.', { variant: 'error' });
+    return;
+  }
+
+  applySavedMealToMealSlot(target.weekDay, target.mealSlotId, meal);
+  showPlannerToast(`${meal.name} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+}
+
+function applyFruitToActiveTarget(foodName) {
+  const target = state.activeGridTarget;
+  if (!target) {
+    showPlannerToast('Tap a snack slot in the week grid first.', { variant: 'error' });
+    return;
+  }
+  if (!isSnackMealSlot(target.mealSlotId)) {
+    showPlannerToast('Tap a snack slot in the grid.', { variant: 'error' });
+    return;
+  }
+
+  applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
+  showPlannerToast(`${foodName} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+}
+
 function showPlannerToast(message, { variant = 'info', durationMs = 5000 } = {}) {
   const host = document.getElementById('planner-toast-host');
   if (!host) return;
@@ -584,16 +661,20 @@ function renderWeekGrid() {
     `;
     const mealCells = WEEK_GRID_MEALS.map((mealSlotId) => {
       const { text, fullText, empty } = weekMealLabel(day.id, mealSlotId);
+      const isTarget = state.activeGridTarget
+        && state.activeGridTarget.weekDay === day.id
+        && state.activeGridTarget.mealSlotId === mealSlotId;
       const tooltip = !empty && fullText && fullText !== text ? fullText : text;
       const titleAttr = empty ? '' : ` title="${escapeHtml(tooltip)}"`;
       return `
-        <div
-          class="mini-card week-matrix__cell${empty ? ' mini-card--empty' : ''}"
+        <button
+          type="button"
+          class="mini-card week-matrix__cell${empty ? ' mini-card--empty' : ''}${isTarget ? ' mini-card--target' : ''}"
           data-week-meal-drop
           ${titleAttr}
           data-week-day="${day.id}"
           data-meal-slot="${mealSlotId}"
-        >${escapeHtml(text)}</div>
+        >${escapeHtml(text)}</button>
       `;
     }).join('');
     return dayCell + mealCells;
@@ -627,10 +708,21 @@ function initWeekGrid() {
 
   panel.addEventListener('click', (event) => {
     if (event.target.closest('#clear-week-menu')) return;
+    const mealCell = event.target.closest('[data-week-meal-drop]');
+    if (mealCell) {
+      setActiveGridTarget(mealCell.dataset.weekDay, mealCell.dataset.mealSlot);
+      return;
+    }
     const dayCell = event.target.closest('.week-matrix__day[data-week-day-select]');
     if (dayCell) {
       setActiveWeekDay(dayCell.dataset.weekDay);
     }
+  });
+
+  grid.addEventListener('click', (event) => {
+    const mealCell = event.target.closest('[data-week-meal-drop]');
+    if (!mealCell) return;
+    setActiveGridTarget(mealCell.dataset.weekDay, mealCell.dataset.mealSlot);
   });
 
   grid.addEventListener('dragover', (event) => {
@@ -734,22 +826,32 @@ function renderRecipeColumn(column) {
       <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
       ${canSpin ? `
       <div class="recipe-reel">
-        <div class="recipe-reel__window">
+        <div class="recipe-reel__window" data-reel-window="${column.id}">
           <div class="recipe-reel__strip" data-reel-strip="${column.id}"></div>
         </div>
       </div>
-      <button
-        type="button"
-        class="recipe-reel__spin"
-        data-reel-spin="${column.id}"
-      >Spin</button>
+      <div class="recipe-reel__actions">
+        <button
+          type="button"
+          class="recipe-reel__spin"
+          data-reel-spin="${column.id}"
+        >Spin</button>
+        <button
+          type="button"
+          class="recipe-reel__use"
+          data-reel-use="${column.id}"
+        >Use</button>
+      </div>
       ` : `
       <div class="recipe-reel recipe-reel--empty">
         <div class="recipe-reel__window">
           <p class="recipe-reel__empty">No recipes yet</p>
         </div>
       </div>
-      <button type="button" class="recipe-reel__spin" disabled>Spin</button>
+      <div class="recipe-reel__actions">
+        <button type="button" class="recipe-reel__spin" disabled>Spin</button>
+        <button type="button" class="recipe-reel__use" disabled>Use</button>
+      </div>
       `}
     </section>
   `;
@@ -787,12 +889,37 @@ function renderFruitList() {
   container.innerHTML = fruits.map((food) => {
     const grams = gramLabelForFood(food, snackServings);
     return `
-      <div class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
+      <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
         <span class="fruit-row__name">${escapeHtml(food.name)}</span>
         <span class="fruit-row__grams">${escapeHtml(grams)}</span>
-      </div>
+      </button>
     `;
   }).join('');
+}
+
+function initFruitPicker() {
+  const container = document.getElementById('fruit-list');
+  if (!container || container.dataset.fruitPickerInit) return;
+  container.dataset.fruitPickerInit = '1';
+
+  container.addEventListener('click', (event) => {
+    const row = event.target.closest('[data-fruit-name]');
+    if (!row) return;
+    applyFruitToActiveTarget(row.dataset.fruitName);
+  });
+}
+
+function initRecipePicker() {
+  const container = document.getElementById('recipe-cards');
+  if (!container || container.dataset.recipePickerInit) return;
+  container.dataset.recipePickerInit = '1';
+
+  container.addEventListener('click', (event) => {
+    const useBtn = event.target.closest('[data-reel-use]');
+    if (useBtn && !useBtn.disabled) {
+      applyPickedRecipeToGrid(useBtn.dataset.reelUse);
+    }
+  });
 }
 
 function renderSavedMealCard(meal) {
@@ -1169,6 +1296,7 @@ function renderPlannerWorkspace() {
   } catch (err) {
     console.error('Fruit list failed to render:', err);
   }
+  updatePickerHints();
   try {
     renderMealMaker();
   } catch (err) {
@@ -1207,6 +1335,8 @@ export {
   initFoodSearch,
   initFoodDropTargets,
   initRecipeReels,
+  initRecipePicker,
+  initFruitPicker,
   setWeekGridCollapsed,
   showPlannerToast,
 };
