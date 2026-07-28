@@ -1,5 +1,11 @@
 /** Hero photos for recipe cards — keyed by saved-meal id. */
 
+export const RECIPE_ROW_MEAL_IDS = [
+  'power-breakfast',
+  'power-lunch',
+  'power-dinner-salad',
+];
+
 const RECIPE_IMAGES = {
   'power-breakfast': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=480&h=320&fit=crop',
   'power-lunch': 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=480&h=320&fit=crop',

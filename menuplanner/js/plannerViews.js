@@ -50,7 +50,7 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
-import { recipeImageUrl } from '../data/recipeImages.js';
+import { recipeImageUrl, RECIPE_ROW_MEAL_IDS } from '../data/recipeImages.js';
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -738,11 +738,19 @@ function renderRecipeCard(meal) {
   `;
 }
 
+function recipeRowMeals() {
+  const featured = RECIPE_ROW_MEAL_IDS
+    .map((id) => savedMealById(id))
+    .filter(Boolean);
+  if (featured.length) return featured;
+  return savedMealsByPopularity().slice(0, 3);
+}
+
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = savedMealsByPopularity();
+  const meals = recipeRowMeals();
   if (!meals.length) {
     container.innerHTML = '<p class="recipe-cards__empty">Recipes will appear here once your program loads.</p>';
     return;
