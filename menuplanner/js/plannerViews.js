@@ -50,7 +50,12 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
-import { recipeImageUrl, RECIPE_ROW_MEAL_IDS } from '../data/recipeImages.js';
+import {
+  MEAL_SLOT_COLUMNS,
+  RECIPE_COLUMN_ORDER,
+  RECIPES_PER_COLUMN,
+  recipeImageUrl,
+} from '../data/recipeImages.js';
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -738,25 +743,42 @@ function renderRecipeCard(meal) {
   `;
 }
 
-function recipeRowMeals() {
-  const featured = RECIPE_ROW_MEAL_IDS
-    .map((id) => savedMealById(id))
-    .filter(Boolean);
-  if (featured.length) return featured;
-  return savedMealsByPopularity().slice(0, 3);
+function mealsForRecipeColumn(mealSlotId) {
+  const byId = new Map(state.savedMeals.map((meal) => [meal.id, meal]));
+  const preferredIds = RECIPE_COLUMN_ORDER[mealSlotId] || [];
+  const ordered = preferredIds.map((id) => byId.get(id)).filter(Boolean);
+  const seen = new Set(ordered.map((meal) => meal.id));
+
+  const extras = savedMealsByPopularity()
+    .filter((meal) => savedMealFitsMealSlot(meal, mealSlotId) && !seen.has(meal.id));
+  return [...ordered, ...extras].slice(0, RECIPES_PER_COLUMN);
+}
+
+function renderRecipeColumn(column) {
+  const meals = mealsForRecipeColumn(column.id);
+  const cardsHtml = meals.length
+    ? meals.map((meal) => renderRecipeCard(meal)).join('')
+    : '<p class="recipe-column__empty">No recipes yet</p>';
+
+  return `
+    <section class="recipe-column" data-meal-slot="${column.id}">
+      <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
+      <div class="recipe-column__stack">${cardsHtml}</div>
+    </section>
+  `;
 }
 
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = recipeRowMeals();
-  if (!meals.length) {
+  if (!state.savedMeals.length) {
     container.innerHTML = '<p class="recipe-cards__empty">Recipes will appear here once your program loads.</p>';
     return;
   }
 
-  container.innerHTML = meals.map((meal) => renderRecipeCard(meal)).join('');
+  container.classList.add('recipe-columns');
+  container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
 }
 
 function renderFruitList() {
