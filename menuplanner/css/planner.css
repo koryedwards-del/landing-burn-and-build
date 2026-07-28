@@ -339,7 +339,14 @@ body {
   width: 100%;
   text-align: left;
   font-family: inherit;
-  cursor: default;
+  cursor: pointer;
+  appearance: none;
+}
+
+.mini-card--target {
+  border-color: var(--gold);
+  background: var(--gold-select-bg);
+  box-shadow: inset 0 0 0 1px rgba(253, 197, 0, 0.28);
 }
 
 .mini-card {
@@ -536,10 +543,17 @@ body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 55%, transparent 100%);
 }
 
-.recipe-reel__spin {
-  width: 100%;
+.recipe-reel__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
   margin-top: 2px;
-  padding: 9px 12px;
+}
+
+.recipe-reel__spin,
+.recipe-reel__use {
+  width: 100%;
+  padding: 9px 10px;
   border: 1px solid var(--gold-muted);
   border-radius: 6px;
   background: transparent;
@@ -553,17 +567,26 @@ body {
   transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
-.recipe-reel__spin:hover:not(:disabled) {
-  background: rgba(253, 197, 0, 0.1);
-  border-color: var(--gold);
+.recipe-reel__use {
+  border-color: var(--border);
+  color: var(--text);
 }
 
-.recipe-reel__spin:disabled {
+.recipe-reel__spin:hover:not(:disabled),
+.recipe-reel__use:hover:not(:disabled) {
+  background: rgba(253, 197, 0, 0.1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.recipe-reel__spin:disabled,
+.recipe-reel__use:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.recipe-reel__spin:active:not(:disabled) {
+.recipe-reel__spin:active:not(:disabled),
+.recipe-reel__use:active:not(:disabled) {
   transform: translateY(1px);
 }
 
@@ -596,6 +619,8 @@ body {
   text-align: left;
   color: inherit;
   font: inherit;
+  appearance: none;
+  cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 

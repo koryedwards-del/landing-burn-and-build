@@ -100,6 +100,8 @@ export async function bootMenuPlannerPage() {
     initPrintShop();
     plannerViews.initFoodDropTargets();
     plannerViews.initRecipeReels();
+    plannerViews.initRecipePicker();
+    plannerViews.initFruitPicker();
     plannerShellReady = true;
 
     if (foodsLoadError) {

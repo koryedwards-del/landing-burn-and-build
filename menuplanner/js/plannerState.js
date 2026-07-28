@@ -798,6 +798,7 @@ export const state = {
   foodSearchQuery: '',
   weekPlan: {},
   activeWeekDay: null,
+  activeGridTarget: null,
 };
 
 state.weekPlan = createFreshWeekPlan();
