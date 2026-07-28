@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Menu planner mockup — Meal bandits · Burn &amp; Build</title>
+  <title>Menu planner mockup — Daily meal roulette · Burn &amp; Build</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -16,9 +16,8 @@
       --text: #f2f2f2;
       --muted: #9c9c9c;
       --gold: #fdc500;
-      --gold-dim: rgba(253, 197, 0, 0.12);
       --gold-muted: rgba(253, 197, 0, 0.38);
-      --card-h: 168px;
+      --card-h: 152px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,11 +50,11 @@
       margin-bottom: 6px;
     }
 
-    .guide { font-size: 0.84rem; color: var(--muted); margin-bottom: 12px; max-width: 42rem; }
+    .guide { font-size: 0.84rem; color: var(--muted); margin-bottom: 12px; max-width: 44rem; }
     .guide em { color: var(--text); font-style: normal; }
 
     .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-    #status { font-size: 0.78rem; color: var(--gold); flex: 1; min-width: 200px; }
+    #status { font-size: 0.78rem; color: var(--gold); flex: 1; }
     #status.idle { color: var(--muted); }
 
     .btn-print {
@@ -72,12 +71,12 @@
       cursor: pointer;
     }
 
+    /* Grid */
     .week-panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       margin-bottom: 16px;
-      overflow: hidden;
     }
 
     .week-bar {
@@ -93,9 +92,9 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 2.4rem repeat(6, minmax(82px, 1fr));
+      grid-template-columns: 2.4rem repeat(6, minmax(80px, 1fr));
       gap: 5px 7px;
-      min-width: 620px;
+      min-width: 600px;
     }
 
     .gh {
@@ -112,7 +111,6 @@
     .gd {
       font-size: 0.64rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--muted);
       display: flex;
@@ -122,221 +120,299 @@
     }
 
     .cell {
-      font-size: 0.6rem;
-      line-height: 1.28;
+      font-size: 0.58rem;
       padding: 5px 6px;
       background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: 4px;
-      cursor: pointer;
-      min-height: 38px;
+      min-height: 36px;
       text-align: left;
       color: inherit;
     }
 
-    .cell:hover { border-color: var(--gold-muted); }
+    .cell__t { display: block; font-weight: 600; }
+    .cell__g { color: var(--muted); font-size: 0.52rem; }
 
-    .cell.target {
-      border-color: var(--gold);
-      background: rgba(253, 197, 0, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(253, 197, 0, 0.25);
-    }
-
-    .cell__t { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .cell__g { display: block; color: var(--muted); font-size: 0.54rem; }
-
-    .lower {
+    /* Main layout */
+    .main-row {
       display: grid;
-      grid-template-columns: 1fr 200px;
+      grid-template-columns: 1fr 188px;
       gap: 14px;
       align-items: start;
     }
 
-    @media (max-width: 860px) { .lower { grid-template-columns: 1fr; } }
+    @media (max-width: 820px) { .main-row { grid-template-columns: 1fr; } }
 
-    .bandits { display: flex; flex-direction: column; gap: 16px; }
-
-    .bandit {
+    /* —— ONE ROULETTE: 3 vertical reels —— */
+    .roulette-section {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px 14px 16px;
+      padding: 14px;
     }
 
-    .bandit.is-active {
-      border-color: var(--gold-muted);
-      box-shadow: 0 0 0 1px rgba(253, 197, 0, 0.15);
-    }
-
-    .bandit__head {
+    .roulette-head {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .bandit__head h3 {
+    .roulette-head h2 {
       font-family: Oswald, sans-serif;
-      font-size: 0.88rem;
-      letter-spacing: 0.07em;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--gold);
     }
 
-    .bandit__head span { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .roulette-head p { font-size: 0.72rem; color: var(--muted); }
 
-    .bandit__machine {
+    .roulette-machine {
       display: flex;
       gap: 12px;
       align-items: stretch;
     }
 
-    /* Three windows = one-arm bandit row */
-    .bandit__windows {
+    .roulette-frame {
       flex: 1;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding: 10px;
-      background: linear-gradient(180deg, #141414 0%, #1a1a1a 50%, #141414 100%);
+      gap: 0;
+      background: linear-gradient(180deg, #121212, #1a1a1a 50%, #121212);
       border: 3px solid var(--gold-muted);
       border-radius: 8px;
-      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.65);
     }
 
-    .bandit__window {
+    .reel-col {
+      border-right: 2px solid #3a3a3a;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .reel-col:last-child { border-right: none; }
+
+    .reel-label {
+      text-align: center;
+      font-family: Oswald, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 8px 4px 6px;
+      background: #141414;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+
+    .reel-window {
       height: var(--card-h);
       overflow: hidden;
-      border: 2px solid #444;
-      border-radius: 6px;
-      background: #0a0a0a;
       position: relative;
+      background: #080808;
     }
 
-    .bandit__window::before,
-    .bandit__window::after {
+    .reel-window::before,
+    .reel-window::after {
       content: '';
       position: absolute;
       left: 0;
       right: 0;
-      height: 24px;
+      height: 28px;
       z-index: 2;
       pointer-events: none;
     }
 
-    .bandit__window::before {
-      top: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
-    }
+    .reel-window::before { top: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
+    .reel-window::after { bottom: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
 
-    .bandit__window::after {
-      bottom: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    }
+    .reel-strip { will-change: transform; }
+    .reel-strip.spinning { filter: blur(1.2px); }
 
-    .bandit__strip {
-      will-change: transform;
-    }
-
-    .bandit__strip.spinning { filter: blur(1px); }
-
-    .bandit-card {
+    .reel-card {
       height: var(--card-h);
+      padding: 8px;
       display: flex;
-      flex-direction: column;
+      gap: 8px;
+      align-items: center;
       background: var(--surface-2);
-      overflow: hidden;
     }
 
-    .bandit-card__img {
-      height: 72px;
+    .reel-card__thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 6px;
       background-size: cover;
       background-position: center;
-      background-color: #333;
       flex-shrink: 0;
+      background-color: #333;
     }
 
-    .bandit-card__body {
-      padding: 6px 8px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+    .reel-card__text { min-width: 0; flex: 1; }
 
-    .bandit-card__name {
+    .reel-card__name {
       font-family: Oswald, sans-serif;
       font-size: 0.62rem;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      margin-bottom: 4px;
       line-height: 1.2;
+      margin-bottom: 4px;
     }
 
-    .bandit-card__g {
-      font-size: 0.52rem;
-      color: var(--muted);
-      line-height: 1.3;
-    }
+    .reel-card__g { font-size: 0.52rem; color: var(--muted); line-height: 1.35; }
 
-    /* Lever */
-    .bandit__lever-col {
+    .lever-col {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 56px;
+      width: 58px;
       flex-shrink: 0;
     }
 
-    .bandit__lever {
-      width: 48px;
-      height: 48px;
+    .lever {
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       border: 3px solid var(--gold);
-      background: radial-gradient(circle at 35% 35%, #ffe566, var(--gold) 45%, #c9a000);
-      color: #0a0a0a;
+      background: radial-gradient(circle at 35% 30%, #ffe566, var(--gold) 50%, #a88600);
       font-family: Oswald, sans-serif;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #8a7200, 0 6px 12px rgba(0,0,0,0.5);
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-    .bandit__lever:hover:not(:disabled) { filter: brightness(1.08); }
-
-    .bandit__lever:active:not(:disabled),
-    .bandit__lever.pulled {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #8a7200, 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .bandit__lever:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      filter: grayscale(0.5);
-    }
-
-    .bandit__lever-label {
-      margin-top: 8px;
       font-size: 0.58rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
+      color: #0a0a0a;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #7a6500, 0 8px 14px rgba(0,0,0,0.55);
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+
+    .lever:hover:not(:disabled) { filter: brightness(1.06); }
+    .lever:active:not(:disabled), .lever.pulled {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #7a6500, 0 3px 8px rgba(0,0,0,0.5);
+    }
+
+    .lever:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .lever-hint {
+      margin-top: 10px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
       writing-mode: vertical-rl;
       transform: rotate(180deg);
     }
 
+    /* Result row — the elegant 3-across after spin */
+    .result-section {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .result-label {
+      font-family: Oswald, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .result-label.has-result { color: var(--gold); }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 700px) { .result-row { grid-template-columns: 1fr; } }
+
+    .result-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0.35;
+      transform: translateY(6px);
+      transition: opacity 0.4s, transform 0.4s, border-color 0.3s;
+    }
+
+    .result-card.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+      border-color: var(--gold-muted);
+    }
+
+    .result-card__img {
+      height: 88px;
+      background-size: cover;
+      background-position: center;
+      background-color: #333;
+    }
+
+    .result-card__body { padding: 10px 11px 12px; }
+
+    .result-card__slot {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .result-card__name {
+      font-family: Oswald, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .result-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.66rem;
+      padding: 2px 0;
+      gap: 6px;
+    }
+
+    .result-line span:last-child { color: var(--muted); white-space: nowrap; }
+
+    .btn-use-row {
+      margin-top: 12px;
+      font-family: Oswald, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--gold-muted);
+      color: var(--gold);
+      border-radius: 5px;
+      padding: 8px 14px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .btn-use-row.visible { opacity: 1; pointer-events: auto; }
+    .btn-use-row:hover { background: rgba(253, 197, 0, 0.1); }
+
     /* Fruits */
     .fruits-panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      position: sticky;
-      top: 12px;
     }
 
     .fruits-head {
@@ -372,319 +448,284 @@
     }
 
     .fruit-row:hover { border-color: var(--gold-muted); }
-    .fruit-row.picked { border-color: var(--gold); background: rgba(253,197,0,0.08); }
 
     .fruit-row__thumb {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 6px;
       background-size: cover;
       background-position: center;
       flex-shrink: 0;
     }
 
-    .fruit-row__name { font-size: 0.78rem; font-weight: 600; display: block; }
-    .fruit-row__g { font-size: 0.68rem; color: var(--muted); }
+    .fruit-row__name { font-size: 0.76rem; font-weight: 600; display: block; }
+    .fruit-row__g { font-size: 0.66rem; color: var(--muted); }
 
-    .footnote { margin-top: 14px; font-size: 0.7rem; color: var(--muted); }
+    .footnote { margin-top: 14px; font-size: 0.68rem; color: var(--muted); }
 
-    @keyframes bandit-flash {
-      0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
-      50% { box-shadow: inset 0 0 20px rgba(253, 197, 0, 0.35); }
+    @keyframes win-flash {
+      0%, 100% { box-shadow: inset 0 0 0 transparent; }
+      50% { box-shadow: inset 0 0 24px rgba(253, 197, 0, 0.4); }
     }
 
-    .bandit__windows.win {
-      animation: bandit-flash 0.5s ease 2;
-    }
+    .roulette-frame.win { animation: win-flash 0.45s ease 2; }
   </style>
 </head>
 <body>
   <div class="shell">
-    <p class="banner"><strong>One-arm bandit mockup</strong> — Tap a meal slot, pull SPIN on the matching bandit. Three windows spin, center column wins. Fruits = tap list (no spin).</p>
+    <p class="banner"><strong>Daily meal roulette</strong> — One pull, three vertical reels (breakfast · lunch · dinner). When they stop, one row of suggestions.</p>
 
     <h1 class="page-title">Menu planner</h1>
-    <p class="guide">Tap <em>breakfast, lunch, or dinner</em> on the grid → pull the <em>SPIN</em> lever on that bandit. Or tap a <em>snack</em> → pick a fruit.</p>
+    <p class="guide">Pull <em>SPIN</em> once. Three reels spin vertically and stop — you get <em>one breakfast, one lunch, one dinner</em> in a single row. Pick fruits separately for snacks.</p>
 
     <div class="toolbar">
-      <p id="status" class="idle">Tap a meal slot, then pull SPIN.</p>
+      <p id="status" class="idle">Pull SPIN for today&rsquo;s meal suggestions.</p>
       <button type="button" class="btn-print">Print Shop</button>
     </div>
 
     <section class="week-panel">
       <div class="week-bar">Your week</div>
       <div class="grid-wrap">
-        <div class="grid" id="grid">
+        <div class="grid">
           <div></div>
-          <div class="gh">Breakfast</div><div class="gh">Snack</div><div class="gh">Lunch</div><div class="gh">Snack</div><div class="gh">Dinner</div><div class="gh">Snack</div>
-
+          <div class="gh">B</div><div class="gh">S</div><div class="gh">L</div><div class="gh">S</div><div class="gh">D</div><div class="gh">S</div>
           <div class="gd">Mon</div>
-          <button type="button" class="cell" data-meal="breakfast" data-label="Mon breakfast"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon AM snack"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></button>
-          <button type="button" class="cell" data-meal="lunch" data-label="Mon lunch"><span class="cell__t">Chicken &amp; Rice</span><span class="cell__g">113 g · 196 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon PM snack"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></button>
-          <button type="button" class="cell" data-meal="dinner" data-label="Mon dinner"><span class="cell__t">Beef Fajita Plate</span><span class="cell__g">113 g · 124 g · 159 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon eve snack"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></button>
-
-          <div class="gd">Tue</div>
-          <button type="button" class="cell" data-meal="breakfast" data-label="Tue breakfast"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Tue snack"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></button>
-          <button type="button" class="cell" data-meal="lunch" data-label="Tue lunch"><span class="cell__t">Power Lunch</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Tue snack"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></button>
-          <button type="button" class="cell" data-meal="dinner" data-label="Tue dinner"><span class="cell__t">Power Dinner w/ salad</span><span class="cell__g">113 g · 124 g · 159 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Tue snack"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></button>
-
-          <div class="gd">Wed</div>
-          <button type="button" class="cell" data-meal="breakfast" data-label="Wed breakfast"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Wed snack"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></button>
-          <button type="button" class="cell" data-meal="lunch" data-label="Wed lunch"><span class="cell__t">Chicken &amp; Rice</span><span class="cell__g">113 g · 196 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Wed snack"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></button>
-          <button type="button" class="cell" data-meal="dinner" data-label="Wed dinner"><span class="cell__t">Beef Fajita Plate</span><span class="cell__g">113 g · 124 g · 159 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Wed snack"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></button>
+          <div class="cell"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g · 124 g</span></div>
+          <div class="cell"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></div>
+          <div class="cell"><span class="cell__t">Chicken &amp; Rice</span><span class="cell__g">113 g · 196 g</span></div>
+          <div class="cell"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></div>
+          <div class="cell"><span class="cell__t">Beef Fajita</span><span class="cell__g">113 g · 124 g · 159 g</span></div>
+          <div class="cell"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></div>
         </div>
       </div>
     </section>
 
-    <div class="lower">
-      <div class="bandits" id="bandits">
-        <!-- built by JS -->
-      </div>
+    <div class="main-row">
+      <section class="roulette-section">
+        <div class="roulette-head">
+          <div>
+            <h2>Meal roulette</h2>
+            <p>Column 1 = breakfast · Column 2 = lunch · Column 3 = dinner</p>
+          </div>
+        </div>
+
+        <div class="roulette-machine">
+          <div class="roulette-frame" id="frame">
+            <div class="reel-col">
+              <div class="reel-label">Breakfast</div>
+              <div class="reel-window">
+                <div class="reel-strip" id="strip-breakfast"></div>
+              </div>
+            </div>
+            <div class="reel-col">
+              <div class="reel-label">Lunch</div>
+              <div class="reel-window">
+                <div class="reel-strip" id="strip-lunch"></div>
+              </div>
+            </div>
+            <div class="reel-col">
+              <div class="reel-label">Dinner</div>
+              <div class="reel-window">
+                <div class="reel-strip" id="strip-dinner"></div>
+              </div>
+            </div>
+          </div>
+          <div class="lever-col">
+            <button type="button" class="lever" id="spin-btn" aria-label="Spin all reels">SPIN</button>
+            <span class="lever-hint">Pull</span>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <p class="result-label" id="result-label">Your row appears here after spin</p>
+          <div class="result-row" id="result-row">
+            <article class="result-card" data-slot="Breakfast"><div class="result-card__img" id="img-b"></div><div class="result-card__body"><p class="result-card__slot">Breakfast</p><p class="result-card__name" id="name-b">—</p><div id="lines-b"></div></div></article>
+            <article class="result-card" data-slot="Lunch"><div class="result-card__img" id="img-l"></div><div class="result-card__body"><p class="result-card__slot">Lunch</p><p class="result-card__name" id="name-l">—</p><div id="lines-l"></div></div></article>
+            <article class="result-card" data-slot="Dinner"><div class="result-card__img" id="img-d"></div><div class="result-card__body"><p class="result-card__slot">Dinner</p><p class="result-card__name" id="name-d">—</p><div id="lines-d"></div></div></article>
+          </div>
+          <button type="button" class="btn-use-row" id="use-row">Use this row for Monday</button>
+        </div>
+      </section>
 
       <aside class="fruits-panel">
         <div class="fruits-head">
           <h3>Fruits</h3>
-          <p>Tap snack slot, then fruit</p>
+          <p>One per snack · tap to pick</p>
         </div>
         <div class="fruit-list" id="fruits"></div>
       </aside>
     </div>
 
-    <p class="footnote">Center reel = your pick (classic bandit). Side reels spin for show. Production: your photos, your recipe library.</p>
+    <p class="footnote">One spin → one row (B + L + D). Apply to grid or spin again for another combo. Snacks from fruit list only.</p>
   </div>
 
   <script>
-    const CARD_H = 168;
+    const CARD_H = 152;
 
     const RECIPES = {
       breakfast: [
-        { title: 'Power Breakfast', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&h=200&fit=crop' },
-        { title: 'Turkey & Toast', grams: '113 g turkey · 128 g bread', img: 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=300&h=200&fit=crop' },
-        { title: 'Beef & Tortilla', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
-        { title: 'Power Breakfast', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&h=200&fit=crop' },
+        { title: 'Power Breakfast', img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=320&h=200&fit=crop', lines: [['Beef, eye of round', '113 g'], ['Tortilla, corn', '124 g']] },
+        { title: 'Turkey & Toast', img: 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=320&h=200&fit=crop', lines: [['Turkey breast', '113 g'], ['Bread, whole wheat', '128 g']] },
+        { title: 'Beef & Tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=320&h=200&fit=crop', lines: [['Beef, eye of round', '113 g'], ['Tortilla, corn', '124 g']] },
       ],
       lunch: [
-        { title: 'Power Lunch', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
-        { title: 'Chicken & Rice Bowl', grams: '113 g chicken · 196 g rice', img: 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=300&h=200&fit=crop' },
-        { title: 'Turkey Wrap', grams: '113 g turkey · 124 g tortilla', img: 'https://images.unsplash.com/photo-1626700051175-6818013e5786?w=300&h=200&fit=crop' },
-        { title: 'Power Lunch', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
+        { title: 'Power Lunch', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=320&h=200&fit=crop', lines: [['Beef, eye of round', '113 g'], ['Tortilla, corn', '124 g']] },
+        { title: 'Chicken & Rice Bowl', img: 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=320&h=200&fit=crop', lines: [['Chicken breast', '113 g'], ['Rice, basmati', '196 g']] },
+        { title: 'Turkey Wrap', img: 'https://images.unsplash.com/photo-1626700051175-6818013e5786?w=320&h=200&fit=crop', lines: [['Turkey breast', '113 g'], ['Tortilla, corn', '124 g']] },
       ],
       dinner: [
-        { title: 'Power Dinner w/ salad', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop' },
-        { title: 'Beef Fajita Plate', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
-        { title: 'Chicken Fajita Plate', grams: '113 g chicken · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
-        { title: 'Beef Fajita Plate', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
+        { title: 'Power Dinner w/ salad', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=320&h=200&fit=crop', lines: [['Beef, eye of round', '113 g'], ['Tortilla, corn', '124 g'], ['Peppers, red bell', '159 g']] },
+        { title: 'Beef Fajita Plate', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=320&h=200&fit=crop', lines: [['Beef, top sirloin', '113 g'], ['Tortilla, corn', '124 g'], ['Peppers, red bell', '159 g']] },
+        { title: 'Chicken Fajita Plate', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=320&h=200&fit=crop', lines: [['Chicken breast', '113 g'], ['Tortilla, corn', '124 g'], ['Peppers, red bell', '159 g']] },
       ],
     };
 
     const FRUITS = [
       { name: 'Apple', grams: '182 g', img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=120&h=120&fit=crop' },
-      { name: 'Apricots', grams: '35 g', img: 'https://images.unsplash.com/photo-1437753323695-e03606f35e24?w=120&h=120&fit=crop' },
       { name: 'Banana', grams: '118 g', img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=120&h=120&fit=crop' },
       { name: 'Grapes', grams: '120 g', img: 'https://images.unsplash.com/photo-1599819177828-977859063789?w=120&h=120&fit=crop' },
+      { name: 'Apricots', grams: '35 g', img: 'https://images.unsplash.com/photo-1437753323695-e03606f35e24?w=120&h=120&fit=crop' },
       { name: 'Orange', grams: '140 g', img: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=120&h=120&fit=crop' },
-      { name: 'Strawberries', grams: '152 g', img: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=120&h=120&fit=crop' },
     ];
 
-    let target = null;
     let spinning = false;
-    const status = document.getElementById('status');
+    let lastResult = null;
 
-    function cardHtml(r) {
+    function reelCardHtml(r) {
+      const grams = r.lines.map((l) => l[1]).join(' · ');
       return `
-        <div class="bandit-card">
-          <div class="bandit-card__img" style="background-image:url('${r.img}')"></div>
-          <div class="bandit-card__body">
-            <p class="bandit-card__name">${r.title}</p>
-            <p class="bandit-card__g">${r.grams}</p>
+        <div class="reel-card">
+          <div class="reel-card__thumb" style="background-image:url('${r.img}')"></div>
+          <div class="reel-card__text">
+            <p class="reel-card__name">${r.title}</p>
+            <p class="reel-card__g">${grams}</p>
           </div>
         </div>`;
     }
 
-    function buildStrip(recipes, copies = 8) {
+    function buildStrip(el, list) {
       let html = '';
-      for (let c = 0; c < copies; c += 1) {
-        recipes.forEach((r) => { html += cardHtml(r); });
-      }
-      return html;
+      for (let i = 0; i < 12; i += 1) list.forEach((r) => { html += reelCardHtml(r); });
+      el.innerHTML = html;
     }
 
-    function buildBandits() {
-      const labels = { breakfast: 'Breakfast bandit', lunch: 'Lunch bandit', dinner: 'Dinner bandit' };
-      document.getElementById('bandits').innerHTML = ['breakfast', 'lunch', 'dinner'].map((type) => `
-        <section class="bandit" data-bandit="${type}" aria-label="${labels[type]}">
-          <div class="bandit__head">
-            <h3>${labels[type]}</h3>
-            <span>3 reels · center wins</span>
-          </div>
-          <div class="bandit__machine">
-            <div class="bandit__windows" data-windows="${type}">
-              ${[0, 1, 2].map((col) => `
-                <div class="bandit__window">
-                  <div class="bandit__strip" data-strip="${type}-${col}" style="transform:translateY(0)">
-                    ${buildStrip(RECIPES[type])}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-            <div class="bandit__lever-col">
-              <button type="button" class="bandit__lever" data-spin="${type}" aria-label="Spin ${type}">SPIN</button>
-              <span class="bandit__lever-label">Pull</span>
-            </div>
-          </div>
-        </section>
-      `).join('');
-
-      document.querySelectorAll('[data-spin]').forEach((btn) => {
-        btn.addEventListener('click', () => spinBandit(btn.dataset.spin));
-      });
-    }
-
-    function buildFruits() {
-      document.getElementById('fruits').innerHTML = FRUITS.map((f) => `
-        <button type="button" class="fruit-row" data-fruit data-name="${f.name}" data-title="${f.name}" data-grams="${f.grams}">
-          <span class="fruit-row__thumb" style="background-image:url('${f.img}')"></span>
-          <span><span class="fruit-row__name">${f.name}</span><span class="fruit-row__g">${f.grams}</span></span>
-        </button>
-      `).join('');
-
-      document.querySelectorAll('[data-fruit]').forEach((row) => {
-        row.addEventListener('click', () => pickFruit(row));
-      });
-    }
-
-    function setActiveBandit(type) {
-      document.querySelectorAll('.bandit').forEach((b) => {
-        b.classList.toggle('is-active', b.dataset.bandit === type);
-      });
-    }
-
-    document.querySelectorAll('.cell').forEach((cell) => {
-      cell.addEventListener('click', () => {
-        document.querySelectorAll('.cell.target').forEach((c) => c.classList.remove('target'));
-        cell.classList.add('target');
-        target = cell;
-        document.querySelectorAll('.fruit-row.picked').forEach((r) => r.classList.remove('picked'));
-
-        const m = cell.dataset.meal;
-        if (m === 'snack') {
-          status.textContent = `Snack slot: ${cell.dataset.label}. Pick a fruit →`;
-          status.classList.add('idle');
-          document.querySelectorAll('.bandit').forEach((b) => b.classList.remove('is-active'));
-        } else {
-          status.textContent = `${cell.dataset.label} selected. Pull SPIN on the ${m} bandit →`;
-          status.classList.remove('idle');
-          setActiveBandit(m);
-          document.querySelector(`[data-bandit="${m}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      });
-    });
-
-    function easeOutCubic(t) {
-      return 1 - (1 - t) ** 3;
-    }
-
-    function animateStrip(strip, targetY, duration, onDone) {
-      const startY = getTranslateY(strip);
-      const start = performance.now();
-      strip.classList.add('spinning');
-
-      function frame(now) {
-        const t = Math.min(1, (now - start) / duration);
-        const y = startY + (targetY - startY) * easeOutCubic(t);
-        strip.style.transform = `translateY(${y}px)`;
-        if (t < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          strip.classList.remove('spinning');
-          onDone?.();
-        }
-      }
-      requestAnimationFrame(frame);
-    }
-
-    function getTranslateY(el) {
+    function getY(el) {
       const m = el.style.transform.match(/translateY\((-?\d+\.?\d*)px\)/);
       return m ? parseFloat(m[1]) : 0;
     }
 
-    function spinBandit(type) {
-      if (spinning) return;
-      if (!target || target.dataset.meal !== type) {
-        status.textContent = `Select a ${type} slot on the grid first, then SPIN.`;
-        status.classList.remove('idle');
-        return;
-      }
+    function easeOut(t) { return 1 - (1 - t) ** 3; }
 
-      spinning = true;
-      document.querySelectorAll(`[data-spin="${type}"]`).forEach((b) => { b.disabled = true; });
-
-      const recipes = RECIPES[type];
-      const winIndex = Math.floor(Math.random() * recipes.length);
-      const winRecipe = recipes[winIndex];
-      const copies = 8;
-      const baseOffset = copies * recipes.length * CARD_H * 0.5;
-      const winY = -(baseOffset + winIndex * CARD_H);
-
-      const windows = document.querySelector(`[data-windows="${type}"]`);
-      windows.classList.remove('win');
-
-      const strips = [0, 1, 2].map((col) => document.querySelector(`[data-strip="${type}-${col}"]));
-
-      status.textContent = 'Spinning…';
-      status.classList.remove('idle');
-
-      let done = 0;
-      strips.forEach((strip, col) => {
-        const offsetIndex = col === 1 ? winIndex : Math.floor(Math.random() * recipes.length);
-        const targetY = -(baseOffset + offsetIndex * CARD_H + (col === 1 ? 0 : Math.floor(Math.random() * 3)) * CARD_H);
-        const extraSpins = (3 + col) * recipes.length * CARD_H;
-        const startY = getTranslateY(strip);
-        const finalY = winY - (col === 1 ? 0 : (col === 0 ? 1 : 2) * CARD_H * 0.3);
-
-        strip.style.transform = `translateY(${startY}px)`;
-        animateStrip(strip, finalY - extraSpins, 1400 + col * 200, () => {
-          animateStrip(strip, col === 1 ? winY : finalY, 600, () => {
-            done += 1;
-            if (done === 3) {
-              spinning = false;
-              document.querySelectorAll(`[data-spin="${type}"]`).forEach((b) => { b.disabled = false; });
-              windows.classList.add('win');
-              target.innerHTML = `<span class="cell__t">${winRecipe.title}</span><span class="cell__g">${winRecipe.grams}</span>`;
-              status.textContent = `🎰 ${winRecipe.title} → ${target.dataset.label}`;
-              target.classList.remove('target');
-              target = null;
-              document.querySelectorAll('.bandit').forEach((b) => b.classList.remove('is-active'));
-            }
-          });
-        });
+    function animateTo(el, targetY, ms) {
+      return new Promise((resolve) => {
+        const startY = getY(el);
+        const t0 = performance.now();
+        el.classList.add('spinning');
+        function frame(now) {
+          const t = Math.min(1, (now - t0) / ms);
+          el.style.transform = `translateY(${startY + (targetY - startY) * easeOut(t)}px)`;
+          if (t < 1) requestAnimationFrame(frame);
+          else { el.classList.remove('spinning'); resolve(); }
+        }
+        requestAnimationFrame(frame);
       });
     }
 
-    function pickFruit(row) {
-      if (!target || target.dataset.meal !== 'snack') {
-        status.textContent = 'Tap a snack slot on the grid first.';
-        status.classList.remove('idle');
-        return;
-      }
-      document.querySelectorAll('.fruit-row.picked').forEach((r) => r.classList.remove('picked'));
-      row.classList.add('picked');
-      target.innerHTML = `<span class="cell__t">${row.dataset.title}</span><span class="cell__g">${row.dataset.grams}</span>`;
-      status.textContent = `${row.dataset.name} → ${target.dataset.label}`;
-      target.classList.remove('target');
-      target = null;
+    function winY(list, index) {
+      const mid = 6 * list.length;
+      return -((mid + index) * CARD_H);
     }
 
-    buildBandits();
-    buildFruits();
+    function fillResult(prefix, r) {
+      document.getElementById(`img-${prefix}`).style.backgroundImage = `url('${r.img}')`;
+      document.getElementById(`name-${prefix}`).textContent = r.title;
+      document.getElementById(`lines-${prefix}`).innerHTML = r.lines.map(([a, b]) =>
+        `<div class="result-line"><span>${a}</span><span>${b}</span></div>`).join('');
+    }
+
+    async function spinAll() {
+      if (spinning) return;
+      spinning = true;
+      document.getElementById('spin-btn').disabled = true;
+      document.getElementById('frame').classList.remove('win');
+      document.querySelectorAll('.result-card').forEach((c) => c.classList.remove('is-revealed'));
+      document.getElementById('use-row').classList.remove('visible');
+      document.getElementById('result-label').classList.remove('has-result');
+      document.getElementById('result-label').textContent = 'Spinning…';
+      document.getElementById('status').textContent = 'Reels spinning…';
+      document.getElementById('status').classList.remove('idle');
+
+      const picks = {
+        breakfast: Math.floor(Math.random() * RECIPES.breakfast.length),
+        lunch: Math.floor(Math.random() * RECIPES.lunch.length),
+        dinner: Math.floor(Math.random() * RECIPES.dinner.length),
+      };
+
+      const strips = {
+        breakfast: document.getElementById('strip-breakfast'),
+        lunch: document.getElementById('strip-lunch'),
+        dinner: document.getElementById('strip-dinner'),
+      };
+
+      const targets = {
+        breakfast: winY(RECIPES.breakfast, picks.breakfast) - CARD_H * RECIPES.breakfast.length * 4,
+        lunch: winY(RECIPES.lunch, picks.lunch) - CARD_H * RECIPES.lunch.length * 5,
+        dinner: winY(RECIPES.dinner, picks.dinner) - CARD_H * RECIPES.dinner.length * 6,
+      };
+
+      await Promise.all([
+        animateTo(strips.breakfast, targets.breakfast, 2200),
+        animateTo(strips.lunch, targets.lunch, 2600),
+        animateTo(strips.dinner, targets.dinner, 3000),
+      ]);
+
+      await Promise.all([
+        animateTo(strips.breakfast, winY(RECIPES.breakfast, picks.breakfast), 500),
+        animateTo(strips.lunch, winY(RECIPES.lunch, picks.lunch), 500),
+        animateTo(strips.dinner, winY(RECIPES.dinner, picks.dinner), 500),
+      ]);
+
+      lastResult = {
+        breakfast: RECIPES.breakfast[picks.breakfast],
+        lunch: RECIPES.lunch[picks.lunch],
+        dinner: RECIPES.dinner[picks.dinner],
+      };
+
+      fillResult('b', lastResult.breakfast);
+      fillResult('l', lastResult.lunch);
+      fillResult('d', lastResult.dinner);
+
+      document.getElementById('frame').classList.add('win');
+      document.getElementById('result-label').textContent = 'Your meal row';
+      document.getElementById('result-label').classList.add('has-result');
+
+      setTimeout(() => {
+        document.querySelectorAll('.result-card').forEach((c, i) => {
+          setTimeout(() => c.classList.add('is-revealed'), i * 120);
+        });
+      }, 200);
+
+      document.getElementById('use-row').classList.add('visible');
+      document.getElementById('status').textContent = `${lastResult.breakfast.title} · ${lastResult.lunch.title} · ${lastResult.dinner.title}`;
+      spinning = false;
+      document.getElementById('spin-btn').disabled = false;
+    }
+
+    buildStrip(document.getElementById('strip-breakfast'), RECIPES.breakfast);
+    buildStrip(document.getElementById('strip-lunch'), RECIPES.lunch);
+    buildStrip(document.getElementById('strip-dinner'), RECIPES.dinner);
+
+    document.getElementById('fruits').innerHTML = FRUITS.map((f) => `
+      <div class="fruit-row">
+        <span class="fruit-row__thumb" style="background-image:url('${f.img}')"></span>
+        <span><span class="fruit-row__name">${f.name}</span><span class="fruit-row__g">${f.grams}</span></span>
+      </div>`).join('');
+
+    document.getElementById('spin-btn').addEventListener('click', spinAll);
+    document.getElementById('use-row').addEventListener('click', () => {
+      if (!lastResult) return;
+      document.getElementById('status').textContent = 'Applied row to Monday (demo). Spin again anytime.';
+    });
   </script>
 </body>
 </html>
