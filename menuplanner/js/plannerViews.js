@@ -518,7 +518,11 @@ function gridTargetLabel(target) {
 function setActiveGridTarget(weekDay, mealSlotId) {
   state.activeGridTarget = { weekDay, mealSlotId };
   state.activeWeekDay = weekDay;
+  if (!isSnackMealSlot(mealSlotId)) {
+    state.pendingFruitPick = null;
+  }
   updatePickerHints();
+  updateFruitPickerUi();
   renderWeekGrid();
 }
 
@@ -529,18 +533,18 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target
-      ? `Selected ${gridTargetLabel(target)} — Spin, then Use`
+      ? `Selected ${gridTargetLabel(target)} — Spin, then Lock`
       : 'Tap a slot in the grid, then pick a recipe';
   }
 
   if (fruitHint) {
     fruitHint.textContent = target && isSnackMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — tap a fruit`
+      ? `Selected ${gridTargetLabel(target)} — pick a fruit, then Lock`
       : 'Tap a snack slot, then pick a fruit';
   }
 }
 
-function applyPickedRecipeToGrid(columnMealSlotId) {
+function lockPickedRecipeToGrid(columnMealSlotId) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
@@ -567,7 +571,35 @@ function applyPickedRecipeToGrid(columnMealSlotId) {
   }
 
   applySavedMealToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPlannerToast(`${meal.name} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${meal.name} locked to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+}
+
+function setPendingFruitPick(foodName) {
+  state.pendingFruitPick = foodName;
+  updateFruitPickerUi();
+}
+
+function updateFruitPickerUi() {
+  document.querySelectorAll('.fruit-row[data-fruit-name]').forEach((row) => {
+    row.classList.toggle('fruit-row--pending', row.dataset.fruitName === state.pendingFruitPick);
+  });
+
+  const lockBtn = document.getElementById('fruit-lock');
+  if (!lockBtn) return;
+  const target = state.activeGridTarget;
+  lockBtn.disabled = !(state.pendingFruitPick && target && isSnackMealSlot(target.mealSlotId));
+}
+
+function lockPendingFruitToGrid() {
+  if (!state.pendingFruitPick) {
+    showPlannerToast('Pick a fruit first.', { variant: 'error' });
+    return;
+  }
+
+  const foodName = state.pendingFruitPick;
+  applyFruitToActiveTarget(foodName);
+  state.pendingFruitPick = null;
+  updateFruitPickerUi();
 }
 
 function applyFruitToActiveTarget(foodName) {
@@ -582,7 +614,7 @@ function applyFruitToActiveTarget(foodName) {
   }
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
-  showPlannerToast(`${foodName} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${foodName} locked to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function showPlannerToast(message, { variant = 'info', durationMs = 5000 } = {}) {
@@ -838,9 +870,9 @@ function renderRecipeColumn(column) {
         >Spin</button>
         <button
           type="button"
-          class="recipe-reel__use"
-          data-reel-use="${column.id}"
-        >Use</button>
+          class="recipe-reel__lock"
+          data-reel-lock="${column.id}"
+        >Lock</button>
       </div>
       ` : `
       <div class="recipe-reel recipe-reel--empty">
@@ -850,7 +882,7 @@ function renderRecipeColumn(column) {
       </div>
       <div class="recipe-reel__actions">
         <button type="button" class="recipe-reel__spin" disabled>Spin</button>
-        <button type="button" class="recipe-reel__use" disabled>Use</button>
+        <button type="button" class="recipe-reel__lock" disabled>Lock</button>
       </div>
       `}
     </section>
@@ -888,24 +920,32 @@ function renderFruitList() {
 
   container.innerHTML = fruits.map((food) => {
     const grams = gramLabelForFood(food, snackServings);
+    const pending = state.pendingFruitPick === food.name ? ' fruit-row--pending' : '';
     return `
-      <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
+      <button type="button" class="fruit-row${pending}" data-fruit-name="${escapeHtml(food.name)}">
         <span class="fruit-row__name">${escapeHtml(food.name)}</span>
         <span class="fruit-row__grams">${escapeHtml(grams)}</span>
       </button>
     `;
   }).join('');
+
+  updateFruitPickerUi();
 }
 
 function initFruitPicker() {
   const container = document.getElementById('fruit-list');
+  const lockBtn = document.getElementById('fruit-lock');
   if (!container || container.dataset.fruitPickerInit) return;
   container.dataset.fruitPickerInit = '1';
 
   container.addEventListener('click', (event) => {
     const row = event.target.closest('[data-fruit-name]');
     if (!row) return;
-    applyFruitToActiveTarget(row.dataset.fruitName);
+    setPendingFruitPick(row.dataset.fruitName);
+  });
+
+  lockBtn?.addEventListener('click', () => {
+    lockPendingFruitToGrid();
   });
 }
 
@@ -915,9 +955,9 @@ function initRecipePicker() {
   container.dataset.recipePickerInit = '1';
 
   container.addEventListener('click', (event) => {
-    const useBtn = event.target.closest('[data-reel-use]');
-    if (useBtn && !useBtn.disabled) {
-      applyPickedRecipeToGrid(useBtn.dataset.reelUse);
+    const lockBtn = event.target.closest('[data-reel-lock]');
+    if (lockBtn && !lockBtn.disabled) {
+      lockPickedRecipeToGrid(lockBtn.dataset.reelLock);
     }
   });
 }

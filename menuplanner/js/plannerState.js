@@ -799,6 +799,7 @@ export const state = {
   weekPlan: {},
   activeWeekDay: null,
   activeGridTarget: null,
+  pendingFruitPick: null,
 };
 
 state.weekPlan = createFreshWeekPlan();
