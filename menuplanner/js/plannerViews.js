@@ -534,8 +534,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target
-      ? `Selected ${gridTargetLabel(target)} — Spin, then Assign`
-      : 'Tap a slot in the grid, then pick a recipe';
+      ? `Selected ${gridTargetLabel(target)} — spin, then Use`
+      : 'Spin for a direction — you fill your foods';
   }
 
   if (fruitHint) {
@@ -567,12 +567,12 @@ function assignPickedRecipeToGrid(columnMealSlotId) {
     return;
   }
   if (!libraryRecipeFitsMealSlot(recipe, target.mealSlotId)) {
-    showPlannerToast('That recipe does not fit this meal slot.', { variant: 'error' });
+    showPlannerToast('That idea does not fit this slot.', { variant: 'error' });
     return;
   }
 
   applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, recipe);
-  showPlannerToast(`${recipe.name} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`"${recipe.name}" on ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function setPendingFruitPick(foodName) {
@@ -869,7 +869,7 @@ function renderRecipeColumn(column) {
           class="recipe-reel__assign"
           data-reel-assign="${column.id}"
           ${canSpin ? '' : 'disabled'}
-        >Assign</button>
+        >Use</button>
       </div>
       ${canSpin ? `
       <div class="recipe-reel">
@@ -880,7 +880,7 @@ function renderRecipeColumn(column) {
       ` : `
       <div class="recipe-reel recipe-reel--empty">
         <div class="recipe-reel__window">
-          <p class="recipe-reel__empty">No recipes yet</p>
+          <p class="recipe-reel__empty">No ideas yet</p>
         </div>
       </div>
       `}

@@ -1,6 +1,6 @@
 import { recipesForMealSlot } from '../data/recipeLibrary.js';
 
-const REEL_CARD_HEIGHT = 136;
+const REEL_CARD_HEIGHT = 88;
 const spinningColumns = new Set();
 const columnPicks = new Map();
 
@@ -16,20 +16,11 @@ export function allMealsForRecipeColumn(mealSlotId) {
   return recipesForMealSlot(mealSlotId);
 }
 
-function reelCardHtml(recipe) {
-  const ingredientsHtml = recipe.ingredients
-    .map((name) => `<li class="recipe-reel__card-ingredient">${escapeHtml(name)}</li>`)
-    .join('');
-
+function reelCardHtml(meal) {
   return `
-    <div class="recipe-reel__card" data-recipe-id="${escapeHtml(recipe.id)}">
-      <div class="recipe-reel__card-media">
-        <span class="recipe-reel__card-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span>
-      </div>
-      <div class="recipe-reel__card-body">
-        <p class="recipe-reel__card-name">${escapeHtml(recipe.name)}</p>
-        <ul class="recipe-reel__card-ingredients">${ingredientsHtml}</ul>
-      </div>
+    <div class="recipe-reel__card" data-recipe-id="${escapeHtml(meal.id)}">
+      <span class="recipe-reel__card-emoji" aria-hidden="true">${escapeHtml(meal.emoji)}</span>
+      <p class="recipe-reel__card-name">${escapeHtml(meal.name)}</p>
     </div>
   `;
 }

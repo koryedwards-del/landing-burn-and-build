@@ -543,7 +543,7 @@ function acceptsSavedMealDrop(mealSlotId) {
   return isMealMealSlot(mealSlotId);
 }
 
-/** Grid and assigned slots: meal came from Saved Meals (center column). */
+/** Grid shows a meal idea label or saved-meal name. */
 function isAssignedMeal(mealSlotId, weekDay = state.activeWeekDay) {
   const meta = mealSlotMeta(mealSlotId, weekDay);
   return !!(meta.savedMealId && meta.mealName);
@@ -605,10 +605,7 @@ function mealItemsScaledToSlot(meal, mealSlotId) {
 function applyLibraryRecipeToGridCell(weekDay, mealSlotId, recipe) {
   if (!isMealMealSlot(mealSlotId) || !recipe?.id || !recipe?.name) return;
 
-  MEAL_MAKER_SLOTS.forEach((slotKey) => {
-    categorySelections(mealSlotId, weekDay)[slotKey] = null;
-  });
-  setFatSelections(mealSlotId, [], weekDay);
+  // Idea only — label the slot; foods stay on the user's program.
   mealSlotMeta(mealSlotId, weekDay).mealName = recipe.name;
   mealSlotMeta(mealSlotId, weekDay).savedMealId = recipe.id;
 }
