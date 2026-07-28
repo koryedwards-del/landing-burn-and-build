@@ -367,7 +367,223 @@ body {
   border-style: dashed;
 }
 
-/* Workspace */
+/* Recipes + Fruits picker (Page 4 redesign) */
+
+.picker-row {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.recipes-panel,
+.fruits-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.recipes-panel__head,
+.fruits-panel__head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.recipes-panel__title,
+.fruits-panel__title {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.recipes-panel__hint,
+.fruits-panel__hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.recipe-cards {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+  -webkit-overflow-scrolling: touch;
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  color: inherit;
+  font: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.recipe-card:hover {
+  border-color: var(--gold-muted);
+}
+
+.recipe-card__img {
+  height: 72px;
+  background: linear-gradient(135deg, #2a2418 0%, #1a1a1a 55%, #262626 100%);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.recipe-card__body {
+  padding: 10px 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.recipe-card__name {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.recipe-card__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recipe-card__line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.recipe-card__line span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipe-card__line span:last-child {
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.recipe-cards__empty {
+  grid-column: 1 / -1;
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 8px 4px;
+}
+
+.fruit-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fruit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 11px;
+  margin-bottom: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.fruit-row:hover {
+  border-color: var(--gold-muted);
+}
+
+.fruit-row__name {
+  font-size: 0.76rem;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fruit-row__grams {
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.fruit-list__empty {
+  font-size: 0.76rem;
+  color: var(--muted);
+  padding: 8px 4px;
+}
+
+.workspace--legacy {
+  display: none !important;
+}
+
+#planner-servings {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .picker-row {
+    grid-template-columns: 1fr;
+    flex: none;
+    min-height: auto;
+  }
+
+  .recipe-cards {
+    grid-template-columns: 1fr;
+    max-height: min(52vh, 480px);
+  }
+
+  .fruit-list {
+    max-height: min(36vh, 320px);
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .recipe-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Workspace (legacy) */
 
 .meal-maker-card {
   display: flex;

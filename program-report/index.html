@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=121" />
-  <link rel="stylesheet" href="css/report.css?v=121" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=121" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=122" />
+  <link rel="stylesheet" href="css/report.css?v=122" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=122" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -130,7 +130,25 @@
               </section>
             </div>
 
-            <section class="workspace" aria-label="Planner workspace">
+            <section class="picker-row" aria-label="Recipes and fruits">
+              <section class="recipes-panel">
+                <div class="recipes-panel__head">
+                  <h3 class="recipes-panel__title">Recipes</h3>
+                  <p class="recipes-panel__hint">Tap a day in the grid, then pick a recipe</p>
+                </div>
+                <div class="recipe-cards" id="recipe-cards"></div>
+              </section>
+
+              <aside class="fruits-panel">
+                <div class="fruits-panel__head">
+                  <h3 class="fruits-panel__title">Fruits</h3>
+                  <p class="fruits-panel__hint">One per snack</p>
+                </div>
+                <div class="fruit-list" id="fruit-list"></div>
+              </aside>
+            </section>
+
+            <section class="workspace workspace--legacy" aria-label="Planner workspace" hidden>
               <div class="workspace__col workspace__col--maker">
                 <div class="meal-maker-card">
                   <div class="meal-maker-card__head">
@@ -212,6 +230,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=121"></script>
+  <script type="module" src="js/report.js?v=122"></script>
 </body>
 </html>
