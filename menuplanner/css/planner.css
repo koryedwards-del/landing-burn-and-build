@@ -474,24 +474,9 @@ body {
 }
 
 .recipe-card__line {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 0.64rem;
-  line-height: 1.35;
-}
-
-.recipe-card__line span:first-child {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.recipe-card__line span:last-child {
-  color: var(--muted);
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--text);
 }
 
 .recipe-cards__empty {
