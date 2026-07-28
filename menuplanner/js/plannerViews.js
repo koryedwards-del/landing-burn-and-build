@@ -50,12 +50,12 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
+import { MEAL_SLOT_COLUMNS } from '../data/recipeImages.js';
 import {
-  MEAL_SLOT_COLUMNS,
-  RECIPE_COLUMN_ORDER,
-  RECIPES_PER_COLUMN,
-  recipeImageUrl,
-} from '../data/recipeImages.js';
+  allMealsForRecipeColumn,
+  initRecipeReels,
+  refreshRecipeReelStrips,
+} from './recipeReels.js';
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -725,45 +725,32 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function renderRecipeCard(meal) {
-  const imgUrl = recipeImageUrl(meal.id);
-  return `
-    <article class="recipe-card" data-meal-id="${escapeHtml(meal.id)}">
-      <div class="recipe-card__media">
-        <img
-          class="recipe-card__img"
-          src="${escapeHtml(imgUrl)}"
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
-        <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-      </div>
-    </article>
-  `;
-}
-
-function mealsForRecipeColumn(mealSlotId) {
-  const byId = new Map(state.savedMeals.map((meal) => [meal.id, meal]));
-  const preferredIds = RECIPE_COLUMN_ORDER[mealSlotId] || [];
-  const ordered = preferredIds.map((id) => byId.get(id)).filter(Boolean);
-  const seen = new Set(ordered.map((meal) => meal.id));
-
-  const extras = savedMealsByPopularity()
-    .filter((meal) => savedMealFitsMealSlot(meal, mealSlotId) && !seen.has(meal.id));
-  return [...ordered, ...extras].slice(0, RECIPES_PER_COLUMN);
-}
-
 function renderRecipeColumn(column) {
-  const meals = mealsForRecipeColumn(column.id);
-  const cardsHtml = meals.length
-    ? meals.map((meal) => renderRecipeCard(meal)).join('')
-    : '<p class="recipe-column__empty">No recipes yet</p>';
+  const meals = allMealsForRecipeColumn(column.id);
+  const canSpin = meals.length > 0;
 
   return `
     <section class="recipe-column" data-meal-slot="${column.id}">
       <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
-      <div class="recipe-column__stack">${cardsHtml}</div>
+      ${canSpin ? `
+      <div class="recipe-reel">
+        <div class="recipe-reel__window">
+          <div class="recipe-reel__strip" data-reel-strip="${column.id}"></div>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="recipe-reel__spin"
+        data-reel-spin="${column.id}"
+      >Spin</button>
+      ` : `
+      <div class="recipe-reel recipe-reel--empty">
+        <div class="recipe-reel__window">
+          <p class="recipe-reel__empty">No recipes yet</p>
+        </div>
+      </div>
+      <button type="button" class="recipe-reel__spin" disabled>Spin</button>
+      `}
     </section>
   `;
 }
@@ -773,12 +760,14 @@ function renderRecipeCards() {
   if (!container) return;
 
   if (!state.savedMeals.length) {
+    container.classList.remove('recipe-columns');
     container.innerHTML = '<p class="recipe-cards__empty">Recipes will appear here once your program loads.</p>';
     return;
   }
 
   container.classList.add('recipe-columns');
   container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
+  refreshRecipeReelStrips();
 }
 
 function renderFruitList() {
@@ -1217,6 +1206,7 @@ export {
   initSavedMealsPanel,
   initFoodSearch,
   initFoodDropTargets,
+  initRecipeReels,
   setWeekGridCollapsed,
   showPlannerToast,
 };
