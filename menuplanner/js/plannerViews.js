@@ -84,6 +84,7 @@ function refreshFoodsPanel() {
 
 function refreshPlannerAfterMenuChange() {
   renderWeekGrid();
+  renderRecipeCards();
   renderMealMaker();
   refreshFoodsPanel();
   persistPlannerToProgram();
@@ -117,6 +118,7 @@ function saveMealFromMaker(name) {
   state.activeFoodCategory = null;
   renderMealMaker();
   renderSavedMeals();
+  renderRecipeCards();
   refreshFoodsPanel();
   persistPlannerToProgram();
 }
@@ -708,6 +710,82 @@ function mealDragHtml(meal) {
   return `<p class="card__title">${escapeHtml(meal.name)}</p>`;
 }
 
+function foodByName(name) {
+  return state.foods.find((item) => item.name === name);
+}
+
+function gramLabelForFood(food, servings) {
+  if (!food) return '';
+  return scaledLabel(food, servings);
+}
+
+function mealIngredientLines(meal) {
+  return (meal.items || [])
+    .map((item) => ({
+      name: item.foodName,
+      grams: gramLabelForFood(foodByName(item.foodName), item.servings),
+    }))
+    .filter((line) => line.name);
+}
+
+function renderRecipeCard(meal) {
+  const lines = mealIngredientLines(meal);
+  const linesHtml = lines.map((line) => `
+    <div class="recipe-card__line">
+      <span>${escapeHtml(line.name)}</span>
+      <span>${escapeHtml(line.grams)}</span>
+    </div>
+  `).join('');
+
+  return `
+    <article class="recipe-card" data-meal-id="${escapeHtml(meal.id)}">
+      <div class="recipe-card__img" aria-hidden="true"></div>
+      <div class="recipe-card__body">
+        <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+        <div class="recipe-card__lines">${linesHtml}</div>
+      </div>
+    </article>
+  `;
+}
+
+function renderRecipeCards() {
+  const container = document.getElementById('recipe-cards');
+  if (!container) return;
+
+  const meals = savedMealsByPopularity();
+  if (!meals.length) {
+    container.innerHTML = '<p class="recipe-cards__empty">Recipes will appear here once your program loads.</p>';
+    return;
+  }
+
+  container.innerHTML = meals.map((meal) => renderRecipeCard(meal)).join('');
+}
+
+function renderFruitList() {
+  const container = document.getElementById('fruit-list');
+  if (!container) return;
+
+  const snackServings = requiredServings('morning-snack', 'fruit');
+  const fruits = state.foods
+    .filter((food) => food.category === 'fruit')
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (!fruits.length) {
+    container.innerHTML = '<p class="fruit-list__empty">Fruit list loading…</p>';
+    return;
+  }
+
+  container.innerHTML = fruits.map((food) => {
+    const grams = gramLabelForFood(food, snackServings);
+    return `
+      <div class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
+        <span class="fruit-row__name">${escapeHtml(food.name)}</span>
+        <span class="fruit-row__grams">${escapeHtml(grams)}</span>
+      </div>
+    `;
+  }).join('');
+}
+
 function renderSavedMealCard(meal) {
   const loaded = state.makerSourceMealId === meal.id ? ' saved-meal__apply--ready' : '';
   return `
@@ -754,6 +832,7 @@ function deleteSavedMeal(mealId) {
   });
 
   renderSavedMeals();
+  renderRecipeCards();
   renderMealMaker();
   renderWeekGrid();
   persistPlannerToProgram();
@@ -970,6 +1049,7 @@ function applySavedMealToMealSlot(weekDay, mealSlotId, meal, { trackPick = true 
   if (trackPick) meal.pickCount += 1;
   renderWeekGrid();
   renderSavedMeals();
+  renderRecipeCards();
   persistPlannerToProgram();
 }
 
@@ -1069,6 +1149,16 @@ function renderPlannerWorkspace() {
     renderWeekGrid();
   } catch (err) {
     console.error('Week grid failed to render:', err);
+  }
+  try {
+    renderRecipeCards();
+  } catch (err) {
+    console.error('Recipe cards failed to render:', err);
+  }
+  try {
+    renderFruitList();
+  } catch (err) {
+    console.error('Fruit list failed to render:', err);
   }
   try {
     renderMealMaker();
