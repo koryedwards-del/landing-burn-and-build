@@ -99,6 +99,7 @@ export async function bootMenuPlannerPage() {
     const { initPrintShop } = await import(`./plannerPrint.js?v=${ASSET_VERSION}`);
     initPrintShop();
     plannerViews.initFoodDropTargets();
+    plannerViews.initRecipeReels();
     plannerShellReady = true;
 
     if (foodsLoadError) {
