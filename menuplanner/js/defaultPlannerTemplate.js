@@ -1,16 +1,15 @@
 /**
- * Default menu planner starter — Kristi-style Power meals + week grid.
- * Reference servings: 15 protein / 15 G&S / 4 fruit / 1 veg daily (7/15/26).
- * Meal items scale to each program's meal-slot requirements.
+ * Default menu planner starter — meal and food choices from the 7/15/26 reference plan.
+ * Serving amounts always scale to the current user's program (requiredServings per slot).
  */
 
 import {
   WEEK_DAYS,
   DAY_SLOTS,
   applyPlannerState,
+  applySavedMealItemsToMakerDraft,
   applySavedMealToGridCell,
   categorySelections,
-  mealSlotMeta,
   setFatSelections,
   clearDaySlotMeta,
   requiredServings,
@@ -131,11 +130,10 @@ export function weekPlanHasAssignments(weekPlan) {
   }));
 }
 
-export function plannerStateIsEmpty(saved) {
-  if (!saved || typeof saved !== 'object') return true;
-  if (Array.isArray(saved.savedMeals) && saved.savedMeals.length > 0) return false;
-  if (weekPlanHasAssignments(saved.weekPlan)) return false;
-  return true;
+/** True when the planner has no saved meals and no week-grid assignments yet. */
+export function plannerWorkspaceNeedsStarter() {
+  if (Array.isArray(state.savedMeals) && state.savedMeals.length > 0) return false;
+  return !weekPlanHasAssignments(state.weekPlan);
 }
 
 /** Mutates planner state — call only when meal slots are initialized. */
@@ -146,12 +144,19 @@ export function seedDefaultPlannerTemplate() {
   state.savedMeals = savedMeals;
   fillDefaultWeekGrid(savedMeals);
   state.activeWeekDay = todayWeekDayId();
+
+  const sampleMeal = savedMeals.find((meal) => meal.id === 'power-breakfast');
+  if (sampleMeal) {
+    applySavedMealItemsToMakerDraft(sampleMeal);
+    state.activeMakerSlot = 'protein';
+  }
+
   return true;
 }
 
-/** Restore saved planner state; seed Power-meal template when empty. */
+/** Restore saved planner state; seed sample week when empty (first visit). */
 export function applyPlannerStateWithDefaults(saved, options = {}) {
   applyPlannerState(saved, options);
-  if (!plannerStateIsEmpty(saved)) return false;
+  if (!plannerWorkspaceNeedsStarter()) return false;
   return seedDefaultPlannerTemplate();
 }

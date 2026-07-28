@@ -41,6 +41,12 @@ function applyProgramPackage(pkg) {
   if (plannerShellReady) {
     views.renderPlannerWorkspace();
   }
+  if (seeded) {
+    views.showPlannerToast(
+      'Sample week filled in using your servings. Edit any day, drag meals, or clear to start fresh.',
+      { durationMs: 9000 },
+    );
+  }
 }
 
 export function applyMenuPlannerProgram(pkg) {
