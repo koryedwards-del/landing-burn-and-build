@@ -856,33 +856,31 @@ function renderRecipeColumn(column) {
   return `
     <section class="recipe-column" data-meal-slot="${column.id}">
       <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
+      <div class="recipe-reel__actions">
+        <button
+          type="button"
+          class="recipe-reel__spin"
+          data-reel-spin="${column.id}"
+          ${canSpin ? '' : 'disabled'}
+        >Spin</button>
+        <button
+          type="button"
+          class="recipe-reel__assign"
+          data-reel-assign="${column.id}"
+          ${canSpin ? '' : 'disabled'}
+        >Assign</button>
+      </div>
       ${canSpin ? `
       <div class="recipe-reel">
         <div class="recipe-reel__window" data-reel-window="${column.id}">
           <div class="recipe-reel__strip" data-reel-strip="${column.id}"></div>
         </div>
       </div>
-      <div class="recipe-reel__actions">
-        <button
-          type="button"
-          class="recipe-reel__spin"
-          data-reel-spin="${column.id}"
-        >Spin</button>
-        <button
-          type="button"
-          class="recipe-reel__assign"
-          data-reel-assign="${column.id}"
-        >Assign</button>
-      </div>
       ` : `
       <div class="recipe-reel recipe-reel--empty">
         <div class="recipe-reel__window">
           <p class="recipe-reel__empty">No recipes yet</p>
         </div>
-      </div>
-      <div class="recipe-reel__actions">
-        <button type="button" class="recipe-reel__spin" disabled>Spin</button>
-        <button type="button" class="recipe-reel__assign" disabled>Assign</button>
       </div>
       `}
     </section>
