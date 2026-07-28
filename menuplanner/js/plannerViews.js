@@ -533,18 +533,18 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target
-      ? `Selected ${gridTargetLabel(target)} — Spin, then Lock`
+      ? `Selected ${gridTargetLabel(target)} — Spin, then Assign`
       : 'Tap a slot in the grid, then pick a recipe';
   }
 
   if (fruitHint) {
     fruitHint.textContent = target && isSnackMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick a fruit, then Lock`
+      ? `Selected ${gridTargetLabel(target)} — pick a fruit, then Assign`
       : 'Tap a snack slot, then pick a fruit';
   }
 }
 
-function lockPickedRecipeToGrid(columnMealSlotId) {
+function assignPickedRecipeToGrid(columnMealSlotId) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
@@ -571,7 +571,7 @@ function lockPickedRecipeToGrid(columnMealSlotId) {
   }
 
   applySavedMealToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPlannerToast(`${meal.name} locked to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${meal.name} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function setPendingFruitPick(foodName) {
@@ -584,13 +584,13 @@ function updateFruitPickerUi() {
     row.classList.toggle('fruit-row--pending', row.dataset.fruitName === state.pendingFruitPick);
   });
 
-  const lockBtn = document.getElementById('fruit-lock');
-  if (!lockBtn) return;
+  const assignBtn = document.getElementById('fruit-assign');
+  if (!assignBtn) return;
   const target = state.activeGridTarget;
-  lockBtn.disabled = !(state.pendingFruitPick && target && isSnackMealSlot(target.mealSlotId));
+  assignBtn.disabled = !(state.pendingFruitPick && target && isSnackMealSlot(target.mealSlotId));
 }
 
-function lockPendingFruitToGrid() {
+function assignPendingFruitToGrid() {
   if (!state.pendingFruitPick) {
     showPlannerToast('Pick a fruit first.', { variant: 'error' });
     return;
@@ -614,7 +614,7 @@ function applyFruitToActiveTarget(foodName) {
   }
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
-  showPlannerToast(`${foodName} locked to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${foodName} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function showPlannerToast(message, { variant = 'info', durationMs = 5000 } = {}) {
@@ -870,9 +870,9 @@ function renderRecipeColumn(column) {
         >Spin</button>
         <button
           type="button"
-          class="recipe-reel__lock"
-          data-reel-lock="${column.id}"
-        >Lock</button>
+          class="recipe-reel__assign"
+          data-reel-assign="${column.id}"
+        >Assign</button>
       </div>
       ` : `
       <div class="recipe-reel recipe-reel--empty">
@@ -882,7 +882,7 @@ function renderRecipeColumn(column) {
       </div>
       <div class="recipe-reel__actions">
         <button type="button" class="recipe-reel__spin" disabled>Spin</button>
-        <button type="button" class="recipe-reel__lock" disabled>Lock</button>
+        <button type="button" class="recipe-reel__assign" disabled>Assign</button>
       </div>
       `}
     </section>
@@ -934,7 +934,7 @@ function renderFruitList() {
 
 function initFruitPicker() {
   const container = document.getElementById('fruit-list');
-  const lockBtn = document.getElementById('fruit-lock');
+  const assignBtn = document.getElementById('fruit-assign');
   if (!container || container.dataset.fruitPickerInit) return;
   container.dataset.fruitPickerInit = '1';
 
@@ -944,8 +944,8 @@ function initFruitPicker() {
     setPendingFruitPick(row.dataset.fruitName);
   });
 
-  lockBtn?.addEventListener('click', () => {
-    lockPendingFruitToGrid();
+  assignBtn?.addEventListener('click', () => {
+    assignPendingFruitToGrid();
   });
 }
 
@@ -955,9 +955,9 @@ function initRecipePicker() {
   container.dataset.recipePickerInit = '1';
 
   container.addEventListener('click', (event) => {
-    const lockBtn = event.target.closest('[data-reel-lock]');
-    if (lockBtn && !lockBtn.disabled) {
-      lockPickedRecipeToGrid(lockBtn.dataset.reelLock);
+    const assignBtn = event.target.closest('[data-reel-assign]');
+    if (assignBtn && !assignBtn.disabled) {
+      assignPickedRecipeToGrid(assignBtn.dataset.reelAssign);
     }
   });
 }

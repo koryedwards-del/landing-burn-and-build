@@ -551,7 +551,7 @@ body {
 }
 
 .recipe-reel__spin,
-.recipe-reel__lock {
+.recipe-reel__assign {
   width: 100%;
   padding: 9px 10px;
   border: 1px solid var(--gold-muted);
@@ -567,27 +567,27 @@ body {
   transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
-.recipe-reel__lock {
+.recipe-reel__assign {
   border-color: var(--gold);
   color: var(--gold);
   background: rgba(253, 197, 0, 0.06);
 }
 
 .recipe-reel__spin:hover:not(:disabled),
-.recipe-reel__lock:hover:not(:disabled) {
+.recipe-reel__assign:hover:not(:disabled) {
   background: rgba(253, 197, 0, 0.1);
   border-color: var(--gold);
   color: var(--gold);
 }
 
 .recipe-reel__spin:disabled,
-.recipe-reel__lock:disabled {
+.recipe-reel__assign:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
 .recipe-reel__spin:active:not(:disabled),
-.recipe-reel__lock:active:not(:disabled) {
+.recipe-reel__assign:active:not(:disabled) {
   transform: translateY(1px);
 }
 
@@ -640,7 +640,7 @@ body {
   flex-shrink: 0;
 }
 
-.fruit-lock {
+.fruit-assign {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--gold);
@@ -656,16 +656,16 @@ body {
   transition: background 0.15s ease, opacity 0.15s ease;
 }
 
-.fruit-lock:hover:not(:disabled) {
+.fruit-assign:hover:not(:disabled) {
   background: rgba(253, 197, 0, 0.14);
 }
 
-.fruit-lock:disabled {
+.fruit-assign:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.fruit-lock:active:not(:disabled) {
+.fruit-assign:active:not(:disabled) {
   transform: translateY(1px);
 }
 
