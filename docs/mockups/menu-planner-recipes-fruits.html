@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu planner mockup — Recipes + Fruits · Burn &amp; Build</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #1c1c1c;
+      --surface-2: #262626;
+      --border: #333333;
+      --text: #f2f2f2;
+      --muted: #9c9c9c;
+      --gold: #fdc500;
+      --gold-dim: rgba(253, 197, 0, 0.12);
+      --gold-muted: rgba(253, 197, 0, 0.38);
+      --gold-select: rgba(253, 197, 0, 0.08);
+      --on-gold: #0a0a0a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #050505;
+      color: var(--text);
+      font-family: "Open Sans", system-ui, sans-serif;
+      padding: 20px 16px 48px;
+      line-height: 1.45;
+    }
+
+    .shell {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    .explore-banner {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      border: 1px dashed var(--gold-muted);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .explore-banner strong { color: var(--gold); }
+
+    /* —— Program shell header —— */
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .page-title {
+      font-family: Oswald, sans-serif;
+      font-size: 1.45rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .guide {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 36rem;
+      margin-bottom: 16px;
+    }
+
+    .guide em { color: var(--text); font-style: normal; }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      min-height: 28px;
+    }
+
+    .status-bar__msg {
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    .status-bar__msg.is-idle { color: var(--muted); }
+
+    .btn-print {
+      margin-left: auto;
+      font-family: Oswald, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--on-gold);
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-print:hover { filter: brightness(1.05); }
+
+    /* —— Week grid —— */
+    .week-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .week-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .week-bar h2 {
+      font-family: Oswald, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .btn-ghost {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover { border-color: var(--gold-muted); color: var(--text); }
+
+    .grid-wrap { padding: 12px; overflow-x: auto; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2.5rem repeat(6, minmax(88px, 1fr));
+      gap: 6px 8px;
+      min-width: 640px;
+    }
+
+    .gh {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      padding-bottom: 6px;
+      border-bottom: 2px solid rgba(253, 197, 0, 0.35);
+    }
+
+    .gd {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .gd.is-active { color: var(--gold); }
+
+    .cell {
+      font-size: 0.62rem;
+      line-height: 1.3;
+      padding: 6px 7px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      min-height: 42px;
+    }
+
+    .cell:hover { border-color: var(--gold-muted); }
+
+    .cell.is-target {
+      border-color: var(--gold);
+      background: var(--gold-select);
+      box-shadow: inset 0 0 0 1px rgba(253, 197, 0, 0.2);
+    }
+
+    .cell.is-snack .cell__title { font-weight: 600; }
+
+    .cell__title {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .cell__grams {
+      display: block;
+      color: var(--muted);
+      font-size: 0.56rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cell--empty {
+      color: var(--muted);
+      border-style: dashed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+    }
+
+    /* —— Two columns —— */
+    .picker-row {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .picker-row { grid-template-columns: 1fr; }
+    }
+
+    .col-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      max-height: 520px;
+    }
+
+    .col-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .col-head h3 {
+      font-family: Oswald, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .col-head p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .col-body {
+      overflow-y: auto;
+      padding: 10px;
+      flex: 1;
+    }
+
+    .recipe-group-label {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 4px 6px;
+    }
+
+    .recipe-card {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .recipe-card:hover { border-color: var(--gold-muted); }
+
+    .recipe-card.is-picked {
+      border-color: var(--gold);
+      background: var(--gold-select);
+    }
+
+    .recipe-card__name {
+      font-family: Oswald, sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .recipe-card__core {
+      font-size: 0.68rem;
+      color: var(--text);
+    }
+
+    .recipe-card__line {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 2px 0;
+    }
+
+    .recipe-card__line span:last-child {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .recipe-card__flavor {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+
+    .recipe-card__flavor summary {
+      cursor: pointer;
+      color: rgba(253, 197, 0, 0.75);
+      font-weight: 600;
+      list-style: none;
+    }
+
+    .recipe-card__flavor summary::-webkit-details-marker { display: none; }
+
+    .fruit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+      font-size: 0.78rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .fruit-row:hover { border-color: var(--gold-muted); }
+
+    .fruit-row.is-picked {
+      border-color: var(--gold);
+      background: var(--gold-select);
+    }
+
+    .fruit-row span:last-child {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .footnote {
+      margin-top: 16px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      max-width: 52rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <p class="explore-banner">
+      <strong>Burn &amp; Build mockup</strong> — Page 4 direction: week grid + Recipes + Fruits. No meal maker. Gram amounts are examples; they update per meal slot on the live product.
+    </p>
+
+    <header class="page-head">
+      <div>
+        <p class="eyebrow">Page 4</p>
+        <h1 class="page-title">Menu planner</h1>
+      </div>
+    </header>
+
+    <p class="guide">
+      Your sample week is below. <em>Tap a breakfast, lunch, or dinner slot</em>, then choose a recipe.
+      <em>Tap a snack slot</em>, then choose a fruit. Open <strong>Print Shop</strong> when ready.
+    </p>
+
+    <div class="status-bar">
+      <p class="status-bar__msg is-idle" id="status">Tap a grid slot to replace a meal or snack.</p>
+      <button type="button" class="btn-print">Print Shop</button>
+    </div>
+
+    <!-- WEEK GRID -->
+    <section class="week-panel" aria-label="Week grid">
+      <div class="week-bar">
+        <h2>Your week</h2>
+        <button type="button" class="btn-ghost">Clear week</button>
+      </div>
+      <div class="grid-wrap">
+        <div class="grid" id="grid">
+          <div></div>
+          <div class="gh">Breakfast</div>
+          <div class="gh">Snack</div>
+          <div class="gh">Lunch</div>
+          <div class="gh">Snack</div>
+          <div class="gh">Dinner</div>
+          <div class="gh">Snack</div>
+
+          <!-- Sun -->
+          <div class="gd is-active">Sun</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Sun · Breakfast">
+            <span class="cell__title">Power Breakfast</span>
+            <span class="cell__grams">113 g beef · 124 g tortilla</span>
+          </button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sun · Morning snack">
+            <span class="cell__title">Apple</span>
+            <span class="cell__grams">182 g</span>
+          </button>
+          <button type="button" class="cell" data-slot="meal" data-label="Sun · Lunch">
+            <span class="cell__title">Chicken &amp; Rice Bowl</span>
+            <span class="cell__grams">113 g chicken · 196 g rice</span>
+          </button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sun · Afternoon snack">
+            <span class="cell__title">Banana</span>
+            <span class="cell__grams">118 g</span>
+          </button>
+          <button type="button" class="cell" data-slot="meal" data-label="Sun · Dinner">
+            <span class="cell__title">Beef Fajita Plate</span>
+            <span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span>
+          </button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sun · Evening snack">
+            <span class="cell__title">Grapes</span>
+            <span class="cell__grams">120 g</span>
+          </button>
+
+          <!-- Mon–Sat abbreviated same pattern -->
+          <div class="gd">Mon</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Mon · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Mon · Snack"><span class="cell__title">Apple</span><span class="cell__grams">182 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Mon · Lunch"><span class="cell__title">Power Lunch</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Mon · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Mon · Dinner"><span class="cell__title">Power Dinner w/ salad</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Mon · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+
+          <div class="gd">Tue</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Tue · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Tue · Snack"><span class="cell__title">Apple</span><span class="cell__grams">182 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Tue · Lunch"><span class="cell__title">Chicken &amp; Rice Bowl</span><span class="cell__grams">113 g chicken · 196 g rice</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Tue · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Tue · Dinner"><span class="cell__title">Beef Fajita Plate</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Tue · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+
+          <div class="gd">Wed</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Wed · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Wed · Snack"><span class="cell__title">Apple</span><span class="cell__grams">182 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Wed · Lunch"><span class="cell__title">Power Lunch</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Wed · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Wed · Dinner"><span class="cell__title">Power Dinner w/ salad</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Wed · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+
+          <div class="gd">Thu</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Thu · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Thu · Snack"><span class="cell__title">Apple</span><span class="cell__grams">182 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Thu · Lunch"><span class="cell__title">Chicken &amp; Rice Bowl</span><span class="cell__grams">113 g chicken · 196 g rice</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Thu · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Thu · Dinner"><span class="cell__title">Beef Fajita Plate</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Thu · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+
+          <div class="gd">Fri</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Fri · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Fri · Snack"><span class="cell__title">Apricots</span><span class="cell__grams">35 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Fri · Lunch"><span class="cell__title">Power Lunch</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Fri · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Fri · Dinner"><span class="cell__title">Power Dinner w/ salad</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Fri · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+
+          <div class="gd">Sat</div>
+          <button type="button" class="cell" data-slot="meal" data-label="Sat · Breakfast"><span class="cell__title">Power Breakfast</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sat · Snack"><span class="cell__title">Apple</span><span class="cell__grams">182 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Sat · Lunch"><span class="cell__title">Power Lunch</span><span class="cell__grams">113 g beef · 124 g tortilla</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sat · Snack"><span class="cell__title">Banana</span><span class="cell__grams">118 g</span></button>
+          <button type="button" class="cell" data-slot="meal" data-label="Sat · Dinner"><span class="cell__title">Power Dinner w/ salad</span><span class="cell__grams">113 g beef · 124 g tortilla · 159 g pepper</span></button>
+          <button type="button" class="cell is-snack" data-slot="snack" data-label="Sat · Snack"><span class="cell__title">Grapes</span><span class="cell__grams">120 g</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECIPES + FRUITS -->
+    <div class="picker-row">
+      <section class="col-panel" aria-label="Recipes">
+        <div class="col-head">
+          <h3>Recipes</h3>
+          <p>Meals = protein + complex carb (+ vegetable at dinner). Tap a recipe, then tap a breakfast, lunch, or dinner slot.</p>
+        </div>
+        <div class="col-body" id="recipes">
+          <p class="recipe-group-label">Breakfast &amp; lunch</p>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Power Breakfast"
+            data-title="Power Breakfast" data-grams="113 g beef · 124 g tortilla">
+            <p class="recipe-card__name">Power Breakfast</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Tortilla, corn (6-inch)</span><span>124 g</span></div>
+            </div>
+            <details class="recipe-card__flavor">
+              <summary>Flavor ideas &amp; caveats</summary>
+              Pepper, garlic powder, hot sauce. Seasonings do not replace beef or tortilla. No butter or cheese on the tortilla unless you count extra fats from your plan.
+            </details>
+          </button>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Power Lunch"
+            data-title="Power Lunch" data-grams="113 g beef · 124 g tortilla">
+            <p class="recipe-card__name">Power Lunch</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Tortilla, corn (6-inch)</span><span>124 g</span></div>
+            </div>
+          </button>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Chicken &amp; Rice Bowl"
+            data-title="Chicken &amp; Rice Bowl" data-grams="113 g chicken · 196 g rice">
+            <p class="recipe-card__name">Chicken &amp; Rice Bowl</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Chicken breast, no skin</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Rice, basmati</span><span>196 g</span></div>
+            </div>
+            <details class="recipe-card__flavor">
+              <summary>Flavor ideas &amp; caveats</summary>
+              Salt, pepper, Mrs. Dash, lemon. Do not swap extra rice for the 113 g chicken. Cooking oil counts toward fat points if used heavily.
+            </details>
+          </button>
+
+          <p class="recipe-group-label">Dinner</p>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Power Dinner w/ salad"
+            data-title="Power Dinner w/ salad" data-grams="113 g beef · 124 g tortilla · 159 g pepper">
+            <p class="recipe-card__name">Power Dinner w/ salad</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Tortilla, corn (6-inch)</span><span>124 g</span></div>
+              <div class="recipe-card__line"><span>Peppers, red bell, cooked</span><span>159 g</span></div>
+            </div>
+          </button>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Beef Fajita Plate"
+            data-title="Beef Fajita Plate" data-grams="113 g beef · 124 g tortilla · 159 g pepper">
+            <p class="recipe-card__name">Beef Fajita Plate</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Beef, top sirloin</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Tortilla, corn (6-inch)</span><span>124 g</span></div>
+              <div class="recipe-card__line"><span>Peppers, red bell, cooked</span><span>159 g</span></div>
+            </div>
+            <details class="recipe-card__flavor">
+              <summary>Flavor ideas &amp; caveats</summary>
+              Lime, cumin, chili, salsa. Not restaurant fajitas — no extra tortillas, sour cream, or cheese unless counted. Peppers are your dinner vegetable serving.
+            </details>
+          </button>
+
+          <button type="button" class="recipe-card" data-type="recipe" data-name="Chicken Fajita Plate"
+            data-title="Chicken Fajita Plate" data-grams="113 g chicken · 124 g tortilla · 159 g pepper">
+            <p class="recipe-card__name">Chicken Fajita Plate</p>
+            <div class="recipe-card__core">
+              <div class="recipe-card__line"><span>Chicken breast, no skin</span><span>113 g</span></div>
+              <div class="recipe-card__line"><span>Tortilla, corn (6-inch)</span><span>124 g</span></div>
+              <div class="recipe-card__line"><span>Peppers, red bell, cooked</span><span>159 g</span></div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <section class="col-panel" aria-label="Fruits">
+        <div class="col-head">
+          <h3>Fruits</h3>
+          <p>One fruit per snack slot. Tap a fruit, then tap a snack cell.</p>
+        </div>
+        <div class="col-body" id="fruits">
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Apple" data-title="Apple" data-grams="182 g">
+            <span>Apple</span><span>182 g</span>
+          </button>
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Apricots" data-title="Apricots" data-grams="35 g">
+            <span>Apricots</span><span>35 g</span>
+          </button>
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Banana" data-title="Banana" data-grams="118 g">
+            <span>Banana</span><span>118 g</span>
+          </button>
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Grapes" data-title="Grapes" data-grams="120 g">
+            <span>Grapes</span><span>120 g</span>
+          </button>
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Orange" data-title="Orange" data-grams="140 g">
+            <span>Orange</span><span>140 g</span>
+          </button>
+          <button type="button" class="fruit-row" data-type="fruit" data-name="Strawberries" data-title="Strawberries" data-grams="152 g">
+            <span>Strawberries</span><span>152 g</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <p class="footnote">
+      Interaction demo: tap slot → tap recipe or fruit → cell updates. No drag, no meal maker, no macro bar, no daily servings strip.
+      Recipe grams shown for a sample plan; live app recalculates per slot.
+    </p>
+  </div>
+
+  <script>
+    let targetCell = null;
+    let pickedItem = null;
+    const status = document.getElementById('status');
+
+    function clearPicks() {
+      document.querySelectorAll('.recipe-card.is-picked, .fruit-row.is-picked').forEach((el) => {
+        el.classList.remove('is-picked');
+      });
+      pickedItem = null;
+    }
+
+    document.querySelectorAll('.cell[data-slot]').forEach((cell) => {
+      cell.addEventListener('click', () => {
+        document.querySelectorAll('.cell.is-target').forEach((c) => c.classList.remove('is-target'));
+        cell.classList.add('is-target');
+        targetCell = cell;
+        clearPicks();
+        const kind = cell.dataset.slot === 'snack' ? 'a snack slot' : 'a breakfast, lunch, or dinner slot';
+        status.textContent = `Selected ${cell.dataset.label}. Now choose from ${cell.dataset.slot === 'snack' ? 'Fruits' : 'Recipes'}.`;
+        status.classList.remove('is-idle');
+      });
+    });
+
+    document.querySelectorAll('[data-type="recipe"], [data-type="fruit"]').forEach((item) => {
+      item.addEventListener('click', () => {
+        if (!targetCell) {
+          status.textContent = 'Tap a grid slot first, then choose a recipe or fruit.';
+          status.classList.remove('is-idle');
+          return;
+        }
+        if (item.dataset.type === 'recipe' && targetCell.dataset.slot === 'snack') {
+          status.textContent = 'That slot is a snack — pick a fruit instead.';
+          return;
+        }
+        if (item.dataset.type === 'fruit' && targetCell.dataset.slot === 'meal') {
+          status.textContent = 'That slot is a meal — pick a recipe instead.';
+          return;
+        }
+        clearPicks();
+        item.classList.add('is-picked');
+        pickedItem = item;
+        targetCell.innerHTML = `
+          <span class="cell__title">${item.dataset.title}</span>
+          <span class="cell__grams">${item.dataset.grams}</span>
+        `;
+        targetCell.classList.remove('is-target');
+        status.textContent = `Updated ${targetCell.dataset.label} → ${item.dataset.name}.`;
+        status.classList.remove('is-idle');
+        targetCell = null;
+      });
+    });
+  </script>
+</body>
+</html>
