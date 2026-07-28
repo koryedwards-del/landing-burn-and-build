@@ -51,13 +51,7 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
-import { MEAL_SLOT_COLUMNS, libraryRecipeFitsMealSlot } from '../data/recipeLibrary.js';
-import {
-  allMealsForRecipeColumn,
-  initRecipeReels,
-  pickedMealForColumn,
-  refreshRecipeReelStrips,
-} from './recipeReels.js';
+import { MEAL_SLOT_COLUMNS, libraryRecipeFitsMealSlot, recipeById, recipesForMealSlot } from '../data/recipeLibrary.js';
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -533,9 +527,9 @@ function updatePickerHints() {
   const target = state.activeGridTarget;
 
   if (recipeHint) {
-    recipeHint.textContent = target
-      ? `Selected ${gridTargetLabel(target)} — spin, then Use`
-      : 'Spin for a direction — you fill your foods';
+    recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
+      ? `Selected ${gridTargetLabel(target)} — pick an idea`
+      : 'Tap a slot in the grid, then pick an idea';
   }
 
   if (fruitHint) {
@@ -545,7 +539,7 @@ function updatePickerHints() {
   }
 }
 
-function assignPickedRecipeToGrid(columnMealSlotId) {
+function applyMealIdeaFromCard(columnMealSlotId, meal) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
@@ -560,19 +554,13 @@ function assignPickedRecipeToGrid(columnMealSlotId) {
     showPlannerToast(`Tap a ${slot?.label ?? columnMealSlotId} slot in the grid.`, { variant: 'error' });
     return;
   }
-
-  const recipe = pickedMealForColumn(columnMealSlotId);
-  if (!recipe) {
-    showPlannerToast('Spin the reel first.', { variant: 'error' });
-    return;
-  }
-  if (!libraryRecipeFitsMealSlot(recipe, target.mealSlotId)) {
+  if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) {
     showPlannerToast('That idea does not fit this slot.', { variant: 'error' });
     return;
   }
 
-  applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, recipe);
-  showPlannerToast(`"${recipe.name}" on ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, meal);
+  showPlannerToast(`"${meal.name}" on ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function setPendingFruitPick(foodName) {
@@ -850,40 +838,30 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
+function renderMealIdeaCard(meal, columnId) {
+  return `
+    <button
+      type="button"
+      class="recipe-card"
+      data-meal-idea-id="${escapeHtml(meal.id)}"
+      data-meal-slot="${escapeHtml(columnId)}"
+    >
+      <span class="recipe-card__emoji" aria-hidden="true">${escapeHtml(meal.emoji)}</span>
+      <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
+    </button>
+  `;
+}
+
 function renderRecipeColumn(column) {
-  const meals = allMealsForRecipeColumn(column.id);
-  const canSpin = meals.length > 0;
+  const meals = recipesForMealSlot(column.id);
+  const cardsHtml = meals.length
+    ? meals.map((meal) => renderMealIdeaCard(meal, column.id)).join('')
+    : '<p class="recipe-column__empty">No ideas yet</p>';
 
   return `
     <section class="recipe-column" data-meal-slot="${column.id}">
       <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
-      <div class="recipe-reel__actions">
-        <button
-          type="button"
-          class="recipe-reel__spin"
-          data-reel-spin="${column.id}"
-          ${canSpin ? '' : 'disabled'}
-        >Spin</button>
-        <button
-          type="button"
-          class="recipe-reel__assign"
-          data-reel-assign="${column.id}"
-          ${canSpin ? '' : 'disabled'}
-        >Use</button>
-      </div>
-      ${canSpin ? `
-      <div class="recipe-reel">
-        <div class="recipe-reel__window" data-reel-window="${column.id}">
-          <div class="recipe-reel__strip" data-reel-strip="${column.id}"></div>
-        </div>
-      </div>
-      ` : `
-      <div class="recipe-reel recipe-reel--empty">
-        <div class="recipe-reel__window">
-          <p class="recipe-reel__empty">No ideas yet</p>
-        </div>
-      </div>
-      `}
+      <div class="recipe-column__cards">${cardsHtml}</div>
     </section>
   `;
 }
@@ -894,7 +872,6 @@ function renderRecipeCards() {
 
   container.classList.add('recipe-columns');
   container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
-  refreshRecipeReelStrips();
 }
 
 function renderFruitList() {
@@ -948,10 +925,11 @@ function initRecipePicker() {
   container.dataset.recipePickerInit = '1';
 
   container.addEventListener('click', (event) => {
-    const assignBtn = event.target.closest('[data-reel-assign]');
-    if (assignBtn && !assignBtn.disabled) {
-      assignPickedRecipeToGrid(assignBtn.dataset.reelAssign);
-    }
+    const card = event.target.closest('[data-meal-idea-id]');
+    if (!card) return;
+    const meal = recipeById(card.dataset.mealIdeaId);
+    if (!meal) return;
+    applyMealIdeaFromCard(card.dataset.mealSlot, meal);
   });
 }
 
@@ -1375,7 +1353,6 @@ export {
   initSavedMealsPanel,
   initFoodSearch,
   initFoodDropTargets,
-  initRecipeReels,
   initRecipePicker,
   initFruitPicker,
   setWeekGridCollapsed,
