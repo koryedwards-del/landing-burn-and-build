@@ -543,7 +543,7 @@ function acceptsSavedMealDrop(mealSlotId) {
   return isMealMealSlot(mealSlotId);
 }
 
-/** Grid and assigned slots: meal came from Saved Meals (center column). */
+/** Grid shows a meal idea label or saved-meal name. */
 function isAssignedMeal(mealSlotId, weekDay = state.activeWeekDay) {
   const meta = mealSlotMeta(mealSlotId, weekDay);
   return !!(meta.savedMealId && meta.mealName);
