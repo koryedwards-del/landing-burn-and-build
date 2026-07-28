@@ -1,10 +1,19 @@
 /** Hero photos for recipe cards — keyed by saved-meal id. */
 
-export const RECIPE_ROW_MEAL_IDS = [
-  'power-breakfast',
-  'power-lunch',
-  'power-dinner-salad',
+export const MEAL_SLOT_COLUMNS = [
+  { id: 'breakfast', label: 'Breakfast' },
+  { id: 'lunch', label: 'Lunch' },
+  { id: 'dinner', label: 'Dinner' },
 ];
+
+/** Preferred order per column; fills up to 3 slots per category. */
+export const RECIPE_COLUMN_ORDER = {
+  breakfast: ['power-breakfast'],
+  lunch: ['power-lunch'],
+  dinner: ['power-dinner-salad', 'power-dinner', 'fajitas', 'beef-strip-fajitas'],
+};
+
+export const RECIPES_PER_COLUMN = 3;
 
 const RECIPE_IMAGES = {
   'power-breakfast': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=480&h=320&fit=crop',
