@@ -719,22 +719,15 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function mealIngredientLines(meal) {
+function mealIngredientNames(meal) {
   return (meal.items || [])
-    .map((item) => ({
-      name: item.foodName,
-      grams: gramLabelForFood(foodByName(item.foodName), item.servings),
-    }))
-    .filter((line) => line.name);
+    .map((item) => item.foodName)
+    .filter(Boolean);
 }
 
 function renderRecipeCard(meal) {
-  const lines = mealIngredientLines(meal);
-  const linesHtml = lines.map((line) => `
-    <div class="recipe-card__line">
-      <span>${escapeHtml(line.name)}</span>
-      <span>${escapeHtml(line.grams)}</span>
-    </div>
+  const linesHtml = mealIngredientNames(meal).map((name) => `
+    <div class="recipe-card__line">${escapeHtml(name)}</div>
   `).join('');
 
   return `
