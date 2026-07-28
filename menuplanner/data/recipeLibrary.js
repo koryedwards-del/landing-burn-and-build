@@ -1,4 +1,4 @@
-/** Meal choices for Page 4 reels — name only, no recipe details. */
+/** Meal ideas for Page 4 reels — short sparks, not full recipes. */
 
 export const MEAL_SLOT_COLUMNS = [
   { id: 'breakfast', label: 'Breakfast' },
@@ -9,27 +9,27 @@ export const MEAL_SLOT_COLUMNS = [
 /** @type {Readonly<Record<string, ReadonlyArray<{ id: string, name: string, emoji: string }>>>} */
 export const MEALS_BY_SLOT = {
   breakfast: [
-    { id: 'power-breakfast', name: 'Power Breakfast', emoji: '🥩' },
-    { id: 'scrambled-eggs', name: 'Scrambled Eggs', emoji: '🍳' },
-    { id: 'turkey-wrap-breakfast', name: 'Turkey Wrap', emoji: '🌯' },
-    { id: 'yogurt-oats', name: 'Yogurt & Oats', emoji: '🥣' },
-    { id: 'cottage-cheese', name: 'Cottage Cheese', emoji: '🧀' },
-    { id: 'burrito-breakfast', name: 'Burrito', emoji: '🌮' },
+    { id: 'power-breakfast', name: 'Power', emoji: '🥩' },
+    { id: 'eggs', name: 'Eggs', emoji: '🍳' },
+    { id: 'wrap-breakfast', name: 'Wrap', emoji: '🌯' },
+    { id: 'yogurt', name: 'Yogurt', emoji: '🥣' },
+    { id: 'cottage-cheese', name: 'Cottage cheese', emoji: '🧀' },
+    { id: 'burrito', name: 'Burrito', emoji: '🌮' },
   ],
   lunch: [
-    { id: 'power-lunch', name: 'Power Lunch', emoji: '🥩' },
+    { id: 'power-lunch', name: 'Power', emoji: '🥩' },
     { id: 'tuna', name: 'Tuna', emoji: '🐟' },
-    { id: 'chicken-salad', name: 'Chicken Salad', emoji: '🥗' },
-    { id: 'turkey-wrap-lunch', name: 'Turkey Wrap', emoji: '🌯' },
+    { id: 'salad', name: 'Salad', emoji: '🥗' },
+    { id: 'wrap-lunch', name: 'Wrap', emoji: '🌯' },
     { id: 'shrimp', name: 'Shrimp', emoji: '🍤' },
     { id: 'burger', name: 'Burger', emoji: '🍔' },
   ],
   dinner: [
-    { id: 'power-dinner', name: 'Power Dinner', emoji: '🥩' },
-    { id: 'grilled-chicken', name: 'Grilled Chicken', emoji: '🍗' },
+    { id: 'power-dinner', name: 'Power', emoji: '🥩' },
+    { id: 'chicken', name: 'Chicken', emoji: '🍗' },
     { id: 'fish', name: 'Fish', emoji: '🐟' },
     { id: 'fajitas', name: 'Fajitas', emoji: '🌶️' },
-    { id: 'stir-fry', name: 'Stir-Fry', emoji: '🥘' },
+    { id: 'stir-fry', name: 'Stir-fry', emoji: '🥘' },
     { id: 'chili', name: 'Chili', emoji: '🫕' },
   ],
 };
