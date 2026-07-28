@@ -1,5 +1,4 @@
-import { state, savedMealFitsMealSlot } from './plannerState.js';
-import { RECIPE_COLUMN_ORDER, recipeImageUrl } from '../data/recipeImages.js';
+import { recipesForMealSlot } from '../data/recipeLibrary.js';
 
 const REEL_CARD_HEIGHT = 136;
 const spinningColumns = new Set();
@@ -13,52 +12,34 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function mealsByPopularity() {
-  return [...state.savedMeals].sort((a, b) => b.pickCount - a.pickCount);
-}
-
 export function allMealsForRecipeColumn(mealSlotId) {
-  const byId = new Map(state.savedMeals.map((meal) => [meal.id, meal]));
-  const preferredIds = RECIPE_COLUMN_ORDER[mealSlotId] || [];
-  const ordered = preferredIds.map((id) => byId.get(id)).filter(Boolean);
-  const seen = new Set(ordered.map((meal) => meal.id));
-
-  const extras = mealsByPopularity()
-    .filter((meal) => savedMealFitsMealSlot(meal, mealSlotId) && !seen.has(meal.id));
-  return [...ordered, ...extras];
+  return recipesForMealSlot(mealSlotId);
 }
 
-function mealIngredientNames(meal) {
-  return (meal.items || [])
-    .map((item) => item.foodName)
-    .filter(Boolean);
-}
-
-function reelCardHtml(meal) {
-  const imgUrl = recipeImageUrl(meal.id);
-  const ingredientsHtml = mealIngredientNames(meal)
+function reelCardHtml(recipe) {
+  const ingredientsHtml = recipe.ingredients
     .map((name) => `<li class="recipe-reel__card-ingredient">${escapeHtml(name)}</li>`)
     .join('');
 
   return `
-    <div class="recipe-reel__card" data-meal-id="${escapeHtml(meal.id)}">
+    <div class="recipe-reel__card" data-recipe-id="${escapeHtml(recipe.id)}">
       <div class="recipe-reel__card-media">
-        <img class="recipe-reel__card-img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />
+        <span class="recipe-reel__card-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span>
       </div>
       <div class="recipe-reel__card-body">
-        <p class="recipe-reel__card-name">${escapeHtml(meal.name)}</p>
+        <p class="recipe-reel__card-name">${escapeHtml(recipe.name)}</p>
         <ul class="recipe-reel__card-ingredients">${ingredientsHtml}</ul>
       </div>
     </div>
   `;
 }
 
-function buildReelStripHtml(meals) {
-  if (!meals.length) return '';
+function buildReelStripHtml(recipes) {
+  if (!recipes.length) return '';
   let html = '';
   for (let repeat = 0; repeat < 12; repeat += 1) {
-    meals.forEach((meal) => {
-      html += reelCardHtml(meal);
+    recipes.forEach((recipe) => {
+      html += reelCardHtml(recipe);
     });
   }
   return html;
@@ -95,8 +76,8 @@ function animateStripTo(strip, targetY, durationMs) {
   });
 }
 
-function winY(meals, index) {
-  const mid = 6 * meals.length;
+function winY(recipes, index) {
+  const mid = 6 * recipes.length;
   return -((mid + index) * REEL_CARD_HEIGHT);
 }
 
@@ -115,26 +96,27 @@ function spinOvershootExtra(mealSlotId) {
 export function refreshRecipeReelStrips() {
   document.querySelectorAll('[data-reel-strip]').forEach((strip) => {
     const slotId = strip.dataset.reelStrip;
-    const meals = allMealsForRecipeColumn(slotId);
-    strip.innerHTML = buildReelStripHtml(meals);
+    const recipes = allMealsForRecipeColumn(slotId);
+    strip.innerHTML = buildReelStripHtml(recipes);
     strip.style.transform = 'translateY(0px)';
 
-    if (!meals.length) return;
+    if (!recipes.length) return;
 
     if (!columnPicks.has(slotId)) {
-      columnPicks.set(slotId, meals[0]);
+      columnPicks.set(slotId, recipes[0]);
     }
 
     const picked = columnPicks.get(slotId);
-    let index = picked ? meals.findIndex((meal) => meal.id === picked.id) : 0;
+    let index = picked ? recipes.findIndex((recipe) => recipe.id === picked.id) : 0;
     if (index < 0) index = 0;
-    strip.style.transform = `translateY(${winY(meals, index)}px)`;
+    columnPicks.set(slotId, recipes[index]);
+    strip.style.transform = `translateY(${winY(recipes, index)}px)`;
   });
 }
 
 export async function spinRecipeColumn(mealSlotId) {
-  const meals = allMealsForRecipeColumn(mealSlotId);
-  if (!meals.length || spinningColumns.has(mealSlotId)) return null;
+  const recipes = allMealsForRecipeColumn(mealSlotId);
+  if (!recipes.length || spinningColumns.has(mealSlotId)) return null;
 
   const strip = document.querySelector(`[data-reel-strip="${mealSlotId}"]`);
   const button = document.querySelector(`[data-reel-spin="${mealSlotId}"]`);
@@ -145,14 +127,14 @@ export async function spinRecipeColumn(mealSlotId) {
   button.disabled = true;
   column?.classList.remove('recipe-column--won');
 
-  const pickIndex = Math.floor(Math.random() * meals.length);
-  const targetY = winY(meals, pickIndex);
-  const overshootY = targetY - (REEL_CARD_HEIGHT * meals.length * spinOvershootExtra(mealSlotId));
+  const pickIndex = Math.floor(Math.random() * recipes.length);
+  const targetY = winY(recipes, pickIndex);
+  const overshootY = targetY - (REEL_CARD_HEIGHT * recipes.length * spinOvershootExtra(mealSlotId));
 
   await animateStripTo(strip, overshootY, spinDurationForSlot(mealSlotId));
   await animateStripTo(strip, targetY, 450);
 
-  const picked = meals[pickIndex];
+  const picked = recipes[pickIndex];
   columnPicks.set(mealSlotId, picked);
   column?.classList.add('recipe-column--won');
 

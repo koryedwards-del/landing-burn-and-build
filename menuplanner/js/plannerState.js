@@ -602,6 +602,17 @@ function mealItemsScaledToSlot(meal, mealSlotId) {
   return scaled;
 }
 
+function applyLibraryRecipeToGridCell(weekDay, mealSlotId, recipe) {
+  if (!isMealMealSlot(mealSlotId) || !recipe?.id || !recipe?.name) return;
+
+  MEAL_MAKER_SLOTS.forEach((slotKey) => {
+    categorySelections(mealSlotId, weekDay)[slotKey] = null;
+  });
+  setFatSelections(mealSlotId, [], weekDay);
+  mealSlotMeta(mealSlotId, weekDay).mealName = recipe.name;
+  mealSlotMeta(mealSlotId, weekDay).savedMealId = recipe.id;
+}
+
 function applySavedMealToGridCell(weekDay, mealSlotId, meal) {
   if (!isMealMealSlot(mealSlotId) || !meal?.items?.length) return;
 
@@ -834,6 +845,7 @@ export {
   fmtServings,
   requiredServings,
   servingHint,
+  applyLibraryRecipeToGridCell,
   applySavedMealToGridCell,
   mealItemsScaledToSlot,
   savedMealById,

@@ -35,6 +35,7 @@ import {
   isMealMealSlot,
   gridCellHasAssignment,
   savedMealFitsMealSlot,
+  applyLibraryRecipeToGridCell,
   applySavedMealToGridCell,
   clearDaySlotMeta,
   clearMealMakerDraft,
@@ -50,7 +51,7 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
-import { MEAL_SLOT_COLUMNS } from '../data/recipeImages.js';
+import { MEAL_SLOT_COLUMNS, libraryRecipeFitsMealSlot } from '../data/recipeLibrary.js';
 import {
   allMealsForRecipeColumn,
   initRecipeReels,
@@ -560,18 +561,18 @@ function assignPickedRecipeToGrid(columnMealSlotId) {
     return;
   }
 
-  const meal = pickedMealForColumn(columnMealSlotId);
-  if (!meal) {
+  const recipe = pickedMealForColumn(columnMealSlotId);
+  if (!recipe) {
     showPlannerToast('Spin the reel first.', { variant: 'error' });
     return;
   }
-  if (!savedMealFitsMealSlot(meal, target.mealSlotId)) {
-    showPlannerToast('That recipe is not complete.', { variant: 'error' });
+  if (!libraryRecipeFitsMealSlot(recipe, target.mealSlotId)) {
+    showPlannerToast('That recipe does not fit this meal slot.', { variant: 'error' });
     return;
   }
 
-  applySavedMealToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPlannerToast(`${meal.name} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, recipe);
+  showPlannerToast(`${recipe.name} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function setPendingFruitPick(foodName) {
@@ -891,12 +892,6 @@ function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  if (!state.savedMeals.length) {
-    container.classList.remove('recipe-columns');
-    container.innerHTML = '<p class="recipe-cards__empty">Recipes will appear here once your program loads.</p>';
-    return;
-  }
-
   container.classList.add('recipe-columns');
   container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
   refreshRecipeReelStrips();
@@ -1214,6 +1209,14 @@ function removeMakerFatPoint(index) {
   items.splice(index, 1);
   setMakerFatSelections(items);
   renderMealMaker();
+}
+
+function applyLibraryRecipeToMealSlot(weekDay, mealSlotId, recipe) {
+  if (!libraryRecipeFitsMealSlot(recipe, mealSlotId)) return;
+
+  applyLibraryRecipeToGridCell(weekDay, mealSlotId, recipe);
+  renderWeekGrid();
+  persistPlannerToProgram();
 }
 
 function applySavedMealToMealSlot(weekDay, mealSlotId, meal, { trackPick = true } = {}) {
