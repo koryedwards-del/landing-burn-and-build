@@ -529,6 +529,18 @@ body {
   width: 72px;
 }
 
+.recipe-reel__card-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  font-size: 2rem;
+  line-height: 1;
+  border-radius: 6px;
+  background: #262626;
+}
+
 .recipe-reel__card-img {
   display: block;
   width: 72px;
