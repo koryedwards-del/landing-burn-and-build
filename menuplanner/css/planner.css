@@ -551,7 +551,7 @@ body {
 }
 
 .recipe-reel__spin,
-.recipe-reel__use {
+.recipe-reel__lock {
   width: 100%;
   padding: 9px 10px;
   border: 1px solid var(--gold-muted);
@@ -567,26 +567,27 @@ body {
   transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
-.recipe-reel__use {
-  border-color: var(--border);
-  color: var(--text);
+.recipe-reel__lock {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(253, 197, 0, 0.06);
 }
 
 .recipe-reel__spin:hover:not(:disabled),
-.recipe-reel__use:hover:not(:disabled) {
+.recipe-reel__lock:hover:not(:disabled) {
   background: rgba(253, 197, 0, 0.1);
   border-color: var(--gold);
   color: var(--gold);
 }
 
 .recipe-reel__spin:disabled,
-.recipe-reel__use:disabled {
+.recipe-reel__lock:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
 .recipe-reel__spin:active:not(:disabled),
-.recipe-reel__use:active:not(:disabled) {
+.recipe-reel__lock:active:not(:disabled) {
   transform: translateY(1px);
 }
 
@@ -626,6 +627,46 @@ body {
 
 .fruit-row:hover {
   border-color: var(--gold-muted);
+}
+
+.fruit-row--pending {
+  border-color: var(--gold);
+  background: var(--gold-select-bg);
+}
+
+.fruits-panel__foot {
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.fruit-lock {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  background: rgba(253, 197, 0, 0.06);
+  color: var(--gold);
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.fruit-lock:hover:not(:disabled) {
+  background: rgba(253, 197, 0, 0.14);
+}
+
+.fruit-lock:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.fruit-lock:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .fruit-row__name {
