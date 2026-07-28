@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Menu planner mockup — Meal reels · Burn &amp; Build</title>
+  <title>Menu planner mockup — Meal bandits · Burn &amp; Build</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -18,7 +18,7 @@
       --gold: #fdc500;
       --gold-dim: rgba(253, 197, 0, 0.12);
       --gold-muted: rgba(253, 197, 0, 0.38);
-      --gold-select: rgba(253, 197, 0, 0.08);
+      --card-h: 168px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,30 +51,11 @@
       margin-bottom: 6px;
     }
 
-    .guide {
-      font-size: 0.84rem;
-      color: var(--muted);
-      margin-bottom: 12px;
-      max-width: 40rem;
-    }
-
+    .guide { font-size: 0.84rem; color: var(--muted); margin-bottom: 12px; max-width: 42rem; }
     .guide em { color: var(--text); font-style: normal; }
 
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    #status {
-      font-size: 0.78rem;
-      color: var(--gold);
-      flex: 1;
-      min-width: 200px;
-    }
-
+    .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    #status { font-size: 0.78rem; color: var(--gold); flex: 1; min-width: 200px; }
     #status.idle { color: var(--muted); }
 
     .btn-print {
@@ -91,7 +72,6 @@
       cursor: pointer;
     }
 
-    /* —— Grid —— */
     .week-panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -158,14 +138,13 @@
 
     .cell.target {
       border-color: var(--gold);
-      background: var(--gold-select);
+      background: rgba(253, 197, 0, 0.08);
       box-shadow: inset 0 0 0 1px rgba(253, 197, 0, 0.25);
     }
 
     .cell__t { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .cell__g { display: block; color: var(--muted); font-size: 0.54rem; }
 
-    /* —— Reels + fruits —— */
     .lower {
       display: grid;
       grid-template-columns: 1fr 200px;
@@ -173,110 +152,185 @@
       align-items: start;
     }
 
-    @media (max-width: 860px) {
-      .lower { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 860px) { .lower { grid-template-columns: 1fr; } }
 
-    .reels { display: flex; flex-direction: column; gap: 14px; }
+    .bandits { display: flex; flex-direction: column; gap: 16px; }
 
-    .reel-block {
+    .bandit {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 0 14px;
-      overflow: hidden;
+      border-radius: 10px;
+      padding: 12px 14px 16px;
     }
 
-    .reel-head {
+    .bandit.is-active {
+      border-color: var(--gold-muted);
+      box-shadow: 0 0 0 1px rgba(253, 197, 0, 0.15);
+    }
+
+    .bandit__head {
       display: flex;
-      align-items: baseline;
       justify-content: space-between;
-      padding: 0 14px 10px;
-      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 10px;
     }
 
-    .reel-head h3 {
+    .bandit__head h3 {
       font-family: Oswald, sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       letter-spacing: 0.07em;
       text-transform: uppercase;
       color: var(--gold);
     }
 
-    .reel-head span {
-      font-size: 0.65rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+    .bandit__head span { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    .reel-track {
+    .bandit__machine {
       display: flex;
-      gap: 10px;
-      padding: 0 14px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-padding: 14px;
-      -webkit-overflow-scrolling: touch;
+      gap: 12px;
+      align-items: stretch;
     }
 
-    .reel-track::-webkit-scrollbar { height: 6px; }
-    .reel-track::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-
-    .recipe-card {
-      flex: 0 0 calc(33.333% - 7px);
-      min-width: 200px;
-      max-width: 240px;
-      scroll-snap-align: start;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
+    /* Three windows = one-arm bandit row */
+    .bandit__windows {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px;
+      background: linear-gradient(180deg, #141414 0%, #1a1a1a 50%, #141414 100%);
+      border: 3px solid var(--gold-muted);
       border-radius: 8px;
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .bandit__window {
+      height: var(--card-h);
       overflow: hidden;
-      cursor: pointer;
-      text-align: left;
-      color: inherit;
-      font: inherit;
-      transition: border-color 0.15s, transform 0.15s;
+      border: 2px solid #444;
+      border-radius: 6px;
+      background: #0a0a0a;
+      position: relative;
     }
 
-    .recipe-card:hover {
-      border-color: var(--gold-muted);
-      transform: translateY(-2px);
+    .bandit__window::before,
+    .bandit__window::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 24px;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    .recipe-card.picked {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 1px rgba(253, 197, 0, 0.3);
+    .bandit__window::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
     }
 
-    .recipe-card__img {
-      height: 100px;
+    .bandit__window::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    }
+
+    .bandit__strip {
+      will-change: transform;
+    }
+
+    .bandit__strip.spinning { filter: blur(1px); }
+
+    .bandit-card {
+      height: var(--card-h);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .bandit-card__img {
+      height: 72px;
       background-size: cover;
       background-position: center;
       background-color: #333;
+      flex-shrink: 0;
     }
 
-    .recipe-card__body { padding: 10px 11px 11px; }
+    .bandit-card__body {
+      padding: 6px 8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-    .recipe-card__name {
+    .bandit-card__name {
       font-family: Oswald, sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.62rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      line-height: 1.2;
     }
 
-    .recipe-card__line {
+    .bandit-card__g {
+      font-size: 0.52rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* Lever */
+    .bandit__lever-col {
       display: flex;
-      justify-content: space-between;
-      font-size: 0.64rem;
-      padding: 1px 0;
-      gap: 6px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      flex-shrink: 0;
     }
 
-    .recipe-card__line span:last-child { color: var(--muted); white-space: nowrap; }
+    .bandit__lever {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: radial-gradient(circle at 35% 35%, #ffe566, var(--gold) 45%, #c9a000);
+      color: #0a0a0a;
+      font-family: Oswald, sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #8a7200, 0 6px 12px rgba(0,0,0,0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
 
-    /* Fruits stack */
+    .bandit__lever:hover:not(:disabled) { filter: brightness(1.08); }
+
+    .bandit__lever:active:not(:disabled),
+    .bandit__lever.pulled {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #8a7200, 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .bandit__lever:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+
+    .bandit__lever-label {
+      margin-top: 8px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    /* Fruits */
     .fruits-panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -297,11 +351,7 @@
       text-transform: uppercase;
     }
 
-    .fruits-head p {
-      font-size: 0.68rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .fruits-head p { font-size: 0.68rem; color: var(--muted); margin-top: 4px; }
 
     .fruit-list { padding: 8px; }
 
@@ -319,11 +369,10 @@
       text-align: left;
       color: inherit;
       font: inherit;
-      transition: border-color 0.15s;
     }
 
     .fruit-row:hover { border-color: var(--gold-muted); }
-    .fruit-row.picked { border-color: var(--gold); background: var(--gold-select); }
+    .fruit-row.picked { border-color: var(--gold); background: rgba(253,197,0,0.08); }
 
     .fruit-row__thumb {
       width: 44px;
@@ -332,29 +381,32 @@
       background-size: cover;
       background-position: center;
       flex-shrink: 0;
-      background-color: #333;
     }
 
-    .fruit-row__text { flex: 1; min-width: 0; }
     .fruit-row__name { font-size: 0.78rem; font-weight: 600; display: block; }
     .fruit-row__g { font-size: 0.68rem; color: var(--muted); }
 
-    .footnote {
-      margin-top: 14px;
-      font-size: 0.7rem;
-      color: var(--muted);
+    .footnote { margin-top: 14px; font-size: 0.7rem; color: var(--muted); }
+
+    @keyframes bandit-flash {
+      0%, 100% { box-shadow: inset 0 0 0 0 transparent; }
+      50% { box-shadow: inset 0 0 20px rgba(253, 197, 0, 0.35); }
+    }
+
+    .bandit__windows.win {
+      animation: bandit-flash 0.5s ease 2;
     }
   </style>
 </head>
 <body>
   <div class="shell">
-    <p class="banner"><strong>Meal reels mockup</strong> — Breakfast · Lunch · Dinner carousels (3 across). Fruits stacked. Burn &amp; Build · no meal maker · no macros.</p>
+    <p class="banner"><strong>One-arm bandit mockup</strong> — Tap a meal slot, pull SPIN on the matching bandit. Three windows spin, center column wins. Fruits = tap list (no spin).</p>
 
     <h1 class="page-title">Menu planner</h1>
-    <p class="guide">Tap a <em>meal or snack slot</em> on the grid. Then tap a card from the matching reel — or a fruit from the list.</p>
+    <p class="guide">Tap <em>breakfast, lunch, or dinner</em> on the grid → pull the <em>SPIN</em> lever on that bandit. Or tap a <em>snack</em> → pick a fruit.</p>
 
     <div class="toolbar">
-      <p id="status" class="idle">Tap a grid slot to start.</p>
+      <p id="status" class="idle">Tap a meal slot, then pull SPIN.</p>
       <button type="button" class="btn-print">Print Shop</button>
     </div>
 
@@ -367,11 +419,11 @@
 
           <div class="gd">Mon</div>
           <button type="button" class="cell" data-meal="breakfast" data-label="Mon breakfast"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon morning snack"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></button>
+          <button type="button" class="cell" data-meal="snack" data-label="Mon AM snack"><span class="cell__t">Apple</span><span class="cell__g">182 g</span></button>
           <button type="button" class="cell" data-meal="lunch" data-label="Mon lunch"><span class="cell__t">Chicken &amp; Rice</span><span class="cell__g">113 g · 196 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon afternoon snack"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></button>
+          <button type="button" class="cell" data-meal="snack" data-label="Mon PM snack"><span class="cell__t">Banana</span><span class="cell__g">118 g</span></button>
           <button type="button" class="cell" data-meal="dinner" data-label="Mon dinner"><span class="cell__t">Beef Fajita Plate</span><span class="cell__g">113 g · 124 g · 159 g</span></button>
-          <button type="button" class="cell" data-meal="snack" data-label="Mon evening snack"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></button>
+          <button type="button" class="cell" data-meal="snack" data-label="Mon eve snack"><span class="cell__t">Grapes</span><span class="cell__g">120 g</span></button>
 
           <div class="gd">Tue</div>
           <button type="button" class="cell" data-meal="breakfast" data-label="Tue breakfast"><span class="cell__t">Power Breakfast</span><span class="cell__g">113 g beef · 124 g tortilla</span></button>
@@ -393,156 +445,126 @@
     </section>
 
     <div class="lower">
-      <div class="reels">
-        <!-- BREAKFAST REEL -->
-        <section class="reel-block" aria-label="Breakfast reel">
-          <div class="reel-head">
-            <h3>Breakfast reel</h3>
-            <span>scroll →</span>
-          </div>
-          <div class="reel-track">
-            <button type="button" class="recipe-card" data-reel="breakfast" data-name="Power Breakfast" data-title="Power Breakfast" data-grams="113 g beef · 124 g tortilla"
-              style="background-image: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=240&fit=crop');">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Power Breakfast</p>
-                <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla, corn</span><span>124 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="breakfast" data-name="Turkey &amp; Toast" data-title="Turkey &amp; Toast" data-grams="113 g turkey · 128 g bread"
-              style="background-image: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=400&h=240&fit=crop');">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Turkey &amp; Toast</p>
-                <div class="recipe-card__line"><span>Turkey breast</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Bread, whole wheat</span><span>128 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="breakfast" data-name="Power Breakfast" data-title="Power Breakfast (alt)" data-grams="113 g beef · 124 g tortilla">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Beef &amp; Tortilla</p>
-                <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla, corn</span><span>124 g</span></div>
-              </div>
-            </button>
-          </div>
-        </section>
-
-        <!-- LUNCH REEL -->
-        <section class="reel-block" aria-label="Lunch reel">
-          <div class="reel-head">
-            <h3>Lunch reel</h3>
-            <span>scroll →</span>
-          </div>
-          <div class="reel-track">
-            <button type="button" class="recipe-card" data-reel="lunch" data-name="Power Lunch" data-title="Power Lunch" data-grams="113 g beef · 124 g tortilla">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Power Lunch</p>
-                <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla, corn</span><span>124 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="lunch" data-name="Chicken &amp; Rice" data-title="Chicken &amp; Rice Bowl" data-grams="113 g chicken · 196 g rice">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Chicken &amp; Rice Bowl</p>
-                <div class="recipe-card__line"><span>Chicken breast</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Rice, basmati</span><span>196 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="lunch" data-name="Turkey wrap" data-title="Turkey Wrap" data-grams="113 g turkey · 124 g tortilla">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1626700051175-6818013e5786?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Turkey Wrap</p>
-                <div class="recipe-card__line"><span>Turkey breast</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla, corn</span><span>124 g</span></div>
-              </div>
-            </button>
-          </div>
-        </section>
-
-        <!-- DINNER REEL -->
-        <section class="reel-block" aria-label="Dinner reel">
-          <div class="reel-head">
-            <h3>Dinner reel</h3>
-            <span>scroll →</span>
-          </div>
-          <div class="reel-track">
-            <button type="button" class="recipe-card" data-reel="dinner" data-name="Power Dinner w/ salad" data-title="Power Dinner w/ salad" data-grams="113 g beef · 124 g tortilla · 159 g pepper">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Power Dinner w/ salad</p>
-                <div class="recipe-card__line"><span>Beef, eye of round</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla + pepper</span><span>283 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="dinner" data-name="Beef Fajita Plate" data-title="Beef Fajita Plate" data-grams="113 g beef · 124 g tortilla · 159 g pepper">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1599974579688-e97571258369?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Beef Fajita Plate</p>
-                <div class="recipe-card__line"><span>Beef, top sirloin</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla + pepper</span><span>283 g</span></div>
-              </div>
-            </button>
-            <button type="button" class="recipe-card" data-reel="dinner" data-name="Chicken Fajita Plate" data-title="Chicken Fajita Plate" data-grams="113 g chicken · 124 g tortilla · 159 g pepper">
-              <div class="recipe-card__img" style="background-image: url('https://images.unsplash.com/photo-1599974579688-e97571258369?w=400&h=240&fit=crop');"></div>
-              <div class="recipe-card__body">
-                <p class="recipe-card__name">Chicken Fajita Plate</p>
-                <div class="recipe-card__line"><span>Chicken breast</span><span>113 g</span></div>
-                <div class="recipe-card__line"><span>Tortilla + pepper</span><span>283 g</span></div>
-              </div>
-            </button>
-          </div>
-        </section>
+      <div class="bandits" id="bandits">
+        <!-- built by JS -->
       </div>
 
-      <aside class="fruits-panel" aria-label="Fruits">
+      <aside class="fruits-panel">
         <div class="fruits-head">
           <h3>Fruits</h3>
-          <p>One per snack slot</p>
+          <p>Tap snack slot, then fruit</p>
         </div>
-        <div class="fruit-list" id="fruits">
-          <button type="button" class="fruit-row" data-fruit data-name="Apple" data-title="Apple" data-grams="182 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Apple</span><span class="fruit-row__g">182 g</span></span>
-          </button>
-          <button type="button" class="fruit-row" data-fruit data-name="Apricots" data-title="Apricots" data-grams="35 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1437753323695-e03606f35e24?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Apricots</span><span class="fruit-row__g">35 g</span></span>
-          </button>
-          <button type="button" class="fruit-row" data-fruit data-name="Banana" data-title="Banana" data-grams="118 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Banana</span><span class="fruit-row__g">118 g</span></span>
-          </button>
-          <button type="button" class="fruit-row" data-fruit data-name="Grapes" data-title="Grapes" data-grams="120 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1599819177828-977859063789?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Grapes</span><span class="fruit-row__g">120 g</span></span>
-          </button>
-          <button type="button" class="fruit-row" data-fruit data-name="Orange" data-title="Orange" data-grams="140 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1547514701-42782101795e?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Orange</span><span class="fruit-row__g">140 g</span></span>
-          </button>
-          <button type="button" class="fruit-row" data-fruit data-name="Strawberries" data-title="Strawberries" data-grams="152 g">
-            <span class="fruit-row__thumb" style="background-image: url('https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=120&h=120&fit=crop');"></span>
-            <span class="fruit-row__text"><span class="fruit-row__name">Strawberries</span><span class="fruit-row__g">152 g</span></span>
-          </button>
-        </div>
+        <div class="fruit-list" id="fruits"></div>
       </aside>
     </div>
 
-    <p class="footnote">Scroll each reel for more recipes. Production would use your own food photography. Tap Mon lunch → pick from Lunch reel.</p>
+    <p class="footnote">Center reel = your pick (classic bandit). Side reels spin for show. Production: your photos, your recipe library.</p>
   </div>
 
   <script>
-    let target = null;
-    const status = document.getElementById('status');
-    const mealMap = { breakfast: 'breakfast', lunch: 'lunch', dinner: 'dinner', snack: 'snack' };
+    const CARD_H = 168;
 
-    function clearPicked() {
-      document.querySelectorAll('.recipe-card.picked, .fruit-row.picked').forEach((el) => el.classList.remove('picked'));
+    const RECIPES = {
+      breakfast: [
+        { title: 'Power Breakfast', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&h=200&fit=crop' },
+        { title: 'Turkey & Toast', grams: '113 g turkey · 128 g bread', img: 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=300&h=200&fit=crop' },
+        { title: 'Beef & Tortilla', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
+        { title: 'Power Breakfast', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&h=200&fit=crop' },
+      ],
+      lunch: [
+        { title: 'Power Lunch', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
+        { title: 'Chicken & Rice Bowl', grams: '113 g chicken · 196 g rice', img: 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=300&h=200&fit=crop' },
+        { title: 'Turkey Wrap', grams: '113 g turkey · 124 g tortilla', img: 'https://images.unsplash.com/photo-1626700051175-6818013e5786?w=300&h=200&fit=crop' },
+        { title: 'Power Lunch', grams: '113 g beef · 124 g tortilla', img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&h=200&fit=crop' },
+      ],
+      dinner: [
+        { title: 'Power Dinner w/ salad', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop' },
+        { title: 'Beef Fajita Plate', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
+        { title: 'Chicken Fajita Plate', grams: '113 g chicken · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
+        { title: 'Beef Fajita Plate', grams: '113 g beef · 124 g · 159 g pepper', img: 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=300&h=200&fit=crop' },
+      ],
+    };
+
+    const FRUITS = [
+      { name: 'Apple', grams: '182 g', img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=120&h=120&fit=crop' },
+      { name: 'Apricots', grams: '35 g', img: 'https://images.unsplash.com/photo-1437753323695-e03606f35e24?w=120&h=120&fit=crop' },
+      { name: 'Banana', grams: '118 g', img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=120&h=120&fit=crop' },
+      { name: 'Grapes', grams: '120 g', img: 'https://images.unsplash.com/photo-1599819177828-977859063789?w=120&h=120&fit=crop' },
+      { name: 'Orange', grams: '140 g', img: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=120&h=120&fit=crop' },
+      { name: 'Strawberries', grams: '152 g', img: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=120&h=120&fit=crop' },
+    ];
+
+    let target = null;
+    let spinning = false;
+    const status = document.getElementById('status');
+
+    function cardHtml(r) {
+      return `
+        <div class="bandit-card">
+          <div class="bandit-card__img" style="background-image:url('${r.img}')"></div>
+          <div class="bandit-card__body">
+            <p class="bandit-card__name">${r.title}</p>
+            <p class="bandit-card__g">${r.grams}</p>
+          </div>
+        </div>`;
+    }
+
+    function buildStrip(recipes, copies = 8) {
+      let html = '';
+      for (let c = 0; c < copies; c += 1) {
+        recipes.forEach((r) => { html += cardHtml(r); });
+      }
+      return html;
+    }
+
+    function buildBandits() {
+      const labels = { breakfast: 'Breakfast bandit', lunch: 'Lunch bandit', dinner: 'Dinner bandit' };
+      document.getElementById('bandits').innerHTML = ['breakfast', 'lunch', 'dinner'].map((type) => `
+        <section class="bandit" data-bandit="${type}" aria-label="${labels[type]}">
+          <div class="bandit__head">
+            <h3>${labels[type]}</h3>
+            <span>3 reels · center wins</span>
+          </div>
+          <div class="bandit__machine">
+            <div class="bandit__windows" data-windows="${type}">
+              ${[0, 1, 2].map((col) => `
+                <div class="bandit__window">
+                  <div class="bandit__strip" data-strip="${type}-${col}" style="transform:translateY(0)">
+                    ${buildStrip(RECIPES[type])}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="bandit__lever-col">
+              <button type="button" class="bandit__lever" data-spin="${type}" aria-label="Spin ${type}">SPIN</button>
+              <span class="bandit__lever-label">Pull</span>
+            </div>
+          </div>
+        </section>
+      `).join('');
+
+      document.querySelectorAll('[data-spin]').forEach((btn) => {
+        btn.addEventListener('click', () => spinBandit(btn.dataset.spin));
+      });
+    }
+
+    function buildFruits() {
+      document.getElementById('fruits').innerHTML = FRUITS.map((f) => `
+        <button type="button" class="fruit-row" data-fruit data-name="${f.name}" data-title="${f.name}" data-grams="${f.grams}">
+          <span class="fruit-row__thumb" style="background-image:url('${f.img}')"></span>
+          <span><span class="fruit-row__name">${f.name}</span><span class="fruit-row__g">${f.grams}</span></span>
+        </button>
+      `).join('');
+
+      document.querySelectorAll('[data-fruit]').forEach((row) => {
+        row.addEventListener('click', () => pickFruit(row));
+      });
+    }
+
+    function setActiveBandit(type) {
+      document.querySelectorAll('.bandit').forEach((b) => {
+        b.classList.toggle('is-active', b.dataset.bandit === type);
+      });
     }
 
     document.querySelectorAll('.cell').forEach((cell) => {
@@ -550,62 +572,119 @@
         document.querySelectorAll('.cell.target').forEach((c) => c.classList.remove('target'));
         cell.classList.add('target');
         target = cell;
-        clearPicked();
+        document.querySelectorAll('.fruit-row.picked').forEach((r) => r.classList.remove('picked'));
+
         const m = cell.dataset.meal;
         if (m === 'snack') {
-          status.textContent = `Selected ${cell.dataset.label}. Pick a fruit →`;
-          status.classList.remove('idle');
+          status.textContent = `Snack slot: ${cell.dataset.label}. Pick a fruit →`;
+          status.classList.add('idle');
+          document.querySelectorAll('.bandit').forEach((b) => b.classList.remove('is-active'));
         } else {
-          status.textContent = `Selected ${cell.dataset.label}. Pick from the ${m} reel →`;
+          status.textContent = `${cell.dataset.label} selected. Pull SPIN on the ${m} bandit →`;
           status.classList.remove('idle');
-          document.querySelector(`[aria-label="${m.charAt(0).toUpperCase() + m.slice(1)} reel"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          setActiveBandit(m);
+          document.querySelector(`[data-bandit="${m}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       });
     });
 
-    document.querySelectorAll('.recipe-card').forEach((card) => {
-      card.addEventListener('click', () => {
-        if (!target) {
-          status.textContent = 'Tap a breakfast, lunch, or dinner slot first.';
-          status.classList.remove('idle');
-          return;
-        }
-        if (target.dataset.meal === 'snack') {
-          status.textContent = 'That\'s a snack slot — use Fruits.';
-          return;
-        }
-        if (target.dataset.meal !== card.dataset.reel) {
-          status.textContent = `That slot is ${target.dataset.meal} — use the ${target.dataset.meal} reel.`;
-          return;
-        }
-        clearPicked();
-        card.classList.add('picked');
-        target.innerHTML = `<span class="cell__t">${card.dataset.title}</span><span class="cell__g">${card.dataset.grams}</span>`;
-        target.classList.remove('target');
-        status.textContent = `Updated ${target.dataset.label} → ${card.dataset.name}.`;
-        target = null;
-      });
-    });
+    function easeOutCubic(t) {
+      return 1 - (1 - t) ** 3;
+    }
 
-    document.querySelectorAll('[data-fruit]').forEach((row) => {
-      row.addEventListener('click', () => {
-        if (!target) {
-          status.textContent = 'Tap a snack slot first.';
-          status.classList.remove('idle');
-          return;
+    function animateStrip(strip, targetY, duration, onDone) {
+      const startY = getTranslateY(strip);
+      const start = performance.now();
+      strip.classList.add('spinning');
+
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const y = startY + (targetY - startY) * easeOutCubic(t);
+        strip.style.transform = `translateY(${y}px)`;
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          strip.classList.remove('spinning');
+          onDone?.();
         }
-        if (target.dataset.meal !== 'snack') {
-          status.textContent = 'That\'s a meal slot — use a recipe reel.';
-          return;
-        }
-        clearPicked();
-        row.classList.add('picked');
-        target.innerHTML = `<span class="cell__t">${row.dataset.title}</span><span class="cell__g">${row.dataset.grams}</span>`;
-        target.classList.remove('target');
-        status.textContent = `Updated ${target.dataset.label} → ${row.dataset.name}.`;
-        target = null;
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function getTranslateY(el) {
+      const m = el.style.transform.match(/translateY\((-?\d+\.?\d*)px\)/);
+      return m ? parseFloat(m[1]) : 0;
+    }
+
+    function spinBandit(type) {
+      if (spinning) return;
+      if (!target || target.dataset.meal !== type) {
+        status.textContent = `Select a ${type} slot on the grid first, then SPIN.`;
+        status.classList.remove('idle');
+        return;
+      }
+
+      spinning = true;
+      document.querySelectorAll(`[data-spin="${type}"]`).forEach((b) => { b.disabled = true; });
+
+      const recipes = RECIPES[type];
+      const winIndex = Math.floor(Math.random() * recipes.length);
+      const winRecipe = recipes[winIndex];
+      const copies = 8;
+      const baseOffset = copies * recipes.length * CARD_H * 0.5;
+      const winY = -(baseOffset + winIndex * CARD_H);
+
+      const windows = document.querySelector(`[data-windows="${type}"]`);
+      windows.classList.remove('win');
+
+      const strips = [0, 1, 2].map((col) => document.querySelector(`[data-strip="${type}-${col}"]));
+
+      status.textContent = 'Spinning…';
+      status.classList.remove('idle');
+
+      let done = 0;
+      strips.forEach((strip, col) => {
+        const offsetIndex = col === 1 ? winIndex : Math.floor(Math.random() * recipes.length);
+        const targetY = -(baseOffset + offsetIndex * CARD_H + (col === 1 ? 0 : Math.floor(Math.random() * 3)) * CARD_H);
+        const extraSpins = (3 + col) * recipes.length * CARD_H;
+        const startY = getTranslateY(strip);
+        const finalY = winY - (col === 1 ? 0 : (col === 0 ? 1 : 2) * CARD_H * 0.3);
+
+        strip.style.transform = `translateY(${startY}px)`;
+        animateStrip(strip, finalY - extraSpins, 1400 + col * 200, () => {
+          animateStrip(strip, col === 1 ? winY : finalY, 600, () => {
+            done += 1;
+            if (done === 3) {
+              spinning = false;
+              document.querySelectorAll(`[data-spin="${type}"]`).forEach((b) => { b.disabled = false; });
+              windows.classList.add('win');
+              target.innerHTML = `<span class="cell__t">${winRecipe.title}</span><span class="cell__g">${winRecipe.grams}</span>`;
+              status.textContent = `🎰 ${winRecipe.title} → ${target.dataset.label}`;
+              target.classList.remove('target');
+              target = null;
+              document.querySelectorAll('.bandit').forEach((b) => b.classList.remove('is-active'));
+            }
+          });
+        });
       });
-    });
+    }
+
+    function pickFruit(row) {
+      if (!target || target.dataset.meal !== 'snack') {
+        status.textContent = 'Tap a snack slot on the grid first.';
+        status.classList.remove('idle');
+        return;
+      }
+      document.querySelectorAll('.fruit-row.picked').forEach((r) => r.classList.remove('picked'));
+      row.classList.add('picked');
+      target.innerHTML = `<span class="cell__t">${row.dataset.title}</span><span class="cell__g">${row.dataset.grams}</span>`;
+      status.textContent = `${row.dataset.name} → ${target.dataset.label}`;
+      target.classList.remove('target');
+      target = null;
+    }
+
+    buildBandits();
+    buildFruits();
   </script>
 </body>
 </html>
