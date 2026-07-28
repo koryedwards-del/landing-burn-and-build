@@ -535,7 +535,7 @@ function updatePickerHints() {
   if (recipeHint) {
     recipeHint.textContent = target
       ? `Selected ${gridTargetLabel(target)} — Spin, then Assign`
-      : 'Tap a slot in the grid, then pick a recipe';
+      : 'Tap a slot in the grid, then pick a meal';
   }
 
   if (fruitHint) {
@@ -567,7 +567,7 @@ function assignPickedRecipeToGrid(columnMealSlotId) {
     return;
   }
   if (!libraryRecipeFitsMealSlot(recipe, target.mealSlotId)) {
-    showPlannerToast('That recipe does not fit this meal slot.', { variant: 'error' });
+    showPlannerToast('That meal does not fit this slot.', { variant: 'error' });
     return;
   }
 
@@ -880,7 +880,7 @@ function renderRecipeColumn(column) {
       ` : `
       <div class="recipe-reel recipe-reel--empty">
         <div class="recipe-reel__window">
-          <p class="recipe-reel__empty">No recipes yet</p>
+          <p class="recipe-reel__empty">No meals yet</p>
         </div>
       </div>
       `}
