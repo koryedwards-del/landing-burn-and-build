@@ -421,6 +421,42 @@ body {
   margin-bottom: 10px;
 }
 
+.meal-sorter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.meal-sorter__pill {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: "Oswald", system-ui, sans-serif;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.meal-sorter__pill--active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-dim);
+  cursor: default;
+}
+
+.meal-sorter__pill:not(.meal-sorter__pill--active):hover {
+  border-color: var(--gold-muted);
+  color: var(--text);
+}
+
 .recipe-cards {
   flex: 1 1 auto;
   min-height: 0;

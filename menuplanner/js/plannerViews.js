@@ -58,6 +58,8 @@ const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASS
 const {
   allMealTemplates,
   libraryRecipeFitsMealSlot,
+  mealMatchesSorter,
+  MEAL_SORTER_PILLS,
   recipeById,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
 const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
@@ -888,15 +890,35 @@ function renderMealIdeaCard(meal) {
   `;
 }
 
+function renderMealSorter() {
+  const container = document.getElementById('meal-sorter');
+  if (!container) return;
+
+  container.innerHTML = MEAL_SORTER_PILLS.map((pill) => {
+    const active = state.mealSuggestionSorter === pill.id ? ' meal-sorter__pill--active' : '';
+    return `
+      <button
+        type="button"
+        class="meal-sorter__pill${active}"
+        data-meal-sorter="${escapeHtml(pill.id)}"
+      >${escapeHtml(pill.label)}</button>
+    `;
+  }).join('');
+}
+
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = allMealTemplates();
+  const meals = allMealTemplates().filter((meal) => mealMatchesSorter(meal, state.mealSuggestionSorter));
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
-    : '<p class="recipe-cards__empty">No suggestions yet</p>';
+    : `<p class="recipe-cards__empty">${escapeHtml(
+      state.mealSuggestionSorter === 'all'
+        ? 'No suggestions yet'
+        : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} suggestions yet`,
+    )}</p>`;
 }
 
 function renderFruitList() {
@@ -941,6 +963,20 @@ function initFruitPicker() {
 
   assignBtn?.addEventListener('click', () => {
     assignPendingFruitToGrid();
+  });
+}
+
+function initMealSorter() {
+  const container = document.getElementById('meal-sorter');
+  if (!container || container.dataset.mealSorterInit) return;
+  container.dataset.mealSorterInit = '1';
+
+  container.addEventListener('click', (event) => {
+    const pill = event.target.closest('[data-meal-sorter]');
+    if (!pill) return;
+    state.mealSuggestionSorter = pill.dataset.mealSorter;
+    renderMealSorter();
+    renderRecipeCards();
   });
 }
 
@@ -1331,9 +1367,10 @@ function renderPlannerWorkspace() {
     console.error('Week grid failed to render:', err);
   }
   try {
+    renderMealSorter();
     renderRecipeCards();
   } catch (err) {
-    console.error('Recipe cards failed to render:', err);
+    console.error('Meal suggestions failed to render:', err);
   }
   try {
     renderFruitList();
@@ -1379,6 +1416,7 @@ export {
   initFoodSearch,
   initFoodDropTargets,
   initRecipePicker,
+  initMealSorter,
   initFruitPicker,
   setWeekGridCollapsed,
   showPlannerToast,
