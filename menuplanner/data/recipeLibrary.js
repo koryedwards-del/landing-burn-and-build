@@ -1,17 +1,19 @@
 /**
- * Meal templates for Page 4 — protein + grain/starch (+ optional veg).
+ * Meal suggestions for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = cultural flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
  *
- * Test set: 3 samples — same foods, different flavor profiles.
+ * Split categories: multiple foods in the same slot share servings
+ * (e.g. black beans + rice both Grains/Starches — each gets half).
  */
 
 /** Short labels for card titles — keep plain and recognizable. */
 const FOOD_SHORT = {
   'Beef, eye of round': 'Steak',
   'Chicken breast, no skin': 'Chicken',
+  'Beans, black': 'Black Beans',
   'Rice, basmati': 'Rice',
   'Tortilla, corn (6-inch)': 'Tortilla',
   'Potato, baked (flesh + skin)': 'Potato',
@@ -65,6 +67,14 @@ export const MEAL_TEMPLATES = [
   ], {
     profile: 'Fajita',
     caveat: 'Lime, cumin, chili powder, salsa. Peppers sautéed or roasted.',
+  }),
+  meal('chicken-beans-rice', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Beans, black' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+  ], {
+    profile: 'Latin',
+    caveat: 'Cumin, garlic, cilantro — no extra oil. Black beans and rice split your grain/starch serving evenly.',
   }),
 ];
 
