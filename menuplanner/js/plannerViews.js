@@ -56,11 +56,11 @@ import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.j
 
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
-  MEAL_SLOT_COLUMNS,
+  allMealTemplates,
   libraryRecipeFitsMealSlot,
   recipeById,
-  recipesForMealSlot,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
+const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -548,7 +548,7 @@ function updatePickerHints() {
   }
 }
 
-function applyMealIdeaFromCard(columnMealSlotId, meal) {
+function applyMealIdeaFromCard(meal) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
@@ -556,11 +556,6 @@ function applyMealIdeaFromCard(columnMealSlotId, meal) {
   }
   if (!isMealMealSlot(target.mealSlotId)) {
     showPlannerToast('Tap breakfast, lunch, or dinner in the grid.', { variant: 'error' });
-    return;
-  }
-  if (target.mealSlotId !== columnMealSlotId) {
-    const slot = DAY_SLOTS.find((item) => item.id === columnMealSlotId);
-    showPlannerToast(`Tap a ${slot?.label ?? columnMealSlotId} slot in the grid.`, { variant: 'error' });
     return;
   }
   if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) {
@@ -847,31 +842,20 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function renderMealIdeaCard(meal, columnId) {
-  const scaledItems = meal.items?.length && state.programPackage
-    ? mealItemsScaledToSlot(meal, columnId)
-    : [];
-  const displayItems = scaledItems.length
-    ? scaledItems
-    : (meal.items || []).map((item) => ({ ...item, servings: null }));
+function renderMealIdeaCard(meal) {
+  const linesHtml = (meal.items || []).map((item) => `
+      <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
+    `).join('');
 
-  const linesHtml = displayItems.map((item) => {
-    const food = foodByName(item.foodName);
-    const grams = food && item.servings != null ? scaledLabel(food, item.servings) : '';
-    return `
-      <div class="recipe-card__line">
-        <span>${escapeHtml(item.foodName)}</span>
-        ${grams ? `<span>${escapeHtml(grams)}</span>` : ''}
-      </div>
-    `;
-  }).join('');
+  const caveatText = meal.flavor || meal.caveats;
+  const profileHtml = meal.profile
+    ? `<p class="recipe-card__profile">${escapeHtml(meal.profile)}</p>`
+    : '';
+  const caveatHtml = caveatText
+    ? `<p class="recipe-card__caveat">${escapeHtml(caveatText)}</p>`
+    : '';
 
-  const flavorHtml = (meal.flavor || meal.caveats) ? `
-    <details class="recipe-card__flavor">
-      <summary>Flavor suggestion</summary>
-      ${escapeHtml(meal.flavor || meal.caveats)}
-    </details>
-  ` : '';
+  const imgUrl = recipeImageUrl(meal.id);
 
   return `
     <article class="recipe-card">
@@ -879,27 +863,28 @@ function renderMealIdeaCard(meal, columnId) {
         type="button"
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
-        data-meal-slot="${escapeHtml(columnId)}"
       >
-        <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-        ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+        <div class="recipe-card__col recipe-card__col--plate">
+          <img
+            class="recipe-card__img"
+            src="${escapeHtml(imgUrl)}"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="recipe-card__col recipe-card__col--title">
+          <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+          ${profileHtml}
+        </div>
+        <div class="recipe-card__col recipe-card__col--foods">
+          ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+        </div>
+        <div class="recipe-card__col recipe-card__col--caveat">
+          ${caveatHtml}
+        </div>
       </button>
-      ${flavorHtml}
     </article>
-  `;
-}
-
-function renderRecipeColumn(column) {
-  const meals = recipesForMealSlot(column.id);
-  const cardsHtml = meals.length
-    ? meals.map((meal) => renderMealIdeaCard(meal, column.id)).join('')
-    : '<p class="recipe-column__empty">No recipes yet</p>';
-
-  return `
-    <section class="recipe-column" data-meal-slot="${column.id}">
-      <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
-      <div class="recipe-column__cards">${cardsHtml}</div>
-    </section>
   `;
 }
 
@@ -907,8 +892,11 @@ function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  container.classList.add('recipe-columns');
-  container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
+  const meals = allMealTemplates();
+  container.className = 'recipe-cards';
+  container.innerHTML = meals.length
+    ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
+    : '<p class="recipe-cards__empty">No templates yet</p>';
 }
 
 function renderFruitList() {
@@ -963,10 +951,10 @@ function initRecipePicker() {
 
   container.addEventListener('click', (event) => {
     const card = event.target.closest('[data-meal-idea-id]');
-    if (!card || event.target.closest('.recipe-card__flavor')) return;
+    if (!card) return;
     const meal = recipeById(card.dataset.mealIdeaId);
     if (!meal) return;
-    applyMealIdeaFromCard(card.dataset.mealSlot, meal);
+    applyMealIdeaFromCard(meal);
   });
 }
 
