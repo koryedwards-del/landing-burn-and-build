@@ -157,7 +157,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Spices as desired. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired.',
+    caveat: 'Spices as desired. 2 whites/1 yolk. Reduce yolks as desired.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
@@ -171,7 +171,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired. Scramble; toast the bread dry.',
+    caveat: '2 whites/1 yolk. Reduce yolks as desired. Scramble; toast the bread dry.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
