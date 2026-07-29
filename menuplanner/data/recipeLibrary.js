@@ -23,10 +23,64 @@ const FOOD_SHORT = {
 
 const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
 
+/** Filter pills in the Meal Suggestions panel. */
+export const MEAL_SORTER_PILLS = [
+  { id: 'all', label: 'All' },
+  { id: 'beef', label: 'Beef' },
+  { id: 'poultry', label: 'Poultry' },
+  { id: 'seafood', label: 'Seafood' },
+  { id: 'pork', label: 'Pork' },
+  { id: 'dairy', label: 'Dairy' },
+  { id: 'grain-starch', label: 'Grain / Starch' },
+];
+
 /**
  * @typedef {{ slot: 'Protein' | 'Grains/Starches' | 'Veggie', foodName: string }} MealItem
- * @typedef {{ id: string, name: string, items: MealItem[], profile?: string, flavor?: string }} MealCard
+ * @typedef {{ id: string, name: string, items: MealItem[], profile?: string, flavor?: string, tags?: string[] }} MealCard
  */
+
+function proteinTagForFood(foodName) {
+  const name = foodName.toLowerCase();
+  if (name.startsWith('beef') || name.includes('bison') || name.includes('venison')) return 'beef';
+  if (name.startsWith('chicken') || name.startsWith('turkey')) return 'poultry';
+  if (name.startsWith('pork') || name.includes('ham')) return 'pork';
+  if (
+    name.startsWith('tuna')
+    || name.startsWith('cod')
+    || name.startsWith('shrimp')
+    || name.includes('fish')
+    || name.includes('salmon')
+    || name.includes('halibut')
+    || name.includes('haddock')
+    || name.includes('flounder')
+  ) return 'seafood';
+  if (
+    name.includes('egg')
+    || name.includes('milk')
+    || name.includes('yogurt')
+    || name.includes('cottage cheese')
+  ) return 'dairy';
+  return null;
+}
+
+export function inferMealTags(items) {
+  const tags = new Set();
+  const gsItems = items.filter((item) => item.slot === 'Grains/Starches');
+  if (gsItems.length >= 2) tags.add('grain-starch');
+
+  items.forEach((item) => {
+    if (item.slot !== 'Protein') return;
+    const tag = proteinTagForFood(item.foodName);
+    if (tag) tags.add(tag);
+  });
+
+  return [...tags];
+}
+
+export function mealMatchesSorter(meal, sorterId) {
+  if (!sorterId || sorterId === 'all') return true;
+  return meal.tags?.includes(sorterId) ?? false;
+}
 
 export function shortFoodLabel(foodName) {
   return FOOD_SHORT[foodName] || foodName.split(',')[0].trim();
@@ -40,8 +94,15 @@ export function mealNameFromItems(items) {
   return labels.join(' & ');
 }
 
-function meal(id, items, { profile, caveat } = {}) {
-  return { id, name: mealNameFromItems(items), items, profile, flavor: caveat };
+function meal(id, items, { profile, caveat, tags } = {}) {
+  return {
+    id,
+    name: mealNameFromItems(items),
+    items,
+    profile,
+    flavor: caveat,
+    tags: tags ?? inferMealTags(items),
+  };
 }
 
 const CHICKEN_RICE_BROCCOLI = [

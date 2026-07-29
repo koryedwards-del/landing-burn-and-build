@@ -830,6 +830,7 @@ export const state = {
   activeWeekDay: null,
   activeGridTarget: null,
   pendingFruitPick: null,
+  mealSuggestionSorter: 'all',
 };
 
 state.weekPlan = createFreshWeekPlan();
