@@ -26,6 +26,6 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: 'Can I skip the yolk?',
-    a: 'Yes. Each egg serving is 2 eggs in shell (both whites + 1 yolk). Reduce or skip yolks as desired — you still get your protein from the whites.',
+    a: 'Yes. Each egg serving is 2 whites/1 yolk. Reduce or skip yolks as desired — you still get your protein from the whites.',
   },
 ];

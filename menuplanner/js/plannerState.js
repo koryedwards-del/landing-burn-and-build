@@ -312,6 +312,10 @@ function savedMealById(id) {
 }
 
 function scaledLabel(food, servings) {
+  if (food.name === 'Eggs') {
+    if (servings === 1) return '2 whites/1 yolk';
+    return `${fmtServings(servings)} × 2 whites/1 yolk`;
+  }
   if (food.unitsPerServing > 0) {
     const count = Math.ceil(food.unitsPerServing * servings);
     return `${count} ${food.servingDescription}`;

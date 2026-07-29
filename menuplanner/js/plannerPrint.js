@@ -221,6 +221,11 @@ function foodsByCategory(categoryId) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function foodListDisplayName(food) {
+  if (food.name === 'Eggs') return '2 whites/1 yolk';
+  return food.name;
+}
+
 function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
   const titleHtml = title
     ? `<h2 class="food-list-col-title${hideTitle ? ' food-list-col-title--spacer' : ''}"${hideTitle ? ' aria-hidden="true"' : ''}>${escapeHtml(title)}</h2>`
@@ -231,7 +236,7 @@ function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
       ${foods.length ? `
       <ul class="food-list-items">
         ${foods.map((food) => `
-          <li class="food-list-name">${escapeHtml(food.name)}</li>
+          <li class="food-list-name">${escapeHtml(foodListDisplayName(food))}</li>
         `).join('')}
       </ul>
       ` : ''}
