@@ -33,7 +33,7 @@ export const MEAL_SORTER_PILLS = [
   { id: 'poultry', label: 'Poultry' },
   { id: 'seafood', label: 'Seafood' },
   { id: 'pork', label: 'Pork' },
-  { id: 'dairy', label: 'Dairy' },
+  { id: 'dairy-eggs', label: 'Dairy & Eggs' },
   { id: 'grain', label: 'Grain' },
   { id: 'starch', label: 'Starch' },
 ];
@@ -59,11 +59,12 @@ function proteinTagForFood(foodName) {
     || name.includes('flounder')
   ) return 'seafood';
   if (
-    name.includes('egg')
+    name.includes('egg white')
+    || name.includes('egg substitute')
     || name.includes('milk')
     || name.includes('yogurt')
     || name.includes('cottage cheese')
-  ) return 'dairy';
+  ) return 'dairy-eggs';
   return null;
 }
 
