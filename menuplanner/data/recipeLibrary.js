@@ -3,7 +3,7 @@
  *
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = cultural flavor spark.
- * Amounts come from the user's program when they pick a card.
+ * Gram amounts live on the weekly PDF — apply still uses the user's program.
  *
  * Test set: 3 samples — same foods, different flavor profiles.
  */
