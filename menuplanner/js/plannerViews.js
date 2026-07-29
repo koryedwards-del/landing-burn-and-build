@@ -538,9 +538,9 @@ function updatePickerHints() {
   const target = state.activeGridTarget;
 
   if (recipeHint) {
-    recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick a suggestion`
-      : 'Fill your week grid faster — and spark meal ideas.';
+    recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
+      ? `Selected <strong>${escapeHtml(gridTargetLabel(target))}</strong> — pick a suggestion`
+      : 'Fill your week grid <strong>faster</strong> — and spark meal ideas.';
   }
 
   if (fruitHint) {
