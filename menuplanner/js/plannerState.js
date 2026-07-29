@@ -830,7 +830,7 @@ export const state = {
   activeWeekDay: null,
   activeGridTarget: null,
   mealSuggestionSorter: 'all',
-  /** 'fast-start' | 'diy' — default fast start until user toggles (DIY UI not yet exposed). */
+  /** 'fast-start' | 'diy' — default fast start until user toggles. */
   plannerEngagementMode: 'fast-start',
 };
 

@@ -80,9 +80,18 @@ function renderPlannerMeta() {
   }
 
   const servings = state.programPackage.plan?.servings;
-  const servingsLine = servings
-    ? `Protein ${fmtServings(servings.protein)}, G/S ${fmtServings(servings.grainsStarches)}, Fruit ${fmtServings(servings.fruits)}, Veg ${fmtServings(servings.vegetables)}, Fat pts ${fmtServings(servings.fatMaintain)}`
-    : '';
+  const parts = servings
+    ? [
+      `Protein ${fmtServings(servings.protein)}`,
+      `G/S ${fmtServings(servings.grainsStarches)}`,
+      `Fruit ${fmtServings(servings.fruits)}`,
+      `Veg ${fmtServings(servings.vegetables)}`,
+    ]
+    : [];
+  if (servings && state.plannerEngagementMode !== 'fast-start') {
+    parts.push(`Fat pts ${fmtServings(servings.fatMaintain)}`);
+  }
+  const servingsLine = parts.length ? parts.join(', ') : '';
 
   if (!servingsLine) {
     meta.hidden = true;
