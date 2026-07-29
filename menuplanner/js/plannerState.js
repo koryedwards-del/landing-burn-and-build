@@ -178,6 +178,7 @@ function collectPlannerState() {
     weekGridCollapsed: state.weekGridCollapsed,
     mealMakerDraft: state.mealMakerDraft,
     activeMakerSlot: state.activeMakerSlot,
+    plannerEngagementMode: state.plannerEngagementMode,
   };
 }
 
@@ -221,6 +222,9 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     }
     if (saved.activeMakerSlot && MEAL_MAKER_SLOTS.includes(saved.activeMakerSlot)) {
       state.activeMakerSlot = saved.activeMakerSlot;
+    }
+    if (saved.plannerEngagementMode === 'diy' || saved.plannerEngagementMode === 'fast-start') {
+      state.plannerEngagementMode = saved.plannerEngagementMode;
     }
   }
   restoreSessionGridUi(sessionUi);

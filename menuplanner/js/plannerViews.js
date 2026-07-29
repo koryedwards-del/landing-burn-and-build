@@ -69,7 +69,65 @@ const {
   fastStartFruitSortKey,
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
+const PLANNER_MODE_TITLES = {
+  'fast-start': '🏃 Fast Start Menu Planner',
+  diy: 'Do-It-Yourself Menu Planner',
+};
+
+function normalizePlannerEngagementMode(mode) {
+  return mode === 'diy' ? 'diy' : 'fast-start';
+}
+
+function syncPlannerEngagementUi() {
+  const mode = normalizePlannerEngagementMode(state.plannerEngagementMode);
+  state.plannerEngagementMode = mode;
+
+  const page = document.getElementById('planner-page');
+  if (page) {
+    page.classList.toggle('planner-page--fast-start', mode === 'fast-start');
+    page.classList.toggle('planner-page--diy', mode === 'diy');
+  }
+
+  const title = document.getElementById('planner-page-title');
+  if (title) title.textContent = PLANNER_MODE_TITLES[mode];
+
+  const navBtn = document.querySelector('[data-nav-page="3"]');
+  if (navBtn) {
+    navBtn.textContent = mode === 'fast-start' ? '4. 🏃 Menu planner' : '4. Menu planner';
+  }
+
+  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
+    const active = btn.dataset.plannerMode === mode;
+    btn.classList.toggle('planner-mode-toggle__btn--active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+function setPlannerEngagementMode(mode) {
+  const next = normalizePlannerEngagementMode(mode);
+  if (state.plannerEngagementMode === next) {
+    syncPlannerEngagementUi();
+    return;
+  }
+  state.plannerEngagementMode = next;
+  syncPlannerEngagementUi();
+  renderPlannerMeta();
+  renderFruitList();
+  persistPlannerToProgram();
+}
+
+function initPlannerEngagementToggle() {
+  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setPlannerEngagementMode(btn.dataset.plannerMode);
+    });
+  });
+  syncPlannerEngagementUi();
+}
+
 function renderPlannerMeta() {
+  syncPlannerEngagementUi();
+
   const meta = document.getElementById('planner-servings');
   if (!meta) return;
 
@@ -1345,6 +1403,7 @@ function initSaveMealDialog() {
 }
 
 function renderPlannerWorkspace() {
+  syncPlannerEngagementUi();
   setWeekGridCollapsed(state.weekGridCollapsed, { persist: false });
   try {
     renderWeekGrid();
@@ -1403,6 +1462,7 @@ export {
   initRecipePicker,
   initMealSorter,
   initFruitPicker,
+  initPlannerEngagementToggle,
   setWeekGridCollapsed,
   showPlannerToast,
 };

@@ -102,6 +102,7 @@ export async function bootMenuPlannerPage() {
     plannerViews.initRecipePicker();
     plannerViews.initMealSorter();
     plannerViews.initFruitPicker();
+    plannerViews.initPlannerEngagementToggle();
     plannerShellReady = true;
 
     if (foodsLoadError) {

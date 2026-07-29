@@ -661,7 +661,59 @@ body {
   padding: 8px 4px;
 }
 
-.workspace--legacy {
+.planner-mode-toggle {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  gap: 2px;
+}
+
+.planner-mode-toggle__btn {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.planner-mode-toggle__btn:hover:not(.planner-mode-toggle__btn--active) {
+  color: var(--text);
+  background: rgba(253, 197, 0, 0.06);
+}
+
+.planner-mode-toggle__btn--active {
+  color: var(--on-gold);
+  background: var(--gold);
+  box-shadow:
+    0 0 0 1px rgba(253, 197, 0, 0.35),
+    0 4px 14px rgba(253, 197, 0, 0.22);
+  cursor: default;
+}
+
+.planner-mode-toggle__btn:focus-visible {
+  outline: 2px solid var(--gold-muted);
+  outline-offset: 2px;
+}
+
+.planner-page--fast-start .workspace--legacy {
+  display: none !important;
+}
+
+.planner-page--diy .picker-row {
   display: none !important;
 }
 
