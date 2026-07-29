@@ -1,11 +1,14 @@
 /**
  * Meal templates for Page 4 — protein + grain/starch (+ veg at dinner).
  *
- * Card title = short ingredient names ("Chicken & Rice", "Steak, Potato & Broccoli").
+ * Card title = short ingredient names ("Chicken & Rice", "Milk & Egg Whites").
  * Amounts come from the user's program when they pick a card.
  *
- * To expand the library: run `node scripts/suggest-meal-combos.mjs` for combo ideas,
- * then add items + flavor here (or wire an AI step that outputs the same shape).
+ * Split categories: multiple foods in the same slot share that slot's servings
+ * (e.g. skim milk + egg whites both Protein — each gets half the protein servings).
+ * Same for two grains/starches or two vegetables at dinner.
+ *
+ * To expand: run `node scripts/suggest-meal-combos.mjs`
  */
 
 export const MEAL_SLOT_COLUMNS = [
@@ -25,6 +28,7 @@ const FOOD_SHORT = {
   'Cod, Atlantic, baked': 'Cod',
   'Shrimp, fresh': 'Shrimp',
   'Egg whites': 'Egg Whites',
+  'Skim milk (fat-free)': 'Skim Milk',
   'Cottage cheese, 2% fat': 'Cottage Cheese',
   'Yogurt, plain, nonfat': 'Yogurt',
   'Tortilla, corn (6-inch)': 'Tortilla',
@@ -78,12 +82,21 @@ export const MEALS_BY_SLOT = {
       'Cinnamon or sweetener. Skip butter unless you count fat points.',
     ),
     meal(
-      'turkey-tortilla-breakfast',
+      'milk-egg-whites',
       [
-        { slot: 'Protein', foodName: 'Turkey breast' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+        { slot: 'Protein', foodName: 'Skim milk (fat-free)' },
+        { slot: 'Protein', foodName: 'Egg whites' },
       ],
-      'Mustard, salsa, or dry rub on the turkey.',
+      'Vanilla, cinnamon, or hot sauce on the eggs. Both count toward your protein serving — split evenly.',
+    ),
+    meal(
+      'milk-egg-whites-oatmeal',
+      [
+        { slot: 'Protein', foodName: 'Skim milk (fat-free)' },
+        { slot: 'Protein', foodName: 'Egg whites' },
+        { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
+      ],
+      'Cook oats in the milk, scramble the whites on the side. Cinnamon on top.',
     ),
     meal(
       'cottage-cheese-egg-whites',
@@ -102,12 +115,12 @@ export const MEALS_BY_SLOT = {
       'Vanilla, cinnamon, or a few berries on top.',
     ),
     meal(
-      'ground-beef-tortilla-breakfast',
+      'turkey-tortilla-breakfast',
       [
-        { slot: 'Protein', foodName: 'Beef, 95% lean ground' },
+        { slot: 'Protein', foodName: 'Turkey breast' },
         { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
       ],
-      'Cumin, chili powder, salsa. Keep it dry — skip cheese unless counted.',
+      'Mustard, salsa, or dry rub on the turkey.',
     ),
   ],
   lunch: [
