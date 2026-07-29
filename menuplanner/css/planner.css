@@ -466,13 +466,34 @@ body {
 }
 
 .recipe-card__name {
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   font-family: "Oswald", system-ui, sans-serif;
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1.25;
+}
+
+.recipe-card__profile {
+  margin: 0 0 6px;
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  line-height: 1.25;
+}
+
+.recipe-card__caveat {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 0.62rem;
+  color: var(--muted);
+  line-height: 1.45;
+  text-align: left;
 }
 
 .recipe-card__core {

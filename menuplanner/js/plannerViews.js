@@ -866,12 +866,13 @@ function renderMealIdeaCard(meal, previewSlotId) {
     `;
   }).join('');
 
-  const flavorHtml = (meal.flavor || meal.caveats) ? `
-    <details class="recipe-card__flavor">
-      <summary>Flavor suggestion</summary>
-      ${escapeHtml(meal.flavor || meal.caveats)}
-    </details>
-  ` : '';
+  const caveatText = meal.flavor || meal.caveats;
+  const profileHtml = meal.profile
+    ? `<p class="recipe-card__profile">${escapeHtml(meal.profile)}</p>`
+    : '';
+  const caveatHtml = caveatText
+    ? `<p class="recipe-card__caveat">${escapeHtml(caveatText)}</p>`
+    : '';
 
   return `
     <article class="recipe-card">
@@ -881,9 +882,10 @@ function renderMealIdeaCard(meal, previewSlotId) {
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
         <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+        ${profileHtml}
         ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+        ${caveatHtml}
       </button>
-      ${flavorHtml}
     </article>
   `;
 }
@@ -952,7 +954,7 @@ function initRecipePicker() {
 
   container.addEventListener('click', (event) => {
     const card = event.target.closest('[data-meal-idea-id]');
-    if (!card || event.target.closest('.recipe-card__flavor')) return;
+    if (!card) return;
     const meal = recipeById(card.dataset.mealIdeaId);
     if (!meal) return;
     applyMealIdeaFromCard(meal);
