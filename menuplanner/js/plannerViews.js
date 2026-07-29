@@ -63,6 +63,7 @@ const {
   recipeById,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
 const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
+const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -912,9 +913,16 @@ function renderFruitList() {
 
   container.innerHTML = fruits.map((food) => {
     const grams = gramLabelForFood(food, snackServings);
+    const imgUrl = fruitImageUrl(food.name, PLANNER_V);
+    const imgHtml = imgUrl
+      ? `<img class="fruit-row__img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />`
+      : '';
     return `
       <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
-        <span class="fruit-row__name">${escapeHtml(food.name)}</span>
+        <span class="fruit-row__lead">
+          ${imgHtml}
+          <span class="fruit-row__name">${escapeHtml(food.name)}</span>
+        </span>
         <span class="fruit-row__grams">${escapeHtml(grams)}</span>
       </button>
     `;
