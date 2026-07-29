@@ -529,6 +529,9 @@ function gridTargetLabel(target) {
 }
 
 function updatePickerHints() {
+  clearPanelHintNotice('recipes-panel-hint');
+  clearPanelHintNotice('fruits-panel-hint');
+
   const recipeHint = document.getElementById('recipes-panel-hint');
   const fruitHint = document.getElementById('fruits-panel-hint');
   const target = state.activeGridTarget;
@@ -546,12 +549,47 @@ function updatePickerHints() {
   }
 }
 
+const PANEL_HINT_NOTICE_MS = 5000;
+const panelHintNoticeTimers = {
+  'recipes-panel-hint': null,
+  'fruits-panel-hint': null,
+};
+
+function clearPanelHintNotice(hintId) {
+  if (panelHintNoticeTimers[hintId]) {
+    window.clearTimeout(panelHintNoticeTimers[hintId]);
+    panelHintNoticeTimers[hintId] = null;
+  }
+  const el = document.getElementById(hintId);
+  if (el) {
+    el.classList.remove('recipes-panel__hint--notice', 'fruits-panel__hint--notice');
+  }
+}
+
+function showPanelHintNotice(hintId, message) {
+  clearPanelHintNotice(hintId);
+  const el = document.getElementById(hintId);
+  if (!el) return;
+
+  el.textContent = message;
+  el.classList.add(
+    hintId === 'recipes-panel-hint' ? 'recipes-panel__hint--notice' : 'fruits-panel__hint--notice',
+  );
+
+  panelHintNoticeTimers[hintId] = window.setTimeout(() => {
+    panelHintNoticeTimers[hintId] = null;
+    el.classList.remove('recipes-panel__hint--notice', 'fruits-panel__hint--notice');
+    updatePickerHints();
+  }, PANEL_HINT_NOTICE_MS);
+}
+
 function applyMealIdeaFromCard(meal) {
   const target = state.activeGridTarget;
   if (!target || !isMealMealSlot(target.mealSlotId)) return;
   if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) return;
 
   applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, meal);
+  showPanelHintNotice('recipes-panel-hint', `${meal.name} → ${gridTargetLabel(target)}`);
 }
 
 function applyFruitFromRow(foodName) {
@@ -559,6 +597,7 @@ function applyFruitFromRow(foodName) {
   if (!target || !isSnackMealSlot(target.mealSlotId)) return;
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
+  showPanelHintNotice('fruits-panel-hint', `${foodName} → ${gridTargetLabel(target)}`);
 }
 
 /** Reserved — meal/fruit feedback UI removed; stub keeps callers safe until rebuilt. */

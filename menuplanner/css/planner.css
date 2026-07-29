@@ -379,6 +379,11 @@ body {
   font-weight: 600;
 }
 
+.recipes-panel__hint--notice,
+.fruits-panel__hint--notice {
+  color: var(--gold);
+}
+
 .meal-sorter-bar {
   display: flex;
   align-items: flex-start;
