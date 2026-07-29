@@ -64,6 +64,10 @@ const {
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
 const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
+const {
+  isFastStartFruit,
+  fastStartFruitSortKey,
+} = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -911,9 +915,13 @@ function renderFruitList() {
   if (!container) return;
 
   const snackServings = requiredServings('morning-snack', 'fruit');
-  const fruits = state.foods
-    .filter((food) => food.category === 'fruit')
-    .sort((a, b) => a.name.localeCompare(b.name));
+  let fruits = state.foods.filter((food) => food.category === 'fruit');
+  if (state.plannerEngagementMode === 'fast-start') {
+    fruits = fruits.filter((food) => isFastStartFruit(food.name));
+    fruits.sort((a, b) => fastStartFruitSortKey(a.name) - fastStartFruitSortKey(b.name));
+  } else {
+    fruits.sort((a, b) => a.name.localeCompare(b.name));
+  }
 
   if (!fruits.length) {
     container.innerHTML = '<p class="fruit-list__empty">Fruit list loading…</p>';
