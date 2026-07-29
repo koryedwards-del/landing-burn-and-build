@@ -5,10 +5,8 @@
 /** @type {Readonly<Record<string, string>>} foods.json name → filename */
 const FRUIT_IMAGE_FILES = {
   Apple: 'apple.png',
-  Apricots: 'apricots.png',
   Banana: 'banana.png',
   Grapes: 'grapes.png',
-  Orange: 'orange.jpg',
 };
 
 const FRUIT_ASSET_BASE = '../menuplanner/assets/fruits';
