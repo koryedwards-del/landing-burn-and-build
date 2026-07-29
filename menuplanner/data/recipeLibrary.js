@@ -2,7 +2,7 @@
  * Meal ideas for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Fast Start: no fat, sugar, or alcohol in template items or caveats.
- * Use salt/pepper and spices as desired.
+ * Use salt/pepper and spices as desired — appended as the last sentence on every idea card.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = optional flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
@@ -133,13 +133,17 @@ export function mealNameFromItems(items) {
   return labels.join(' & ');
 }
 
+const SEASONING_CLOSER = 'Use salt/pepper and spices as desired.';
+
 function meal(id, items, { profile, caveat, tags, name } = {}) {
+  const body = (caveat ?? '').trim();
+  const flavor = body ? `${body} ${SEASONING_CLOSER}` : SEASONING_CLOSER;
   return {
     id,
     name: name ?? mealNameFromItems(items),
     items,
     profile,
-    flavor: caveat,
+    flavor,
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -157,7 +161,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Use salt/pepper and spices as desired. 2 whites/1 yolk. Reduce yolks as desired.',
+    caveat: '2 whites/1 yolk. Reduce yolks as desired.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
@@ -178,7 +182,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal with Blueberries',
     profile: 'Classic',
-    caveat: 'Use salt/pepper and spices as desired on the oats; stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
+    caveat: 'Stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
