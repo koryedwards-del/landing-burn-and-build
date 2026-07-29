@@ -76,6 +76,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Latin',
     caveat: 'Cumin, garlic, cilantro — no extra oil. Black beans and rice split your grain/starch serving evenly.',
   }),
+  meal('steak-tortilla-texas', [
+    { slot: 'Protein', foodName: 'Beef, eye of round' },
+    { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+  ], {
+    profile: 'Texas',
+    caveat: 'Mesquite, chili powder, black pepper — dry rub or sugar-free BBQ. Jalapeño for heat is free.',
+  }),
 ];
 
 export const RECIPE_LIBRARY = MEAL_TEMPLATES;
