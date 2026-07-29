@@ -2,7 +2,7 @@
  * Meal suggestions for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Fast Start: no fat, sugar, or alcohol in template items or caveats.
- * Use salt/pepper and spices as desired.
+ * Spices as desired.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = cultural flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
@@ -157,7 +157,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Use salt/pepper and spices as desired — cinnamon on the oats is great. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired.',
+    caveat: 'Spices as desired — cinnamon on the oats if you like. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
@@ -179,7 +179,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal with Blueberries',
     profile: 'Classic',
-    caveat: 'Use salt/pepper and spices as desired on the oats; stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
+    caveat: 'Spices as desired on the oats; stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
