@@ -27,6 +27,7 @@ const FLAVOR_HINTS = {
   Tuna: 'Mustard, lemon, hot sauce.',
   Cod: 'Lemon, dill, parsley.',
   'Egg Whites': 'Cinnamon, hot sauce, or everything seasoning.',
+  'Skim Milk': 'Vanilla, cinnamon. Both split your protein serving.',
   default: 'Salt, pepper, and one spice you actually like.',
 };
 
@@ -65,6 +66,24 @@ for (const slot of ['breakfast', 'lunch']) {
     console.log('');
   });
 }
+
+console.log('## split protein (same slot — servings split)');
+const splitProteins = [
+  ['Skim milk (fat-free)', 'Egg whites'],
+  ['Cottage cheese, 2% fat', 'Egg whites'],
+  ['Yogurt, plain, nonfat', 'Egg whites'],
+  ['Turkey breast', 'Egg whites'],
+];
+splitProteins.forEach(([a, b]) => {
+  const items = [
+    twoPartSlot('Protein', a),
+    twoPartSlot('Protein', b),
+  ];
+  console.log(`- ${mealNameFromItems(items)}`);
+  items.forEach((item) => console.log(`    ${item.slot}: ${item.foodName}`));
+  console.log(`    flavor: ${flavorFor(items)}`);
+  console.log('');
+});
 
 console.log('## dinner');
 const dinners = [];
