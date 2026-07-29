@@ -528,7 +528,6 @@ function setActiveGridTarget(weekDay, mealSlotId) {
   updatePickerHints();
   updateFruitPickerUi();
   renderWeekGrid();
-  renderRecipeCards();
 }
 
 function updatePickerHints() {
@@ -843,29 +842,10 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function recipePreviewSlotId() {
-  const target = state.activeGridTarget;
-  return target && isMealMealSlot(target.mealSlotId) ? target.mealSlotId : 'breakfast';
-}
-
-function renderMealIdeaCard(meal, previewSlotId) {
-  const scaledItems = meal.items?.length && state.programPackage
-    ? mealItemsScaledToSlot(meal, previewSlotId)
-    : [];
-  const displayItems = scaledItems.length
-    ? scaledItems
-    : (meal.items || []).map((item) => ({ ...item, servings: null }));
-
-  const linesHtml = displayItems.map((item) => {
-    const food = foodByName(item.foodName);
-    const grams = food && item.servings != null ? scaledLabel(food, item.servings) : '';
-    return `
-      <div class="recipe-card__line">
-        <span>${escapeHtml(item.foodName)}</span>
-        ${grams ? `<span>${escapeHtml(grams)}</span>` : ''}
-      </div>
-    `;
-  }).join('');
+function renderMealIdeaCard(meal) {
+  const linesHtml = (meal.items || []).map((item) => `
+      <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
+    `).join('');
 
   const caveatText = meal.flavor || meal.caveats;
   const profileHtml = meal.profile
@@ -912,11 +892,10 @@ function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const previewSlotId = recipePreviewSlotId();
   const meals = allMealTemplates();
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
-    ? meals.map((meal) => renderMealIdeaCard(meal, previewSlotId)).join('')
+    ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : '<p class="recipe-cards__empty">No templates yet</p>';
 }
 
