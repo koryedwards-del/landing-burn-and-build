@@ -866,10 +866,10 @@ function renderMealIdeaCard(meal, columnId) {
     `;
   }).join('');
 
-  const caveatsHtml = meal.caveats ? `
+  const flavorHtml = (meal.flavor || meal.caveats) ? `
     <details class="recipe-card__flavor">
-      <summary>Flavor ideas &amp; caveats</summary>
-      ${escapeHtml(meal.caveats)}
+      <summary>Flavor suggestion</summary>
+      ${escapeHtml(meal.flavor || meal.caveats)}
     </details>
   ` : '';
 
@@ -884,7 +884,7 @@ function renderMealIdeaCard(meal, columnId) {
         <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
         ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
       </button>
-      ${caveatsHtml}
+      ${flavorHtml}
     </article>
   `;
 }
