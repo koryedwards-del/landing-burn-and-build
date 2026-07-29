@@ -881,10 +881,16 @@ function renderMealIdeaCard(meal, previewSlotId) {
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
-        <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-        ${profileHtml}
-        ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
-        ${caveatHtml}
+        <div class="recipe-card__col recipe-card__col--title">
+          <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+          ${profileHtml}
+        </div>
+        <div class="recipe-card__col recipe-card__col--foods">
+          ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+        </div>
+        <div class="recipe-card__col recipe-card__col--caveat">
+          ${caveatHtml}
+        </div>
       </button>
     </article>
   `;
