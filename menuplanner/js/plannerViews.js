@@ -958,8 +958,8 @@ function renderRecipeCards() {
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
       state.mealSuggestionSorter === 'all'
-        ? 'No suggestions yet'
-        : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} suggestions yet`,
+        ? 'No ideas yet'
+        : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} ideas yet`,
     )}</p>`;
 }
 
