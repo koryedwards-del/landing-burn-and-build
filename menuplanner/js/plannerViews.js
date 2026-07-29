@@ -37,6 +37,7 @@ import {
   savedMealFitsMealSlot,
   applyLibraryRecipeToGridCell,
   applySavedMealToGridCell,
+  mealItemsScaledToSlot,
   clearDaySlotMeta,
   clearMealMakerDraft,
   applySavedMealItemsToMakerDraft,
@@ -528,8 +529,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick an idea`
-      : 'Tap a slot in the grid, then pick an idea';
+      ? `Selected ${gridTargetLabel(target)} — pick a recipe`
+      : 'Tap a slot in the grid, then pick a recipe';
   }
 
   if (fruitHint) {
@@ -560,7 +561,7 @@ function applyMealIdeaFromCard(columnMealSlotId, meal) {
   }
 
   applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPlannerToast(`"${meal.name}" on ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${meal.name} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function setPendingFruitPick(foodName) {
@@ -839,16 +840,38 @@ function gramLabelForFood(food, servings) {
 }
 
 function renderMealIdeaCard(meal, columnId) {
+  const scaledItems = meal.items?.length ? mealItemsScaledToSlot(meal, columnId) : [];
+  const linesHtml = scaledItems.map((item) => {
+    const food = foodByName(item.foodName);
+    const grams = food ? scaledLabel(food, item.servings) : '';
+    return `
+      <div class="recipe-card__line">
+        <span>${escapeHtml(item.foodName)}</span>
+        ${grams ? `<span>${escapeHtml(grams)}</span>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  const caveatsHtml = meal.caveats ? `
+    <details class="recipe-card__flavor">
+      <summary>Flavor ideas &amp; caveats</summary>
+      ${escapeHtml(meal.caveats)}
+    </details>
+  ` : '';
+
   return `
-    <button
-      type="button"
-      class="recipe-card"
-      data-meal-idea-id="${escapeHtml(meal.id)}"
-      data-meal-slot="${escapeHtml(columnId)}"
-    >
-      <span class="recipe-card__emoji" aria-hidden="true">${escapeHtml(meal.emoji)}</span>
-      <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
-    </button>
+    <article class="recipe-card">
+      <button
+        type="button"
+        class="recipe-card__pick"
+        data-meal-idea-id="${escapeHtml(meal.id)}"
+        data-meal-slot="${escapeHtml(columnId)}"
+      >
+        <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+        ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+      </button>
+      ${caveatsHtml}
+    </article>
   `;
 }
 
@@ -856,7 +879,7 @@ function renderRecipeColumn(column) {
   const meals = recipesForMealSlot(column.id);
   const cardsHtml = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal, column.id)).join('')
-    : '<p class="recipe-column__empty">No ideas yet</p>';
+    : '<p class="recipe-column__empty">No recipes yet</p>';
 
   return `
     <section class="recipe-column" data-meal-slot="${column.id}">
@@ -926,7 +949,7 @@ function initRecipePicker() {
 
   container.addEventListener('click', (event) => {
     const card = event.target.closest('[data-meal-idea-id]');
-    if (!card) return;
+    if (!card || event.target.closest('.recipe-card__flavor')) return;
     const meal = recipeById(card.dataset.mealIdeaId);
     if (!meal) return;
     applyMealIdeaFromCard(card.dataset.mealSlot, meal);

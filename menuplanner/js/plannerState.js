@@ -605,7 +605,29 @@ function mealItemsScaledToSlot(meal, mealSlotId) {
 function applyLibraryRecipeToGridCell(weekDay, mealSlotId, recipe) {
   if (!isMealMealSlot(mealSlotId) || !recipe?.id || !recipe?.name) return;
 
-  // Idea only — label the slot; foods stay on the user's program.
+  if (recipe.items?.length) {
+    MEAL_MAKER_SLOTS.forEach((slotKey) => {
+      categorySelections(mealSlotId, weekDay)[slotKey] = null;
+    });
+    setFatSelections(mealSlotId, [], weekDay);
+
+    const proteinItems = [];
+    const gsItems = [];
+    const vegetableItems = [];
+
+    mealItemsScaledToSlot(recipe, mealSlotId).forEach((item) => {
+      const slotKey = SAVED_MEAL_SLOT_LABELS[item.slot];
+      const entry = { foodName: item.foodName, servings: item.servings };
+      if (slotKey === 'gs') gsItems.push(entry);
+      else if (slotKey === 'vegetable') vegetableItems.push(entry);
+      else if (slotKey === 'protein') proteinItems.push(entry);
+    });
+
+    setSplitGridSelections(mealSlotId, 'protein', proteinItems, weekDay);
+    setSplitGridSelections(mealSlotId, 'gs', gsItems, weekDay);
+    setSplitGridSelections(mealSlotId, 'vegetable', vegetableItems, weekDay);
+  }
+
   mealSlotMeta(mealSlotId, weekDay).mealName = recipe.name;
   mealSlotMeta(mealSlotId, weekDay).savedMealId = recipe.id;
 }
