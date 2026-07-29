@@ -524,11 +524,7 @@ function gridTargetLabel(target) {
 function setActiveGridTarget(weekDay, mealSlotId) {
   state.activeGridTarget = { weekDay, mealSlotId };
   state.activeWeekDay = weekDay;
-  if (!isSnackMealSlot(mealSlotId)) {
-    state.pendingFruitPick = null;
-  }
   updatePickerHints();
-  updateFruitPickerUi();
   renderWeekGrid();
 }
 
@@ -544,8 +540,8 @@ function updatePickerHints() {
   }
 
   if (fruitHint) {
-    fruitHint.textContent = target && isSnackMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick a fruit, then Assign`
+    fruitHint.innerHTML = target && isSnackMealSlot(target.mealSlotId)
+      ? `Selected <strong>${escapeHtml(gridTargetLabel(target))}</strong> — pick a fruit`
       : 'Tap a snack slot, then pick a fruit';
   }
 }
@@ -569,35 +565,7 @@ function applyMealIdeaFromCard(meal) {
   showPlannerToast(`${meal.name} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
-function setPendingFruitPick(foodName) {
-  state.pendingFruitPick = foodName;
-  updateFruitPickerUi();
-}
-
-function updateFruitPickerUi() {
-  document.querySelectorAll('.fruit-row[data-fruit-name]').forEach((row) => {
-    row.classList.toggle('fruit-row--pending', row.dataset.fruitName === state.pendingFruitPick);
-  });
-
-  const assignBtn = document.getElementById('fruit-assign');
-  if (!assignBtn) return;
-  const target = state.activeGridTarget;
-  assignBtn.disabled = !(state.pendingFruitPick && target && isSnackMealSlot(target.mealSlotId));
-}
-
-function assignPendingFruitToGrid() {
-  if (!state.pendingFruitPick) {
-    showPlannerToast('Pick a fruit first.', { variant: 'error' });
-    return;
-  }
-
-  const foodName = state.pendingFruitPick;
-  applyFruitToActiveTarget(foodName);
-  state.pendingFruitPick = null;
-  updateFruitPickerUi();
-}
-
-function applyFruitToActiveTarget(foodName) {
+function applyFruitFromRow(foodName) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a snack slot in the week grid first.', { variant: 'error' });
@@ -609,7 +577,7 @@ function applyFruitToActiveTarget(foodName) {
   }
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
-  showPlannerToast(`${foodName} assigned to ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
+  showPlannerToast(`${foodName} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function showPlannerToast(message, { variant = 'info', durationMs = 5000 } = {}) {
@@ -937,32 +905,24 @@ function renderFruitList() {
 
   container.innerHTML = fruits.map((food) => {
     const grams = gramLabelForFood(food, snackServings);
-    const pending = state.pendingFruitPick === food.name ? ' fruit-row--pending' : '';
     return `
-      <button type="button" class="fruit-row${pending}" data-fruit-name="${escapeHtml(food.name)}">
+      <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
         <span class="fruit-row__name">${escapeHtml(food.name)}</span>
         <span class="fruit-row__grams">${escapeHtml(grams)}</span>
       </button>
     `;
   }).join('');
-
-  updateFruitPickerUi();
 }
 
 function initFruitPicker() {
   const container = document.getElementById('fruit-list');
-  const assignBtn = document.getElementById('fruit-assign');
   if (!container || container.dataset.fruitPickerInit) return;
   container.dataset.fruitPickerInit = '1';
 
   container.addEventListener('click', (event) => {
     const row = event.target.closest('[data-fruit-name]');
     if (!row) return;
-    setPendingFruitPick(row.dataset.fruitName);
-  });
-
-  assignBtn?.addEventListener('click', () => {
-    assignPendingFruitToGrid();
+    applyFruitFromRow(row.dataset.fruitName);
   });
 }
 
