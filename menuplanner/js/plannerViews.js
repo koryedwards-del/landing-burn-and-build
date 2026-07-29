@@ -537,8 +537,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick a recipe`
-      : 'Protein + grain/starch (+ vegetable at dinner). Same slot can split — e.g. milk & egg whites.';
+      ? `Selected ${gridTargetLabel(target)} — pick a template`
+      : 'Templates to fill your week grid faster — and spark meal ideas.';
   }
 
   if (fruitHint) {
