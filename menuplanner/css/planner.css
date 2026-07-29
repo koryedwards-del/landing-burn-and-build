@@ -471,50 +471,91 @@ body {
 
 .recipe-card {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
   width: 100%;
-  padding: 10px 12px;
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 8px;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-  appearance: none;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
 }
 
 .recipe-card:hover {
   border-color: var(--gold-muted);
 }
 
-.recipe-card:active {
-  background: var(--gold-select-bg);
+.recipe-card__pick {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  appearance: none;
+  cursor: pointer;
 }
 
-.recipe-card__emoji {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 1.35rem;
-  line-height: 1;
-  border-radius: 6px;
-  background: #262626;
+.recipe-card__pick:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .recipe-card__name {
+  margin: 0 0 6px;
   font-family: "Oswald", system-ui, sans-serif;
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1.25;
+}
+
+.recipe-card__core {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recipe-card__line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.recipe-card__line span:first-child {
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipe-card__line span:last-child {
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.recipe-card__flavor {
+  margin: 0;
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--border);
+  font-size: 0.62rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.recipe-card__flavor summary {
+  cursor: pointer;
+  color: rgba(253, 197, 0, 0.75);
+  font-weight: 600;
+  list-style: none;
+}
+
+.recipe-card__flavor summary::-webkit-details-marker {
+  display: none;
 }
 
 .recipe-cards__empty {
