@@ -31,7 +31,8 @@ export const MEAL_SORTER_PILLS = [
   { id: 'seafood', label: 'Seafood' },
   { id: 'pork', label: 'Pork' },
   { id: 'dairy', label: 'Dairy' },
-  { id: 'grain-starch', label: 'Grain / Starch' },
+  { id: 'grain', label: 'Grain' },
+  { id: 'starch', label: 'Starch' },
 ];
 
 /**
@@ -63,12 +64,40 @@ function proteinTagForFood(foodName) {
   return null;
 }
 
+/** Match foods.json grain vs starch category for G/S filter pills. */
+function grainStarchTagForFood(foodName) {
+  const name = foodName.toLowerCase();
+  if (
+    name.includes('rice')
+    || name.includes('oat')
+    || name.includes('tortilla')
+    || name.includes('bread')
+    || name.includes('pasta')
+    || name.includes('noodle')
+    || name.includes('cereal')
+    || name.includes('corn,')
+    || name.startsWith('corn ')
+  ) return 'grain';
+  if (
+    name.includes('bean')
+    || name.includes('potato')
+    || name.includes('peas,')
+    || name.includes('lentil')
+    || name.includes('yam')
+    || name.includes('plantain')
+  ) return 'starch';
+  return null;
+}
+
 export function inferMealTags(items) {
   const tags = new Set();
-  const gsItems = items.filter((item) => item.slot === 'Grains/Starches');
-  if (gsItems.length >= 2) tags.add('grain-starch');
 
   items.forEach((item) => {
+    if (item.slot === 'Grains/Starches') {
+      const tag = grainStarchTagForFood(item.foodName);
+      if (tag) tags.add(tag);
+      return;
+    }
     if (item.slot !== 'Protein') return;
     const tag = proteinTagForFood(item.foodName);
     if (tag) tags.add(tag);
