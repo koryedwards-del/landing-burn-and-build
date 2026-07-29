@@ -1,11 +1,15 @@
 /**
  * Fruit picker images — hosted in repo (menuplanner/assets/fruits/).
- * Add PNGs with transparent backgrounds; map foods.json names to filenames.
+ * Source picks from docs/mockups/menu-planner-meal-reels.html (saved locally).
  */
 
-/** @type {Readonly<Record<string, string>>} foods.json name → filename (no path) */
+/** @type {Readonly<Record<string, string>>} foods.json name → filename */
 const FRUIT_IMAGE_FILES = {
-  Apple: 'apple.png',
+  Apple: 'apple.jpg',
+  Apricots: 'apricots.png',
+  Banana: 'banana.jpg',
+  Grapes: 'grapes.png',
+  Orange: 'orange.jpg',
 };
 
 const FRUIT_ASSET_BASE = '../menuplanner/assets/fruits';

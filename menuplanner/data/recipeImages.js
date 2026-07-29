@@ -1,18 +1,27 @@
-/** Plate photos for template cards — color spark, not literal dish photos. */
+/**
+ * Meal suggestion plate photos — hosted in repo (menuplanner/assets/meals/).
+ * Curated from docs/mockups/menu-planner-meal-reels.html (saved locally).
+ */
+
+const MEAL_ASSET_BASE = '../menuplanner/assets/meals';
 
 const TEMPLATE_IMAGES = {
-  'egg-substitute-toast': 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=480&h=320&fit=crop',
-  'egg-whites-toast': 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=480&h=320&fit=crop',
-  'yogurt-oatmeal-blueberries': 'https://images.unsplash.com/photo-1517673400268-025144020236?w=480&h=320&fit=crop',
-  'chicken-rice-broccoli-soy': 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=480&h=320&fit=crop',
-  'chicken-rice-broccoli-bbq': 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=480&h=320&fit=crop',
-  'steak-tortilla-peppers-fajita': 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=480&h=320&fit=crop',
-  'chicken-beans-rice': 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=480&h=320&fit=crop',
-  'steak-tortilla-texas': 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=480&h=320&fit=crop',
+  'egg-substitute-toast': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
+  'egg-whites-oatmeal': `${MEAL_ASSET_BASE}/power-breakfast.jpg`,
+  'egg-whites-toast': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
+  'yogurt-oatmeal-blueberries': `${MEAL_ASSET_BASE}/oatmeal-bowl.jpg`,
+  'chicken-rice-broccoli-soy': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
+  'chicken-rice-broccoli-bbq': `${MEAL_ASSET_BASE}/chicken-rice-bbq.jpg`,
+  'steak-tortilla-peppers-fajita': `${MEAL_ASSET_BASE}/steak-fajita.jpg`,
+  'chicken-beans-rice': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
+  'steak-tortilla-texas': `${MEAL_ASSET_BASE}/steak-tortilla.jpg`,
+  'salmon-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
 };
 
-const PLATE_FALLBACK = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=480&h=320&fit=crop';
+const PLATE_FALLBACK = `${MEAL_ASSET_BASE}/plate-fallback.jpg`;
 
-export function recipeImageUrl(templateId) {
-  return TEMPLATE_IMAGES[templateId] || PLATE_FALLBACK;
+export function recipeImageUrl(templateId, version = '') {
+  const path = TEMPLATE_IMAGES[templateId] || PLATE_FALLBACK;
+  const q = version ? `?v=${encodeURIComponent(version)}` : '';
+  return `${path}${q}`;
 }
