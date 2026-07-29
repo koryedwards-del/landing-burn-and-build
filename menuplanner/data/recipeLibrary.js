@@ -179,7 +179,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal with Blueberries',
     profile: 'Classic',
-    caveat: 'Use salt/pepper and spices as desired on the oats; stir in yogurt. A splash of blueberries on top — not a whole fruit serving.',
+    caveat: 'Use salt/pepper and spices as desired on the oats; stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
