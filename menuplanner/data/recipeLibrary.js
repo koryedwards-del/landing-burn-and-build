@@ -20,7 +20,9 @@ const FOOD_SHORT = {
   'Broccoli, cooked': 'Broccoli',
   'Peppers, red bell, cooked': 'Peppers',
   'Egg whites': 'Egg Whites',
+  'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
+  'Bread, whole wheat': 'Whole Wheat Toast',
   'Salmon, Atlantic, baked': 'Salmon',
 };
 
@@ -152,6 +154,13 @@ export const MEAL_TEMPLATES = [
   ], {
     profile: 'Classic',
     caveat: 'Cinnamon or sweetener. Skip butter unless you count fat points.',
+  }),
+  meal('egg-substitute-toast', [
+    { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
+    { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Scramble the substitute; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',

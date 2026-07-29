@@ -1,6 +1,7 @@
 /** Plate photos for template cards — color spark, not literal dish photos. */
 
 const TEMPLATE_IMAGES = {
+  'egg-substitute-toast': 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=480&h=320&fit=crop',
   'chicken-rice-broccoli-soy': 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=480&h=320&fit=crop',
   'chicken-rice-broccoli-bbq': 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=480&h=320&fit=crop',
   'steak-tortilla-peppers-fajita': 'https://images.unsplash.com/photo-1599974579688-e97571258369?w=480&h=320&fit=crop',
