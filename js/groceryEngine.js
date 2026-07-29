@@ -40,13 +40,13 @@ function parseLeadingNumber(label) {
 }
 
 export function groceryDisplayName(foodName) {
-  return foodName === 'Egg whites' ? 'Eggs' : foodName;
+  return foodName === 'Eggs' ? 'Eggs' : foodName;
 }
 
 export function formatGroceryQuantity(item) {
   if (item.isCountBased) {
     const count = Math.ceil(item.weeklyUnits);
-    const isEggs = item.foodName === 'Egg whites';
+    const isEggs = item.foodName === 'Eggs';
     if (count >= 12) {
       const dozens = Math.floor(count / 12);
       const remainder = count % 12;

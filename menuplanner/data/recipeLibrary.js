@@ -20,7 +20,7 @@ const FOOD_SHORT = {
   'Potato, baked (flesh + skin)': 'Potato',
   'Broccoli, cooked': 'Broccoli',
   'Peppers, red bell, cooked': 'Peppers',
-  'Egg whites': 'Egg Whites',
+  'Eggs': 'Eggs',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
   'Yogurt, plain, nonfat': 'Yogurt',
@@ -63,7 +63,8 @@ function proteinTagForFood(foodName) {
     || name.includes('flounder')
   ) return 'seafood';
   if (
-    name.includes('egg white')
+    name === 'eggs'
+    || name.includes('egg white')
     || name.includes('egg substitute')
     || name.includes('milk')
     || name.includes('yogurt')
@@ -151,11 +152,11 @@ const CHICKEN_RICE_BROCCOLI = [
 /** @type {ReadonlyArray<MealCard>} */
 export const MEAL_TEMPLATES = [
   meal('egg-whites-oatmeal', [
-    { slot: 'Protein', foodName: 'Egg whites' },
+    { slot: 'Protein', foodName: 'Eggs' },
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Cinnamon. Scramble the egg whites; cook oats plain.',
+    caveat: 'Cinnamon. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired. Cook oats plain.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
@@ -165,11 +166,11 @@ export const MEAL_TEMPLATES = [
     caveat: 'Scramble the substitute; toast the bread dry.',
   }),
   meal('egg-whites-toast', [
-    { slot: 'Protein', foodName: 'Egg whites' },
+    { slot: 'Protein', foodName: 'Eggs' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble the egg whites; toast the bread dry.',
+    caveat: 'Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired. Scramble; toast the bread dry.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
