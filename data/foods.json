@@ -176,6 +176,14 @@
     "fatBracket": 0.0
   },
   {
+    "name": "Salmon, Atlantic, baked",
+    "category": "protein",
+    "servingDescription": "cooked",
+    "gramWeight": 32.0,
+    "unitsPerServing": 0.0,
+    "fatBracket": 0.0
+  },
+  {
     "name": "Swordfish, baked",
     "category": "protein",
     "servingDescription": "cooked",

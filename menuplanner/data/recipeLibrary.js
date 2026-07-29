@@ -21,6 +21,7 @@ const FOOD_SHORT = {
   'Peppers, red bell, cooked': 'Peppers',
   'Egg whites': 'Egg Whites',
   'Oats, rolled': 'Oatmeal',
+  'Salmon, Atlantic, baked': 'Salmon',
 };
 
 const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
@@ -181,6 +182,13 @@ export const MEAL_TEMPLATES = [
   ], {
     profile: 'Texas',
     caveat: 'Mesquite, chili powder, black pepper — dry rub or sugar-free BBQ. Jalapeño for heat is free.',
+  }),
+  meal('salmon-potato', [
+    { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
+    { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Lemon, dill, parsley — light spray oil only. Potato roasted or baked; count extra fat if you use more oil.',
   }),
 ];
 
