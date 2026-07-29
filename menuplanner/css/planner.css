@@ -398,8 +398,8 @@ body {
 
 .recipes-panel__head,
 .fruits-panel__head {
-  padding: 14px 16px 12px;
-  border-bottom: 1px solid var(--border);
+  padding: 14px 16px 10px;
+  border-bottom: none;
   flex-shrink: 0;
 }
 
@@ -423,6 +423,56 @@ body {
 .recipes-panel--featured .recipes-panel__title {
   color: var(--gold);
   text-shadow: 0 0 18px rgba(253, 197, 0, 0.22);
+}
+
+.recipes-panel__guide,
+.fruits-panel__guide {
+  position: relative;
+  flex-shrink: 0;
+  margin: -4px 14px 10px;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid rgba(253, 197, 0, 0.42);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(253, 197, 0, 0.16) 0%, rgba(253, 197, 0, 0.06) 100%),
+    var(--surface-2);
+  box-shadow:
+    0 0 0 1px rgba(253, 197, 0, 0.08),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+  font-size: 0.74rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.recipes-panel__guide::before,
+.fruits-panel__guide::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 22px;
+  width: 10px;
+  height: 10px;
+  background: var(--surface-2);
+  border-top: 1px solid rgba(253, 197, 0, 0.42);
+  border-left: 1px solid rgba(253, 197, 0, 0.42);
+  transform: rotate(45deg);
+}
+
+.recipes-panel__guide--active,
+.fruits-panel__guide--active {
+  border-color: var(--gold);
+  background:
+    linear-gradient(135deg, rgba(253, 197, 0, 0.22) 0%, rgba(253, 197, 0, 0.1) 100%),
+    var(--surface);
+  box-shadow:
+    0 0 0 1px rgba(253, 197, 0, 0.2),
+    0 8px 22px rgba(253, 197, 0, 0.14);
+}
+
+.recipes-panel__guide strong,
+.fruits-panel__guide strong {
+  color: var(--gold);
+  font-weight: 600;
 }
 
 .recipes-panel__hint,
