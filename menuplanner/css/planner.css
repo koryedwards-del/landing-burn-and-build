@@ -475,21 +475,6 @@ body {
   font-weight: 600;
 }
 
-.recipes-panel__hint,
-.fruits-panel__hint {
-  font-size: 0.74rem;
-  color: var(--muted);
-  margin-top: 6px;
-  margin-bottom: 0;
-  line-height: 1.45;
-}
-
-.recipes-panel__hint strong,
-.fruits-panel__hint strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
 .meal-sorter-bar {
   display: flex;
   align-items: flex-start;
