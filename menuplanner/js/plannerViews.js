@@ -589,7 +589,7 @@ function applyMealIdeaFromCard(meal) {
   if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) return;
 
   applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPanelHintNotice('recipes-panel-hint', `${meal.name} → ${gridTargetLabel(target)}`);
+  showPanelHintNotice('recipes-panel-hint', `${gridTargetLabel(target)} → ${meal.name}`);
 }
 
 function applyFruitFromRow(foodName) {
@@ -597,7 +597,7 @@ function applyFruitFromRow(foodName) {
   if (!target || !isSnackMealSlot(target.mealSlotId)) return;
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
-  showPanelHintNotice('fruits-panel-hint', `${foodName} → ${gridTargetLabel(target)}`);
+  showPanelHintNotice('fruits-panel-hint', `${gridTargetLabel(target)} → ${foodName}`);
 }
 
 /** Reserved — meal/fruit feedback UI removed; stub keeps callers safe until rebuilt. */

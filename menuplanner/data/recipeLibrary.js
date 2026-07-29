@@ -163,6 +163,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Classic',
     caveat: 'Scramble the substitute; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
   }),
+  meal('egg-whites-toast', [
+    { slot: 'Protein', foodName: 'Egg whites' },
+    { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Scramble the egg whites; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
+  }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
