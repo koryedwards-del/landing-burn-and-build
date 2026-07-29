@@ -60,6 +60,7 @@ const {
   libraryRecipeFitsMealSlot,
   recipeById,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
+const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -874,6 +875,8 @@ function renderMealIdeaCard(meal, previewSlotId) {
     ? `<p class="recipe-card__caveat">${escapeHtml(caveatText)}</p>`
     : '';
 
+  const imgUrl = recipeImageUrl(meal.id);
+
   return `
     <article class="recipe-card">
       <button
@@ -881,6 +884,15 @@ function renderMealIdeaCard(meal, previewSlotId) {
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
+        <div class="recipe-card__col recipe-card__col--plate">
+          <img
+            class="recipe-card__img"
+            src="${escapeHtml(imgUrl)}"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
         <div class="recipe-card__col recipe-card__col--title">
           <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
           ${profileHtml}
