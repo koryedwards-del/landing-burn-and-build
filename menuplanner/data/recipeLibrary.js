@@ -1,21 +1,15 @@
 /**
- * Meal templates for Page 4 — protein + grain/starch (+ veg at dinner).
+ * Meal templates for Page 4 — protein + grain/starch (+ optional veg).
  *
+ * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = short ingredient names ("Chicken & Rice", "Milk & Egg Whites").
  * Amounts come from the user's program when they pick a card.
  *
  * Split categories: multiple foods in the same slot share that slot's servings
  * (e.g. skim milk + egg whites both Protein — each gets half the protein servings).
- * Same for two grains/starches or two vegetables at dinner.
  *
  * To expand: run `node scripts/suggest-meal-combos.mjs`
  */
-
-export const MEAL_SLOT_COLUMNS = [
-  { id: 'breakfast', label: 'Breakfast' },
-  { id: 'lunch', label: 'Lunch' },
-  { id: 'dinner', label: 'Dinner' },
-];
 
 /** Short labels for card titles — keep plain and recognizable. */
 const FOOD_SHORT = {
@@ -41,6 +35,8 @@ const FOOD_SHORT = {
   'Peppers, red bell, cooked': 'Peppers',
 };
 
+const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
+
 /**
  * @typedef {{ slot: 'Protein' | 'Grains/Starches' | 'Veggie', foodName: string }} MealItem
  * @typedef {{ id: string, name: string, items: MealItem[], flavor?: string }} MealCard
@@ -62,178 +58,136 @@ function meal(id, items, flavor) {
   return { id, name: mealNameFromItems(items), items, flavor };
 }
 
-/** @type {Readonly<Record<string, ReadonlyArray<MealCard>>>} */
-export const MEALS_BY_SLOT = {
-  breakfast: [
-    meal(
-      'steak-tortilla-breakfast',
-      [
-        { slot: 'Protein', foodName: 'Beef, eye of round' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-      ],
-      'Pepper, garlic powder, hot sauce. Seasonings never replace steak or tortilla.',
-    ),
-    meal(
-      'egg-whites-oatmeal',
-      [
-        { slot: 'Protein', foodName: 'Egg whites' },
-        { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
-      ],
-      'Cinnamon or sweetener. Skip butter unless you count fat points.',
-    ),
-    meal(
-      'milk-egg-whites',
-      [
-        { slot: 'Protein', foodName: 'Skim milk (fat-free)' },
-        { slot: 'Protein', foodName: 'Egg whites' },
-      ],
-      'Vanilla, cinnamon, or hot sauce on the eggs. Both count toward your protein serving — split evenly.',
-    ),
-    meal(
-      'milk-egg-whites-oatmeal',
-      [
-        { slot: 'Protein', foodName: 'Skim milk (fat-free)' },
-        { slot: 'Protein', foodName: 'Egg whites' },
-        { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
-      ],
-      'Cook oats in the milk, scramble the whites on the side. Cinnamon on top.',
-    ),
-    meal(
-      'cottage-cheese-egg-whites',
-      [
-        { slot: 'Protein', foodName: 'Cottage cheese, 2% fat' },
-        { slot: 'Protein', foodName: 'Egg whites' },
-      ],
-      'Black pepper, chives, or everything-bagel seasoning.',
-    ),
-    meal(
-      'yogurt-oatmeal',
-      [
-        { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
-        { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
-      ],
-      'Vanilla, cinnamon, or a few berries on top.',
-    ),
-    meal(
-      'turkey-tortilla-breakfast',
-      [
-        { slot: 'Protein', foodName: 'Turkey breast' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-      ],
-      'Mustard, salsa, or dry rub on the turkey.',
-    ),
-  ],
-  lunch: [
-    meal(
-      'steak-tortilla-lunch',
-      [
-        { slot: 'Protein', foodName: 'Beef, eye of round' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-      ],
-      'Pepper, garlic powder, hot sauce.',
-    ),
-    meal(
-      'chicken-rice',
-      [
-        { slot: 'Protein', foodName: 'Chicken breast, no skin' },
-        { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-      ],
-      'Salt, pepper, Mrs. Dash, lemon. Do not swap extra rice for the chicken serving.',
-    ),
-    meal(
-      'tuna-rice',
-      [
-        { slot: 'Protein', foodName: 'Tuna, canned in water' },
-        { slot: 'Grains/Starches', foodName: 'Rice, white' },
-      ],
-      'Mustard, lemon, or hot sauce. Mayo uses fat points.',
-    ),
-    meal(
-      'turkey-tortilla-lunch',
-      [
-        { slot: 'Protein', foodName: 'Turkey breast' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-      ],
-      'Mustard, lettuce, tomato — tomato is free flavor, not a veg serving.',
-    ),
-    meal(
-      'steak-potato-lunch',
-      [
-        { slot: 'Protein', foodName: 'Beef, top sirloin' },
-        { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
-      ],
-      'Salt, pepper, steak seasoning. Potato is your grain/starch serving.',
-    ),
-    meal(
-      'ground-beef-tortilla-lunch',
-      [
-        { slot: 'Protein', foodName: 'Beef, 95% lean ground' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-      ],
-      'Taco seasoning, salsa, onion powder.',
-    ),
-  ],
-  dinner: [
-    meal(
-      'steak-potato-broccoli',
-      [
-        { slot: 'Protein', foodName: 'Beef, eye of round' },
-        { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
-        { slot: 'Veggie', foodName: 'Broccoli, cooked' },
-      ],
-      'Salt, pepper, garlic. Classic plate — potato is G/S, broccoli is your veg.',
-    ),
-    meal(
-      'steak-tortilla-peppers',
-      [
-        { slot: 'Protein', foodName: 'Beef, eye of round' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-        { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
-      ],
-      'Fajita-style: lime, cumin, chili powder, salsa.',
-    ),
-    meal(
-      'chicken-potato-broccoli',
-      [
-        { slot: 'Protein', foodName: 'Chicken breast, no skin' },
-        { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
-        { slot: 'Veggie', foodName: 'Broccoli, cooked' },
-      ],
-      'Poultry seasoning, lemon pepper, rosemary.',
-    ),
-    meal(
-      'cod-potato-broccoli',
-      [
-        { slot: 'Protein', foodName: 'Cod, Atlantic, baked' },
-        { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
-        { slot: 'Veggie', foodName: 'Broccoli, cooked' },
-      ],
-      'Lemon, dill, parsley. Light spray oil only.',
-    ),
-    meal(
-      'steak-tortilla-peppers-sirloin',
-      [
-        { slot: 'Protein', foodName: 'Beef, top sirloin' },
-        { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
-        { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
-      ],
-      'Lime, cumin, salsa. One tortilla — no extras unless counted.',
-    ),
-    meal(
-      'chicken-rice-broccoli',
-      [
-        { slot: 'Protein', foodName: 'Chicken breast, no skin' },
-        { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-        { slot: 'Veggie', foodName: 'Broccoli, cooked' },
-      ],
-      'Soy sauce, ginger, garlic — stir-fry vibe without extra oil.',
-    ),
-  ],
-};
+/** @type {ReadonlyArray<MealCard>} */
+export const MEAL_TEMPLATES = [
+  meal(
+    'egg-whites-oatmeal',
+    [
+      { slot: 'Protein', foodName: 'Egg whites' },
+      { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
+    ],
+    'Cinnamon or sweetener. Skip butter unless you count fat points.',
+  ),
+  meal(
+    'milk-egg-whites',
+    [
+      { slot: 'Protein', foodName: 'Skim milk (fat-free)' },
+      { slot: 'Protein', foodName: 'Egg whites' },
+    ],
+    'Vanilla, cinnamon, or hot sauce on the eggs. Both count toward your protein serving — split evenly.',
+  ),
+  meal(
+    'cottage-cheese-egg-whites',
+    [
+      { slot: 'Protein', foodName: 'Cottage cheese, 2% fat' },
+      { slot: 'Protein', foodName: 'Egg whites' },
+    ],
+    'Black pepper, chives, or everything-bagel seasoning.',
+  ),
+  meal(
+    'yogurt-oatmeal',
+    [
+      { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
+      { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
+    ],
+    'Vanilla, cinnamon, or a few berries on top.',
+  ),
+  meal(
+    'steak-tortilla',
+    [
+      { slot: 'Protein', foodName: 'Beef, eye of round' },
+      { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+    ],
+    'Pepper, garlic powder, hot sauce. Seasonings never replace steak or tortilla.',
+  ),
+  meal(
+    'turkey-tortilla',
+    [
+      { slot: 'Protein', foodName: 'Turkey breast' },
+      { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+    ],
+    'Mustard, salsa, or dry rub on the turkey.',
+  ),
+  meal(
+    'chicken-rice',
+    [
+      { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+      { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    ],
+    'Salt, pepper, Mrs. Dash, lemon. Do not swap extra rice for the chicken serving.',
+  ),
+  meal(
+    'tuna-rice',
+    [
+      { slot: 'Protein', foodName: 'Tuna, canned in water' },
+      { slot: 'Grains/Starches', foodName: 'Rice, white' },
+    ],
+    'Mustard, lemon, or hot sauce. Mayo uses fat points.',
+  ),
+  meal(
+    'steak-potato',
+    [
+      { slot: 'Protein', foodName: 'Beef, top sirloin' },
+      { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+    ],
+    'Salt, pepper, steak seasoning. Potato is your grain/starch serving.',
+  ),
+  meal(
+    'ground-beef-tortilla',
+    [
+      { slot: 'Protein', foodName: 'Beef, 95% lean ground' },
+      { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+    ],
+    'Taco seasoning, salsa, onion powder.',
+  ),
+  meal(
+    'steak-potato-broccoli',
+    [
+      { slot: 'Protein', foodName: 'Beef, eye of round' },
+      { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    ],
+    'Salt, pepper, garlic. Classic plate — potato is G/S, broccoli is your veg.',
+  ),
+  meal(
+    'chicken-potato-broccoli',
+    [
+      { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+      { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    ],
+    'Poultry seasoning, lemon pepper, rosemary.',
+  ),
+  meal(
+    'cod-potato-broccoli',
+    [
+      { slot: 'Protein', foodName: 'Cod, Atlantic, baked' },
+      { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    ],
+    'Lemon, dill, parsley. Light spray oil only.',
+  ),
+  meal(
+    'chicken-rice-broccoli',
+    [
+      { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+      { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    ],
+    'Soy sauce, ginger, garlic — stir-fry vibe without extra oil.',
+  ),
+  meal(
+    'steak-tortilla-peppers',
+    [
+      { slot: 'Protein', foodName: 'Beef, eye of round' },
+      { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+      { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
+    ],
+    'Fajita-style: lime, cumin, chili powder, salsa.',
+  ),
+];
 
-export const RECIPE_LIBRARY = Object.entries(MEALS_BY_SLOT).flatMap(([mealSlot, meals]) =>
-  meals.map((entry) => ({ ...entry, mealSlot })),
-);
+export const RECIPE_LIBRARY = MEAL_TEMPLATES;
 
 const mealsById = new Map(RECIPE_LIBRARY.map((entry) => [entry.id, entry]));
 
@@ -241,10 +195,16 @@ export function recipeById(id) {
   return mealsById.get(id) ?? null;
 }
 
-export function libraryRecipeFitsMealSlot(meal, mealSlotId) {
-  return meal?.mealSlot === mealSlotId;
+export function allMealTemplates() {
+  return MEAL_TEMPLATES;
 }
 
-export function recipesForMealSlot(mealSlotId) {
-  return MEALS_BY_SLOT[mealSlotId] ?? [];
+/** Any template fits breakfast, lunch, or dinner — scaling follows the target grid slot. */
+export function libraryRecipeFitsMealSlot(meal, mealSlotId) {
+  return Boolean(meal) && MEAL_GRID_SLOTS.has(mealSlotId);
+}
+
+/** @deprecated Use allMealTemplates — slot no longer filters the library. */
+export function recipesForMealSlot() {
+  return MEAL_TEMPLATES;
 }

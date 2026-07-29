@@ -421,52 +421,16 @@ body {
   margin-bottom: 10px;
 }
 
-.recipe-columns {
+.recipe-cards {
   flex: 1 1 auto;
   min-height: 0;
   padding: 12px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  overflow: hidden;
-}
-
-.recipe-column {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  min-width: 0;
-  min-height: 0;
-}
-
-.recipe-column__label {
-  font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold);
-  text-align: center;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.recipe-column__cards {
-  flex: 1 1 auto;
-  min-height: 0;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-content: start;
   -webkit-overflow-scrolling: touch;
-}
-
-.recipe-column__empty {
-  font-size: 0.72rem;
-  color: var(--muted);
-  text-align: center;
-  padding: 12px 4px;
 }
 
 .recipe-card {
@@ -666,10 +630,8 @@ body {
     min-height: auto;
   }
 
-  .recipe-columns {
-    grid-template-columns: repeat(3, minmax(100px, 1fr));
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .recipe-cards {
+    grid-template-columns: 1fr;
   }
 
   .fruit-list {

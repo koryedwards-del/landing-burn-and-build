@@ -56,10 +56,9 @@ import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.j
 
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
-  MEAL_SLOT_COLUMNS,
+  allMealTemplates,
   libraryRecipeFitsMealSlot,
   recipeById,
-  recipesForMealSlot,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
@@ -528,6 +527,7 @@ function setActiveGridTarget(weekDay, mealSlotId) {
   updatePickerHints();
   updateFruitPickerUi();
   renderWeekGrid();
+  renderRecipeCards();
 }
 
 function updatePickerHints() {
@@ -548,7 +548,7 @@ function updatePickerHints() {
   }
 }
 
-function applyMealIdeaFromCard(columnMealSlotId, meal) {
+function applyMealIdeaFromCard(meal) {
   const target = state.activeGridTarget;
   if (!target) {
     showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
@@ -556,11 +556,6 @@ function applyMealIdeaFromCard(columnMealSlotId, meal) {
   }
   if (!isMealMealSlot(target.mealSlotId)) {
     showPlannerToast('Tap breakfast, lunch, or dinner in the grid.', { variant: 'error' });
-    return;
-  }
-  if (target.mealSlotId !== columnMealSlotId) {
-    const slot = DAY_SLOTS.find((item) => item.id === columnMealSlotId);
-    showPlannerToast(`Tap a ${slot?.label ?? columnMealSlotId} slot in the grid.`, { variant: 'error' });
     return;
   }
   if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) {
@@ -847,9 +842,14 @@ function gramLabelForFood(food, servings) {
   return scaledLabel(food, servings);
 }
 
-function renderMealIdeaCard(meal, columnId) {
+function recipePreviewSlotId() {
+  const target = state.activeGridTarget;
+  return target && isMealMealSlot(target.mealSlotId) ? target.mealSlotId : 'breakfast';
+}
+
+function renderMealIdeaCard(meal, previewSlotId) {
   const scaledItems = meal.items?.length && state.programPackage
-    ? mealItemsScaledToSlot(meal, columnId)
+    ? mealItemsScaledToSlot(meal, previewSlotId)
     : [];
   const displayItems = scaledItems.length
     ? scaledItems
@@ -879,7 +879,6 @@ function renderMealIdeaCard(meal, columnId) {
         type="button"
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
-        data-meal-slot="${escapeHtml(columnId)}"
       >
         <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
         ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
@@ -889,26 +888,16 @@ function renderMealIdeaCard(meal, columnId) {
   `;
 }
 
-function renderRecipeColumn(column) {
-  const meals = recipesForMealSlot(column.id);
-  const cardsHtml = meals.length
-    ? meals.map((meal) => renderMealIdeaCard(meal, column.id)).join('')
-    : '<p class="recipe-column__empty">No recipes yet</p>';
-
-  return `
-    <section class="recipe-column" data-meal-slot="${column.id}">
-      <h4 class="recipe-column__label">${escapeHtml(column.label)}</h4>
-      <div class="recipe-column__cards">${cardsHtml}</div>
-    </section>
-  `;
-}
-
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  container.classList.add('recipe-columns');
-  container.innerHTML = MEAL_SLOT_COLUMNS.map((column) => renderRecipeColumn(column)).join('');
+  const previewSlotId = recipePreviewSlotId();
+  const meals = allMealTemplates();
+  container.className = 'recipe-cards';
+  container.innerHTML = meals.length
+    ? meals.map((meal) => renderMealIdeaCard(meal, previewSlotId)).join('')
+    : '<p class="recipe-cards__empty">No templates yet</p>';
 }
 
 function renderFruitList() {
@@ -966,7 +955,7 @@ function initRecipePicker() {
     if (!card || event.target.closest('.recipe-card__flavor')) return;
     const meal = recipeById(card.dataset.mealIdeaId);
     if (!meal) return;
-    applyMealIdeaFromCard(card.dataset.mealSlot, meal);
+    applyMealIdeaFromCard(meal);
   });
 }
 
