@@ -70,7 +70,7 @@ const {
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
 const PLANNER_MODE_TITLES = {
-  'fast-start': '🚀 Fast Start Menu Planner',
+  'fast-start': '🚀 8-Week Diet Menu Planner',
   diy: 'Do-It-Yourself Menu Planner',
 };
 
@@ -93,7 +93,7 @@ function syncPlannerEngagementUi() {
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
   if (navBtn) {
-    navBtn.textContent = mode === 'fast-start' ? '4. 🚀 Menu planner' : '4. Menu planner';
+    navBtn.textContent = mode === 'fast-start' ? '4. 🚀 8-Week diet' : '4. Menu planner';
   }
 
   document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
