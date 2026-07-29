@@ -33,11 +33,11 @@ const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
 export const MEAL_SORTER_PILLS = [
   { id: 'all', label: 'All' },
   { id: 'beef', label: 'Beef' },
-  { id: 'poultry', label: 'Poultry' },
-  { id: 'seafood', label: 'Seafood' },
-  { id: 'pork', label: 'Pork' },
   { id: 'dairy-eggs', label: 'Dairy & Eggs' },
   { id: 'grain', label: 'Grain' },
+  { id: 'pork', label: 'Pork' },
+  { id: 'poultry', label: 'Poultry' },
+  { id: 'seafood', label: 'Seafood' },
   { id: 'starch', label: 'Starch' },
 ];
 
