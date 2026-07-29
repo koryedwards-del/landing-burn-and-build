@@ -157,7 +157,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Spices as desired — cinnamon on the oats if you like. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired.',
+    caveat: 'Spices as desired. Two eggs per serving (both whites + 1 yolk). Reduce yolks as desired.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
