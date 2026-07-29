@@ -535,14 +535,14 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
-      ? `Selected <strong>${escapeHtml(gridTargetLabel(target))}</strong> — pick a suggestion`
-      : 'Fill your week grid <strong>faster</strong> — and spark meal ideas.';
+      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a meal below`
+      : 'Tap a day/meal cell, then tap a meal below to update the grid.';
   }
 
   if (fruitHint) {
     fruitHint.innerHTML = target && isSnackMealSlot(target.mealSlotId)
-      ? `Selected <strong>${escapeHtml(gridTargetLabel(target))}</strong> — pick a fruit`
-      : 'Tap a snack slot, then pick a fruit';
+      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a fruit below`
+      : 'Tap a snack cell, then tap a fruit below to update the grid.';
   }
 }
 
