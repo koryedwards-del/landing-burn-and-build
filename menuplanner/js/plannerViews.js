@@ -529,18 +529,22 @@ function setActiveGridTarget(weekDay, mealSlotId) {
 }
 
 function updatePickerHints() {
-  const recipeHint = document.querySelector('.recipes-panel__hint');
-  const fruitHint = document.querySelector('.fruits-panel__hint');
+  const recipeHint = document.getElementById('recipes-panel-hint');
+  const fruitHint = document.getElementById('fruits-panel-hint');
   const target = state.activeGridTarget;
 
   if (recipeHint) {
-    recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
+    const mealSelected = target && isMealMealSlot(target.mealSlotId);
+    recipeHint.classList.toggle('recipes-panel__guide--active', Boolean(mealSelected));
+    recipeHint.innerHTML = mealSelected
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a meal below`
       : 'Tap a day/meal cell, then tap a meal below to update the grid.';
   }
 
   if (fruitHint) {
-    fruitHint.innerHTML = target && isSnackMealSlot(target.mealSlotId)
+    const snackSelected = target && isSnackMealSlot(target.mealSlotId);
+    fruitHint.classList.toggle('fruits-panel__guide--active', Boolean(snackSelected));
+    fruitHint.innerHTML = snackSelected
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a fruit below`
       : 'Tap a snack cell, then tap a fruit below to update the grid.';
   }
