@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=167" />
-  <link rel="stylesheet" href="css/report.css?v=167" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=167" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=168" />
+  <link rel="stylesheet" href="css/report.css?v=168" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=168" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -131,14 +131,11 @@
               <section class="recipes-panel recipes-panel--featured">
                 <div class="recipes-panel__head">
                   <h3 class="recipes-panel__title">Meal Suggestions</h3>
+                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap a day/meal cell, then tap a meal below to update the grid.</p>
                 </div>
-                <p class="recipes-panel__guide" id="recipes-panel-hint">Tap a day/meal cell, then tap a meal below to update the grid.</p>
                 <div class="meal-sorter-bar">
                   <span class="meal-sorter-bar__label">Filter</span>
                   <div class="meal-sorter" id="meal-sorter" aria-label="Filter meal suggestions"></div>
-                </div>
-                <div class="recipes-panel__toast-anchor">
-                  <div class="planner-toast-host" id="planner-toast-host" aria-live="polite" role="status"></div>
                 </div>
                 <div class="recipe-cards" id="recipe-cards"></div>
               </section>
@@ -146,8 +143,8 @@
               <aside class="fruits-panel">
                 <div class="fruits-panel__head">
                   <h3 class="fruits-panel__title">Fruits</h3>
+                  <p class="fruits-panel__hint" id="fruits-panel-hint">Tap a snack cell, then tap a fruit below to update the grid.</p>
                 </div>
-                <p class="fruits-panel__guide" id="fruits-panel-hint">Tap a snack cell, then tap a fruit below to update the grid.</p>
                 <div class="fruit-list" id="fruit-list"></div>
               </aside>
             </section>
@@ -234,6 +231,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=167"></script>
+  <script type="module" src="js/report.js?v=168"></script>
 </body>
 </html>
