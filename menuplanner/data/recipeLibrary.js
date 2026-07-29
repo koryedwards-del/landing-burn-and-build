@@ -1,6 +1,7 @@
 /**
  * Meal suggestions for Page 4 — protein + grain/starch (+ optional veg).
  *
+ * Fast Start: no fat, sugar, or alcohol in template items or caveats.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = cultural flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
@@ -154,21 +155,21 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: 'Cinnamon or sweetener. Skip butter unless you count fat points.',
+    caveat: 'Cinnamon. Scramble the egg whites; cook oats plain.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble the substitute; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
+    caveat: 'Scramble the substitute; toast the bread dry.',
   }),
   meal('egg-whites-toast', [
     { slot: 'Protein', foodName: 'Egg whites' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble the egg whites; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
+    caveat: 'Scramble the egg whites; toast the bread dry.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
@@ -180,11 +181,11 @@ export const MEAL_TEMPLATES = [
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
-    caveat: 'Soy sauce, ginger, garlic — no extra oil. Broccoli steamed or crisp-tender.',
+    caveat: 'Soy sauce, ginger, garlic. Broccoli steamed or crisp-tender.',
   }),
   meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
     profile: 'BBQ',
-    caveat: 'Dry rub or sugar-free sauce — watch fat and sugar points. Broccoli roasted; spray oil only.',
+    caveat: 'Dry rub or BBQ seasoning. Broccoli roasted or steamed.',
   }),
   meal('steak-tortilla-peppers-fajita', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
@@ -200,21 +201,21 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
   ], {
     profile: 'Latin',
-    caveat: 'Cumin, garlic, cilantro — no extra oil. Black beans and rice split your grain/starch serving evenly.',
+    caveat: 'Cumin, garlic, cilantro. Black beans and rice split your grain/starch serving evenly.',
   }),
   meal('steak-tortilla-texas', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
     { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
   ], {
     profile: 'Texas',
-    caveat: 'Mesquite, chili powder, black pepper — dry rub or sugar-free BBQ. Jalapeño for heat is free.',
+    caveat: 'Mesquite, chili powder, black pepper — dry rub. Jalapeño for heat is free.',
   }),
   meal('salmon-potato', [
     { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
     { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
   ], {
     profile: 'Classic',
-    caveat: 'Lemon, dill, parsley — light spray oil only. Potato roasted or baked; count extra fat if you use more oil.',
+    caveat: 'Lemon, dill, parsley. Potato roasted or baked.',
   }),
 ];
 
