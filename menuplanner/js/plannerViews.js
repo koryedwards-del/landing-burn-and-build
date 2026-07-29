@@ -537,8 +537,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
-      ? `Selected ${gridTargetLabel(target)} — pick a template`
-      : 'Templates to fill your week grid faster — and spark meal ideas.';
+      ? `Selected ${gridTargetLabel(target)} — pick a suggestion`
+      : 'Fill your week grid faster — and spark meal ideas.';
   }
 
   if (fruitHint) {
@@ -896,7 +896,7 @@ function renderRecipeCards() {
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
-    : '<p class="recipe-cards__empty">No templates yet</p>';
+    : '<p class="recipe-cards__empty">No suggestions yet</p>';
 }
 
 function renderFruitList() {
