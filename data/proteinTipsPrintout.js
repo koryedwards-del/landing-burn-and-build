@@ -10,11 +10,11 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: "What if I don't eat meat?",
-    a: 'Meat is not required. Use egg whites and, if you tolerate dairy, foods from the dairy column on this list to reach your daily protein servings.',
+    a: 'Meat is not required. Use eggs, and if you tolerate dairy, foods from the dairy column on this list to reach your daily protein servings.',
   },
   {
     q: "What if I don't eat dairy?",
-    a: "That's a personal choice. Many people skip dairy today. Replace those servings with other protein foods on this list — meats, fish, and egg whites.",
+    a: "That's a personal choice. Many people skip dairy today. Replace those servings with other protein foods on this list — meats, fish, and eggs.",
   },
   {
     q: 'Can I have salmon?',
@@ -22,6 +22,10 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: 'Can I count beans, rice, or nuts as protein?',
-    a: 'Even though beans, rice, and nuts contain protein, they are predominantly complex carbohydrates or fats. Use the meats, fish, egg whites, and dairy on this list for protein servings.',
+    a: 'Even though beans, rice, and nuts contain protein, they are predominantly complex carbohydrates or fats. Use the meats, fish, eggs, and dairy on this list for protein servings.',
+  },
+  {
+    q: 'Can I skip the yolk?',
+    a: 'Yes. Each egg serving is 2 eggs in shell (both whites + 1 yolk). Reduce or skip yolks as desired — you still get your protein from the whites.',
   },
 ];
