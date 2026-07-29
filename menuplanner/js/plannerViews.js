@@ -430,7 +430,7 @@ function initWeekGridCollapse() {
       setWeekGridCollapsed(false);
       return;
     }
-    if (event.target.closest('[data-meal-slot], .week-matrix__day[data-week-day-select], #clear-week-menu, .week-panel__actions')) {
+    if (event.target.closest('[data-meal-slot], .week-matrix__day[data-week-day-select], #clear-week-menu')) {
       return;
     }
     setWeekGridCollapsed(true);

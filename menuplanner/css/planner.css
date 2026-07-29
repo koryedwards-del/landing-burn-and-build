@@ -208,14 +208,6 @@ body {
   margin: 0;
 }
 
-.week-panel__actions {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
 .planner-toast-host {
   position: absolute;
   top: calc(100% + 10px);
@@ -393,7 +385,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .recipes-panel--featured {
@@ -524,6 +516,32 @@ body {
   gap: 8px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 8px 8px;
+}
+
+.recipes-panel__toast-anchor {
+  position: relative;
+  flex-shrink: 0;
+  height: 0;
+  z-index: 5;
+}
+
+.recipes-panel__toast-anchor .planner-toast-host {
+  position: absolute;
+  top: 4px;
+  left: 14px;
+  right: 14px;
+  width: auto;
+  max-width: none;
+}
+
+.recipes-panel__toast-anchor .planner-toast {
+  transform-origin: top left;
+}
+
+.recipes-panel__toast-anchor .planner-toast::before {
+  left: 24px;
+  right: auto;
 }
 
 .recipe-card {
