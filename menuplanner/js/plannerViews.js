@@ -515,17 +515,17 @@ function fitWeekGridLabel(text) {
   return raw.charAt(0);
 }
 
-function gridTargetLabel(target) {
-  const day = WEEK_DAYS.find((item) => item.id === target.weekDay);
-  const slot = DAY_SLOTS.find((item) => item.id === target.mealSlotId);
-  return `${day?.label ?? target.weekDay} · ${slot?.label ?? target.mealSlotId}`;
-}
-
 function setActiveGridTarget(weekDay, mealSlotId) {
   state.activeGridTarget = { weekDay, mealSlotId };
   state.activeWeekDay = weekDay;
   updatePickerHints();
   renderWeekGrid();
+}
+
+function gridTargetLabel(target) {
+  const day = WEEK_DAYS.find((item) => item.id === target.weekDay);
+  const slot = DAY_SLOTS.find((item) => item.id === target.mealSlotId);
+  return `${day?.label ?? target.weekDay} · ${slot?.label ?? target.mealSlotId}`;
 }
 
 function updatePickerHints() {
@@ -534,17 +534,13 @@ function updatePickerHints() {
   const target = state.activeGridTarget;
 
   if (recipeHint) {
-    const mealSelected = target && isMealMealSlot(target.mealSlotId);
-    recipeHint.classList.toggle('recipes-panel__guide--active', Boolean(mealSelected));
-    recipeHint.innerHTML = mealSelected
+    recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a meal below`
       : 'Tap a day/meal cell, then tap a meal below to update the grid.';
   }
 
   if (fruitHint) {
-    const snackSelected = target && isSnackMealSlot(target.mealSlotId);
-    fruitHint.classList.toggle('fruits-panel__guide--active', Boolean(snackSelected));
-    fruitHint.innerHTML = snackSelected
+    fruitHint.innerHTML = target && isSnackMealSlot(target.mealSlotId)
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a fruit below`
       : 'Tap a snack cell, then tap a fruit below to update the grid.';
   }
@@ -552,53 +548,21 @@ function updatePickerHints() {
 
 function applyMealIdeaFromCard(meal) {
   const target = state.activeGridTarget;
-  if (!target) {
-    showPlannerToast('Tap a slot in the week grid first.', { variant: 'error' });
-    return;
-  }
-  if (!isMealMealSlot(target.mealSlotId)) {
-    showPlannerToast('Tap breakfast, lunch, or dinner in the grid.', { variant: 'error' });
-    return;
-  }
-  if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) {
-    showPlannerToast('That idea does not fit this slot.', { variant: 'error' });
-    return;
-  }
+  if (!target || !isMealMealSlot(target.mealSlotId)) return;
+  if (!libraryRecipeFitsMealSlot(meal, target.mealSlotId)) return;
 
   applyLibraryRecipeToMealSlot(target.weekDay, target.mealSlotId, meal);
-  showPlannerToast(`${meal.name} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
 function applyFruitFromRow(foodName) {
   const target = state.activeGridTarget;
-  if (!target) {
-    showPlannerToast('Tap a snack slot in the week grid first.', { variant: 'error' });
-    return;
-  }
-  if (!isSnackMealSlot(target.mealSlotId)) {
-    showPlannerToast('Tap a snack slot in the grid.', { variant: 'error' });
-    return;
-  }
+  if (!target || !isSnackMealSlot(target.mealSlotId)) return;
 
   applyFruitToSnackCell(target.weekDay, target.mealSlotId, foodName);
-  showPlannerToast(`${foodName} → ${gridTargetLabel(target)}`, { variant: 'success', durationMs: 4000 });
 }
 
-function showPlannerToast(message, { variant = 'info', durationMs = 5000 } = {}) {
-  const host = document.getElementById('planner-toast-host');
-  if (!host) return;
-
-  host.innerHTML = '';
-  const toast = document.createElement('p');
-  toast.className = `planner-toast planner-toast--${variant}`;
-  toast.textContent = message;
-  host.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add('is-visible'));
-  window.setTimeout(() => {
-    toast.classList.remove('is-visible');
-    window.setTimeout(() => toast.remove(), 320);
-  }, durationMs);
-}
+/** Reserved — meal/fruit feedback UI removed; stub keeps callers safe until rebuilt. */
+function showPlannerToast() {}
 
 function weekMealLabel(weekDay, mealSlotId) {
   const meta = mealSlotMeta(mealSlotId, weekDay);

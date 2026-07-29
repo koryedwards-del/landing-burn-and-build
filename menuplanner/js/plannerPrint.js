@@ -498,24 +498,6 @@ function printPlannerDocument(view) {
   printViaIframe(html);
 }
 
-function showPlannerToast(message, { variant = 'info', durationMs = 6000 } = {}) {
-  const host = document.getElementById('planner-toast-host');
-  if (!host) return;
-
-  host.innerHTML = '';
-
-  const toast = document.createElement('p');
-  toast.className = `planner-toast planner-toast--${variant}`;
-  toast.textContent = message;
-  host.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add('is-visible'));
-
-  window.setTimeout(() => {
-    toast.classList.remove('is-visible');
-    window.setTimeout(() => toast.remove(), 320);
-  }, durationMs);
-}
-
 function initPrintChoiceDialog() {
   const dialog = document.getElementById('print-choice-dialog');
   if (!dialog) return;
