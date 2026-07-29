@@ -19,6 +19,8 @@ const FOOD_SHORT = {
   'Potato, baked (flesh + skin)': 'Potato',
   'Broccoli, cooked': 'Broccoli',
   'Peppers, red bell, cooked': 'Peppers',
+  'Egg whites': 'Egg Whites',
+  'Oats, rolled': 'Oatmeal',
 };
 
 const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
@@ -142,6 +144,13 @@ const CHICKEN_RICE_BROCCOLI = [
 
 /** @type {ReadonlyArray<MealCard>} */
 export const MEAL_TEMPLATES = [
+  meal('egg-whites-oatmeal', [
+    { slot: 'Protein', foodName: 'Egg whites' },
+    { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Cinnamon or sweetener. Skip butter unless you count fat points.',
+  }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
     caveat: 'Soy sauce, ginger, garlic — no extra oil. Broccoli steamed or crisp-tender.',
