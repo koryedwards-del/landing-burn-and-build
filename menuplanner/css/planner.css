@@ -708,40 +708,6 @@ body {
   border-color: var(--gold-muted);
 }
 
-.fruit-row--pending {
-  border-color: var(--gold);
-  background: var(--gold-select-bg);
-}
-
-.fruit-assign {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--gold);
-  border-radius: 6px;
-  background: rgba(253, 197, 0, 0.06);
-  color: var(--gold);
-  font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.15s ease, opacity 0.15s ease;
-}
-
-.fruit-assign:hover:not(:disabled) {
-  background: rgba(253, 197, 0, 0.14);
-}
-
-.fruit-assign:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.fruit-assign:active:not(:disabled) {
-  transform: translateY(1px);
-}
-
 .fruit-row__name {
   font-size: 0.76rem;
   font-weight: 600;

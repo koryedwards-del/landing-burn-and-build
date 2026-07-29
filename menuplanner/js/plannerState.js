@@ -829,7 +829,6 @@ export const state = {
   weekPlan: {},
   activeWeekDay: null,
   activeGridTarget: null,
-  pendingFruitPick: null,
   mealSuggestionSorter: 'all',
 };
 
