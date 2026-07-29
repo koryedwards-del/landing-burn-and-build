@@ -70,7 +70,7 @@ const {
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
 const PLANNER_MODE_TITLES = {
-  'fast-start': 'Fast Start Menu Planner',
+  'fast-start': '🏃 Fast Start Menu Planner',
   diy: 'Do-It-Yourself Menu Planner',
 };
 
@@ -90,6 +90,11 @@ function syncPlannerEngagementUi() {
 
   const title = document.getElementById('planner-page-title');
   if (title) title.textContent = PLANNER_MODE_TITLES[mode];
+
+  const navBtn = document.querySelector('[data-nav-page="3"]');
+  if (navBtn) {
+    navBtn.textContent = mode === 'fast-start' ? '4. 🏃 Menu planner' : '4. Menu planner';
+  }
 
   document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
     const active = btn.dataset.plannerMode === mode;
@@ -121,6 +126,8 @@ function initPlannerEngagementToggle() {
 }
 
 function renderPlannerMeta() {
+  syncPlannerEngagementUi();
+
   const meta = document.getElementById('planner-servings');
   if (!meta) return;
 
