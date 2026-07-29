@@ -101,9 +101,6 @@ function syncPlannerEngagementUi() {
     btn.classList.toggle('planner-mode-toggle__btn--active', active);
     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
-
-  const fastStartRule = document.getElementById('recipes-panel-fast-start-rule');
-  if (fastStartRule) fastStartRule.hidden = mode !== 'fast-start';
 }
 
 function setPlannerEngagementMode(mode) {

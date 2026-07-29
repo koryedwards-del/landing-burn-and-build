@@ -2,7 +2,7 @@
  * Meal suggestions for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Fast Start: no fat, sugar, or alcohol in template items or caveats.
- * Use salt/pepper and spices as desired — especially on oatmeal.
+ * Use salt/pepper and spices as desired.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = cultural flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
