@@ -418,13 +418,6 @@ body {
   border-bottom-color: rgba(253, 197, 0, 0.16);
 }
 
-.recipes-panel__title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 .recipes-panel__title,
 .fruits-panel__title {
   font-family: "Oswald", system-ui, sans-serif;
@@ -438,21 +431,6 @@ body {
 .recipes-panel--featured .recipes-panel__title {
   color: var(--gold);
   text-shadow: 0 0 18px rgba(253, 197, 0, 0.22);
-}
-
-.recipes-panel__badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 9px;
-  border-radius: 999px;
-  border: 1px solid rgba(253, 197, 0, 0.45);
-  background: rgba(253, 197, 0, 0.12);
-  color: var(--gold);
-  font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.52rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 .recipes-panel__hint,
