@@ -833,7 +833,7 @@ function renderMealIdeaCard(meal) {
     ? `<p class="recipe-card__caveat">${escapeHtml(caveatText)}</p>`
     : '';
 
-  const imgUrl = recipeImageUrl(meal.id);
+  const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
 
   return `
     <article class="recipe-card">
