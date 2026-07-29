@@ -298,7 +298,7 @@
   {
     "name": "Eggs",
     "category": "protein",
-    "servingDescription": "eggs (2 whites + 1 yolk)",
+    "servingDescription": "2 whites/1 yolk",
     "gramWeight": 0.0,
     "unitsPerServing": 2.0,
     "fatBracket": 0.0
