@@ -261,10 +261,10 @@ function renderWelcome(pkg) {
           on your own.
         </p>
 
-        <h3>Menu planner</h3>
+        <h3>8-Week diet</h3>
         <p>
-          After your servings page, the menu planner is where you build your week. Choose meals for breakfast,
-          lunch, dinner, and snacks that hit your daily serving targets — and get your grocery list.
+          Page four is your 8-week diet menu planner. Meal ideas and fruits fill your week — or switch to
+          do-it-yourself for the full food lists and meal maker.
         </p>
       </article>
 
@@ -519,7 +519,7 @@ function renderServings(pkg) {
 
       <footer class="r-actions">
         <button type="button" class="r-btn r-btn--ghost" data-report-back-food>← Projections</button>
-        <button type="button" class="r-btn r-btn--primary" data-report-next-planner>Menu planner →</button>
+        <button type="button" class="r-btn r-btn--primary" data-report-next-planner>8-Week diet →</button>
       </footer>
     </section>
   `;
