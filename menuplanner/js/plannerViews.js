@@ -538,7 +538,7 @@ function updatePickerHints() {
   if (recipeHint) {
     recipeHint.textContent = target && isMealMealSlot(target.mealSlotId)
       ? `Selected ${gridTargetLabel(target)} — pick a recipe`
-      : 'Tap a slot in the grid, then pick a recipe';
+      : 'Protein + complex carb (+ vegetable at dinner). Tap a slot, then pick a recipe.';
   }
 
   if (fruitHint) {
