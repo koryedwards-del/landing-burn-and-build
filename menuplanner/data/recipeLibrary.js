@@ -1,10 +1,10 @@
 /**
- * Meal suggestions for Page 4 — protein + grain/starch (+ optional veg).
+ * Meal ideas for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Fast Start: no fat, sugar, or alcohol in template items or caveats.
  * Spices as desired.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
- * Card title = ingredient names. Profile + caveat = cultural flavor spark.
+ * Card title = ingredient names. Profile + caveat = optional flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
  *
  * Split categories: multiple foods in the same slot share servings
@@ -31,7 +31,7 @@ const FOOD_SHORT = {
 
 const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
 
-/** Filter pills in the Meal Suggestions panel. */
+/** Filter pills in the Meal Ideas panel. */
 export const MEAL_SORTER_PILLS = [
   { id: 'all', label: 'All' },
   { id: 'beef', label: 'Beef' },
