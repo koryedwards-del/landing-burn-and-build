@@ -34,6 +34,7 @@ import {
   getSplitGridSelections,
   fmtServings,
   scaledLabel,
+  gramWeightLabel,
   escapeHtml,
   iterWeekFoodSelections,
   foodAmountLabel,
@@ -46,7 +47,7 @@ import {
 function printFoodAmount(foodName, servings) {
   const food = state.foods.find((item) => item.name === foodName);
   if (!food) return `${fmtServings(servings)} servings`;
-  return scaledLabel(food, servings);
+  return gramWeightLabel(food, servings);
 }
 
 function mealSlotPrintParts(mealSlotId) {

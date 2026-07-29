@@ -311,7 +311,26 @@ function savedMealById(id) {
   return state.savedMeals.find((meal) => meal.id === id);
 }
 
+/** User-facing food list / picker — counts and servings only (no gram weights). */
 function scaledLabel(food, servings) {
+  if (food.name === 'Eggs') {
+    if (servings === 1) return '2 whites/1 yolk';
+    return `${fmtServings(servings)} × 2 whites/1 yolk`;
+  }
+  if (food.unitsPerServing > 0) {
+    const count = Math.ceil(food.unitsPerServing * servings);
+    return `${count} ${food.servingDescription}`;
+  }
+  if (food.servingDescription && !food.gramWeight) {
+    if (servings === 1) return food.servingDescription;
+    return `${fmtServings(servings)} × ${food.servingDescription}`;
+  }
+  if (servings === 1) return '1 serving';
+  return `${fmtServings(servings)} servings`;
+}
+
+/** Weekly meal plan PDF — gram weights where applicable. */
+function gramWeightLabel(food, servings) {
   if (food.name === 'Eggs') {
     if (servings === 1) return '2 whites/1 yolk';
     return `${fmtServings(servings)} × 2 whites/1 yolk`;
@@ -324,7 +343,11 @@ function scaledLabel(food, servings) {
     if (servings === 1) return food.servingDescription;
     return `${servings} × ${food.servingDescription}`;
   }
-  return `${Math.round(food.gramWeight * servings)} g`;
+  if (food.gramWeight > 0) {
+    return `${Math.round(food.gramWeight * servings)} g`;
+  }
+  if (servings === 1) return '1 serving';
+  return `${fmtServings(servings)} servings`;
 }
 
 function servingAmountLabel(food, servings) {
@@ -875,6 +898,7 @@ export {
   mealItemsScaledToSlot,
   savedMealById,
   scaledLabel,
+  gramWeightLabel,
   servingAmountLabel,
   escapeHtml,
   slotFoodCategories,
