@@ -2,6 +2,7 @@
 
 const TEMPLATE_IMAGES = {
   'egg-substitute-toast': 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=480&h=320&fit=crop',
+  'egg-whites-toast': 'https://images.unsplash.com/photo-1484723091739-30a122e849ef?w=480&h=320&fit=crop',
   'yogurt-oatmeal-blueberries': 'https://images.unsplash.com/photo-1517673400268-025144020236?w=480&h=320&fit=crop',
   'chicken-rice-broccoli-soy': 'https://images.unsplash.com/photo-1603133872877-684f208fb84b?w=480&h=320&fit=crop',
   'chicken-rice-broccoli-bbq': 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=480&h=320&fit=crop',
