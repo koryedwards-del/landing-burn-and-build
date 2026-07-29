@@ -22,6 +22,7 @@ const FOOD_SHORT = {
   'Egg whites': 'Egg Whites',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
+  'Yogurt, plain, nonfat': 'Yogurt',
   'Bread, whole wheat': 'Whole Wheat Toast',
   'Salmon, Atlantic, baked': 'Salmon',
 };
@@ -129,10 +130,10 @@ export function mealNameFromItems(items) {
   return labels.join(' & ');
 }
 
-function meal(id, items, { profile, caveat, tags } = {}) {
+function meal(id, items, { profile, caveat, tags, name } = {}) {
   return {
     id,
-    name: mealNameFromItems(items),
+    name: name ?? mealNameFromItems(items),
     items,
     profile,
     flavor: caveat,
@@ -161,6 +162,14 @@ export const MEAL_TEMPLATES = [
   ], {
     profile: 'Classic',
     caveat: 'Scramble the substitute; toast the bread dry or with spray oil. Skip butter unless you count fat points.',
+  }),
+  meal('yogurt-oatmeal-blueberries', [
+    { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
+    { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
+  ], {
+    name: 'Yogurt & Oatmeal with Blueberries',
+    profile: 'Classic',
+    caveat: 'Cook oats; stir in yogurt. A splash of blueberries on top — not a whole fruit serving.',
   }),
   meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
     profile: 'Soy stir-fry',
