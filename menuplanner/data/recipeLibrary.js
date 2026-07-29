@@ -25,7 +25,7 @@ const FOOD_SHORT = {
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
   'Yogurt, plain, nonfat': 'Yogurt',
-  'Bread, whole wheat': 'Whole Wheat Toast',
+  'Bread, whole wheat': 'Whole Wheat Bread',
   'Salmon, Atlantic, baked': 'Salmon',
 };
 
@@ -164,14 +164,13 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble the substitute; toast the bread dry.',
   }),
   meal('egg-whites-toast', [
     { slot: 'Protein', foodName: 'Eggs' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: '2 whites/1 yolk. Reduce yolks as desired. Scramble; toast the bread dry.',
+    caveat: '2 whites/1 yolk. Reduce yolks as desired.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
