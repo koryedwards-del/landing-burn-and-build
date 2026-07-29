@@ -663,13 +663,27 @@ body {
 
 .planner-mode-toggle {
   display: inline-flex;
-  align-self: flex-start;
-  margin-top: 10px;
+  flex-shrink: 0;
   padding: 3px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface-2);
   gap: 2px;
+}
+
+.pb-page-head__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.pb-page-head__title-row .pb-panel__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
 }
 
 .planner-mode-toggle__btn {
