@@ -384,6 +384,17 @@ body {
   color: var(--gold);
 }
 
+.recipes-panel__fast-start-rule {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-hint);
+}
+
+.recipes-panel__fast-start-rule[hidden] {
+  display: none;
+}
+
 .meal-sorter-bar {
   display: flex;
   align-items: flex-start;
