@@ -52,7 +52,15 @@ import {
   persistPlannerToProgram,
   createEmptyDayState,
 } from './plannerState.js';
-import { MEAL_SLOT_COLUMNS, libraryRecipeFitsMealSlot, recipeById, recipesForMealSlot } from '../data/recipeLibrary.js';
+import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+
+const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
+const {
+  MEAL_SLOT_COLUMNS,
+  libraryRecipeFitsMealSlot,
+  recipeById,
+  recipesForMealSlot,
+} = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
 
 function renderPlannerMeta() {
   const meta = document.getElementById('planner-servings');
@@ -840,10 +848,16 @@ function gramLabelForFood(food, servings) {
 }
 
 function renderMealIdeaCard(meal, columnId) {
-  const scaledItems = meal.items?.length ? mealItemsScaledToSlot(meal, columnId) : [];
-  const linesHtml = scaledItems.map((item) => {
+  const scaledItems = meal.items?.length && state.programPackage
+    ? mealItemsScaledToSlot(meal, columnId)
+    : [];
+  const displayItems = scaledItems.length
+    ? scaledItems
+    : (meal.items || []).map((item) => ({ ...item, servings: null }));
+
+  const linesHtml = displayItems.map((item) => {
     const food = foodByName(item.foodName);
-    const grams = food ? scaledLabel(food, item.servings) : '';
+    const grams = food && item.servings != null ? scaledLabel(food, item.servings) : '';
     return `
       <div class="recipe-card__line">
         <span>${escapeHtml(item.foodName)}</span>
