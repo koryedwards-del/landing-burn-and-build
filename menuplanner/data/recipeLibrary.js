@@ -193,7 +193,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal',
     profile: 'Proats',
-    caveat: `${OATS_COOK} Cool slightly, stir in yogurt. Fruit servings stay on snack slots.`,
+    caveat: `${OATS_COOK} Cool slightly. Stir in yogurt if you like — your choice. Fruit servings stay on snack slots.`,
   }),
   meal('turkey-sweet-potato-spinach', [
     { slot: 'Protein', foodName: 'Turkey breast' },
