@@ -686,6 +686,14 @@ body {
   margin: 0;
 }
 
+.planner-mode-lead {
+  margin: 6px 0 0;
+  max-width: 42rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
 .planner-mode-toggle__btn {
   padding: 6px 14px;
   border: 0;

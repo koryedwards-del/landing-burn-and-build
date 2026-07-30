@@ -79,6 +79,11 @@ const PLANNER_MODE_NAV = {
   diy: '4. 💪 Menu planner',
 };
 
+const PLANNER_MODE_LEADS = {
+  'fast-start': 'Leave out fat, sugar, and alcohol to cut. Switch to Maintenance when you reach your look.',
+  diy: 'Add them back in to hold your look. Switch to Fast Start when you\u2019re ready to cut again.',
+};
+
 function normalizePlannerEngagementMode(mode) {
   return mode === 'diy' ? 'diy' : 'fast-start';
 }
@@ -95,6 +100,9 @@ function syncPlannerEngagementUi() {
 
   const title = document.getElementById('planner-page-title');
   if (title) title.textContent = PLANNER_MODE_TITLES[mode];
+
+  const lead = document.getElementById('planner-mode-lead');
+  if (lead) lead.textContent = PLANNER_MODE_LEADS[mode];
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
   if (navBtn) navBtn.textContent = PLANNER_MODE_NAV[mode];
