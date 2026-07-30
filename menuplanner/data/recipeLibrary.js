@@ -2,7 +2,7 @@
  * Meal ideas for Page 4 — protein + grain/starch (+ optional veg).
  *
  * Fast Start: no fat, sugar, or alcohol in template items or caveats.
- * Use salt/pepper and spices as desired — appended as the last sentence on every idea card.
+ * Use salt/peppers, herbs and spices to taste — appended as the last sentence on every idea card.
  * Slot-agnostic: any template can fill breakfast, lunch, or dinner.
  * Card title = ingredient names. Profile + caveat = optional flavor spark.
  * Gram amounts live on the weekly PDF — apply still uses the user's program.
@@ -143,7 +143,7 @@ export function mealNameFromItems(items) {
   return labels.join(' & ');
 }
 
-const SEASONING_CLOSER = 'Use salt/pepper and spices as desired.';
+const SEASONING_CLOSER = 'Use salt/peppers, herbs and spices to taste.';
 
 function meal(id, items, { profile, caveat, tags, name } = {}) {
   const body = (caveat ?? '').trim();
