@@ -224,6 +224,7 @@ function foodsByCategory(categoryId) {
 
 function foodListDisplayName(food) {
   if (food.name === 'Eggs') return '2 whites/1 yolk';
+  if (food.name === 'Egg whites') return 'Egg whites (2 large whites)';
   return food.name;
 }
 
