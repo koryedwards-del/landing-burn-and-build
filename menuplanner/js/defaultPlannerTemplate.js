@@ -27,7 +27,7 @@ const FOODS = {
 
 const SNACK_FRUITS = {
   morning: 'Apple',
-  morningFriday: 'Apricots',
+  morningFriday: 'Pear',
   afternoon: 'Banana',
   evening: 'Grapes',
 };

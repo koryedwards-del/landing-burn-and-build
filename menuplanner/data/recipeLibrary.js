@@ -9,17 +9,29 @@
  *
  * Split categories: multiple foods in the same slot share servings
  * (e.g. black beans + rice both Grains/Starches — each gets half).
+ *
+ * Curated from classic bodybuilding prep patterns — lean protein, starch, veg;
+ * batch-cook friendly; flavor rotation to beat meal fatigue.
  */
 
 /** Short labels for card titles — keep plain and recognizable. */
 const FOOD_SHORT = {
   'Beef, eye of round': 'Steak',
+  'Beef, top sirloin': 'Sirloin',
+  'Beef, 95% lean ground': 'Lean Ground Beef',
   'Chicken breast, no skin': 'Chicken',
+  'Turkey breast': 'Turkey',
+  'Tuna, canned in water': 'Tuna',
+  'Tilapia, baked': 'Tilapia',
   'Beans, black': 'Black Beans',
   'Rice, basmati': 'Rice',
   'Tortilla, corn (6-inch)': 'Tortilla',
   'Potato, baked (flesh + skin)': 'Potato',
+  'Sweet potato, baked': 'Sweet Potato',
   'Broccoli, cooked': 'Broccoli',
+  'Green beans, cooked': 'Green Beans',
+  'Asparagus, cooked': 'Asparagus',
+  'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Peppers',
   'Eggs': 'Eggs',
   'Egg substitute (liquid)': 'Egg Substitute',
@@ -62,6 +74,7 @@ function proteinTagForFood(foodName) {
     || name.includes('halibut')
     || name.includes('haddock')
     || name.includes('flounder')
+    || name.includes('tilapia')
   ) return 'seafood';
   if (
     name === 'eggs'
@@ -156,49 +169,104 @@ const CHICKEN_RICE_BROCCOLI = [
 
 /** @type {ReadonlyArray<MealCard>} */
 export const MEAL_TEMPLATES = [
+  // —— Breakfast staples ——
   meal('egg-whites-oatmeal', [
     { slot: 'Protein', foodName: 'Eggs' },
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
     profile: 'Classic',
-    caveat: '2 whites/1 yolk. Reduce yolks as desired.',
+    caveat: 'Scramble 2 whites/1 yolk. Cook oats plain; cinnamon is fine.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Toast bread without spread.',
   }),
   meal('egg-whites-toast', [
     { slot: 'Protein', foodName: 'Eggs' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: '2 whites/1 yolk. Reduce yolks as desired.',
+    caveat: '2 whites/1 yolk scrambled. Toast dry — add pepper or hot sauce if you like heat.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
-    name: 'Yogurt & Oatmeal with Blueberries',
-    profile: 'Classic',
-    caveat: 'Stir in yogurt. Use a splash of blueberries — doesn\'t count as a fruit serving.',
+    name: 'Yogurt & Oatmeal',
+    profile: 'Proats',
+    caveat: 'Cook oats, cool slightly, stir in yogurt. Fruit servings stay on snack slots.',
   }),
-  meal('chicken-rice-broccoli-soy', CHICKEN_RICE_BROCCOLI, {
-    profile: 'Soy stir-fry',
-    caveat: 'Soy sauce, ginger, garlic. Broccoli steamed or crisp-tender.',
+  meal('turkey-sweet-potato-spinach', [
+    { slot: 'Protein', foodName: 'Turkey breast' },
+    { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
+    { slot: 'Veggie', foodName: 'Spinach, cooked' },
+  ], {
+    profile: 'Power bowl',
+    caveat: 'Dice cooked sweet potato. Sauté turkey with garlic powder; wilt spinach at the end.',
+  }),
+
+  // —— Chicken & rice bowls (bodybuilding rotation) ——
+  meal('chicken-rice-broccoli-lemon', CHICKEN_RICE_BROCCOLI, {
+    profile: 'Lemon-herb',
+    caveat: 'Sheet-pan chicken and broccoli. Lemon juice and dried herbs on everything — batch six at once.',
+  }),
+  meal('chicken-rice-broccoli-cajun', CHICKEN_RICE_BROCCOLI, {
+    profile: 'Cajun',
+    caveat: 'Blackened seasoning on chicken. Broccoli steamed; rice cooked separately.',
+  }),
+  meal('chicken-rice-broccoli-teriyaki', CHICKEN_RICE_BROCCOLI, {
+    profile: 'Teriyaki',
+    caveat: 'Soy, ginger, garlic on chicken — light coat only. Broccoli crisp-tender.',
   }),
   meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
     profile: 'BBQ',
-    caveat: 'Dry rub or BBQ seasoning. Broccoli roasted or steamed.',
+    caveat: 'Dry rub — paprika, garlic powder, chili. No sauce. Broccoli roasted or steamed.',
   }),
+
+  // —— Variations on the classic bowl ——
+  meal('turkey-rice-broccoli', [
+    { slot: 'Protein', foodName: 'Turkey breast' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Same prep as chicken and rice. Slice or dice turkey breast; weigh cooked.',
+  }),
+  meal('tuna-sweet-potato', [
+    { slot: 'Protein', foodName: 'Tuna, canned in water' },
+    { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Drain tuna well. Lemon and pepper over baked or microwaved sweet potato.',
+  }),
+  meal('chicken-sweet-potato-green-beans', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
+    { slot: 'Veggie', foodName: 'Green beans, cooked' },
+  ], {
+    profile: 'Cut',
+    caveat: 'One sheet pan: chicken, sweet potato chunks, green beans. Rotate with rice bowls.',
+  }),
+  meal('tilapia-rice-broccoli', [
+    { slot: 'Protein', foodName: 'Tilapia, baked' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Bake tilapia plain. Same bowl structure as chicken — mild fish, same prep rhythm.',
+  }),
+
+  // —— Hearty / dinner ——
   meal('steak-tortilla-peppers-fajita', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
     { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     profile: 'Fajita',
-    caveat: 'Lime, cumin, chili powder, salsa. Peppers sautéed or roasted.',
+    caveat: 'Slice steak thin; cumin, chili powder, lime. Peppers sautéed — load the tortilla.',
   }),
   meal('chicken-beans-rice', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
@@ -206,21 +274,44 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
   ], {
     profile: 'Latin',
-    caveat: 'Cumin, garlic, cilantro. Black beans and rice split your grain/starch serving evenly.',
+    caveat: 'Cumin, garlic, cilantro. Beans and rice each get half your grain/starch serving.',
   }),
   meal('steak-tortilla-texas', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
     { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
   ], {
     profile: 'Texas',
-    caveat: 'Mesquite, chili powder, black pepper — dry rub. Jalapeño for heat is free.',
+    caveat: 'Mesquite and chili dry rub. Jalapeño for heat is free.',
+  }),
+  meal('top-sirloin-rice-peppers', [
+    { slot: 'Protein', foodName: 'Beef, top sirloin' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
+  ], {
+    profile: 'Stir-fry',
+    caveat: 'Sirloin strips with peppers. Rice on the side — weigh steak cooked.',
+  }),
+  meal('beef-ground-potato', [
+    { slot: 'Protein', foodName: 'Beef, 95% lean ground' },
+    { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Brown lean beef dry in a non-stick pan. Baked potato on the side.',
   }),
   meal('salmon-potato', [
     { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
     { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
   ], {
     profile: 'Classic',
-    caveat: 'Lemon, dill, parsley. Potato roasted or baked.',
+    caveat: 'Bake salmon plain. Lemon, dill, parsley on potato and fish.',
+  }),
+  meal('salmon-rice-asparagus', [
+    { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Asparagus, cooked' },
+  ], {
+    profile: 'Classic',
+    caveat: 'Same rhythm as chicken bowls — salmon, rice, asparagus steamed or grilled.',
   }),
 ];
 
