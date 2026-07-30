@@ -34,6 +34,7 @@ const FOOD_SHORT = {
   'Asparagus, cooked': 'Asparagus',
   'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Peppers',
+  'Egg whites': 'Egg Whites',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
   'Yogurt, plain, nonfat': 'Yogurt',

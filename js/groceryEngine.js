@@ -40,13 +40,16 @@ function parseLeadingNumber(label) {
 }
 
 export function groceryDisplayName(foodName) {
-  return foodName === 'Eggs' ? 'Eggs' : foodName;
+  if (foodName === 'Eggs') return 'Eggs';
+  if (foodName === 'Egg whites') return 'Egg whites';
+  return foodName;
 }
 
 export function formatGroceryQuantity(item) {
   if (item.isCountBased) {
     const count = Math.ceil(item.weeklyUnits);
     const isEggs = item.foodName === 'Eggs';
+    const isEggWhites = item.foodName === 'Egg whites';
     if (count >= 12) {
       const dozens = Math.floor(count / 12);
       const remainder = count % 12;
@@ -59,7 +62,7 @@ export function formatGroceryQuantity(item) {
         ? `${dozens === 1 ? '1 dozen' : `${dozens} dozen`} + ${remainder} eggs`
         : `${dozens} doz ${remainder}`;
     }
-    return isEggs ? `${count} eggs` : String(count);
+    return isEggs ? `${count} eggs` : isEggWhites ? `${count} egg whites` : String(count);
   }
 
   const totalOz = item.weeklyGrams / 28.3495;

@@ -272,6 +272,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Egg whites",
+    "category": "protein",
+    "servingDescription": "large whites",
+    "gramWeight": 0.0,
+    "unitsPerServing": 3.0,
+    "fatBracket": 0.0
+  },
+  {
     "name": "Egg substitute (liquid)",
     "category": "protein",
     "servingDescription": "liquid",
