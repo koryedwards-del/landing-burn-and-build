@@ -1,6 +1,6 @@
 /**
  * Locked Fast Start fruit list — store jargon, no knife, distinct at the shelf.
- * DIY mode shows the full foods.json fruit catalog.
+ * Maintenance mode shows the full foods.json fruit catalog.
  */
 
 /** @type {readonly string[]} foods.json names, curated display order */

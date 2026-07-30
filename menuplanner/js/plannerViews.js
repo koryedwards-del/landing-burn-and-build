@@ -71,7 +71,12 @@ const {
 
 const PLANNER_MODE_TITLES = {
   'fast-start': '🚀 Fast Start Menu Planner',
-  diy: 'Do-It-Yourself Menu Planner',
+  diy: '💪 Maintenance Menu Planner',
+};
+
+const PLANNER_MODE_NAV = {
+  'fast-start': '4. 🚀 Menu planner',
+  diy: '4. 💪 Menu planner',
 };
 
 function normalizePlannerEngagementMode(mode) {
@@ -92,9 +97,7 @@ function syncPlannerEngagementUi() {
   if (title) title.textContent = PLANNER_MODE_TITLES[mode];
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
-  if (navBtn) {
-    navBtn.textContent = mode === 'fast-start' ? '4. 🚀 Menu planner' : '4. Menu planner';
-  }
+  if (navBtn) navBtn.textContent = PLANNER_MODE_NAV[mode];
 
   document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
     const active = btn.dataset.plannerMode === mode;
