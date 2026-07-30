@@ -145,11 +145,6 @@ export function mealNameFromItems(items) {
 
 const SEASONING_CLOSER = 'Use salt/pepper and spices as desired.';
 
-/** Shared Fast Start cooking notes — identical wording on every meal card that uses them. */
-const OATS_COOK = 'Oats measured dry — water content changes the weight. Add water and salt to taste.';
-const IN_NONSTICK_PAM = 'in a non-stick pan — PAM cooking spray is recommended to prevent sticking';
-const SCRAMBLE_EGG = `Scramble egg substitute ${IN_NONSTICK_PAM}.`;
-
 function meal(id, items, { profile, caveat, tags, name } = {}) {
   const body = (caveat ?? '').trim();
   const flavor = body ? `${body} ${SEASONING_CLOSER}` : SEASONING_CLOSER;
@@ -178,14 +173,14 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Egg Substitute & Oatmeal',
     profile: 'Classic',
-    caveat: `${OATS_COOK} ${SCRAMBLE_EGG}`,
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Cook oats plain; cinnamon is fine.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: `${SCRAMBLE_EGG} Bread plain — no butter, jam, or spread.`,
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Bread without spread.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
@@ -193,7 +188,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal',
     profile: 'Proats',
-    caveat: `${OATS_COOK} Cool slightly. Stir in yogurt if you like — your choice. Fruit servings stay on snack slots.`,
+    caveat: 'Cook oats, cool slightly, stir in yogurt. Fruit servings stay on snack slots.',
   }),
   meal('turkey-sweet-potato-spinach', [
     { slot: 'Protein', foodName: 'Turkey breast' },
@@ -201,7 +196,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Spinach, cooked' },
   ], {
     profile: 'Power bowl',
-    caveat: `Dice cooked sweet potato. Sauté turkey ${IN_NONSTICK_PAM}. Garlic powder; wilt spinach at the end.`,
+    caveat: 'Dice cooked sweet potato. Sauté turkey with garlic powder; wilt spinach at the end.',
   }),
 
   // —— Chicken & rice bowls ——
@@ -211,15 +206,15 @@ export const MEAL_TEMPLATES = [
   }),
   meal('chicken-rice-broccoli-cajun', CHICKEN_RICE_BROCCOLI, {
     profile: 'Cajun',
-    caveat: `Blackened seasoning on chicken — cook ${IN_NONSTICK_PAM}. Broccoli steamed; rice cooked separately.`,
+    caveat: 'Blackened seasoning on chicken. Broccoli steamed; rice cooked separately.',
   }),
   meal('chicken-rice-broccoli-teriyaki', CHICKEN_RICE_BROCCOLI, {
     profile: 'Teriyaki',
-    caveat: `Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Cook chicken ${IN_NONSTICK_PAM}. Broccoli crisp-tender.`,
+    caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Broccoli crisp-tender.',
   }),
   meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
     profile: 'BBQ',
-    caveat: `Dry rub — paprika, garlic powder, chili. No sauce. Cook chicken ${IN_NONSTICK_PAM}. Broccoli roasted or steamed.`,
+    caveat: 'Dry rub — paprika, garlic powder, chili. No sauce. Broccoli roasted or steamed.',
   }),
 
   // —— Variations on the classic bowl ——
@@ -229,7 +224,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Broccoli, cooked' },
   ], {
     profile: 'Classic',
-    caveat: `Same prep as chicken and rice. Slice or dice turkey breast; cook ${IN_NONSTICK_PAM} if needed. Weigh cooked.`,
+    caveat: 'Same prep as chicken and rice. Slice or dice turkey breast; weigh cooked.',
   }),
   meal('tuna-sweet-potato', [
     { slot: 'Protein', foodName: 'Tuna, canned in water' },
@@ -262,7 +257,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     profile: 'Fajita',
-    caveat: `Slice steak thin; cook ${IN_NONSTICK_PAM}. Cumin, chili powder, lime. Sauté peppers; load the tortilla.`,
+    caveat: 'Slice steak thin; cumin, chili powder, lime. Peppers sautéed — load the tortilla.',
   }),
   meal('chicken-beans-rice', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
@@ -270,14 +265,14 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
   ], {
     profile: 'Latin',
-    caveat: `Cumin, garlic, cilantro. Cook chicken ${IN_NONSTICK_PAM}. Beans and rice each get half your grain/starch serving.`,
+    caveat: 'Cumin, garlic, cilantro. Beans and rice each get half your grain/starch serving.',
   }),
   meal('steak-tortilla-texas', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
     { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
   ], {
     profile: 'Texas',
-    caveat: `Mesquite and chili dry rub. Cook steak ${IN_NONSTICK_PAM}. Jalapeño for heat is free.`,
+    caveat: 'Mesquite and chili dry rub. Jalapeño for heat is free.',
   }),
   meal('top-sirloin-rice-peppers', [
     { slot: 'Protein', foodName: 'Beef, top sirloin' },
@@ -285,7 +280,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     profile: 'Stir-fry',
-    caveat: `Sirloin strips and peppers — cook ${IN_NONSTICK_PAM}. Rice on the side; weigh steak cooked.`,
+    caveat: 'Sirloin strips with peppers. Rice on the side — weigh steak cooked.',
   }),
   meal('beef-ground-round-potato', [
     { slot: 'Protein', foodName: 'Beef, ground round' },
@@ -293,7 +288,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Ground Round & Potato',
     profile: 'Classic',
-    caveat: `Ask the butcher to grind trimmed ground round — not grab-and-go hamburger. Cook ${IN_NONSTICK_PAM}.`,
+    caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger.',
   }),
 ];
 
