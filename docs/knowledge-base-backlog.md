@@ -91,7 +91,7 @@ Run: `node scripts/grains-14-1-audit.mjs` · `node scripts/starches-14-0-audit.m
 
 **MAYBE (4):** Beans navy/pinto, Lentils, Yam cooked.
 
-**Math FAIL:** Chickpeas (1.33g), Corn sweet (0.77g), spaghetti/summer/hubbard/zucchini squash.
+**Math FAIL — drop:** Chickpeas, all squash (1982 summer/winter/zucchini fail 14/0.44; acorn/butternut pass math but dropped per roster decision), spaghetti squash.
 
 **Pass but not prep rotation:** kidney/lima/cannellini beans, jicama, peas variants, plantain, pumpkin, rutabaga, parsnips, taro, water chestnuts, etc.
 
