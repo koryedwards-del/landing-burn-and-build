@@ -1,7 +1,6 @@
 /** User-facing food names — print food list, planner picker, grocery labels. */
 
 const DISPLAY_OVERRIDES = {
-  Eggs: '2 whites/1 yolk',
   'Egg whites': 'Egg whites (2 large whites)',
 };
 

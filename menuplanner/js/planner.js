@@ -1,4 +1,7 @@
-import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+import {
+  ASSET_VERSION as FALLBACK_ASSET_VERSION,
+  FOODS_CATALOG_VERSION,
+} from '../../js/assetVersion.js';
 import { plannerStateFromPackage } from '../../js/menuPlannerState.js';
 import { setActiveProgramId } from '../../js/programActive.js';
 import {
@@ -14,12 +17,31 @@ const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK
 let plannerShellReady = false;
 let plannerBootPromise = null;
 let views = null;
+let loadedFoodsCatalogVersion = null;
 
 async function loadViews() {
   if (!views) {
     views = await import(`./plannerViews.js?v=${ASSET_VERSION}`);
   }
   return views;
+}
+
+async function loadFoodsCatalog({ force = false } = {}) {
+  if (!force && loadedFoodsCatalogVersion === FOODS_CATALOG_VERSION && state.foods?.length) {
+    return null;
+  }
+
+  const response = await fetch(
+    `../data/foods.json?v=${encodeURIComponent(FOODS_CATALOG_VERSION)}`,
+    { cache: 'no-store' },
+  );
+  if (!response.ok) {
+    throw new Error('Could not load foods catalog.');
+  }
+
+  state.foods = await response.json();
+  loadedFoodsCatalogVersion = FOODS_CATALOG_VERSION;
+  return state.foods;
 }
 
 function applyProgramPackage(pkg) {
@@ -37,6 +59,26 @@ function applyProgramPackage(pkg) {
     persistPlannerToProgram({ immediate: true });
   }
   if (!views) return;
+
+  const pkgCatalog = pkg?.reference?.foodsCatalogVersion;
+  const catalogStale = pkgCatalog && pkgCatalog !== FOODS_CATALOG_VERSION;
+
+  if (plannerShellReady && catalogStale) {
+    loadFoodsCatalog({ force: true })
+      .then(() => {
+        views.renderPlannerMeta();
+        views.renderPlannerWorkspace();
+        views.showPlannerToast('Food lists updated to the latest catalog.', { durationMs: 7000 });
+      })
+      .catch((err) => {
+        console.error(err);
+        views.showPlannerToast('Could not refresh food lists. Reload the page to try again.', {
+          variant: 'error',
+        });
+      });
+    return;
+  }
+
   views.renderPlannerMeta();
   if (plannerShellReady) {
     views.renderPlannerWorkspace();
@@ -77,11 +119,7 @@ export async function bootMenuPlannerPage() {
   plannerBootPromise = (async () => {
     let foodsLoadError = null;
     try {
-      const response = await fetch(`../data/foods.json?v=${ASSET_VERSION}`, { cache: 'no-store' });
-      if (!response.ok) {
-        throw new Error('Could not load foods catalog.');
-      }
-      state.foods = await response.json();
+      await loadFoodsCatalog({ force: true });
     } catch (err) {
       foodsLoadError = err;
       state.foods = Array.isArray(state.foods) ? state.foods : [];
