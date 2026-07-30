@@ -845,7 +845,8 @@
     "servingDescription": "as-is",
     "gramWeight": 32,
     "unitsPerServing": 0,
-    "fatBracket": 0
+    "fatBracket": 0,
+    "borderline": true
   },
   {
     "name": "Buckwheat groats",
@@ -989,7 +990,8 @@
     "servingDescription": "dry",
     "gramWeight": 21,
     "unitsPerServing": 0,
-    "fatBracket": 0
+    "fatBracket": 0,
+    "borderline": true
   },
   {
     "name": "Pasta, regular",
@@ -1181,7 +1183,8 @@
     "servingDescription": "large whites",
     "gramWeight": 0,
     "unitsPerServing": 2,
-    "fatBracket": 0
+    "fatBracket": 0,
+    "borderline": true
   },
   {
     "name": "Flounder, baked",

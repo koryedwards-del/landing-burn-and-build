@@ -20,4 +20,8 @@ export const GRAINS_STARCHES_TIPS_QA = [
     q: 'Why are potatoes and corn listed as starches?',
     a: 'Starch and vegetable servings are measured differently — a potato serving is not the same as a broccoli serving. People often pair potatoes with vegetables like broccoli or Brussels sprouts; keeping them separate keeps portions manageable.',
   },
+  {
+    q: 'What does the asterisk (*) mean?',
+    a: 'Foods marked * are on the list at the listed portion, but exceed the grain fat allowance (~1g fat per 14g-carb serving) or the starch allowance (~0.44g). Servings are still the prescription.',
+  },
 ];

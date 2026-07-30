@@ -53,6 +53,7 @@ import {
   createEmptyDayState,
 } from './plannerState.js';
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+import { foodListLabel } from '../../js/foodDisplay.js';
 
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
@@ -1227,7 +1228,7 @@ function renderFoodStack() {
       draggable="true"
       data-food-name="${food.name.replace(/"/g, '&quot;')}"
     >
-      <p class="card__title">${escapeHtml(food.name)}</p>
+      <p class="card__title">${escapeHtml(foodListLabel(food))}</p>
       <p class="card__detail">${foodCardDetail(food)}</p>
     </div>
   `).join('');
