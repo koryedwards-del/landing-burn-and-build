@@ -22,6 +22,6 @@ export const GRAINS_STARCHES_TIPS_QA = [
   },
   {
     q: 'What does the asterisk (*) mean?',
-    a: 'Foods marked * are on the list at the listed portion, but exceed the grain fat allowance (~1g fat per 14g-carb serving) or the starch allowance (~0.44g). Servings are still the prescription.',
+    a: 'Tested portions that work on this program. The engine\'s grain slot (~1g fat per 14g-carb serving) runs tight on these items. Count servings normally.',
   },
 ];

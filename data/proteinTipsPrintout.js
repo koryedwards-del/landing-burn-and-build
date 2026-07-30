@@ -30,6 +30,6 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: 'What does the asterisk (*) mean?',
-    a: 'Foods marked * are on the list at the listed portion, but outside strict Burn Engine protein math (8g protein and ~2g fat per serving). Example: egg whites are 2 large whites (~7g protein), not a full 8g slot. Servings are still the prescription.',
+    a: 'Tested portions that work on this program. The engine\'s 8g-protein / ~2g-fat slot runs tight on these items (e.g. egg whites are 2 large, ~7g protein). Count servings normally.',
   },
 ];

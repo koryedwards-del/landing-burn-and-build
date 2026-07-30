@@ -20,4 +20,4 @@ export function hasBorderlineFoods(foods) {
 }
 
 export const BORDERLINE_FOOTNOTE =
-  '* On the list at the listed portion, but outside strict Burn Engine serving math (fat, protein, or carb allowance). Servings are still the prescription.';
+  '* Tested portions that work on this program. Strict Burn Engine slot math runs tight here — count servings normally.';
