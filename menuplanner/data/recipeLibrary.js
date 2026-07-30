@@ -173,7 +173,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Egg Substitute & Oatmeal',
     profile: 'Classic',
-    caveat: 'Oats measured dry — water content changes the weight. Add water and salt to taste. Scramble egg substitute in a dry non-stick pan (no oil or spray).',
+    caveat: 'Oats measured dry — water content changes the weight. Add water and salt to taste. Scramble egg substitute in a non-stick pan — PAM cooking spray is recommended to prevent sticking.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
