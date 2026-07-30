@@ -5,13 +5,55 @@ Working notes from product exploration. Not user-facing copy yet.
 
 ---
 
-## Protein list — trim direction
+## 1982 PDF protein sheet (authoritative)
 
-- **Keep:** 1982 PDF proteins only (seminar sheet). No pork, bison, salmon, tilapia, steak cuts, generic 95% lean ground, etc. unless on PDF.
-- **Add / align:** **Trimmed ground round** = seminar **Beef, round steak (ground)**. Catalog entry: `Beef, ground round`. Gram weight **24** (seminar tested, not guessed USDA).
-- **Butcher (meal caveat only):** Ground Round & Potato card — ask the butcher to grind trimmed round; not grab-and-go hamburger. Case sign (ground round $$ vs hamburger $) is the proof. Not print tips / FAQ until promoted.
-- **Dairy / whey:** Competitors’ biggest protein source — lives on **dairy column**, not protein sheet.
-- **Contest prep vs PDF:** Core overlap (chicken, turkey breast, eggs, white fish, seafood). Modern prep pushes ground turkey and tilapia — PDF intentionally different.
+Tested gram weights from seminar printout. Dairy is a **separate column** (not below).
+
+| Food | Serving label | Weight (g) |
+|------|---------------|------------|
+| Beef, round steak (ground) | 1 oz | 24 |
+| Eggs, medium | 2 whites/1 yolk | 69 |
+| Eggs, substitute (Eggbeaters) | 1/3 cup | 80 |
+| Fish, blue | 1 oz | 25 |
+| Fish, catfish | 1 ½ oz | 31 |
+| Fish, cod | 1 oz | 28 |
+| Fish, flounder | 1 oz | 26 |
+| Fish, haddock | 1 ¼ oz | 34 |
+| Fish, halibut | 1 ¼ oz | 38 |
+| Fish, perch | 1 ½ oz | 42 |
+| Fish, pike | 1 ½ oz | 44 |
+| Fish, snapper | 1 ½ oz | 40 |
+| Fish, sole | 1 ¾ oz | 48 |
+| Fish, swordfish | 1 oz | 28 |
+| Fish, tuna (water-packed) | 1 oz | 28 |
+| Poultry, chicken (no skin) | 1 oz | 24 |
+| Poultry, turkey | 1 oz | 29 |
+| Seafood, clams | 1/3 cup | 51 |
+| Seafood, crab meat | 1 ½ oz | 46 |
+| Seafood, lobster | 1 ½ oz | 43 |
+| Seafood, oysters | 3 ½ oz | 95 |
+| Seafood, scallops | 1 ¼ oz | 34 |
+| Seafood, shrimp | 1 ¼ oz | 33 |
+| Game, venison | 1 ½ oz | 38 |
+
+**Not on sheet:** salmon, tilapia, pork, bison, steak cuts (eye of round, sirloin), generic 95% ground.
+
+**On sheet (corrects earlier assumptions):** swordfish, bluefish, catfish, venison.
+
+**Butcher (meal caveat only):** Ground Round & Potato card — ask the butcher to grind trimmed round; not grab-and-go hamburger.
+
+### 8g / 2g audit (USDA × tested weights)
+
+Burn Engine: 32 cal = 8g protein; 18 cal = 2g fat per protein serving.
+
+| Result | Items |
+|--------|-------|
+| **Pass @ tested weight** | Eggbeaters (80g), shrimp (33g), haddock (34g), scallops (34g), turkey (29g), chicken (24g), halibut (38g) |
+| **Fat >2g @ tested weight** | Eggs 2w/1y (3.1g), swordfish (2.1g), oysters (2.8g) |
+| **Fat >2g if scaled to 8g pro** | + bluefish (2.2g), eggs (3.6g) |
+| **Tested portion, fat OK** | Ground round, cod, flounder, sole, tuna, catfish, crab, lobster, venison, perch, pike, snapper, clams — protein grams vary; **seminar weights override USDA** |
+
+**Takeaway:** 8/2 was the screening rule; portions are **empirically tested**. Catalog `foods.json` needs diff to this sheet (e.g. chicken 24 not 26, flounder 26 not 37). Run: `node scripts/protein-82-audit.mjs`
 
 ---
 
