@@ -19,6 +19,7 @@ const FOOD_SHORT = {
   'Beef, eye of round': 'Steak',
   'Beef, top sirloin': 'Sirloin',
   'Beef, 95% lean ground': 'Lean Ground Beef',
+  'Beef, ground round': 'Ground Round',
   'Chicken breast, no skin': 'Chicken',
   'Turkey breast': 'Turkey',
   'Tuna, canned in water': 'Tuna',
@@ -291,12 +292,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Stir-fry',
     caveat: 'Sirloin strips with peppers. Rice on the side — weigh steak cooked.',
   }),
-  meal('beef-ground-potato', [
-    { slot: 'Protein', foodName: 'Beef, 95% lean ground' },
-    { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+  meal('beef-ground-round-potato', [
+    { slot: 'Protein', foodName: 'Beef, ground round' },
+    { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
   ], {
+    name: 'Ground Round & Potato',
     profile: 'Classic',
-    caveat: 'Brown lean beef dry in a non-stick pan. Baked potato on the side.',
+    caveat: 'Read the case — ground round and hamburger are different grinds. Boil potato; mash dry or eat baby reds whole.',
   }),
   meal('salmon-potato', [
     { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },

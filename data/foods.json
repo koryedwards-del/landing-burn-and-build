@@ -24,6 +24,14 @@
     "fatBracket": 0.0
   },
   {
+    "name": "Beef, ground round",
+    "category": "protein",
+    "servingDescription": "cooked",
+    "gramWeight": 33.0,
+    "unitsPerServing": 0.0,
+    "fatBracket": 0.0
+  },
+  {
     "name": "Bison, roasted",
     "category": "protein",
     "servingDescription": "cooked",
