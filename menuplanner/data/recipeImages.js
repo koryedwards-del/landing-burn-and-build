@@ -7,9 +7,8 @@
 const MEAL_ASSET_BASE = '../menuplanner/assets/meals';
 
 const TEMPLATE_IMAGES = {
+  'egg-substitute-oatmeal': `${MEAL_ASSET_BASE}/power-breakfast.jpg`,
   'egg-substitute-toast': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
-  'egg-whites-oatmeal': `${MEAL_ASSET_BASE}/power-breakfast.jpg`,
-  'egg-whites-toast': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
   'yogurt-oatmeal-blueberries': `${MEAL_ASSET_BASE}/oatmeal-bowl.jpg`,
   'chicken-rice-broccoli-lemon': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
   'chicken-rice-broccoli-cajun': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
@@ -25,8 +24,6 @@ const TEMPLATE_IMAGES = {
   'steak-tortilla-texas': `${MEAL_ASSET_BASE}/steak-tortilla.jpg`,
   'top-sirloin-rice-peppers': `${MEAL_ASSET_BASE}/steak-fajita.jpg`,
   'beef-ground-round-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'salmon-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'salmon-rice-asparagus': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
 };
 
 const PLATE_FALLBACK = `${MEAL_ASSET_BASE}/plate-fallback.jpg`;

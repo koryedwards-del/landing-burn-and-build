@@ -34,12 +34,10 @@ const FOOD_SHORT = {
   'Asparagus, cooked': 'Asparagus',
   'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Peppers',
-  'Eggs': 'Eggs',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
   'Yogurt, plain, nonfat': 'Yogurt',
   'Bread, whole wheat': 'Whole Wheat Bread',
-  'Salmon, Atlantic, baked': 'Salmon',
 };
 
 const MEAL_GRID_SLOTS = new Set(['breakfast', 'lunch', 'dinner']);
@@ -171,12 +169,13 @@ const CHICKEN_RICE_BROCCOLI = [
 /** @type {ReadonlyArray<MealCard>} */
 export const MEAL_TEMPLATES = [
   // —— Breakfast staples ——
-  meal('egg-whites-oatmeal', [
-    { slot: 'Protein', foodName: 'Eggs' },
+  meal('egg-substitute-oatmeal', [
+    { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
     { slot: 'Grains/Starches', foodName: 'Oats, rolled' },
   ], {
+    name: 'Egg Substitute & Oatmeal',
     profile: 'Classic',
-    caveat: 'Scramble 2 whites/1 yolk. Cook oats plain; cinnamon is fine.',
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Cook oats plain; cinnamon is fine.',
   }),
   meal('egg-substitute-toast', [
     { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
@@ -184,13 +183,6 @@ export const MEAL_TEMPLATES = [
   ], {
     profile: 'Classic',
     caveat: 'Scramble egg substitute dry in a non-stick pan. Toast bread without spread.',
-  }),
-  meal('egg-whites-toast', [
-    { slot: 'Protein', foodName: 'Eggs' },
-    { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
-  ], {
-    profile: 'Classic',
-    caveat: '2 whites/1 yolk scrambled. Toast dry — add pepper or hot sauce if you like heat.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
@@ -299,21 +291,6 @@ export const MEAL_TEMPLATES = [
     name: 'Ground Round & Potato',
     profile: 'Classic',
     caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger.',
-  }),
-  meal('salmon-potato', [
-    { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
-    { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
-  ], {
-    profile: 'Classic',
-    caveat: 'Bake salmon plain. Lemon, dill, parsley on potato and fish.',
-  }),
-  meal('salmon-rice-asparagus', [
-    { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
-    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Asparagus, cooked' },
-  ], {
-    profile: 'Classic',
-    caveat: 'Same rhythm as chicken bowls — salmon, rice, asparagus steamed or grilled.',
   }),
 ];
 
