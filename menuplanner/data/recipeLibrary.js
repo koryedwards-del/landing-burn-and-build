@@ -18,7 +18,6 @@
 const FOOD_SHORT = {
   'Beef, eye of round': 'Steak',
   'Beef, top sirloin': 'Sirloin',
-  'Beef, 95% lean ground': 'Lean Ground Beef',
   'Beef, ground round': 'Ground Round',
   'Chicken breast, no skin': 'Chicken',
   'Turkey breast': 'Turkey',
@@ -49,7 +48,6 @@ export const MEAL_SORTER_PILLS = [
   { id: 'beef', label: 'Beef' },
   { id: 'dairy-eggs', label: 'Dairy & Eggs' },
   { id: 'grain', label: 'Grain' },
-  { id: 'pork', label: 'Pork' },
   { id: 'poultry', label: 'Poultry' },
   { id: 'seafood', label: 'Seafood' },
   { id: 'starch', label: 'Starch' },
