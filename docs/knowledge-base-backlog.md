@@ -81,7 +81,7 @@ Run: `node scripts/grains-14-1-audit.mjs` · `node scripts/starches-14-0-audit.m
 
 **Math FAIL — prep staples (needs decision):**
 - **Oats, rolled** — 1.46g fat @ 14g carb (Fast Start breakfast)
-- **Bread, whole wheat** — 1.19g fat @ 14g carb (Fast Start toast)
+- **Bread, whole wheat** — 1.19g fat @ 14g carb (Fast Start bread meal)
 
 **Math FAIL — drop:** Amaranth, multigrain bread, Cheerios, saltines, egg noodles, quinoa.
 

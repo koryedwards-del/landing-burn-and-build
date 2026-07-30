@@ -10,8 +10,7 @@
  * Split categories: multiple foods in the same slot share servings
  * (e.g. black beans + rice both Grains/Starches — each gets half).
  *
- * Curated from classic bodybuilding prep patterns — lean protein, starch, veg;
- * batch-cook friendly; flavor rotation to beat meal fatigue.
+ * Curated meal patterns from the food lists — lean protein, grain/starch, optional veg.
  */
 
 /** Short labels for card titles — keep plain and recognizable. */
@@ -181,7 +180,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble egg substitute dry in a non-stick pan. Toast bread without spread.',
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Bread without spread.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
@@ -200,7 +199,7 @@ export const MEAL_TEMPLATES = [
     caveat: 'Dice cooked sweet potato. Sauté turkey with garlic powder; wilt spinach at the end.',
   }),
 
-  // —— Chicken & rice bowls (bodybuilding rotation) ——
+  // —— Chicken & rice bowls ——
   meal('chicken-rice-broccoli-lemon', CHICKEN_RICE_BROCCOLI, {
     profile: 'Lemon-herb',
     caveat: 'Sheet-pan chicken and broccoli. Lemon juice and dried herbs on everything — batch six at once.',
@@ -240,7 +239,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Green beans, cooked' },
   ], {
     profile: 'Cut',
-    caveat: 'One sheet pan: chicken, sweet potato chunks, green beans. Rotate with rice bowls.',
+    caveat: 'One sheet pan: chicken, sweet potato chunks, green beans.',
   }),
   meal('tilapia-rice-broccoli', [
     { slot: 'Protein', foodName: 'Tilapia, baked' },
