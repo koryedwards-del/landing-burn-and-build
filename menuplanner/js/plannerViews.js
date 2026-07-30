@@ -70,14 +70,11 @@ const {
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
 const PLANNER_MODE_TITLES = {
-  'fast-start': '🚀 Fast Start Menu Planner',
-  diy: '⚖️ Maintenance Menu Planner',
+  'fast-start': 'Fast Start Menu Planner',
+  diy: 'Maintenance Menu Planner',
 };
 
-const PLANNER_MODE_NAV = {
-  'fast-start': '4. 🚀 Menu planner',
-  diy: '4. ⚖️ Menu planner',
-};
+const PLANNER_NAV_LABEL = '4. Menu planner';
 
 const PLANNER_MODE_LEADS = {
   'fast-start': 'Leave out fat, sugar, and alcohol to cut. Switch to Maintenance when you reach your look.',
@@ -105,7 +102,7 @@ function syncPlannerEngagementUi() {
   if (lead) lead.textContent = PLANNER_MODE_LEADS[mode];
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
-  if (navBtn) navBtn.textContent = PLANNER_MODE_NAV[mode];
+  if (navBtn) navBtn.textContent = PLANNER_NAV_LABEL;
 
   document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
     const active = btn.dataset.plannerMode === mode;
