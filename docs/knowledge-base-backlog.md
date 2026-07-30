@@ -83,7 +83,7 @@ Run: `node scripts/grains-14-1-audit.mjs` · `node scripts/starches-14-0-audit.m
 - **Oats, rolled** — 1.46g fat @ 14g carb (Fast Start breakfast)
 - **Bread, whole wheat** — 1.19g fat @ 14g carb (Fast Start bread meal)
 
-**Math FAIL — drop:** Amaranth, multigrain bread, Cheerios, saltines, egg noodles, quinoa.
+**Math FAIL — dropped (2026-07-30):** Amaranth, multigrain bread, Cheerios, saltines, egg noodles, quinoa. **41 grains remain** in catalog.
 
 ### Starches — 14/0.44 × prep (2026-07-30)
 

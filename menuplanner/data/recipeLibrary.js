@@ -210,7 +210,7 @@ export const MEAL_TEMPLATES = [
   }),
   meal('chicken-rice-broccoli-teriyaki', CHICKEN_RICE_BROCCOLI, {
     profile: 'Teriyaki',
-    caveat: 'Soy, ginger, garlic on chicken — light coat only. Broccoli crisp-tender.',
+    caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Broccoli crisp-tender.',
   }),
   meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
     profile: 'BBQ',

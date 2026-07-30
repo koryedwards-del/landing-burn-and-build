@@ -744,14 +744,6 @@
     "fatBracket": 0
   },
   {
-    "name": "Amaranth",
-    "category": "grain",
-    "servingDescription": "cooked",
-    "gramWeight": 75,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
     "name": "Bagel, plain",
     "category": "grain",
     "servingDescription": "as-is",
@@ -780,14 +772,6 @@
     "category": "grain",
     "servingDescription": "as-is",
     "gramWeight": 25,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Bread, multigrain",
-    "category": "grain",
-    "servingDescription": "as-is",
-    "gramWeight": 32,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -864,14 +848,6 @@
     "fatBracket": 0
   },
   {
-    "name": "Cheerios",
-    "category": "grain",
-    "servingDescription": "dry",
-    "gramWeight": 19,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
     "name": "Corn flakes",
     "category": "grain",
     "servingDescription": "dry",
@@ -896,14 +872,6 @@
     "fatBracket": 0
   },
   {
-    "name": "Crackers, saltine",
-    "category": "grain",
-    "servingDescription": "as-is",
-    "gramWeight": 19,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
     "name": "Cream of Rice",
     "category": "grain",
     "servingDescription": "dry",
@@ -916,14 +884,6 @@
     "category": "grain",
     "servingDescription": "dry",
     "gramWeight": 19,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Egg noodles",
-    "category": "grain",
-    "servingDescription": "cooked",
-    "gramWeight": 56,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1020,14 +980,6 @@
     "category": "grain",
     "servingDescription": "as-is",
     "gramWeight": 18,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Quinoa",
-    "category": "grain",
-    "servingDescription": "cooked",
-    "gramWeight": 66,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
