@@ -449,12 +449,6 @@ const FOODLIST_CONTENT_STYLES = `
     padding: 1px 0;
   }
   .food-list-name { color: #222; }
-  .food-list-borderline-note {
-    font-size: 0.5rem;
-    line-height: 1.25;
-    color: #444;
-    margin-top: 4px;
-  }
   .food-list-col-title--spacer { visibility: hidden; }
   .food-list-col--empty { min-height: 1px; }
   .food-list-tips {

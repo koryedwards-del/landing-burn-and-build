@@ -28,8 +28,4 @@ export const PROTEIN_TIPS_QA = [
     q: 'Can I skip the yolk?',
     a: 'Yes. Each egg serving is 2 whites/1 yolk. Reduce or skip yolks as desired — you still get your protein from the whites.',
   },
-  {
-    q: 'What does the asterisk (*) mean?',
-    a: 'Tested portions that work on this program. The engine\'s 8g-protein / ~2g-fat slot runs tight on these items (e.g. egg whites are 2 large, ~7g protein). Count servings normally.',
-  },
 ];

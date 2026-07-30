@@ -2,7 +2,7 @@ import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.j
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
-import { foodListLabel, hasBorderlineFoods, BORDERLINE_FOOTNOTE } from '../../js/foodDisplay.js';
+import { foodListLabel } from '../../js/foodDisplay.js';
 import { PROTEIN_TIPS_QA } from '../../data/proteinTipsPrintout.js';
 import { GRAINS_STARCHES_TIPS_QA } from '../../data/grainsStarchesTipsPrintout.js';
 import { VEGETABLE_TIPS_QA } from '../../data/vegetableTipsPrintout.js';
@@ -227,9 +227,6 @@ function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
   const titleHtml = title
     ? `<h2 class="food-list-col-title${hideTitle ? ' food-list-col-title--spacer' : ''}"${hideTitle ? ' aria-hidden="true"' : ''}>${escapeHtml(title)}</h2>`
     : '';
-  const footnoteHtml = hasBorderlineFoods(foods)
-    ? `<p class="food-list-borderline-note">${escapeHtml(BORDERLINE_FOOTNOTE)}</p>`
-    : '';
   return `
     <div class="food-list-col${hideTitle ? ' food-list-col--continued' : ''}${!foods.length ? ' food-list-col--empty' : ''}">
       ${titleHtml}
@@ -239,7 +236,6 @@ function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
           <li class="food-list-name">${escapeHtml(foodListLabel(food))}</li>
         `).join('')}
       </ul>
-      ${footnoteHtml}
       ` : ''}
     </div>
   `;

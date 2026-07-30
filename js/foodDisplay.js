@@ -5,19 +5,7 @@ const DISPLAY_OVERRIDES = {
   'Egg whites': 'Egg whites (2 large whites)',
 };
 
-/**
- * @param {{ name: string, borderline?: boolean }} food
- * @param {{ showBorderline?: boolean }} [opts]
- */
-export function foodListLabel(food, { showBorderline = true } = {}) {
-  const base = DISPLAY_OVERRIDES[food.name] || food.name;
-  if (showBorderline && food.borderline) return `${base}*`;
-  return base;
+/** @param {{ name: string }} food */
+export function foodListLabel(food) {
+  return DISPLAY_OVERRIDES[food.name] || food.name;
 }
-
-export function hasBorderlineFoods(foods) {
-  return foods.some((food) => food.borderline);
-}
-
-export const BORDERLINE_FOOTNOTE =
-  '* Tested portions that work on this program. Strict Burn Engine slot math runs tight here — count servings normally.';
