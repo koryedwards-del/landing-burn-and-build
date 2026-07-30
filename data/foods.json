@@ -1299,14 +1299,6 @@
     "fatBracket": 0
   },
   {
-    "name": "Beans, garbanzo (chickpeas)",
-    "category": "starch",
-    "servingDescription": "cooked",
-    "gramWeight": 51,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
     "name": "Beans, kidney",
     "category": "starch",
     "servingDescription": "cooked",
@@ -1479,54 +1471,6 @@
     "category": "starch",
     "servingDescription": "cooked",
     "gramWeight": 161,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, acorn",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 135,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, butternut",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 120,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, spaghetti",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 203,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, summer (yellow)",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 412,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, winter (hubbard)",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 161,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Squash, zucchini",
-    "category": "starch",
-    "servingDescription": "raw",
-    "gramWeight": 452,
     "unitsPerServing": 0,
     "fatBracket": 0
   },

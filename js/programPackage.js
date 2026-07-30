@@ -4,7 +4,7 @@ import { computePlan, generateMealSlots } from './burnEngine.js';
 import { heartRates, profileFromForm } from './onboardingEngine.js';
 
 export const SCHEMA_VERSION = '1.0.0';
-export const FOODS_CATALOG_VERSION = '2026.07.30f';
+export const FOODS_CATALOG_VERSION = '2026.07.30g';
 export const PROGRAM_DURATION_DAYS = 56;
 
 export function buildProgramPackage(form, { startDate, programId, label, meta } = {}) {
