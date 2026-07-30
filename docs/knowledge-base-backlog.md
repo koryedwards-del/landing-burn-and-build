@@ -57,6 +57,46 @@ Burn Engine: 32 cal = 8g protein; 18 cal = 2g fat per protein serving.
 
 ---
 
+## Burn Engine — grains & starches (separate)
+
+From `js/burnEngine.js` `computeServingsPhase`:
+
+| Slot | Cal/serving | Baked-in fat (TF) | Strict rule |
+|------|-------------|-------------------|-------------|
+| **Grains (G1)** | 56 → **14g carbs** | `G1 × 9` → **~1.0g fat** | **14/1** — fat ≤ 1.0g at 14g-carb portion |
+| **Starches (S2)** | 56 → **14g carbs** | `S2 × 4` → **~0.44g fat** | **14/0.44** — fat ≤ 0.44g at 14g-carb portion |
+
+Gram weight (now) = `1400 / carbs_per_100g` (current USDA, not 1982).  
+Handbook: bread **1 oz** per serving — measure slices.  
+Beans/rice count here as grains/starches, not protein (`grainsStarchesTipsPrintout.js`).
+
+**No 1982 grains/starches PDF yet** — audit uses current catalog + USDA + prep cross-ref.  
+Run: `node scripts/grains-14-1-audit.mjs` · `node scripts/starches-14-0-audit.mjs`
+
+### Grains — 14/1 × prep (2026-07-30)
+
+**KEEP (11):** Corn grits, Cream of Rice, Cream of Wheat, English muffin, Pasta regular, Rice cakes plain, Rice basmati/brown/jasmine/white, Tortilla corn (6-inch).
+
+**MAYBE (10):** Barley, Pita whole wheat, Bread sourdough/white, Bulgur, Corn flakes, Rice noodles, Rice wild, Shredded Wheat, Soba.
+
+**Math FAIL — prep staples (needs decision):**
+- **Oats, rolled** — 1.46g fat @ 14g carb (Fast Start breakfast)
+- **Bread, whole wheat** — 1.19g fat @ 14g carb (Fast Start toast)
+
+**Math FAIL — drop:** Amaranth, multigrain bread, Cheerios, saltines, egg noodles, quinoa.
+
+### Starches — 14/0.44 × prep (2026-07-30)
+
+**KEEP (6):** Beans black, Potato baked/boiled/red/Yukon gold, Sweet potato baked.
+
+**MAYBE (4):** Beans navy/pinto, Lentils, Yam cooked.
+
+**Math FAIL:** Chickpeas (1.33g), Corn sweet (0.77g), spaghetti/summer/hubbard/zucchini squash.
+
+**Pass but not prep rotation:** kidney/lima/cannellini beans, jicama, peas variants, plantain, pumpkin, rutabaga, parsnips, taro, water chestnuts, etc.
+
+---
+
 ## Draft Q&A — turkey breast vs ground turkey
 
 **Q: Can I use ground turkey instead of turkey breast?**
