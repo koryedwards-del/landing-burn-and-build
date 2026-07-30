@@ -7,6 +7,8 @@ import { FOODS_CATALOG_VERSION } from './assetVersion.js';
 export const SCHEMA_VERSION = '1.0.0';
 export { FOODS_CATALOG_VERSION };
 export const PROGRAM_DURATION_DAYS = 56;
+
+export function buildProgramPackage(form, { startDate, programId, label, meta } = {}) {
   const intake = profileFromForm(form);
   const plan = computePlan({
     lbm: intake.leanBodyMass,
