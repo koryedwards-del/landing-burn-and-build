@@ -8,7 +8,8 @@ Working notes from product exploration. Not user-facing copy yet.
 ## Protein list — trim direction
 
 - **Keep:** 1982 PDF proteins only (seminar sheet). No pork, bison, salmon, tilapia, steak cuts, generic 95% lean ground, etc. unless on PDF.
-- **Add / align:** `Beef, ground round` = seminar **Beef, round steak (ground)**, gram weight **24** (not guessed USDA).
+- **Add / align:** **Trimmed ground round** = seminar **Beef, round steak (ground)**. Catalog entry: `Beef, ground round`. Gram weight **24** (seminar tested, not guessed USDA).
+- **Butcher:** Not always pre-packaged on the shelf — you **ask the butcher to grind** trimmed round. Case sign (ground round $$ vs hamburger $) is the proof. Knowledge-base point, not grab-and-go hamburger.
 - **Dairy / whey:** Competitors’ biggest protein source — lives on **dairy column**, not protein sheet.
 - **Contest prep vs PDF:** Core overlap (chicken, turkey breast, eggs, white fish, seafood). Modern prep pushes ground turkey and tilapia — PDF intentionally different.
 
