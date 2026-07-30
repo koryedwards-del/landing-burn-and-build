@@ -71,12 +71,12 @@ const {
 
 const PLANNER_MODE_TITLES = {
   'fast-start': '🚀 Fast Start Menu Planner',
-  diy: '💪 Maintenance Menu Planner',
+  diy: '⚖️ Maintenance Menu Planner',
 };
 
 const PLANNER_MODE_NAV = {
   'fast-start': '4. 🚀 Menu planner',
-  diy: '4. 💪 Menu planner',
+  diy: '4. ⚖️ Menu planner',
 };
 
 const PLANNER_MODE_LEADS = {
