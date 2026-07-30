@@ -9,7 +9,7 @@ Working notes from product exploration. Not user-facing copy yet.
 
 - **Keep:** 1982 PDF proteins only (seminar sheet). No pork, bison, salmon, tilapia, steak cuts, generic 95% lean ground, etc. unless on PDF.
 - **Add / align:** **Trimmed ground round** = seminar **Beef, round steak (ground)**. Catalog entry: `Beef, ground round`. Gram weight **24** (seminar tested, not guessed USDA).
-- **Butcher:** Not always pre-packaged on the shelf — you **ask the butcher to grind** trimmed round. Case sign (ground round $$ vs hamburger $) is the proof. Knowledge-base point, not grab-and-go hamburger.
+- **Butcher:** You **have to ask the butcher to grind** trimmed round — not grab-and-go hamburger from the case. Case sign (ground round $$ vs hamburger $) is the proof.
 - **Dairy / whey:** Competitors’ biggest protein source — lives on **dairy column**, not protein sheet.
 - **Contest prep vs PDF:** Core overlap (chicken, turkey breast, eggs, white fish, seafood). Modern prep pushes ground turkey and tilapia — PDF intentionally different.
 
@@ -25,11 +25,13 @@ Working notes from product exploration. Not user-facing copy yet.
 
 ---
 
-## Draft Q&A — ground round vs hamburger
+## Draft Q&A — trimmed ground round vs hamburger
 
-**Q: Why ground round and not regular ground beef / hamburger?**
+**Q: Why trimmed ground round and not regular ground beef / hamburger?**
 
-**A (draft):** Ground round comes from the round primal only — a knowledgeable butcher and the case sign prove it (ground round $$ vs hamburger $). Hamburger can include different trim. Different grind = different fat = different portions. Read the sign.
+**A (draft):** Trimmed ground round is round steak, trimmed, ground from the round primal only — not generic hamburger trim. You **have to ask the butcher to grind it**; it is not the same as grabbing hamburger off the shelf. A knowledgeable butcher knows the difference; the case sign is the proof (ground round $$ vs hamburger $). Hamburger can include different trim and fat. Different grind = different fat = different portions.
+
+**1982 PDF name:** Beef, round steak (ground). **App catalog:** `Beef, ground round`.
 
 ---
 
@@ -46,7 +48,7 @@ Already in `data/proteinTipsPrintout.js`: *"Stick to the lean fish on this list.
 | Turkey breast, skinless cooked | — | ~2g / 100g | ~13–15% |
 | 93/7 ground turkey | 7% | ~8–11g / 100g | ~42–50% |
 | 95/5 lean ground beef | 5% | — | ~33–35% |
-| Ground round (USDA range) | 85–90% lean | 10–15% | ~55–65%+ |
+| Trimmed ground round (round primal, butcher grind) | 85–90% lean label range | 10–15% | ~55–65%+ |
 
 **Point:** "Lean" on the package ≠ lean for Burn & Build servings.
 

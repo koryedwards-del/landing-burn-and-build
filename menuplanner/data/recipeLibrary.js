@@ -298,7 +298,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Ground Round & Potato',
     profile: 'Classic',
-    caveat: 'Read the case — ground round and hamburger are different grinds. Boil potato; mash dry or eat baby reds whole.',
+    caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger. Boil potato; mash dry or eat baby reds whole.',
   }),
   meal('salmon-potato', [
     { slot: 'Protein', foodName: 'Salmon, Atlantic, baked' },
