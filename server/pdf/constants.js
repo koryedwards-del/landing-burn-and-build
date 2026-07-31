@@ -4,7 +4,8 @@ export const PDF_WATERMARK_OPACITY = 0.08;
 /** Full-color logo, centered — matches Print Shop HTML target (240px ≈ 180pt). */
 export const PDF_WATERMARK_SIZE_PT = 180;
 
-export const PDF_LOGO_REL = 'img/brand/bblogo1.png';
+/** Optimized for PDF embed (~40KB); full bblogo1.png is ~2MB and slows open/print. */
+export const PDF_LOGO_REL = 'img/brand/bblogo-pdf.jpg';
 
 /** Match generic sheet padding in plannerPrintStyles.js */
 export const PDF_MARGIN = {
@@ -24,11 +25,11 @@ export const PDF_HEADER = {
 };
 
 export const PDF_FAQ = {
-  questionSize: 8.75,
-  answerSize: 7.75,
-  itemGap: 8,
-  lineGap: 2.25,
-  questionAnswerGap: 2,
+  questionSize: 9.5,
+  answerSize: 8.5,
+  itemGap: 7,
+  lineGap: 2,
+  questionAnswerGap: 1.5,
 };
 
 export const PDF_VIEWS = new Set(['faq']);
