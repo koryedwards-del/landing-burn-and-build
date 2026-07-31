@@ -8,7 +8,7 @@ const MEAL_ASSET_BASE = '../menuplanner/assets/meals';
 
 const TEMPLATE_IMAGES = {
   'egg-substitute-oatmeal': `${MEAL_ASSET_BASE}/power-breakfast.jpg`,
-  'egg-substitute-toast': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
+  'egg-whites-bread': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
   'yogurt-oatmeal-blueberries': `${MEAL_ASSET_BASE}/oatmeal-bowl.jpg`,
   'chicken-rice-broccoli-lemon': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
   'chicken-rice-broccoli-cajun': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,

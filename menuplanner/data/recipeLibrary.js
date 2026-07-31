@@ -175,12 +175,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Classic',
     caveat: 'Oats are measured dry. Add water and salt to taste. Scramble egg substitute in a non-stick pan — PAM cooking spray is recommended to prevent sticking.',
   }),
-  meal('egg-substitute-toast', [
-    { slot: 'Protein', foodName: 'Egg substitute (liquid)' },
+  meal('egg-whites-bread', [
+    { slot: 'Protein', foodName: 'Egg whites' },
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
+    name: 'Egg Whites & Whole Wheat Bread',
     profile: 'Classic',
-    caveat: 'Scramble egg substitute dry in a non-stick pan. Bread without spread.',
+    caveat: 'Scramble egg whites in a non-stick pan — PAM cooking spray is recommended to prevent sticking. Bread plain — no butter, jam, or spread.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
