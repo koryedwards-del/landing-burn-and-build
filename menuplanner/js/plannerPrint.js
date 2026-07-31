@@ -41,7 +41,7 @@ const pdfBlobCache = new Map();
 const PDF_BLOB_CACHE_KEYS = {
   faq: 'faq',
   foodlist: 'foodlist',
-  bestresults: 'bestresults:v2',
+  bestresults: 'bestresults:v3',
 };
 
 function pdfBlobCacheKey(view) {
