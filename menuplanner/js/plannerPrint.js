@@ -505,10 +505,10 @@ async function openPdfDocument(view) {
   const titleEl = document.getElementById('pdf-view-title');
   const frame = document.getElementById('pdf-view-frame');
   const printBtn = document.getElementById('pdf-view-print');
-  const saveBtn = document.getElementById('pdf-view-save');
+  const closeBtn = document.getElementById('pdf-view-close');
   const errorEl = document.getElementById('pdf-view-error');
 
-  if (!dialog || !frame || !printBtn || !saveBtn) {
+  if (!dialog || !frame || !printBtn) {
     const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
     viewerUrl.searchParams.set('view', view);
     window.open(viewerUrl.href, '_blank');
@@ -519,7 +519,6 @@ async function openPdfDocument(view) {
     titleEl.textContent = PDF_VIEW_TITLES[view] || 'Document';
   }
   printBtn.disabled = true;
-  saveBtn.disabled = true;
   errorEl.hidden = true;
   errorEl.textContent = '';
   frame.removeAttribute('src');
@@ -549,7 +548,6 @@ async function openPdfDocument(view) {
     frame.dataset.filename = `burn-and-build-${view}.pdf`;
     frame.onload = () => {
       printBtn.disabled = false;
-      saveBtn.disabled = false;
     };
     frame.src = blobUrl;
   } catch (err) {
@@ -562,29 +560,16 @@ function initPdfViewDialog() {
   const dialog = document.getElementById('pdf-view-dialog');
   const frame = document.getElementById('pdf-view-frame');
   const printBtn = document.getElementById('pdf-view-print');
-  const saveBtn = document.getElementById('pdf-view-save');
   const closeBtn = document.getElementById('pdf-view-close');
-  if (!dialog || !frame || !printBtn || !saveBtn) return;
+  if (!dialog || !frame || !printBtn) return;
 
   printBtn.addEventListener('click', () => {
     try {
       frame.contentWindow?.focus();
       frame.contentWindow?.print();
     } catch (_) {
-      /* keep viewer open — no window.print fallback */
+      /* keep viewer open */
     }
-  });
-
-  saveBtn.addEventListener('click', () => {
-    const blobUrl = frame.dataset.blobUrl;
-    const filename = frame.dataset.filename || 'burn-and-build.pdf';
-    if (!blobUrl) return;
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   });
 
   closeBtn?.addEventListener('click', () => dialog.close());
@@ -598,7 +583,6 @@ function initPdfViewDialog() {
     }
     frame.removeAttribute('src');
     printBtn.disabled = true;
-    saveBtn.disabled = true;
   });
 }
 
