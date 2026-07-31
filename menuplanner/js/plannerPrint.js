@@ -1,4 +1,8 @@
-import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+import {
+  ASSET_VERSION as FALLBACK_ASSET_VERSION,
+  FOODS_CATALOG_VERSION,
+  PDF_PRINT_REVISIONS,
+} from '../../js/assetVersion.js';
 import { apiUrl } from '../../js/apiConfig.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
@@ -38,14 +42,22 @@ const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);
 /** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
 const pdfBlobCache = new Map();
 
-const PDF_BLOB_CACHE_KEYS = {
-  faq: 'faq',
-  foodlist: 'foodlist',
-  bestresults: 'bestresults:v3',
-};
+function pdfRevision(view) {
+  if (view === 'foodlist') return FOODS_CATALOG_VERSION;
+  return PDF_PRINT_REVISIONS[view] || ASSET_VERSION;
+}
 
 function pdfBlobCacheKey(view) {
-  return PDF_BLOB_CACHE_KEYS[view] || view;
+  return `${view}:${pdfRevision(view)}`;
+}
+
+function pdfFetchUrl(view, title) {
+  const params = new URLSearchParams({
+    view,
+    rev: pdfRevision(view),
+  });
+  if (title) params.set('title', title);
+  return apiUrl(`/api/print/pdf?${params}`);
 }
 
 function isPdfBlob(blob) {
@@ -392,9 +404,7 @@ async function openPdfDocument(view) {
   }
 
   try {
-    const res = await fetch(apiUrl(
-      `/api/print/pdf?view=${encodeURIComponent(view)}&title=${encodeURIComponent(docTitle)}`,
-    ));
+    const res = await fetch(pdfFetchUrl(view, docTitle), { cache: 'no-store' });
     if (!res.ok) {
       let message = 'Could not generate PDF.';
       try {

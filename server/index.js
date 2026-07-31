@@ -164,7 +164,8 @@ app.get('/api/print/pdf', async (req, res) => {
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
     if (isStaticPdfView(view)) {
-      res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+      // Avoid immutable — clients bust cache via ?rev= when PDF layout changes.
+      res.setHeader('Cache-Control', 'public, max-age=3600');
     } else {
       res.setHeader('Cache-Control', 'no-store');
     }

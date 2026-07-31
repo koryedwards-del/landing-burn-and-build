@@ -83,6 +83,7 @@
   <iframe class="pdf-frame" id="pdf-frame" title="PDF document"></iframe>
   <script type="module">
     import { apiUrl } from '../js/apiConfig.js';
+    import { PDF_PRINT_REVISIONS } from '../js/assetVersion.js';
 
     const VIEW_TITLES = {
       faq: 'Frequently Asked Questions',
@@ -132,7 +133,11 @@
     });
 
     try {
-      const res = await fetch(apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`));
+      const rev = PDF_PRINT_REVISIONS[view] || '1';
+      const res = await fetch(
+        apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}&rev=${encodeURIComponent(rev)}`),
+        { cache: 'no-store' },
+      );
       if (!res.ok) {
         let message = 'Could not generate PDF.';
         try {
