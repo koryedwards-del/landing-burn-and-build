@@ -1096,6 +1096,13 @@ body {
   color: var(--yellow);
 }
 
+.save-dialog__hint {
+  margin: -4px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
 .save-dialog__input {
   width: 100%;
   padding: 10px 12px;
