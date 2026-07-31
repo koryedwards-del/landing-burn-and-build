@@ -258,10 +258,11 @@ export const MEAL_TEMPLATES = [
   meal('tilapia-rice-broccoli', [
     { slot: 'Protein', foodName: 'Tilapia, baked' },
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    { slot: 'Veggie', foodName: 'Cauliflower, cooked' },
   ], {
+    name: 'Tilapia, Rice & Cauliflower',
     profile: 'Classic',
-    caveat: 'Bake tilapia plain. Same bowl structure as chicken — mild fish, same prep rhythm.',
+    caveat: 'Bake tilapia plain. Rice on the side; cauliflower steamed or roasted until tender.',
   }),
 
   // —— Hearty / dinner ——
