@@ -24,6 +24,14 @@ export const PDF_HEADER = {
   ruleGap: 10,
 };
 
+/** Shared palette — generic Print Shop documents. */
+export const PDF_COLORS = {
+  question: '#111111',
+  body: '#333333',
+  brand: '#888888',
+  rule: '#e8e8e8',
+};
+
 /** Shared Q&A typography — FAQ, For Best Results, food-list tips. */
 export const PDF_QA = {
   questionSize: 9.5,
@@ -33,17 +41,14 @@ export const PDF_QA = {
   questionAnswerGap: 1.5,
 };
 
-/** @deprecated Use PDF_QA */
-export const PDF_FAQ = PDF_QA;
-
 export const PDF_FOOD_LIST = {
-  columnTitleSize: 9,
+  columnTitleSize: PDF_QA.questionSize,
   columnTitleGap: 6,
   foodSize: 7,
   foodItemGap: 1,
   foodLineHeight: 8,
   columnGap: 16,
-  columnRuleWidth: 1.5,
+  columnRuleWidth: 1,
   tipsMinBlock: 24,
 };
 

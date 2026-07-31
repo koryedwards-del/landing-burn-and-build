@@ -1,21 +1,16 @@
-import PDFDocument from 'pdfkit';
-import { PDF_FOOD_LIST, PDF_QA } from './constants.js';
-import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
+import { PDF_COLORS, PDF_FOOD_LIST } from './constants.js';
+import {
+  addGenericSheet,
+  collectPdfBuffer,
+  createPortraitPdf,
+  drawQaItem,
+} from './draw.js';
 import {
   FOOD_LIST_PRINT_PAGES,
   foodListLabel,
   foodsForFoodListColumn,
   tipsForColumn,
 } from './foodListData.js';
-
-function collectPdfBuffer(doc) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    doc.on('data', (chunk) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
-  });
-}
 
 function columnLayout(box, columnCount) {
   const gap = PDF_FOOD_LIST.columnGap;
@@ -28,7 +23,7 @@ function columnLayout(box, columnCount) {
 
 function drawColumnRule(doc, x, yTop, yBottom) {
   doc
-    .strokeColor('#111111')
+    .strokeColor(PDF_COLORS.rule)
     .lineWidth(PDF_FOOD_LIST.columnRuleWidth)
     .moveTo(x, yTop)
     .lineTo(x, yBottom)
@@ -38,9 +33,9 @@ function drawColumnRule(doc, x, yTop, yBottom) {
 function drawColumnTitle(doc, title, x, y, width, { hidden = false } = {}) {
   if (hidden) return y;
   doc
-    .font('Helvetica-BoldOblique')
+    .font('Helvetica-Bold')
     .fontSize(PDF_FOOD_LIST.columnTitleSize)
-    .fillColor('#111111')
+    .fillColor(PDF_COLORS.question)
     .text(String(title || '').toUpperCase(), x, y, {
       width,
       align: 'center',
@@ -51,7 +46,7 @@ function drawColumnTitle(doc, title, x, y, width, { hidden = false } = {}) {
 
 function drawFoodNames(doc, foods, x, startY, width, bottomY) {
   let y = startY;
-  doc.font('Helvetica').fontSize(PDF_FOOD_LIST.foodSize).fillColor('#222222');
+  doc.font('Helvetica').fontSize(PDF_FOOD_LIST.foodSize).fillColor(PDF_COLORS.body);
 
   for (const food of foods) {
     if (y > bottomY - PDF_FOOD_LIST.foodLineHeight) break;
@@ -65,52 +60,29 @@ function drawFoodNames(doc, foods, x, startY, width, bottomY) {
 function drawTipsColumn(doc, qaItems, x, startY, width, bottomY) {
   let y = startY;
 
-  qaItems.forEach((item, index) => {
+  qaItems.forEach((item) => {
     if (y > bottomY - PDF_FOOD_LIST.tipsMinBlock) return;
-
-    doc
-      .font('Helvetica-Bold')
-      .fontSize(PDF_QA.questionSize)
-      .fillColor('#111111')
-      .text(item.q, x, y, { width, lineGap: PDF_QA.lineGap });
-
-    y = doc.y + PDF_QA.questionAnswerGap;
-
-    doc
-      .font('Helvetica')
-      .fontSize(PDF_QA.answerSize)
-      .fillColor('#333333')
-      .text(item.a, x, y, { width, lineGap: PDF_QA.lineGap });
-
-    y = doc.y + PDF_QA.itemGap;
-
-    if (index < qaItems.length - 1 && y < bottomY - 4) {
-      doc
-        .strokeColor('#bbbbbb')
-        .lineWidth(0.5)
-        .moveTo(x, y - PDF_QA.itemGap / 2)
-        .lineTo(x + width, y - PDF_QA.itemGap / 2)
-        .stroke();
-    }
+    y = drawQaItem(doc, {
+      question: item.q,
+      answer: item.a,
+      x,
+      y,
+      width,
+    });
   });
 
   return y;
 }
 
 function drawFoodListPage(doc, pageDef) {
-  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-  drawWatermark(doc);
-
-  const box = contentBox(doc);
-  const contentTop = drawGenericHeader(doc, 'Food List', box);
+  const { box, y: contentTop } = addGenericSheet(doc, 'Food List');
   const bottomY = box.bottom;
   const columnCount = pageDef.columnCount || pageDef.columns.length;
   const columns = columnLayout(box, columnCount);
 
   pageDef.columns.forEach((columnDef, index) => {
     const col = columns[index];
-    const drawRule = index > 0;
-    if (drawRule) {
+    if (index > 0) {
       drawColumnRule(doc, col.x - PDF_FOOD_LIST.columnGap / 2, contentTop - 4, bottomY);
     }
 
@@ -123,30 +95,13 @@ function drawFoodListPage(doc, pageDef) {
       return;
     }
 
-    drawFoodNames(
-      doc,
-      foodsForFoodListColumn(columnDef),
-      col.x,
-      y,
-      col.width,
-      bottomY,
-    );
+    drawFoodNames(doc, foodsForFoodListColumn(columnDef), col.x, y, col.width, bottomY);
   });
 }
 
 export async function renderFoodListPdf({ title } = {}) {
   const docTitle = title || 'B&B - Food List';
-  const doc = new PDFDocument({
-    size: 'LETTER',
-    layout: 'portrait',
-    margin: 0,
-    autoFirstPage: false,
-    info: {
-      Title: docTitle,
-      Author: 'Burn & Build Diet',
-    },
-  });
-
+  const doc = createPortraitPdf({ title: docTitle });
   const bufferPromise = collectPdfBuffer(doc);
 
   FOOD_LIST_PRINT_PAGES.forEach((pageDef) => {

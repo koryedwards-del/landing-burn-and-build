@@ -1,11 +1,11 @@
 /** Single source for static asset cache busting (HTML stamped at build; JS uses for dynamic URLs). */
-export const ASSET_VERSION = '233';
+export const ASSET_VERSION = '234';
 
 /** Bump when data/foods.json changes so browsers refetch the catalog. */
-export const FOODS_CATALOG_VERSION = '2026.07.31c';
+export const FOODS_CATALOG_VERSION = '2026.07.31d';
 
 /** Bump when a static Print Shop PDF body changes — appended as ?rev= on API fetch. */
 export const PDF_PRINT_REVISIONS = {
-  faq: '1',
-  bestresults: '4',
+  faq: '2',
+  bestresults: '5',
 };

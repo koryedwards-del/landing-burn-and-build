@@ -1,15 +1,40 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import PDFDocument from 'pdfkit';
 import {
+  PDF_COLORS,
   PDF_HEADER,
   PDF_LOGO_REL,
   PDF_MARGIN,
+  PDF_QA,
   PDF_WATERMARK_OPACITY,
   PDF_WATERMARK_SIZE_PT,
 } from './constants.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const logoPath = path.join(root, PDF_LOGO_REL);
+
+export function collectPdfBuffer(doc) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+  });
+}
+
+export function createPortraitPdf({ title, author = 'Burn & Build Diet' } = {}) {
+  return new PDFDocument({
+    size: 'LETTER',
+    layout: 'portrait',
+    margin: 0,
+    autoFirstPage: false,
+    info: {
+      Title: title || 'Burn & Build Diet',
+      Author: author,
+    },
+  });
+}
 
 export function contentBox(doc) {
   const { width, height } = doc.page;
@@ -22,41 +47,13 @@ export function contentBox(doc) {
   };
 }
 
-/** Manual pagination — reuse a trailing empty page instead of inserting a blank. */
-export function beginPortraitSheet(doc) {
-  const range = doc.bufferedPageRange();
-  if (range.count === 0) {
-    doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-    return;
-  }
-
-  doc.switchToPage(range.start + range.count - 1);
-  const box = contentBox(doc);
-  if (doc.y <= box.y + 1) {
-    return;
-  }
-
+/** Logo watermark + generic header — one sheet in the Print Shop family. */
+export function addGenericSheet(doc, headerTitle) {
   doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-}
-
-/** Fixed-layout text — height cap prevents PDFKit from auto-inserting extra pages. */
-export function drawClampedText(doc, text, x, y, width, bottomY, options = {}) {
-  const {
-    font,
-    fontSize,
-    fillColor,
-    lineGap = 0,
-    characterSpacing,
-  } = options;
-
-  if (font) doc.font(font);
-  if (fontSize) doc.fontSize(fontSize);
-  if (fillColor) doc.fillColor(fillColor);
-
-  const height = Math.max(0, bottomY - y);
-  const textOpts = { width, lineGap, height };
-  if (characterSpacing != null) textOpts.characterSpacing = characterSpacing;
-  doc.text(String(text), x, y, textOpts);
+  drawWatermark(doc);
+  const box = contentBox(doc);
+  const y = drawGenericHeader(doc, headerTitle, box);
+  return { box, y };
 }
 
 export function drawWatermark(doc) {
@@ -83,7 +80,7 @@ export function drawGenericHeader(doc, title, box = contentBox(doc)) {
   doc
     .font('Helvetica-Bold')
     .fontSize(PDF_HEADER.brandSize)
-    .fillColor('#888888')
+    .fillColor(PDF_COLORS.brand)
     .text('BURN & BUILD DIET', textX, textY, {
       width: textWidth,
       characterSpacing: 1.6,
@@ -93,7 +90,7 @@ export function drawGenericHeader(doc, title, box = contentBox(doc)) {
   doc
     .font('Helvetica-Bold')
     .fontSize(PDF_HEADER.titleSize)
-    .fillColor('#111111')
+    .fillColor(PDF_COLORS.question)
     .text(String(title || '').toUpperCase(), textX, textY, {
       width: textWidth,
       lineGap: 0,
@@ -101,12 +98,47 @@ export function drawGenericHeader(doc, title, box = contentBox(doc)) {
 
   const headerBottom = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + PDF_HEADER.ruleGap;
   doc
-    .strokeColor('#e8e8e8')
+    .strokeColor(PDF_COLORS.rule)
     .lineWidth(1)
     .moveTo(box.x, headerBottom)
     .lineTo(box.x + box.width, headerBottom)
     .stroke();
 
-  doc.fillColor('#111111');
+  doc.fillColor(PDF_COLORS.question);
   return headerBottom + PDF_HEADER.gap;
+}
+
+/**
+ * Shared Q&A block — FAQ, For Best Results, and food-list tips.
+ * @returns {number} next y position
+ */
+export function drawQaItem(
+  doc,
+  { question, answer, x, y, width },
+  { questionNumber, uppercaseQuestion = false } = {},
+) {
+  const prefix = questionNumber != null ? `${questionNumber}. ` : '';
+  const questionText = `${prefix}${question}`;
+  const displayQuestion = uppercaseQuestion ? questionText.toUpperCase() : questionText;
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(PDF_QA.questionSize)
+    .fillColor(PDF_COLORS.question)
+    .text(displayQuestion, x, y, {
+      width,
+      lineGap: 0,
+    });
+
+  const answerY = doc.y + PDF_QA.questionAnswerGap;
+  doc
+    .font('Helvetica')
+    .fontSize(PDF_QA.answerSize)
+    .fillColor(PDF_COLORS.body)
+    .text(answer, x, answerY, {
+      width,
+      lineGap: PDF_QA.lineGap,
+    });
+
+  return doc.y + PDF_QA.itemGap;
 }

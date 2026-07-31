@@ -1,67 +1,28 @@
-import PDFDocument from 'pdfkit';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
-import { PDF_QA } from './constants.js';
-import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
-
-function collectPdfBuffer(doc) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    doc.on('data', (chunk) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
-  });
-}
-
-function drawFaqItem(doc, item, questionNumber, x, y, width) {
-  const question = `${questionNumber}. ${item.q}`.toUpperCase();
-
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(PDF_QA.questionSize)
-    .fillColor('#111111')
-    .text(question, x, y, {
-      width,
-      lineGap: 0,
-    });
-
-  const answerY = doc.y + PDF_QA.questionAnswerGap;
-  doc
-    .font('Helvetica')
-    .fontSize(PDF_QA.answerSize)
-    .fillColor('#333333')
-    .text(item.a, x, answerY, {
-      width,
-      lineGap: PDF_QA.lineGap,
-    });
-
-  return doc.y + PDF_QA.itemGap;
-}
+import {
+  addGenericSheet,
+  collectPdfBuffer,
+  createPortraitPdf,
+  drawQaItem,
+} from './draw.js';
 
 export async function renderFaqPdf({ title } = {}) {
   const docTitle = title || 'B&B - Frequently Asked Questions';
-  const doc = new PDFDocument({
-    size: 'LETTER',
-    margin: 0,
-    autoFirstPage: false,
-    info: {
-      Title: docTitle,
-      Author: 'Burn & Build Diet',
-    },
-  });
-
+  const doc = createPortraitPdf({ title: docTitle });
   const bufferPromise = collectPdfBuffer(doc);
   let questionNumber = 0;
 
   HANDBOOK_FAQ_PRINT_PAGES.forEach((pageDef) => {
-    doc.addPage({ size: 'LETTER', margin: 0 });
-    drawWatermark(doc);
-
-    const box = contentBox(doc);
-    let y = drawGenericHeader(doc, 'Frequently Asked Questions');
+    const { box, y: startY } = addGenericSheet(doc, 'Frequently Asked Questions');
+    let y = startY;
 
     pageDef.items.forEach((item) => {
       questionNumber += 1;
-      y = drawFaqItem(doc, item, questionNumber, box.x, y, box.width);
+      y = drawQaItem(
+        doc,
+        { question: item.q, answer: item.a, x: box.x, y, width: box.width },
+        { questionNumber, uppercaseQuestion: true },
+      );
     });
   });
 
