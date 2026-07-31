@@ -897,7 +897,7 @@ function renderMealIdeaCard(meal) {
     ? `<p class="recipe-card__profile">${escapeHtml(meal.profile)}</p>`
     : '';
   const caveatHtml = caveatText
-    ? `<p class="recipe-card__caveat">${escapeHtml(caveatText)}</p>`
+    ? `<p class="recipe-card__caveat-text">${escapeHtml(caveatText)}</p>`
     : '';
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
@@ -909,25 +909,25 @@ function renderMealIdeaCard(meal) {
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
-        <div class="recipe-card__col recipe-card__col--plate">
-          <img
-            class="recipe-card__img"
-            src="${escapeHtml(imgUrl)}"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
+        <div class="recipe-card__head">
+          <div class="recipe-card__col recipe-card__col--plate">
+            <img
+              class="recipe-card__img"
+              src="${escapeHtml(imgUrl)}"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="recipe-card__col recipe-card__col--title">
+            <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+            ${profileHtml}
+          </div>
+          <div class="recipe-card__col recipe-card__col--foods">
+            ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
+          </div>
         </div>
-        <div class="recipe-card__col recipe-card__col--title">
-          <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-          ${profileHtml}
-        </div>
-        <div class="recipe-card__col recipe-card__col--foods">
-          ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
-        </div>
-        <div class="recipe-card__col recipe-card__col--caveat">
-          ${caveatHtml}
-        </div>
+        ${caveatHtml ? `<div class="recipe-card__caveat">${caveatHtml}</div>` : ''}
       </button>
     </article>
   `;
