@@ -221,9 +221,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Teriyaki',
     caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Peppers crisp-tender.',
   }),
-  meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
+  meal('chicken-rice-broccoli-bbq', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Asparagus, cooked' },
+  ], {
     profile: 'BBQ',
-    caveat: 'Dry rub — paprika, garlic powder, chili. No sauce. Broccoli roasted or steamed.',
+    caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Asparagus roasted or steamed.',
   }),
 
   // —— Variations on the classic bowl ——
