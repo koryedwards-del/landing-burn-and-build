@@ -4,173 +4,69 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Print Shop PDF</title>
-  <link rel="stylesheet" href="../css/tokens.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: "Open Sans", system-ui, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
       background: #121212;
       color: #f5f5f5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
-    .pdf-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      padding: 12px 16px;
-      background: #1e1e1e;
-      border-bottom: 1px solid #333;
-    }
-    .pdf-toolbar__title {
-      font-family: Oswald, system-ui, sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--logo-burn, #fdc500);
-    }
-    .pdf-toolbar__status {
-      width: 100%;
-      font-size: 0.82rem;
-      color: #ff8a80;
-    }
-    .pdf-toolbar__actions {
-      display: flex;
-      gap: 10px;
-      margin-left: auto;
-    }
-    .pdf-toolbar__btn {
-      appearance: none;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background: #2a2a2a;
-      color: #fff;
-      font: inherit;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 10px 18px;
-      cursor: pointer;
-    }
-    .pdf-toolbar__btn--primary {
-      background: var(--logo-burn, #fdc500);
-      border-color: var(--logo-burn, #fdc500);
-      color: #111;
-    }
-    .pdf-toolbar__btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-    .pdf-frame {
-      flex: 1 1 auto;
-      width: 100%;
-      min-height: 0;
-      border: 0;
-      background: #525659;
-    }
+    p { margin: 0; padding: 16px; text-align: center; max-width: 28rem; line-height: 1.5; }
+    .error { color: #ff8a80; }
   </style>
 </head>
 <body>
-  <div class="pdf-toolbar">
-    <p class="pdf-toolbar__title" id="pdf-title">Print Shop</p>
-    <div class="pdf-toolbar__actions">
-      <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print</button>
-    </div>
-    <p class="pdf-toolbar__status" id="pdf-status" hidden></p>
-  </div>
-  <iframe class="pdf-frame" id="pdf-frame" title="PDF document"></iframe>
+  <p id="status">Opening PDF…</p>
   <script type="module">
     import { apiUrl } from '../js/apiConfig.js';
-    import { PDF_PRINT_REVISIONS } from '../js/assetVersion.js';
-
-    const VIEW_TITLES = {
-      faq: 'Frequently Asked Questions',
-      foodlist: 'Food List',
-      bestresults: 'For Best Results',
-      week: 'Weekly Meal Plan',
-      shopping: 'Grocery List',
-    };
+    import { FOODS_CATALOG_VERSION, PDF_PRINT_REVISIONS } from '../js/assetVersion.js';
 
     const PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
-
-    const view = new URLSearchParams(window.location.search).get('view') || 'faq';
-    const shortTitle = VIEW_TITLES[view] || 'Document';
-    const docTitle = `B&B - ${shortTitle}`;
-    document.getElementById('pdf-title').textContent = docTitle;
-    document.title = docTitle;
-
-    const statusEl = document.getElementById('pdf-status');
-    const frame = document.getElementById('pdf-frame');
-    const printBtn = document.getElementById('pdf-print');
+    const statusEl = document.getElementById('status');
 
     function showError(message) {
       statusEl.textContent = message;
-      statusEl.hidden = false;
+      statusEl.className = 'error';
     }
 
-    function printPdfBlobUrl(url) {
-      const printWin = window.open(url, '_blank');
-      if (!printWin) return false;
-      const runPrint = () => {
-        try {
-          printWin.focus();
-          printWin.print();
-        } catch (_) { /* ignore */ }
-      };
-      printWin.addEventListener('load', runPrint);
-      setTimeout(runPrint, 800);
-      return true;
-    }
-
-    function printLoadedPdfFrame() {
-      try {
-        const frameWin = frame.contentWindow;
-        if (frameWin && frame.src) {
-          frameWin.focus();
-          frameWin.print();
-          return true;
-        }
-      } catch (_) { /* fall through */ }
-      const pdfBlobUrl = frame.dataset.pdfBlobUrl;
-      return pdfBlobUrl ? printPdfBlobUrl(pdfBlobUrl) : false;
-    }
-
-    printBtn.addEventListener('click', () => {
-      printLoadedPdfFrame();
-    });
-
-    frame.addEventListener('load', () => {
-      printBtn.disabled = false;
-    });
+    const view = new URLSearchParams(window.location.search).get('view') || 'faq';
 
     if (PERSONALIZED_VIEWS.has(view)) {
       showError('Open Print Shop from your menu planner to generate this document.');
-    } else try {
-      const rev = PDF_PRINT_REVISIONS[view] || '1';
-      const params = new URLSearchParams({ view, rev, title: docTitle });
-      const res = await fetch(
-        apiUrl(`/api/print/pdf?${params}`),
-        { cache: 'no-store' },
-      );
-      if (!res.ok) {
-        let message = 'Could not generate PDF.';
-        try {
-          const body = await res.json();
-          if (body?.message) message = body.message;
-        } catch (_) { /* ignore */ }
-        showError(message);
-        throw new Error(message);
-      }
+    } else {
+      try {
+        const rev = view === 'foodlist' ? FOODS_CATALOG_VERSION : (PDF_PRINT_REVISIONS[view] || '1');
+        const params = new URLSearchParams({ view, rev });
+        const title = new URLSearchParams(window.location.search).get('title');
+        if (title) params.set('title', title);
 
-      const blob = await res.blob();
-      const pdfBlobUrl = URL.createObjectURL(blob);
-      frame.dataset.pdfBlobUrl = pdfBlobUrl;
-      frame.src = `${pdfBlobUrl}#toolbar=0&navpanes=0`;
-    } catch (err) {
-      if (statusEl.hidden) {
-        showError(err.message || 'Could not load PDF.');
+        const res = await fetch(apiUrl(`/api/print/pdf?${params}`), { cache: 'no-store' });
+        if (!res.ok) {
+          let message = 'Could not generate PDF.';
+          try {
+            const body = await res.json();
+            if (body?.message) message = body.message;
+          } catch (_) { /* ignore */ }
+          showError(message);
+          throw new Error(message);
+        }
+
+        const blob = await res.blob();
+        const header = await blob.slice(0, 5).text();
+        if (!header.startsWith('%PDF-')) {
+          showError('Could not load PDF.');
+          throw new Error('Invalid PDF');
+        }
+
+        const pdfUrl = URL.createObjectURL(blob);
+        window.location.replace(pdfUrl);
+      } catch (err) {
+        if (!statusEl.classList.contains('error')) {
+          showError(err.message || 'Could not load PDF.');
+        }
       }
     }
   </script>
