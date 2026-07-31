@@ -22,6 +22,7 @@ const FOOD_SHORT = {
   'Turkey breast': 'Turkey',
   'Tuna, canned in water': 'Tuna',
   'Tilapia, baked': 'Tilapia',
+  'Shrimp, steamed': 'Shrimp',
   'Beans, black': 'Black Beans',
   'Rice, basmati': 'Rice',
   'Tortilla, corn (6-inch)': 'Tortilla',
@@ -31,7 +32,7 @@ const FOOD_SHORT = {
   'Green beans, cooked': 'Green Beans',
   'Asparagus, cooked': 'Asparagus',
   'Spinach, cooked': 'Spinach',
-  'Peppers, red bell, cooked': 'Peppers',
+  'Peppers, red bell, cooked': 'Bell Peppers',
   'Egg whites': 'Egg Whites',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
@@ -213,13 +214,16 @@ export const MEAL_TEMPLATES = [
     profile: 'Cajun',
     caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Green beans steamed; rice cooked separately.',
   }),
-  meal('chicken-rice-broccoli-teriyaki', [
-    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+  meal('shrimp-stir-fry-rice', [
+    { slot: 'Protein', foodName: 'Shrimp, steamed' },
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    { slot: 'Veggie', foodName: 'Mushrooms, white, cooked' },
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
-    profile: 'Teriyaki',
-    caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Peppers crisp-tender.',
+    name: 'Shrimp Stir-Fry',
+    profile: 'Stir-fry',
+    caveat: 'PAM cooking spray is recommended to prevent sticking. Stir-fry shrimp with broccoli, mushrooms, and red bell peppers in a hot non-stick pan until the shrimp turn pink and are cooked through. Rice cooked separately.',
   }),
   meal('chicken-rice-broccoli-bbq', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
