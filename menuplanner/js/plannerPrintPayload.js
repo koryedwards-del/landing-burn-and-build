@@ -1,7 +1,7 @@
 /** Planner print payloads — client builds structured data for server PDF renderers. */
 
 import { formatPrintDateTime, programClientName } from '../../js/programBridgeUi.js';
-import { printDocumentTitle } from './plannerPrintShell.js';
+import { printDocumentTitle } from './printShopConfig.js';
 import {
   DAY_SLOTS,
   WEEK_DAYS,

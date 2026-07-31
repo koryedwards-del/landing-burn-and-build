@@ -8,7 +8,7 @@ import {
 
 /**
  * Burn & Build Print Shop PDF creator.
- * Owns document lifecycle, sheet headers, and pagination helpers.
+ * Owns document lifecycle and sheet headers for all five documents.
  */
 export class PrintPdfCreator {
   #doc;
@@ -47,18 +47,6 @@ export class PrintPdfCreator {
       preparedAt,
       layout,
     });
-  }
-
-  /**
-   * Advance to a new sheet when content will not fit.
-   * @returns {{ y: number, sheet: object }}
-   */
-  paginate({ y, bottom, needed, newSheet }) {
-    if (y + needed <= bottom) {
-      return { y, sheet: null };
-    }
-    const sheet = newSheet();
-    return { y: sheet.y, sheet };
   }
 
   drawEmptyMessage(box, y, message) {

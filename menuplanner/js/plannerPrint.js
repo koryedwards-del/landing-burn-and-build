@@ -4,14 +4,14 @@ import {
   PDF_PRINT_REVISIONS,
 } from '../../js/assetVersion.js';
 import { apiUrl } from '../../js/apiConfig.js';
-import { printDocumentTitle } from './plannerPrintShell.js';
+import { printDocumentTitle } from './printShopConfig.js';
 import { buildPlannerPrintPayload } from './plannerPrintPayload.js';
 import { persistPlannerToProgram, state } from './plannerState.js';
 
-/** Filled from live planner state via POST payload — not cacheable. */
+const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults', 'week', 'shopping']);
 const PDF_PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
 
-/** In-memory blob cache for static PDFs — avoids repeat network on reopen. */
+/** In-memory blob cache for static PDFs. */
 const pdfBlobCache = new Map();
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
@@ -26,10 +26,7 @@ function pdfBlobCacheKey(view) {
 }
 
 function pdfFetchUrl(view, title) {
-  const params = new URLSearchParams({
-    view,
-    rev: pdfRevision(view),
-  });
+  const params = new URLSearchParams({ view, rev: pdfRevision(view) });
   if (title) params.set('title', title);
   return apiUrl(`/api/print/pdf?${params}`);
 }
@@ -37,26 +34,15 @@ function pdfFetchUrl(view, title) {
 async function fetchPrintPdf(view, title) {
   if (PDF_PERSONALIZED_VIEWS.has(view)) {
     const payload = buildPlannerPrintPayload(view);
-    if (!payload) {
-      throw new Error('Could not build print payload.');
-    }
+    if (!payload) throw new Error('Could not build print payload.');
     return fetch(apiUrl('/api/print/pdf'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
-      body: JSON.stringify({
-        ...payload,
-        title: title || payload.title,
-      }),
+      body: JSON.stringify({ ...payload, title: title || payload.title }),
     });
   }
-
   return fetch(pdfFetchUrl(view, title), { cache: 'no-store' });
-}
-
-function isPdfBlob(blob) {
-  if (!blob || blob.size < 5) return false;
-  return blob.type === 'application/pdf' || blob.type === '';
 }
 
 async function readPdfHeader(blob) {
@@ -84,14 +70,16 @@ async function loadPdfBlob(view, title) {
   }
 
   const blob = await res.blob();
-  if (!isPdfBlob(blob) || !(await readPdfHeader(blob))) {
+  if (!blob?.size || blob.type !== 'application/pdf' && blob.type !== '') {
+    throw new Error('Could not load PDF.');
+  }
+  if (!(await readPdfHeader(blob))) {
     throw new Error('Could not load PDF.');
   }
 
   if (!PDF_PERSONALIZED_VIEWS.has(view)) {
     pdfBlobCache.set(cacheKey, blob);
   }
-
   return blob;
 }
 
@@ -119,8 +107,9 @@ function showPdfInPrintTab(blob, printWin) {
 }
 
 async function printPlannerDocument(view, printWin) {
-  persistPlannerToProgram({ immediate: true });
+  if (!PDF_VIEWS.has(view)) return;
 
+  persistPlannerToProgram({ immediate: true });
   const docTitle = printDocumentTitle(view, state.programPackage);
 
   if (!printWin || printWin.closed) {
@@ -136,9 +125,7 @@ async function printPlannerDocument(view, printWin) {
     }
     showPdfInPrintTab(blob, printWin);
   } catch (err) {
-    if (!printWin.closed) {
-      printWin.close();
-    }
+    if (!printWin.closed) printWin.close();
     window.alert(err.message || 'Could not open PDF.');
   }
 }
@@ -154,10 +141,9 @@ function initPrintChoiceDialog() {
 
   dialog.querySelectorAll('[data-print-view]').forEach((button) => {
     button.addEventListener('click', () => {
-      const view = button.dataset.printView;
       const printWin = openPrintTab();
       dialog.close();
-      void printPlannerDocument(view, printWin);
+      void printPlannerDocument(button.dataset.printView, printWin);
     });
   });
 }

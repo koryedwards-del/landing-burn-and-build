@@ -7,7 +7,7 @@ export const PDF_WATERMARK_SIZE_PT = 180;
 /** Optimized for PDF embed (~40KB); full bblogo1.png is ~2MB and slows open/print. */
 export const PDF_LOGO_REL = 'img/brand/bblogo-pdf.jpg';
 
-/** Match generic sheet padding in plannerPrintStyles.js */
+/** Match Print Shop sheet padding (0.35in vertical, 0.44in horizontal). */
 export const PDF_MARGIN = {
   top: 0.35 * 72,
   bottom: 0.35 * 72,
