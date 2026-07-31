@@ -60,21 +60,6 @@ const PDF_VIEW_TITLES = {
   shopping: 'Grocery List',
 };
 
-function buildPdfPreviewShellHtml(pdfBlobUrl, title) {
-  const safeTitle = escapeHtml(title);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>${safeTitle}</title>
-<style>html,body{margin:0;height:100%;} embed{display:block;width:100%;height:100%;}</style>
-</head>
-<body>
-<embed type="application/pdf" src="${pdfBlobUrl}">
-</body>
-</html>`;
-}
-
 function pdfFilenameFromTitle(title, view) {
   const base = String(title || PDF_VIEW_TITLES[view] || view)
     .replace(/[^\w\s.-]/g, '')
@@ -558,23 +543,20 @@ async function openPdfDocument(view) {
   if (loadingEl) loadingEl.hidden = false;
   frame.removeAttribute('src');
   delete frame.dataset.pdfBlobUrl;
-  delete frame.dataset.shellBlobUrl;
 
   dialog.showModal();
 
   function showPdfBlob(blob) {
     const pdfBlobUrl = URL.createObjectURL(blob);
-    const shellHtml = buildPdfPreviewShellHtml(pdfBlobUrl, docTitle);
-    const shellBlobUrl = URL.createObjectURL(new Blob([shellHtml], { type: 'text/html' }));
     frame.dataset.pdfBlobUrl = pdfBlobUrl;
-    frame.dataset.shellBlobUrl = shellBlobUrl;
     frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
     frame.onload = () => {
       if (loadingEl) loadingEl.hidden = true;
       frame.hidden = false;
       printBtn.disabled = false;
     };
-    frame.src = shellBlobUrl;
+    // Load PDF directly — HTML embed wrappers only print the visible page.
+    frame.src = pdfBlobUrl;
   }
 
   const cachedBlob = pdfBlobCache.get(view);
@@ -631,11 +613,8 @@ function initPdfViewDialog() {
 
   dialog.addEventListener('close', () => {
     const pdfBlobUrl = frame.dataset.pdfBlobUrl;
-    const shellBlobUrl = frame.dataset.shellBlobUrl;
     if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
-    if (shellBlobUrl) URL.revokeObjectURL(shellBlobUrl);
     delete frame.dataset.pdfBlobUrl;
-    delete frame.dataset.shellBlobUrl;
     delete frame.dataset.filename;
     frame.removeAttribute('src');
     frame.hidden = false;
