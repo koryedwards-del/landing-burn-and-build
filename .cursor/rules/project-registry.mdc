@@ -42,6 +42,6 @@ Five print documents, **two header templates**:
 | For Best Results | `data/forBestResultsPrintout.js` |
 | FAQ | `data/handbookFaqPrintout.js` |
 
-**Print Shop PDF pipeline:** `server/pdf/` (PDFKit via `PrintPdfCreator`) renders all five documents. Static docs (food list, For Best Results, FAQ) — `GET /api/print/pdf`. Personalized docs (weekly, grocery) — `POST /api/print/pdf` with payload from `menuplanner/js/plannerPrintPayload.js`. Client opens the PDF in a new browser tab; no HTML print path.
+**Print Shop PDF pipeline:** View registry in `js/printShopViews.js`. Server: `server/pdf/` (PDFKit via `PrintPdfCreator`). Client: `printShopClient.js` (fetch), `printShopDelivery.js` (new tab), `plannerPrintPayload.js` (planner data). Static docs — `GET /api/print/pdf`. Personalized docs — `POST /api/print/pdf`. Verify: `npm run verify:pdf`.
 
 **Deprecated:** `pwa-burn-and-build` (archived), `gettheburnandbuildapp.com`, `/myplan/` phone app.

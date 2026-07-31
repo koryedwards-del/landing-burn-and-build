@@ -1,4 +1,13 @@
 /** Shared Print Shop PDF settings — tune watermark opacity here. */
+export { PRINT_SHOP_VIEW_SET as PDF_VIEWS } from '../../js/printShopViews.js';
+export {
+  PRINT_SHOP_PERSONALIZED_VIEW_SET as PDF_PERSONALIZED_VIEWS,
+  PRINT_SHOP_STATIC_BODY_VIEW_SET as STATIC_PDF_BODY_VIEWS,
+  isPersonalizedPrintShopView as isPersonalizedPdfView,
+  isPrintShopView as isPdfView,
+  isStaticPrintShopBody as isStaticPdfBodyView,
+} from '../../js/printShopViews.js';
+
 export const PDF_WATERMARK_OPACITY = 0.08;
 
 /** Full-color logo, centered — matches Print Shop HTML target (240px ≈ 180pt). */
@@ -75,8 +84,3 @@ export const PDF_SHOPPING = {
   sectionGap: 14,
   rowPadY: 4,
 };
-
-export const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults', 'week', 'shopping']);
-
-/** Views filled from client POST payload (not cacheable). */
-export const PDF_PERSONALIZED_VIEWS = new Set(['week', 'shopping']);

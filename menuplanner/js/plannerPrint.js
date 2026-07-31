@@ -1,115 +1,17 @@
+import { isPrintShopView } from '../../js/printShopViews.js';
+import { assertPrintShopView, printDocumentTitle } from './printShopConfig.js';
+import { loadPrintPdfBlob } from './printShopClient.js';
 import {
-  ASSET_VERSION as FALLBACK_ASSET_VERSION,
-  FOODS_CATALOG_VERSION,
-  PDF_PRINT_REVISIONS,
-} from '../../js/assetVersion.js';
-import { apiUrl } from '../../js/apiConfig.js';
-import { printDocumentTitle } from './printShopConfig.js';
-import { buildPlannerPrintPayload } from './plannerPrintPayload.js';
+  deliverPrintPdfToTab,
+  openPrintTab,
+  showPrintTabError,
+} from './printShopDelivery.js';
 import { persistPlannerToProgram, state } from './plannerState.js';
 
-const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults', 'week', 'shopping']);
-const PDF_PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
-
-/** In-memory blob cache for static PDFs. */
-const pdfBlobCache = new Map();
-
-const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
-
-function pdfRevision(view) {
-  if (view === 'foodlist') return FOODS_CATALOG_VERSION;
-  return PDF_PRINT_REVISIONS[view] || ASSET_VERSION;
-}
-
-function pdfBlobCacheKey(view) {
-  return `${view}:${pdfRevision(view)}`;
-}
-
-function pdfFetchUrl(view, title) {
-  const params = new URLSearchParams({ view, rev: pdfRevision(view) });
-  if (title) params.set('title', title);
-  return apiUrl(`/api/print/pdf?${params}`);
-}
-
-async function fetchPrintPdf(view, title) {
-  if (PDF_PERSONALIZED_VIEWS.has(view)) {
-    const payload = buildPlannerPrintPayload(view);
-    if (!payload) throw new Error('Could not build print payload.');
-    return fetch(apiUrl('/api/print/pdf'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-      body: JSON.stringify({ ...payload, title: title || payload.title }),
-    });
-  }
-  return fetch(pdfFetchUrl(view, title), { cache: 'no-store' });
-}
-
-async function readPdfHeader(blob) {
-  const header = await blob.slice(0, 5).text();
-  return header.startsWith('%PDF-');
-}
-
-async function loadPdfBlob(view, title) {
-  const cacheKey = pdfBlobCacheKey(view);
-  if (!PDF_PERSONALIZED_VIEWS.has(view)) {
-    const cached = pdfBlobCache.get(cacheKey);
-    if (cached) return cached;
-  }
-
-  const res = await fetchPrintPdf(view, title);
-  if (!res.ok) {
-    let message = 'Could not generate PDF.';
-    try {
-      const body = await res.json();
-      if (body?.message) message = body.message;
-    } catch (_) {
-      /* ignore */
-    }
-    throw new Error(message);
-  }
-
-  const blob = await res.blob();
-  if (!blob?.size || blob.type !== 'application/pdf' && blob.type !== '') {
-    throw new Error('Could not load PDF.');
-  }
-  if (!(await readPdfHeader(blob))) {
-    throw new Error('Could not load PDF.');
-  }
-
-  if (!PDF_PERSONALIZED_VIEWS.has(view)) {
-    pdfBlobCache.set(cacheKey, blob);
-  }
-  return blob;
-}
-
-/** Must run synchronously inside the Print Shop button click handler. */
-function openPrintTab() {
-  return window.open('about:blank', '_blank');
-}
-
-function showPdfInPrintTab(blob, printWin) {
-  const url = URL.createObjectURL(blob);
-
-  const runPrint = () => {
-    try {
-      printWin.focus();
-      printWin.print();
-    } catch (_) {
-      /* user can print from the PDF tab */
-    }
-  };
-
-  printWin.location.replace(url);
-  printWin.addEventListener('load', runPrint, { once: true });
-  setTimeout(runPrint, 800);
-  setTimeout(() => URL.revokeObjectURL(url), 120_000);
-}
-
 async function printPlannerDocument(view, printWin) {
-  if (!PDF_VIEWS.has(view)) return;
-
+  assertPrintShopView(view);
   persistPlannerToProgram({ immediate: true });
+
   const docTitle = printDocumentTitle(view, state.programPackage);
 
   if (!printWin || printWin.closed) {
@@ -118,14 +20,17 @@ async function printPlannerDocument(view, printWin) {
   }
 
   try {
-    const blob = await loadPdfBlob(view, docTitle);
+    const blob = await loadPrintPdfBlob(view, docTitle);
     if (printWin.closed) {
       window.alert('The print tab was closed before the PDF finished loading.');
       return;
     }
-    showPdfInPrintTab(blob, printWin);
+    deliverPrintPdfToTab(printWin, blob);
   } catch (err) {
-    if (!printWin.closed) printWin.close();
+    if (!printWin.closed) {
+      showPrintTabError(printWin, err.message || 'Could not open PDF.');
+      return;
+    }
     window.alert(err.message || 'Could not open PDF.');
   }
 }
@@ -141,9 +46,12 @@ function initPrintChoiceDialog() {
 
   dialog.querySelectorAll('[data-print-view]').forEach((button) => {
     button.addEventListener('click', () => {
-      const printWin = openPrintTab();
+      const view = button.dataset.printView;
+      if (!isPrintShopView(view)) return;
+
+      const printWin = openPrintTab(printDocumentTitle(view, state.programPackage));
       dialog.close();
-      void printPlannerDocument(button.dataset.printView, printWin);
+      void printPlannerDocument(view, printWin);
     });
   });
 }
@@ -154,7 +62,7 @@ function openPrintShop() {
     dialog.showModal();
     return;
   }
-  void printPlannerDocument('week', openPrintTab());
+  void printPlannerDocument('week', openPrintTab(printDocumentTitle('week', state.programPackage)));
 }
 
 function initPrintShop() {

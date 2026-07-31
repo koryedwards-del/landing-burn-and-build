@@ -23,8 +23,8 @@
   <script type="module">
     import { apiUrl } from '../js/apiConfig.js';
     import { FOODS_CATALOG_VERSION, PDF_PRINT_REVISIONS } from '../js/assetVersion.js';
+    import { isPersonalizedPrintShopView, isPrintShopView } from '../js/printShopViews.js';
 
-    const PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
     const statusEl = document.getElementById('status');
 
     function showError(message) {
@@ -34,7 +34,9 @@
 
     const view = new URLSearchParams(window.location.search).get('view') || 'faq';
 
-    if (PERSONALIZED_VIEWS.has(view)) {
+    if (!isPrintShopView(view)) {
+      showError(`Print Shop view not supported: ${view}`);
+    } else if (isPersonalizedPrintShopView(view)) {
       showError('Open Print Shop from your menu planner to generate this document.');
     } else {
       try {
@@ -61,8 +63,7 @@
           throw new Error('Invalid PDF');
         }
 
-        const pdfUrl = URL.createObjectURL(blob);
-        window.location.replace(pdfUrl);
+        window.location.replace(URL.createObjectURL(blob));
       } catch (err) {
         if (!statusEl.classList.contains('error')) {
           showError(err.message || 'Could not load PDF.');

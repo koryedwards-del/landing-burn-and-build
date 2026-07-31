@@ -1,42 +1,52 @@
-import { PDF_PERSONALIZED_VIEWS, PDF_VIEWS } from './constants.js';
+import {
+  isPersonalizedPrintShopView,
+  isPrintShopView,
+} from '../../js/printShopViews.js';
+import { pdfError } from './errors.js';
 
-function validationError(message) {
-  const err = new Error(message);
-  err.status = 400;
-  return err;
-}
-
-function requireString(value, field) {
-  if (value != null && typeof value !== 'string') {
-    throw validationError(`${field} must be a string.`);
+function requireString(value, field, { required = false } = {}) {
+  if (value == null || value === '') {
+    if (required) throw pdfError(`${field} is required.`);
+    return;
+  }
+  if (typeof value !== 'string') {
+    throw pdfError(`${field} must be a string.`);
   }
 }
 
 function requireArray(value, field) {
   if (value != null && !Array.isArray(value)) {
-    throw validationError(`${field} must be an array.`);
+    throw pdfError(`${field} must be an array.`);
   }
 }
 
-export function validatePrintPayload(view, payload) {
-  if (!PDF_VIEWS.has(view)) {
-    throw validationError(`PDF view not supported: ${view}`);
+export function validatePrintView(view) {
+  if (!view) {
+    throw pdfError('Missing print view.');
   }
+  if (!isPrintShopView(view)) {
+    throw pdfError(`PDF view not supported: ${view}`);
+  }
+  return view;
+}
 
-  if (!PDF_PERSONALIZED_VIEWS.has(view)) {
+export function validatePrintPayload(view, payload) {
+  validatePrintView(view);
+
+  if (!isPersonalizedPrintShopView(view)) {
     return payload;
   }
 
   if (!payload || typeof payload !== 'object') {
-    throw validationError(`Personalized PDF view requires payload: ${view}`);
+    throw pdfError(`Personalized PDF view requires payload: ${view}`);
   }
 
-  requireString(payload.title, 'title');
-  requireString(payload.clientName, 'clientName');
-  requireString(payload.preparedAt, 'preparedAt');
+  requireString(payload.title, 'title', { required: true });
+  requireString(payload.clientName, 'clientName', { required: true });
+  requireString(payload.preparedAt, 'preparedAt', { required: true });
 
   if (payload.empty != null && typeof payload.empty !== 'boolean') {
-    throw validationError('empty must be a boolean.');
+    throw pdfError('empty must be a boolean.');
   }
 
   if (view === 'week') {
@@ -45,20 +55,20 @@ export function validatePrintPayload(view, payload) {
 
     payload.weekDays?.forEach((day, index) => {
       if (!day || typeof day !== 'object') {
-        throw validationError(`weekDays[${index}] must be an object.`);
+        throw pdfError(`weekDays[${index}] must be an object.`);
       }
-      requireString(day.id, `weekDays[${index}].id`);
-      requireString(day.label, `weekDays[${index}].label`);
+      requireString(day.id, `weekDays[${index}].id`, { required: true });
+      requireString(day.label, `weekDays[${index}].label`, { required: true });
     });
 
     payload.rows?.forEach((row, index) => {
       if (!row || typeof row !== 'object') {
-        throw validationError(`rows[${index}] must be an object.`);
+        throw pdfError(`rows[${index}] must be an object.`);
       }
-      requireString(row.id, `rows[${index}].id`);
-      requireString(row.label, `rows[${index}].label`);
+      requireString(row.id, `rows[${index}].id`, { required: true });
+      requireString(row.label, `rows[${index}].label`, { required: true });
       if (row.cells != null && typeof row.cells !== 'object') {
-        throw validationError(`rows[${index}].cells must be an object.`);
+        throw pdfError(`rows[${index}].cells must be an object.`);
       }
     });
   }
@@ -68,17 +78,17 @@ export function validatePrintPayload(view, payload) {
 
     payload.groups?.forEach((group, index) => {
       if (!group || typeof group !== 'object') {
-        throw validationError(`groups[${index}] must be an object.`);
+        throw pdfError(`groups[${index}] must be an object.`);
       }
-      requireString(group.category, `groups[${index}].category`);
+      requireString(group.category, `groups[${index}].category`, { required: true });
       requireArray(group.rows, `groups[${index}].rows`);
 
       group.rows?.forEach((row, rowIndex) => {
         if (!row || typeof row !== 'object') {
-          throw validationError(`groups[${index}].rows[${rowIndex}] must be an object.`);
+          throw pdfError(`groups[${index}].rows[${rowIndex}] must be an object.`);
         }
-        requireString(row.foodName, `groups[${index}].rows[${rowIndex}].foodName`);
-        requireString(row.amount, `groups[${index}].rows[${rowIndex}].amount`);
+        requireString(row.foodName, `groups[${index}].rows[${rowIndex}].foodName`, { required: true });
+        requireString(row.amount, `groups[${index}].rows[${rowIndex}].amount`, { required: true });
       });
     });
   }

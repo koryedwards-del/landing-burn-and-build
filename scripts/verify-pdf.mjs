@@ -1,7 +1,10 @@
 #!/usr/bin/env node
-/** Smoke-test all Print Shop PDF renderers — run: node scripts/verify-pdf.mjs */
+/** Print Shop PDF verification — run: npm run verify:pdf */
 
 import { renderPrintPdf } from '../server/pdf/index.js';
+import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
+import { PdfError } from '../server/pdf/errors.js';
+import { validatePrintPayload, validatePrintView } from '../server/pdf/validate.js';
 
 const STATIC_VIEWS = ['faq', 'foodlist', 'bestresults'];
 
@@ -61,20 +64,45 @@ const shoppingPayload = {
 };
 
 function pageCount(pdf) {
-  const text = pdf.toString('latin1');
-  return (text.match(/\/Type\s*\/Page[^s]/g) || []).length;
+  return (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 }
 
 function assertPdf(label, pdf, { minPages = 1 } = {}) {
-  if (!pdf.slice(0, 5).toString().startsWith('%PDF-')) {
-    throw new Error(`${label}: not a PDF`);
-  }
+  assertPdfBuffer(pdf);
   const pages = pageCount(pdf);
   if (pages < minPages) {
     throw new Error(`${label}: expected >= ${minPages} pages, got ${pages}`);
   }
   console.log(`ok  ${label} — ${pages} page(s), ${pdf.length} bytes`);
 }
+
+function assertThrows(label, fn, { status, includes } = {}) {
+  try {
+    fn();
+    throw new Error(`${label}: expected throw`);
+  } catch (err) {
+    if (!(err instanceof PdfError || err.status)) {
+      throw err;
+    }
+    if (status != null && err.status !== status) {
+      throw new Error(`${label}: expected status ${status}, got ${err.status}`);
+    }
+    if (includes && !String(err.message).includes(includes)) {
+      throw new Error(`${label}: message "${err.message}" missing "${includes}"`);
+    }
+    console.log(`ok  ${label}`);
+  }
+}
+
+assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { status: 400 });
+assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
+assertThrows('validatePrintPayload rejects bad week', () => validatePrintPayload('week', {}), { status: 400 });
+
+const filename = sanitizePdfFilename('B&B - FAQ - Alex', 'faq');
+if (!filename.endsWith('.pdf') || filename.includes('&')) {
+  throw new Error(`sanitizePdfFilename failed: ${filename}`);
+}
+console.log(`ok  sanitizePdfFilename — ${filename}`);
 
 for (const view of STATIC_VIEWS) {
   assertPdf(view, await renderPrintPdf(view), {
@@ -88,4 +116,4 @@ assertPdf('week (empty)', await renderPrintPdf('week', {
   payload: { ...weekPayload, empty: true, rows: [] },
 }), { minPages: 1 });
 
-console.log('\nAll PDF renders passed.');
+console.log('\nAll Print Shop PDF checks passed.');
