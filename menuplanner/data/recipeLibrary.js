@@ -207,7 +207,7 @@ export const MEAL_TEMPLATES = [
   }),
   meal('chicken-rice-broccoli-cajun', CHICKEN_RICE_BROCCOLI, {
     profile: 'Cajun',
-    caveat: 'Blackened seasoning on chicken. Broccoli steamed; rice cooked separately.',
+    caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Broccoli steamed; rice cooked separately.',
   }),
   meal('chicken-rice-broccoli-teriyaki', CHICKEN_RICE_BROCCOLI, {
     profile: 'Teriyaki',
