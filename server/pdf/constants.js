@@ -24,11 +24,11 @@ export const PDF_HEADER = {
 };
 
 export const PDF_FAQ = {
-  questionSize: 8.75,
-  answerSize: 7.75,
-  itemGap: 8,
-  lineGap: 2.25,
-  questionAnswerGap: 2,
+  questionSize: 9.5,
+  answerSize: 8.5,
+  itemGap: 7,
+  lineGap: 2,
+  questionAnswerGap: 1.5,
 };
 
 export const PDF_VIEWS = new Set(['faq']);
