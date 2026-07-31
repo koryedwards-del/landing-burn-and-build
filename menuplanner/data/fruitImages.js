@@ -4,11 +4,16 @@
 
 /** @type {Readonly<Record<string, string>>} foods.json name → filename */
 const FRUIT_IMAGE_FILES = {
-  Apple: 'apples.png',
-  Banana: 'bananas.png',
+  Apples: 'apples.png',
+  Bananas: 'bananas.png',
+  Blueberries: 'blueberries.png',
+  Clementines: 'clementines.png',
   Grapes: 'grapes.png',
-  Orange: 'oranges.png',
-  Pear: 'pears.png',
+  Nectarines: 'nectarines.png',
+  Oranges: 'oranges.png',
+  Peaches: 'peaches.png',
+  Pears: 'pears.png',
+  Strawberries: 'strawberries.png',
 };
 
 const FRUIT_ASSET_BASE = '../menuplanner/assets/fruits';

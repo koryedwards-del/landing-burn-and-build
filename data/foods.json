@@ -440,7 +440,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Apple",
+    "name": "Apples",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 130,
@@ -456,7 +456,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Banana",
+    "name": "Bananas",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 79,
@@ -624,7 +624,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Nectarine",
+    "name": "Nectarines",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 170,
@@ -632,7 +632,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Orange",
+    "name": "Oranges",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 153,
@@ -656,7 +656,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Peach",
+    "name": "Peaches",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 189,
@@ -664,7 +664,7 @@
     "fatBracket": 0
   },
   {
-    "name": "Pear",
+    "name": "Pears",
     "category": "fruit",
     "servingDescription": "raw",
     "gramWeight": 118,

@@ -169,6 +169,54 @@ function cloneSavedMeals(meals = []) {
   }));
 }
 
+const FOOD_NAME_MIGRATIONS = {
+  Apple: 'Apples',
+  Banana: 'Bananas',
+  Pear: 'Pears',
+  Orange: 'Oranges',
+  Peach: 'Peaches',
+  Nectarine: 'Nectarines',
+};
+
+function migrateFoodName(name) {
+  return FOOD_NAME_MIGRATIONS[name] || name;
+}
+
+function migrateSelectionFoodName(selection) {
+  if (!selection || typeof selection !== 'object') return selection;
+  if (Array.isArray(selection)) {
+    return selection.map((item) => migrateSelectionFoodName(item));
+  }
+  if (selection.foodName) {
+    return { ...selection, foodName: migrateFoodName(selection.foodName) };
+  }
+  return selection;
+}
+
+function migratePlannerFoodNames() {
+  WEEK_DAYS.forEach((day) => {
+    DAY_SLOTS.forEach((daySlot) => {
+      const selections = state.weekPlan[day.id]?.selections?.[daySlot.id];
+      if (!selections) return;
+      Object.keys(selections).forEach((slotKey) => {
+        selections[slotKey] = migrateSelectionFoodName(selections[slotKey]);
+      });
+    });
+  });
+
+  state.savedMeals.forEach((meal) => {
+    if (!Array.isArray(meal.items)) return;
+    meal.items = meal.items.map((item) => ({
+      ...item,
+      foodName: migrateFoodName(item.foodName),
+    }));
+  });
+
+  ['protein', 'gs', 'vegetable', 'fat'].forEach((slot) => {
+    state.mealMakerDraft[slot] = migrateSelectionFoodName(state.mealMakerDraft[slot]);
+  });
+}
+
 function collectPlannerState() {
   return {
     version: 2,
@@ -226,6 +274,7 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     if (saved.plannerEngagementMode === 'diy' || saved.plannerEngagementMode === 'fast-start') {
       state.plannerEngagementMode = saved.plannerEngagementMode;
     }
+    migratePlannerFoodNames();
   }
   restoreSessionGridUi(sessionUi);
 }

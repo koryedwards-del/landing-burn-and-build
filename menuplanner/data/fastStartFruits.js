@@ -5,17 +5,17 @@
 
 /** @type {readonly string[]} foods.json names, curated display order */
 export const FAST_START_FRUIT_NAMES = [
-  'Banana',
-  'Apple',
+  'Bananas',
+  'Apples',
   'Grapes',
-  'Pear',
-  'Orange',
+  'Pears',
+  'Oranges',
   'Clementines',
   'Tangerines',
   'Strawberries',
   'Blueberries',
-  'Peach',
-  'Nectarine',
+  'Peaches',
+  'Nectarines',
 ];
 
 const FAST_START_FRUIT_ORDER = new Map(FAST_START_FRUIT_NAMES.map((name, index) => [name, index]));
