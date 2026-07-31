@@ -1,13 +1,17 @@
 import { FOODS_CATALOG_VERSION } from '../../js/assetVersion.js';
-import { PDF_VIEWS } from './constants.js';
+import { PDF_PERSONALIZED_VIEWS, PDF_VIEWS } from './constants.js';
 import { renderBestResultsPdf } from './renderBestResults.js';
 import { renderFaqPdf } from './renderFaq.js';
 import { renderFoodListPdf } from './renderFoodList.js';
+import { renderShoppingListPdf } from './renderShoppingList.js';
+import { renderWeekPlanPdf } from './renderWeekPlan.js';
 
 const RENDERERS = {
   faq: renderFaqPdf,
   foodlist: renderFoodListPdf,
   bestresults: renderBestResultsPdf,
+  week: renderWeekPlanPdf,
+  shopping: renderShoppingListPdf,
 };
 
 /** Static print bodies (same bytes for every client); title only affects metadata/filename. */
@@ -34,12 +38,25 @@ export function isStaticPdfView(view) {
   return STATIC_PDF_VIEWS.has(view);
 }
 
-export async function renderPrintPdf(view, { title } = {}) {
+export function isPersonalizedPdfView(view) {
+  return PDF_PERSONALIZED_VIEWS.has(view);
+}
+
+export async function renderPrintPdf(view, { title, payload } = {}) {
   const render = RENDERERS[view];
   if (!render) {
     const err = new Error(`PDF view not supported: ${view}`);
     err.status = 400;
     throw err;
+  }
+
+  if (PDF_PERSONALIZED_VIEWS.has(view)) {
+    if (!payload || typeof payload !== 'object') {
+      const err = new Error(`Personalized PDF view requires payload: ${view}`);
+      err.status = 400;
+      throw err;
+    }
+    return render(payload, { title: title || payload.title });
   }
 
   if (STATIC_PDF_VIEWS.has(view)) {

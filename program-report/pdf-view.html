@@ -93,6 +93,8 @@
       shopping: 'Grocery List',
     };
 
+    const PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
+
     const view = new URLSearchParams(window.location.search).get('view') || 'faq';
     const shortTitle = VIEW_TITLES[view] || 'Document';
     const docTitle = `B&B - ${shortTitle}`;
@@ -151,7 +153,9 @@
       printBtn.disabled = false;
     });
 
-    try {
+    if (PERSONALIZED_VIEWS.has(view)) {
+      showError('Open Print Shop from your menu planner to generate this document.');
+    } else try {
       const rev = PDF_PRINT_REVISIONS[view] || '1';
       const params = new URLSearchParams({ view, rev, title: docTitle });
       const res = await fetch(

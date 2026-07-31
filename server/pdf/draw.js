@@ -36,6 +36,19 @@ export function createPortraitPdf({ title, author = 'Burn & Build Diet' } = {}) 
   });
 }
 
+export function createLandscapePdf({ title, author = 'Burn & Build Diet' } = {}) {
+  return new PDFDocument({
+    size: 'LETTER',
+    layout: 'landscape',
+    margin: 0,
+    autoFirstPage: false,
+    info: {
+      Title: title || 'Burn & Build Diet',
+      Author: author,
+    },
+  });
+}
+
 export function contentBox(doc) {
   const { width, height } = doc.page;
   return {
@@ -54,6 +67,55 @@ export function addGenericSheet(doc, headerTitle) {
   const box = contentBox(doc);
   const y = drawGenericHeader(doc, headerTitle, box);
   return { box, y };
+}
+
+/** Personalized weekly / grocery — name + date under title. */
+export function addPersonalizedSheet(doc, { headerTitle, clientName, preparedAt, layout = 'portrait' }) {
+  doc.addPage({ size: 'LETTER', layout, margin: 0 });
+  drawWatermark(doc);
+  const box = contentBox(doc);
+  const y = drawPersonalizedHeader(doc, headerTitle, clientName, preparedAt, box);
+  return { box, y };
+}
+
+export function drawPersonalizedHeader(doc, title, clientName, preparedAt, box = contentBox(doc)) {
+  const logoY = box.y;
+  const textX = box.x + PDF_HEADER.logoWidth + 16;
+  const textWidth = box.width - PDF_HEADER.logoWidth - 16;
+
+  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
+
+  let textY = logoY + 2;
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(PDF_HEADER.titleSize)
+    .fillColor(PDF_COLORS.question)
+    .text(String(title || '').toUpperCase(), textX, textY, {
+      width: textWidth,
+      lineGap: 0,
+    });
+
+  textY = doc.y + 4;
+  const meta = `Prepared for ${String(clientName || 'You').trim()} · ${String(preparedAt || '').trim()}`;
+  doc
+    .font('Helvetica')
+    .fontSize(PDF_HEADER.metaSize)
+    .fillColor('#666666')
+    .text(meta, textX, textY, {
+      width: textWidth,
+      lineGap: 0,
+    });
+
+  const headerBottom = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + PDF_HEADER.ruleGap;
+  doc
+    .strokeColor(PDF_COLORS.rule)
+    .lineWidth(1)
+    .moveTo(box.x, headerBottom)
+    .lineTo(box.x + box.width, headerBottom)
+    .stroke();
+
+  doc.fillColor(PDF_COLORS.question);
+  return headerBottom + PDF_HEADER.gap;
 }
 
 export function drawWatermark(doc) {

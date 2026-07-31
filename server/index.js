@@ -21,7 +21,7 @@ import {
   stripeConfigured,
   verifyCheckoutSession,
 } from './stripe.js';
-import { renderPrintPdf, isStaticPdfView } from './pdf/index.js';
+import { renderPrintPdf, isPersonalizedPdfView, isStaticPdfView } from './pdf/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -145,31 +145,36 @@ app.get('/health', (_req, res) => {
   });
 });
 
-app.get('/api/print/pdf', async (req, res) => {
-  const view = String(req.query.view || '').trim();
+function sendPrintPdfResponse(res, view, pdf, title) {
+  const safeName = (title || `burn-and-build-${view}`)
+    .replace(/[^\w\s.-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    || `burn-and-build-${view}`;
+  const filename = `${safeName}.pdf`;
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+  if (isStaticPdfView(view)) {
+    // Avoid immutable — clients bust cache via ?rev= when PDF layout changes.
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+  } else {
+    res.setHeader('Cache-Control', 'no-store');
+  }
+  res.send(pdf);
+}
+
+async function handlePrintPdfRequest(req, res, { view, title, payload }) {
   if (!view) {
     res.status(400).json({ ok: false, message: 'Missing print view.' });
     return;
   }
 
   try {
-    const title = String(req.query.title || '').trim();
-    const pdf = await renderPrintPdf(view, { title: title || undefined });
-    const safeName = (title || `burn-and-build-${view}`)
-      .replace(/[^\w\s.-]/g, '')
-      .trim()
-      .replace(/\s+/g, '-')
-      || `burn-and-build-${view}`;
-    const filename = `${safeName}.pdf`;
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-    if (isStaticPdfView(view)) {
-      // Avoid immutable — clients bust cache via ?rev= when PDF layout changes.
-      res.setHeader('Cache-Control', 'public, max-age=3600');
-    } else {
-      res.setHeader('Cache-Control', 'no-store');
-    }
-    res.send(pdf);
+    const pdf = await renderPrintPdf(view, {
+      title: title || undefined,
+      payload,
+    });
+    sendPrintPdfResponse(res, view, pdf, title);
   } catch (err) {
     const status = err.status || 500;
     if (status >= 500) {
@@ -177,6 +182,23 @@ app.get('/api/print/pdf', async (req, res) => {
     }
     res.status(status).json({ ok: false, message: err.message || 'Could not generate PDF.' });
   }
+}
+
+app.get('/api/print/pdf', async (req, res) => {
+  const view = String(req.query.view || '').trim();
+  const title = String(req.query.title || '').trim();
+  await handlePrintPdfRequest(req, res, { view, title });
+});
+
+app.post('/api/print/pdf', async (req, res) => {
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const view = String(body.view || req.query.view || '').trim();
+  const title = String(body.title || req.query.title || '').trim();
+  if (!isPersonalizedPdfView(view)) {
+    res.status(400).json({ ok: false, message: 'POST print PDF requires a personalized view (week or shopping).' });
+    return;
+  }
+  await handlePrintPdfRequest(req, res, { view, title, payload: body });
 });
 
 function creatorBaseUrl(req) {

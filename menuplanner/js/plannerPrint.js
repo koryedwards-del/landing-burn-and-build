@@ -11,6 +11,7 @@ import {
   buildPrintViewHeaderHtml,
   buildPrintPageShell,
 } from './plannerPrintShell.js';
+import { buildPlannerPrintPayload } from './plannerPrintPayload.js';
 import { programClientName } from '../../js/programBridgeUi.js';
 import {
   FOOD_CATEGORIES,
@@ -37,7 +38,10 @@ import {
 } from './plannerState.js';
 
 /** Views rendered as real PDFs on Render — grows as each doc is converted. */
-const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);
+const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist', 'bestresults', 'week', 'shopping']);
+
+/** Filled from live planner state via POST payload — not cacheable. */
+const PDF_PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
 
 /** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
 const pdfBlobCache = new Map();
@@ -58,6 +62,26 @@ function pdfFetchUrl(view, title) {
   });
   if (title) params.set('title', title);
   return apiUrl(`/api/print/pdf?${params}`);
+}
+
+async function fetchPrintPdf(view, title) {
+  if (PDF_PERSONALIZED_VIEWS.has(view)) {
+    const payload = buildPlannerPrintPayload(view);
+    if (!payload) {
+      throw new Error('Could not build print payload.');
+    }
+    return fetch(apiUrl('/api/print/pdf'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({
+        ...payload,
+        title: title || payload.title,
+      }),
+    });
+  }
+
+  return fetch(pdfFetchUrl(view, title), { cache: 'no-store' });
 }
 
 function isPdfBlob(blob) {
@@ -416,14 +440,14 @@ async function openPdfDocument(view) {
   }
 
   const cacheKey = pdfBlobCacheKey(view);
-  const cachedBlob = pdfBlobCache.get(cacheKey);
+  const cachedBlob = PDF_PERSONALIZED_VIEWS.has(view) ? null : pdfBlobCache.get(cacheKey);
   if (cachedBlob) {
     showPdfBlob(cachedBlob);
     return;
   }
 
   try {
-    const res = await fetch(pdfFetchUrl(view, docTitle), { cache: 'no-store' });
+    const res = await fetchPrintPdf(view, docTitle);
     if (!res.ok) {
       let message = 'Could not generate PDF.';
       try {
@@ -444,7 +468,9 @@ async function openPdfDocument(view) {
       return;
     }
 
-    pdfBlobCache.set(cacheKey, blob);
+    if (!PDF_PERSONALIZED_VIEWS.has(view)) {
+      pdfBlobCache.set(cacheKey, blob);
+    }
     showPdfBlob(blob);
   } catch (err) {
     errorEl.textContent = err.message || 'Could not load PDF.';

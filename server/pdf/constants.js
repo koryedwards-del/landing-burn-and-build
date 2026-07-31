@@ -52,4 +52,31 @@ export const PDF_FOOD_LIST = {
   tipsMinBlock: 24,
 };
 
-export const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);
+/** Weekly meal plan — landscape agenda grid. */
+export const PDF_WEEK = {
+  dayHeadSize: 8,
+  mealTimeSize: 6.5,
+  mealLabelSize: 5.5,
+  foodSize: 7,
+  emptyMarkSize: 8,
+  rowHeadWidth: 76,
+  cellPadX: 6,
+  cellPadY: 14,
+  minRowHeight: 36,
+  lineGap: 2,
+  accent: '#fdc500',
+};
+
+/** Grocery list — portrait checklist sections. */
+export const PDF_SHOPPING = {
+  sectionSize: 10,
+  rowSize: 9,
+  checkboxSize: 10,
+  sectionGap: 14,
+  rowPadY: 4,
+};
+
+export const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults', 'week', 'shopping']);
+
+/** Views filled from client POST payload (not cacheable). */
+export const PDF_PERSONALIZED_VIEWS = new Set(['week', 'shopping']);
