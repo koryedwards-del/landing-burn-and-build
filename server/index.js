@@ -153,8 +153,14 @@ app.get('/api/print/pdf', async (req, res) => {
   }
 
   try {
-    const pdf = await renderPrintPdf(view);
-    const filename = `burn-and-build-${view}.pdf`;
+    const title = String(req.query.title || '').trim();
+    const pdf = await renderPrintPdf(view, { title: title || undefined });
+    const safeName = (title || `burn-and-build-${view}`)
+      .replace(/[^\w\s.-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      || `burn-and-build-${view}`;
+    const filename = `${safeName}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
     res.setHeader('Cache-Control', 'no-store');

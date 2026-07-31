@@ -57,6 +57,29 @@ const PDF_VIEW_TITLES = {
   shopping: 'Grocery List',
 };
 
+function buildPdfPreviewShellHtml(pdfBlobUrl, title) {
+  const safeTitle = escapeHtml(title);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${safeTitle}</title>
+<style>html,body{margin:0;height:100%;} embed{display:block;width:100%;height:100%;}</style>
+</head>
+<body>
+<embed type="application/pdf" src="${pdfBlobUrl}">
+</body>
+</html>`;
+}
+
+function pdfFilenameFromTitle(title, view) {
+  const base = String(title || PDF_VIEW_TITLES[view] || view)
+    .replace(/[^\w\s.-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+  return `${base || `burn-and-build-${view}`}.pdf`;
+}
+
 function printFoodAmount(foodName, servings) {
   const food = state.foods.find((item) => item.name === foodName);
   if (!food) return `${fmtServings(servings)} servings`;
@@ -518,17 +541,25 @@ async function openPdfDocument(view) {
   if (titleEl) {
     titleEl.textContent = PDF_VIEW_TITLES[view] || 'Document';
   }
+
+  const docTitle = printDocumentTitle(view, state.programPackage);
+  dialog.dataset.priorPageTitle = document.title;
+  document.title = docTitle;
+  frame.title = docTitle;
+
   printBtn.disabled = true;
   errorEl.hidden = true;
   errorEl.textContent = '';
   frame.removeAttribute('src');
-  delete frame.dataset.blobUrl;
-  delete frame.dataset.filename;
+  delete frame.dataset.pdfBlobUrl;
+  delete frame.dataset.shellBlobUrl;
 
   dialog.showModal();
 
   try {
-    const res = await fetch(apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`));
+    const res = await fetch(apiUrl(
+      `/api/print/pdf?view=${encodeURIComponent(view)}&title=${encodeURIComponent(docTitle)}`,
+    ));
     if (!res.ok) {
       let message = 'Could not generate PDF.';
       try {
@@ -543,13 +574,16 @@ async function openPdfDocument(view) {
     }
 
     const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    frame.dataset.blobUrl = blobUrl;
-    frame.dataset.filename = `burn-and-build-${view}.pdf`;
+    const pdfBlobUrl = URL.createObjectURL(blob);
+    const shellHtml = buildPdfPreviewShellHtml(pdfBlobUrl, docTitle);
+    const shellBlobUrl = URL.createObjectURL(new Blob([shellHtml], { type: 'text/html' }));
+    frame.dataset.pdfBlobUrl = pdfBlobUrl;
+    frame.dataset.shellBlobUrl = shellBlobUrl;
+    frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
     frame.onload = () => {
       printBtn.disabled = false;
     };
-    frame.src = blobUrl;
+    frame.src = shellBlobUrl;
   } catch (err) {
     errorEl.textContent = err.message || 'Could not load PDF.';
     errorEl.hidden = false;
@@ -575,14 +609,19 @@ function initPdfViewDialog() {
   closeBtn?.addEventListener('click', () => dialog.close());
 
   dialog.addEventListener('close', () => {
-    const blobUrl = frame.dataset.blobUrl;
-    if (blobUrl) {
-      URL.revokeObjectURL(blobUrl);
-      delete frame.dataset.blobUrl;
-      delete frame.dataset.filename;
-    }
+    const pdfBlobUrl = frame.dataset.pdfBlobUrl;
+    const shellBlobUrl = frame.dataset.shellBlobUrl;
+    if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+    if (shellBlobUrl) URL.revokeObjectURL(shellBlobUrl);
+    delete frame.dataset.pdfBlobUrl;
+    delete frame.dataset.shellBlobUrl;
+    delete frame.dataset.filename;
     frame.removeAttribute('src');
     printBtn.disabled = true;
+    if (dialog.dataset.priorPageTitle) {
+      document.title = dialog.dataset.priorPageTitle;
+      delete dialog.dataset.priorPageTitle;
+    }
   });
 }
 

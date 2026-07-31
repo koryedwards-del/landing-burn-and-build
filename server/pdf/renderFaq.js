@@ -37,13 +37,14 @@ function drawFaqItem(doc, item, questionNumber, x, y, width) {
   return doc.y + PDF_FAQ.itemGap;
 }
 
-export async function renderFaqPdf() {
+export async function renderFaqPdf({ title } = {}) {
+  const docTitle = title || 'B&B - Frequently Asked Questions';
   const doc = new PDFDocument({
     size: 'LETTER',
     margin: 0,
     autoFirstPage: false,
     info: {
-      Title: 'B&B - Frequently Asked Questions',
+      Title: docTitle,
       Author: 'Burn & Build Diet',
     },
   });
