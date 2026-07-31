@@ -1,15 +1,17 @@
 import { FOODS_CATALOG_VERSION } from '../../js/assetVersion.js';
 import { PDF_VIEWS } from './constants.js';
+import { renderBestResultsPdf } from './renderBestResults.js';
 import { renderFaqPdf } from './renderFaq.js';
 import { renderFoodListPdf } from './renderFoodList.js';
 
 const RENDERERS = {
   faq: renderFaqPdf,
   foodlist: renderFoodListPdf,
+  bestresults: renderBestResultsPdf,
 };
 
 /** Static print bodies (same bytes for every client); title only affects metadata/filename. */
-const STATIC_PDF_VIEWS = new Set(['faq']);
+const STATIC_PDF_VIEWS = new Set(['faq', 'bestresults']);
 
 const pdfBodyCache = new Map();
 

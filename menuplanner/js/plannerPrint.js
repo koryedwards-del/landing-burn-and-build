@@ -1,18 +1,11 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import { apiUrl } from '../../js/apiConfig.js';
-import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
-  buildGenericPrintDocumentHtml,
-  buildGenericPrintSheet,
-  isGenericPrintView,
-} from './genericPrintEngine.js';
-import {
+  buildPrintDocumentHtml as buildPrintShellDocumentHtml,
   printDocumentTitle,
   buildPrintViewHeaderHtml,
   buildPrintPageShell,
-  buildPrintDocumentHtml as buildPrintShellDocumentHtml,
-  PRINT_VIEW_CONFIG,
 } from './plannerPrintShell.js';
 import { programClientName } from '../../js/programBridgeUi.js';
 import {
@@ -40,7 +33,7 @@ import {
 } from './plannerState.js';
 
 /** Views rendered as real PDFs on Render — grows as each doc is converted. */
-const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist']);
+const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);
 
 /** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
 const pdfBlobCache = new Map();
@@ -214,42 +207,6 @@ function weekPlanHasContent() {
   return found;
 }
 
-function buildQaPrintContent(view, pages, { numbered = false } = {}) {
-  const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
-  const orientation = PRINT_VIEW_CONFIG[view]?.pageSize === 'landscape' ? 'landscape' : 'portrait';
-  let questionNumber = 0;
-
-  return pages.map((page, index) => {
-    const bodyHtml = `
-      <div class="print-qa-page">
-        ${page.items.map((item) => {
-          questionNumber += 1;
-          const questionPrefix = numbered ? `${questionNumber}. ` : '';
-          return `
-            <article class="print-qa-item">
-              <h2 class="print-qa-question">${questionPrefix}${escapeHtml(item.q)}</h2>
-              <p class="print-qa-answer">${escapeHtml(item.a)}</p>
-            </article>
-          `;
-        }).join('')}
-      </div>
-    `;
-
-    return buildGenericPrintSheet({
-      orientation,
-      headerHtml,
-      logoUrl: printLogoUrl(),
-      bodyHtml,
-      pageIndex: index,
-      isLast: index === pages.length - 1,
-    });
-  }).join('');
-}
-
-function buildForBestResultsContent() {
-  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES, { numbered: true });
-}
-
 function buildShoppingListContent() {
   const totals = buildShoppingTotals();
   const categoryOrder = FOOD_CATEGORIES.map((cat) => cat.id);
@@ -294,22 +251,12 @@ function buildShoppingListContent() {
 const PRINT_BODY_BUILDERS = {
   week: buildWeekAgendaContent,
   shopping: buildShoppingListContent,
-  bestresults: buildForBestResultsContent,
 };
 
 function buildPrintDocumentHtml(view = 'week') {
   const title = printDocumentTitle(view, state.programPackage);
   const styles = buildPrintStylesForView(view);
   const buildBody = PRINT_BODY_BUILDERS[view] || PRINT_BODY_BUILDERS.week;
-
-  if (isGenericPrintView(view)) {
-    return buildGenericPrintDocumentHtml({
-      view,
-      title,
-      styles,
-      sheetsHtml: buildBody(),
-    });
-  }
 
   const bodyHtml = buildPrintPageShell({
     headerHtml: buildPrintViewHeaderHtml(view, printShellContext()),
@@ -357,19 +304,6 @@ function printViaIframe(html) {
   frameDoc.write(html);
   frameDoc.close();
   triggerDocumentPrint(frameWin, frameDoc);
-}
-
-function printGenericDocument(html) {
-  const printWin = window.open('', '_blank');
-  if (!printWin) {
-    printViaIframe(html);
-    return;
-  }
-
-  printWin.document.open();
-  printWin.document.write(html);
-  printWin.document.close();
-  triggerDocumentPrint(printWin, printWin.document);
 }
 
 async function openPdfDocument(view) {
@@ -484,14 +418,7 @@ function printPlannerDocument(view) {
     return;
   }
 
-  const html = buildPrintDocumentHtml(view);
-
-  if (isGenericPrintView(view)) {
-    printGenericDocument(html);
-    return;
-  }
-
-  printViaIframe(html);
+  printViaIframe(buildPrintDocumentHtml(view));
 }
 
 function initPrintChoiceDialog() {

@@ -8,7 +8,7 @@
  * Pagination is authored in data/*Printout.js — not computed at runtime.
  */
 
-export const GENERIC_PRINT_VIEWS = new Set(['bestresults']);
+export const GENERIC_PRINT_VIEWS = new Set([]);
 
 export function isGenericPrintView(view) {
   return GENERIC_PRINT_VIEWS.has(view);

@@ -48,4 +48,12 @@ export const PDF_FOOD_LIST = {
   tipsMinBlock: 24,
 };
 
-export const PDF_VIEWS = new Set(['faq', 'foodlist']);
+export const PDF_BEST_RESULTS = {
+  questionSize: 9,
+  answerSize: 8.5,
+  itemGap: 14,
+  lineGap: 2.5,
+  questionAnswerGap: 3,
+};
+
+export const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);

@@ -154,9 +154,6 @@ const PRINT_SHELL_STYLES = `
     padding: ${PRINT_PAGE_PADDING};
     background: #ffffff;
   }
-  .print-body--bestresults .print-page--sheet {
-    min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
-  }
   .print-page--break,
   .print-page--sheet + .print-page--sheet {
     break-before: page;
