@@ -209,9 +209,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Cajun',
     caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Broccoli steamed; rice cooked separately.',
   }),
-  meal('chicken-rice-broccoli-teriyaki', CHICKEN_RICE_BROCCOLI, {
+  meal('chicken-rice-broccoli-teriyaki', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
+  ], {
     profile: 'Teriyaki',
-    caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Broccoli crisp-tender.',
+    caveat: 'Soy, ginger, garlic on chicken — dry spices, not bottled sauce. Peppers crisp-tender.',
   }),
   meal('chicken-rice-broccoli-bbq', CHICKEN_RICE_BROCCOLI, {
     profile: 'BBQ',
