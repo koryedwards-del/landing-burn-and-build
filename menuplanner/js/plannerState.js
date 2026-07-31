@@ -169,15 +169,6 @@ function cloneSavedMeals(meals = []) {
   }));
 }
 
-const FOOD_NAME_MIGRATIONS = {
-  Apple: 'Apples',
-  Banana: 'Bananas',
-  Pear: 'Pears',
-  Orange: 'Oranges',
-  Peach: 'Peaches',
-  Nectarine: 'Nectarines',
-};
-
 function migrateFoodName(name) {
   return canonicalFruitName(name);
 }
