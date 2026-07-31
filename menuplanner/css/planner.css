@@ -512,7 +512,7 @@ body {
 }
 
 .recipe-card__caveat {
-  grid-column: 3;
+  grid-column: 2 / -1;
   grid-row: 2;
   min-width: 0;
   padding-top: 8px;
