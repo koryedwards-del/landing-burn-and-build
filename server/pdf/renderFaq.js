@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
-import { PDF_FAQ } from './constants.js';
+import { PDF_QA } from './constants.js';
 import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
 
 function collectPdfBuffer(doc) {
@@ -17,24 +17,24 @@ function drawFaqItem(doc, item, questionNumber, x, y, width) {
 
   doc
     .font('Helvetica-Bold')
-    .fontSize(PDF_FAQ.questionSize)
+    .fontSize(PDF_QA.questionSize)
     .fillColor('#111111')
     .text(question, x, y, {
       width,
       lineGap: 0,
     });
 
-  const answerY = doc.y + PDF_FAQ.questionAnswerGap;
+  const answerY = doc.y + PDF_QA.questionAnswerGap;
   doc
     .font('Helvetica')
-    .fontSize(PDF_FAQ.answerSize)
+    .fontSize(PDF_QA.answerSize)
     .fillColor('#333333')
     .text(item.a, x, answerY, {
       width,
-      lineGap: PDF_FAQ.lineGap,
+      lineGap: PDF_QA.lineGap,
     });
 
-  return doc.y + PDF_FAQ.itemGap;
+  return doc.y + PDF_QA.itemGap;
 }
 
 export async function renderFaqPdf({ title } = {}) {

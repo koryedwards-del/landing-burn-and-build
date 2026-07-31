@@ -16,7 +16,7 @@ const STATIC_PDF_VIEWS = new Set(['faq', 'bestresults']);
 /** Bump bestresults when layout changes so Render cache cannot serve stale multi-page PDFs. */
 const STATIC_PDF_CACHE_KEYS = {
   faq: 'faq',
-  bestresults: 'bestresults:v3',
+  bestresults: 'bestresults:v4',
 };
 
 const pdfBodyCache = new Map();

@@ -24,13 +24,17 @@ export const PDF_HEADER = {
   ruleGap: 10,
 };
 
-export const PDF_FAQ = {
+/** Shared Q&A typography — FAQ, For Best Results, food-list tips. */
+export const PDF_QA = {
   questionSize: 9.5,
   answerSize: 8.5,
   itemGap: 7,
   lineGap: 2,
   questionAnswerGap: 1.5,
 };
+
+/** @deprecated Use PDF_QA */
+export const PDF_FAQ = PDF_QA;
 
 export const PDF_FOOD_LIST = {
   columnTitleSize: 9,
@@ -40,20 +44,7 @@ export const PDF_FOOD_LIST = {
   foodLineHeight: 8,
   columnGap: 16,
   columnRuleWidth: 1.5,
-  tipsQuestionSize: 7.5,
-  tipsAnswerSize: 7,
-  tipsLineGap: 1.5,
-  tipsQuestionAnswerGap: 2,
-  tipsItemGap: 8,
   tipsMinBlock: 24,
-};
-
-export const PDF_BEST_RESULTS = {
-  questionSize: 9,
-  answerSize: 8.5,
-  itemGap: 14,
-  lineGap: 2.5,
-  questionAnswerGap: 3,
 };
 
 export const PDF_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);

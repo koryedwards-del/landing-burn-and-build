@@ -1,4 +1,4 @@
-/** For Best Results — fixed 3-page pagination (newspaper Q&A, portrait). */
+/** For Best Results — fixed 2-page pagination (newspaper Q&A, portrait). */
 const FOR_BEST_RESULTS_ITEMS = [
   {
     q: 'What is the Burn & Build Diet?',
@@ -123,7 +123,6 @@ const FOR_BEST_RESULTS_ITEMS = [
 ];
 
 export const FOR_BEST_RESULTS_PRINT_PAGES = [
-  { page: 1, items: FOR_BEST_RESULTS_ITEMS.slice(0, 10) },
-  { page: 2, items: FOR_BEST_RESULTS_ITEMS.slice(10, 20) },
-  { page: 3, items: FOR_BEST_RESULTS_ITEMS.slice(20) },
+  { page: 1, items: FOR_BEST_RESULTS_ITEMS.slice(0, 15) },
+  { page: 2, items: FOR_BEST_RESULTS_ITEMS.slice(15) },
 ];

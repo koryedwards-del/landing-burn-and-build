@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
-import { PDF_BEST_RESULTS } from './constants.js';
+import { PDF_QA } from './constants.js';
 import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
 
 function collectPdfBuffer(doc) {
@@ -17,24 +17,24 @@ function drawBestResultsItem(doc, item, questionNumber, x, y, width) {
 
   doc
     .font('Helvetica-Bold')
-    .fontSize(PDF_BEST_RESULTS.questionSize)
+    .fontSize(PDF_QA.questionSize)
     .fillColor('#111111')
     .text(question, x, y, {
       width,
       lineGap: 0,
     });
 
-  const answerY = doc.y + PDF_BEST_RESULTS.questionAnswerGap;
+  const answerY = doc.y + PDF_QA.questionAnswerGap;
   doc
     .font('Helvetica')
-    .fontSize(PDF_BEST_RESULTS.answerSize)
-    .fillColor('#222222')
+    .fontSize(PDF_QA.answerSize)
+    .fillColor('#333333')
     .text(item.a, x, answerY, {
       width,
-      lineGap: PDF_BEST_RESULTS.lineGap,
+      lineGap: PDF_QA.lineGap,
     });
 
-  return doc.y + PDF_BEST_RESULTS.itemGap;
+  return doc.y + PDF_QA.itemGap;
 }
 
 export async function renderBestResultsPdf({ title } = {}) {

@@ -1,5 +1,5 @@
 import PDFDocument from 'pdfkit';
-import { PDF_FOOD_LIST } from './constants.js';
+import { PDF_FOOD_LIST, PDF_QA } from './constants.js';
 import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
 import {
   FOOD_LIST_PRINT_PAGES,
@@ -70,26 +70,26 @@ function drawTipsColumn(doc, qaItems, x, startY, width, bottomY) {
 
     doc
       .font('Helvetica-Bold')
-      .fontSize(PDF_FOOD_LIST.tipsQuestionSize)
+      .fontSize(PDF_QA.questionSize)
       .fillColor('#111111')
-      .text(item.q, x, y, { width, lineGap: PDF_FOOD_LIST.tipsLineGap });
+      .text(item.q, x, y, { width, lineGap: PDF_QA.lineGap });
 
-    y = doc.y + PDF_FOOD_LIST.tipsQuestionAnswerGap;
+    y = doc.y + PDF_QA.questionAnswerGap;
 
     doc
       .font('Helvetica')
-      .fontSize(PDF_FOOD_LIST.tipsAnswerSize)
-      .fillColor('#222222')
-      .text(item.a, x, y, { width, lineGap: PDF_FOOD_LIST.tipsLineGap });
+      .fontSize(PDF_QA.answerSize)
+      .fillColor('#333333')
+      .text(item.a, x, y, { width, lineGap: PDF_QA.lineGap });
 
-    y = doc.y + PDF_FOOD_LIST.tipsItemGap;
+    y = doc.y + PDF_QA.itemGap;
 
     if (index < qaItems.length - 1 && y < bottomY - 4) {
       doc
         .strokeColor('#bbbbbb')
         .lineWidth(0.5)
-        .moveTo(x, y - PDF_FOOD_LIST.tipsItemGap / 2)
-        .lineTo(x + width, y - PDF_FOOD_LIST.tipsItemGap / 2)
+        .moveTo(x, y - PDF_QA.itemGap / 2)
+        .lineTo(x + width, y - PDF_QA.itemGap / 2)
         .stroke();
     }
   });
