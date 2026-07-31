@@ -82,7 +82,7 @@
     <p class="pdf-toolbar__lead">Print or save this document</p>
     <p class="pdf-toolbar__status" id="pdf-status">Loading PDF…</p>
     <div class="pdf-toolbar__actions">
-      <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print again</button>
+      <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print</button>
       <a class="pdf-toolbar__btn" id="pdf-download" download hidden>Download PDF</a>
     </div>
   </div>
@@ -121,8 +121,7 @@
 
     frame.addEventListener('load', () => {
       printBtn.disabled = false;
-      statusEl.innerHTML = 'The <strong>print dialog</strong> should open automatically. Choose your printer, or pick <strong>Save as PDF</strong> to keep a copy. You can also use <strong>Download PDF</strong> below.';
-      triggerPrint();
+      statusEl.innerHTML = 'Click <strong>Print</strong> to send this to your printer, or choose <strong>Save as PDF</strong> in the print dialog. Click <strong>Download PDF</strong> to save the file to your device.';
     });
 
     try {
