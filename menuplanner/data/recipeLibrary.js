@@ -189,7 +189,7 @@ export const MEAL_TEMPLATES = [
   ], {
     name: 'Yogurt & Oatmeal',
     profile: 'Proats',
-    caveat: 'Oats are measured dry. Add water and salt to taste. Cool slightly. Add a handful of berries — they don\'t count toward your fruit servings.',
+    caveat: 'Cook oats, cool slightly, stir in yogurt. Fruit servings stay on snack slots.',
   }),
   meal('turkey-sweet-potato-spinach', [
     { slot: 'Protein', foodName: 'Turkey breast' },
