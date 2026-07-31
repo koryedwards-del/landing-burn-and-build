@@ -180,7 +180,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Grains/Starches', foodName: 'Bread, whole wheat' },
   ], {
     profile: 'Classic',
-    caveat: 'Scramble egg substitute in a non-stick pan — PAM cooking spray is recommended to prevent sticking. Bread plain — no butter, jam, or spread.',
+    caveat: 'Scramble egg substitute dry in a non-stick pan. Bread without spread.',
   }),
   meal('yogurt-oatmeal-blueberries', [
     { slot: 'Protein', foodName: 'Yogurt, plain, nonfat' },
