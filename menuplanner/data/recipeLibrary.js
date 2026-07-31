@@ -248,11 +248,12 @@ export const MEAL_TEMPLATES = [
   }),
   meal('chicken-sweet-potato-green-beans', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
-    { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
-    { slot: 'Veggie', foodName: 'Green beans, cooked' },
+    { slot: 'Grains/Starches', foodName: 'Potato, red, boiled' },
+    { slot: 'Veggie', foodName: 'Carrots, cooked' },
   ], {
+    name: 'Chicken, Baby Reds & Carrots',
     profile: 'Cut',
-    caveat: 'One sheet pan: chicken, sweet potato chunks, green beans.',
+    caveat: 'Heat the oven. Put chicken, baby red potatoes, and carrots on one tray. Roast until the chicken is done and the potatoes and carrots are tender.',
   }),
   meal('tilapia-rice-broccoli', [
     { slot: 'Protein', foodName: 'Tilapia, baked' },
