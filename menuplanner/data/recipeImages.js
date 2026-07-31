@@ -13,7 +13,7 @@ const TEMPLATE_IMAGES = {
   'chicken-rice-broccoli-lemon': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
   'chicken-rice-broccoli-cajun': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
   'shrimp-stir-fry-rice': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'chicken-rice-broccoli-bbq': `${MEAL_ASSET_BASE}/chicken-rice-bbq.jpg`,
+  'cod-rice-kale': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
   'turkey-rice-broccoli': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
   'turkey-sweet-potato-spinach': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
   'tuna-sweet-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,

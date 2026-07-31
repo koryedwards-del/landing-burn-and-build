@@ -22,6 +22,7 @@ const FOOD_SHORT = {
   'Turkey breast': 'Turkey',
   'Tuna, canned in water': 'Tuna',
   'Tilapia, baked': 'Tilapia',
+  'Cod, Atlantic, baked': 'Cod',
   'Shrimp, steamed': 'Shrimp',
   'Beans, black': 'Black Beans',
   'Rice, basmati': 'Rice',
@@ -31,6 +32,7 @@ const FOOD_SHORT = {
   'Broccoli, cooked': 'Broccoli',
   'Green beans, cooked': 'Green Beans',
   'Asparagus, cooked': 'Asparagus',
+  'Kale, cooked': 'Kale',
   'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Bell Peppers',
   'Egg whites': 'Egg Whites',
@@ -225,13 +227,14 @@ export const MEAL_TEMPLATES = [
     profile: 'Stir-fry',
     caveat: 'PAM cooking spray is recommended to prevent sticking. Stir-fry shrimp with broccoli, mushrooms, and red bell peppers in a hot non-stick pan until the shrimp turn pink and are cooked through. Rice cooked separately.',
   }),
-  meal('chicken-rice-broccoli-bbq', [
-    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+  meal('cod-rice-kale', [
+    { slot: 'Protein', foodName: 'Cod, Atlantic, baked' },
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Asparagus, cooked' },
+    { slot: 'Veggie', foodName: 'Kale, cooked' },
   ], {
-    profile: 'BBQ',
-    caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Asparagus roasted or steamed.',
+    name: 'Cod, Rice & Kale',
+    profile: 'Lemon-herb',
+    caveat: 'Heat the oven. Put cod and kale on one tray. Lemon juice and dried herbs on the fish. Bake until the cod flakes and the kale is tender. Rice cooked separately.',
   }),
 
   // —— Variations on the classic bowl ——
