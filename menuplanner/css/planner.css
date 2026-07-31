@@ -1241,17 +1241,6 @@ body {
   background: #525659;
 }
 
-.pdf-view-dialog__loading {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-  background: #525659;
-}
-
 .pdf-view-dialog__error {
   margin: 0;
   padding: 10px 14px;

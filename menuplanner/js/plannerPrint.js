@@ -518,7 +518,6 @@ async function openPdfDocument(view) {
   const printBtn = document.getElementById('pdf-view-print');
   const closeBtn = document.getElementById('pdf-view-close');
   const errorEl = document.getElementById('pdf-view-error');
-  const loadingEl = document.getElementById('pdf-view-loading');
 
   if (!dialog || !frame || !printBtn) {
     const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
@@ -539,8 +538,6 @@ async function openPdfDocument(view) {
   printBtn.disabled = true;
   errorEl.hidden = true;
   errorEl.textContent = '';
-  frame.hidden = true;
-  if (loadingEl) loadingEl.hidden = false;
   frame.removeAttribute('src');
   delete frame.dataset.pdfBlobUrl;
 
@@ -550,13 +547,8 @@ async function openPdfDocument(view) {
     const pdfBlobUrl = URL.createObjectURL(blob);
     frame.dataset.pdfBlobUrl = pdfBlobUrl;
     frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
-    frame.onload = () => {
-      if (loadingEl) loadingEl.hidden = true;
-      frame.hidden = false;
-      printBtn.disabled = false;
-    };
-    // Load PDF directly — HTML embed wrappers only print the visible page.
     frame.src = pdfBlobUrl;
+    printBtn.disabled = false;
   }
 
   const cachedBlob = pdfBlobCache.get(view);
@@ -577,7 +569,6 @@ async function openPdfDocument(view) {
       } catch (_) {
         /* ignore */
       }
-      if (loadingEl) loadingEl.hidden = true;
       errorEl.textContent = message;
       errorEl.hidden = false;
       return;
@@ -587,7 +578,6 @@ async function openPdfDocument(view) {
     pdfBlobCache.set(view, blob);
     showPdfBlob(blob);
   } catch (err) {
-    if (loadingEl) loadingEl.hidden = true;
     errorEl.textContent = err.message || 'Could not load PDF.';
     errorEl.hidden = false;
   }
@@ -617,9 +607,6 @@ function initPdfViewDialog() {
     delete frame.dataset.pdfBlobUrl;
     delete frame.dataset.filename;
     frame.removeAttribute('src');
-    frame.hidden = false;
-    const loadingEl = document.getElementById('pdf-view-loading');
-    if (loadingEl) loadingEl.hidden = true;
     printBtn.disabled = true;
     if (dialog.dataset.priorPageTitle) {
       document.title = dialog.dataset.priorPageTitle;
