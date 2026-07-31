@@ -284,12 +284,14 @@ export const MEAL_TEMPLATES = [
     profile: 'Latin',
     caveat: 'Cumin, garlic, cilantro. Beans and rice each get half your grain/starch serving.',
   }),
-  meal('steak-tortilla-texas', [
-    { slot: 'Protein', foodName: 'Beef, eye of round' },
-    { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+  meal('sirloin-baked-potato-snap-peas', [
+    { slot: 'Protein', foodName: 'Beef, top sirloin' },
+    { slot: 'Grains/Starches', foodName: 'Potato, baked (flesh + skin)' },
+    { slot: 'Veggie', foodName: 'Snap peas (sugar snap)' },
   ], {
-    profile: 'Texas',
-    caveat: 'Mesquite and chili dry rub. Jalapeño for heat is free.',
+    name: 'Sirloin, Baked Potato & Snap Peas',
+    profile: 'Classic',
+    caveat: 'PAM cooking spray is recommended to prevent sticking. Cook steak in a non-stick pan until done to your liking. Bake the potato until tender. Oversalt the potato — tastes like it has butter on it. Ok, not really, but better than struggling. Some people love plain yogurt as a replacement for sour cream on the potato. Snap peas steamed or roasted until tender. A good steak deserves a good steak sauce.',
   }),
   meal('top-sirloin-rice-peppers', [
     { slot: 'Protein', foodName: 'Beef, top sirloin' },
