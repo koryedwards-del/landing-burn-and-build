@@ -203,7 +203,7 @@ export const MEAL_TEMPLATES = [
   // —— Chicken & rice bowls ——
   meal('chicken-rice-broccoli-lemon', CHICKEN_RICE_BROCCOLI, {
     profile: 'Lemon-herb',
-    caveat: 'Sheet-pan chicken and broccoli. Lemon juice and dried herbs on everything — batch six at once.',
+    caveat: 'Roast chicken and broccoli on one oven tray. Lemon juice and dried herbs on everything — cook extra if you\'re meal prepping.',
   }),
   meal('chicken-rice-broccoli-cajun', CHICKEN_RICE_BROCCOLI, {
     profile: 'Cajun',
