@@ -480,10 +480,11 @@ body {
 }
 
 .recipe-card__pick {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 0.95fr) minmax(0, 1.15fr);
+  grid-template-rows: auto auto;
+  gap: 8px 16px;
+  align-items: start;
   width: 100%;
   padding: 10px 12px;
   background: transparent;
@@ -495,12 +496,27 @@ body {
   cursor: pointer;
 }
 
-.recipe-card__head {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 0.95fr) minmax(0, 1.15fr);
-  gap: 12px 16px;
-  align-items: start;
-  width: 100%;
+.recipe-card__col--plate {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.recipe-card__col--title {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.recipe-card__col--foods {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.recipe-card__caveat {
+  grid-column: 3;
+  grid-row: 2;
+  min-width: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
 }
 
 .recipe-card__pick:hover {
@@ -552,12 +568,6 @@ body {
   text-transform: uppercase;
   color: var(--gold);
   line-height: 1.25;
-}
-
-.recipe-card__caveat {
-  width: 100%;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
 }
 
 .recipe-card__caveat-text {
@@ -756,9 +766,17 @@ body {
     min-height: auto;
   }
 
-  .recipe-card__head {
+  .recipe-card__pick {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .recipe-card__col--plate,
+  .recipe-card__col--title,
+  .recipe-card__col--foods,
+  .recipe-card__caveat {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .recipe-card__col--plate {
