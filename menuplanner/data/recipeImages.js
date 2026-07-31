@@ -21,7 +21,7 @@ const TEMPLATE_IMAGES = {
   'tilapia-rice-broccoli': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
   'steak-tortilla-peppers-fajita': `${MEAL_ASSET_BASE}/steak-fajita.jpg`,
   'chicken-beans-rice': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
-  'steak-tortilla-texas': `${MEAL_ASSET_BASE}/steak-tortilla.jpg`,
+  'sirloin-baked-potato-snap-peas': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
   'top-sirloin-rice-peppers': `${MEAL_ASSET_BASE}/steak-fajita.jpg`,
   'beef-ground-round-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
 };
