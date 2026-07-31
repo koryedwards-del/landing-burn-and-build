@@ -33,6 +33,9 @@ const FOOD_SHORT = {
   'Green beans, cooked': 'Green Beans',
   'Asparagus, cooked': 'Asparagus',
   'Kale, cooked': 'Kale',
+  'Cauliflower, cooked': 'Cauliflower',
+  'Cabbage, green, cooked': 'Cabbage',
+  'Bok choy': 'Bok Choy',
   'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Bell Peppers',
   'Egg whites': 'Egg Whites',
@@ -238,22 +241,24 @@ export const MEAL_TEMPLATES = [
   }),
 
   // —— Variations on the classic bowl ——
-  meal('turkey-rice-broccoli', [
+  meal('turkey-beans-cabbage', [
     { slot: 'Protein', foodName: 'Turkey breast' },
-    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Brussels sprouts, cooked' },
+    { slot: 'Grains/Starches', foodName: 'Beans, black' },
+    { slot: 'Veggie', foodName: 'Cabbage, green, cooked' },
   ], {
-    profile: 'Classic',
-    caveat: 'Slice or dice turkey breast. PAM cooking spray is recommended to prevent sticking. Cook in a non-stick pan until done; weigh cooked. Brussels sprouts roasted or steamed; rice cooked separately.',
+    name: 'Turkey, Black Beans & Cabbage',
+    profile: 'Latin',
+    caveat: 'Slice or dice turkey breast. PAM cooking spray is recommended to prevent sticking. Cook in a non-stick pan until done. Black beans heated; cabbage steamed or sautéed until tender.',
   }),
   meal('tuna-sweet-potato', [
     { slot: 'Protein', foodName: 'Tuna, canned in water' },
     { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
     { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
+    { slot: 'Veggie', foodName: 'Cauliflower, cooked' },
   ], {
-    name: 'Tuna with Sweet & White Potato Mash',
+    name: 'Tuna, Potato Mash & Cauliflower',
     profile: 'Classic',
-    caveat: 'Drain tuna well. Boil the sweet potato and white potato together, or microwave until tender — then mash together.',
+    caveat: 'Drain tuna well. Boil the sweet potato and white potato together, or microwave until tender — then mash together. Cauliflower steamed or roasted until tender.',
   }),
   meal('chicken-sweet-potato-green-beans', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
@@ -264,14 +269,14 @@ export const MEAL_TEMPLATES = [
     profile: 'Cut',
     caveat: 'Heat the oven. Put chicken, baby red potatoes, and carrots on one tray. Roast until the chicken is done and the potatoes and carrots are tender.',
   }),
-  meal('tilapia-rice-broccoli', [
-    { slot: 'Protein', foodName: 'Tilapia, baked' },
-    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Cauliflower, cooked' },
+  meal('tuna-tortilla-bok-choy', [
+    { slot: 'Protein', foodName: 'Tuna, canned in water' },
+    { slot: 'Grains/Starches', foodName: 'Tortilla, corn (6-inch)' },
+    { slot: 'Veggie', foodName: 'Bok choy' },
   ], {
-    name: 'Tilapia, Rice & Cauliflower',
+    name: 'Tuna, Tortilla & Bok Choy',
     profile: 'Classic',
-    caveat: 'Bake tilapia plain. Rice on the side; cauliflower steamed or roasted until tender.',
+    caveat: 'Drain tuna well. PAM cooking spray is recommended to prevent sticking. Sauté bok choy in a non-stick pan until tender. Load the tortilla with tuna and bok choy.',
   }),
 
   // —— Hearty / dinner ——
@@ -287,9 +292,11 @@ export const MEAL_TEMPLATES = [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
     { slot: 'Grains/Starches', foodName: 'Beans, black' },
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Asparagus, cooked' },
   ], {
+    name: 'Chicken, Black Beans, Rice & Asparagus',
     profile: 'Latin',
-    caveat: 'Cumin, garlic, cilantro. Beans and rice each get half your grain/starch serving.',
+    caveat: 'Cumin, garlic, cilantro on chicken. PAM cooking spray is recommended to prevent sticking. Cook chicken in a hot non-stick pan until done. Black beans and rice heated separately; asparagus steamed or roasted until tender.',
   }),
   meal('sirloin-baked-potato-snap-peas', [
     { slot: 'Protein', foodName: 'Beef, top sirloin' },
