@@ -247,11 +247,7 @@ const PRINT_SHELL_STYLES = `
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    .print-body--foodlist .print-page--sheet {
-      min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
-    }
-    .print-body--bestresults .print-page--sheet,
-    .print-body--faq .print-page--sheet {
+    .print-body--bestresults .print-page--sheet {
       min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
     }
   }
