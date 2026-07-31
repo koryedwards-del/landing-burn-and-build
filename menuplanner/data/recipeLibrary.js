@@ -242,9 +242,11 @@ export const MEAL_TEMPLATES = [
   meal('tuna-sweet-potato', [
     { slot: 'Protein', foodName: 'Tuna, canned in water' },
     { slot: 'Grains/Starches', foodName: 'Sweet potato, baked' },
+    { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
   ], {
+    name: 'Tuna with Sweet & White Potato Mash',
     profile: 'Classic',
-    caveat: 'Drain tuna well. Lemon and pepper over baked or microwaved sweet potato.',
+    caveat: 'Drain tuna well. Boil the sweet potato and white potato together, or microwave until tender — then mash together.',
   }),
   meal('chicken-sweet-potato-green-beans', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
