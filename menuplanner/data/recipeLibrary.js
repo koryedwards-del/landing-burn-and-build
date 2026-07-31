@@ -197,7 +197,7 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Spinach, cooked' },
   ], {
     profile: 'Power bowl',
-    caveat: 'Dice cooked sweet potato. Sauté turkey with garlic powder; wilt spinach at the end.',
+    caveat: 'Dice cooked sweet potato. Sauté turkey in a non-stick pan — PAM cooking spray is recommended to prevent sticking. Garlic powder. Add spinach to the hot pan and toss until wilted.',
   }),
 
   // —— Chicken & rice bowls ——
