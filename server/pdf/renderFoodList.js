@@ -1,6 +1,14 @@
 import PDFDocument from 'pdfkit';
 import { PDF_FOOD_LIST } from './constants.js';
-import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
+import {
+  addLandscapeLetterPage,
+  beginLandscapeDrawing,
+  contentBox,
+  drawGenericHeader,
+  drawWatermark,
+  endLandscapeDrawing,
+  landscapePageSize,
+} from './draw.js';
 import {
   FOOD_LIST_PRINT_PAGES,
   foodListLabel,
@@ -98,11 +106,13 @@ function drawTipsColumn(doc, qaItems, x, startY, width, bottomY) {
 }
 
 function drawFoodListPage(doc, pageDef) {
-  doc.addPage({ size: [792, 612], margin: 0 });
-  drawWatermark(doc);
+  addLandscapeLetterPage(doc);
+  beginLandscapeDrawing(doc);
 
-  const box = contentBox(doc);
-  const contentTop = drawGenericHeader(doc, 'Food List');
+  const { width, height } = landscapePageSize(doc);
+  const box = contentBox(doc, width, height);
+  drawWatermark(doc, width, height);
+  const contentTop = drawGenericHeader(doc, 'Food List', box);
   const bottomY = box.bottom;
   const columnCount = pageDef.columnCount || pageDef.columns.length;
   const columns = columnLayout(box, columnCount);
@@ -132,12 +142,15 @@ function drawFoodListPage(doc, pageDef) {
       bottomY,
     );
   });
+
+  endLandscapeDrawing(doc);
 }
 
 export async function renderFoodListPdf({ title } = {}) {
   const docTitle = title || 'B&B - Food List';
   const doc = new PDFDocument({
-    size: [792, 612],
+    size: 'LETTER',
+    layout: 'portrait',
     margin: 0,
     autoFirstPage: false,
     info: {

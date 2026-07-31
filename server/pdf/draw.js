@@ -11,22 +11,40 @@ import {
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const logoPath = path.join(root, PDF_LOGO_REL);
 
-export function contentBox(doc) {
-  const { width, height } = doc.page;
+export function contentBox(doc, pageWidth = doc.page.width, pageHeight = doc.page.height) {
   return {
     x: PDF_MARGIN.left,
     y: PDF_MARGIN.top,
-    width: width - PDF_MARGIN.left - PDF_MARGIN.right,
-    height: height - PDF_MARGIN.top - PDF_MARGIN.bottom,
-    bottom: height - PDF_MARGIN.bottom,
+    width: pageWidth - PDF_MARGIN.left - PDF_MARGIN.right,
+    height: pageHeight - PDF_MARGIN.top - PDF_MARGIN.bottom,
+    bottom: pageHeight - PDF_MARGIN.bottom,
   };
 }
 
-export function drawWatermark(doc) {
-  const { width, height } = doc.page;
+/** Letter page stored portrait with /Rotate 90 — prints landscape reliably on macOS. */
+export function addLandscapeLetterPage(doc) {
+  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+  doc.page.dictionary.data.Rotate = 90;
+}
+
+export function landscapePageSize(doc) {
+  return { width: doc.page.height, height: doc.page.width };
+}
+
+export function beginLandscapeDrawing(doc) {
+  doc.save();
+  doc.translate(doc.page.width, 0);
+  doc.rotate(90);
+}
+
+export function endLandscapeDrawing(doc) {
+  doc.restore();
+}
+
+export function drawWatermark(doc, pageWidth = doc.page.width, pageHeight = doc.page.height) {
   const size = PDF_WATERMARK_SIZE_PT;
-  const x = (width - size) / 2;
-  const y = (height - size) / 2;
+  const x = (pageWidth - size) / 2;
+  const y = (pageHeight - size) / 2;
 
   doc.save();
   doc.opacity(PDF_WATERMARK_OPACITY);
@@ -35,8 +53,7 @@ export function drawWatermark(doc) {
   doc.opacity(1);
 }
 
-export function drawGenericHeader(doc, title) {
-  const box = contentBox(doc);
+export function drawGenericHeader(doc, title, box = contentBox(doc)) {
   const logoY = box.y;
   const textX = box.x + PDF_HEADER.logoWidth + 16;
   const textWidth = box.width - PDF_HEADER.logoWidth - 16;
