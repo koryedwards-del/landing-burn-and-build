@@ -234,10 +234,10 @@ export const MEAL_TEMPLATES = [
   meal('turkey-rice-broccoli', [
     { slot: 'Protein', foodName: 'Turkey breast' },
     { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+    { slot: 'Veggie', foodName: 'Brussels sprouts, cooked' },
   ], {
     profile: 'Classic',
-    caveat: 'Same prep as chicken and rice. Slice or dice turkey breast; weigh cooked.',
+    caveat: 'Slice or dice turkey breast. PAM cooking spray is recommended to prevent sticking. Cook in a non-stick pan until done; weigh cooked. Brussels sprouts roasted or steamed; rice cooked separately.',
   }),
   meal('tuna-sweet-potato', [
     { slot: 'Protein', foodName: 'Tuna, canned in water' },
