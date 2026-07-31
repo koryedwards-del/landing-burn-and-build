@@ -14,6 +14,7 @@ const FRUIT_IMAGE_FILES = {
   Peaches: 'peaches.png',
   Pears: 'pears.png',
   Strawberries: 'strawberries.png',
+  Tangerines: 'tangerines.png',
 };
 
 const FRUIT_ASSET_BASE = '../menuplanner/assets/fruits';
