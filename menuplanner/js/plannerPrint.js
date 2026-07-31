@@ -1,4 +1,5 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+import { apiUrl } from '../../js/apiConfig.js';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
@@ -47,6 +48,14 @@ import {
 
 /** Views rendered as real PDFs on Render — grows as each doc is converted. */
 const PDF_PRINT_VIEWS = new Set(['faq']);
+
+const PDF_VIEW_TITLES = {
+  faq: 'Frequently Asked Questions',
+  foodlist: 'Food List',
+  bestresults: 'For Best Results',
+  week: 'Weekly Meal Plan',
+  shopping: 'Grocery List',
+};
 
 function printFoodAmount(foodName, servings) {
   const food = state.foods.find((item) => item.name === foodName);
@@ -492,12 +501,105 @@ function printGenericDocument(html) {
 }
 
 async function openPdfDocument(view) {
-  const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
-  viewerUrl.searchParams.set('view', view);
-  const pdfWin = window.open(viewerUrl.href, '_blank');
-  if (!pdfWin) {
-    window.alert('Allow pop-ups to open the PDF, or try again.');
+  const dialog = document.getElementById('pdf-view-dialog');
+  const titleEl = document.getElementById('pdf-view-title');
+  const frame = document.getElementById('pdf-view-frame');
+  const printBtn = document.getElementById('pdf-view-print');
+  const saveBtn = document.getElementById('pdf-view-save');
+  const errorEl = document.getElementById('pdf-view-error');
+
+  if (!dialog || !frame || !printBtn || !saveBtn) {
+    const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
+    viewerUrl.searchParams.set('view', view);
+    window.open(viewerUrl.href, '_blank');
+    return;
   }
+
+  if (titleEl) {
+    titleEl.textContent = PDF_VIEW_TITLES[view] || 'Document';
+  }
+  printBtn.disabled = true;
+  saveBtn.disabled = true;
+  errorEl.hidden = true;
+  errorEl.textContent = '';
+  frame.removeAttribute('src');
+  delete frame.dataset.blobUrl;
+  delete frame.dataset.filename;
+
+  dialog.showModal();
+
+  try {
+    const res = await fetch(apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`));
+    if (!res.ok) {
+      let message = 'Could not generate PDF.';
+      try {
+        const body = await res.json();
+        if (body?.message) message = body.message;
+      } catch (_) {
+        /* ignore */
+      }
+      errorEl.textContent = message;
+      errorEl.hidden = false;
+      return;
+    }
+
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    frame.dataset.blobUrl = blobUrl;
+    frame.dataset.filename = `burn-and-build-${view}.pdf`;
+    frame.onload = () => {
+      printBtn.disabled = false;
+      saveBtn.disabled = false;
+    };
+    frame.src = blobUrl;
+  } catch (err) {
+    errorEl.textContent = err.message || 'Could not load PDF.';
+    errorEl.hidden = false;
+  }
+}
+
+function initPdfViewDialog() {
+  const dialog = document.getElementById('pdf-view-dialog');
+  const frame = document.getElementById('pdf-view-frame');
+  const printBtn = document.getElementById('pdf-view-print');
+  const saveBtn = document.getElementById('pdf-view-save');
+  const closeBtn = document.getElementById('pdf-view-close');
+  if (!dialog || !frame || !printBtn || !saveBtn) return;
+
+  printBtn.addEventListener('click', () => {
+    try {
+      frame.contentWindow?.focus();
+      frame.contentWindow?.print();
+    } catch (_) {
+      /* keep viewer open — no window.print fallback */
+    }
+  });
+
+  saveBtn.addEventListener('click', () => {
+    const blobUrl = frame.dataset.blobUrl;
+    const filename = frame.dataset.filename || 'burn-and-build.pdf';
+    if (!blobUrl) return;
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  });
+
+  closeBtn?.addEventListener('click', () => dialog.close());
+
+  dialog.addEventListener('close', () => {
+    const blobUrl = frame.dataset.blobUrl;
+    if (blobUrl) {
+      URL.revokeObjectURL(blobUrl);
+      delete frame.dataset.blobUrl;
+      delete frame.dataset.filename;
+    }
+    frame.removeAttribute('src');
+    printBtn.disabled = true;
+    saveBtn.disabled = true;
+  });
 }
 
 function printPlannerDocument(view) {
@@ -545,6 +647,7 @@ function openPrintShop() {
 
 function initPrintShop() {
   preloadPrintAssets();
+  initPdfViewDialog();
   document.getElementById('print-shop-open')?.addEventListener('click', openPrintShop);
   initPrintChoiceDialog();
 }

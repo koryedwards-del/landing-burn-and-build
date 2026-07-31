@@ -1156,6 +1156,98 @@ body {
   outline: none;
 }
 
+.pdf-view-dialog {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: min(960px, 96vw);
+  height: min(88vh, 880px);
+  max-width: none;
+  max-height: none;
+  background: #121212;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.pdf-view-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.pdf-view-dialog__shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pdf-view-dialog__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.pdf-view-dialog__title {
+  margin: 0;
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.pdf-view-dialog__actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.pdf-view-dialog__btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.pdf-view-dialog__btn--primary {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.pdf-view-dialog__btn--ghost {
+  color: var(--muted);
+}
+
+.pdf-view-dialog__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pdf-view-dialog__frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #525659;
+}
+
+.pdf-view-dialog__error {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: #ff8a80;
+}
+
 /* Cards */
 
 .card {
