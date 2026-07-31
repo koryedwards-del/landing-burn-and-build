@@ -1,4 +1,5 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
+import { apiUrl } from '../../js/apiConfig.js';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
@@ -44,6 +45,9 @@ import {
   isAssignedMeal,
   mealSlotMeta,
 } from './plannerState.js';
+
+/** Views rendered as real PDFs on Render — grows as each doc is converted. */
+const PDF_PRINT_VIEWS = new Set(['faq']);
 
 function printFoodAmount(foodName, servings) {
   const food = state.foods.find((item) => item.name === foodName);
@@ -488,8 +492,41 @@ function printGenericDocument(html) {
   triggerDocumentPrint(printWin, printWin.document);
 }
 
+async function openPdfDocument(view) {
+  const url = apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`);
+  const res = await fetch(url);
+  if (!res.ok) {
+    let message = 'Could not generate PDF.';
+    try {
+      const body = await res.json();
+      if (body?.message) message = body.message;
+    } catch (_) {
+      /* ignore */
+    }
+    window.alert(message);
+    return;
+  }
+
+  const blob = await res.blob();
+  const blobUrl = URL.createObjectURL(blob);
+  const pdfWin = window.open(blobUrl, '_blank');
+  if (!pdfWin) {
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = `burn-and-build-${view}.pdf`;
+    link.click();
+  }
+  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+}
+
 function printPlannerDocument(view) {
   persistPlannerToProgram({ immediate: true });
+
+  if (PDF_PRINT_VIEWS.has(view)) {
+    openPdfDocument(view);
+    return;
+  }
+
   const html = buildPrintDocumentHtml(view);
 
   if (isGenericPrintView(view)) {

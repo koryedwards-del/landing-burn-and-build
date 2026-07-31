@@ -21,6 +21,7 @@ import {
   stripeConfigured,
   verifyCheckoutSession,
 } from './stripe.js';
+import { renderPrintPdf } from './pdf/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -140,7 +141,31 @@ app.get('/health', (_req, res) => {
     env: isProd ? 'production' : 'development',
     database: dbPathForHealth(),
     stripe: stripeConfigured(),
+    pdf: true,
   });
+});
+
+app.get('/api/print/pdf', async (req, res) => {
+  const view = String(req.query.view || '').trim();
+  if (!view) {
+    res.status(400).json({ ok: false, message: 'Missing print view.' });
+    return;
+  }
+
+  try {
+    const pdf = await renderPrintPdf(view);
+    const filename = `burn-and-build-${view}.pdf`;
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(pdf);
+  } catch (err) {
+    const status = err.status || 500;
+    if (status >= 500) {
+      console.error('PDF render error:', err);
+    }
+    res.status(status).json({ ok: false, message: err.message || 'Could not generate PDF.' });
+  }
 });
 
 function creatorBaseUrl(req) {
