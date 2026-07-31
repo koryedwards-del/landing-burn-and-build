@@ -1,7 +1,6 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import { apiUrl } from '../../js/apiConfig.js';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
-import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
 import { foodListLabel } from '../../js/foodDisplay.js';
 import { PROTEIN_TIPS_QA } from '../../data/proteinTipsPrintout.js';
@@ -330,43 +329,26 @@ function buildFoodListContent() {
   })).join('');
 }
 
-function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } = {}) {
+function buildQaPrintContent(view, pages, { numbered = false } = {}) {
   const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
   const orientation = PRINT_VIEW_CONFIG[view]?.pageSize === 'landscape' ? 'landscape' : 'portrait';
   let questionNumber = 0;
 
   return pages.map((page, index) => {
-    const bodyHtml = variant === 'newspaper'
-      ? `
-        <div class="print-qa-page">
-          ${page.items.map((item) => {
-            questionNumber += 1;
-            const questionPrefix = numbered ? `${questionNumber}. ` : '';
-            return `
-              <article class="print-qa-item">
-                <h2 class="print-qa-question">${questionPrefix}${escapeHtml(item.q)}</h2>
-                <p class="print-qa-answer">${escapeHtml(item.a)}</p>
-              </article>
-            `;
-          }).join('')}
-        </div>
-      `
-      : `
-        <div class="faq-page">
-          ${page.items.map((item) => {
-            questionNumber += 1;
-            const questionPrefix = numbered
-              ? `<span class="faq-question-num">${questionNumber}.</span> `
-              : '';
-            return `
-              <article class="faq-item">
-                <h2 class="faq-question">${questionPrefix}${escapeHtml(item.q)}</h2>
-                <p class="faq-answer">${escapeHtml(item.a)}</p>
-              </article>
-            `;
-          }).join('')}
-        </div>
-      `;
+    const bodyHtml = `
+      <div class="print-qa-page">
+        ${page.items.map((item) => {
+          questionNumber += 1;
+          const questionPrefix = numbered ? `${questionNumber}. ` : '';
+          return `
+            <article class="print-qa-item">
+              <h2 class="print-qa-question">${questionPrefix}${escapeHtml(item.q)}</h2>
+              <p class="print-qa-answer">${escapeHtml(item.a)}</p>
+            </article>
+          `;
+        }).join('')}
+      </div>
+    `;
 
     return buildGenericPrintSheet({
       orientation,
@@ -380,11 +362,7 @@ function buildQaPrintContent(view, pages, { numbered = false, variant = 'faq' } 
 }
 
 function buildForBestResultsContent() {
-  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES, { numbered: true, variant: 'newspaper' });
-}
-
-function buildHandbookFaqContent() {
-  return buildQaPrintContent('faq', HANDBOOK_FAQ_PRINT_PAGES, { numbered: true });
+  return buildQaPrintContent('bestresults', FOR_BEST_RESULTS_PRINT_PAGES, { numbered: true });
 }
 
 function buildShoppingListContent() {
@@ -433,7 +411,6 @@ const PRINT_BODY_BUILDERS = {
   shopping: buildShoppingListContent,
   foodlist: buildFoodListContent,
   bestresults: buildForBestResultsContent,
-  faq: buildHandbookFaqContent,
 };
 
 function buildPrintDocumentHtml(view = 'week') {

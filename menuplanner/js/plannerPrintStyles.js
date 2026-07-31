@@ -157,8 +157,7 @@ const PRINT_SHELL_STYLES = `
   .print-body--foodlist .print-page--sheet {
     min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
   }
-  .print-body--bestresults .print-page--sheet,
-  .print-body--faq .print-page--sheet {
+  .print-body--bestresults .print-page--sheet {
     min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
   }
   .print-page--break,
@@ -501,39 +500,6 @@ const FOODLIST_CONTENT_STYLES = `
   }
 `;
 
-const QA_CONTENT_STYLES = `
-  .faq-page {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-  .faq-item { break-inside: avoid; }
-  .faq-question {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #111;
-    line-height: 1.2;
-    margin-bottom: 1px;
-  }
-  .faq-question-num { font-weight: 700; }
-  .faq-answer {
-    font-size: 0.64rem;
-    line-height: 1.4;
-    color: #333;
-  }
-  @media print {
-    .faq-page { gap: 3px; }
-    .faq-question { font-size: 0.6rem; margin-bottom: 0; }
-    .faq-answer { font-size: 0.56rem; line-height: 1.28; }
-  }
-`;
-
 const BESTRESULTS_CONTENT_STYLES = `
   .print-qa-page {
     display: flex;
@@ -576,7 +542,6 @@ const CONTENT_STYLES = {
   shopping: SHOPPING_CONTENT_STYLES,
   foodlist: FOODLIST_CONTENT_STYLES,
   bestresults: BESTRESULTS_CONTENT_STYLES,
-  faq: QA_CONTENT_STYLES,
 };
 
 function buildPrintStylesForView(view) {
