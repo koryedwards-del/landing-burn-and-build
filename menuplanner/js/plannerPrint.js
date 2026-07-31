@@ -95,24 +95,19 @@ async function loadPdfBlob(view, title) {
   return blob;
 }
 
-/** Open tab synchronously on click — must run before any await or the browser blocks it. */
-function openPrintPendingWindow(title) {
-  const printWin = window.open('about:blank', '_blank');
-  if (!printWin || printWin.closed) {
-    throw new Error('Could not open a new tab. Check your browser\'s pop-up settings for this site.');
+/** Call synchronously inside the Print Shop button click handler. */
+export function openPrintTab() {
+  try {
+    const printWin = window.open('about:blank', '_blank');
+    if (printWin && !printWin.closed) {
+      return printWin;
+    }
+  } catch (_) {
+    /* fall through to iframe print */
   }
-
-  printWin.document.title = title || 'Print Shop';
-  printWin.document.body.innerHTML = `
-    <p style="font-family: system-ui, sans-serif; padding: 2rem; color: #333;">
-      Preparing PDF…
-    </p>
-  `;
-
-  return printWin;
+  return null;
 }
 
-/** Navigate the pending tab to PDF bytes and trigger print. */
 function showPdfInPrintWindow(blob, printWin) {
   const url = URL.createObjectURL(blob);
 
@@ -125,31 +120,64 @@ function showPdfInPrintWindow(blob, printWin) {
     }
   };
 
-  printWin.location.href = url;
-  printWin.addEventListener('load', runPrint);
+  printWin.location.replace(url);
+  printWin.addEventListener('load', runPrint, { once: true });
   setTimeout(runPrint, 800);
   setTimeout(() => URL.revokeObjectURL(url), 120_000);
 }
 
-async function printPlannerDocument(view) {
-  persistPlannerToProgram({ immediate: true });
+let printPdfFrame = null;
 
-  const docTitle = printDocumentTitle(view, state.programPackage);
-  let printWin;
+function printPdfViaHiddenFrame(blob, title) {
+  const url = URL.createObjectURL(blob);
 
-  try {
-    printWin = openPrintPendingWindow(docTitle);
-  } catch (err) {
-    window.alert(err.message || 'Could not open PDF.');
+  printPdfFrame?.remove();
+  printPdfFrame = document.createElement('iframe');
+  printPdfFrame.setAttribute('aria-hidden', 'true');
+  printPdfFrame.title = title || 'Print';
+  Object.assign(printPdfFrame.style, {
+    position: 'fixed',
+    width: '0',
+    height: '0',
+    border: '0',
+    visibility: 'hidden',
+  });
+  document.body.appendChild(printPdfFrame);
+
+  const runPrint = () => {
+    try {
+      printPdfFrame.contentWindow?.focus();
+      printPdfFrame.contentWindow?.print();
+    } catch (_) {
+      /* keep PDF loaded in frame */
+    }
+  };
+
+  printPdfFrame.addEventListener('load', runPrint, { once: true });
+  printPdfFrame.src = url;
+  setTimeout(runPrint, 800);
+  setTimeout(() => URL.revokeObjectURL(url), 120_000);
+}
+
+function deliverPdfForPrint(blob, { printWin, docTitle } = {}) {
+  if (printWin && !printWin.closed) {
+    showPdfInPrintWindow(blob, printWin);
     return;
   }
+  printPdfViaHiddenFrame(blob, docTitle);
+}
+
+async function printPlannerDocument(view, { printWin, docTitle: presetTitle } = {}) {
+  persistPlannerToProgram({ immediate: true });
+
+  const docTitle = presetTitle || printDocumentTitle(view, state.programPackage);
 
   try {
     const blob = await loadPdfBlob(view, docTitle);
-    if (printWin.closed) {
-      throw new Error('The print tab was closed before the PDF finished loading.');
+    if (printWin?.closed) {
+      printWin = null;
     }
-    showPdfInPrintWindow(blob, printWin);
+    deliverPdfForPrint(blob, { printWin, docTitle });
   } catch (err) {
     if (printWin && !printWin.closed) {
       printWin.close();
@@ -169,8 +197,11 @@ function initPrintChoiceDialog() {
 
   dialog.querySelectorAll('[data-print-view]').forEach((button) => {
     button.addEventListener('click', () => {
-      printPlannerDocument(button.dataset.printView);
+      const view = button.dataset.printView;
+      const docTitle = printDocumentTitle(view, state.programPackage);
+      const printWin = openPrintTab();
       dialog.close();
+      void printPlannerDocument(view, { printWin, docTitle });
     });
   });
 }
@@ -181,7 +212,8 @@ function openPrintShop() {
     dialog.showModal();
     return;
   }
-  printPlannerDocument('week');
+  const printWin = openPrintTab();
+  void printPlannerDocument('week', { printWin });
 }
 
 function initPrintShop() {
