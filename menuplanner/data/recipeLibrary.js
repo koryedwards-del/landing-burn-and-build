@@ -293,14 +293,6 @@ export const MEAL_TEMPLATES = [
     profile: 'Classic',
     caveat: 'PAM cooking spray is recommended to prevent sticking. Cook steak in a non-stick pan until done to your liking. Bake the potato until tender. Oversalt the potato — tastes like it has butter on it. Ok, not really, but better than struggling. Some people love plain yogurt as a replacement for sour cream on the potato. Snap peas steamed or roasted until tender. A good steak deserves a good steak sauce.',
   }),
-  meal('top-sirloin-rice-peppers', [
-    { slot: 'Protein', foodName: 'Beef, top sirloin' },
-    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
-  ], {
-    profile: 'Stir-fry',
-    caveat: 'Sirloin strips with peppers. Rice on the side — weigh steak cooked.',
-  }),
   meal('beef-ground-round-potato', [
     { slot: 'Protein', foodName: 'Beef, ground round' },
     { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
