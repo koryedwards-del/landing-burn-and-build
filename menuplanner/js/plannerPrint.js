@@ -49,6 +49,9 @@ import {
 /** Views rendered as real PDFs on Render — grows as each doc is converted. */
 const PDF_PRINT_VIEWS = new Set(['faq']);
 
+/** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
+const pdfBlobCache = new Map();
+
 const PDF_VIEW_TITLES = {
   faq: 'Frequently Asked Questions',
   foodlist: 'Food List',
@@ -530,6 +533,7 @@ async function openPdfDocument(view) {
   const printBtn = document.getElementById('pdf-view-print');
   const closeBtn = document.getElementById('pdf-view-close');
   const errorEl = document.getElementById('pdf-view-error');
+  const loadingEl = document.getElementById('pdf-view-loading');
 
   if (!dialog || !frame || !printBtn) {
     const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
@@ -550,11 +554,34 @@ async function openPdfDocument(view) {
   printBtn.disabled = true;
   errorEl.hidden = true;
   errorEl.textContent = '';
+  frame.hidden = true;
+  if (loadingEl) loadingEl.hidden = false;
   frame.removeAttribute('src');
   delete frame.dataset.pdfBlobUrl;
   delete frame.dataset.shellBlobUrl;
 
   dialog.showModal();
+
+  function showPdfBlob(blob) {
+    const pdfBlobUrl = URL.createObjectURL(blob);
+    const shellHtml = buildPdfPreviewShellHtml(pdfBlobUrl, docTitle);
+    const shellBlobUrl = URL.createObjectURL(new Blob([shellHtml], { type: 'text/html' }));
+    frame.dataset.pdfBlobUrl = pdfBlobUrl;
+    frame.dataset.shellBlobUrl = shellBlobUrl;
+    frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
+    frame.onload = () => {
+      if (loadingEl) loadingEl.hidden = true;
+      frame.hidden = false;
+      printBtn.disabled = false;
+    };
+    frame.src = shellBlobUrl;
+  }
+
+  const cachedBlob = pdfBlobCache.get(view);
+  if (cachedBlob) {
+    showPdfBlob(cachedBlob);
+    return;
+  }
 
   try {
     const res = await fetch(apiUrl(
@@ -568,23 +595,17 @@ async function openPdfDocument(view) {
       } catch (_) {
         /* ignore */
       }
+      if (loadingEl) loadingEl.hidden = true;
       errorEl.textContent = message;
       errorEl.hidden = false;
       return;
     }
 
     const blob = await res.blob();
-    const pdfBlobUrl = URL.createObjectURL(blob);
-    const shellHtml = buildPdfPreviewShellHtml(pdfBlobUrl, docTitle);
-    const shellBlobUrl = URL.createObjectURL(new Blob([shellHtml], { type: 'text/html' }));
-    frame.dataset.pdfBlobUrl = pdfBlobUrl;
-    frame.dataset.shellBlobUrl = shellBlobUrl;
-    frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
-    frame.onload = () => {
-      printBtn.disabled = false;
-    };
-    frame.src = shellBlobUrl;
+    pdfBlobCache.set(view, blob);
+    showPdfBlob(blob);
   } catch (err) {
+    if (loadingEl) loadingEl.hidden = true;
     errorEl.textContent = err.message || 'Could not load PDF.';
     errorEl.hidden = false;
   }
@@ -617,6 +638,9 @@ function initPdfViewDialog() {
     delete frame.dataset.shellBlobUrl;
     delete frame.dataset.filename;
     frame.removeAttribute('src');
+    frame.hidden = false;
+    const loadingEl = document.getElementById('pdf-view-loading');
+    if (loadingEl) loadingEl.hidden = true;
     printBtn.disabled = true;
     if (dialog.dataset.priorPageTitle) {
       document.title = dialog.dataset.priorPageTitle;

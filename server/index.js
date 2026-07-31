@@ -21,7 +21,7 @@ import {
   stripeConfigured,
   verifyCheckoutSession,
 } from './stripe.js';
-import { renderPrintPdf } from './pdf/index.js';
+import { renderPrintPdf, isStaticPdfView } from './pdf/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -163,7 +163,11 @@ app.get('/api/print/pdf', async (req, res) => {
     const filename = `${safeName}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-    res.setHeader('Cache-Control', 'no-store');
+    if (isStaticPdfView(view)) {
+      res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+    } else {
+      res.setHeader('Cache-Control', 'no-store');
+    }
     res.send(pdf);
   } catch (err) {
     const status = err.status || 500;
