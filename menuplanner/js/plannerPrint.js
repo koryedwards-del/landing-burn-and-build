@@ -95,20 +95,12 @@ async function loadPdfBlob(view, title) {
   return blob;
 }
 
-/** Call synchronously inside the Print Shop button click handler. */
-export function openPrintTab() {
-  try {
-    const printWin = window.open('about:blank', '_blank');
-    if (printWin && !printWin.closed) {
-      return printWin;
-    }
-  } catch (_) {
-    /* fall through to iframe print */
-  }
-  return null;
+/** Must run synchronously inside the Print Shop button click handler. */
+function openPrintTab() {
+  return window.open('about:blank', '_blank');
 }
 
-function showPdfInPrintWindow(blob, printWin) {
+function showPdfInPrintTab(blob, printWin) {
   const url = URL.createObjectURL(blob);
 
   const runPrint = () => {
@@ -126,60 +118,25 @@ function showPdfInPrintWindow(blob, printWin) {
   setTimeout(() => URL.revokeObjectURL(url), 120_000);
 }
 
-let printPdfFrame = null;
-
-function printPdfViaHiddenFrame(blob, title) {
-  const url = URL.createObjectURL(blob);
-
-  printPdfFrame?.remove();
-  printPdfFrame = document.createElement('iframe');
-  printPdfFrame.setAttribute('aria-hidden', 'true');
-  printPdfFrame.title = title || 'Print';
-  Object.assign(printPdfFrame.style, {
-    position: 'fixed',
-    width: '0',
-    height: '0',
-    border: '0',
-    visibility: 'hidden',
-  });
-  document.body.appendChild(printPdfFrame);
-
-  const runPrint = () => {
-    try {
-      printPdfFrame.contentWindow?.focus();
-      printPdfFrame.contentWindow?.print();
-    } catch (_) {
-      /* keep PDF loaded in frame */
-    }
-  };
-
-  printPdfFrame.addEventListener('load', runPrint, { once: true });
-  printPdfFrame.src = url;
-  setTimeout(runPrint, 800);
-  setTimeout(() => URL.revokeObjectURL(url), 120_000);
-}
-
-function deliverPdfForPrint(blob, { printWin, docTitle } = {}) {
-  if (printWin && !printWin.closed) {
-    showPdfInPrintWindow(blob, printWin);
-    return;
-  }
-  printPdfViaHiddenFrame(blob, docTitle);
-}
-
-async function printPlannerDocument(view, { printWin, docTitle: presetTitle } = {}) {
+async function printPlannerDocument(view, printWin) {
   persistPlannerToProgram({ immediate: true });
 
-  const docTitle = presetTitle || printDocumentTitle(view, state.programPackage);
+  const docTitle = printDocumentTitle(view, state.programPackage);
+
+  if (!printWin || printWin.closed) {
+    window.alert('Could not open a new tab. Allow new tabs for this site and try again.');
+    return;
+  }
 
   try {
     const blob = await loadPdfBlob(view, docTitle);
-    if (printWin?.closed) {
-      printWin = null;
+    if (printWin.closed) {
+      window.alert('The print tab was closed before the PDF finished loading.');
+      return;
     }
-    deliverPdfForPrint(blob, { printWin, docTitle });
+    showPdfInPrintTab(blob, printWin);
   } catch (err) {
-    if (printWin && !printWin.closed) {
+    if (!printWin.closed) {
       printWin.close();
     }
     window.alert(err.message || 'Could not open PDF.');
@@ -198,10 +155,9 @@ function initPrintChoiceDialog() {
   dialog.querySelectorAll('[data-print-view]').forEach((button) => {
     button.addEventListener('click', () => {
       const view = button.dataset.printView;
-      const docTitle = printDocumentTitle(view, state.programPackage);
       const printWin = openPrintTab();
       dialog.close();
-      void printPlannerDocument(view, { printWin, docTitle });
+      void printPlannerDocument(view, printWin);
     });
   });
 }
@@ -212,8 +168,7 @@ function openPrintShop() {
     dialog.showModal();
     return;
   }
-  const printWin = openPrintTab();
-  void printPlannerDocument('week', { printWin });
+  void printPlannerDocument('week', openPrintTab());
 }
 
 function initPrintShop() {
