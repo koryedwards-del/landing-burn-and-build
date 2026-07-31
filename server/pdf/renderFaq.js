@@ -24,7 +24,7 @@ function drawFaqItem(doc, item, questionNumber, x, y, width) {
       lineGap: 0,
     });
 
-  const answerY = doc.y + 1;
+  const answerY = doc.y + PDF_FAQ.questionAnswerGap;
   doc
     .font('Helvetica')
     .fontSize(PDF_FAQ.answerSize)

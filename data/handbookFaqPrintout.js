@@ -1,4 +1,4 @@
-/** Frequently Asked Questions — 2-page printout (handbook pages 12–17). */
+/** Frequently Asked Questions — 3-page printout (expanded for legibility). */
 const HANDBOOK_FAQ_ITEMS = [
   { q: "What about artificial sweeteners?", a: "Artificial sweeteners are great for giving good food a little flavor. They will not speed up your fat loss, but if used carelessly, they could slow it down. Low-calorie or no-calorie products often leave a person hungry, which causes them to overeat later. Another trap people fall into is thinking that because this product is low-calorie, they can eat more of it. Be sure you eat your quality food and just use the artificial sweeteners to enhance the flavor." },
   { q: "What do I put on salads?", a: "Many Eat to Lose Fat clients don’t eat “salads,” per se. They eat plain, raw vegetables that are generally found in salads. We’ve found that by skipping the lettuce, it’s easy to skip the dressing. When we do eat salads with lettuce, seasonings such as salt, pepper, and Mrs. Dash Table Blend." },
@@ -39,6 +39,7 @@ const HANDBOOK_FAQ_ITEMS = [
 ];
 
 export const HANDBOOK_FAQ_PRINT_PAGES = [
-  { page: 1, items: HANDBOOK_FAQ_ITEMS.slice(0, 18) },
-  { page: 2, items: HANDBOOK_FAQ_ITEMS.slice(18) },
+  { page: 1, items: HANDBOOK_FAQ_ITEMS.slice(0, 13) },
+  { page: 2, items: HANDBOOK_FAQ_ITEMS.slice(13, 26) },
+  { page: 3, items: HANDBOOK_FAQ_ITEMS.slice(26) },
 ];
