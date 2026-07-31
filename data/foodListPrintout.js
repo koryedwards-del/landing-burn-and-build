@@ -1,4 +1,4 @@
-/** Food List — fixed 4-page pagination (landscape, column grid + tips Q&A). */
+/** Food List — fixed 4-page pagination (portrait, column grid + tips Q&A). */
 export const FOOD_LIST_PRINT_PAGES = [
   {
     page: 1,

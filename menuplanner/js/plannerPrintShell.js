@@ -47,7 +47,7 @@ export const PRINT_VIEW_CONFIG = {
   },
   foodlist: {
     docTitle: 'Food List',
-    pageSize: 'landscape',
+    pageSize: 'portrait',
     headerVariant: 'generic',
     headerTitle: 'Food List',
     watermarkMode: 'sheet',

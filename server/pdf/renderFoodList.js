@@ -1,14 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { PDF_FOOD_LIST } from './constants.js';
-import {
-  addLandscapeLetterPage,
-  beginLandscapeDrawing,
-  contentBox,
-  drawGenericHeader,
-  drawWatermark,
-  endLandscapeDrawing,
-  landscapePageSize,
-} from './draw.js';
+import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
 import {
   FOOD_LIST_PRINT_PAGES,
   foodListLabel,
@@ -106,12 +98,10 @@ function drawTipsColumn(doc, qaItems, x, startY, width, bottomY) {
 }
 
 function drawFoodListPage(doc, pageDef) {
-  addLandscapeLetterPage(doc);
-  beginLandscapeDrawing(doc);
+  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+  drawWatermark(doc);
 
-  const { width, height } = landscapePageSize(doc);
-  const box = contentBox(doc, width, height);
-  drawWatermark(doc, width, height);
+  const box = contentBox(doc);
   const contentTop = drawGenericHeader(doc, 'Food List', box);
   const bottomY = box.bottom;
   const columnCount = pageDef.columnCount || pageDef.columns.length;
@@ -142,8 +132,6 @@ function drawFoodListPage(doc, pageDef) {
       bottomY,
     );
   });
-
-  endLandscapeDrawing(doc);
 }
 
 export async function renderFoodListPdf({ title } = {}) {
