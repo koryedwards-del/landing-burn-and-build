@@ -17,20 +17,35 @@
     }
     .pdf-toolbar {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 10px;
-      flex-wrap: wrap;
-      padding: 12px 16px;
+      padding: 14px 16px;
       background: #1e1e1e;
       border-bottom: 1px solid #333;
     }
     .pdf-toolbar__title {
       font-family: Oswald, system-ui, sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--logo-burn, #fdc500);
-      margin-right: auto;
+    }
+    .pdf-toolbar__lead {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .pdf-toolbar__status {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #ccc;
+    }
+    .pdf-toolbar__status strong { color: #fff; }
+    .pdf-toolbar__status--error { color: #ff8a80; }
+    .pdf-toolbar__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .pdf-toolbar__btn {
       appearance: none;
@@ -41,8 +56,10 @@
       font: inherit;
       font-size: 0.88rem;
       font-weight: 600;
-      padding: 8px 14px;
+      padding: 10px 16px;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
     .pdf-toolbar__btn:hover { border-color: var(--logo-burn, #fdc500); }
     .pdf-toolbar__btn--primary {
@@ -50,12 +67,6 @@
       border-color: var(--logo-burn, #fdc500);
       color: #111;
     }
-    .pdf-toolbar__status {
-      width: 100%;
-      font-size: 0.82rem;
-      color: #aaa;
-    }
-    .pdf-toolbar__status--error { color: #ff8a80; }
     .pdf-frame {
       flex: 1 1 auto;
       width: 100%;
@@ -68,9 +79,12 @@
 <body>
   <div class="pdf-toolbar">
     <p class="pdf-toolbar__title" id="pdf-title">Print Shop</p>
-    <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print</button>
-    <a class="pdf-toolbar__btn" id="pdf-download" download hidden>Download PDF</a>
+    <p class="pdf-toolbar__lead">Print or save this document</p>
     <p class="pdf-toolbar__status" id="pdf-status">Loading PDF…</p>
+    <div class="pdf-toolbar__actions">
+      <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print again</button>
+      <a class="pdf-toolbar__btn" id="pdf-download" download hidden>Download PDF</a>
+    </div>
   </div>
   <iframe class="pdf-frame" id="pdf-frame" title="PDF document"></iframe>
   <script type="module">
@@ -94,13 +108,21 @@
     const printBtn = document.getElementById('pdf-print');
     const downloadLink = document.getElementById('pdf-download');
 
-    printBtn.addEventListener('click', () => {
+    function triggerPrint() {
       try {
         frame.contentWindow?.focus();
         frame.contentWindow?.print();
       } catch (_) {
         window.print();
       }
+    }
+
+    printBtn.addEventListener('click', triggerPrint);
+
+    frame.addEventListener('load', () => {
+      printBtn.disabled = false;
+      statusEl.innerHTML = 'The <strong>print dialog</strong> should open automatically. Choose your printer, or pick <strong>Save as PDF</strong> to keep a copy. You can also use <strong>Download PDF</strong> below.';
+      triggerPrint();
     });
 
     try {
@@ -122,8 +144,6 @@
       downloadLink.href = blobUrl;
       downloadLink.download = `burn-and-build-${view}.pdf`;
       downloadLink.hidden = false;
-      printBtn.disabled = false;
-      statusEl.textContent = 'Use Print or Download PDF above.';
     } catch (err) {
       if (!statusEl.classList.contains('pdf-toolbar__status--error')) {
         statusEl.textContent = err.message || 'Could not load PDF.';
