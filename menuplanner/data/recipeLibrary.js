@@ -205,9 +205,13 @@ export const MEAL_TEMPLATES = [
     profile: 'Lemon-herb',
     caveat: 'Roast chicken and broccoli on one oven tray. Lemon juice and dried herbs on everything — cook extra if you\'re meal prepping.',
   }),
-  meal('chicken-rice-broccoli-cajun', CHICKEN_RICE_BROCCOLI, {
+  meal('chicken-rice-broccoli-cajun', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Veggie', foodName: 'Green beans, cooked' },
+  ], {
     profile: 'Cajun',
-    caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Broccoli steamed; rice cooked separately.',
+    caveat: 'Use a dry rub to coat chicken — your choice. PAM cooking spray is recommended to prevent sticking. Cook in a hot non-stick pan until the chicken is dark on the outside and cooked through. Green beans steamed; rice cooked separately.',
   }),
   meal('chicken-rice-broccoli-teriyaki', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
