@@ -5,6 +5,10 @@ import { renderFaqPdf } from './renderFaq.js';
 import { renderFoodListPdf } from './renderFoodList.js';
 import { renderShoppingListPdf } from './renderShoppingList.js';
 import { renderWeekPlanPdf } from './renderWeekPlan.js';
+import { validatePrintPayload } from './validate.js';
+
+export { createPrintPdf, PrintPdfCreator } from './creator.js';
+export { validatePrintPayload } from './validate.js';
 
 const RENDERERS = {
   faq: renderFaqPdf,
@@ -56,6 +60,7 @@ export async function renderPrintPdf(view, { title, payload } = {}) {
       err.status = 400;
       throw err;
     }
+    validatePrintPayload(view, payload);
     return render(payload, { title: title || payload.title });
   }
 

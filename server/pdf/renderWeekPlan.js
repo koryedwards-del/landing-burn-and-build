@@ -1,26 +1,47 @@
 import { PDF_COLORS, PDF_WEEK } from './constants.js';
+import { createPrintPdf } from './creator.js';
 import {
-  addPersonalizedSheet,
-  collectPdfBuffer,
-  createLandscapePdf,
-} from './draw.js';
+  measureWeekRowHeight,
+  weekDayHeaderHeight,
+} from './measure.js';
+import { validatePrintPayload } from './validate.js';
 
-function cellLineCount(lines) {
-  if (!lines?.length) return 1;
-  return lines.length;
+const EMPTY_MESSAGE = 'No meals planned for this week yet. Fill in your menu planner, then open Print Shop again.';
+
+function weekLayout(box, dayCount) {
+  const cornerW = PDF_WEEK.rowHeadWidth;
+  const dayW = (box.width - cornerW) / dayCount;
+  return { cornerW, dayW };
 }
 
-function rowHeight(linesByDay, dayIds) {
-  const maxLines = Math.max(
-    1,
-    ...dayIds.map((id) => cellLineCount(linesByDay[id])),
-  );
-  const contentH = maxLines * (PDF_WEEK.foodSize + PDF_WEEK.lineGap) + 4;
-  return Math.max(PDF_WEEK.minRowHeight, contentH + PDF_WEEK.cellPadY * 2);
+function drawWeekDayHeaders(doc, weekDays, box, y, cornerW, dayW) {
+  weekDays.forEach((day, index) => {
+    const x = box.x + cornerW + index * dayW;
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(PDF_WEEK.dayHeadSize)
+      .fillColor(PDF_COLORS.question)
+      .text(String(day.label || '').toUpperCase(), x, y, {
+        width: dayW,
+        align: 'center',
+        lineGap: 0,
+      });
+  });
+
+  const ruleY = y + weekDayHeaderHeight();
+  doc
+    .strokeColor(PDF_WEEK.accent)
+    .lineWidth(2)
+    .moveTo(box.x + cornerW, ruleY)
+    .lineTo(box.x + box.width, ruleY)
+    .stroke();
+
+  return ruleY + 4;
 }
 
 function drawWeekCell(doc, lines, x, y, width, height) {
   const innerY = y + PDF_WEEK.cellPadY;
+  const innerWidth = width - PDF_WEEK.cellPadX * 2;
 
   if (!lines?.length) {
     doc
@@ -36,14 +57,14 @@ function drawWeekCell(doc, lines, x, y, width, height) {
   }
 
   let cy = innerY;
-  lines.forEach((line) => {
+  lines.forEach((line, index) => {
     if (line.isMealTitle) {
       doc
         .font('Helvetica-Bold')
         .fontSize(PDF_WEEK.foodSize)
         .fillColor(PDF_COLORS.question)
         .text(String(line.foodName || ''), x + PDF_WEEK.cellPadX, cy, {
-          width: width - PDF_WEEK.cellPadX * 2,
+          width: innerWidth,
           lineGap: 0,
         });
       cy = doc.y + PDF_WEEK.lineGap;
@@ -51,16 +72,12 @@ function drawWeekCell(doc, lines, x, y, width, height) {
     }
 
     const textX = x + PDF_WEEK.cellPadX;
-    const textWidth = width - PDF_WEEK.cellPadX * 2;
-    const amountWidth = 42;
-    const foodWidth = Math.max(20, textWidth - amountWidth);
-
     doc
       .font('Helvetica')
       .fontSize(PDF_WEEK.foodSize)
       .fillColor('#222222')
       .text(String(line.foodName || ''), textX, cy, {
-        width: foodWidth,
+        width: innerWidth,
         lineGap: 0,
       });
 
@@ -70,126 +87,102 @@ function drawWeekCell(doc, lines, x, y, width, height) {
         .fontSize(PDF_WEEK.foodSize)
         .fillColor(PDF_COLORS.question)
         .text(String(line.amount), textX, cy, {
-          width: textWidth,
+          width: innerWidth,
           align: 'right',
           lineGap: 0,
         });
     }
 
-    cy += PDF_WEEK.foodSize + PDF_WEEK.lineGap;
+    cy = doc.y + (index < lines.length - 1 ? PDF_WEEK.lineGap : 0);
   });
 }
 
-function drawWeekGrid(doc, payload, box, startY) {
-  const dayIds = payload.weekDays.map((day) => day.id);
-  const cornerW = PDF_WEEK.rowHeadWidth;
-  const dayW = (box.width - cornerW) / dayIds.length;
-  let y = startY;
+function drawWeekRow(doc, row, weekDays, box, y, cornerW, dayW, rowHeight) {
+  const dayIds = weekDays.map((day) => day.id);
+  const rowTop = y;
 
-  const headH = 18;
-  dayIds.forEach((id, index) => {
-    const day = payload.weekDays[index];
-    const x = box.x + cornerW + index * dayW;
-    doc
-      .font('Helvetica-Bold')
-      .fontSize(PDF_WEEK.dayHeadSize)
-      .fillColor(PDF_COLORS.question)
-      .text(String(day.label || '').toUpperCase(), x, y, {
-        width: dayW,
-        align: 'center',
-        lineGap: 0,
-      });
-  });
-
-  y += headH;
   doc
-    .strokeColor(PDF_WEEK.accent)
-    .lineWidth(2)
-    .moveTo(box.x + cornerW, y)
-    .lineTo(box.x + box.width, y)
+    .strokeColor(PDF_COLORS.rule)
+    .lineWidth(1)
+    .moveTo(box.x, rowTop + rowHeight)
+    .lineTo(box.x + box.width, rowTop + rowHeight)
     .stroke();
 
-  payload.rows.forEach((row, rowIndex) => {
-    const h = rowHeight(row.cells, dayIds);
-    const rowTop = y;
-
-    doc
-      .strokeColor(PDF_COLORS.rule)
-      .lineWidth(1)
-      .moveTo(box.x, rowTop + h)
-      .lineTo(box.x + box.width, rowTop + h)
-      .stroke();
-
-    const labelX = box.x;
-    const labelY = rowTop + PDF_WEEK.cellPadY;
-    if (row.time) {
-      doc
-        .font('Helvetica-Bold')
-        .fontSize(PDF_WEEK.mealTimeSize)
-        .fillColor(PDF_COLORS.question)
-        .text(String(row.time), labelX, labelY, {
-          width: cornerW - 8,
-          align: 'right',
-          lineGap: 0,
-        });
-    }
+  const labelX = box.x;
+  const labelY = rowTop + PDF_WEEK.cellPadY;
+  if (row.time) {
     doc
       .font('Helvetica-Bold')
-      .fontSize(PDF_WEEK.mealLabelSize)
-      .fillColor('#777777')
-      .text(String(row.label || '').toUpperCase(), labelX, doc.y + 1, {
+      .fontSize(PDF_WEEK.mealTimeSize)
+      .fillColor(PDF_COLORS.question)
+      .text(String(row.time), labelX, labelY, {
         width: cornerW - 8,
         align: 'right',
         lineGap: 0,
       });
+  }
 
-    dayIds.forEach((dayId, index) => {
-      const cellX = box.x + cornerW + index * dayW;
-      if (index > 0) {
-        doc
-          .strokeColor('#f2f2f2')
-          .lineWidth(1)
-          .moveTo(cellX, rowTop)
-          .lineTo(cellX, rowTop + h)
-          .stroke();
-      }
-      drawWeekCell(doc, row.cells[dayId], cellX, rowTop, dayW, h);
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(PDF_WEEK.mealLabelSize)
+    .fillColor('#777777')
+    .text(String(row.label || '').toUpperCase(), labelX, doc.y + 1, {
+      width: cornerW - 8,
+      align: 'right',
+      lineGap: 0,
     });
 
-    y += h;
-    if (y > box.bottom - PDF_WEEK.minRowHeight && rowIndex < payload.rows.length - 1) {
-      return;
+  dayIds.forEach((dayId, index) => {
+    const cellX = box.x + cornerW + index * dayW;
+    if (index > 0) {
+      doc
+        .strokeColor('#f2f2f2')
+        .lineWidth(1)
+        .moveTo(cellX, rowTop)
+        .lineTo(cellX, rowTop + rowHeight)
+        .stroke();
     }
+    drawWeekCell(doc, row.cells?.[dayId], cellX, rowTop, dayW, rowHeight);
   });
+
+  return rowTop + rowHeight;
 }
 
-export async function renderWeekPlanPdf(payload = {}, { title } = {}) {
-  const docTitle = title || payload.title || 'B&B - Weekly Meal Plan';
-  const doc = createLandscapePdf({ title: docTitle });
-  const bufferPromise = collectPdfBuffer(doc);
-
-  const { box, y } = addPersonalizedSheet(doc, {
+function newWeekSheet(creator, payload) {
+  return creator.addPersonalizedSheet({
     headerTitle: 'Weekly Meal Plan',
     clientName: payload.clientName,
     preparedAt: payload.preparedAt,
     layout: 'landscape',
   });
+}
+
+export async function renderWeekPlanPdf(payload = {}, { title } = {}) {
+  validatePrintPayload('week', payload);
+
+  const docTitle = title || payload.title || 'B&B - Weekly Meal Plan';
+  const creator = createPrintPdf({ layout: 'landscape', title: docTitle });
+  let sheet = newWeekSheet(creator, payload);
 
   if (payload.empty) {
-    doc
-      .font('Helvetica')
-      .fontSize(10)
-      .fillColor('#666666')
-      .text(
-        'No meals planned for this week yet. Fill in your menu planner, then open Print Shop again.',
-        box.x,
-        y,
-        { width: box.width, lineGap: 2 },
-      );
-  } else {
-    drawWeekGrid(doc, payload, box, y);
+    creator.drawEmptyMessage(sheet.box, sheet.y, EMPTY_MESSAGE);
+    return creator.finish();
   }
 
-  doc.end();
-  return bufferPromise;
+  const dayIds = payload.weekDays.map((day) => day.id);
+  const { cornerW, dayW } = weekLayout(sheet.box, payload.weekDays.length);
+  let y = drawWeekDayHeaders(creator.doc, payload.weekDays, sheet.box, sheet.y, cornerW, dayW);
+
+  payload.rows.forEach((row) => {
+    const rowH = measureWeekRowHeight(creator.doc, row, dayIds, dayW, cornerW);
+
+    if (y + rowH > sheet.box.bottom) {
+      sheet = newWeekSheet(creator, payload);
+      y = drawWeekDayHeaders(creator.doc, payload.weekDays, sheet.box, sheet.y, cornerW, dayW);
+    }
+
+    y = drawWeekRow(creator.doc, row, payload.weekDays, sheet.box, y, cornerW, dayW, rowH);
+  });
+
+  return creator.finish();
 }

@@ -1,10 +1,6 @@
 import { PDF_COLORS, PDF_FOOD_LIST } from './constants.js';
-import {
-  addGenericSheet,
-  collectPdfBuffer,
-  createPortraitPdf,
-  drawQaItem,
-} from './draw.js';
+import { createPrintPdf } from './creator.js';
+import { addGenericSheet, drawQaItem } from './draw.js';
 import {
   FOOD_LIST_PRINT_PAGES,
   foodListLabel,
@@ -101,13 +97,11 @@ function drawFoodListPage(doc, pageDef) {
 
 export async function renderFoodListPdf({ title } = {}) {
   const docTitle = title || 'B&B - Food List';
-  const doc = createPortraitPdf({ title: docTitle });
-  const bufferPromise = collectPdfBuffer(doc);
+  const creator = createPrintPdf({ title: docTitle });
 
   FOOD_LIST_PRINT_PAGES.forEach((pageDef) => {
-    drawFoodListPage(doc, pageDef);
+    drawFoodListPage(creator.doc, pageDef);
   });
 
-  doc.end();
-  return bufferPromise;
+  return creator.finish();
 }
