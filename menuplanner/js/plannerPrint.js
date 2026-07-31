@@ -95,14 +95,26 @@ async function loadPdfBlob(view, title) {
   return blob;
 }
 
-/** Open real PDF bytes in a new tab and trigger the browser print dialog. */
-function openPdfForPrint(blob) {
-  const url = URL.createObjectURL(blob);
-  const printWin = window.open(url, '_blank');
-  if (!printWin) {
-    URL.revokeObjectURL(url);
-    throw new Error('Pop-up blocked. Allow pop-ups for this site to open Print Shop documents.');
+/** Open tab synchronously on click — must run before any await or the browser blocks it. */
+function openPrintPendingWindow(title) {
+  const printWin = window.open('about:blank', '_blank');
+  if (!printWin || printWin.closed) {
+    throw new Error('Could not open a new tab. Check your browser\'s pop-up settings for this site.');
   }
+
+  printWin.document.title = title || 'Print Shop';
+  printWin.document.body.innerHTML = `
+    <p style="font-family: system-ui, sans-serif; padding: 2rem; color: #333;">
+      Preparing PDF…
+    </p>
+  `;
+
+  return printWin;
+}
+
+/** Navigate the pending tab to PDF bytes and trigger print. */
+function showPdfInPrintWindow(blob, printWin) {
+  const url = URL.createObjectURL(blob);
 
   const runPrint = () => {
     try {
@@ -113,6 +125,7 @@ function openPdfForPrint(blob) {
     }
   };
 
+  printWin.location.href = url;
   printWin.addEventListener('load', runPrint);
   setTimeout(runPrint, 800);
   setTimeout(() => URL.revokeObjectURL(url), 120_000);
@@ -122,11 +135,25 @@ async function printPlannerDocument(view) {
   persistPlannerToProgram({ immediate: true });
 
   const docTitle = printDocumentTitle(view, state.programPackage);
+  let printWin;
+
+  try {
+    printWin = openPrintPendingWindow(docTitle);
+  } catch (err) {
+    window.alert(err.message || 'Could not open PDF.');
+    return;
+  }
 
   try {
     const blob = await loadPdfBlob(view, docTitle);
-    openPdfForPrint(blob);
+    if (printWin.closed) {
+      throw new Error('The print tab was closed before the PDF finished loading.');
+    }
+    showPdfInPrintWindow(blob, printWin);
   } catch (err) {
+    if (printWin && !printWin.closed) {
+      printWin.close();
+    }
     window.alert(err.message || 'Could not open PDF.');
   }
 }
