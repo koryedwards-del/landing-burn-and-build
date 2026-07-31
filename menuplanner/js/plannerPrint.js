@@ -70,9 +70,28 @@ async function readPdfHeader(blob) {
   return header.startsWith('%PDF-');
 }
 
-function printPdfBlobUrl(url) {
-  const printWin = window.open(url, '_blank');
+function buildPdfPrintShellHtml(pdfBlobUrl, title) {
+  const safeTitle = escapeHtml(title);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${safeTitle}</title>
+<style>html,body{margin:0;height:100%;} embed{display:block;width:100%;height:100%;}</style>
+</head>
+<body>
+<embed type="application/pdf" src="${pdfBlobUrl}">
+</body>
+</html>`;
+}
+
+function printPdfBlobUrl(url, title) {
+  const printWin = window.open('', '_blank');
   if (!printWin) return false;
+
+  printWin.document.open();
+  printWin.document.write(buildPdfPrintShellHtml(url, title || 'Document'));
+  printWin.document.close();
 
   const runPrint = () => {
     try {
@@ -372,7 +391,7 @@ async function openPdfDocument(view) {
   }
 
   if (titleEl) {
-    titleEl.textContent = PDF_VIEW_TITLES[view] || 'Document';
+    titleEl.textContent = printDocumentTitle(view, state.programPackage);
   }
 
   const docTitle = printDocumentTitle(view, state.programPackage);
@@ -442,7 +461,8 @@ function initPdfViewDialog() {
 
   printBtn.addEventListener('click', () => {
     const pdfBlobUrl = frame.dataset.pdfBlobUrl;
-    if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl)) return;
+    const docTitle = frame.title || 'Document';
+    if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl, docTitle)) return;
 
     try {
       frame.contentWindow?.focus();

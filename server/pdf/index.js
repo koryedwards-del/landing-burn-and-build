@@ -44,9 +44,13 @@ export async function renderPrintPdf(view, { title } = {}) {
 
   if (STATIC_PDF_VIEWS.has(view)) {
     const cacheKey = STATIC_PDF_CACHE_KEYS[view] || view;
+    if (title) {
+      // Personalized Title metadata — body is the same; do not serve cached generic title.
+      return render({ title });
+    }
     let cached = pdfBodyCache.get(cacheKey);
     if (!cached) {
-      cached = await render({ title: title || undefined });
+      cached = await render({});
       pdfBodyCache.set(cacheKey, cached);
     }
     return cached;

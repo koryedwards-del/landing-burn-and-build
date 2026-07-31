@@ -94,9 +94,10 @@
     };
 
     const view = new URLSearchParams(window.location.search).get('view') || 'faq';
-    const title = VIEW_TITLES[view] || 'Document';
-    document.getElementById('pdf-title').textContent = title;
-    document.title = `B&B — ${title}`;
+    const shortTitle = VIEW_TITLES[view] || 'Document';
+    const docTitle = `B&B - ${shortTitle}`;
+    document.getElementById('pdf-title').textContent = docTitle;
+    document.title = docTitle;
 
     const statusEl = document.getElementById('pdf-status');
     const frame = document.getElementById('pdf-frame');
@@ -107,9 +108,27 @@
       statusEl.hidden = false;
     }
 
-    function printPdfBlobUrl(url) {
-      const printWin = window.open(url, '_blank');
+    function buildPdfPrintShellHtml(pdfBlobUrl, printTitle) {
+      const safeTitle = printTitle.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${safeTitle}</title>
+<style>html,body{margin:0;height:100%;} embed{display:block;width:100%;height:100%;}</style>
+</head>
+<body>
+<embed type="application/pdf" src="${pdfBlobUrl}">
+</body>
+</html>`;
+    }
+
+    function printPdfBlobUrl(url, printTitle) {
+      const printWin = window.open('', '_blank');
       if (!printWin) return false;
+      printWin.document.open();
+      printWin.document.write(buildPdfPrintShellHtml(url, printTitle || docTitle));
+      printWin.document.close();
       const runPrint = () => {
         try {
           printWin.focus();
@@ -123,7 +142,7 @@
 
     printBtn.addEventListener('click', () => {
       const pdfBlobUrl = frame.dataset.pdfBlobUrl;
-      if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl)) return;
+      if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl, docTitle)) return;
       frame.contentWindow?.focus();
       frame.contentWindow?.print();
     });
@@ -134,8 +153,9 @@
 
     try {
       const rev = PDF_PRINT_REVISIONS[view] || '1';
+      const params = new URLSearchParams({ view, rev, title: docTitle });
       const res = await fetch(
-        apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}&rev=${encodeURIComponent(rev)}`),
+        apiUrl(`/api/print/pdf?${params}`),
         { cache: 'no-store' },
       );
       if (!res.ok) {
