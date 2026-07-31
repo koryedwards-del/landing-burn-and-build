@@ -3,6 +3,8 @@
  * DIY mode shows the full foods.json fruit catalog.
  */
 
+import { canonicalFruitName } from './fruitNames.js';
+
 /** @type {readonly string[]} foods.json names, curated display order */
 export const FAST_START_FRUIT_NAMES = [
   'Bananas',
@@ -21,9 +23,9 @@ export const FAST_START_FRUIT_NAMES = [
 const FAST_START_FRUIT_ORDER = new Map(FAST_START_FRUIT_NAMES.map((name, index) => [name, index]));
 
 export function isFastStartFruit(foodName) {
-  return FAST_START_FRUIT_ORDER.has(foodName);
+  return FAST_START_FRUIT_ORDER.has(canonicalFruitName(foodName));
 }
 
 export function fastStartFruitSortKey(foodName) {
-  return FAST_START_FRUIT_ORDER.get(foodName) ?? Number.MAX_SAFE_INTEGER;
+  return FAST_START_FRUIT_ORDER.get(canonicalFruitName(foodName)) ?? Number.MAX_SAFE_INTEGER;
 }

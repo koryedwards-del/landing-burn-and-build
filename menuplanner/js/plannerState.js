@@ -1,4 +1,4 @@
-import { formatGroceryQuantity } from '../../js/groceryEngine.js';
+import { canonicalFruitName } from '../data/fruitNames.js';
 import { generateMealSlots } from '../../js/burnEngine.js';
 import {
   attachPlannerStateToPackage,
@@ -179,7 +179,7 @@ const FOOD_NAME_MIGRATIONS = {
 };
 
 function migrateFoodName(name) {
-  return FOOD_NAME_MIGRATIONS[name] || name;
+  return canonicalFruitName(name);
 }
 
 function migrateSelectionFoodName(selection) {

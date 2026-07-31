@@ -54,6 +54,7 @@ import {
 } from './plannerState.js';
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import { foodListLabel } from '../../js/foodDisplay.js';
+import { canonicalFruitName } from '../data/fruitNames.js';
 
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
@@ -693,10 +694,18 @@ function weekMealLabel(weekDay, mealSlotId) {
   return { text: WEEK_MEAL_EMPTY_LABEL[mealSlotId], empty: true };
 }
 
+function findFruitByName(foodName) {
+  const canonical = canonicalFruitName(foodName);
+  return state.foods.find(
+    (item) => item.category === 'fruit'
+      && (item.name === foodName || canonicalFruitName(item.name) === canonical),
+  );
+}
+
 function applyFruitToSnackCell(weekDay, mealSlotId, foodName) {
   if (!isSnackMealSlot(mealSlotId)) return;
-  const food = state.foods.find((item) => item.name === foodName);
-  if (!food || food.category !== 'fruit') return;
+  const food = findFruitByName(foodName);
+  if (!food) return;
 
   templateSlots('snack').forEach((slotKey) => {
     categorySelections(mealSlotId, weekDay)[slotKey] = null;
@@ -704,7 +713,7 @@ function applyFruitToSnackCell(weekDay, mealSlotId, foodName) {
   setFatSelections(mealSlotId, [], weekDay);
   clearDaySlotMeta(mealSlotId, weekDay);
   categorySelections(mealSlotId, weekDay).fruit = {
-    foodName,
+    foodName: canonicalFruitName(food.name),
     servings: requiredServings(mealSlotId, 'fruit'),
   };
   renderWeekGrid();
@@ -985,15 +994,16 @@ function renderFruitList() {
   }
 
   container.innerHTML = fruits.map((food) => {
-    const imgUrl = fruitImageUrl(food.name, PLANNER_V);
+    const fruitName = canonicalFruitName(food.name);
+    const imgUrl = fruitImageUrl(fruitName, PLANNER_V);
     const imgHtml = imgUrl
       ? `<img class="fruit-row__img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />`
       : '';
     return `
-      <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(food.name)}">
+      <button type="button" class="fruit-row" data-fruit-name="${escapeHtml(fruitName)}">
         <span class="fruit-row__lead">
           ${imgHtml}
-          <span class="fruit-row__name">${escapeHtml(food.name)}</span>
+          <span class="fruit-row__name">${escapeHtml(fruitName)}</span>
         </span>
       </button>
     `;
