@@ -1,7 +1,13 @@
 import PDFDocument from 'pdfkit';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { PDF_BEST_RESULTS } from './constants.js';
-import { contentBox, drawGenericHeader, drawWatermark } from './draw.js';
+import {
+  beginPortraitSheet,
+  contentBox,
+  drawClampedText,
+  drawGenericHeader,
+  drawWatermark,
+} from './draw.js';
 
 function collectPdfBuffer(doc) {
   return new Promise((resolve, reject) => {
@@ -12,35 +18,35 @@ function collectPdfBuffer(doc) {
   });
 }
 
-function drawBestResultsItem(doc, item, questionNumber, x, y, width) {
-  const question = `${questionNumber}. ${item.q}`;
+function drawBestResultsItem(doc, item, questionNumber, x, y, width, bottomY) {
+  if (y >= bottomY - 4) return y;
 
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(PDF_BEST_RESULTS.questionSize)
-    .fillColor('#111111')
-    .text(question, x, y, {
-      width,
-      lineGap: 0,
-    });
+  const question = `${questionNumber}. ${item.q}`;
+  drawClampedText(doc, question, x, y, width, bottomY, {
+    font: 'Helvetica-Bold',
+    fontSize: PDF_BEST_RESULTS.questionSize,
+    fillColor: '#111111',
+    lineGap: 0,
+  });
 
   const answerY = doc.y + PDF_BEST_RESULTS.questionAnswerGap;
-  doc
-    .font('Helvetica')
-    .fontSize(PDF_BEST_RESULTS.answerSize)
-    .fillColor('#222222')
-    .text(item.a, x, answerY, {
-      width,
-      lineGap: PDF_BEST_RESULTS.lineGap,
-    });
+  if (answerY >= bottomY - 4) return bottomY;
 
-  return doc.y + PDF_BEST_RESULTS.itemGap;
+  drawClampedText(doc, item.a, x, answerY, width, bottomY, {
+    font: 'Helvetica',
+    fontSize: PDF_BEST_RESULTS.answerSize,
+    fillColor: '#222222',
+    lineGap: PDF_BEST_RESULTS.lineGap,
+  });
+
+  return Math.min(doc.y + PDF_BEST_RESULTS.itemGap, bottomY);
 }
 
 export async function renderBestResultsPdf({ title } = {}) {
   const docTitle = title || 'B&B - For Best Results';
   const doc = new PDFDocument({
     size: 'LETTER',
+    layout: 'portrait',
     margin: 0,
     autoFirstPage: false,
     info: {
@@ -53,15 +59,16 @@ export async function renderBestResultsPdf({ title } = {}) {
   let questionNumber = 0;
 
   FOR_BEST_RESULTS_PRINT_PAGES.forEach((pageDef) => {
-    doc.addPage({ size: 'LETTER', margin: 0 });
+    beginPortraitSheet(doc);
     drawWatermark(doc);
 
     const box = contentBox(doc);
+    const bottomY = box.bottom;
     let y = drawGenericHeader(doc, 'For Best Results');
 
     pageDef.items.forEach((item) => {
       questionNumber += 1;
-      y = drawBestResultsItem(doc, item, questionNumber, box.x, y, box.width);
+      y = drawBestResultsItem(doc, item, questionNumber, box.x, y, box.width, bottomY);
     });
   });
 

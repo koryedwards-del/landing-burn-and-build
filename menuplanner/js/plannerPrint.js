@@ -38,6 +38,44 @@ const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist', 'bestresults']);
 /** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
 const pdfBlobCache = new Map();
 
+const PDF_BLOB_CACHE_KEYS = {
+  faq: 'faq',
+  foodlist: 'foodlist',
+  bestresults: 'bestresults:v2',
+};
+
+function pdfBlobCacheKey(view) {
+  return PDF_BLOB_CACHE_KEYS[view] || view;
+}
+
+function isPdfBlob(blob) {
+  if (!blob || blob.size < 5) return false;
+  return blob.type === 'application/pdf' || blob.type === '';
+}
+
+async function readPdfHeader(blob) {
+  const header = await blob.slice(0, 5).text();
+  return header.startsWith('%PDF-');
+}
+
+function printPdfBlobUrl(url) {
+  const printWin = window.open(url, '_blank');
+  if (!printWin) return false;
+
+  const runPrint = () => {
+    try {
+      printWin.focus();
+      printWin.print();
+    } catch (_) {
+      /* popup may block print until user focuses */
+    }
+  };
+
+  printWin.addEventListener('load', runPrint);
+  setTimeout(runPrint, 600);
+  return true;
+}
+
 const PDF_VIEW_TITLES = {
   faq: 'Frequently Asked Questions',
   foodlist: 'Food List',
@@ -342,11 +380,12 @@ async function openPdfDocument(view) {
     const pdfBlobUrl = URL.createObjectURL(blob);
     frame.dataset.pdfBlobUrl = pdfBlobUrl;
     frame.dataset.filename = pdfFilenameFromTitle(docTitle, view);
-    frame.src = pdfBlobUrl;
+    frame.src = `${pdfBlobUrl}#toolbar=0&navpanes=0`;
     printBtn.disabled = false;
   }
 
-  const cachedBlob = pdfBlobCache.get(view);
+  const cacheKey = pdfBlobCacheKey(view);
+  const cachedBlob = pdfBlobCache.get(cacheKey);
   if (cachedBlob) {
     showPdfBlob(cachedBlob);
     return;
@@ -370,7 +409,13 @@ async function openPdfDocument(view) {
     }
 
     const blob = await res.blob();
-    pdfBlobCache.set(view, blob);
+    if (!isPdfBlob(blob) || !(await readPdfHeader(blob))) {
+      errorEl.textContent = 'Could not load PDF.';
+      errorEl.hidden = false;
+      return;
+    }
+
+    pdfBlobCache.set(cacheKey, blob);
     showPdfBlob(blob);
   } catch (err) {
     errorEl.textContent = err.message || 'Could not load PDF.';
@@ -386,6 +431,9 @@ function initPdfViewDialog() {
   if (!dialog || !frame || !printBtn) return;
 
   printBtn.addEventListener('click', () => {
+    const pdfBlobUrl = frame.dataset.pdfBlobUrl;
+    if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl)) return;
+
     try {
       frame.contentWindow?.focus();
       frame.contentWindow?.print();

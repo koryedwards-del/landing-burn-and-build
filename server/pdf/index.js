@@ -13,6 +13,12 @@ const RENDERERS = {
 /** Static print bodies (same bytes for every client); title only affects metadata/filename. */
 const STATIC_PDF_VIEWS = new Set(['faq', 'bestresults']);
 
+/** Bump bestresults when layout changes so Render cache cannot serve stale multi-page PDFs. */
+const STATIC_PDF_CACHE_KEYS = {
+  faq: 'faq',
+  bestresults: 'bestresults:v2',
+};
+
 const pdfBodyCache = new Map();
 
 function catalogAwareCacheKey(view) {
@@ -37,10 +43,11 @@ export async function renderPrintPdf(view, { title } = {}) {
   }
 
   if (STATIC_PDF_VIEWS.has(view)) {
-    let cached = pdfBodyCache.get(view);
+    const cacheKey = STATIC_PDF_CACHE_KEYS[view] || view;
+    let cached = pdfBodyCache.get(cacheKey);
     if (!cached) {
       cached = await render({ title: title || undefined });
-      pdfBodyCache.set(view, cached);
+      pdfBodyCache.set(cacheKey, cached);
     }
     return cached;
   }

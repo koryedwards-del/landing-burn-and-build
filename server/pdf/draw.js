@@ -22,6 +22,43 @@ export function contentBox(doc) {
   };
 }
 
+/** Manual pagination — reuse a trailing empty page instead of inserting a blank. */
+export function beginPortraitSheet(doc) {
+  const range = doc.bufferedPageRange();
+  if (range.count === 0) {
+    doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+    return;
+  }
+
+  doc.switchToPage(range.start + range.count - 1);
+  const box = contentBox(doc);
+  if (doc.y <= box.y + 1) {
+    return;
+  }
+
+  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+}
+
+/** Fixed-layout text — height cap prevents PDFKit from auto-inserting extra pages. */
+export function drawClampedText(doc, text, x, y, width, bottomY, options = {}) {
+  const {
+    font,
+    fontSize,
+    fillColor,
+    lineGap = 0,
+    characterSpacing,
+  } = options;
+
+  if (font) doc.font(font);
+  if (fontSize) doc.fontSize(fontSize);
+  if (fillColor) doc.fillColor(fillColor);
+
+  const height = Math.max(0, bottomY - y);
+  const textOpts = { width, lineGap, height };
+  if (characterSpacing != null) textOpts.characterSpacing = characterSpacing;
+  doc.text(String(text), x, y, textOpts);
+}
+
 export function drawWatermark(doc) {
   const { width, height } = doc.page;
   const size = PDF_WATERMARK_SIZE_PT;

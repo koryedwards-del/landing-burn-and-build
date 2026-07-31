@@ -106,7 +106,23 @@
       statusEl.hidden = false;
     }
 
+    function printPdfBlobUrl(url) {
+      const printWin = window.open(url, '_blank');
+      if (!printWin) return false;
+      const runPrint = () => {
+        try {
+          printWin.focus();
+          printWin.print();
+        } catch (_) { /* ignore */ }
+      };
+      printWin.addEventListener('load', runPrint);
+      setTimeout(runPrint, 600);
+      return true;
+    }
+
     printBtn.addEventListener('click', () => {
+      const pdfBlobUrl = frame.dataset.pdfBlobUrl;
+      if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl)) return;
       frame.contentWindow?.focus();
       frame.contentWindow?.print();
     });
@@ -128,7 +144,9 @@
       }
 
       const blob = await res.blob();
-      frame.src = URL.createObjectURL(blob);
+      const pdfBlobUrl = URL.createObjectURL(blob);
+      frame.dataset.pdfBlobUrl = pdfBlobUrl;
+      frame.src = `${pdfBlobUrl}#toolbar=0&navpanes=0`;
     } catch (err) {
       if (statusEl.hidden) {
         showError(err.message || 'Could not load PDF.');
