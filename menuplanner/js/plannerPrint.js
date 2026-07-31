@@ -1,5 +1,4 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
-import { apiUrl } from '../../js/apiConfig.js';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
 import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
 import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
@@ -493,30 +492,12 @@ function printGenericDocument(html) {
 }
 
 async function openPdfDocument(view) {
-  const url = apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`);
-  const res = await fetch(url);
-  if (!res.ok) {
-    let message = 'Could not generate PDF.';
-    try {
-      const body = await res.json();
-      if (body?.message) message = body.message;
-    } catch (_) {
-      /* ignore */
-    }
-    window.alert(message);
-    return;
-  }
-
-  const blob = await res.blob();
-  const blobUrl = URL.createObjectURL(blob);
-  const pdfWin = window.open(blobUrl, '_blank');
+  const viewerUrl = new URL('../../program-report/pdf-view.html', import.meta.url);
+  viewerUrl.searchParams.set('view', view);
+  const pdfWin = window.open(viewerUrl.href, '_blank');
   if (!pdfWin) {
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = `burn-and-build-${view}.pdf`;
-    link.click();
+    window.alert('Allow pop-ups to open the PDF, or try again.');
   }
-  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
 }
 
 function printPlannerDocument(view) {

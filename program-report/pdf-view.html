@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Print Shop PDF</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Open Sans", system-ui, sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .pdf-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      background: #1e1e1e;
+      border-bottom: 1px solid #333;
+    }
+    .pdf-toolbar__title {
+      font-family: Oswald, system-ui, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--logo-burn, #fdc500);
+      margin-right: auto;
+    }
+    .pdf-toolbar__btn {
+      appearance: none;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background: #2a2a2a;
+      color: #fff;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+    .pdf-toolbar__btn:hover { border-color: var(--logo-burn, #fdc500); }
+    .pdf-toolbar__btn--primary {
+      background: var(--logo-burn, #fdc500);
+      border-color: var(--logo-burn, #fdc500);
+      color: #111;
+    }
+    .pdf-toolbar__status {
+      width: 100%;
+      font-size: 0.82rem;
+      color: #aaa;
+    }
+    .pdf-toolbar__status--error { color: #ff8a80; }
+    .pdf-frame {
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 0;
+      border: 0;
+      background: #525659;
+    }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <p class="pdf-toolbar__title" id="pdf-title">Print Shop</p>
+    <button type="button" class="pdf-toolbar__btn pdf-toolbar__btn--primary" id="pdf-print" disabled>Print</button>
+    <a class="pdf-toolbar__btn" id="pdf-download" download hidden>Download PDF</a>
+    <p class="pdf-toolbar__status" id="pdf-status">Loading PDF…</p>
+  </div>
+  <iframe class="pdf-frame" id="pdf-frame" title="PDF document"></iframe>
+  <script type="module">
+    import { apiUrl } from '../js/apiConfig.js';
+
+    const VIEW_TITLES = {
+      faq: 'Frequently Asked Questions',
+      foodlist: 'Food List',
+      bestresults: 'For Best Results',
+      week: 'Weekly Meal Plan',
+      shopping: 'Grocery List',
+    };
+
+    const view = new URLSearchParams(window.location.search).get('view') || 'faq';
+    const title = VIEW_TITLES[view] || 'Document';
+    document.getElementById('pdf-title').textContent = title;
+    document.title = `B&B — ${title}`;
+
+    const statusEl = document.getElementById('pdf-status');
+    const frame = document.getElementById('pdf-frame');
+    const printBtn = document.getElementById('pdf-print');
+    const downloadLink = document.getElementById('pdf-download');
+
+    printBtn.addEventListener('click', () => {
+      try {
+        frame.contentWindow?.focus();
+        frame.contentWindow?.print();
+      } catch (_) {
+        window.print();
+      }
+    });
+
+    try {
+      const res = await fetch(apiUrl(`/api/print/pdf?view=${encodeURIComponent(view)}`));
+      if (!res.ok) {
+        let message = 'Could not generate PDF.';
+        try {
+          const body = await res.json();
+          if (body?.message) message = body.message;
+        } catch (_) { /* ignore */ }
+        statusEl.textContent = message;
+        statusEl.classList.add('pdf-toolbar__status--error');
+        throw new Error(message);
+      }
+
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      frame.src = blobUrl;
+      downloadLink.href = blobUrl;
+      downloadLink.download = `burn-and-build-${view}.pdf`;
+      downloadLink.hidden = false;
+      printBtn.disabled = false;
+      statusEl.textContent = 'Use Print or Download PDF above.';
+    } catch (err) {
+      if (!statusEl.classList.contains('pdf-toolbar__status--error')) {
+        statusEl.textContent = err.message || 'Could not load PDF.';
+        statusEl.classList.add('pdf-toolbar__status--error');
+      }
+    }
+  </script>
+</body>
+</html>
