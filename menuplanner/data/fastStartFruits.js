@@ -5,19 +5,19 @@
 
 import { canonicalFruitName } from './fruitNames.js';
 
-/** @type {readonly string[]} foods.json names, curated display order */
+/** @type {readonly string[]} foods.json names, alphabetical display order */
 export const FAST_START_FRUIT_NAMES = [
-  'Bananas',
   'Apples',
-  'Grapes',
-  'Pears',
-  'Oranges',
-  'Clementines',
-  'Tangerines',
-  'Strawberries',
+  'Bananas',
   'Blueberries',
-  'Peaches',
+  'Clementines',
+  'Grapes',
   'Nectarines',
+  'Oranges',
+  'Peaches',
+  'Pears',
+  'Strawberries',
+  'Tangerines',
 ];
 
 const FAST_START_FRUIT_ORDER = new Map(FAST_START_FRUIT_NAMES.map((name, index) => [name, index]));
