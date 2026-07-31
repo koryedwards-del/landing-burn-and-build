@@ -32,4 +32,20 @@ export const PDF_FAQ = {
   questionAnswerGap: 1.5,
 };
 
-export const PDF_VIEWS = new Set(['faq']);
+export const PDF_FOOD_LIST = {
+  columnTitleSize: 9,
+  columnTitleGap: 6,
+  foodSize: 7,
+  foodItemGap: 1,
+  foodLineHeight: 8,
+  columnGap: 16,
+  columnRuleWidth: 1.5,
+  tipsQuestionSize: 7.5,
+  tipsAnswerSize: 7,
+  tipsLineGap: 1.5,
+  tipsQuestionAnswerGap: 2,
+  tipsItemGap: 8,
+  tipsMinBlock: 24,
+};
+
+export const PDF_VIEWS = new Set(['faq', 'foodlist']);

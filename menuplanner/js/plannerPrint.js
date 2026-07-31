@@ -1,12 +1,6 @@
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import { apiUrl } from '../../js/apiConfig.js';
 import { FOR_BEST_RESULTS_PRINT_PAGES } from '../../data/forBestResultsPrintout.js';
-import { FOOD_LIST_PRINT_PAGES } from '../../data/foodListPrintout.js';
-import { foodListLabel } from '../../js/foodDisplay.js';
-import { PROTEIN_TIPS_QA } from '../../data/proteinTipsPrintout.js';
-import { GRAINS_STARCHES_TIPS_QA } from '../../data/grainsStarchesTipsPrintout.js';
-import { VEGETABLE_TIPS_QA } from '../../data/vegetableTipsPrintout.js';
-import { FRUIT_TIPS_QA } from '../../data/fruitTipsPrintout.js';
 import { buildPrintStylesForView } from './plannerPrintStyles.js';
 import {
   buildGenericPrintDocumentHtml,
@@ -46,7 +40,7 @@ import {
 } from './plannerState.js';
 
 /** Views rendered as real PDFs on Render — grows as each doc is converted. */
-const PDF_PRINT_VIEWS = new Set(['faq']);
+const PDF_PRINT_VIEWS = new Set(['faq', 'foodlist']);
 
 /** In-memory blob cache for static PDFs — avoids repeat network + parse on reopen. */
 const pdfBlobCache = new Map();
@@ -220,115 +214,6 @@ function weekPlanHasContent() {
   return found;
 }
 
-function splitFoodsInHalf(foods) {
-  const splitAt = Math.ceil(foods.length / 2);
-  return [foods.slice(0, splitAt), foods.slice(splitAt)];
-}
-
-const FOOD_LIST_TIPS_BY_KEY = {
-  protein: PROTEIN_TIPS_QA,
-  grainsStarches: GRAINS_STARCHES_TIPS_QA,
-  vegetable: VEGETABLE_TIPS_QA,
-  fruit: FRUIT_TIPS_QA,
-};
-
-function foodsForFoodListColumn(columnDef) {
-  const foods = foodsByCategory(columnDef.category);
-  if (columnDef.split === 'first') return splitFoodsInHalf(foods)[0];
-  if (columnDef.split === 'second') return splitFoodsInHalf(foods)[1];
-  return foods;
-}
-
-function foodsByCategory(categoryId) {
-  return state.foods
-    .filter((food) => food.category === categoryId)
-    .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-function buildFoodListColumn(title, foods, { hideTitle = false } = {}) {
-  const titleHtml = title
-    ? `<h2 class="food-list-col-title${hideTitle ? ' food-list-col-title--spacer' : ''}"${hideTitle ? ' aria-hidden="true"' : ''}>${escapeHtml(title)}</h2>`
-    : '';
-  return `
-    <div class="food-list-col${hideTitle ? ' food-list-col--continued' : ''}${!foods.length ? ' food-list-col--empty' : ''}">
-      ${titleHtml}
-      ${foods.length ? `
-      <ul class="food-list-items">
-        ${foods.map((food) => `
-          <li class="food-list-name">${escapeHtml(foodListLabel(food))}</li>
-        `).join('')}
-      </ul>
-      ` : ''}
-    </div>
-  `;
-}
-
-function buildFoodListTipsColumn(title, { tips = [], qaItems = [] } = {}) {
-  const tipsBody = qaItems.length
-    ? qaItems.map((item) => `
-      <article class="food-list-qa-item">
-        <h3 class="food-list-qa-question">${escapeHtml(item.q)}</h3>
-        <p class="food-list-qa-answer">${escapeHtml(item.a)}</p>
-      </article>
-    `).join('')
-    : tips.map((paragraph) => `<p class="food-list-tip">${escapeHtml(paragraph)}</p>`).join('');
-
-  return `
-    <div class="food-list-col food-list-col--tips${qaItems.length ? ' food-list-col--tips-qa' : ''}">
-      <h2 class="food-list-col-title food-list-col-title--tips">${escapeHtml(title)}</h2>
-      <div class="food-list-tips${qaItems.length ? ' food-list-tips--qa' : ''}">
-        ${tipsBody}
-      </div>
-    </div>
-  `;
-}
-
-function buildFoodListRow({
-  headerHtml,
-  columns,
-  columnCount = 3,
-  pageIndex = 0,
-  isLast = false,
-}) {
-  const colsHtml = columns.map((columnDef) => {
-    if (columnDef.kind === 'tips') {
-      return buildFoodListTipsColumn(columnDef.title, {
-        qaItems: FOOD_LIST_TIPS_BY_KEY[columnDef.qaKey] || [],
-      });
-    }
-    return buildFoodListColumn(columnDef.title, foodsForFoodListColumn(columnDef), {
-      hideTitle: columnDef.hideTitle,
-    });
-  }).join('');
-
-  return buildGenericPrintSheet({
-    orientation: 'landscape',
-    headerHtml,
-    logoUrl: printLogoUrl(),
-    pageIndex,
-    isLast,
-    bodyHtml: `
-      <div class="food-list-columns food-list-columns--cols-${columnCount}">
-        ${colsHtml}
-      </div>
-    `,
-    sectionClass: 'food-list-section',
-  });
-}
-
-function buildFoodListContent() {
-  const headerHtml = buildPrintViewHeaderHtml('foodlist', printShellContext());
-  const pages = FOOD_LIST_PRINT_PAGES;
-
-  return pages.map((pageDef, index) => buildFoodListRow({
-    headerHtml,
-    columns: pageDef.columns,
-    columnCount: pageDef.columnCount || pageDef.columns.length,
-    pageIndex: index,
-    isLast: index === pages.length - 1,
-  })).join('');
-}
-
 function buildQaPrintContent(view, pages, { numbered = false } = {}) {
   const headerHtml = buildPrintViewHeaderHtml(view, printShellContext());
   const orientation = PRINT_VIEW_CONFIG[view]?.pageSize === 'landscape' ? 'landscape' : 'portrait';
@@ -409,7 +294,6 @@ function buildShoppingListContent() {
 const PRINT_BODY_BUILDERS = {
   week: buildWeekAgendaContent,
   shopping: buildShoppingListContent,
-  foodlist: buildFoodListContent,
   bestresults: buildForBestResultsContent,
 };
 

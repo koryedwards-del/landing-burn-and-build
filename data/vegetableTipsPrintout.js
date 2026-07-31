@@ -14,6 +14,6 @@ export const VEGETABLE_TIPS_QA = [
   },
   {
     q: 'Why are potatoes and corn not on this list?',
-    a: 'Potatoes, corn, peas, and squash are starches because their serving sizes would be unwieldy if measured as vegetables.',
+    a: 'Potatoes, corn, and peas are starches because their serving sizes would be unwieldy if measured as vegetables.',
   },
 ];

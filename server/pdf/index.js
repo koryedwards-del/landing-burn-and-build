@@ -1,14 +1,22 @@
+import { FOODS_CATALOG_VERSION } from '../../js/assetVersion.js';
 import { PDF_VIEWS } from './constants.js';
 import { renderFaqPdf } from './renderFaq.js';
+import { renderFoodListPdf } from './renderFoodList.js';
 
 const RENDERERS = {
   faq: renderFaqPdf,
+  foodlist: renderFoodListPdf,
 };
 
 /** Static print bodies (same bytes for every client); title only affects metadata/filename. */
 const STATIC_PDF_VIEWS = new Set(['faq']);
 
 const pdfBodyCache = new Map();
+
+function catalogAwareCacheKey(view) {
+  if (view === 'foodlist') return `${view}:${FOODS_CATALOG_VERSION}`;
+  return view;
+}
 
 export function isPdfView(view) {
   return PDF_VIEWS.has(view);
@@ -35,5 +43,11 @@ export async function renderPrintPdf(view, { title } = {}) {
     return cached;
   }
 
-  return render({ title: title || undefined });
+  const cacheKey = catalogAwareCacheKey(view);
+  let cached = pdfBodyCache.get(cacheKey);
+  if (!cached) {
+    cached = await render({ title: title || undefined });
+    pdfBodyCache.set(cacheKey, cached);
+  }
+  return cached;
 }

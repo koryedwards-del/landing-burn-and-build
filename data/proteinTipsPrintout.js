@@ -17,15 +17,11 @@ export const PROTEIN_TIPS_QA = [
     a: "That's a personal choice. Many people skip dairy today. Replace those servings with other protein foods on this list — meats, fish, and eggs.",
   },
   {
-    q: 'Can I have salmon?',
-    a: 'Stick to the lean fish on this list.',
-  },
-  {
     q: 'Can I count beans, rice, or nuts as protein?',
     a: 'Even though beans, rice, and nuts contain protein, they are predominantly complex carbohydrates or fats. Use the meats, fish, eggs, and dairy on this list for protein servings.',
   },
   {
-    q: 'Can I skip the yolk?',
-    a: 'Yes. Each egg serving is 2 whites/1 yolk. Reduce or skip yolks as desired — you still get your protein from the whites.',
+    q: 'How are egg whites listed?',
+    a: 'Each egg whites serving on this list equals 2 large whites. Adjust yolks separately if you use whole eggs elsewhere in your day.',
   },
 ];

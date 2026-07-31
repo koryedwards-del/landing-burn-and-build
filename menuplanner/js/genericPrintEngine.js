@@ -1,15 +1,14 @@
 /**
  * Generic Print Sheet Engine
  *
- * Food List and For Best Results are fixed reference documents. They use
- * exact physical sheet dimensions (letter size, zero @page margin) instead of
+ * For Best Results is a fixed reference document. It uses
  * browser flow + min-height hacks, which are unreliable across print engines.
  *
  * Each logical page = one .generic-print-sheet (fixed width/height, overflow hidden).
  * Pagination is authored in data/*Printout.js — not computed at runtime.
  */
 
-export const GENERIC_PRINT_VIEWS = new Set(['foodlist', 'bestresults']);
+export const GENERIC_PRINT_VIEWS = new Set(['bestresults']);
 
 export function isGenericPrintView(view) {
   return GENERIC_PRINT_VIEWS.has(view);

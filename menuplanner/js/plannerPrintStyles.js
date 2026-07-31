@@ -154,9 +154,6 @@ const PRINT_SHELL_STYLES = `
     padding: ${PRINT_PAGE_PADDING};
     background: #ffffff;
   }
-  .print-body--foodlist .print-page--sheet {
-    min-height: ${PRINT_SHEET_MIN_HEIGHT.landscape};
-  }
   .print-body--bestresults .print-page--sheet {
     min-height: ${PRINT_SHEET_MIN_HEIGHT.portrait};
   }
@@ -407,99 +404,6 @@ const SHOPPING_CONTENT_STYLES = `
   }
 `;
 
-const FOODLIST_CONTENT_STYLES = `
-  .food-list-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0;
-    align-items: start;
-    flex: 1;
-    min-height: 0;
-  }
-  .food-list-columns--cols-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-  .food-list-col {
-    position: relative;
-    padding: 0 12px;
-    border-left: 2px solid #111;
-  }
-  .food-list-col:first-child { border-left: none; padding-left: 0; }
-  .food-list-col:last-child { padding-right: 0; }
-  .food-list-col-title {
-    font-family: Oswald, system-ui, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    font-style: italic;
-    letter-spacing: 0.04em;
-    text-align: center;
-    color: #111;
-    margin-bottom: 8px;
-  }
-  .food-list-items {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .food-list-items li {
-    font-size: 0.56rem;
-    line-height: 1.2;
-    padding: 1px 0;
-  }
-  .food-list-name { color: #222; }
-  .food-list-col-title--spacer { visibility: hidden; }
-  .food-list-col--empty { min-height: 1px; }
-  .food-list-tips {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .food-list-tip {
-    font-size: 0.62rem;
-    line-height: 1.4;
-    color: #222;
-  }
-  .food-list-tips--qa {
-    gap: 0;
-  }
-  .food-list-qa-item {
-    break-inside: avoid;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #bbb;
-  }
-  .food-list-qa-item:last-child {
-    padding-bottom: 0;
-    margin-bottom: 0;
-    border-bottom: none;
-  }
-  .food-list-qa-question {
-    font-family: "Open Sans", system-ui, sans-serif;
-    font-size: 0.62rem;
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: 0.01em;
-    color: #111;
-    margin-bottom: 3px;
-  }
-  .food-list-qa-answer {
-    font-family: Merriweather, Georgia, "Times New Roman", serif;
-    font-size: 0.58rem;
-    line-height: 1.48;
-    color: #222;
-  }
-  @media print {
-    .food-list-col-title { margin-bottom: 6px; }
-    .food-list-qa-item {
-      padding-bottom: 6px;
-      margin-bottom: 6px;
-    }
-    .food-list-qa-question { font-size: 0.58rem; }
-    .food-list-qa-answer { font-size: 0.54rem; line-height: 1.42; }
-  }
-`;
-
 const BESTRESULTS_CONTENT_STYLES = `
   .print-qa-page {
     display: flex;
@@ -540,7 +444,6 @@ const BESTRESULTS_CONTENT_STYLES = `
 const CONTENT_STYLES = {
   week: WEEK_CONTENT_STYLES,
   shopping: SHOPPING_CONTENT_STYLES,
-  foodlist: FOODLIST_CONTENT_STYLES,
   bestresults: BESTRESULTS_CONTENT_STYLES,
 };
 
