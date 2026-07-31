@@ -295,11 +295,11 @@ export const MEAL_TEMPLATES = [
   }),
   meal('beef-ground-round-potato', [
     { slot: 'Protein', foodName: 'Beef, ground round' },
-    { slot: 'Grains/Starches', foodName: 'Potato, boiled' },
+    { slot: 'Grains/Starches', foodName: 'Hamburger/hot dog bun' },
   ], {
-    name: 'Ground Round & Potato',
+    name: 'Ground Round Burgers',
     profile: 'Classic',
-    caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger.',
+    caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger. PAM cooking spray is recommended to prevent sticking. Form patties and cook in a non-stick pan until done. Buns plain — no butter or spread.',
   }),
 ];
 
