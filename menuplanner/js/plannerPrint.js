@@ -94,28 +94,9 @@ async function readPdfHeader(blob) {
   return header.startsWith('%PDF-');
 }
 
-function buildPdfPrintShellHtml(pdfBlobUrl, title) {
-  const safeTitle = escapeHtml(title);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>${safeTitle}</title>
-<style>html,body{margin:0;height:100%;} embed{display:block;width:100%;height:100%;}</style>
-</head>
-<body>
-<embed type="application/pdf" src="${pdfBlobUrl}">
-</body>
-</html>`;
-}
-
-function printPdfBlobUrl(url, title) {
-  const printWin = window.open('', '_blank');
+function printPdfBlobUrl(url) {
+  const printWin = window.open(url, '_blank');
   if (!printWin) return false;
-
-  printWin.document.open();
-  printWin.document.write(buildPdfPrintShellHtml(url, title || 'Document'));
-  printWin.document.close();
 
   const runPrint = () => {
     try {
@@ -127,8 +108,23 @@ function printPdfBlobUrl(url, title) {
   };
 
   printWin.addEventListener('load', runPrint);
-  setTimeout(runPrint, 600);
+  setTimeout(runPrint, 800);
   return true;
+}
+
+function printLoadedPdfFrame(frame, pdfBlobUrl) {
+  try {
+    const frameWin = frame?.contentWindow;
+    if (frameWin && frame?.src) {
+      frameWin.focus();
+      frameWin.print();
+      return true;
+    }
+  } catch (_) {
+    /* fall through to blob tab */
+  }
+
+  return pdfBlobUrl ? printPdfBlobUrl(pdfBlobUrl) : false;
 }
 
 const PDF_VIEW_TITLES = {
@@ -399,7 +395,17 @@ function printViaIframe(html) {
   triggerDocumentPrint(frameWin, frameDoc);
 }
 
+let pdfViewDialogReady = false;
+
+function ensurePdfViewDialog() {
+  if (pdfViewDialogReady) return;
+  initPdfViewDialog();
+  pdfViewDialogReady = true;
+}
+
 async function openPdfDocument(view) {
+  ensurePdfViewDialog();
+
   const dialog = document.getElementById('pdf-view-dialog');
   const titleEl = document.getElementById('pdf-view-title');
   const frame = document.getElementById('pdf-view-frame');
@@ -482,23 +488,12 @@ function initPdfViewDialog() {
   const dialog = document.getElementById('pdf-view-dialog');
   const frame = document.getElementById('pdf-view-frame');
   const printBtn = document.getElementById('pdf-view-print');
-  const closeBtn = document.getElementById('pdf-view-close');
-  if (!dialog || !frame || !printBtn) return;
+  if (!dialog || !frame || !printBtn || dialog.dataset.pdfViewInit) return;
+  dialog.dataset.pdfViewInit = '1';
 
   printBtn.addEventListener('click', () => {
-    const pdfBlobUrl = frame.dataset.pdfBlobUrl;
-    const docTitle = frame.title || 'Document';
-    if (pdfBlobUrl && printPdfBlobUrl(pdfBlobUrl, docTitle)) return;
-
-    try {
-      frame.contentWindow?.focus();
-      frame.contentWindow?.print();
-    } catch (_) {
-      /* keep viewer open */
-    }
+    printLoadedPdfFrame(frame, frame.dataset.pdfBlobUrl);
   });
-
-  closeBtn?.addEventListener('click', () => dialog.close());
 
   dialog.addEventListener('close', () => {
     const pdfBlobUrl = frame.dataset.pdfBlobUrl;
@@ -527,7 +522,8 @@ function printPlannerDocument(view) {
 
 function initPrintChoiceDialog() {
   const dialog = document.getElementById('print-choice-dialog');
-  if (!dialog) return;
+  if (!dialog || dialog.dataset.printChoiceInit) return;
+  dialog.dataset.printChoiceInit = '1';
 
   dialog.querySelector('#print-choice-cancel')?.addEventListener('click', () => {
     dialog.close();

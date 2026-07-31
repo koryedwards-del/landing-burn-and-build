@@ -1185,6 +1185,9 @@ body {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
   padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
@@ -1203,6 +1206,12 @@ body {
   display: flex;
   gap: 8px;
   margin-left: auto;
+  position: relative;
+  z-index: 3;
+}
+
+.pdf-view-dialog__close-form {
+  margin: 0;
 }
 
 .pdf-view-dialog__btn {
@@ -1239,6 +1248,8 @@ body {
   min-height: 0;
   border: 0;
   background: #525659;
+  position: relative;
+  z-index: 1;
 }
 
 .pdf-view-dialog__error {

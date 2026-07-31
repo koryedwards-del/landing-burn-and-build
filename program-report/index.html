@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/program-bridge.css?v=234" />
   <link rel="stylesheet" href="css/report.css?v=234" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=234" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=236" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -233,7 +233,9 @@
         <p class="pdf-view-dialog__title" id="pdf-view-title">Document</p>
         <div class="pdf-view-dialog__actions">
           <button type="button" class="pdf-view-dialog__btn pdf-view-dialog__btn--primary" id="pdf-view-print" disabled>Print</button>
-          <button type="button" class="pdf-view-dialog__btn pdf-view-dialog__btn--ghost" id="pdf-view-close">Close</button>
+          <form method="dialog" class="pdf-view-dialog__close-form">
+            <button type="submit" class="pdf-view-dialog__btn pdf-view-dialog__btn--ghost" id="pdf-view-close">Close</button>
+          </form>
         </div>
       </header>
       <iframe id="pdf-view-frame" class="pdf-view-dialog__frame" title="PDF document"></iframe>
