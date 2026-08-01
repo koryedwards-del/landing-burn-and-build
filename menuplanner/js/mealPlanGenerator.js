@@ -196,6 +196,7 @@ export function mealSummaryLabel(weekDay, mealSlotId) {
 
 export function swapMealLane(weekDay, mealSlotId, lane) {
   const current = getMealLaneFood(weekDay, mealSlotId, lane);
+  // Only this cell — not a taste profile; next regenerate may pick oatmeal again.
   const next = pickFoodName(lane, { exclude: [current], mealSlotId });
   if (!next || next === current) return current;
   assignMealLane(weekDay, mealSlotId, lane, next);
@@ -249,26 +250,20 @@ export function sanitizeWeekFruits() {
   });
 }
 
-function fillMealSlot(weekDay, mealSlotId, usedByLane) {
+function fillMealSlot(weekDay, mealSlotId) {
   MEAL_LANES.forEach((lane) => {
     if (mealLaneServings(mealSlotId, lane) <= 0) {
       setSplitGridSelections(mealSlotId, lane, [], weekDay);
       return;
     }
-    const used = usedByLane[lane] || [];
-    const foodName = pickFoodName(lane, { exclude: used, mealSlotId });
-    if (foodName) {
-      usedByLane[lane] = used.concat(foodName);
-    }
-    assignMealLane(weekDay, mealSlotId, lane, foodName);
+    assignMealLane(weekDay, mealSlotId, lane, pickFoodName(lane, { mealSlotId }));
   });
 }
 
 export function generateReactiveWeek() {
-  const usedByLane = { protein: [], gs: [], vegetable: [] };
   WEEK_DAYS.forEach((day, index) => {
     REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
-      fillMealSlot(day.id, mealSlotId, usedByLane);
+      fillMealSlot(day.id, mealSlotId);
     });
     const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length] || FRUIT_NAMES_WITH_IMAGES[0];
     assignDayFruit(day.id, fruitName);
