@@ -58,7 +58,25 @@ function inferMealTags(items) {
 }
 
 /** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, splash: string[], prep: string, tags: string[] }>} */
-export const TRANSFORMATION_MEALS = [];
+export const TRANSFORMATION_MEALS = [
+  defineTransformationMeal(
+    'garlic-herb-shrimp-stir-fry',
+    'Garlic Herb Shrimp Stir-Fry',
+    [
+      { slot: 'Protein', foodName: 'Shrimp, steamed' },
+      { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
+      { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
+      { slot: 'Veggie', foodName: 'Mushrooms, white, cooked' },
+    ],
+    {
+      tags: ['seafood', 'grain'],
+      flavorKit: 'iron',
+      splash: ['Low-sodium soy sauce'],
+      prep: 'Pat shrimp dry and season with your Iron flavor kit. Heat a wok with a small amount of oil; cook shrimp 1–2 minutes per side until pink, set aside. Stir-fry broccoli, bell peppers, and mushrooms until crisp-tender; add minced garlic. Return shrimp, splash with soy sauce, and toss. Garnish with sliced green onions; crushed red pepper optional. Serve over basmati rice.',
+    },
+  ),
+];
 
 const mealsById = new Map(TRANSFORMATION_MEALS.map((entry) => [entry.id, entry]));
 
