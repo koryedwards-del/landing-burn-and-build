@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=305" />
-  <link rel="stylesheet" href="css/report.css?v=305" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=305" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=306" />
+  <link rel="stylesheet" href="css/report.css?v=306" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=306" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -105,13 +105,15 @@
               <p class="pb-eyebrow">Page 4</p>
               <div class="pb-page-head__title-row">
                 <h2 class="pb-panel__title" id="planner-page-title">Weekly Menu Planner</h2>
-                <div class="planner-toolbar" aria-label="Menu planner actions">
-                  <button type="button" class="planner-toolbar__btn" id="grocery-toggle" aria-expanded="false" aria-controls="grocery-drawer">Grocery</button>
-                  <button type="button" class="planner-toolbar__btn" id="regenerate-week">Regenerate week</button>
-                  <button type="button" class="planner-toolbar__btn planner-toolbar__btn--primary" id="planner-print-open">Print</button>
+                <div class="planner-head__actions">
+                  <div class="planner-toolbar" aria-label="Menu planner actions">
+                    <button type="button" class="planner-toolbar__btn" id="grocery-toggle" aria-expanded="false" aria-controls="grocery-drawer">Grocery</button>
+                    <button type="button" class="planner-toolbar__btn" id="regenerate-week">Regenerate week</button>
+                    <button type="button" class="planner-toolbar__btn planner-toolbar__btn--primary" id="planner-print-open">Print</button>
+                  </div>
+                  <p class="planner-swap-hint">Tap any food to swap it</p>
                 </div>
               </div>
-              <p class="planner-swap-hint">Tap any food to swap it</p>
             </div>
             <p class="pb-servings-note" id="planner-servings" hidden></p>
           </div>
@@ -163,6 +165,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=305"></script>
+  <script type="module" src="js/report.js?v=306"></script>
 </body>
 </html>
