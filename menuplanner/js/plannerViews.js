@@ -892,6 +892,10 @@ function foodByName(name) {
   return state.foods.find((item) => item.name === name);
 }
 
+function mealIngredientLabel(item) {
+  return item.label || item.foodName;
+}
+
 function renderMealFlavorKitHtml(meal) {
   const kit = flavorKitById(meal.flavorKit);
   if (!kit) return '';
@@ -902,13 +906,11 @@ function renderMealFlavorKitHtml(meal) {
     : '';
 
   return `
-    <div class="recipe-card__flavor-kit">
-      <p class="recipe-card__flavor-kit-label">
-        Flavor kit: <strong>${escapeHtml(kit.label)}</strong>
-      </p>
-      <p class="recipe-card__flavor-kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
+    <section class="recipe-card__block recipe-card__block--flavor">
+      <p class="recipe-card__flavor-line">Flavor kit · <strong>${escapeHtml(kit.label)}</strong></p>
+      <p class="recipe-card__flavor-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
       ${splashHtml}
-    </div>
+    </section>
   `;
 }
 
@@ -917,12 +919,17 @@ function renderMealStepsHtml(meal) {
   const items = meal.steps.map((step) => `
       <li class="recipe-card__step">${escapeHtml(step)}</li>
     `).join('');
-  return `<ol class="recipe-card__steps">${items}</ol>`;
+  return `
+    <section class="recipe-card__block recipe-card__block--prep">
+      <p class="recipe-card__block-label">Prep</p>
+      <ol class="recipe-card__steps">${items}</ol>
+    </section>
+  `;
 }
 
 function renderMealIdeaCard(meal) {
-  const linesHtml = (meal.items || []).map((item) => `
-      <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
+  const ingredientsHtml = (meal.items || []).map((item) => `
+      <li>${escapeHtml(mealIngredientLabel(item))}</li>
     `).join('');
 
   const flavorKitHtml = renderMealFlavorKitHtml(meal);
@@ -938,7 +945,7 @@ function renderMealIdeaCard(meal) {
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
-        <div class="recipe-card__col recipe-card__col--plate">
+        <header class="recipe-card__hero">
           <img
             class="recipe-card__img"
             src="${escapeHtml(imgUrl)}"
@@ -947,19 +954,14 @@ function renderMealIdeaCard(meal) {
             decoding="async"
             onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
           />
-        </div>
-        <div class="recipe-card__content">
-          <div class="recipe-card__head">
-            <div class="recipe-card__col recipe-card__col--title">
-              <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-            </div>
-            <div class="recipe-card__col recipe-card__col--foods">
-              ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
-            </div>
-          </div>
-          ${flavorKitHtml}
-          ${stepsHtml}
-        </div>
+          <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+        </header>
+        <section class="recipe-card__block recipe-card__block--ingredients">
+          <p class="recipe-card__block-label">Ingredients</p>
+          <ul class="recipe-card__ingredients">${ingredientsHtml}</ul>
+        </section>
+        ${flavorKitHtml}
+        ${stepsHtml}
       </button>
     </article>
   `;

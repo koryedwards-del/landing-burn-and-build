@@ -1,21 +1,14 @@
 /**
  * 8-Week Transformation — meal prep catalog.
  *
- * Fresh start: no meals yet. Add entries to TRANSFORMATION_MEALS as they are defined.
- *
- * Meal card elements:
- *   1. Photo        — menuplanner/assets/meals/{id}.jpg
- *   2. Name         — menu title
- *   3. Plan foods   — items[] from foods.json (counted on the plan)
- *   4. Flavor kit   — one dry kit id (fire | iron | green | earth)
- *   5. Splash       — optional liquid accents while cooking (not counted)
- *   6. Prep         — numbered steps (technique only)
+ * Meal card blocks: hero · ingredients · flavor kit · prep steps.
+ * items[].foodName links to foods.json; items[].label is the short card name.
  */
 
 /**
  * @param {string} id
  * @param {string} name
- * @param {Array<{ slot: string, foodName: string }>} items
+ * @param {Array<{ slot: string, foodName: string, label?: string }>} items
  * @param {{
  *   flavorKit: string,
  *   splash?: string[],
@@ -57,31 +50,29 @@ function inferMealTags(items) {
   return [...tags];
 }
 
-/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, splash: string[], steps: string[], tags: string[] }>} */
+/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string, label?: string }>, flavorKit: string, splash: string[], steps: string[], tags: string[] }>} */
 export const TRANSFORMATION_MEALS = [
   defineTransformationMeal(
     'garlic-herb-shrimp-stir-fry',
     'Garlic Herb Shrimp Stir-Fry',
     [
-      { slot: 'Protein', foodName: 'Shrimp, steamed' },
-      { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-      { slot: 'Veggie', foodName: 'Broccoli, cooked' },
-      { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
-      { slot: 'Veggie', foodName: 'Mushrooms, white, cooked' },
+      { slot: 'Protein', foodName: 'Shrimp, steamed', label: 'Shrimp' },
+      { slot: 'Grains/Starches', foodName: 'Rice, basmati', label: 'Basmati rice' },
+      { slot: 'Veggie', foodName: 'Broccoli, cooked', label: 'Broccoli' },
+      { slot: 'Veggie', foodName: 'Peppers, red bell, cooked', label: 'Bell peppers' },
+      { slot: 'Veggie', foodName: 'Mushrooms, white, cooked', label: 'Mushrooms' },
     ],
     {
       tags: ['seafood', 'grain'],
       flavorKit: 'iron',
       splash: ['Low-sodium soy sauce'],
       steps: [
-        'Pat shrimp dry; season with your Iron flavor kit.',
-        'Heat a wok over medium-high heat; add a small amount of oil.',
-        'Cook shrimp 1–2 minutes per side until pink; set aside.',
-        'Stir-fry broccoli, bell peppers, and mushrooms 4–5 minutes until crisp-tender.',
-        'Add minced garlic; cook 30 seconds until fragrant.',
-        'Return shrimp to the wok.',
-        'Splash with soy sauce; toss until coated and heated through.',
-        'Garnish with green onions; crushed red pepper optional.',
+        'Season shrimp with the Iron Flavor Kit.',
+        'Cook shrimp; remove from wok.',
+        'Stir-fry broccoli, peppers, and mushrooms.',
+        'Add garlic; cook 30 seconds.',
+        'Return shrimp and splash with soy sauce.',
+        'Toss to combine.',
         'Serve over basmati rice.',
       ],
     },
