@@ -242,7 +242,6 @@ export function renderReactiveWeekGrid() {
       ${head}
       ${rows}
     </div>
-    <p class="reactive-grid__tip">Don&rsquo;t like something? Swap protein, g/s, or fruit. Your grocery list updates automatically.</p>
   `;
 
   renderGroceryList();
@@ -287,6 +286,7 @@ export function initReactivePlanner() {
   const grid = document.getElementById('week-grid');
   if (grid && !grid.dataset.reactiveInit) {
     grid.dataset.reactiveInit = '1';
+    grid.querySelector('.week-grid__bar')?.remove();
     grid.addEventListener('click', handleSwapClick);
   }
 

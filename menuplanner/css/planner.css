@@ -1869,9 +1869,9 @@ html.mp-handoff-pending #planner-root {
   color: var(--on-gold);
 }
 
+.week-grid--reactive .week-grid__bar,
 .week-grid--reactive .week-grid__bar--reactive {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
+  display: none;
 }
 
 .reactive-grid {
@@ -1978,14 +1978,6 @@ html.mp-handoff-pending #planner-root {
 .reactive-cell__swap:focus-visible {
   border-color: var(--gold);
   background: rgba(253, 197, 0, 0.2);
-}
-
-.reactive-grid__tip {
-  grid-column: 1 / -1;
-  margin-top: 4px;
-  font-size: 0.72rem;
-  color: var(--text-hint);
-  line-height: 1.4;
 }
 
 .grocery-drawer {
