@@ -63,7 +63,7 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Snap peas (sugar snap)' },
   ], {
     tags: ['beef', 'starch'],
-    caveat: 'Pan-sear sirloin to your doneness; rest and slice. Bake the potato until tender. Steam or roast snap peas until crisp-tender. Portion for the week — reheat steak gently so it stays juicy.',
+    caveat: 'Pat sirloin dry; season with garlic powder, onion powder, black pepper, and salt. Grill or pan-sear to your doneness; rest 5–10 minutes, then slice. Bake the potato until tender; split and top with a spoonful of plain Greek yogurt. Steam snap peas until crisp-tender. Garnish with chives or parsley if desired.',
   }),
   meal('garlic-herb-shrimp-stir-fry', [
     { slot: 'Protein', foodName: 'Shrimp, steamed' },
