@@ -66,6 +66,16 @@ const {
   transformationMealTemplates,
   transformationMealById,
 } = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
+const {
+  flavorKitById,
+  flavorKitList,
+  flavorKitItemsLabel,
+  splashItemsLabel,
+  splashLabel,
+  FLAVOR_KIT_RULE,
+  SPLASH_RULE,
+  COMMON_SPLASHES,
+} = await import(`../data/flavorKits.js?v=${PLANNER_V}`);
 const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
 const {
@@ -73,47 +83,32 @@ const {
   fastStartFruitSortKey,
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
-const PLANNER_MODE_TITLES = {
-  'fast-start': '8-Week Transformation Menu Planner',
-  diy: 'Do-It-Yourself Menu Planner',
-};
+const PLANNER_PAGE_TITLE = '8-Week Transformation Menu Planner';
 
-function normalizePlannerEngagementMode(mode) {
-  return mode === 'diy' ? 'diy' : 'fast-start';
+/** DIY mode is disabled — planner always runs the transformation program. */
+function normalizePlannerEngagementMode(_mode) {
+  return 'fast-start';
 }
 
 function syncPlannerEngagementUi() {
-  const mode = normalizePlannerEngagementMode(state.plannerEngagementMode);
-  state.plannerEngagementMode = mode;
+  state.plannerEngagementMode = 'fast-start';
 
   const page = document.getElementById('planner-page');
   if (page) {
-    page.classList.toggle('planner-page--fast-start', mode === 'fast-start');
-    page.classList.toggle('planner-page--diy', mode === 'diy');
+    page.classList.add('planner-page--fast-start');
+    page.classList.remove('planner-page--diy');
   }
 
   const title = document.getElementById('planner-page-title');
-  if (title) title.textContent = PLANNER_MODE_TITLES[mode];
+  if (title) title.textContent = PLANNER_PAGE_TITLE;
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
   if (navBtn) {
     navBtn.textContent = '4. Menu planner';
   }
-
-  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
-    const active = btn.dataset.plannerMode === mode;
-    btn.classList.toggle('planner-mode-toggle__btn--active', active);
-    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-  });
 }
 
-function setPlannerEngagementMode(mode) {
-  const next = normalizePlannerEngagementMode(mode);
-  if (state.plannerEngagementMode === next) {
-    syncPlannerEngagementUi();
-    return;
-  }
-  state.plannerEngagementMode = next;
+function setPlannerEngagementMode(_mode) {
   syncPlannerEngagementUi();
   renderPlannerMeta();
   renderFruitList();
@@ -121,11 +116,6 @@ function setPlannerEngagementMode(mode) {
 }
 
 function initPlannerEngagementToggle() {
-  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      setPlannerEngagementMode(btn.dataset.plannerMode);
-    });
-  });
   syncPlannerEngagementUi();
 }
 
@@ -902,17 +892,34 @@ function foodByName(name) {
   return state.foods.find((item) => item.name === name);
 }
 
+function renderMealFlavorKitHtml(meal) {
+  const kit = flavorKitById(meal.flavorKit);
+  if (!kit) return '';
+
+  const splashText = splashLabel(meal.splash);
+  const splashHtml = splashText
+    ? `<p class="recipe-card__splash">Splash: ${escapeHtml(splashText)}</p>`
+    : '';
+
+  return `
+    <div class="recipe-card__flavor-kit">
+      <p class="recipe-card__flavor-kit-label">
+        Flavor kit: <strong>${escapeHtml(kit.label)}</strong>
+      </p>
+      <p class="recipe-card__flavor-kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
+      ${splashHtml}
+    </div>
+  `;
+}
+
 function renderMealIdeaCard(meal) {
   const linesHtml = (meal.items || []).map((item) => `
       <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
     `).join('');
 
-  const caveatText = meal.flavor || meal.caveats;
-  const profileHtml = meal.profile
-    ? `<p class="recipe-card__profile">${escapeHtml(meal.profile)}</p>`
-    : '';
-  const caveatHtml = caveatText
-    ? `<p class="recipe-card__caveat-text">${escapeHtml(caveatText)}</p>`
+  const flavorKitHtml = renderMealFlavorKitHtml(meal);
+  const prepHtml = meal.prep
+    ? `<p class="recipe-card__prep">${escapeHtml(meal.prep)}</p>`
     : '';
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
@@ -939,16 +946,41 @@ function renderMealIdeaCard(meal) {
           <div class="recipe-card__head">
             <div class="recipe-card__col recipe-card__col--title">
               <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-              ${profileHtml}
             </div>
             <div class="recipe-card__col recipe-card__col--foods">
               ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
             </div>
           </div>
-          ${caveatHtml ? `<div class="recipe-card__caveat">${caveatHtml}</div>` : ''}
+          ${flavorKitHtml}
+          ${prepHtml}
         </div>
       </button>
     </article>
+  `;
+}
+
+function renderFlavorPantry() {
+  const container = document.getElementById('flavor-pantry');
+  if (!container) return;
+
+  const kitsHtml = flavorKitList().map((kit) => `
+    <div class="flavor-pantry__kit">
+      <p class="flavor-pantry__kit-name">${escapeHtml(kit.label)}</p>
+      <p class="flavor-pantry__kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="flavor-pantry__head">
+      <p class="flavor-pantry__title">Your flavor pantry</p>
+      <p class="flavor-pantry__rule">${escapeHtml(FLAVOR_KIT_RULE)}</p>
+    </div>
+    <div class="flavor-pantry__kits">${kitsHtml}</div>
+    <div class="flavor-pantry__splashes">
+      <p class="flavor-pantry__splashes-title">Splashes</p>
+      <p class="flavor-pantry__splashes-items">${escapeHtml(splashItemsLabel(COMMON_SPLASHES))}</p>
+      <p class="flavor-pantry__rule flavor-pantry__rule--splash">${escapeHtml(SPLASH_RULE)}</p>
+    </div>
   `;
 }
 
@@ -968,21 +1000,33 @@ function renderMealSorter() {
   }).join('');
 }
 
+function syncMealPrepPanel() {
+  const templates = transformationMealTemplates();
+  const sorterBar = document.querySelector('.meal-sorter-bar');
+  const cards = document.getElementById('recipe-cards');
+  if (sorterBar) sorterBar.hidden = templates.length === 0;
+  if (cards) cards.classList.toggle('recipe-cards--empty', templates.length === 0);
+}
+
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = transformationMealTemplates().filter(
+  const templates = transformationMealTemplates();
+  const meals = templates.filter(
     (meal) => mealMatchesSorter(meal, state.mealSuggestionSorter),
   );
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
-      state.mealSuggestionSorter === 'all'
-        ? 'No prep ideas yet'
-        : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} ideas yet`,
+      templates.length === 0
+        ? 'Meals coming soon. Stock your flavor pantry above — new prep meals will appear here.'
+        : state.mealSuggestionSorter === 'all'
+          ? 'No prep meals match this filter'
+          : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} meals yet`,
     )}</p>`;
+  syncMealPrepPanel();
 }
 
 function renderFruitList() {
@@ -1434,6 +1478,7 @@ function renderPlannerWorkspace() {
     console.error('Week grid failed to render:', err);
   }
   try {
+    renderFlavorPantry();
     renderMealSorter();
     renderRecipeCards();
   } catch (err) {

@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/program-bridge.css?v=234" />
   <link rel="stylesheet" href="css/report.css?v=234" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=251" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=256" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -105,24 +105,6 @@
               <p class="pb-eyebrow">Page 4</p>
               <div class="pb-page-head__title-row">
                 <h2 class="pb-panel__title" id="planner-page-title">8-Week Transformation Menu Planner</h2>
-                <div class="planner-mode-toggle" role="group" aria-label="Menu planner mode">
-                  <button
-                    type="button"
-                    class="planner-mode-toggle__btn planner-mode-toggle__btn--active"
-                    data-planner-mode="fast-start"
-                    aria-pressed="true"
-                  >
-                    8-Week Transformation
-                  </button>
-                  <button
-                    type="button"
-                    class="planner-mode-toggle__btn"
-                    data-planner-mode="diy"
-                    aria-pressed="false"
-                  >
-                    Do-it-yourself
-                  </button>
-                </div>
               </div>
             </div>
             <p class="pb-servings-note" id="planner-servings" hidden></p>
@@ -151,8 +133,9 @@
               <section class="recipes-panel recipes-panel--featured">
                 <div class="recipes-panel__head">
                   <h3 class="recipes-panel__title">Meal Prep</h3>
-                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap a meal cell, then tap a prep idea below to fill the grid.</p>
+                  <p class="recipes-panel__hint" id="recipes-panel-hint">Stock your flavor pantry. Meal prep cards will appear here as meals are added to the program.</p>
                 </div>
+                <div class="flavor-pantry" id="flavor-pantry" aria-label="Flavor kits pantry"></div>
                 <div class="meal-sorter-bar">
                   <span class="meal-sorter-bar__label">Filter</span>
                   <div class="meal-sorter" id="meal-sorter" aria-label="Filter meal ideas"></div>
@@ -167,41 +150,6 @@
                 </div>
                 <div class="fruit-list" id="fruit-list"></div>
               </aside>
-            </section>
-
-            <section class="workspace workspace--legacy" aria-label="Planner workspace">
-              <div class="workspace__col workspace__col--maker">
-                <div class="meal-maker-card">
-                  <div class="meal-maker-card__head">
-                    <p class="col-heading meal-maker-card__title">Meal maker</p>
-                    <div class="meal-maker-card__actions">
-                      <button type="button" class="meal-maker-card__save" id="save-meal-open" disabled>Save Meal</button>
-                      <button type="button" class="meal-maker-card__clear" id="clear-meal-maker">Clear</button>
-                    </div>
-                  </div>
-                  <div class="meal-maker" id="meal-maker"></div>
-                </div>
-              </div>
-
-              <div class="workspace__col workspace__col--meals">
-                <p class="col-heading">Saved Meals</p>
-                <div class="saved-meals" id="saved-meals"></div>
-              </div>
-
-              <div class="workspace__col workspace__col--foods">
-                <p class="col-heading">Foods</p>
-                <p class="food-filter-label" id="food-filter-label" hidden></p>
-                <input
-                  type="search"
-                  class="food-search"
-                  id="food-search"
-                  placeholder="Search foods…"
-                  autocomplete="off"
-                  hidden
-                />
-                <div class="food-filters" id="food-filters"></div>
-                <div class="food-stack" id="food-stack"></div>
-              </div>
             </section>
           </main>
 
@@ -227,30 +175,11 @@
     </div>
   </dialog>
 
-  <dialog id="save-meal-dialog" class="save-dialog">
-    <form class="save-dialog__form" id="save-meal-form">
-      <p class="save-dialog__title">Name this meal</p>
-      <input
-        type="text"
-        id="save-meal-name"
-        class="save-dialog__input"
-        placeholder="Short name for week grid"
-        maxlength="120"
-        required
-        autocomplete="off"
-      />
-      <div class="save-dialog__actions">
-        <button type="button" class="save-dialog__btn save-dialog__btn--ghost" id="save-meal-cancel">Cancel</button>
-        <button type="submit" class="save-dialog__btn save-dialog__btn--primary">Save Meal</button>
-      </div>
-    </form>
-  </dialog>
-
   <script>
     document.getElementById('access-form')?.addEventListener('submit', (event) => {
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=251"></script>
+  <script type="module" src="js/report.js?v=256"></script>
 </body>
 </html>
