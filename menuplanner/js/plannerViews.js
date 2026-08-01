@@ -940,24 +940,24 @@ function renderMealIdeaCard(meal) {
 
   return `
     <article class="recipe-card">
-      <div
-        class="recipe-card__photo"
-        data-meal-photo="${escapeHtml(meal.id)}"
-        role="button"
-        tabindex="0"
-        aria-label="${escapeHtml(meal.name)} — tap for details, or add to week when a meal cell is selected"
-      >
-        <img
-          class="recipe-card__img"
-          src="${escapeHtml(imgUrl)}"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
-        />
-      </div>
       <details class="recipe-card__details"${isOpen ? ' open' : ''} data-meal-details="${escapeHtml(meal.id)}">
         <summary class="recipe-card__summary">
+          <div
+            class="recipe-card__photo"
+            data-meal-photo="${escapeHtml(meal.id)}"
+            role="button"
+            tabindex="0"
+            aria-label="${escapeHtml(meal.name)} — tap for details, or add to week when a meal cell is selected"
+          >
+            <img
+              class="recipe-card__img"
+              src="${escapeHtml(imgUrl)}"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
+            />
+          </div>
           <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
           <span class="recipe-card__chevron" aria-hidden="true"></span>
         </summary>
@@ -1145,15 +1145,17 @@ function initRecipePicker() {
         && isMealMealSlot(target.mealSlotId)
         && libraryRecipeFitsMealSlot(meal, target.mealSlotId)
       ) {
+        event.preventDefault();
+        event.stopPropagation();
         applyMealIdeaFromCard(meal);
         return;
       }
-      const details = photo.closest('.recipe-card')?.querySelector('.recipe-card__details');
+      const details = photo.closest('.recipe-card__details');
       if (!details) return;
+      event.preventDefault();
       details.open = !details.open;
       if (details.open) expandedMealCards.add(meal.id);
       else expandedMealCards.delete(meal.id);
-      return;
     }
   });
 
