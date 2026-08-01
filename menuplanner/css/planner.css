@@ -1832,6 +1832,10 @@ html.mp-handoff-pending #planner-root {
   display: block;
 }
 
+.pb-page-head__title-row .planner-toolbar {
+  flex: 0 0 auto;
+}
+
 .planner-toolbar {
   display: flex;
   flex-wrap: wrap;
