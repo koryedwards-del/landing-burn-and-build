@@ -87,6 +87,16 @@ function foodsInCategories(categories) {
   return (state.foods || []).filter((food) => categories.includes(food.category));
 }
 
+/** Fast Start fruits — bodybuilding list, all have picker images. */
+function bodybuildingFruitCandidates() {
+  const byCanonical = new Map(
+    foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
+  );
+  return FAST_START_FRUIT_NAMES
+    .map((name) => byCanonical.get(name))
+    .filter(Boolean);
+}
+
 function laneCategories(lane) {
   if (lane === 'protein') return PROTEIN_CATEGORIES;
   if (lane === 'gs') return GS_CATEGORIES;
