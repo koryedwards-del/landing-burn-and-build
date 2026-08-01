@@ -28,6 +28,34 @@ const DEFAULT_STARTER_FOODS = {
   vegetable: 'Broccoli, cooked',
 };
 
+const BREAKFAST_STARTER_PROTEINS = [
+  'Egg whites',
+  'Greek yogurt, nonfat',
+  'Cottage cheese, nonfat',
+];
+
+function isEggProtein(food) {
+  const name = String(food?.name || '').toLowerCase();
+  return name.startsWith('egg') && !name.startsWith('eggplant');
+}
+
+function isDairyOrEggProtein(food) {
+  return food?.category === 'dairy' || isEggProtein(food);
+}
+
+function proteinCandidatesForMealSlot(mealSlotId) {
+  const all = foodsInCategories(PROTEIN_CATEGORIES);
+  if (mealSlotId === 'breakfast') {
+    const breakfastPool = all.filter(isDairyOrEggProtein);
+    return breakfastPool.length ? breakfastPool : all;
+  }
+  if (mealSlotId === 'lunch' || mealSlotId === 'dinner') {
+    const mainMealPool = all.filter((food) => !isDairyOrEggProtein(food));
+    return mainMealPool.length ? mainMealPool : all;
+  }
+  return all;
+}
+
 export function shortFoodName(fullName) {
   if (!fullName) return '';
   const base = String(fullName).split(',')[0].trim();
@@ -90,13 +118,21 @@ export function recordFruitReject(oldFoodName, newFoodName) {
   recordLaneReject('fruit', oldFoodName, newFoodName);
 }
 
-function pickFoodName(lane, { exclude = [] } = {}) {
-  const candidates = foodsInCategories(laneCategories(lane));
+function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
+  let candidates = lane === 'protein' && mealSlotId
+    ? proteinCandidatesForMealSlot(mealSlotId)
+    : foodsInCategories(laneCategories(lane));
   const prefs = ensureFoodPreferences();
   const blocked = new Set(exclude.filter(Boolean));
   const pool = candidates.filter((food) => !blocked.has(food.name));
   const list = pool.length ? pool : candidates;
-  if (!list.length) return DEFAULT_STARTER_FOODS[lane] || null;
+  if (!list.length) {
+    if (lane === 'protein' && mealSlotId === 'breakfast') {
+      return BREAKFAST_STARTER_PROTEINS.find((name) => !blocked.has(name))
+        || DEFAULT_STARTER_FOODS.protein;
+    }
+    return DEFAULT_STARTER_FOODS[lane] || null;
+  }
 
   const ranked = list
     .map((food) => ({
@@ -140,7 +176,7 @@ export function mealSummaryLabel(weekDay, mealSlotId) {
 
 export function swapMealLane(weekDay, mealSlotId, lane) {
   const current = getMealLaneFood(weekDay, mealSlotId, lane);
-  const next = pickFoodName(lane, { exclude: [current] });
+  const next = pickFoodName(lane, { exclude: [current], mealSlotId });
   if (!next) return current;
   recordLaneReject(lane, current, next);
   assignMealLane(weekDay, mealSlotId, lane, next);
@@ -190,7 +226,7 @@ function fillMealSlot(weekDay, mealSlotId) {
       setSplitGridSelections(mealSlotId, lane, [], weekDay);
       return;
     }
-    assignMealLane(weekDay, mealSlotId, lane, pickFoodName(lane));
+    assignMealLane(weekDay, mealSlotId, lane, pickFoodName(lane, { mealSlotId }));
   });
 }
 
