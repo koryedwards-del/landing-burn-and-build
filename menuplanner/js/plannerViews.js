@@ -958,8 +958,10 @@ function renderMealIdeaCard(meal) {
               onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
             />
           </div>
-          <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
-          <span class="recipe-card__chevron" aria-hidden="true"></span>
+          <div class="recipe-card__head">
+            <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
+            <span class="recipe-card__chevron" aria-hidden="true"></span>
+          </div>
         </summary>
         <div class="recipe-card__drawer">
           <p class="recipe-card__plan-note">${escapeHtml(MEAL_CARD_PLAN_NOTE)}</p>

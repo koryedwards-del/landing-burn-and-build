@@ -575,10 +575,10 @@ body {
 }
 
 .recipe-card__summary {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) auto;
-  gap: 10px 12px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 12px;
   padding: 10px 12px;
   cursor: pointer;
   list-style: none;
@@ -589,13 +589,27 @@ body {
   display: none;
 }
 
+.recipe-card__summary::marker {
+  content: "";
+}
+
 .recipe-card__summary:hover {
   background: rgba(255, 255, 255, 0.02);
+}
+
+.recipe-card__head {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
 }
 
 .recipe-card__photo {
   display: block;
   position: relative;
+  flex: 0 0 72px;
   width: 72px;
   height: 72px;
   padding: 0;
@@ -603,7 +617,6 @@ body {
   border-radius: 6px;
   background: #262626;
   cursor: pointer;
-  flex-shrink: 0;
   overflow: hidden;
 }
 
@@ -914,7 +927,9 @@ body {
   }
 
   .recipe-card__photo {
-    height: 128px;
+    flex-basis: 64px;
+    width: 64px;
+    height: 64px;
   }
 
   .flavor-pantry__kits {
