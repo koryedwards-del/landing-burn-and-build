@@ -569,11 +569,15 @@ body {
 .recipe-card__photo {
   display: block;
   width: 100%;
+  aspect-ratio: 16 / 11;
+  min-height: 140px;
+  max-height: 220px;
   padding: 0;
   border: none;
   background: #262626;
   cursor: pointer;
   appearance: none;
+  flex-shrink: 0;
 }
 
 .recipe-card__photo:hover {
@@ -583,14 +587,6 @@ body {
 .recipe-card__photo:focus-visible {
   outline: 2px solid var(--gold-muted);
   outline-offset: -2px;
-}
-
-.recipe-card__photo {
-  width: 100%;
-  aspect-ratio: 16 / 11;
-  min-height: 140px;
-  max-height: 220px;
-  flex-shrink: 0;
 }
 
 .recipe-card__img {
