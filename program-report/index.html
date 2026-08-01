@@ -111,45 +111,32 @@
           </div>
 
           <main class="planner-frame">
+            <div class="planner-toolbar" aria-label="Menu planner actions">
+              <button type="button" class="planner-toolbar__btn" id="grocery-toggle" aria-expanded="false" aria-controls="grocery-drawer">Grocery</button>
+              <button type="button" class="planner-toolbar__btn" id="regenerate-week">Regenerate week</button>
+              <button type="button" class="planner-toolbar__btn planner-toolbar__btn--primary" id="planner-print-open">Print</button>
+            </div>
+
             <div class="week-panel" id="week-panel">
-              <section class="week-grid" id="week-grid" aria-label="Week plan">
-                <div class="week-grid__bar">
-                  <button
-                    type="button"
-                    class="week-grid__toggle"
-                    id="week-grid-toggle"
-                    aria-expanded="true"
-                    aria-controls="week-grid-matrix"
-                  >
-                    <span class="col-heading col-heading--week">Plan your week grid</span>
-                    <span class="week-grid__hint">Tap to open</span>
-                  </button>
+              <section class="week-grid week-grid--reactive" id="week-grid" aria-label="Week plan">
+                <div class="week-grid__bar week-grid__bar--reactive">
+                  <span class="col-heading col-heading--week">Weekly meal plan</span>
                 </div>
                 <div class="week-grid__matrix" id="week-grid-matrix"></div>
               </section>
             </div>
 
-            <section class="picker-row" aria-label="Meal ideas and fruits">
-              <section class="recipes-panel recipes-panel--featured">
-                <div class="recipes-panel__head">
-                  <h3 class="recipes-panel__title">Meals</h3>
-                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap the meal photo to add it to your planner — the meal amounts are determined by your plan — the weekly menu planner and grocery printouts have the info.</p>
-                </div>
-                <div class="meal-sorter-bar">
-                  <span class="meal-sorter-bar__label">Filter</span>
-                  <div class="meal-sorter" id="meal-sorter" aria-label="Filter meal ideas"></div>
-                </div>
-                <div class="recipe-cards" id="recipe-cards"></div>
-              </section>
-
-              <aside class="fruits-panel">
-                <div class="fruits-panel__head">
-                  <h3 class="fruits-panel__title">Fruits</h3>
-                  <p class="fruits-panel__hint" id="fruits-panel-hint">Tap a snack cell, then tap a fruit below to update the grid.</p>
-                </div>
-                <div class="fruit-list" id="fruit-list"></div>
-              </aside>
-            </section>
+            <aside id="grocery-drawer" class="grocery-drawer" aria-hidden="true">
+              <div class="grocery-drawer__scrim" tabindex="-1" aria-hidden="true"></div>
+              <div class="grocery-drawer__panel" role="dialog" aria-labelledby="grocery-drawer-title">
+                <header class="grocery-drawer__header">
+                  <h3 class="grocery-drawer__title" id="grocery-drawer-title">Grocery list</h3>
+                  <button type="button" class="grocery-drawer__close" aria-label="Close grocery list">&times;</button>
+                </header>
+                <p class="grocery-drawer__note">Combined for 7 days — updates when you swap meals or fruit.</p>
+                <div class="grocery-drawer__body" id="grocery-list"></div>
+              </div>
+            </aside>
           </main>
 
           <footer class="pb-actions">

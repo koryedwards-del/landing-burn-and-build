@@ -11,12 +11,14 @@ import {
   normalizeMealMakerDraft,
 } from './plannerState.js';
 import { applyPlannerStateWithDefaults } from './defaultPlannerTemplate.js';
+import { ensureFoodPreferences } from './mealPlanGenerator.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 
 let plannerShellReady = false;
 let plannerBootPromise = null;
 let views = null;
+let reactiveViews = null;
 let loadedFoodsCatalogVersion = null;
 
 async function loadViews() {
@@ -24,6 +26,13 @@ async function loadViews() {
     views = await import(`./plannerViews.js?v=${ASSET_VERSION}`);
   }
   return views;
+}
+
+async function loadReactiveViews() {
+  if (!reactiveViews) {
+    reactiveViews = await import(`./reactivePlannerViews.js?v=${ASSET_VERSION}`);
+  }
+  return reactiveViews;
 }
 
 async function loadFoodsCatalog({ force = false } = {}) {
@@ -44,6 +53,12 @@ async function loadFoodsCatalog({ force = false } = {}) {
   return state.foods;
 }
 
+function renderReactiveSurface() {
+  if (!plannerShellReady || !reactiveViews) return;
+  views?.renderPlannerMeta();
+  reactiveViews.renderReactivePlanner();
+}
+
 function applyProgramPackage(pkg) {
   state.programPackage = pkg;
   if (state.programPackage?.program?.id) {
@@ -55,6 +70,7 @@ function applyProgramPackage(pkg) {
     preserveSessionUi: plannerShellReady,
   });
   normalizeMealMakerDraft();
+  ensureFoodPreferences();
   if (seeded) {
     persistPlannerToProgram({ immediate: true });
   }
@@ -66,26 +82,22 @@ function applyProgramPackage(pkg) {
   if (plannerShellReady && catalogStale) {
     loadFoodsCatalog({ force: true })
       .then(() => {
-        views.renderPlannerMeta();
-        views.renderPlannerWorkspace();
-        views.showPlannerToast('Food lists updated to the latest catalog.', { durationMs: 7000 });
+        renderReactiveSurface();
+        reactiveViews?.showReactiveToast('Food lists updated to the latest catalog.', { durationMs: 7000 });
       })
       .catch((err) => {
         console.error(err);
-        views.showPlannerToast('Could not refresh food lists. Reload the page to try again.', {
+        reactiveViews?.showReactiveToast('Could not refresh food lists. Reload the page to try again.', {
           variant: 'error',
         });
       });
     return;
   }
 
-  views.renderPlannerMeta();
-  if (plannerShellReady) {
-    views.renderPlannerWorkspace();
-  }
+  renderReactiveSurface();
   if (seeded) {
-    views.showPlannerToast(
-      'Sample week filled in using your servings. Edit any day, drag meals, or clear to start fresh.',
+    reactiveViews?.showReactiveToast(
+      'Your week is filled using your servings. Swap any protein, g/s, veggie, or fruit to personalize.',
       { durationMs: 9000 },
     );
   }
@@ -96,9 +108,7 @@ export function applyMenuPlannerProgram(pkg) {
 }
 
 export function refreshMenuPlannerDisplay() {
-  if (!views || !plannerShellReady) return;
-  views.renderPlannerMeta();
-  views.renderPlannerWorkspace();
+  renderReactiveSurface();
 }
 
 export function isMenuPlannerHydrated() {
@@ -126,25 +136,19 @@ export async function bootMenuPlannerPage() {
       console.error(err);
     }
 
-    const plannerViews = await loadViews();
-    plannerViews.initWeekGrid();
-    plannerViews.initWeekGridCollapse();
-    plannerViews.initSaveMealDialog();
-    plannerViews.initClearMealMaker();
-    plannerViews.initClearWeekMenu();
-    plannerViews.initFoodSearch();
-    plannerViews.initSavedMealsPanel();
-    const { initPrintShop } = await import(`./plannerPrint.js?v=${ASSET_VERSION}`);
+    await loadViews();
+    const reactive = await loadReactiveViews();
+    reactive.initReactivePlanner();
+    views.initPlannerEngagementToggle();
+
+    const { initPrintShop, openPrintShop } = await import(`./plannerPrint.js?v=${ASSET_VERSION}`);
     initPrintShop();
-    plannerViews.initFoodDropTargets();
-    plannerViews.initRecipePicker();
-    plannerViews.initMealSorter();
-    plannerViews.initFruitPicker();
-    plannerViews.initPlannerEngagementToggle();
+    document.getElementById('planner-print-open')?.addEventListener('click', openPrintShop);
+
     plannerShellReady = true;
 
     if (foodsLoadError) {
-      plannerViews.showPlannerToast('Could not load foods. Refresh the page to try again.', {
+      reactive.showReactiveToast('Could not load foods. Refresh the page to try again.', {
         variant: 'error',
       });
     }

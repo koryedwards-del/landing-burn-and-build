@@ -160,6 +160,8 @@ function resetPlannerState() {
   state.activeMakerSlot = null;
   state.activeFoodCategory = null;
   state.weekGridCollapsed = false;
+  state.foodPreferences = null;
+  state.enableSplitServings = false;
 }
 
 function cloneSavedMeals(meals = []) {
@@ -218,6 +220,8 @@ function collectPlannerState() {
     mealMakerDraft: state.mealMakerDraft,
     activeMakerSlot: state.activeMakerSlot,
     plannerEngagementMode: state.plannerEngagementMode,
+    foodPreferences: state.foodPreferences,
+    enableSplitServings: state.enableSplitServings === true,
   };
 }
 
@@ -265,6 +269,10 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     if (saved.plannerEngagementMode === 'fast-start' || saved.plannerEngagementMode === 'diy') {
       state.plannerEngagementMode = 'fast-start';
     }
+    if (saved.foodPreferences && typeof saved.foodPreferences === 'object') {
+      state.foodPreferences = saved.foodPreferences;
+    }
+    state.enableSplitServings = saved.enableSplitServings === true;
     migratePlannerFoodNames();
   }
   restoreSessionGridUi(sessionUi);
@@ -903,6 +911,8 @@ export const state = {
   mealSuggestionSorter: 'all',
   /** Always `fast-start` — DIY mode disabled. */
   plannerEngagementMode: 'fast-start',
+  foodPreferences: null,
+  enableSplitServings: false,
 };
 
 state.weekPlan = createFreshWeekPlan();

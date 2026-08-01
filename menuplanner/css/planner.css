@@ -1817,3 +1817,314 @@ html.mp-handoff-pending #planner-root {
 #planner-page[hidden] {
   display: none !important;
 }
+
+/* Reactive planner — B/L/D/S grid, swap lanes, grocery drawer */
+
+.planner-page--reactive .picker-row {
+  display: none;
+}
+
+.planner-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.planner-toolbar__btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.planner-toolbar__btn:hover,
+.planner-toolbar__btn:focus-visible {
+  border-color: var(--gold-muted);
+  color: var(--text-bright);
+}
+
+.planner-toolbar__btn--primary {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--on-gold);
+}
+
+.week-grid--reactive .week-grid__bar--reactive {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.reactive-grid {
+  display: grid;
+  grid-template-columns: minmax(44px, 56px) repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+
+.reactive-grid__head {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 2px 8px;
+}
+
+.reactive-grid__head--day {
+  grid-column: 1;
+}
+
+.reactive-grid__day {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
+}
+
+.reactive-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reactive-cell--snack {
+  background: var(--surface-2);
+}
+
+.reactive-cell__summary {
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: var(--text);
+  flex: 1;
+}
+
+.reactive-cell__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.reactive-cell__swap {
+  appearance: none;
+  border: 1px solid var(--gold-muted);
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.reactive-cell__swap:hover,
+.reactive-cell__swap:focus-visible {
+  border-color: var(--gold);
+  background: rgba(253, 197, 0, 0.2);
+}
+
+.reactive-grid__tip {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-hint);
+  line-height: 1.4;
+}
+
+.grocery-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.grocery-drawer.is-open {
+  pointer-events: auto;
+}
+
+.grocery-drawer__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.grocery-drawer.is-open .grocery-drawer__scrim {
+  opacity: 1;
+}
+
+.grocery-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(360px, 92vw);
+  height: 100%;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.35);
+  transform: translateX(100%);
+  transition: transform 0.24s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+
+.grocery-drawer.is-open .grocery-drawer__panel {
+  transform: translateX(0);
+}
+
+.grocery-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.grocery-drawer__title {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.grocery-drawer__close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.grocery-drawer__note {
+  font-size: 0.72rem;
+  color: var(--text-hint);
+  line-height: 1.4;
+}
+
+.grocery-drawer__body {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+.grocery-drawer__section + .grocery-drawer__section {
+  margin-top: 16px;
+}
+
+.grocery-drawer__section-title {
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.grocery-drawer__items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grocery-drawer__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.grocery-drawer__qty {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.grocery-drawer__empty {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.planner-toast-root {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1400;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.planner-toast {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  max-width: min(420px, 92vw);
+}
+
+.planner-toast--error {
+  border-color: rgba(255, 122, 0, 0.5);
+  color: #ffb380;
+}
+
+@media (orientation: portrait) and (max-width: 720px) {
+  .week-grid__matrix {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reactive-grid {
+    min-width: 680px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .reactive-cell {
+    min-height: 64px;
+    padding: 6px;
+  }
+
+  .reactive-cell__summary {
+    font-size: 0.68rem;
+  }
+
+  .reactive-cell__swap {
+    font-size: 0.58rem;
+    padding: 3px 6px;
+  }
+}
