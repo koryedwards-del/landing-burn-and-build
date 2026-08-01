@@ -2211,6 +2211,23 @@ html.mp-handoff-pending #planner-root {
   white-space: nowrap;
 }
 
+.grocery-drawer__item--active .grocery-drawer__food {
+  font-weight: 600;
+}
+
+.grocery-drawer__item--active .grocery-drawer__qty {
+  color: var(--text);
+}
+
+.grocery-drawer__item--static {
+  color: var(--muted);
+}
+
+.grocery-drawer__item--static .grocery-drawer__food::before {
+  content: '☐ ';
+  opacity: 0.55;
+}
+
 .grocery-drawer__empty {
   font-size: 0.78rem;
   color: var(--muted);

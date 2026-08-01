@@ -1072,6 +1072,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Tortilla, whole wheat (6-inch)",
+    "category": "grain",
+    "servingDescription": "as-is",
+    "gramWeight": 31,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
     "name": "Beef, eye of round",
     "category": "protein",
     "servingDescription": "cooked",
@@ -1100,6 +1108,14 @@
     "category": "protein",
     "servingDescription": "cooked",
     "gramWeight": 26,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Ground turkey, 93% lean",
+    "category": "protein",
+    "servingDescription": "cooked",
+    "gramWeight": 28,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1133,6 +1149,14 @@
     "servingDescription": "large whites",
     "gramWeight": 0,
     "unitsPerServing": 2,
+    "fatBracket": 0
+  },
+  {
+    "name": "Eggs",
+    "category": "protein",
+    "servingDescription": "large",
+    "gramWeight": 0,
+    "unitsPerServing": 1,
     "fatBracket": 0
   },
   {

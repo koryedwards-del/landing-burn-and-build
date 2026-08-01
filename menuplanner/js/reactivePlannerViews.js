@@ -5,7 +5,6 @@
 import { foodPlannerLabel } from '../../js/foodDisplay.js';
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import {
-  FOOD_CATEGORIES,
   WEEK_DAYS,
   buildShoppingTotals,
   escapeHtml,
@@ -17,6 +16,7 @@ import {
   state,
 } from './plannerState.js';
 import { fruitImageUrl } from '../data/fruitImages.js';
+import { CUTTING_STAPLE_SHOP_SECTIONS } from '../data/cuttingStaples.js';
 import {
   REACTIVE_MEAL_SLOTS,
   generateReactiveWeek,
@@ -53,69 +53,54 @@ function showToast(message, { variant = 'info', durationMs = 5000 } = {}) {
   window.setTimeout(() => el.remove(), durationMs);
 }
 
-function groceryCategoryId(foodName) {
-  const food = state.foods.find((item) => item.name === foodName);
-  return food?.category || 'other';
-}
-
-function groceryCategoryLabel(categoryId) {
-  const match = FOOD_CATEGORIES.find((item) => item.id === categoryId);
-  return match?.label || categoryId;
-}
-
 function renderGroceryList() {
   const container = document.getElementById('grocery-list');
   if (!container) return;
 
   const totals = buildShoppingTotals();
-  if (!totals.size) {
-    container.innerHTML = '<p class="grocery-drawer__empty">Your grocery list fills in as meals are assigned.</p>';
-    return;
-  }
+  let weekItemCount = 0;
 
-  const groups = new Map();
-  totals.forEach((servings, foodName) => {
-    const categoryId = groceryCategoryId(foodName);
-    if (!groups.has(categoryId)) groups.set(categoryId, []);
-    const food = state.foods.find((item) => item.name === foodName);
-    groups.get(categoryId).push({
-      foodName,
-      label: food ? foodPlannerLabel(food) : foodName,
-      servings,
-      food,
-    });
-  });
-
-  const categoryOrder = FOOD_CATEGORIES.map((item) => item.id);
-  const sections = [...groups.entries()]
-    .sort((a, b) => categoryOrder.indexOf(a[0]) - categoryOrder.indexOf(b[0]))
-    .map(([categoryId, items]) => {
-      const lines = items
-        .sort((a, b) => a.label.localeCompare(b.label))
-        .map((item) => `
-          <li class="grocery-drawer__item">
-            <span class="grocery-drawer__food">${escapeHtml(item.label)}</span>
-            <span class="grocery-drawer__qty">${escapeHtml(foodAmountLabel(item.food, item.servings))}</span>
-          </li>
-        `)
-        .join('');
+  const sections = CUTTING_STAPLE_SHOP_SECTIONS.map((section) => {
+    const catalogLines = (section.catalogNames || []).map((foodName) => {
+      const food = state.foods.find((item) => item.name === foodName);
+      const servings = totals.get(foodName) || 0;
+      if (servings > 0) weekItemCount += 1;
+      const label = food ? foodPlannerLabel(food) : foodName;
+      const qty = servings && food
+        ? foodAmountLabel(food, servings)
+        : '';
+      const inWeek = servings > 0;
       return `
-        <section class="grocery-drawer__section">
-          <h3 class="grocery-drawer__section-title">${escapeHtml(groceryCategoryLabel(categoryId))}</h3>
-          <ul class="grocery-drawer__items">${lines}</ul>
-        </section>
+        <li class="grocery-drawer__item${inWeek ? ' grocery-drawer__item--active' : ''}">
+          <span class="grocery-drawer__food">${escapeHtml(label)}</span>
+          <span class="grocery-drawer__qty">${escapeHtml(qty)}</span>
+        </li>
       `;
-    })
-    .join('');
+    });
+
+    const staticLines = (section.staticItems || []).map((label) => `
+      <li class="grocery-drawer__item grocery-drawer__item--static">
+        <span class="grocery-drawer__food">${escapeHtml(label)}</span>
+        <span class="grocery-drawer__qty"></span>
+      </li>
+    `).join('');
+
+    return `
+      <section class="grocery-drawer__section">
+        <h3 class="grocery-drawer__section-title">${escapeHtml(section.label)}</h3>
+        <ul class="grocery-drawer__items">${catalogLines.join('')}${staticLines}</ul>
+      </section>
+    `;
+  }).join('');
 
   container.innerHTML = sections;
-  updateGroceryToggleBadge(totals.size);
+  updateGroceryToggleBadge(weekItemCount);
 }
 
 function updateGroceryToggleBadge(count) {
   const toggle = document.getElementById('grocery-toggle');
   if (!toggle) return;
-  toggle.textContent = count ? `Grocery (${count})` : 'Grocery';
+  toggle.textContent = count ? `Grocery (${count} this week)` : 'Grocery';
 }
 
 function setGroceryOpen(open) {
@@ -340,6 +325,8 @@ export function initReactivePlanner() {
 
   const title = document.getElementById('planner-page-title');
   if (title) title.textContent = 'Weekly Menu Planner';
+
+  renderGroceryList();
 }
 
 export { showToast as showReactiveToast };
