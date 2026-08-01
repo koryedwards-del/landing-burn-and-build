@@ -23,6 +23,7 @@ export function defineTransformationMeal(id, name, items, {
   flavorKit,
   splash,
   how,
+  imageFile,
   tags,
 } = {}) {
   return {
@@ -32,6 +33,7 @@ export function defineTransformationMeal(id, name, items, {
     flavorKit,
     splash: splash ?? [],
     how: (how ?? []).map((line) => line.trim()).filter(Boolean),
+    imageFile: imageFile?.trim() ?? '',
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -69,6 +71,7 @@ export const TRANSFORMATION_MEALS = [
       tags: ['seafood', 'grain'],
       flavorKit: 'iron',
       splash: ['Low-sodium soy sauce'],
+      imageFile: 'garlic-herb-shrimp-stir-fry.png',
       how: [
         'Cook shrimp.',
         'Stir-fry vegetables.',

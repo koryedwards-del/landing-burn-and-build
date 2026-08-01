@@ -604,8 +604,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
-      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a meal below`
-      : 'Tap a day/meal cell, then tap a meal below to update the grid.';
+      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details`
+      : 'Tap a meal title for details. Select a grid cell, then tap the photo to add a meal.';
   }
 
   if (fruitHint) {
@@ -613,6 +613,18 @@ function updatePickerHints() {
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap a fruit below`
       : 'Tap a snack cell, then tap a fruit below to update the grid.';
   }
+
+  syncRecipeCardsPickState();
+}
+
+function syncRecipeCardsPickState() {
+  const container = document.getElementById('recipe-cards');
+  if (!container) return;
+  const target = state.activeGridTarget;
+  container.classList.toggle(
+    'recipe-cards--pick-ready',
+    Boolean(target && isMealMealSlot(target.mealSlotId)),
+  );
 }
 
 const PANEL_HINT_NOTICE_MS = 5000;
@@ -923,16 +935,17 @@ function renderMealIdeaCard(meal) {
     `).join('');
   const isOpen = expandedMealCards.has(meal.id);
 
-  const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
+  const imgUrl = recipeImageUrl(meal.id, PLANNER_V, meal.imageFile);
   const fallbackUrl = recipeImageFallbackUrl(PLANNER_V);
 
   return `
     <article class="recipe-card">
-      <button
-        type="button"
+      <div
         class="recipe-card__photo"
-        data-meal-idea-id="${escapeHtml(meal.id)}"
-        aria-label="Add ${escapeHtml(meal.name)} to your week"
+        data-meal-photo="${escapeHtml(meal.id)}"
+        role="button"
+        tabindex="0"
+        aria-label="${escapeHtml(meal.name)} — tap for details, or add to week when a meal cell is selected"
       >
         <img
           class="recipe-card__img"
@@ -942,7 +955,7 @@ function renderMealIdeaCard(meal) {
           decoding="async"
           onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
         />
-      </button>
+      </div>
       <details class="recipe-card__details"${isOpen ? ' open' : ''} data-meal-details="${escapeHtml(meal.id)}">
         <summary class="recipe-card__summary">
           <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
@@ -1020,8 +1033,9 @@ function syncMealPrepPanel() {
   const templates = transformationMealTemplates();
   const sorterBar = document.querySelector('.meal-sorter-bar');
   const cards = document.getElementById('recipe-cards');
-  if (sorterBar) sorterBar.hidden = templates.length === 0;
+  if (sorterBar) sorterBar.hidden = templates.length <= 1;
   if (cards) cards.classList.toggle('recipe-cards--empty', templates.length === 0);
+  syncRecipeCardsPickState();
 }
 
 function renderRecipeCards() {
@@ -1121,11 +1135,34 @@ function initRecipePicker() {
   });
 
   container.addEventListener('click', (event) => {
-    const pick = event.target.closest('[data-meal-idea-id]');
-    if (!pick) return;
-    const meal = mealIdeaById(pick.dataset.mealIdeaId);
-    if (!meal) return;
-    applyMealIdeaFromCard(meal);
+    const photo = event.target.closest('[data-meal-photo]');
+    if (photo) {
+      const meal = mealIdeaById(photo.dataset.mealPhoto);
+      if (!meal) return;
+      const target = state.activeGridTarget;
+      if (
+        target
+        && isMealMealSlot(target.mealSlotId)
+        && libraryRecipeFitsMealSlot(meal, target.mealSlotId)
+      ) {
+        applyMealIdeaFromCard(meal);
+        return;
+      }
+      const details = photo.closest('.recipe-card')?.querySelector('.recipe-card__details');
+      if (!details) return;
+      details.open = !details.open;
+      if (details.open) expandedMealCards.add(meal.id);
+      else expandedMealCards.delete(meal.id);
+      return;
+    }
+  });
+
+  container.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    const photo = event.target.closest('[data-meal-photo]');
+    if (!photo) return;
+    event.preventDefault();
+    photo.click();
   });
 }
 

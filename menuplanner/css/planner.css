@@ -568,6 +568,7 @@ body {
 
 .recipe-card__photo {
   display: block;
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 11;
   min-height: 140px;
@@ -576,7 +577,6 @@ body {
   border: none;
   background: #262626;
   cursor: pointer;
-  appearance: none;
   flex-shrink: 0;
 }
 
@@ -587,6 +587,28 @@ body {
 .recipe-card__photo:focus-visible {
   outline: 2px solid var(--gold-muted);
   outline-offset: -2px;
+}
+
+.recipe-cards--pick-ready .recipe-card__photo {
+  box-shadow: inset 0 0 0 2px rgba(253, 197, 0, 0.45);
+  cursor: pointer;
+}
+
+.recipe-cards--pick-ready .recipe-card__photo::after {
+  content: "Tap to add";
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--gold);
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .recipe-card__img {
