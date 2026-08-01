@@ -1877,6 +1877,10 @@ html.mp-handoff-pending #planner-root {
   line-height: 1.4;
 }
 
+.planner-page--reactive .pb-eyebrow {
+  color: var(--muted);
+}
+
 @media (max-width: 720px) {
   .planner-page--reactive .pb-page-head__title-row {
     grid-template-columns: 1fr;
@@ -1912,7 +1916,8 @@ html.mp-handoff-pending #planner-root {
 
 .planner-toolbar__btn:hover,
 .planner-toolbar__btn:focus-visible {
-  border-color: var(--gold-muted);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: var(--surface-2);
   color: var(--text-bright);
 }
 
@@ -1950,7 +1955,7 @@ html.mp-handoff-pending #planner-root {
 
 .reactive-grid__head--day-col {
   text-align: center;
-  color: var(--gold);
+  color: var(--text-bright);
 }
 
 .reactive-grid__meal {
@@ -2006,6 +2011,8 @@ html.mp-handoff-pending #planner-root {
   flex-direction: column;
   gap: 1px;
   flex: 1;
+  transform-origin: left center;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
 }
 
 .reactive-lane--snack.reactive-lane__swap {
@@ -2017,13 +2024,19 @@ html.mp-handoff-pending #planner-root {
 
 .reactive-lane__swap:hover,
 .reactive-lane__swap:focus-visible {
-  background: var(--gold-dim);
+  background: var(--surface-2);
   outline: none;
+  transform: scale(1.045);
+}
+
+.reactive-lane__swap:hover .reactive-lane__fruit-img,
+.reactive-lane__swap:focus-visible .reactive-lane__fruit-img {
+  transform: scale(1.06);
 }
 
 .reactive-lane__swap:hover .reactive-lane__name,
 .reactive-lane__swap:focus-visible .reactive-lane__name {
-  color: var(--gold);
+  color: var(--text-bright);
 }
 
 .reactive-lane__food {
@@ -2057,6 +2070,7 @@ html.mp-handoff-pending #planner-root {
   object-fit: cover;
   flex-shrink: 0;
   border: 1px solid var(--border);
+  transition: transform 0.16s ease;
 }
 
 .grocery-drawer {
@@ -2155,7 +2169,7 @@ html.mp-handoff-pending #planner-root {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--muted);
   margin-bottom: 8px;
 }
 
@@ -2213,6 +2227,23 @@ html.mp-handoff-pending #planner-root {
 .planner-toast--error {
   border-color: rgba(255, 122, 0, 0.5);
   color: #ffb380;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reactive-lane__swap,
+  .reactive-lane__fruit-img {
+    transition: background 0.16s ease, color 0.16s ease;
+  }
+
+  .reactive-lane__swap:hover,
+  .reactive-lane__swap:focus-visible {
+    transform: none;
+  }
+
+  .reactive-lane__swap:hover .reactive-lane__fruit-img,
+  .reactive-lane__swap:focus-visible .reactive-lane__fruit-img {
+    transform: none;
+  }
 }
 
 @media (orientation: portrait) and (max-width: 720px) {
