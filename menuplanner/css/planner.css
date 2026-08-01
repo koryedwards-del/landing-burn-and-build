@@ -837,10 +837,6 @@ body {
     height: 64px;
   }
 
-  .flavor-pantry__kits {
-    grid-template-columns: 1fr;
-  }
-
   .fruit-list {
     max-height: min(36vh, 320px);
   }
