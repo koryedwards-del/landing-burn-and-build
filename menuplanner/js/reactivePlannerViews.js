@@ -228,7 +228,7 @@ export function renderReactiveWeekGrid() {
     <div class="reactive-grid__head">Breakfast</div>
     <div class="reactive-grid__head">Lunch</div>
     <div class="reactive-grid__head">Dinner</div>
-    <div class="reactive-grid__head reactive-grid__head--snack">Fruit snack × 3</div>
+    <div class="reactive-grid__head">Fruit snack × 3</div>
   `;
 
   const rows = WEEK_DAYS.map((day) => `

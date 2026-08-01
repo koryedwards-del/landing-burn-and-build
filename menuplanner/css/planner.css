@@ -1887,11 +1887,6 @@ html.mp-handoff-pending #planner-root {
   padding: 4px 2px 8px;
 }
 
-.reactive-grid__head--snack {
-  font-size: 0.58rem;
-  line-height: 1.25;
-}
-
 .reactive-grid__head--day {
   grid-column: 1;
 }
