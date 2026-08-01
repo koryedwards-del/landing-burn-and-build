@@ -58,13 +58,14 @@ import { canonicalFruitName } from '../data/fruitNames.js';
 
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
-  allMealTemplates,
-  transformationMealTemplates,
   libraryRecipeFitsMealSlot,
   mealMatchesSorter,
   MEAL_SORTER_PILLS,
-  recipeById,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
+const {
+  transformationMealTemplates,
+  transformationMealById,
+} = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
 const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
 const {
@@ -658,6 +659,10 @@ function showPanelHintNotice(hintId, message) {
   }, PANEL_HINT_NOTICE_MS);
 }
 
+function mealIdeaById(id) {
+  return transformationMealById(id);
+}
+
 function applyMealIdeaFromCard(meal) {
   const target = state.activeGridTarget;
   if (!target || !isMealMealSlot(target.mealSlotId)) return;
@@ -967,16 +972,15 @@ function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const catalog = state.plannerEngagementMode === 'fast-start'
-    ? transformationMealTemplates()
-    : allMealTemplates();
-  const meals = catalog.filter((meal) => mealMatchesSorter(meal, state.mealSuggestionSorter));
+  const meals = transformationMealTemplates().filter(
+    (meal) => mealMatchesSorter(meal, state.mealSuggestionSorter),
+  );
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
       state.mealSuggestionSorter === 'all'
-        ? 'No ideas yet'
+        ? 'No prep ideas yet'
         : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} ideas yet`,
     )}</p>`;
 }
@@ -1050,7 +1054,7 @@ function initRecipePicker() {
   container.addEventListener('click', (event) => {
     const card = event.target.closest('[data-meal-idea-id]');
     if (!card) return;
-    const meal = recipeById(card.dataset.mealIdeaId);
+    const meal = mealIdeaById(card.dataset.mealIdeaId);
     if (!meal) return;
     applyMealIdeaFromCard(meal);
   });

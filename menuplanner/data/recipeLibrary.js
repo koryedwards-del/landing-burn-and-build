@@ -11,12 +11,9 @@
  * (e.g. black beans + rice both Grains/Starches — each gets half).
  *
  * Curated meal patterns from the food lists — lean protein, grain/starch, optional veg.
+ *
+ * @deprecated Legacy DIY catalog — Meal Prep panel uses transformationMealLibrary.js.
  */
-
-import {
-  isTransformationMeal,
-  transformationMealSortKey,
-} from './transformationMeals.js';
 
 /** Short labels for card titles — keep plain and recognizable. */
 const FOOD_SHORT = {
@@ -321,17 +318,6 @@ export const MEAL_TEMPLATES = [
     profile: 'Classic',
     caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger. PAM cooking spray is recommended to prevent sticking. Form patties and cook in a non-stick pan until done. Buns plain — no butter or spread.',
   }),
-  meal('southwest-chicken-bowl', [
-    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
-    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
-    { slot: 'Grains/Starches', foodName: 'Beans, black' },
-    { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
-    { slot: 'Veggie', foodName: 'Onions, cooked' },
-  ], {
-    name: 'Southwest Chicken Bowl',
-    profile: 'Meal prep',
-    caveat: 'Season chicken with chili powder, cumin, garlic powder, salt, and pepper; grill or pan-sear until done, rest, and slice. Cook rice; warm drained black beans. Sauté pepper strips and onion until crisp-tender. Portion bowls with rice, chicken, beans, and vegetables. Lime and cilantro optional.',
-  }),
 ];
 
 export const RECIPE_LIBRARY = MEAL_TEMPLATES;
@@ -344,13 +330,6 @@ export function recipeById(id) {
 
 export function allMealTemplates() {
   return MEAL_TEMPLATES;
-}
-
-/** 8-Week Transformation curated prep cards (fast-start panel). */
-export function transformationMealTemplates() {
-  return MEAL_TEMPLATES
-    .filter((meal) => isTransformationMeal(meal.id))
-    .sort((a, b) => transformationMealSortKey(a.id) - transformationMealSortKey(b.id));
 }
 
 /** Any template fits breakfast, lunch, or dinner — scaling follows the target grid slot. */

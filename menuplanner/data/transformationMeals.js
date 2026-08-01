@@ -1,13 +1,14 @@
 /**
- * 8-Week Transformation — curated meal prep cards.
- * Image-first: add template ids here as assets land in menuplanner/assets/meals/.
+ * 8-Week Transformation — curated meal prep card order.
+ * Meal definitions live in transformationMealLibrary.js.
  */
 
-/** @type {readonly string[]} recipeLibrary.js meal ids, display order */
-export const TRANSFORMATION_MEAL_IDS = [
-  'shrimp-stir-fry-rice',
-  'southwest-chicken-bowl',
-];
+import {
+  TRANSFORMATION_MEAL_IDS,
+  transformationMealById,
+} from './transformationMealLibrary.js';
+
+export { TRANSFORMATION_MEAL_IDS, transformationMealById };
 
 const TRANSFORMATION_MEAL_ORDER = new Map(
   TRANSFORMATION_MEAL_IDS.map((id, index) => [id, index]),

@@ -1,27 +1,17 @@
 /**
  * Meal suggestion plate photos — menuplanner/assets/meals/
  *
- * Upload new images as `{templateId}.jpg` (or .png). Legacy filenames below
- * until re-uploaded. Missing files show plate-fallback.jpg in the UI.
+ * 8-Week Transformation meals: upload as `{templateId}.jpg` (or .png).
+ * Missing files show plate-fallback.jpg in the UI.
  *
- * Template ids (from recipeLibrary.js):
- *   egg-substitute-oatmeal        Egg Substitute & Oatmeal
- *   egg-whites-bread              Egg Whites & Whole Wheat Bread
- *   yogurt-oatmeal-blueberries    Yogurt & Oatmeal
- *   turkey-sweet-potato-spinach   Turkey, Sweet Potato & Spinach
- *   chicken-rice-broccoli-lemon   Chicken, Rice & Broccoli
- *   chicken-rice-broccoli-cajun   Chicken, Rice & Green Beans
- *   shrimp-stir-fry-rice          Shrimp Stir-Fry
- *   cod-rice-kale                 Cod, Rice & Kale
- *   turkey-beans-cabbage          Turkey, Black Beans & Cabbage
- *   tuna-sweet-potato             Tuna, Potato Mash & Cauliflower
- *   chicken-sweet-potato-green-beans  Chicken, Baby Reds & Carrots
- *   tuna-tortilla-bok-choy        Tuna, Tortilla & Bok Choy
- *   steak-tortilla-peppers-fajita Steak, Tortilla & Bell Peppers
- *   chicken-beans-rice            Chicken, Black Beans, Rice & Asparagus
- *   sirloin-baked-potato-snap-peas Sirloin, Baked Potato & Snap Peas
- *   beef-ground-round-potato      Ground Round Burgers
- *   southwest-chicken-bowl        Southwest Chicken Bowl
+ * Transformation template ids (transformationMealLibrary.js):
+ *   southwest-chicken-bowl
+ *   steakhouse-sirloin-plate
+ *   garlic-herb-shrimp-stir-fry
+ *   tex-mex-steak-fajitas
+ *   lemon-pepper-cod-dinner
+ *   turkey-harvest-skillet
+ *   classic-beef-potato-plate
  *
  * Audit: npm run verify:meals
  */
@@ -29,7 +19,7 @@
 const MEAL_ASSET_BASE = '../menuplanner/assets/meals';
 const PLATE_FALLBACK_FILE = 'plate-fallback.jpg';
 
-/** @type {Readonly<Record<string, string>>} templateId → filename (legacy names) */
+/** @type {Readonly<Record<string, string>>} DIY legacy filenames only */
 export const MEAL_IMAGE_LEGACY = {
   'egg-substitute-oatmeal': 'power-breakfast.jpg',
   'egg-whites-bread': 'egg-toast.jpg',
