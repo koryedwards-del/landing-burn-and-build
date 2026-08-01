@@ -91,12 +91,20 @@ function syncPlannerEngagementUi() {
 
   const page = document.getElementById('planner-page');
   if (page) {
-    page.classList.add('planner-page--fast-start');
-    page.classList.remove('planner-page--diy');
+    if (page.classList.contains('planner-page--reactive')) {
+      page.classList.remove('planner-page--diy');
+    } else {
+      page.classList.add('planner-page--fast-start');
+      page.classList.remove('planner-page--diy');
+    }
   }
 
   const title = document.getElementById('planner-page-title');
-  if (title) title.textContent = PLANNER_PAGE_TITLE;
+  if (title) {
+    title.textContent = page?.classList.contains('planner-page--reactive')
+      ? 'Weekly Menu Planner'
+      : PLANNER_PAGE_TITLE;
+  }
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
   if (navBtn) {
@@ -736,6 +744,9 @@ function weekGridColumnLabel(mealSlotId) {
 }
 
 function renderWeekGrid() {
+  if (document.getElementById('planner-page')?.classList.contains('planner-page--reactive')) {
+    return;
+  }
   const container = document.getElementById('week-grid-matrix');
   if (!container) return;
   const headCells = WEEK_GRID_MEALS.map((mealSlotId) => `

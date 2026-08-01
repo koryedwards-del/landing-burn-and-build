@@ -14,6 +14,8 @@ import {
   SNACK_SLOT_IDS,
 } from './mealPlanGenerator.js';
 
+const REACTIVE_PLANNER_UI_VERSION = 3;
+
 function selectionListFromPlan(weekPlan, weekDay, mealSlotId, lane) {
   const raw = weekPlan?.[weekDay]?.selections?.[mealSlotId]?.[lane];
   if (!raw) return [];
@@ -38,6 +40,11 @@ export function plannerWorkspaceNeedsStarter() {
   return !reactiveWeekHasAssignments();
 }
 
+function needsReactiveMigration(saved) {
+  if (!saved || typeof saved !== 'object') return true;
+  return !saved.plannerUiVersion || saved.plannerUiVersion < REACTIVE_PLANNER_UI_VERSION;
+}
+
 /** Mutates planner state — call only when meal slots are initialized. */
 export function seedDefaultPlannerTemplate() {
   if (!state.mealSlotsById || !Object.keys(state.mealSlotsById).length) return false;
@@ -45,12 +52,16 @@ export function seedDefaultPlannerTemplate() {
   state.savedMeals = [];
   generateReactiveWeek();
   state.activeWeekDay = todayWeekDayId();
+  state.plannerUiVersion = REACTIVE_PLANNER_UI_VERSION;
   return true;
 }
 
 /** Restore saved planner state; seed generated week when empty (first visit). */
 export function applyPlannerStateWithDefaults(saved, options = {}) {
   applyPlannerState(saved, options);
+  if (needsReactiveMigration(saved)) {
+    return seedDefaultPlannerTemplate();
+  }
   if (!plannerWorkspaceNeedsStarter()) return false;
   return seedDefaultPlannerTemplate();
 }

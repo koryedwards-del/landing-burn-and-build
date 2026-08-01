@@ -566,10 +566,6 @@ function renderPage() {
     plannerPage.hidden = false;
     bootMenuPlannerPage()
       .then(async () => {
-        if (await isMenuPlannerHydrated()) {
-          await refreshMenuPlannerDisplay();
-          return;
-        }
         await applyMenuPlannerProgram(programPackage);
       })
       .catch((err) => {

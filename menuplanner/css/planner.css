@@ -1957,6 +1957,12 @@ html.mp-handoff-pending #planner-root {
   inset: 0;
   z-index: 1200;
   pointer-events: none;
+  visibility: hidden;
+}
+
+.grocery-drawer.is-open {
+  pointer-events: auto;
+  visibility: visible;
 }
 
 .grocery-drawer.is-open {
