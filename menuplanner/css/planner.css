@@ -664,7 +664,7 @@ body {
 .recipe-card__name {
   margin: 0;
   font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.74rem;
+  font-size: 1.11rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -698,7 +698,7 @@ body {
 
 .recipe-card__plan-note {
   margin: 0;
-  font-size: 0.58rem;
+  font-size: 0.87rem;
   color: var(--muted);
   line-height: 1.4;
 }
@@ -712,7 +712,7 @@ body {
 .recipe-card__section-label {
   margin: 0;
   font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.56rem;
+  font-size: 0.84rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -722,21 +722,21 @@ body {
 
 .recipe-card__ingredients-line {
   margin: 0;
-  font-size: 0.64rem;
+  font-size: 0.96rem;
   line-height: 1.45;
   color: var(--text);
 }
 
 .recipe-card__flavor-kit-name {
   margin: 0;
-  font-size: 0.64rem;
+  font-size: 0.96rem;
   line-height: 1.35;
   color: var(--text);
 }
 
 .recipe-card__flavor-splash {
   margin: 0;
-  font-size: 0.62rem;
+  font-size: 0.93rem;
   line-height: 1.35;
   color: var(--muted);
 }
@@ -749,8 +749,8 @@ body {
 
 .recipe-card__how li {
   position: relative;
-  padding-left: 0.8rem;
-  font-size: 0.62rem;
+  padding-left: 1.2rem;
+  font-size: 0.93rem;
   line-height: 1.4;
   color: var(--text);
 }
