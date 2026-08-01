@@ -199,7 +199,7 @@ function renderSnackCell(weekDay) {
   const perSnack = fruitSelection?.servings ?? mealLaneServings('morning-snack', 'fruit');
   const amount = food && perSnack
     ? gramWeightLabel(food, perSnack * 3)
-    : '× 3 snacks';
+    : '× 3';
   const imgUrl = foodName ? fruitImageUrl(foodName, PLANNER_V) : null;
   const imgHtml = imgUrl
     ? `<img class="reactive-lane__fruit-img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />`
@@ -228,7 +228,7 @@ export function renderReactiveWeekGrid() {
     <div class="reactive-grid__head">Breakfast</div>
     <div class="reactive-grid__head">Lunch</div>
     <div class="reactive-grid__head">Dinner</div>
-    <div class="reactive-grid__head">Snacks</div>
+    <div class="reactive-grid__head reactive-grid__head--snack">Fruit snack × 3</div>
   `;
 
   const rows = WEEK_DAYS.map((day) => `
@@ -259,7 +259,7 @@ function handleSwapClick(event) {
     const next = swapDayFruit(weekDay);
     renderReactiveWeekGrid();
     persistPlannerToProgram();
-    if (next) showToast(`Snacks → ${next} × 3`);
+    if (next) showToast(`Fruit snack × 3 → ${foodDisplayLabel(next)}`);
     return;
   }
 
