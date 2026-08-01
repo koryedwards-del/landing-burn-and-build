@@ -1872,7 +1872,7 @@ html.mp-handoff-pending #planner-root {
 
 .reactive-grid {
   display: grid;
-  grid-template-columns: minmax(28px, 36px) repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(28px, 36px) repeat(3, minmax(0, 1fr)) minmax(0, 0.7fr);
   gap: 4px;
   align-items: stretch;
 }
@@ -1939,10 +1939,17 @@ html.mp-handoff-pending #planner-root {
   color: var(--text);
 }
 
-.reactive-lane__amount {
-  font-size: 0.58rem;
-  line-height: 1.25;
-  color: var(--muted);
+.reactive-lane--snack {
+  align-items: center;
+}
+
+.reactive-lane__fruit-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
 }
 
 .reactive-cell__swap {
