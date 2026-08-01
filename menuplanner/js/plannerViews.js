@@ -68,12 +68,6 @@ const {
 } = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
 const {
   flavorKitById,
-  flavorKitList,
-  flavorKitItemsLabel,
-  splashItemsLabel,
-  FLAVOR_KIT_RULE,
-  SPLASH_RULE,
-  COMMON_SPLASHES,
 } = await import(`../data/flavorKits.js?v=${PLANNER_V}`);
 const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
@@ -992,31 +986,6 @@ function renderMealIdeaCard(meal) {
   `;
 }
 
-function renderFlavorPantry() {
-  const container = document.getElementById('flavor-pantry');
-  if (!container) return;
-
-  const kitsHtml = flavorKitList().map((kit) => `
-    <div class="flavor-pantry__kit">
-      <p class="flavor-pantry__kit-name">${escapeHtml(kit.label)}</p>
-      <p class="flavor-pantry__kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
-    </div>
-  `).join('');
-
-  container.innerHTML = `
-    <div class="flavor-pantry__head">
-      <p class="flavor-pantry__title">Your flavor pantry</p>
-      <p class="flavor-pantry__rule">${escapeHtml(FLAVOR_KIT_RULE)}</p>
-    </div>
-    <div class="flavor-pantry__kits">${kitsHtml}</div>
-    <div class="flavor-pantry__splashes">
-      <p class="flavor-pantry__splashes-title">Splashes</p>
-      <p class="flavor-pantry__splashes-items">${escapeHtml(splashItemsLabel(COMMON_SPLASHES))}</p>
-      <p class="flavor-pantry__rule flavor-pantry__rule--splash">${escapeHtml(SPLASH_RULE)}</p>
-    </div>
-  `;
-}
-
 function renderMealSorter() {
   const container = document.getElementById('meal-sorter');
   if (!container) return;
@@ -1055,7 +1024,7 @@ function renderRecipeCards() {
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
       templates.length === 0
-        ? 'Meals coming soon. Stock your flavor pantry below — new prep meals will appear here.'
+        ? 'Meals coming soon.'
         : state.mealSuggestionSorter === 'all'
           ? 'No prep meals match this filter'
           : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} meals yet`,
@@ -1546,7 +1515,6 @@ function renderPlannerWorkspace() {
     console.error('Week grid failed to render:', err);
   }
   try {
-    renderFlavorPantry();
     renderMealSorter();
     renderRecipeCards();
   } catch (err) {
