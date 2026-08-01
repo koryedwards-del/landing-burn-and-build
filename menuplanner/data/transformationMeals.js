@@ -6,6 +6,7 @@
 /** @type {readonly string[]} recipeLibrary.js meal ids, display order */
 export const TRANSFORMATION_MEAL_IDS = [
   'shrimp-stir-fry-rice',
+  'southwest-chicken-bowl',
 ];
 
 const TRANSFORMATION_MEAL_ORDER = new Map(

@@ -43,6 +43,7 @@ const FOOD_SHORT = {
   'Bok choy': 'Bok Choy',
   'Spinach, cooked': 'Spinach',
   'Peppers, red bell, cooked': 'Bell Peppers',
+  'Onions, cooked': 'Onion',
   'Egg whites': 'Egg Whites',
   'Egg substitute (liquid)': 'Egg Substitute',
   'Oats, rolled': 'Oatmeal',
@@ -319,6 +320,17 @@ export const MEAL_TEMPLATES = [
     name: 'Ground Round Burgers',
     profile: 'Classic',
     caveat: 'Ask the butcher to grind trimmed ground round — not grab-and-go hamburger. PAM cooking spray is recommended to prevent sticking. Form patties and cook in a non-stick pan until done. Buns plain — no butter or spread.',
+  }),
+  meal('southwest-chicken-bowl', [
+    { slot: 'Protein', foodName: 'Chicken breast, no skin' },
+    { slot: 'Grains/Starches', foodName: 'Rice, basmati' },
+    { slot: 'Grains/Starches', foodName: 'Beans, black' },
+    { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
+    { slot: 'Veggie', foodName: 'Onions, cooked' },
+  ], {
+    name: 'Southwest Chicken Bowl',
+    profile: 'Meal prep',
+    caveat: 'Season chicken with chili powder, cumin, garlic powder, salt, and pepper; grill or pan-sear until done, rest, and slice. Cook rice; warm drained black beans. Sauté pepper strips and onion until crisp-tender. Portion bowls with rice, chicken, beans, and vegetables. Lime and cilantro optional.',
   }),
 ];
 

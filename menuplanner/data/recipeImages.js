@@ -21,6 +21,7 @@
  *   chicken-beans-rice            Chicken, Black Beans, Rice & Asparagus
  *   sirloin-baked-potato-snap-peas Sirloin, Baked Potato & Snap Peas
  *   beef-ground-round-potato      Ground Round Burgers
+ *   southwest-chicken-bowl        Southwest Chicken Bowl
  *
  * Audit: npm run verify:meals
  */
