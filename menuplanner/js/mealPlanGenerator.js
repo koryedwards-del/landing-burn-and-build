@@ -4,6 +4,10 @@
  */
 
 import { canonicalFruitName } from '../data/fruitNames.js';
+import {
+  fastStartNameListForLane,
+  isFastStartLaneFood,
+} from '../data/fastStartFoods.js';
 import { FRUIT_NAMES_WITH_IMAGES, fruitHasImage } from '../data/fruitImages.js';
 import { FOOD_PREFERENCE_LEARNING_ENABLED } from './plannerFlags.js';
 import {
@@ -19,43 +23,32 @@ import {
 export const REACTIVE_MEAL_SLOTS = ['breakfast', 'lunch', 'dinner'];
 export const SNACK_SLOT_IDS = ['morning-snack', 'afternoon-snack', 'evening-snack'];
 
-const PROTEIN_CATEGORIES = ['protein', 'dairy'];
-const GS_CATEGORIES = ['grain', 'starch'];
-const VEGGIE_CATEGORIES = ['vegetable'];
 const MEAL_LANES = ['protein', 'gs', 'vegetable'];
 
 const DEFAULT_STARTER_FOODS = {
   protein: 'Chicken breast, no skin',
-  gs: 'Brown rice, cooked',
+  gs: 'Rice, basmati',
   vegetable: 'Broccoli, cooked',
 };
 
-const BREAKFAST_STARTER_PROTEINS = [
-  'Egg whites',
-  'Greek yogurt, nonfat',
-  'Cottage cheese, nonfat',
-];
+function fastStartCandidates(lane, mealSlotId = null) {
+  const names = fastStartNameListForLane(lane, mealSlotId);
+  if (!names.length) return [];
 
-function isEggProtein(food) {
-  const name = String(food?.name || '').toLowerCase();
-  return name.startsWith('egg') && !name.startsWith('eggplant');
+  if (lane === 'fruit') {
+    const byCanonical = new Map(
+      foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
+    );
+    return names.map((name) => byCanonical.get(name)).filter(Boolean);
+  }
+
+  const byName = new Map((state.foods || []).map((food) => [food.name, food]));
+  return names.map((name) => byName.get(name)).filter(Boolean);
 }
 
-function isDairyOrEggProtein(food) {
-  return food?.category === 'dairy' || isEggProtein(food);
-}
-
-function proteinCandidatesForMealSlot(mealSlotId) {
-  const all = foodsInCategories(PROTEIN_CATEGORIES);
-  if (mealSlotId === 'breakfast') {
-    const breakfastPool = all.filter(isDairyOrEggProtein);
-    return breakfastPool.length ? breakfastPool : all;
-  }
-  if (mealSlotId === 'lunch' || mealSlotId === 'dinner') {
-    const mainMealPool = all.filter((food) => !isDairyOrEggProtein(food));
-    return mainMealPool.length ? mainMealPool : all;
-  }
-  return all;
+function fastStartFallbackName(lane, mealSlotId, blocked) {
+  const names = fastStartNameListForLane(lane, mealSlotId);
+  return names.find((name) => !blocked.has(name)) || names[0] || DEFAULT_STARTER_FOODS[lane] || null;
 }
 
 export function shortFoodName(fullName) {
@@ -90,22 +83,26 @@ function foodsInCategories(categories) {
   return (state.foods || []).filter((food) => categories.includes(food.category));
 }
 
-/** Fruits with picker images — pool grows when fruitImages.js entries are added. */
-function fruitsWithImageCandidates() {
-  const byCanonical = new Map(
-    foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
+function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
+  const candidates = fastStartCandidates(lane, mealSlotId);
+  const blocked = new Set(
+    exclude.filter(Boolean).map((name) => (lane === 'fruit' ? canonicalFruitName(name) : name)),
   );
-  return FRUIT_NAMES_WITH_IMAGES
-    .map((name) => byCanonical.get(name))
-    .filter(Boolean);
-}
+  const pool = candidates.filter((food) => {
+    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
+    return !blocked.has(name);
+  });
+  const list = pool.length ? pool : candidates;
+  if (!list.length) {
+    return fastStartFallbackName(lane, mealSlotId, blocked);
+  }
 
-function laneCategories(lane) {
-  if (lane === 'protein') return PROTEIN_CATEGORIES;
-  if (lane === 'gs') return GS_CATEGORIES;
-  if (lane === 'vegetable') return VEGGIE_CATEGORIES;
-  if (lane === 'fruit') return ['fruit'];
-  return [];
+  const available = list.filter((food) => {
+    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
+    return !blocked.has(name);
+  });
+  const pickFrom = available.length ? available : list;
+  return pickFrom[Math.floor(Math.random() * pickFrom.length)].name;
 }
 
 function bumpPreference(lane, foodName, delta) {
@@ -126,42 +123,6 @@ export function recordLaneReject(lane, oldFoodName, newFoodName) {
 
 export function recordFruitReject(oldFoodName, newFoodName) {
   recordLaneReject('fruit', oldFoodName, newFoodName);
-}
-
-function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
-  let candidates;
-  if (lane === 'fruit') {
-    candidates = fruitsWithImageCandidates();
-  } else if (lane === 'protein' && mealSlotId) {
-    candidates = proteinCandidatesForMealSlot(mealSlotId);
-  } else {
-    candidates = foodsInCategories(laneCategories(lane));
-  }
-  const blocked = new Set(
-    exclude.filter(Boolean).map((name) => (lane === 'fruit' ? canonicalFruitName(name) : name)),
-  );
-  const pool = candidates.filter((food) => {
-    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
-    return !blocked.has(name);
-  });
-  const list = pool.length ? pool : candidates;
-  if (!list.length) {
-    if (lane === 'fruit') {
-      return FRUIT_NAMES_WITH_IMAGES.find((name) => !blocked.has(name)) || FRUIT_NAMES_WITH_IMAGES[0];
-    }
-    if (lane === 'protein' && mealSlotId === 'breakfast') {
-      return BREAKFAST_STARTER_PROTEINS.find((name) => !blocked.has(name))
-        || DEFAULT_STARTER_FOODS.protein;
-    }
-    return DEFAULT_STARTER_FOODS[lane] || null;
-  }
-
-  const available = list.filter((food) => {
-    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
-    return !blocked.has(name);
-  });
-  const pickFrom = available.length ? available : list;
-  return pickFrom[Math.floor(Math.random() * pickFrom.length)].name;
 }
 
 export function assignMealLane(weekDay, mealSlotId, lane, foodName) {
@@ -196,7 +157,6 @@ export function mealSummaryLabel(weekDay, mealSlotId) {
 
 export function swapMealLane(weekDay, mealSlotId, lane) {
   const current = getMealLaneFood(weekDay, mealSlotId, lane);
-  // Only this cell — not a taste profile; next regenerate may pick oatmeal again.
   const next = pickFoodName(lane, { exclude: [current], mealSlotId });
   if (!next || next === current) return current;
   assignMealLane(weekDay, mealSlotId, lane, next);
@@ -247,6 +207,20 @@ export function sanitizeWeekFruits() {
     const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length]
       || FRUIT_NAMES_WITH_IMAGES[0];
     assignDayFruit(day.id, fruitName);
+  });
+}
+
+/** Replace meal-lane foods outside Fast Start pools on load. */
+export function sanitizeWeekMealLanes() {
+  WEEK_DAYS.forEach((day) => {
+    REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
+      MEAL_LANES.forEach((lane) => {
+        const current = getMealLaneFood(day.id, mealSlotId, lane);
+        if (!current || isFastStartLaneFood(lane, current, mealSlotId)) return;
+        const next = pickFoodName(lane, { exclude: [current], mealSlotId });
+        if (next) assignMealLane(day.id, mealSlotId, lane, next);
+      });
+    });
   });
 }
 

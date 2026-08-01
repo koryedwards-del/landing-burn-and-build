@@ -12,6 +12,7 @@ import {
   generateReactiveWeek,
   reactiveWeekHasAssignments,
   sanitizeWeekFruits,
+  sanitizeWeekMealLanes,
   SNACK_SLOT_IDS,
 } from './mealPlanGenerator.js';
 
@@ -64,6 +65,7 @@ export function applyPlannerStateWithDefaults(saved, options = {}) {
     return seedDefaultPlannerTemplate();
   }
   sanitizeWeekFruits();
+  sanitizeWeekMealLanes();
   if (!plannerWorkspaceNeedsStarter()) return false;
   return seedDefaultPlannerTemplate();
 }
