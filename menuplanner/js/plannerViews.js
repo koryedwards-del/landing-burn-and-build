@@ -604,8 +604,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
-      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details`
-      : 'Tap a meal title for details. Select a grid cell, then tap the photo to add a meal.';
+      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details. ${escapeHtml(MEAL_CARD_PLAN_NOTE)}`
+      : `Tap a meal title for details. Select a grid cell, then tap the photo to add a meal. ${escapeHtml(MEAL_CARD_PLAN_NOTE)}`;
   }
 
   if (fruitHint) {
