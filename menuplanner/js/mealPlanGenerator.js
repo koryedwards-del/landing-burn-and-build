@@ -3,7 +3,12 @@
  */
 
 import { canonicalFruitName } from '../data/fruitNames.js';
-import { FAST_START_FRUIT_NAMES } from '../data/fastStartFruits.js';
+import {
+  FAST_START_FRUIT_NAMES,
+  fastStartNameListForLane,
+  isFastStartFruit,
+  isFastStartLaneFood,
+} from '../data/fastStartFoods.js';
 import {
   WEEK_DAYS,
   clearDaySlotMeta,
@@ -17,44 +22,13 @@ import {
 export const REACTIVE_MEAL_SLOTS = ['breakfast', 'lunch', 'dinner'];
 export const SNACK_SLOT_IDS = ['morning-snack', 'afternoon-snack', 'evening-snack'];
 
-const PROTEIN_CATEGORIES = ['protein', 'dairy'];
-const GS_CATEGORIES = ['grain', 'starch'];
-const VEGGIE_CATEGORIES = ['vegetable'];
 const MEAL_LANES = ['protein', 'gs', 'vegetable'];
 
 const DEFAULT_STARTER_FOODS = {
   protein: 'Chicken breast, no skin',
-  gs: 'Brown rice, cooked',
+  gs: 'Rice, basmati',
   vegetable: 'Broccoli, cooked',
 };
-
-const BREAKFAST_STARTER_PROTEINS = [
-  'Egg whites',
-  'Greek yogurt, nonfat',
-  'Cottage cheese, nonfat',
-];
-
-function isEggProtein(food) {
-  const name = String(food?.name || '').toLowerCase();
-  return name.startsWith('egg') && !name.startsWith('eggplant');
-}
-
-function isDairyOrEggProtein(food) {
-  return food?.category === 'dairy' || isEggProtein(food);
-}
-
-function proteinCandidatesForMealSlot(mealSlotId) {
-  const all = foodsInCategories(PROTEIN_CATEGORIES);
-  if (mealSlotId === 'breakfast') {
-    const breakfastPool = all.filter(isDairyOrEggProtein);
-    return breakfastPool.length ? breakfastPool : all;
-  }
-  if (mealSlotId === 'lunch' || mealSlotId === 'dinner') {
-    const mainMealPool = all.filter((food) => !isDairyOrEggProtein(food));
-    return mainMealPool.length ? mainMealPool : all;
-  }
-  return all;
-}
 
 export function shortFoodName(fullName) {
   if (!fullName) return '';
@@ -87,22 +61,20 @@ function foodsInCategories(categories) {
   return (state.foods || []).filter((food) => categories.includes(food.category));
 }
 
-/** Fast Start fruits — bodybuilding list, all have picker images. */
-function bodybuildingFruitCandidates() {
-  const byCanonical = new Map(
-    foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
-  );
-  return FAST_START_FRUIT_NAMES
-    .map((name) => byCanonical.get(name))
-    .filter(Boolean);
-}
+/** Fast Start pool for a lane — top-ranked bodybuilding staples (~10 max). */
+function fastStartCandidates(lane, mealSlotId = null) {
+  const names = fastStartNameListForLane(lane, mealSlotId);
+  if (!names.length) return [];
 
-function laneCategories(lane) {
-  if (lane === 'protein') return PROTEIN_CATEGORIES;
-  if (lane === 'gs') return GS_CATEGORIES;
-  if (lane === 'vegetable') return VEGGIE_CATEGORIES;
-  if (lane === 'fruit') return ['fruit'];
-  return [];
+  if (lane === 'fruit') {
+    const byCanonical = new Map(
+      foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
+    );
+    return names.map((name) => byCanonical.get(name)).filter(Boolean);
+  }
+
+  const byName = new Map((state.foods || []).map((food) => [food.name, food]));
+  return names.map((name) => byName.get(name)).filter(Boolean);
 }
 
 function scoreFood(foodName, lane, prefs) {
@@ -128,20 +100,24 @@ export function recordFruitReject(oldFoodName, newFoodName) {
   recordLaneReject('fruit', oldFoodName, newFoodName);
 }
 
+function fastStartFallbackName(lane, mealSlotId, blocked) {
+  const names = fastStartNameListForLane(lane, mealSlotId);
+  return names.find((name) => !blocked.has(name)) || names[0] || DEFAULT_STARTER_FOODS[lane] || null;
+}
+
 function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
-  let candidates = lane === 'protein' && mealSlotId
-    ? proteinCandidatesForMealSlot(mealSlotId)
-    : foodsInCategories(laneCategories(lane));
+  const candidates = fastStartCandidates(lane, mealSlotId);
   const prefs = ensureFoodPreferences();
-  const blocked = new Set(exclude.filter(Boolean));
-  const pool = candidates.filter((food) => !blocked.has(food.name));
+  const blocked = new Set(
+    exclude.filter(Boolean).map((name) => (lane === 'fruit' ? canonicalFruitName(name) : name)),
+  );
+  const pool = candidates.filter((food) => {
+    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
+    return !blocked.has(name);
+  });
   const list = pool.length ? pool : candidates;
   if (!list.length) {
-    if (lane === 'protein' && mealSlotId === 'breakfast') {
-      return BREAKFAST_STARTER_PROTEINS.find((name) => !blocked.has(name))
-        || DEFAULT_STARTER_FOODS.protein;
-    }
-    return DEFAULT_STARTER_FOODS[lane] || null;
+    return fastStartFallbackName(lane, mealSlotId, blocked);
   }
 
   const ranked = list
@@ -228,6 +204,28 @@ export function swapDayFruit(weekDay) {
   recordFruitReject(current, next);
   assignDayFruit(weekDay, next);
   return next;
+}
+
+/** Replace saved foods outside the Fast Start lists on load. */
+export function sanitizeWeekPlan() {
+  WEEK_DAYS.forEach((day, index) => {
+    const fruit = getDayFruitName(day.id);
+    if (fruit && !isFastStartFruit(fruit)) {
+      const fruitName = FAST_START_FRUIT_NAMES[index % FAST_START_FRUIT_NAMES.length]
+        || FAST_START_FRUIT_NAMES[0];
+      assignDayFruit(day.id, fruitName);
+    }
+
+    REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
+      MEAL_LANES.forEach((lane) => {
+        if (!mealLaneHasServings(mealSlotId, lane)) return;
+        const current = getMealLaneFood(day.id, mealSlotId, lane);
+        if (current && !isFastStartLaneFood(lane, current, mealSlotId)) {
+          assignMealLane(day.id, mealSlotId, lane, pickFoodName(lane, { mealSlotId }));
+        }
+      });
+    });
+  });
 }
 
 function fillMealSlot(weekDay, mealSlotId) {
