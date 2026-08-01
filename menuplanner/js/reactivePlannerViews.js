@@ -132,12 +132,6 @@ const LANE_SWAP_ARIA = {
   vegetable: 'Swap vegetable',
 };
 
-const SWAP_ICON = `
-  <svg class="reactive-cell__swap-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-    <path fill="currentColor" d="M12.2 2.8 10.5 1.1V3H5.8a3.2 3.2 0 0 0 0 6.4H7v1.6H5.8a4.8 4.8 0 0 1 0-9.6h4.7V1.1l1.7 1.7ZM3.8 13.2 5.5 15v-2h4.7a3.2 3.2 0 0 0 0-6.4H9V5h1.5a4.8 4.8 0 0 1 0 9.6H5.8V15l-1.7-1.8Z"/>
-  </svg>
-`.trim();
-
 function foodCatalogEntry(foodName) {
   return state.foods.find((food) => food.name === foodName) || null;
 }
@@ -171,16 +165,16 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
     <div class="reactive-lane">
       <button
         type="button"
-        class="reactive-cell__swap"
+        class="reactive-lane__swap"
         data-swap-lane="${lane}"
         data-week-day="${weekDay}"
         data-meal-slot="${mealSlotId}"
-        aria-label="${escapeHtml(LANE_SWAP_ARIA[lane] || 'Swap food')}"
-      >${SWAP_ICON}</button>
-      <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        aria-label="${escapeHtml(`${LANE_SWAP_ARIA[lane] || 'Swap food'}: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         <span class="reactive-lane__name">${escapeHtml(label)}</span>
         <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
-      </span>
+      </button>
     </div>
   `;
 }
@@ -214,14 +208,20 @@ function renderSnackCell(weekDay) {
 
   return `
     <article class="reactive-cell reactive-cell--snack">
-      <div class="reactive-lane reactive-lane--snack">
-        <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}" aria-label="Swap fruit snack">${SWAP_ICON}</button>
+      <button
+        type="button"
+        class="reactive-lane reactive-lane--snack reactive-lane__swap"
+        data-swap-fruit
+        data-week-day="${weekDay}"
+        aria-label="${escapeHtml(`Swap fruit snack: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         ${imgHtml}
-        <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        <span class="reactive-lane__food">
           <span class="reactive-lane__name">${escapeHtml(label)}</span>
           <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
         </span>
-      </div>
+      </button>
     </article>
   `;
 }

@@ -1971,7 +1971,43 @@ html.mp-handoff-pending #planner-root {
   align-items: center;
   gap: 6px;
   min-width: 0;
-  padding: 5px 0;
+  padding: 2px 0;
+}
+
+.reactive-lane__swap {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+  padding: 3px 4px;
+  margin: -3px -4px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.reactive-lane--snack.reactive-lane__swap {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.reactive-lane__swap:hover,
+.reactive-lane__swap:focus-visible {
+  background: var(--gold-dim);
+  outline: none;
+}
+
+.reactive-lane__swap:hover .reactive-lane__name,
+.reactive-lane__swap:focus-visible .reactive-lane__name {
+  color: var(--gold);
 }
 
 .reactive-lane__food {
@@ -2005,35 +2041,6 @@ html.mp-handoff-pending #planner-root {
   object-fit: cover;
   flex-shrink: 0;
   border: 1px solid var(--border);
-}
-
-.reactive-cell__swap {
-  appearance: none;
-  border: 1px solid var(--gold-muted);
-  background: var(--gold-dim);
-  color: var(--gold);
-  border-radius: 4px;
-  padding: 0;
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  line-height: 0;
-  flex-shrink: 0;
-}
-
-.reactive-cell__swap-icon {
-  width: 10px;
-  height: 10px;
-  display: block;
-}
-
-.reactive-cell__swap:hover,
-.reactive-cell__swap:focus-visible {
-  border-color: var(--gold);
-  background: rgba(253, 197, 0, 0.2);
 }
 
 .grocery-drawer {
@@ -2212,13 +2219,8 @@ html.mp-handoff-pending #planner-root {
     font-size: 0.68rem;
   }
 
-  .reactive-cell__swap {
-    width: 16px;
-    height: 16px;
-  }
-
-  .reactive-cell__swap-icon {
-    width: 9px;
-    height: 9px;
+  .reactive-lane__swap {
+    padding: 2px 3px;
+    margin: -2px -3px;
   }
 }
