@@ -3,7 +3,7 @@
  */
 
 import { canonicalFruitName } from '../data/fruitNames.js';
-import { FAST_START_FRUIT_NAMES } from '../data/fastStartFruits.js';
+import { FAST_START_FRUIT_NAMES, isFastStartFruit } from '../data/fastStartFruits.js';
 import {
   WEEK_DAYS,
   clearDaySlotMeta,
@@ -129,14 +129,27 @@ export function recordFruitReject(oldFoodName, newFoodName) {
 }
 
 function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
-  let candidates = lane === 'protein' && mealSlotId
-    ? proteinCandidatesForMealSlot(mealSlotId)
-    : foodsInCategories(laneCategories(lane));
+  let candidates;
+  if (lane === 'fruit') {
+    candidates = bodybuildingFruitCandidates();
+  } else if (lane === 'protein' && mealSlotId) {
+    candidates = proteinCandidatesForMealSlot(mealSlotId);
+  } else {
+    candidates = foodsInCategories(laneCategories(lane));
+  }
   const prefs = ensureFoodPreferences();
-  const blocked = new Set(exclude.filter(Boolean));
-  const pool = candidates.filter((food) => !blocked.has(food.name));
+  const blocked = new Set(
+    exclude.filter(Boolean).map((name) => (lane === 'fruit' ? canonicalFruitName(name) : name)),
+  );
+  const pool = candidates.filter((food) => {
+    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
+    return !blocked.has(name);
+  });
   const list = pool.length ? pool : candidates;
   if (!list.length) {
+    if (lane === 'fruit') {
+      return FAST_START_FRUIT_NAMES.find((name) => !blocked.has(name)) || FAST_START_FRUIT_NAMES[0];
+    }
     if (lane === 'protein' && mealSlotId === 'breakfast') {
       return BREAKFAST_STARTER_PROTEINS.find((name) => !blocked.has(name))
         || DEFAULT_STARTER_FOODS.protein;
@@ -228,6 +241,17 @@ export function swapDayFruit(weekDay) {
   recordFruitReject(current, next);
   assignDayFruit(weekDay, next);
   return next;
+}
+
+/** Replace saved fruits outside the image list on load. */
+export function sanitizeWeekFruits() {
+  WEEK_DAYS.forEach((day, index) => {
+    const fruit = getDayFruitName(day.id);
+    if (!fruit || isFastStartFruit(fruit)) return;
+    const fruitName = FAST_START_FRUIT_NAMES[index % FAST_START_FRUIT_NAMES.length]
+      || FAST_START_FRUIT_NAMES[0];
+    assignDayFruit(day.id, fruitName);
+  });
 }
 
 function fillMealSlot(weekDay, mealSlotId) {

@@ -19,6 +19,9 @@ const FRUIT_IMAGE_FILES = {
   Tangerines: 'tangerines.png',
 };
 
+/** Single source — planner fruit pool = fruits with picker images only. */
+export const FRUIT_NAMES_WITH_IMAGES = Object.keys(FRUIT_IMAGE_FILES).sort((a, b) => a.localeCompare(b));
+
 const FRUIT_ASSET_BASE = '../menuplanner/assets/fruits';
 
 export function fruitImageUrl(foodName, version = '') {

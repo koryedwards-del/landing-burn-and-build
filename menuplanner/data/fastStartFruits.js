@@ -1,24 +1,13 @@
 /**
- * Locked Fast Start fruit list — store jargon, no knife, distinct at the shelf.
+ * Locked Fast Start fruit list — must match fruitImages.js (picker thumbnails).
  * DIY mode shows the full foods.json fruit catalog.
  */
 
+import { FRUIT_NAMES_WITH_IMAGES } from './fruitImages.js';
 import { canonicalFruitName } from './fruitNames.js';
 
 /** @type {readonly string[]} foods.json names, alphabetical display order */
-export const FAST_START_FRUIT_NAMES = [
-  'Apples',
-  'Bananas',
-  'Blueberries',
-  'Clementines',
-  'Grapes',
-  'Nectarines',
-  'Oranges',
-  'Peaches',
-  'Pears',
-  'Strawberries',
-  'Tangerines',
-];
+export const FAST_START_FRUIT_NAMES = FRUIT_NAMES_WITH_IMAGES;
 
 const FAST_START_FRUIT_ORDER = new Map(FAST_START_FRUIT_NAMES.map((name, index) => [name, index]));
 
