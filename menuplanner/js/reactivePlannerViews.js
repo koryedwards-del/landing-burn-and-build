@@ -132,7 +132,6 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
   const label = foodName ? shortFoodName(foodName) : '—';
   return `
     <div class="reactive-lane">
-      <span class="reactive-lane__food">${escapeHtml(label)}</span>
       <button
         type="button"
         class="reactive-cell__swap"
@@ -140,6 +139,7 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
         data-week-day="${weekDay}"
         data-meal-slot="${mealSlotId}"
       >${LANE_SWAP_LABELS[lane]}</button>
+      <span class="reactive-lane__food">${escapeHtml(label)}</span>
     </div>
   `;
 }
@@ -162,8 +162,8 @@ function renderSnackCell(weekDay) {
   return `
     <article class="reactive-cell reactive-cell--snack">
       <div class="reactive-lane">
-        <span class="reactive-lane__food">${escapeHtml(summary)}</span>
         <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap</button>
+        <span class="reactive-lane__food">${escapeHtml(summary)}</span>
       </div>
     </article>
   `;

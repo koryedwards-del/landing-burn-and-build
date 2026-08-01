@@ -1921,8 +1921,7 @@ html.mp-handoff-pending #planner-root {
 .reactive-lane {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
 }
 
