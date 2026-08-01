@@ -16,8 +16,9 @@ import {
   REACTIVE_MEAL_SLOTS,
   dayFruitSummaryLabel,
   generateReactiveWeek,
+  getMealLaneFood,
   mealLaneHasServings,
-  mealSummaryLabel,
+  shortFoodName,
   swapDayFruit,
   swapMealLane,
 } from './mealPlanGenerator.js';
@@ -118,17 +119,6 @@ function setGroceryOpen(open) {
   document.getElementById('grocery-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
   if (open) renderGroceryList();
 }
-
-import {
-  REACTIVE_MEAL_SLOTS,
-  dayFruitSummaryLabel,
-  generateReactiveWeek,
-  getMealLaneFood,
-  mealLaneHasServings,
-  shortFoodName,
-  swapDayFruit,
-  swapMealLane,
-} from './mealPlanGenerator.js';
 
 const LANE_SWAP_LABELS = {
   protein: 'Swap',
