@@ -577,6 +577,10 @@ function fitWeekGridLabel(text) {
   }
 
   const fitted = raw.slice(0, lo).trimEnd();
+  if (fitted && fitted.length < raw.length) {
+    const withEllipsis = `${fitted}\u2026`;
+    if (weekGridLabelFits(withEllipsis, maxWidth)) return withEllipsis;
+  }
   if (fitted) return fitted;
   return raw.charAt(0);
 }
@@ -604,8 +608,8 @@ function updatePickerHints() {
 
   if (recipeHint) {
     recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
-      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details. ${escapeHtml(MEAL_CARD_PLAN_NOTE)}`
-      : `Tap a meal title for details. Select a grid cell, then tap the photo to add a meal. ${escapeHtml(MEAL_CARD_PLAN_NOTE)}`;
+      ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details`
+      : 'Tap a meal title for details. Select a grid cell, then tap the photo to add a meal.';
   }
 
   if (fruitHint) {
@@ -1053,7 +1057,7 @@ function renderRecipeCards() {
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
       templates.length === 0
-        ? 'Meals coming soon. Stock your flavor pantry above — new prep meals will appear here.'
+        ? 'Meals coming soon. Stock your flavor pantry below — new prep meals will appear here.'
         : state.mealSuggestionSorter === 'all'
           ? 'No prep meals match this filter'
           : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} meals yet`,
