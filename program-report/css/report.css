@@ -98,6 +98,30 @@ body {
   min-height: 0;
 }
 
+/* Menu planner — full width, hide sidebar */
+.r-layout--planner,
+.pb-layout.r-layout--planner {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.r-layout--planner .pb-aside {
+  display: none;
+}
+
+.r-body--planner {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.r-body--planner .r-header {
+  padding-bottom: 10px;
+}
+
+.r-body--planner .pb-page-head {
+  margin-bottom: 8px;
+}
+
 #r-main[hidden] {
   display: none !important;
 }

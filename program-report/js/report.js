@@ -589,8 +589,17 @@ function renderPage() {
 function showPage(index) {
   activePage = Math.max(0, Math.min(index, PAGES.length - 1));
   syncPageUrl();
+  syncPlannerLayoutMode();
   renderNav();
   renderPage();
+}
+
+function syncPlannerLayoutMode() {
+  const layout = document.querySelector('.r-layout');
+  if (layout) {
+    layout.classList.toggle('r-layout--planner', activePage === 3);
+  }
+  document.body.classList.toggle('r-body--planner', activePage === 3);
 }
 
 function bindEvents() {
@@ -681,6 +690,7 @@ async function init() {
   if (programPackage?.intake?.leanBodyMass) {
     activePage = initialPageFromUrl();
   }
+  syncPlannerLayoutMode();
   launchApp();
 }
 

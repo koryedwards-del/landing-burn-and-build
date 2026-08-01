@@ -1872,8 +1872,8 @@ html.mp-handoff-pending #planner-root {
 
 .reactive-grid {
   display: grid;
-  grid-template-columns: minmax(44px, 56px) repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: minmax(28px, 36px) repeat(4, minmax(0, 1fr));
+  gap: 4px;
   align-items: stretch;
 }
 
@@ -1906,12 +1906,12 @@ html.mp-handoff-pending #planner-root {
 .reactive-cell {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 6px 8px;
+  border-radius: 6px;
+  padding: 4px 6px;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .reactive-cell--snack {
@@ -1922,16 +1922,19 @@ html.mp-handoff-pending #planner-root {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 .reactive-lane__food {
   flex: 1;
   min-width: 0;
-  font-size: 0.74rem;
-  line-height: 1.35;
+  font-size: 0.72rem;
+  line-height: 1.25;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .reactive-cell__swap {
@@ -1940,10 +1943,10 @@ html.mp-handoff-pending #planner-root {
   background: var(--gold-dim);
   color: var(--gold);
   border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 0.62rem;
+  padding: 2px 6px;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   cursor: pointer;
   line-height: 1.2;
