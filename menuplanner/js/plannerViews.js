@@ -59,6 +59,7 @@ import { canonicalFruitName } from '../data/fruitNames.js';
 const PLANNER_V = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 const {
   allMealTemplates,
+  transformationMealTemplates,
   libraryRecipeFitsMealSlot,
   mealMatchesSorter,
   MEAL_SORTER_PILLS,
@@ -72,7 +73,7 @@ const {
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
 const PLANNER_MODE_TITLES = {
-  'fast-start': 'Fast Start Menu Planner',
+  'fast-start': '8-Week Transformation Menu Planner',
   diy: 'Do-It-Yourself Menu Planner',
 };
 
@@ -966,7 +967,10 @@ function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = allMealTemplates().filter((meal) => mealMatchesSorter(meal, state.mealSuggestionSorter));
+  const catalog = state.plannerEngagementMode === 'fast-start'
+    ? transformationMealTemplates()
+    : allMealTemplates();
+  const meals = catalog.filter((meal) => mealMatchesSorter(meal, state.mealSuggestionSorter));
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')

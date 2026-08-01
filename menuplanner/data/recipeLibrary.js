@@ -13,6 +13,11 @@
  * Curated meal patterns from the food lists — lean protein, grain/starch, optional veg.
  */
 
+import {
+  isTransformationMeal,
+  transformationMealSortKey,
+} from './transformationMeals.js';
+
 /** Short labels for card titles — keep plain and recognizable. */
 const FOOD_SHORT = {
   'Beef, eye of round': 'Steak',
@@ -227,8 +232,8 @@ export const MEAL_TEMPLATES = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     name: 'Shrimp Stir-Fry',
-    profile: 'Stir-fry',
-    caveat: 'PAM cooking spray is recommended to prevent sticking. Stir-fry shrimp with broccoli, mushrooms, and red bell peppers in a hot non-stick pan until the shrimp turn pink and are cooked through. Rice cooked separately.',
+    profile: 'Meal prep',
+    caveat: 'Stir-fry a double batch in a wok — PAM recommended. Cook shrimp with broccoli, mushrooms, and bell peppers until pink. Portion into containers; cook rice separately and add when you eat.',
   }),
   meal('cod-rice-kale', [
     { slot: 'Protein', foodName: 'Cod, Atlantic, baked' },
@@ -327,6 +332,13 @@ export function recipeById(id) {
 
 export function allMealTemplates() {
   return MEAL_TEMPLATES;
+}
+
+/** 8-Week Transformation curated prep cards (fast-start panel). */
+export function transformationMealTemplates() {
+  return MEAL_TEMPLATES
+    .filter((meal) => isTransformationMeal(meal.id))
+    .sort((a, b) => transformationMealSortKey(a.id) - transformationMealSortKey(b.id));
 }
 
 /** Any template fits breakfast, lunch, or dinner — scaling follows the target grid slot. */
