@@ -6,6 +6,7 @@ import {
   scheduleProgramPersist,
 } from '../../js/menuPlannerState.js';
 import { setActiveProgramId } from '../../js/programActive.js';
+import { formatGroceryQuantity } from '../../js/groceryEngine.js';
 
 const SLOT_LABEL_TO_ID = {
   Breakfast: 'breakfast',
