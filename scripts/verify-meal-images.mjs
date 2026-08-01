@@ -27,6 +27,20 @@ function resolveFilename(templateId) {
 
 const templates = transformationMealTemplates();
 const onDisk = fs.readdirSync(mealsDir).filter((name) => IMAGE_EXT.includes(path.extname(name).toLowerCase()));
+
+if (templates.length === 0) {
+  console.log('8-Week Transformation meals: 0 (catalog empty — fresh start)');
+  console.log(`Image files on disk: ${onDisk.length}`);
+  const orphans = onDisk.filter((file) => file !== 'plate-fallback.jpg');
+  if (orphans.length) {
+    console.log('\nUnused image files (no meals defined yet):');
+    for (const file of orphans) {
+      console.log(`  ? ${file}`);
+    }
+  }
+  process.exit(0);
+}
+
 const usedFiles = new Set();
 const missing = [];
 const mapped = [];

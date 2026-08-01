@@ -1,17 +1,8 @@
 /**
  * Meal suggestion plate photos — menuplanner/assets/meals/
  *
- * 8-Week Transformation meals: upload as `{templateId}.jpg` (or .png).
+ * Upload as `{templateId}.jpg` when meals are added to transformationMealLibrary.js.
  * Missing files show plate-fallback.jpg in the UI.
- *
- * Transformation template ids (transformationMealLibrary.js):
- *   southwest-chicken-bowl
- *   steakhouse-sirloin-plate
- *   garlic-herb-shrimp-stir-fry
- *   tex-mex-steak-fajitas
- *   lemon-pepper-cod-dinner
- *   turkey-harvest-skillet
- *   classic-beef-potato-plate
  *
  * Audit: npm run verify:meals
  */

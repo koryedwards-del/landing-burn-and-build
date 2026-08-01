@@ -1016,21 +1016,33 @@ function renderMealSorter() {
   }).join('');
 }
 
+function syncMealPrepPanel() {
+  const templates = transformationMealTemplates();
+  const sorterBar = document.querySelector('.meal-sorter-bar');
+  const cards = document.getElementById('recipe-cards');
+  if (sorterBar) sorterBar.hidden = templates.length === 0;
+  if (cards) cards.classList.toggle('recipe-cards--empty', templates.length === 0);
+}
+
 function renderRecipeCards() {
   const container = document.getElementById('recipe-cards');
   if (!container) return;
 
-  const meals = transformationMealTemplates().filter(
+  const templates = transformationMealTemplates();
+  const meals = templates.filter(
     (meal) => mealMatchesSorter(meal, state.mealSuggestionSorter),
   );
   container.className = 'recipe-cards';
   container.innerHTML = meals.length
     ? meals.map((meal) => renderMealIdeaCard(meal)).join('')
     : `<p class="recipe-cards__empty">${escapeHtml(
-      state.mealSuggestionSorter === 'all'
-        ? 'No prep ideas yet'
-        : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} ideas yet`,
+      templates.length === 0
+        ? 'Meals coming soon. Stock your flavor pantry above — new prep meals will appear here.'
+        : state.mealSuggestionSorter === 'all'
+          ? 'No prep meals match this filter'
+          : `No ${MEAL_SORTER_PILLS.find((p) => p.id === state.mealSuggestionSorter)?.label ?? ''} meals yet`,
     )}</p>`;
+  syncMealPrepPanel();
 }
 
 function renderFruitList() {

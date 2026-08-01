@@ -699,10 +699,16 @@ body {
 }
 
 .recipe-cards__empty {
-  grid-column: 1 / -1;
-  font-size: 0.78rem;
+  margin: 0;
+  padding: 20px 16px 24px;
+  font-size: 0.72rem;
   color: var(--muted);
-  padding: 8px 4px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.recipe-cards--empty {
+  min-height: 72px;
 }
 
 .fruit-list {
