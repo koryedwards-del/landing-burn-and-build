@@ -219,26 +219,33 @@ function renderSnackCell(weekDay) {
   `;
 }
 
+const MEAL_ROWS = [
+  ...REACTIVE_MEAL_SLOTS.map((id) => ({ type: 'meal', id, label: MEAL_SLOT_LABELS[id] })),
+  { type: 'snack', id: 'snack', label: 'Fruit snack × 3' },
+];
+
 export function renderReactiveWeekGrid() {
   const container = document.getElementById('week-grid-matrix');
   if (!container) return;
 
   const head = `
-    <div class="reactive-grid__head reactive-grid__head--day">Day</div>
-    <div class="reactive-grid__head">Breakfast</div>
-    <div class="reactive-grid__head">Lunch</div>
-    <div class="reactive-grid__head">Dinner</div>
-    <div class="reactive-grid__head">Fruit snack × 3</div>
+    <div class="reactive-grid__head reactive-grid__head--corner"></div>
+    ${WEEK_DAYS.map((day) => `
+      <div class="reactive-grid__head reactive-grid__head--day-col">${escapeHtml(day.label)}</div>
+    `).join('')}
   `;
 
-  const rows = WEEK_DAYS.map((day) => `
-    <div class="reactive-grid__day">${escapeHtml(day.label)}</div>
-    ${REACTIVE_MEAL_SLOTS.map((mealSlotId) => renderMealCell(day.id, mealSlotId)).join('')}
-    ${renderSnackCell(day.id)}
-  `).join('');
+  const rows = MEAL_ROWS.map((row) => {
+    const labelCell = `<div class="reactive-grid__meal">${escapeHtml(row.label)}</div>`;
+    const cells = WEEK_DAYS.map((day) => {
+      if (row.type === 'snack') return renderSnackCell(day.id);
+      return renderMealCell(day.id, row.id);
+    }).join('');
+    return labelCell + cells;
+  }).join('');
 
   container.innerHTML = `
-    <div class="reactive-grid" role="grid" aria-label="Weekly meal plan">
+    <div class="reactive-grid reactive-grid--by-meal" role="grid" aria-label="Weekly meal plan">
       ${head}
       ${rows}
     </div>

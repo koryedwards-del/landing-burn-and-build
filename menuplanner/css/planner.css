@@ -1913,7 +1913,7 @@ html.mp-handoff-pending #planner-root {
 
 .reactive-grid {
   display: grid;
-  grid-template-columns: minmax(28px, 36px) repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(72px, 88px) repeat(7, minmax(0, 1fr));
   gap: 6px;
   align-items: stretch;
 }
@@ -1928,20 +1928,26 @@ html.mp-handoff-pending #planner-root {
   padding: 4px 2px 8px;
 }
 
-.reactive-grid__head--day {
+.reactive-grid__head--corner {
   grid-column: 1;
 }
 
-.reactive-grid__day {
+.reactive-grid__head--day-col {
+  text-align: center;
+  color: var(--gold);
+}
+
+.reactive-grid__meal {
   font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--muted);
   display: flex;
   align-items: flex-start;
   padding-top: 10px;
+  line-height: 1.25;
 }
 
 .reactive-cell {
@@ -2186,7 +2192,7 @@ html.mp-handoff-pending #planner-root {
   }
 
   .reactive-grid {
-    min-width: 620px;
+    min-width: 820px;
   }
 }
 
