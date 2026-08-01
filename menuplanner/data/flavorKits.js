@@ -1,6 +1,7 @@
 /**
- * Flavor kits — named pantry lists for the 8-Week Transformation meal prep program.
- * Not counted toward protein or G/S servings.
+ * Flavor kits — dry pantry lists for the 8-Week Transformation meal prep program.
+ * Splashes — liquid accents used while cooking (per meal).
+ * Neither counts toward protein or G/S servings.
  */
 
 /** @type {Readonly<Record<string, { id: string, label: string, flavors: readonly string[] }>>} */
@@ -47,8 +48,22 @@ export const FLAVOR_KITS = Object.freeze({
   }),
 });
 
+/** Common liquid accents — reference pantry; meals pick from these or add their own. */
+export const COMMON_SPLASHES = Object.freeze([
+  'Low-sodium soy sauce',
+  'Mustard',
+  'Salsa',
+  'Vinegar',
+  'Hot sauce',
+  'Lemon juice',
+  'Lime juice',
+]);
+
 export const FLAVOR_KIT_RULE =
   'Flavor kits don\u2019t count toward protein or G/S servings.';
+
+export const SPLASH_RULE =
+  'Splashes are liquids used while cooking \u2014 normal amounts, not a beverage.';
 
 /** @type {readonly string[]} */
 export const FLAVOR_KIT_ORDER = Object.freeze(['fire', 'iron', 'green', 'earth']);
@@ -75,11 +90,18 @@ export function flavorKitItemsLabel(kit) {
 }
 
 /**
- * @param {string[] | undefined} finish
+ * @param {readonly string[]} items
  * @returns {string}
  */
-export function flavorFinishLabel(finish) {
-  if (!finish?.length) return '';
-  const items = finish.join(', ');
-  return `${items} (optional)`;
+export function splashItemsLabel(items) {
+  return items.join(' \u00b7 ');
+}
+
+/**
+ * @param {string[] | undefined} splash
+ * @returns {string}
+ */
+export function splashLabel(splash) {
+  if (!splash?.length) return '';
+  return splashItemsLabel(splash);
 }

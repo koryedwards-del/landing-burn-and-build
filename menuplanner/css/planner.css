@@ -444,6 +444,33 @@ body {
   line-height: 1.4;
 }
 
+.flavor-pantry__splashes {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.flavor-pantry__splashes-title {
+  margin: 0 0 4px;
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.flavor-pantry__splashes-items {
+  margin: 0;
+  font-size: 0.62rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.flavor-pantry__rule--splash {
+  margin-top: 6px;
+}
+
 .meal-sorter-bar {
   display: flex;
   align-items: flex-start;
@@ -644,8 +671,8 @@ body {
   line-height: 1.4;
 }
 
-.recipe-card__flavor-kit-finish {
-  margin: 4px 0 0;
+.recipe-card__splash {
+  margin: 6px 0 0;
   font-size: 0.62rem;
   color: var(--muted);
   line-height: 1.35;
@@ -656,14 +683,6 @@ body {
   font-size: 0.66rem;
   color: var(--muted);
   line-height: 1.5;
-  text-align: left;
-}
-
-.recipe-card__plan-note {
-  margin: 6px 0 0;
-  font-size: 0.62rem;
-  color: rgba(253, 197, 0, 0.85);
-  line-height: 1.45;
   text-align: left;
 }
 

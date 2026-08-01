@@ -70,8 +70,11 @@ const {
   flavorKitById,
   flavorKitList,
   flavorKitItemsLabel,
-  flavorFinishLabel,
+  splashItemsLabel,
+  splashLabel,
   FLAVOR_KIT_RULE,
+  SPLASH_RULE,
+  COMMON_SPLASHES,
 } = await import(`../data/flavorKits.js?v=${PLANNER_V}`);
 const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
@@ -913,9 +916,9 @@ function renderMealFlavorKitHtml(meal) {
   const kit = flavorKitById(meal.flavorKit);
   if (!kit) return '';
 
-  const finishText = flavorFinishLabel(meal.finish);
-  const finishHtml = finishText
-    ? `<p class="recipe-card__flavor-kit-finish">Finish: ${escapeHtml(finishText)}</p>`
+  const splashText = splashLabel(meal.splash);
+  const splashHtml = splashText
+    ? `<p class="recipe-card__splash">Splash: ${escapeHtml(splashText)}</p>`
     : '';
 
   return `
@@ -924,7 +927,7 @@ function renderMealFlavorKitHtml(meal) {
         Flavor kit: <strong>${escapeHtml(kit.label)}</strong>
       </p>
       <p class="recipe-card__flavor-kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
-      ${finishHtml}
+      ${splashHtml}
     </div>
   `;
 }
@@ -937,9 +940,6 @@ function renderMealIdeaCard(meal) {
   const flavorKitHtml = renderMealFlavorKitHtml(meal);
   const prepHtml = meal.prep
     ? `<p class="recipe-card__prep">${escapeHtml(meal.prep)}</p>`
-    : '';
-  const planNoteHtml = meal.planNote
-    ? `<p class="recipe-card__plan-note">${escapeHtml(meal.planNote)}</p>`
     : '';
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
@@ -973,7 +973,6 @@ function renderMealIdeaCard(meal) {
           </div>
           ${flavorKitHtml}
           ${prepHtml}
-          ${planNoteHtml}
         </div>
       </button>
     </article>
@@ -997,6 +996,11 @@ function renderFlavorPantry() {
       <p class="flavor-pantry__rule">${escapeHtml(FLAVOR_KIT_RULE)}</p>
     </div>
     <div class="flavor-pantry__kits">${kitsHtml}</div>
+    <div class="flavor-pantry__splashes">
+      <p class="flavor-pantry__splashes-title">Splashes</p>
+      <p class="flavor-pantry__splashes-items">${escapeHtml(splashItemsLabel(COMMON_SPLASHES))}</p>
+      <p class="flavor-pantry__rule flavor-pantry__rule--splash">${escapeHtml(SPLASH_RULE)}</p>
+    </div>
   `;
 }
 

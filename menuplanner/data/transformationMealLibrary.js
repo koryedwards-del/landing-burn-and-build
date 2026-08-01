@@ -2,8 +2,14 @@
  * 8-Week Transformation — meal prep catalog.
  *
  * Fresh start: no meals yet. Add entries to TRANSFORMATION_MEALS as they are defined.
- * Each meal: plan foods (items), one flavorKit, optional finish[], prep steps, optional planNote.
- * Image: menuplanner/assets/meals/{id}.jpg
+ *
+ * Meal card elements:
+ *   1. Photo        — menuplanner/assets/meals/{id}.jpg
+ *   2. Name         — menu title
+ *   3. Plan foods   — items[] from foods.json (counted on the plan)
+ *   4. Flavor kit   — one dry kit id (fire | iron | green | earth)
+ *   5. Splash       — optional liquid accents while cooking (not counted)
+ *   6. Prep         — technique only
  */
 
 /**
@@ -12,17 +18,15 @@
  * @param {Array<{ slot: string, foodName: string }>} items
  * @param {{
  *   flavorKit: string,
- *   finish?: string[],
+ *   splash?: string[],
  *   prep: string,
- *   planNote?: string,
  *   tags?: string[],
  * }} options
  */
 export function defineTransformationMeal(id, name, items, {
   flavorKit,
-  finish,
+  splash,
   prep,
-  planNote,
   tags,
 } = {}) {
   return {
@@ -30,9 +34,8 @@ export function defineTransformationMeal(id, name, items, {
     name,
     items,
     flavorKit,
-    finish: finish ?? [],
+    splash: splash ?? [],
     prep: prep.trim(),
-    planNote: planNote?.trim() ?? '',
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -54,7 +57,7 @@ function inferMealTags(items) {
   return [...tags];
 }
 
-/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, finish: string[], prep: string, planNote: string, tags: string[] }>} */
+/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, splash: string[], prep: string, tags: string[] }>} */
 export const TRANSFORMATION_MEALS = [];
 
 const mealsById = new Map(TRANSFORMATION_MEALS.map((entry) => [entry.id, entry]));
