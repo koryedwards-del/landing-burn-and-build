@@ -54,12 +54,12 @@ async function loadFoodsCatalog({ force = false } = {}) {
 }
 
 function renderReactiveSurface() {
-  if (!plannerShellReady || !reactiveViews) return;
+  if (!reactiveViews) return;
   views?.renderPlannerMeta();
   reactiveViews.renderReactivePlanner();
 }
 
-function applyProgramPackage(pkg) {
+async function applyProgramPackage(pkg) {
   state.programPackage = pkg;
   if (state.programPackage?.program?.id) {
     setActiveProgramId(state.programPackage.program.id);
@@ -74,7 +74,9 @@ function applyProgramPackage(pkg) {
   if (seeded) {
     persistPlannerToProgram({ immediate: true });
   }
-  if (!views) return;
+
+  await loadViews();
+  await loadReactiveViews();
 
   const pkgCatalog = pkg?.reference?.foodsCatalogVersion;
   const catalogStale = pkgCatalog && pkgCatalog !== FOODS_CATALOG_VERSION;
@@ -106,7 +108,7 @@ function applyProgramPackage(pkg) {
 }
 
 export function applyMenuPlannerProgram(pkg) {
-  applyProgramPackage(pkg);
+  return applyProgramPackage(pkg);
 }
 
 export function refreshMenuPlannerDisplay() {

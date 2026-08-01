@@ -1824,6 +1824,14 @@ html.mp-handoff-pending #planner-root {
   display: none;
 }
 
+.planner-page--reactive .week-panel.is-collapsed .week-grid__matrix {
+  display: block;
+}
+
+.planner-page--reactive .week-grid__matrix {
+  display: block;
+}
+
 .planner-toolbar {
   display: flex;
   flex-wrap: wrap;

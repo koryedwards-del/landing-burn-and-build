@@ -251,9 +251,8 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     if (saved.activeWeekDay && WEEK_DAYS.some((day) => day.id === saved.activeWeekDay)) {
       state.activeWeekDay = saved.activeWeekDay;
     }
-    if (saved.weekGridCollapsed === true) {
-      state.weekGridCollapsed = true;
-    }
+    // Reactive planner always shows the week grid — ignore legacy collapsed state.
+    state.weekGridCollapsed = false;
     if (saved.mealMakerDraft && typeof saved.mealMakerDraft === 'object') {
       state.mealMakerDraft = {
         ...createEmptyMealMakerDraft(),

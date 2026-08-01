@@ -267,10 +267,13 @@ export function initReactivePlanner() {
     page.classList.remove('planner-page--fast-start');
   }
 
+  const panel = document.getElementById('week-panel');
+  if (panel) {
+    panel.classList.remove('is-collapsed');
+  }
+
   const title = document.getElementById('planner-page-title');
   if (title) title.textContent = 'Weekly Menu Planner';
-
-  renderReactivePlanner();
 }
 
 export { showToast as showReactiveToast };
