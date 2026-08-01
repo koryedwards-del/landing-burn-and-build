@@ -1939,6 +1939,12 @@ html.mp-handoff-pending #planner-root {
   color: var(--text);
 }
 
+.reactive-lane__amount {
+  font-size: 0.58rem;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
 .reactive-lane--snack {
   align-items: center;
 }
