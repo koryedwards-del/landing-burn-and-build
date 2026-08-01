@@ -3,7 +3,7 @@
  */
 
 import { canonicalFruitName } from '../data/fruitNames.js';
-import { FAST_START_FRUIT_NAMES } from '../data/fastStartFruits.js';
+import { FRUIT_NAMES_WITH_IMAGES, fruitHasImage } from '../data/fruitImages.js';
 import {
   WEEK_DAYS,
   clearDaySlotMeta,
@@ -87,12 +87,12 @@ function foodsInCategories(categories) {
   return (state.foods || []).filter((food) => categories.includes(food.category));
 }
 
-/** Fast Start fruits — bodybuilding list, all have picker images. */
-function bodybuildingFruitCandidates() {
+/** Fruits with picker images — pool grows when fruitImages.js entries are added. */
+function fruitsWithImageCandidates() {
   const byCanonical = new Map(
     foodsInCategories(['fruit']).map((food) => [canonicalFruitName(food.name), food]),
   );
-  return FAST_START_FRUIT_NAMES
+  return FRUIT_NAMES_WITH_IMAGES
     .map((name) => byCanonical.get(name))
     .filter(Boolean);
 }
@@ -129,14 +129,27 @@ export function recordFruitReject(oldFoodName, newFoodName) {
 }
 
 function pickFoodName(lane, { exclude = [], mealSlotId = null } = {}) {
-  let candidates = lane === 'protein' && mealSlotId
-    ? proteinCandidatesForMealSlot(mealSlotId)
-    : foodsInCategories(laneCategories(lane));
+  let candidates;
+  if (lane === 'fruit') {
+    candidates = fruitsWithImageCandidates();
+  } else if (lane === 'protein' && mealSlotId) {
+    candidates = proteinCandidatesForMealSlot(mealSlotId);
+  } else {
+    candidates = foodsInCategories(laneCategories(lane));
+  }
   const prefs = ensureFoodPreferences();
-  const blocked = new Set(exclude.filter(Boolean));
-  const pool = candidates.filter((food) => !blocked.has(food.name));
+  const blocked = new Set(
+    exclude.filter(Boolean).map((name) => (lane === 'fruit' ? canonicalFruitName(name) : name)),
+  );
+  const pool = candidates.filter((food) => {
+    const name = lane === 'fruit' ? canonicalFruitName(food.name) : food.name;
+    return !blocked.has(name);
+  });
   const list = pool.length ? pool : candidates;
   if (!list.length) {
+    if (lane === 'fruit') {
+      return FRUIT_NAMES_WITH_IMAGES.find((name) => !blocked.has(name)) || FRUIT_NAMES_WITH_IMAGES[0];
+    }
     if (lane === 'protein' && mealSlotId === 'breakfast') {
       return BREAKFAST_STARTER_PROTEINS.find((name) => !blocked.has(name))
         || DEFAULT_STARTER_FOODS.protein;
@@ -230,6 +243,17 @@ export function swapDayFruit(weekDay) {
   return next;
 }
 
+/** Replace saved fruits outside the image list on load. */
+export function sanitizeWeekFruits() {
+  WEEK_DAYS.forEach((day, index) => {
+    const fruit = getDayFruitName(day.id);
+    if (!fruit || fruitHasImage(fruit)) return;
+    const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length]
+      || FRUIT_NAMES_WITH_IMAGES[0];
+    assignDayFruit(day.id, fruitName);
+  });
+}
+
 function fillMealSlot(weekDay, mealSlotId) {
   MEAL_LANES.forEach((lane) => {
     if (mealLaneServings(mealSlotId, lane) <= 0) {
@@ -246,7 +270,7 @@ export function generateReactiveWeek() {
     REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
       fillMealSlot(day.id, mealSlotId);
     });
-    const fruitName = FAST_START_FRUIT_NAMES[index % FAST_START_FRUIT_NAMES.length] || FAST_START_FRUIT_NAMES[0];
+    const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length] || FRUIT_NAMES_WITH_IMAGES[0];
     assignDayFruit(day.id, fruitName);
   });
 }

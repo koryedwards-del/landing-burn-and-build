@@ -2,7 +2,7 @@
  * Reactive menu planner UI — B/L/D/S grid, lane swap, slide-over grocery.
  */
 
-import { foodListLabel } from '../../js/foodDisplay.js';
+import { foodPlannerLabel } from '../../js/foodDisplay.js';
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import {
   FOOD_CATEGORIES,
@@ -80,7 +80,7 @@ function renderGroceryList() {
     const food = state.foods.find((item) => item.name === foodName);
     groups.get(categoryId).push({
       foodName,
-      label: food ? foodListLabel(food) : foodName,
+      label: food ? foodPlannerLabel(food) : foodName,
       servings,
       food,
     });
@@ -128,10 +128,10 @@ function setGroceryOpen(open) {
   if (open) renderGroceryList();
 }
 
-const LANE_SWAP_LABELS = {
-  protein: 'Swap',
-  gs: 'Swap',
-  vegetable: 'Swap',
+const LANE_SWAP_ARIA = {
+  protein: 'Swap protein',
+  gs: 'Swap grain or starch',
+  vegetable: 'Swap vegetable',
 };
 
 function foodCatalogEntry(foodName) {
@@ -140,7 +140,7 @@ function foodCatalogEntry(foodName) {
 
 function foodDisplayLabel(foodName) {
   const food = foodCatalogEntry(foodName);
-  return food ? foodListLabel(food) : foodName;
+  return food ? foodPlannerLabel(food) : foodName;
 }
 
 function foodGramAmount(weekDay, mealSlotId, lane, foodName) {
@@ -167,15 +167,16 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
     <div class="reactive-lane">
       <button
         type="button"
-        class="reactive-cell__swap"
+        class="reactive-lane__swap"
         data-swap-lane="${lane}"
         data-week-day="${weekDay}"
         data-meal-slot="${mealSlotId}"
-      >${LANE_SWAP_LABELS[lane]}</button>
-      <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        aria-label="${escapeHtml(`${LANE_SWAP_ARIA[lane] || 'Swap food'}: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         <span class="reactive-lane__name">${escapeHtml(label)}</span>
         <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
-      </span>
+      </button>
     </div>
   `;
 }
@@ -201,7 +202,7 @@ function renderSnackCell(weekDay) {
   const perSnack = fruitSelection?.servings ?? mealLaneServings('morning-snack', 'fruit');
   const amount = food && perSnack
     ? gramWeightLabel(food, perSnack * 3)
-    : '× 3 snacks';
+    : '× 3';
   const imgUrl = foodName ? fruitImageUrl(foodName, PLANNER_V) : null;
   const imgHtml = imgUrl
     ? `<img class="reactive-lane__fruit-img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" decoding="async" />`
@@ -209,42 +210,54 @@ function renderSnackCell(weekDay) {
 
   return `
     <article class="reactive-cell reactive-cell--snack">
-      <div class="reactive-lane reactive-lane--snack">
-        <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap</button>
+      <button
+        type="button"
+        class="reactive-lane reactive-lane--snack reactive-lane__swap"
+        data-swap-fruit
+        data-week-day="${weekDay}"
+        aria-label="${escapeHtml(`Swap fruit snack: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         ${imgHtml}
-        <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        <span class="reactive-lane__food">
           <span class="reactive-lane__name">${escapeHtml(label)}</span>
           <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
         </span>
-      </div>
+      </button>
     </article>
   `;
 }
+
+const MEAL_ROWS = [
+  ...REACTIVE_MEAL_SLOTS.map((id) => ({ type: 'meal', id, label: MEAL_SLOT_LABELS[id] })),
+  { type: 'snack', id: 'snack', label: 'Fruit snack × 3' },
+];
 
 export function renderReactiveWeekGrid() {
   const container = document.getElementById('week-grid-matrix');
   if (!container) return;
 
   const head = `
-    <div class="reactive-grid__head reactive-grid__head--day">Day</div>
-    <div class="reactive-grid__head">Breakfast</div>
-    <div class="reactive-grid__head">Lunch</div>
-    <div class="reactive-grid__head">Dinner</div>
-    <div class="reactive-grid__head">Snacks</div>
+    <div class="reactive-grid__head reactive-grid__head--corner"></div>
+    ${WEEK_DAYS.map((day) => `
+      <div class="reactive-grid__head reactive-grid__head--day-col">${escapeHtml(day.label)}</div>
+    `).join('')}
   `;
 
-  const rows = WEEK_DAYS.map((day) => `
-    <div class="reactive-grid__day">${escapeHtml(day.label)}</div>
-    ${REACTIVE_MEAL_SLOTS.map((mealSlotId) => renderMealCell(day.id, mealSlotId)).join('')}
-    ${renderSnackCell(day.id)}
-  `).join('');
+  const rows = MEAL_ROWS.map((row) => {
+    const labelCell = `<div class="reactive-grid__meal">${escapeHtml(row.label)}</div>`;
+    const cells = WEEK_DAYS.map((day) => {
+      if (row.type === 'snack') return renderSnackCell(day.id);
+      return renderMealCell(day.id, row.id);
+    }).join('');
+    return labelCell + cells;
+  }).join('');
 
   container.innerHTML = `
-    <div class="reactive-grid" role="grid" aria-label="Weekly meal plan">
+    <div class="reactive-grid reactive-grid--by-meal" role="grid" aria-label="Weekly meal plan">
       ${head}
       ${rows}
     </div>
-    <p class="reactive-grid__tip">Don&rsquo;t like something? Swap protein, g/s, or fruit. Your grocery list updates automatically.</p>
   `;
 
   renderGroceryList();
@@ -261,7 +274,7 @@ function handleSwapClick(event) {
     const next = swapDayFruit(weekDay);
     renderReactiveWeekGrid();
     persistPlannerToProgram();
-    if (next) showToast(`Snacks → ${next} × 3`);
+    if (next) showToast(`Fruit snack × 3 → ${foodDisplayLabel(next)}`);
     return;
   }
 
@@ -289,6 +302,7 @@ export function initReactivePlanner() {
   const grid = document.getElementById('week-grid');
   if (grid && !grid.dataset.reactiveInit) {
     grid.dataset.reactiveInit = '1';
+    grid.querySelector('.week-grid__bar')?.remove();
     grid.addEventListener('click', handleSwapClick);
   }
 
