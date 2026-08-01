@@ -119,30 +119,50 @@ function setGroceryOpen(open) {
   if (open) renderGroceryList();
 }
 
-function renderMealCell(weekDay, mealSlotId) {
-  const summary = mealSummaryLabel(weekDay, mealSlotId);
-  const swapButtons = [];
+import {
+  REACTIVE_MEAL_SLOTS,
+  dayFruitSummaryLabel,
+  generateReactiveWeek,
+  getMealLaneFood,
+  mealLaneHasServings,
+  shortFoodName,
+  swapDayFruit,
+  swapMealLane,
+} from './mealPlanGenerator.js';
 
-  if (mealLaneHasServings(mealSlotId, 'protein')) {
-    swapButtons.push(`
-      <button type="button" class="reactive-cell__swap" data-swap-lane="protein" data-week-day="${weekDay}" data-meal-slot="${mealSlotId}">Swap protein</button>
-    `);
-  }
-  if (mealLaneHasServings(mealSlotId, 'gs')) {
-    swapButtons.push(`
-      <button type="button" class="reactive-cell__swap" data-swap-lane="gs" data-week-day="${weekDay}" data-meal-slot="${mealSlotId}">Swap g/s</button>
-    `);
-  }
-  if (mealLaneHasServings(mealSlotId, 'vegetable')) {
-    swapButtons.push(`
-      <button type="button" class="reactive-cell__swap" data-swap-lane="vegetable" data-week-day="${weekDay}" data-meal-slot="${mealSlotId}">Swap veggie</button>
-    `);
-  }
+const LANE_SWAP_LABELS = {
+  protein: 'Swap',
+  gs: 'Swap',
+  vegetable: 'Swap',
+};
+
+function renderLaneRow(weekDay, mealSlotId, lane) {
+  if (!mealLaneHasServings(mealSlotId, lane)) return '';
+  const foodName = getMealLaneFood(weekDay, mealSlotId, lane);
+  const label = foodName ? shortFoodName(foodName) : '—';
+  return `
+    <div class="reactive-lane">
+      <span class="reactive-lane__food">${escapeHtml(label)}</span>
+      <button
+        type="button"
+        class="reactive-cell__swap"
+        data-swap-lane="${lane}"
+        data-week-day="${weekDay}"
+        data-meal-slot="${mealSlotId}"
+      >${LANE_SWAP_LABELS[lane]}</button>
+    </div>
+  `;
+}
+
+function renderMealCell(weekDay, mealSlotId) {
+  const lanes = ['protein', 'gs', 'vegetable']
+    .map((lane) => renderLaneRow(weekDay, mealSlotId, lane))
+    .filter(Boolean)
+    .join('');
 
   return `
     <article class="reactive-cell reactive-cell--meal">
-      <p class="reactive-cell__summary">${escapeHtml(summary)}</p>
-      <div class="reactive-cell__actions">${swapButtons.join('')}</div>
+      ${lanes || '<div class="reactive-lane"><span class="reactive-lane__food">—</span></div>'}
     </article>
   `;
 }
@@ -151,9 +171,9 @@ function renderSnackCell(weekDay) {
   const summary = dayFruitSummaryLabel(weekDay);
   return `
     <article class="reactive-cell reactive-cell--snack">
-      <p class="reactive-cell__summary">${escapeHtml(summary)}</p>
-      <div class="reactive-cell__actions">
-        <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap fruit</button>
+      <div class="reactive-lane">
+        <span class="reactive-lane__food">${escapeHtml(summary)}</span>
+        <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap</button>
       </div>
     </article>
   `;
