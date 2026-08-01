@@ -73,7 +73,7 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     tags: ['seafood', 'grain'],
-    caveat: 'Stir-fry a double batch with garlic, dried herbs, and black pepper — PAM recommended. Cook shrimp with broccoli, mushrooms, and peppers until pink. Portion into containers; cook rice separately and add when you eat.',
+    caveat: 'Pat shrimp dry; season with black pepper, garlic powder, and onion powder. Stir-fry in a hot wok with a small amount of oil — cook shrimp 1–2 minutes per side until pink, set aside. Stir-fry broccoli, bell peppers, and mushrooms until crisp-tender; add minced garlic. Return shrimp; toss with a splash of low-sodium soy sauce. Garnish with green onions and optional crushed red pepper. Serve over basmati rice.',
   }),
   meal('tex-mex-steak-fajitas', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
