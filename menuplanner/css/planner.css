@@ -1837,31 +1837,25 @@ html.mp-handoff-pending #planner-root {
 }
 
 .planner-page--reactive .pb-page-head__title-row {
-  position: relative;
   display: flex;
   align-items: center;
-  min-height: 2.75rem;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .planner-page--reactive .pb-page-head__title-row .pb-panel__title {
-  flex: 0 1 auto;
-  max-width: min(100%, calc(50vw - 50% - 9rem));
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
-  position: relative;
-  z-index: 1;
 }
 
 .planner-page--reactive .pb-page-head__title-row .planner-toolbar {
-  position: absolute;
-  left: calc(50vw - 50%);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-}
-
-.planner-page--reactive .planner-toolbar__grocery-anchor {
-  display: inline-flex;
-  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .planner-toolbar {
