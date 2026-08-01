@@ -10,6 +10,7 @@ import {
   buildShoppingTotals,
   escapeHtml,
   fmtServings,
+  foodAmountLabel,
   getSplitGridSelections,
   gramWeightLabel,
   persistPlannerToProgram,
@@ -81,6 +82,7 @@ function renderGroceryList() {
       foodName,
       label: food ? foodListLabel(food) : foodName,
       servings,
+      food,
     });
   });
 
@@ -93,7 +95,7 @@ function renderGroceryList() {
         .map((item) => `
           <li class="grocery-drawer__item">
             <span class="grocery-drawer__food">${escapeHtml(item.label)}</span>
-            <span class="grocery-drawer__qty">${escapeHtml(fmtServings(item.servings))} srv</span>
+            <span class="grocery-drawer__qty">${escapeHtml(foodAmountLabel(item.food, item.servings))}</span>
           </li>
         `)
         .join('');
