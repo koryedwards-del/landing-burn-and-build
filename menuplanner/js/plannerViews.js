@@ -72,7 +72,6 @@ const {
   flavorKitList,
   flavorKitItemsLabel,
   splashItemsLabel,
-  splashLabel,
   FLAVOR_KIT_RULE,
   SPLASH_RULE,
   COMMON_SPLASHES,
@@ -913,6 +912,8 @@ function mealSplashLine(splash) {
   return `+ Splash of ${titled}`;
 }
 
+const expandedMealCards = new Set();
+
 function renderMealIdeaCard(meal) {
   const kit = flavorKitById(meal.flavorKit);
   const ingredientsLine = mealIngredientsLine(meal);
@@ -920,6 +921,7 @@ function renderMealIdeaCard(meal) {
   const howHtml = (meal.how || []).map((line) => `
       <li>${escapeHtml(line)}</li>
     `).join('');
+  const isOpen = expandedMealCards.has(meal.id);
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
   const fallbackUrl = recipeImageFallbackUrl(PLANNER_V);
@@ -928,21 +930,25 @@ function renderMealIdeaCard(meal) {
     <article class="recipe-card">
       <button
         type="button"
-        class="recipe-card__pick"
+        class="recipe-card__photo"
         data-meal-idea-id="${escapeHtml(meal.id)}"
+        aria-label="Add ${escapeHtml(meal.name)} to your week"
       >
-        <div class="recipe-card__photo">
-          <img
-            class="recipe-card__img"
-            src="${escapeHtml(imgUrl)}"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
-          />
-        </div>
-        <div class="recipe-card__body">
-          <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
+        <img
+          class="recipe-card__img"
+          src="${escapeHtml(imgUrl)}"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
+        />
+      </button>
+      <details class="recipe-card__details"${isOpen ? ' open' : ''} data-meal-details="${escapeHtml(meal.id)}">
+        <summary class="recipe-card__summary">
+          <span class="recipe-card__name">${escapeHtml(meal.name)}</span>
+          <span class="recipe-card__chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="recipe-card__drawer">
           <p class="recipe-card__plan-note">${escapeHtml(MEAL_CARD_PLAN_NOTE)}</p>
           ${ingredientsLine ? `
             <div class="recipe-card__section">
@@ -964,7 +970,7 @@ function renderMealIdeaCard(meal) {
             </div>
           ` : ''}
         </div>
-      </button>
+      </details>
     </article>
   `;
 }
@@ -1105,10 +1111,19 @@ function initRecipePicker() {
   if (!container || container.dataset.recipePickerInit) return;
   container.dataset.recipePickerInit = '1';
 
+  container.addEventListener('toggle', (event) => {
+    const details = event.target;
+    if (!details.matches('.recipe-card__details')) return;
+    const mealId = details.dataset.mealDetails;
+    if (!mealId) return;
+    if (details.open) expandedMealCards.add(mealId);
+    else expandedMealCards.delete(mealId);
+  });
+
   container.addEventListener('click', (event) => {
-    const card = event.target.closest('[data-meal-idea-id]');
-    if (!card) return;
-    const meal = mealIdeaById(card.dataset.mealIdeaId);
+    const pick = event.target.closest('[data-meal-idea-id]');
+    if (!pick) return;
+    const meal = mealIdeaById(pick.dataset.mealIdeaId);
     if (!meal) return;
     applyMealIdeaFromCard(meal);
   });

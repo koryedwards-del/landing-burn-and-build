@@ -566,22 +566,23 @@ body {
   border-color: var(--gold-muted);
 }
 
-.recipe-card__pick {
-  display: flex;
-  flex-direction: column;
+.recipe-card__photo {
+  display: block;
   width: 100%;
   padding: 0;
-  background: transparent;
   border: none;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-  appearance: none;
+  background: #262626;
   cursor: pointer;
+  appearance: none;
 }
 
-.recipe-card__pick:hover {
-  background: rgba(255, 255, 255, 0.02);
+.recipe-card__photo:hover {
+  filter: brightness(1.04);
+}
+
+.recipe-card__photo:focus-visible {
+  outline: 2px solid var(--gold-muted);
+  outline-offset: -2px;
 }
 
 .recipe-card__photo {
@@ -589,7 +590,6 @@ body {
   aspect-ratio: 16 / 11;
   min-height: 140px;
   max-height: 220px;
-  background: #262626;
   flex-shrink: 0;
 }
 
@@ -601,11 +601,51 @@ body {
   background: #262626;
 }
 
-.recipe-card__body {
+.recipe-card__details {
+  border-top: 1px solid var(--border);
+}
+
+.recipe-card__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.recipe-card__summary::-webkit-details-marker {
+  display: none;
+}
+
+.recipe-card__summary:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.recipe-card__chevron {
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+  margin-top: -2px;
+}
+
+.recipe-card__details[open] .recipe-card__chevron {
+  transform: rotate(-135deg);
+  margin-top: 2px;
+}
+
+.recipe-card__drawer {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 12px 12px;
+  padding: 0 12px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .recipe-card__name {
@@ -616,6 +656,7 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .recipe-card__plan-note {
