@@ -126,10 +126,10 @@ function setGroceryOpen(open) {
   if (open) renderGroceryList();
 }
 
-const LANE_SWAP_LABELS = {
-  protein: 'Swap',
-  gs: 'Swap',
-  vegetable: 'Swap',
+const LANE_SWAP_ARIA = {
+  protein: 'Swap protein',
+  gs: 'Swap grain or starch',
+  vegetable: 'Swap vegetable',
 };
 
 function foodCatalogEntry(foodName) {
@@ -165,15 +165,16 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
     <div class="reactive-lane">
       <button
         type="button"
-        class="reactive-cell__swap"
+        class="reactive-lane__swap"
         data-swap-lane="${lane}"
         data-week-day="${weekDay}"
         data-meal-slot="${mealSlotId}"
-      >${LANE_SWAP_LABELS[lane]}</button>
-      <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        aria-label="${escapeHtml(`${LANE_SWAP_ARIA[lane] || 'Swap food'}: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         <span class="reactive-lane__name">${escapeHtml(label)}</span>
         <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
-      </span>
+      </button>
     </div>
   `;
 }
@@ -207,14 +208,20 @@ function renderSnackCell(weekDay) {
 
   return `
     <article class="reactive-cell reactive-cell--snack">
-      <div class="reactive-lane reactive-lane--snack">
-        <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap</button>
+      <button
+        type="button"
+        class="reactive-lane reactive-lane--snack reactive-lane__swap"
+        data-swap-fruit
+        data-week-day="${weekDay}"
+        aria-label="${escapeHtml(`Swap fruit snack: ${label}`)}"
+        title="${escapeHtml(`${label} — ${amount}`)}"
+      >
         ${imgHtml}
-        <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        <span class="reactive-lane__food">
           <span class="reactive-lane__name">${escapeHtml(label)}</span>
           <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
         </span>
-      </div>
+      </button>
     </article>
   `;
 }
