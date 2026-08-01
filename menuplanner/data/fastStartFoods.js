@@ -1,8 +1,7 @@
 /**
- * Bodybuilding staple pools — ~10 top picks per planner lane.
- * Generate/swap uses these lists only (not the full catalog) so taps stay
- * in lean, meal-prep-friendly foods aligned with the Burn & Build system.
- * Order = priority (frequency, compliance, 1982 PDF alignment).
+ * Bodybuilding staple pools — ~5 per lane (planner rotate + future shop list).
+ * Sized for how you actually shop: a few proteins, a few carbs, a few veg —
+ * not 10 items per category. Full catalog stays on the print food list.
  */
 
 import { FAST_START_FRUIT_NAMES, isFastStartFruit } from './fastStartFruits.js';
@@ -12,15 +11,10 @@ export { FAST_START_FRUIT_NAMES, isFastStartFruit };
 /** Lunch & dinner — lean animal protein, no dairy/eggs. */
 export const FAST_START_MAIN_PROTEIN_NAMES = [
   'Chicken breast, no skin',
-  'Turkey breast',
-  'Beef, eye of round',
   'Beef, top sirloin',
-  'Beef, ground round',
   'Tuna, canned in water',
-  'Cod, Atlantic, baked',
-  'Shrimp, steamed',
   'Tilapia, baked',
-  'Flounder, baked',
+  'Turkey breast',
 ];
 
 /** Breakfast — dairy & eggs only. */
@@ -28,23 +22,16 @@ export const FAST_START_BREAKFAST_PROTEIN_NAMES = [
   'Egg whites',
   'Greek yogurt, nonfat',
   'Cottage cheese, nonfat',
-  'Egg substitute (liquid)',
   'Yogurt, plain, nonfat',
-  'Skim milk (fat-free)',
 ];
 
 /** Grains + starches combined (g/s lane). */
 export const FAST_START_GS_NAMES = [
   'Rice, basmati',
-  'Rice, brown',
   'Oats, rolled',
-  'Bread, whole wheat',
   'Sweet potato, baked',
-  'Potato, baked (flesh + skin)',
   'Beans, black',
-  'Tortilla, corn (6-inch)',
-  'Potato, red, boiled',
-  'Pasta, regular',
+  'Bread, whole wheat',
 ];
 
 /** Vegetables — high-volume, meal-prep friendly. */
@@ -53,12 +40,7 @@ export const FAST_START_VEGETABLE_NAMES = [
   'Green beans, cooked',
   'Asparagus, cooked',
   'Spinach, cooked',
-  'Kale, cooked',
-  'Cauliflower, cooked',
   'Peppers, red bell, cooked',
-  'Carrots, cooked',
-  'Mushrooms, white, cooked',
-  'Cabbage, green, cooked',
 ];
 
 const MAIN_PROTEIN_ORDER = nameOrderMap(FAST_START_MAIN_PROTEIN_NAMES);
