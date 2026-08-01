@@ -6,7 +6,7 @@
  */
 
 export const MEAL_CARD_PLAN_NOTE =
-  'Amounts come from your plan — they appear on your weekly grid and grocery list.';
+  'Amounts are determined by your personal servings — add the meal to the grid. Your weekly menu planner and grocery printouts will have the exact amounts.';
 
 /**
  * @param {string} id
