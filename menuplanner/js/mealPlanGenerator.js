@@ -1,9 +1,11 @@
 /**
- * Reactive meal plan generator — fill week from catalog, swap lanes, learn preferences.
+ * Reactive meal plan generator — fill week from catalog, swap lanes.
+ * Preference learning deferred until plannerFlags.FOOD_PREFERENCE_LEARNING_ENABLED.
  */
 
 import { canonicalFruitName } from '../data/fruitNames.js';
 import { FRUIT_NAMES_WITH_IMAGES, fruitHasImage } from '../data/fruitImages.js';
+import { FOOD_PREFERENCE_LEARNING_ENABLED } from './plannerFlags.js';
 import {
   WEEK_DAYS,
   clearDaySlotMeta,
@@ -72,6 +74,7 @@ export function createEmptyFoodPreferences() {
 }
 
 export function ensureFoodPreferences() {
+  if (!FOOD_PREFERENCE_LEARNING_ENABLED) return null;
   if (!state.foodPreferences || typeof state.foodPreferences !== 'object') {
     state.foodPreferences = createEmptyFoodPreferences();
   }
@@ -106,12 +109,13 @@ function laneCategories(lane) {
 }
 
 function bumpPreference(lane, foodName, delta) {
-  if (!foodName) return;
+  if (!FOOD_PREFERENCE_LEARNING_ENABLED || !foodName) return;
   const prefs = ensureFoodPreferences();
   prefs[lane][foodName] = (prefs[lane][foodName] || 0) + delta;
 }
 
 export function recordLaneReject(lane, oldFoodName, newFoodName) {
+  if (!FOOD_PREFERENCE_LEARNING_ENABLED) return;
   if (oldFoodName && oldFoodName !== newFoodName) {
     bumpPreference(lane, oldFoodName, -1);
   }
@@ -261,7 +265,6 @@ function fillMealSlot(weekDay, mealSlotId, usedByLane) {
 }
 
 export function generateReactiveWeek() {
-  ensureFoodPreferences();
   const usedByLane = { protein: [], gs: [], vegetable: [] };
   WEEK_DAYS.forEach((day, index) => {
     REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
