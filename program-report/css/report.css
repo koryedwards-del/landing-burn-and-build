@@ -110,8 +110,15 @@ body {
 }
 
 .r-body--planner {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (max-width: 720px) {
+  .r-body--planner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 .r-body--planner .r-header {
