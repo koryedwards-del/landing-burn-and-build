@@ -1861,6 +1861,10 @@ html.mp-handoff-pending #planner-root {
   align-items: center;
 }
 
+.planner-swap-hint {
+  display: none;
+}
+
 .planner-page--reactive .planner-swap-hint {
   display: flex;
   align-items: center;

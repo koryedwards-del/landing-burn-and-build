@@ -2,7 +2,7 @@
  * Reactive menu planner UI — B/L/D/S grid, lane swap, slide-over grocery.
  */
 
-import { foodListLabel } from '../../js/foodDisplay.js';
+import { foodPlannerLabel } from '../../js/foodDisplay.js';
 import { ASSET_VERSION as FALLBACK_ASSET_VERSION } from '../../js/assetVersion.js';
 import {
   FOOD_CATEGORIES,
@@ -79,7 +79,7 @@ function renderGroceryList() {
     const food = state.foods.find((item) => item.name === foodName);
     groups.get(categoryId).push({
       foodName,
-      label: food ? foodListLabel(food) : foodName,
+      label: food ? foodPlannerLabel(food) : foodName,
       servings,
     });
   });
@@ -138,7 +138,7 @@ function foodCatalogEntry(foodName) {
 
 function foodDisplayLabel(foodName) {
   const food = foodCatalogEntry(foodName);
-  return food ? foodListLabel(food) : foodName;
+  return food ? foodPlannerLabel(food) : foodName;
 }
 
 function foodGramAmount(weekDay, mealSlotId, lane, foodName) {
