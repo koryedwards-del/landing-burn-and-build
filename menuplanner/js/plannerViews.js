@@ -64,7 +64,7 @@ const {
   MEAL_SORTER_PILLS,
   recipeById,
 } = await import(`../data/recipeLibrary.js?v=${PLANNER_V}`);
-const { recipeImageUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
+const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
 const {
   isFastStartFruit,
@@ -910,6 +910,7 @@ function renderMealIdeaCard(meal) {
     : '';
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
+  const fallbackUrl = recipeImageFallbackUrl(PLANNER_V);
 
   return `
     <article class="recipe-card">
@@ -925,6 +926,7 @@ function renderMealIdeaCard(meal) {
             alt=""
             loading="lazy"
             decoding="async"
+            onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
           />
         </div>
         <div class="recipe-card__content">

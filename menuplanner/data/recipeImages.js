@@ -1,34 +1,58 @@
 /**
- * Meal suggestion plate photos — hosted in repo (menuplanner/assets/meals/).
- * Curated from docs/mockups/menu-planner-meal-reels.html (saved locally).
- * New templates fall back to plate-fallback until photorealistic assets are added.
+ * Meal suggestion plate photos — menuplanner/assets/meals/
+ *
+ * Upload new images as `{templateId}.jpg` (or .png). Legacy filenames below
+ * until re-uploaded. Missing files show plate-fallback.jpg in the UI.
+ *
+ * Template ids (from recipeLibrary.js):
+ *   egg-substitute-oatmeal        Egg Substitute & Oatmeal
+ *   egg-whites-bread              Egg Whites & Whole Wheat Bread
+ *   yogurt-oatmeal-blueberries    Yogurt & Oatmeal
+ *   turkey-sweet-potato-spinach   Turkey, Sweet Potato & Spinach
+ *   chicken-rice-broccoli-lemon   Chicken, Rice & Broccoli
+ *   chicken-rice-broccoli-cajun   Chicken, Rice & Green Beans
+ *   shrimp-stir-fry-rice          Shrimp Stir-Fry
+ *   cod-rice-kale                 Cod, Rice & Kale
+ *   turkey-beans-cabbage          Turkey, Black Beans & Cabbage
+ *   tuna-sweet-potato             Tuna, Potato Mash & Cauliflower
+ *   chicken-sweet-potato-green-beans  Chicken, Baby Reds & Carrots
+ *   tuna-tortilla-bok-choy        Tuna, Tortilla & Bok Choy
+ *   steak-tortilla-peppers-fajita Steak, Tortilla & Bell Peppers
+ *   chicken-beans-rice            Chicken, Black Beans, Rice & Asparagus
+ *   sirloin-baked-potato-snap-peas Sirloin, Baked Potato & Snap Peas
+ *   beef-ground-round-potato      Ground Round Burgers
+ *
+ * Audit: npm run verify:meals
  */
 
 const MEAL_ASSET_BASE = '../menuplanner/assets/meals';
+const PLATE_FALLBACK_FILE = 'plate-fallback.jpg';
 
-const TEMPLATE_IMAGES = {
-  'egg-substitute-oatmeal': `${MEAL_ASSET_BASE}/power-breakfast.jpg`,
-  'egg-whites-bread': `${MEAL_ASSET_BASE}/egg-toast.jpg`,
-  'yogurt-oatmeal-blueberries': `${MEAL_ASSET_BASE}/oatmeal-bowl.jpg`,
-  'chicken-rice-broccoli-lemon': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
-  'chicken-rice-broccoli-cajun': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
-  'shrimp-stir-fry-rice': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'cod-rice-kale': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'turkey-beans-cabbage': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'turkey-sweet-potato-spinach': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'tuna-sweet-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'chicken-sweet-potato-green-beans': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'tuna-tortilla-bok-choy': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'steak-tortilla-peppers-fajita': `${MEAL_ASSET_BASE}/steak-fajita.jpg`,
-  'chicken-beans-rice': `${MEAL_ASSET_BASE}/chicken-rice-broccoli.jpg`,
-  'sirloin-baked-potato-snap-peas': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
-  'beef-ground-round-potato': `${MEAL_ASSET_BASE}/plate-fallback.jpg`,
+/** @type {Readonly<Record<string, string>>} templateId → filename (legacy names) */
+export const MEAL_IMAGE_LEGACY = {
+  'egg-substitute-oatmeal': 'power-breakfast.jpg',
+  'egg-whites-bread': 'egg-toast.jpg',
+  'yogurt-oatmeal-blueberries': 'oatmeal-bowl.jpg',
+  'chicken-rice-broccoli-lemon': 'chicken-rice-broccoli.jpg',
+  'chicken-rice-broccoli-cajun': 'chicken-rice-broccoli.jpg',
+  'steak-tortilla-peppers-fajita': 'steak-fajita.jpg',
+  'chicken-beans-rice': 'chicken-rice-broccoli.jpg',
 };
 
-const PLATE_FALLBACK = `${MEAL_ASSET_BASE}/plate-fallback.jpg`;
+export function mealImageFilename(templateId) {
+  return MEAL_IMAGE_LEGACY[templateId] ?? `${templateId}.jpg`;
+}
+
+function mealImagePath(filename) {
+  return `${MEAL_ASSET_BASE}/${filename}`;
+}
+
+export function recipeImageFallbackUrl(version = '') {
+  const q = version ? `?v=${encodeURIComponent(version)}` : '';
+  return `${mealImagePath(PLATE_FALLBACK_FILE)}${q}`;
+}
 
 export function recipeImageUrl(templateId, version = '') {
-  const path = TEMPLATE_IMAGES[templateId] || PLATE_FALLBACK;
   const q = version ? `?v=${encodeURIComponent(version)}` : '';
-  return `${path}${q}`;
+  return `${mealImagePath(mealImageFilename(templateId))}${q}`;
 }

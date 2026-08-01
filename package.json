@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
-    "verify:pdf": "node scripts/verify-pdf.mjs"
+    "verify:pdf": "node scripts/verify-pdf.mjs",
+    "verify:meals": "node scripts/verify-meal-images.mjs"
   },
   "engines": {
     "node": ">=20"
