@@ -9,16 +9,18 @@ import {
   buildShoppingTotals,
   escapeHtml,
   fmtServings,
+  getSplitGridSelections,
+  gramWeightLabel,
   persistPlannerToProgram,
   state,
 } from './plannerState.js';
 import {
   REACTIVE_MEAL_SLOTS,
-  dayFruitSummaryLabel,
   generateReactiveWeek,
+  getDayFruitName,
   getMealLaneFood,
   mealLaneHasServings,
-  shortFoodName,
+  mealLaneServings,
   swapDayFruit,
   swapMealLane,
 } from './mealPlanGenerator.js';
@@ -126,10 +128,32 @@ const LANE_SWAP_LABELS = {
   vegetable: 'Swap',
 };
 
+function foodCatalogEntry(foodName) {
+  return state.foods.find((food) => food.name === foodName) || null;
+}
+
+function laneFoodDisplay(weekDay, mealSlotId, lane, foodName) {
+  const food = foodCatalogEntry(foodName);
+  const label = food ? foodListLabel(food) : foodName;
+  const selection = getSplitGridSelections(mealSlotId, lane, weekDay)[0];
+  const servings = selection?.servings ?? mealLaneServings(mealSlotId, lane);
+  const amount = food
+    ? gramWeightLabel(food, servings)
+    : `${fmtServings(servings)} srv`;
+  return { label, amount };
+}
+
 function renderLaneRow(weekDay, mealSlotId, lane) {
   if (!mealLaneHasServings(mealSlotId, lane)) return '';
   const foodName = getMealLaneFood(weekDay, mealSlotId, lane);
-  const label = foodName ? shortFoodName(foodName) : '—';
+  if (!foodName) {
+    return `
+      <div class="reactive-lane">
+        <span class="reactive-lane__food">—</span>
+      </div>
+    `;
+  }
+  const { label, amount } = laneFoodDisplay(weekDay, mealSlotId, lane, foodName);
   return `
     <div class="reactive-lane">
       <button
@@ -139,7 +163,10 @@ function renderLaneRow(weekDay, mealSlotId, lane) {
         data-week-day="${weekDay}"
         data-meal-slot="${mealSlotId}"
       >${LANE_SWAP_LABELS[lane]}</button>
-      <span class="reactive-lane__food">${escapeHtml(label)}</span>
+      <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+        <span class="reactive-lane__name">${escapeHtml(label)}</span>
+        <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
+      </span>
     </div>
   `;
 }
@@ -158,12 +185,23 @@ function renderMealCell(weekDay, mealSlotId) {
 }
 
 function renderSnackCell(weekDay) {
-  const summary = dayFruitSummaryLabel(weekDay);
+  const foodName = getDayFruitName(weekDay);
+  const fruitSelection = state.weekPlan[weekDay]?.selections?.['morning-snack']?.fruit;
+  const food = foodName ? foodCatalogEntry(foodName) : null;
+  const label = food ? foodListLabel(food) : (foodName || '—');
+  const perSnack = fruitSelection?.servings;
+  const amount = perSnack
+    ? `${fmtServings(perSnack)} srv × 3 snacks`
+    : '× 3 snacks';
+
   return `
     <article class="reactive-cell reactive-cell--snack">
       <div class="reactive-lane">
         <button type="button" class="reactive-cell__swap" data-swap-fruit data-week-day="${weekDay}">Swap</button>
-        <span class="reactive-lane__food">${escapeHtml(summary)}</span>
+        <span class="reactive-lane__food" title="${escapeHtml(`${label} — ${amount}`)}">
+          <span class="reactive-lane__name">${escapeHtml(label)}</span>
+          <span class="reactive-lane__amount">${escapeHtml(amount)}</span>
+        </span>
       </div>
     </article>
   `;

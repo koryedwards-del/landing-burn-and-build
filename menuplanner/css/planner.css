@@ -1928,12 +1928,21 @@ html.mp-handoff-pending #planner-root {
 .reactive-lane__food {
   flex: 1;
   min-width: 0;
-  font-size: 0.72rem;
-  line-height: 1.25;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.reactive-lane__name {
+  font-size: 0.68rem;
+  line-height: 1.3;
   color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.reactive-lane__amount {
+  font-size: 0.58rem;
+  line-height: 1.25;
+  color: var(--muted);
 }
 
 .reactive-cell__swap {
