@@ -65,7 +65,6 @@ const {
 const {
   transformationMealTemplates,
   transformationMealById,
-  MEAL_CARD_PLAN_NOTE,
 } = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
 const {
   flavorKitById,
@@ -968,7 +967,6 @@ function renderMealIdeaCard(meal) {
           </div>
         </summary>
         <div class="recipe-card__drawer">
-          <p class="recipe-card__plan-note">${escapeHtml(MEAL_CARD_PLAN_NOTE)}</p>
           ${ingredientsLine ? `
             <div class="recipe-card__section">
               <p class="recipe-card__section-label">Ingredients</p>
