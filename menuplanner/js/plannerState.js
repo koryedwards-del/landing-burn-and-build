@@ -6,6 +6,7 @@ import {
   scheduleProgramPersist,
 } from '../../js/menuPlannerState.js';
 import { setActiveProgramId } from '../../js/programActive.js';
+import { FOOD_PREFERENCE_LEARNING_ENABLED } from './plannerFlags.js';
 import { formatGroceryQuantity } from '../../js/groceryEngine.js';
 
 const SLOT_LABEL_TO_ID = {
@@ -222,7 +223,7 @@ function collectPlannerState() {
     mealMakerDraft: state.mealMakerDraft,
     activeMakerSlot: state.activeMakerSlot,
     plannerEngagementMode: state.plannerEngagementMode,
-    foodPreferences: state.foodPreferences,
+    foodPreferences: FOOD_PREFERENCE_LEARNING_ENABLED ? state.foodPreferences : null,
     enableSplitServings: state.enableSplitServings === true,
     plannerUiVersion: state.plannerUiVersion || 3,
   };
@@ -271,8 +272,10 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     if (saved.plannerEngagementMode === 'fast-start' || saved.plannerEngagementMode === 'diy') {
       state.plannerEngagementMode = 'fast-start';
     }
-    if (saved.foodPreferences && typeof saved.foodPreferences === 'object') {
+    if (FOOD_PREFERENCE_LEARNING_ENABLED && saved.foodPreferences && typeof saved.foodPreferences === 'object') {
       state.foodPreferences = saved.foodPreferences;
+    } else {
+      state.foodPreferences = null;
     }
     state.enableSplitServings = saved.enableSplitServings === true;
     if (saved.plannerUiVersion) {

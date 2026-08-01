@@ -12,6 +12,7 @@ import {
 } from './plannerState.js';
 import { applyPlannerStateWithDefaults } from './defaultPlannerTemplate.js';
 import { ensureFoodPreferences } from './mealPlanGenerator.js';
+import { FOOD_PREFERENCE_LEARNING_ENABLED } from './plannerFlags.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || FALLBACK_ASSET_VERSION;
 
@@ -70,7 +71,11 @@ async function applyProgramPackage(pkg) {
     preserveSessionUi: plannerShellReady,
   });
   normalizeMealMakerDraft();
-  ensureFoodPreferences();
+  if (FOOD_PREFERENCE_LEARNING_ENABLED) {
+    ensureFoodPreferences();
+  } else {
+    state.foodPreferences = null;
+  }
   if (seeded) {
     persistPlannerToProgram({ immediate: true });
   }
