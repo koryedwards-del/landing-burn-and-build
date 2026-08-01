@@ -78,6 +78,9 @@ const {
 
 const PLANNER_PAGE_TITLE = '8-Week Transformation Menu Planner';
 
+const MEALS_PANEL_HINT =
+  'Tap the meal photo to add it to your planner — the meal amounts are determined by your plan — the weekly menu planner and grocery printouts have the info.';
+
 /** DIY mode is disabled — planner always runs the transformation program. */
 function normalizePlannerEngagementMode(_mode) {
   return 'fast-start';
@@ -602,7 +605,7 @@ function updatePickerHints() {
   if (recipeHint) {
     recipeHint.innerHTML = target && isMealMealSlot(target.mealSlotId)
       ? `<strong>${escapeHtml(gridTargetLabel(target))}</strong> selected — tap photo to add, or title for details`
-      : 'Tap a meal title for details. Select a grid cell, then tap the photo to add a meal.';
+      : MEALS_PANEL_HINT;
   }
 
   if (fruitHint) {
