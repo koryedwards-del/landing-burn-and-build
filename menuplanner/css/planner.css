@@ -538,6 +538,10 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
+.meal-sorter-bar[hidden] {
+  display: none !important;
+}
+
 .recipe-cards {
   flex: 1 1 auto;
   min-height: 0;
@@ -570,14 +574,13 @@ body {
   display: block;
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 11;
-  min-height: 140px;
-  max-height: 220px;
+  height: 112px;
   padding: 0;
   border: none;
   background: #262626;
   cursor: pointer;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .recipe-card__photo:hover {
@@ -616,6 +619,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   background: #262626;
 }
 
@@ -628,7 +632,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   cursor: pointer;
   list-style: none;
   user-select: none;
@@ -908,8 +912,7 @@ body {
   }
 
   .recipe-card__photo {
-    min-height: 160px;
-    max-height: 240px;
+    height: 128px;
   }
 
   .flavor-pantry__kits {
