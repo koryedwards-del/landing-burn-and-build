@@ -698,13 +698,6 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.recipe-card__plan-note {
-  margin: 0;
-  font-size: 0.87rem;
-  color: var(--muted);
-  line-height: 1.4;
-}
-
 .recipe-card__section {
   display: flex;
   flex-direction: column;

@@ -2,11 +2,8 @@
  * 8-Week Transformation — meal inspiration library.
  *
  * Cards are visual ideas, not recipes. items[].foodName links to foods.json;
- * items[].label is the short display name. Amounts follow personal servings once added to the grid.
+ * items[].label is the short display name.
  */
-
-export const MEAL_CARD_PLAN_NOTE =
-  'Amounts are determined by your personal servings — add the meal to the grid — your weekly menu planner and grocery printouts will have the exact amounts.';
 
 /**
  * @param {string} id
