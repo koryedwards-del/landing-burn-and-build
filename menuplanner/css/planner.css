@@ -1914,10 +1914,6 @@ html.mp-handoff-pending #planner-root {
   gap: 2px;
 }
 
-.reactive-cell--snack {
-  background: var(--surface-2);
-}
-
 .reactive-lane {
   display: flex;
   align-items: center;
