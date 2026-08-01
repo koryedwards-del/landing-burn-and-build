@@ -678,12 +678,23 @@ body {
   line-height: 1.35;
 }
 
-.recipe-card__prep {
+.recipe-card__steps {
   margin: 8px 0 0;
-  font-size: 0.66rem;
+  padding-left: 1.15rem;
+  list-style: decimal;
+  font-size: 0.62rem;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.35;
   text-align: left;
+}
+
+.recipe-card__step {
+  margin: 0 0 3px;
+  padding-left: 2px;
+}
+
+.recipe-card__step:last-child {
+  margin-bottom: 0;
 }
 
 .recipe-card__core {

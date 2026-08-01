@@ -9,7 +9,7 @@
  *   3. Plan foods   — items[] from foods.json (counted on the plan)
  *   4. Flavor kit   — one dry kit id (fire | iron | green | earth)
  *   5. Splash       — optional liquid accents while cooking (not counted)
- *   6. Prep         — technique only
+ *   6. Prep         — numbered steps (technique only)
  */
 
 /**
@@ -19,14 +19,14 @@
  * @param {{
  *   flavorKit: string,
  *   splash?: string[],
- *   prep: string,
+ *   steps: string[],
  *   tags?: string[],
  * }} options
  */
 export function defineTransformationMeal(id, name, items, {
   flavorKit,
   splash,
-  prep,
+  steps,
   tags,
 } = {}) {
   return {
@@ -35,7 +35,7 @@ export function defineTransformationMeal(id, name, items, {
     items,
     flavorKit,
     splash: splash ?? [],
-    prep: prep.trim(),
+    steps: (steps ?? []).map((step) => step.trim()).filter(Boolean),
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -57,7 +57,7 @@ function inferMealTags(items) {
   return [...tags];
 }
 
-/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, splash: string[], prep: string, tags: string[] }>} */
+/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, splash: string[], steps: string[], tags: string[] }>} */
 export const TRANSFORMATION_MEALS = [
   defineTransformationMeal(
     'garlic-herb-shrimp-stir-fry',
@@ -73,7 +73,17 @@ export const TRANSFORMATION_MEALS = [
       tags: ['seafood', 'grain'],
       flavorKit: 'iron',
       splash: ['Low-sodium soy sauce'],
-      prep: 'Pat shrimp dry and season with your Iron flavor kit. Heat a wok with a small amount of oil; cook shrimp 1–2 minutes per side until pink, set aside. Stir-fry broccoli, bell peppers, and mushrooms until crisp-tender; add minced garlic. Return shrimp, splash with soy sauce, and toss. Garnish with sliced green onions; crushed red pepper optional. Serve over basmati rice.',
+      steps: [
+        'Pat shrimp dry; season with your Iron flavor kit.',
+        'Heat a wok over medium-high heat; add a small amount of oil.',
+        'Cook shrimp 1–2 minutes per side until pink; set aside.',
+        'Stir-fry broccoli, bell peppers, and mushrooms 4–5 minutes until crisp-tender.',
+        'Add minced garlic; cook 30 seconds until fragrant.',
+        'Return shrimp to the wok.',
+        'Splash with soy sauce; toss until coated and heated through.',
+        'Garnish with green onions; crushed red pepper optional.',
+        'Serve over basmati rice.',
+      ],
     },
   ),
 ];

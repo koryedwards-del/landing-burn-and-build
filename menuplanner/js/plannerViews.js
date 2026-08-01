@@ -912,15 +912,21 @@ function renderMealFlavorKitHtml(meal) {
   `;
 }
 
+function renderMealStepsHtml(meal) {
+  if (!meal.steps?.length) return '';
+  const items = meal.steps.map((step) => `
+      <li class="recipe-card__step">${escapeHtml(step)}</li>
+    `).join('');
+  return `<ol class="recipe-card__steps">${items}</ol>`;
+}
+
 function renderMealIdeaCard(meal) {
   const linesHtml = (meal.items || []).map((item) => `
       <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
     `).join('');
 
   const flavorKitHtml = renderMealFlavorKitHtml(meal);
-  const prepHtml = meal.prep
-    ? `<p class="recipe-card__prep">${escapeHtml(meal.prep)}</p>`
-    : '';
+  const stepsHtml = renderMealStepsHtml(meal);
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
   const fallbackUrl = recipeImageFallbackUrl(PLANNER_V);
@@ -952,7 +958,7 @@ function renderMealIdeaCard(meal) {
             </div>
           </div>
           ${flavorKitHtml}
-          ${prepHtml}
+          ${stepsHtml}
         </div>
       </button>
     </article>
