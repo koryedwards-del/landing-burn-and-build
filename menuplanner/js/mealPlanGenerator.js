@@ -8,7 +8,8 @@ import {
   fastStartNameListForLane,
   isFastStartLaneFood,
 } from '../data/fastStartFoods.js';
-import { FRUIT_NAMES_WITH_IMAGES, fruitHasImage } from '../data/fruitImages.js';
+import { fruitHasImage } from '../data/fruitImages.js';
+import { STAPLE_FRUIT_NAMES } from '../data/cuttingStaples.js';
 import { FOOD_PREFERENCE_LEARNING_ENABLED } from './plannerFlags.js';
 import {
   WEEK_DAYS,
@@ -204,8 +205,8 @@ export function sanitizeWeekFruits() {
   WEEK_DAYS.forEach((day, index) => {
     const fruit = getDayFruitName(day.id);
     if (!fruit || fruitHasImage(fruit)) return;
-    const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length]
-      || FRUIT_NAMES_WITH_IMAGES[0];
+    const fruitName = STAPLE_FRUIT_NAMES[index % STAPLE_FRUIT_NAMES.length]
+      || STAPLE_FRUIT_NAMES[0];
     assignDayFruit(day.id, fruitName);
   });
 }
@@ -239,7 +240,7 @@ export function generateReactiveWeek() {
     REACTIVE_MEAL_SLOTS.forEach((mealSlotId) => {
       fillMealSlot(day.id, mealSlotId);
     });
-    const fruitName = FRUIT_NAMES_WITH_IMAGES[index % FRUIT_NAMES_WITH_IMAGES.length] || FRUIT_NAMES_WITH_IMAGES[0];
+    const fruitName = STAPLE_FRUIT_NAMES[index % STAPLE_FRUIT_NAMES.length] || STAPLE_FRUIT_NAMES[0];
     assignDayFruit(day.id, fruitName);
   });
 }

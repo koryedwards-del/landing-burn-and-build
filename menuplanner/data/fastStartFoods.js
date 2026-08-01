@@ -1,77 +1,33 @@
 /**
- * Bodybuilding staple pools — shop-sized lists by protein/carb type.
- * Planner generate/swap draws from these only. Counts target real grocery runs.
+ * Planner rotate pools — derived from cuttingStaples.js (same foods, lane groupings).
  */
 
-import { FAST_START_FRUIT_NAMES, isFastStartFruit } from './fastStartFruits.js';
+import { fruitHasImage } from './fruitImages.js';
+import {
+  STAPLE_DAIRY_EGG_NAMES,
+  STAPLE_FRUIT_NAMES,
+  STAPLE_GS_NAMES,
+  STAPLE_MAIN_PROTEIN_NAMES,
+  STAPLE_VEGETABLE_NAMES,
+} from './cuttingStaples.js';
 
-export { FAST_START_FRUIT_NAMES, isFastStartFruit };
+export const FAST_START_FRUIT_NAMES = STAPLE_FRUIT_NAMES;
+export const isFastStartFruit = (foodName) => STAPLE_FRUIT_NAMES.includes(foodName) && fruitHasImage(foodName);
 
-/** Breakfast — dairy & eggs (5). */
-export const STAPLE_DAIRY_EGG_NAMES = [
-  'Egg whites',
-  'Greek yogurt, nonfat',
-  'Cottage cheese, nonfat',
-  'Yogurt, plain, nonfat',
-  'Skim milk (fat-free)',
-];
-
-/** Lunch/dinner — lean red meat (5). Catalog currently has 3 lean beef cuts. */
-export const STAPLE_RED_MEAT_NAMES = [
-  'Beef, top sirloin',
-  'Beef, eye of round',
-  'Beef, ground round',
-];
-
-/** Lunch/dinner — poultry (5). Catalog currently has 2 — add cuts in foods.json to fill. */
-export const STAPLE_WHITE_MEAT_NAMES = [
-  'Chicken breast, no skin',
-  'Turkey breast',
-];
-
-/** Lunch/dinner — seafood (2). */
-export const STAPLE_SEAFOOD_NAMES = [
-  'Tuna, canned in water',
-  'Tilapia, baked',
-];
-
-/** Grains (5). */
-export const STAPLE_GRAIN_NAMES = [
-  'Rice, basmati',
-  'Rice, brown',
-  'Oats, rolled',
-  'Bread, whole wheat',
-  'Pasta, regular',
-];
-
-/** Starches (5). */
-export const STAPLE_STARCH_NAMES = [
-  'Sweet potato, baked',
-  'Beans, black',
-  'Potato, baked (flesh + skin)',
-  'Lentils',
-  'Beans, kidney',
-];
-
-/** Vegetables — high-volume meal-prep (5). */
-export const STAPLE_VEGETABLE_NAMES = [
-  'Broccoli, cooked',
-  'Green beans, cooked',
-  'Asparagus, cooked',
-  'Spinach, cooked',
-  'Peppers, red bell, cooked',
-];
-
-export const STAPLE_MAIN_PROTEIN_NAMES = [
-  ...STAPLE_RED_MEAT_NAMES,
-  ...STAPLE_WHITE_MEAT_NAMES,
-  ...STAPLE_SEAFOOD_NAMES,
-];
-
-export const STAPLE_GS_NAMES = [
-  ...STAPLE_GRAIN_NAMES,
-  ...STAPLE_STARCH_NAMES,
-];
+export {
+  STAPLE_FRUIT_NAMES,
+  STAPLE_DAIRY_EGG_NAMES,
+  STAPLE_RED_MEAT_NAMES,
+  STAPLE_WHITE_MEAT_NAMES,
+  STAPLE_SEAFOOD_NAMES,
+  STAPLE_GRAIN_NAMES,
+  STAPLE_STARCH_NAMES,
+  STAPLE_VEGETABLE_NAMES,
+  STAPLE_MAIN_PROTEIN_NAMES,
+  STAPLE_GS_NAMES,
+  STAPLE_CATALOG_NAMES,
+  CUTTING_STAPLE_SHOP_SECTIONS,
+} from './cuttingStaples.js';
 
 const DAIRY_EGG_ORDER = nameOrderMap(STAPLE_DAIRY_EGG_NAMES);
 const MAIN_PROTEIN_ORDER = nameOrderMap(STAPLE_MAIN_PROTEIN_NAMES);
