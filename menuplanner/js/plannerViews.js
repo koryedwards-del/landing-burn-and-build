@@ -65,6 +65,7 @@ const {
 const {
   transformationMealTemplates,
   transformationMealById,
+  MEAL_CARD_PLAN_NOTE,
 } = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
 const {
   flavorKitById,
@@ -896,44 +897,29 @@ function mealIngredientLabel(item) {
   return item.label || item.foodName;
 }
 
-function renderMealFlavorKitHtml(meal) {
-  const kit = flavorKitById(meal.flavorKit);
-  if (!kit) return '';
-
-  const splashText = splashLabel(meal.splash);
-  const splashHtml = splashText
-    ? `<p class="recipe-card__splash">Splash: ${escapeHtml(splashText)}</p>`
-    : '';
-
-  return `
-    <section class="recipe-card__block recipe-card__block--flavor">
-      <p class="recipe-card__flavor-line">Flavor kit · <strong>${escapeHtml(kit.label)}</strong></p>
-      <p class="recipe-card__flavor-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
-      ${splashHtml}
-    </section>
-  `;
+function mealIngredientsLine(meal) {
+  return (meal.items || []).map((item) => mealIngredientLabel(item)).join(' \u00b7 ');
 }
 
-function renderMealStepsHtml(meal) {
-  if (!meal.steps?.length) return '';
-  const items = meal.steps.map((step) => `
-      <li class="recipe-card__step">${escapeHtml(step)}</li>
-    `).join('');
-  return `
-    <section class="recipe-card__block recipe-card__block--prep">
-      <p class="recipe-card__block-label">Prep</p>
-      <ol class="recipe-card__steps">${items}</ol>
-    </section>
-  `;
+function mealSplashLine(splash) {
+  if (!splash?.length) return '';
+  const name = splash[0];
+  const words = name.split(' ');
+  const titled = words.map((word, index) => {
+    const lower = word.toLowerCase();
+    if (index > 0 && ['of', 'and', 'or'].includes(lower)) return lower;
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
+  }).join(' ');
+  return `+ Splash of ${titled}`;
 }
 
 function renderMealIdeaCard(meal) {
-  const ingredientsHtml = (meal.items || []).map((item) => `
-      <li>${escapeHtml(mealIngredientLabel(item))}</li>
+  const kit = flavorKitById(meal.flavorKit);
+  const ingredientsLine = mealIngredientsLine(meal);
+  const splashLine = mealSplashLine(meal.splash);
+  const howHtml = (meal.how || []).map((line) => `
+      <li>${escapeHtml(line)}</li>
     `).join('');
-
-  const flavorKitHtml = renderMealFlavorKitHtml(meal);
-  const stepsHtml = renderMealStepsHtml(meal);
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
   const fallbackUrl = recipeImageFallbackUrl(PLANNER_V);
@@ -945,7 +931,7 @@ function renderMealIdeaCard(meal) {
         class="recipe-card__pick"
         data-meal-idea-id="${escapeHtml(meal.id)}"
       >
-        <header class="recipe-card__hero">
+        <div class="recipe-card__photo">
           <img
             class="recipe-card__img"
             src="${escapeHtml(imgUrl)}"
@@ -954,14 +940,30 @@ function renderMealIdeaCard(meal) {
             decoding="async"
             onerror="this.onerror=null;this.src='${escapeHtml(fallbackUrl)}'"
           />
+        </div>
+        <div class="recipe-card__body">
           <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-        </header>
-        <section class="recipe-card__block recipe-card__block--ingredients">
-          <p class="recipe-card__block-label">Ingredients</p>
-          <ul class="recipe-card__ingredients">${ingredientsHtml}</ul>
-        </section>
-        ${flavorKitHtml}
-        ${stepsHtml}
+          <p class="recipe-card__plan-note">${escapeHtml(MEAL_CARD_PLAN_NOTE)}</p>
+          ${ingredientsLine ? `
+            <div class="recipe-card__section">
+              <p class="recipe-card__section-label">Ingredients</p>
+              <p class="recipe-card__ingredients-line">${escapeHtml(ingredientsLine)}</p>
+            </div>
+          ` : ''}
+          ${kit ? `
+            <div class="recipe-card__section">
+              <p class="recipe-card__section-label">Flavor</p>
+              <p class="recipe-card__flavor-kit-name">${escapeHtml(kit.label)} Flavor Kit</p>
+              ${splashLine ? `<p class="recipe-card__flavor-splash">${escapeHtml(splashLine)}</p>` : ''}
+            </div>
+          ` : ''}
+          ${howHtml ? `
+            <div class="recipe-card__section">
+              <p class="recipe-card__section-label">How</p>
+              <ul class="recipe-card__how">${howHtml}</ul>
+            </div>
+          ` : ''}
+        </div>
       </button>
     </article>
   `;

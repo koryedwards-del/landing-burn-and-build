@@ -584,42 +584,57 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
-.recipe-card__hero {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
-  padding: 12px 14px 10px;
+.recipe-card__photo {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  min-height: 140px;
+  max-height: 220px;
+  background: #262626;
+  flex-shrink: 0;
 }
 
 .recipe-card__img {
   display: block;
-  width: 72px;
-  height: 72px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 6px;
   background: #262626;
+}
+
+.recipe-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
 }
 
 .recipe-card__name {
   margin: 0;
   font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
-.recipe-card__block {
-  padding: 10px 14px;
-  border-top: 1px solid var(--border);
-}
-
-.recipe-card__block-label {
-  margin: 0 0 6px;
-  font-family: "Oswald", system-ui, sans-serif;
+.recipe-card__plan-note {
+  margin: 0;
   font-size: 0.58rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.recipe-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.recipe-card__section-label {
+  margin: 0;
+  font-family: "Oswald", system-ui, sans-serif;
+  font-size: 0.56rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -627,85 +642,50 @@ body {
   line-height: 1.2;
 }
 
-.recipe-card__ingredients {
+.recipe-card__ingredients-line {
+  margin: 0;
+  font-size: 0.64rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.recipe-card__flavor-kit-name {
+  margin: 0;
+  font-size: 0.64rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.recipe-card__flavor-splash {
+  margin: 0;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.recipe-card__how {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.recipe-card__ingredients li {
+.recipe-card__how li {
   position: relative;
-  padding-left: 0.85rem;
-  font-size: 0.66rem;
-  line-height: 1.45;
+  padding-left: 0.8rem;
+  font-size: 0.62rem;
+  line-height: 1.4;
   color: var(--text);
 }
 
-.recipe-card__ingredients li + li {
+.recipe-card__how li + li {
   margin-top: 2px;
 }
 
-.recipe-card__ingredients li::before {
+.recipe-card__how li::before {
   content: "•";
   position: absolute;
   left: 0;
   color: var(--muted);
-}
-
-.recipe-card__block--flavor {
-  padding: 8px 14px;
-}
-
-.recipe-card__flavor-line {
-  margin: 0;
-  font-family: "Oswald", system-ui, sans-serif;
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  line-height: 1.3;
-}
-
-.recipe-card__flavor-line strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.recipe-card__flavor-items {
-  margin: 3px 0 0;
-  font-size: 0.62rem;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-.recipe-card__splash {
-  margin: 4px 0 0;
-  font-size: 0.62rem;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-.recipe-card__block--prep {
-  padding-bottom: 12px;
-}
-
-.recipe-card__steps {
-  margin: 0;
-  padding-left: 1.1rem;
-  list-style: decimal;
-  font-size: 0.64rem;
-  color: var(--text);
-  line-height: 1.4;
-}
-
-.recipe-card__step {
-  margin: 0 0 4px;
-  padding-left: 2px;
-}
-
-.recipe-card__step:last-child {
-  margin-bottom: 0;
 }
 
 .recipe-cards__empty {
@@ -868,14 +848,9 @@ body {
     min-height: auto;
   }
 
-  .recipe-card__hero {
-    grid-template-columns: 64px minmax(0, 1fr);
-    padding: 10px 12px 8px;
-  }
-
-  .recipe-card__img {
-    width: 64px;
-    height: 64px;
+  .recipe-card__photo {
+    min-height: 160px;
+    max-height: 240px;
   }
 
   .flavor-pantry__kits {

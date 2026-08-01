@@ -1,9 +1,12 @@
 /**
- * 8-Week Transformation — meal prep catalog.
+ * 8-Week Transformation — meal inspiration library.
  *
- * Meal card blocks: hero · ingredients · flavor kit · prep steps.
- * items[].foodName links to foods.json; items[].label is the short card name.
+ * Cards are visual ideas, not recipes. items[].foodName links to foods.json;
+ * items[].label is the short display name. Amounts come from the user's plan.
  */
+
+export const MEAL_CARD_PLAN_NOTE =
+  'Amounts come from your plan — they appear on your weekly grid and grocery list.';
 
 /**
  * @param {string} id
@@ -12,14 +15,14 @@
  * @param {{
  *   flavorKit: string,
  *   splash?: string[],
- *   steps: string[],
+ *   how: string[],
  *   tags?: string[],
  * }} options
  */
 export function defineTransformationMeal(id, name, items, {
   flavorKit,
   splash,
-  steps,
+  how,
   tags,
 } = {}) {
   return {
@@ -28,7 +31,7 @@ export function defineTransformationMeal(id, name, items, {
     items,
     flavorKit,
     splash: splash ?? [],
-    steps: (steps ?? []).map((step) => step.trim()).filter(Boolean),
+    how: (how ?? []).map((line) => line.trim()).filter(Boolean),
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -50,14 +53,14 @@ function inferMealTags(items) {
   return [...tags];
 }
 
-/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string, label?: string }>, flavorKit: string, splash: string[], steps: string[], tags: string[] }>} */
+/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string, label?: string }>, flavorKit: string, splash: string[], how: string[], tags: string[] }>} */
 export const TRANSFORMATION_MEALS = [
   defineTransformationMeal(
     'garlic-herb-shrimp-stir-fry',
     'Garlic Herb Shrimp Stir-Fry',
     [
       { slot: 'Protein', foodName: 'Shrimp, steamed', label: 'Shrimp' },
-      { slot: 'Grains/Starches', foodName: 'Rice, basmati', label: 'Basmati rice' },
+      { slot: 'Grains/Starches', foodName: 'Rice, basmati', label: 'Rice' },
       { slot: 'Veggie', foodName: 'Broccoli, cooked', label: 'Broccoli' },
       { slot: 'Veggie', foodName: 'Peppers, red bell, cooked', label: 'Bell peppers' },
       { slot: 'Veggie', foodName: 'Mushrooms, white, cooked', label: 'Mushrooms' },
@@ -66,14 +69,10 @@ export const TRANSFORMATION_MEALS = [
       tags: ['seafood', 'grain'],
       flavorKit: 'iron',
       splash: ['Low-sodium soy sauce'],
-      steps: [
-        'Season shrimp with the Iron Flavor Kit.',
-        'Cook shrimp; remove from wok.',
-        'Stir-fry broccoli, peppers, and mushrooms.',
-        'Add garlic; cook 30 seconds.',
-        'Return shrimp and splash with soy sauce.',
-        'Toss to combine.',
-        'Serve over basmati rice.',
+      how: [
+        'Cook shrimp.',
+        'Stir-fry vegetables.',
+        'Combine and serve over rice.',
       ],
     },
   ),
