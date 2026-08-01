@@ -861,11 +861,8 @@ body {
   outline-offset: 2px;
 }
 
-.planner-page--fast-start .workspace--legacy {
-  display: none !important;
-}
-
-.planner-page--diy .picker-row {
+.planner-page--fast-start .workspace--legacy,
+.workspace--legacy {
   display: none !important;
 }
 

@@ -262,8 +262,8 @@ function applyPlannerState(saved, { preserveSessionUi = false } = {}) {
     if (saved.activeMakerSlot && MEAL_MAKER_SLOTS.includes(saved.activeMakerSlot)) {
       state.activeMakerSlot = saved.activeMakerSlot;
     }
-    if (saved.plannerEngagementMode === 'diy' || saved.plannerEngagementMode === 'fast-start') {
-      state.plannerEngagementMode = saved.plannerEngagementMode;
+    if (saved.plannerEngagementMode === 'fast-start' || saved.plannerEngagementMode === 'diy') {
+      state.plannerEngagementMode = 'fast-start';
     }
     migratePlannerFoodNames();
   }
@@ -901,7 +901,7 @@ export const state = {
   activeWeekDay: null,
   activeGridTarget: null,
   mealSuggestionSorter: 'all',
-  /** 'fast-start' | 'diy' — default fast start until user toggles. */
+  /** Always `fast-start` — DIY mode disabled. */
   plannerEngagementMode: 'fast-start',
 };
 

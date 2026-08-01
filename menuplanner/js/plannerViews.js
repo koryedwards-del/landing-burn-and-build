@@ -83,47 +83,32 @@ const {
   fastStartFruitSortKey,
 } = await import(`../data/fastStartFruits.js?v=${PLANNER_V}`);
 
-const PLANNER_MODE_TITLES = {
-  'fast-start': '8-Week Transformation Menu Planner',
-  diy: 'Do-It-Yourself Menu Planner',
-};
+const PLANNER_PAGE_TITLE = '8-Week Transformation Menu Planner';
 
-function normalizePlannerEngagementMode(mode) {
-  return mode === 'diy' ? 'diy' : 'fast-start';
+/** DIY mode is disabled — planner always runs the transformation program. */
+function normalizePlannerEngagementMode(_mode) {
+  return 'fast-start';
 }
 
 function syncPlannerEngagementUi() {
-  const mode = normalizePlannerEngagementMode(state.plannerEngagementMode);
-  state.plannerEngagementMode = mode;
+  state.plannerEngagementMode = 'fast-start';
 
   const page = document.getElementById('planner-page');
   if (page) {
-    page.classList.toggle('planner-page--fast-start', mode === 'fast-start');
-    page.classList.toggle('planner-page--diy', mode === 'diy');
+    page.classList.add('planner-page--fast-start');
+    page.classList.remove('planner-page--diy');
   }
 
   const title = document.getElementById('planner-page-title');
-  if (title) title.textContent = PLANNER_MODE_TITLES[mode];
+  if (title) title.textContent = PLANNER_PAGE_TITLE;
 
   const navBtn = document.querySelector('[data-nav-page="3"]');
   if (navBtn) {
     navBtn.textContent = '4. Menu planner';
   }
-
-  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
-    const active = btn.dataset.plannerMode === mode;
-    btn.classList.toggle('planner-mode-toggle__btn--active', active);
-    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-  });
 }
 
-function setPlannerEngagementMode(mode) {
-  const next = normalizePlannerEngagementMode(mode);
-  if (state.plannerEngagementMode === next) {
-    syncPlannerEngagementUi();
-    return;
-  }
-  state.plannerEngagementMode = next;
+function setPlannerEngagementMode(_mode) {
   syncPlannerEngagementUi();
   renderPlannerMeta();
   renderFruitList();
@@ -131,11 +116,6 @@ function setPlannerEngagementMode(mode) {
 }
 
 function initPlannerEngagementToggle() {
-  document.querySelectorAll('[data-planner-mode]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      setPlannerEngagementMode(btn.dataset.plannerMode);
-    });
-  });
   syncPlannerEngagementUi();
 }
 
