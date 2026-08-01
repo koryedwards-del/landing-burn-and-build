@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/program-bridge.css?v=234" />
   <link rel="stylesheet" href="css/report.css?v=234" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=251" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=252" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -151,8 +151,9 @@
               <section class="recipes-panel recipes-panel--featured">
                 <div class="recipes-panel__head">
                   <h3 class="recipes-panel__title">Meal Prep</h3>
-                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap a meal cell, then tap a prep idea below to fill the grid.</p>
+                  <p class="recipes-panel__hint" id="recipes-panel-hint">Tap a meal cell, then tap a prep meal below. Each meal uses one flavor kit from your pantry.</p>
                 </div>
+                <div class="flavor-pantry" id="flavor-pantry" aria-label="Flavor kits pantry"></div>
                 <div class="meal-sorter-bar">
                   <span class="meal-sorter-bar__label">Filter</span>
                   <div class="meal-sorter" id="meal-sorter" aria-label="Filter meal ideas"></div>
@@ -251,6 +252,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=251"></script>
+  <script type="module" src="js/report.js?v=252"></script>
 </body>
 </html>

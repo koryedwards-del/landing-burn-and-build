@@ -66,6 +66,13 @@ const {
   transformationMealTemplates,
   transformationMealById,
 } = await import(`../data/transformationMealLibrary.js?v=${PLANNER_V}`);
+const {
+  flavorKitById,
+  flavorKitList,
+  flavorKitItemsLabel,
+  flavorFinishLabel,
+  FLAVOR_KIT_RULE,
+} = await import(`../data/flavorKits.js?v=${PLANNER_V}`);
 const { recipeImageUrl, recipeImageFallbackUrl } = await import(`../data/recipeImages.js?v=${PLANNER_V}`);
 const { fruitImageUrl } = await import(`../data/fruitImages.js?v=${PLANNER_V}`);
 const {
@@ -902,17 +909,37 @@ function foodByName(name) {
   return state.foods.find((item) => item.name === name);
 }
 
+function renderMealFlavorKitHtml(meal) {
+  const kit = flavorKitById(meal.flavorKit);
+  if (!kit) return '';
+
+  const finishText = flavorFinishLabel(meal.finish);
+  const finishHtml = finishText
+    ? `<p class="recipe-card__flavor-kit-finish">Finish: ${escapeHtml(finishText)}</p>`
+    : '';
+
+  return `
+    <div class="recipe-card__flavor-kit">
+      <p class="recipe-card__flavor-kit-label">
+        Flavor kit: <strong>${escapeHtml(kit.label)}</strong>
+      </p>
+      <p class="recipe-card__flavor-kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
+      ${finishHtml}
+    </div>
+  `;
+}
+
 function renderMealIdeaCard(meal) {
   const linesHtml = (meal.items || []).map((item) => `
       <div class="recipe-card__line">${escapeHtml(item.foodName)}</div>
     `).join('');
 
-  const caveatText = meal.flavor || meal.caveats;
-  const profileHtml = meal.profile
-    ? `<p class="recipe-card__profile">${escapeHtml(meal.profile)}</p>`
+  const flavorKitHtml = renderMealFlavorKitHtml(meal);
+  const prepHtml = meal.prep
+    ? `<p class="recipe-card__prep">${escapeHtml(meal.prep)}</p>`
     : '';
-  const caveatHtml = caveatText
-    ? `<p class="recipe-card__caveat-text">${escapeHtml(caveatText)}</p>`
+  const planNoteHtml = meal.planNote
+    ? `<p class="recipe-card__plan-note">${escapeHtml(meal.planNote)}</p>`
     : '';
 
   const imgUrl = recipeImageUrl(meal.id, PLANNER_V);
@@ -939,16 +966,37 @@ function renderMealIdeaCard(meal) {
           <div class="recipe-card__head">
             <div class="recipe-card__col recipe-card__col--title">
               <p class="recipe-card__name">${escapeHtml(meal.name)}</p>
-              ${profileHtml}
             </div>
             <div class="recipe-card__col recipe-card__col--foods">
               ${linesHtml ? `<div class="recipe-card__core">${linesHtml}</div>` : ''}
             </div>
           </div>
-          ${caveatHtml ? `<div class="recipe-card__caveat">${caveatHtml}</div>` : ''}
+          ${flavorKitHtml}
+          ${prepHtml}
+          ${planNoteHtml}
         </div>
       </button>
     </article>
+  `;
+}
+
+function renderFlavorPantry() {
+  const container = document.getElementById('flavor-pantry');
+  if (!container) return;
+
+  const kitsHtml = flavorKitList().map((kit) => `
+    <div class="flavor-pantry__kit">
+      <p class="flavor-pantry__kit-name">${escapeHtml(kit.label)}</p>
+      <p class="flavor-pantry__kit-items">${escapeHtml(flavorKitItemsLabel(kit))}</p>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="flavor-pantry__head">
+      <p class="flavor-pantry__title">Your flavor pantry</p>
+      <p class="flavor-pantry__rule">${escapeHtml(FLAVOR_KIT_RULE)}</p>
+    </div>
+    <div class="flavor-pantry__kits">${kitsHtml}</div>
   `;
 }
 
@@ -1434,6 +1482,7 @@ function renderPlannerWorkspace() {
     console.error('Week grid failed to render:', err);
   }
   try {
+    renderFlavorPantry();
     renderMealSorter();
     renderRecipeCards();
   } catch (err) {

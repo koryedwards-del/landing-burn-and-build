@@ -1,19 +1,40 @@
 /**
  * 8-Week Transformation — seven meal prep menu items.
- * Standalone from recipeLibrary.js (DIY catalog). Image-first filenames: {id}.jpg
+ * Plan foods in items[]; flavor kit + prep technique on each card.
+ * Image filenames: {id}.jpg
  */
 
-const SEASONING_CLOSER = 'Use salt/peppers, herbs and spices to taste.';
+/** @type {Readonly<Record<string, string>>} */
+const MEAL_NAMES = {
+  'southwest-chicken-bowl': 'Southwest Chicken Bowl',
+  'steakhouse-sirloin-plate': 'Steakhouse Sirloin Plate',
+  'garlic-herb-shrimp-stir-fry': 'Garlic Herb Shrimp Stir-Fry',
+  'tex-mex-steak-fajitas': 'Tex-Mex Steak Fajitas',
+  'lemon-pepper-cod-dinner': 'Lemon Pepper Cod Dinner',
+  'turkey-harvest-skillet': 'Turkey Harvest Skillet',
+  'classic-beef-potato-plate': 'Classic Beef & Potato Plate',
+};
 
-function meal(id, items, { profile = 'Meal prep', caveat, tags } = {}) {
-  const body = (caveat ?? '').trim();
-  const flavor = body ? `${body} ${SEASONING_CLOSER}` : SEASONING_CLOSER;
+/**
+ * @param {string} id
+ * @param {Array<{ slot: string, foodName: string }>} items
+ * @param {{
+ *   flavorKit: string,
+ *   finish?: string[],
+ *   prep: string,
+ *   planNote?: string,
+ *   tags?: string[],
+ * }} options
+ */
+function meal(id, items, { flavorKit, finish, prep, planNote, tags } = {}) {
   return {
     id,
     name: MEAL_NAMES[id],
     items,
-    profile,
-    flavor,
+    flavorKit,
+    finish: finish ?? [],
+    prep: prep.trim(),
+    planNote: planNote?.trim() ?? '',
     tags: tags ?? inferMealTags(items),
   };
 }
@@ -35,18 +56,7 @@ function inferMealTags(items) {
   return [...tags];
 }
 
-/** @type {Readonly<Record<string, string>>} */
-const MEAL_NAMES = {
-  'southwest-chicken-bowl': 'Southwest Chicken Bowl',
-  'steakhouse-sirloin-plate': 'Steakhouse Sirloin Plate',
-  'garlic-herb-shrimp-stir-fry': 'Garlic Herb Shrimp Stir-Fry',
-  'tex-mex-steak-fajitas': 'Tex-Mex Steak Fajitas',
-  'lemon-pepper-cod-dinner': 'Lemon Pepper Cod Dinner',
-  'turkey-harvest-skillet': 'Turkey Harvest Skillet',
-  'classic-beef-potato-plate': 'Classic Beef & Potato Plate',
-};
-
-/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, profile?: string, flavor?: string, tags?: string[] }>} */
+/** @type {ReadonlyArray<{ id: string, name: string, items: Array<{ slot: string, foodName: string }>, flavorKit: string, finish: string[], prep: string, planNote: string, tags: string[] }>} */
 export const TRANSFORMATION_MEALS = [
   meal('southwest-chicken-bowl', [
     { slot: 'Protein', foodName: 'Chicken breast, no skin' },
@@ -55,7 +65,9 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
     { slot: 'Veggie', foodName: 'Onions, cooked' },
   ], {
-    caveat: 'Season chicken with chili powder, cumin, garlic powder, salt, and pepper; grill or pan-sear until done, rest, and slice. Cook rice; warm drained black beans. Sauté pepper strips and onion until crisp-tender. Portion bowls with rice, chicken, beans, and vegetables. Lime and cilantro optional.',
+    flavorKit: 'fire',
+    finish: ['Lime', 'Cilantro'],
+    prep: 'Grill or pan-sear chicken; cook rice; warm drained black beans. Sauté pepper strips and onion until crisp-tender. Portion bowls with rice, chicken, beans, and vegetables.',
   }),
   meal('steakhouse-sirloin-plate', [
     { slot: 'Protein', foodName: 'Beef, top sirloin' },
@@ -63,7 +75,10 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Snap peas (sugar snap)' },
   ], {
     tags: ['beef', 'starch'],
-    caveat: 'Pat sirloin dry; season with garlic powder, onion powder, black pepper, and salt. Grill or pan-sear to your doneness; rest 5–10 minutes, then slice. Bake the potato until tender; split and top with a spoonful of plain Greek yogurt. Steam snap peas until crisp-tender. Garnish with chives or parsley if desired.',
+    flavorKit: 'iron',
+    finish: ['Chives', 'Parsley'],
+    prep: 'Grill or pan-sear sirloin to your doneness; rest 5–10 minutes, then slice. Bake the potato until tender; steam snap peas until crisp-tender.',
+    planNote: 'A spoonful of plain Greek yogurt on the potato is fine — it counts toward your plan when used in meaningful amounts.',
   }),
   meal('garlic-herb-shrimp-stir-fry', [
     { slot: 'Protein', foodName: 'Shrimp, steamed' },
@@ -73,7 +88,10 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Peppers, red bell, cooked' },
   ], {
     tags: ['seafood', 'grain'],
-    caveat: 'Pat shrimp dry; season with black pepper, garlic powder, and onion powder. Stir-fry in a hot wok with a small amount of oil — cook shrimp 1–2 minutes per side until pink, set aside. Stir-fry broccoli, bell peppers, and mushrooms until crisp-tender; add minced garlic. Return shrimp; toss with a splash of low-sodium soy sauce. Garnish with green onions and optional crushed red pepper. Serve over basmati rice.',
+    flavorKit: 'green',
+    finish: ['Green onion'],
+    prep: 'Stir-fry shrimp until pink; set aside. Stir-fry broccoli, peppers, and mushrooms until crisp-tender; return shrimp. Serve over basmati rice.',
+    planNote: 'Use a small amount of oil for the wok. Low-sodium soy sauce in normal cooking amounts is fine.',
   }),
   meal('tex-mex-steak-fajitas', [
     { slot: 'Protein', foodName: 'Beef, eye of round' },
@@ -82,7 +100,9 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Onions, cooked' },
   ], {
     tags: ['beef', 'grain'],
-    caveat: 'Slice steak thin; season with cumin, chili powder, garlic, and lime. Sauté pepper strips and onion until tender. Warm tortillas and build fajitas — prep extra filling for multiple meals.',
+    flavorKit: 'fire',
+    finish: ['Lime'],
+    prep: 'Slice steak thin; sauté with pepper strips and onion until tender. Warm tortillas and build fajitas. Prep extra filling for multiple meals.',
   }),
   meal('lemon-pepper-cod-dinner', [
     { slot: 'Protein', foodName: 'Cod, Atlantic, baked' },
@@ -90,7 +110,8 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Green beans, cooked' },
   ], {
     tags: ['seafood', 'grain'],
-    caveat: 'Season cod with lemon pepper. Bake until the fish flakes. Steam green beans; cook rice separately. Portion fish, rice, and beans into meal-prep containers.',
+    flavorKit: 'green',
+    prep: 'Bake cod until it flakes. Steam green beans; cook rice separately. Portion fish, rice, and beans into meal-prep containers.',
   }),
   meal('turkey-harvest-skillet', [
     { slot: 'Protein', foodName: 'Turkey breast' },
@@ -99,7 +120,8 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Mushrooms, white, cooked' },
   ], {
     tags: ['poultry', 'starch'],
-    caveat: 'Dice sweet potato and roast until tender. Sauté turkey with mushrooms until done; fold in spinach until wilted. Portion skillets for the week.',
+    flavorKit: 'earth',
+    prep: 'Roast diced sweet potato until tender. Sauté turkey with mushrooms until done; fold in spinach until wilted. Portion skillets for the week.',
   }),
   meal('classic-beef-potato-plate', [
     { slot: 'Protein', foodName: 'Beef, ground round' },
@@ -107,7 +129,8 @@ export const TRANSFORMATION_MEALS = [
     { slot: 'Veggie', foodName: 'Cauliflower, cooked' },
   ], {
     tags: ['beef', 'starch'],
-    caveat: 'Form lean ground round into patties and pan-sear until done. Roast baby red potatoes and cauliflower on one tray until tender. Portion patties, potatoes, and cauliflower for reheating.',
+    flavorKit: 'iron',
+    prep: 'Form lean ground round into patties and pan-sear until done. Roast potatoes and cauliflower on one tray until tender. Portion for reheating.',
   }),
 ];
 
