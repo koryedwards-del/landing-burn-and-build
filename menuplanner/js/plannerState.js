@@ -373,12 +373,11 @@ function savedMealById(id) {
 
 /** User-facing food list / picker — counts and servings only (no gram weights). */
 function scaledLabel(food, servings) {
-  if (food.name === 'Eggs') {
-    if (servings === 1) return '2 whites/1 yolk';
-    return `${fmtServings(servings)} × 2 whites/1 yolk`;
-  }
   if (food.unitsPerServing > 0) {
     const count = Math.ceil(food.unitsPerServing * servings);
+    if (food.name === 'Eggs') {
+      return count === 1 ? '1 egg' : `${count} eggs`;
+    }
     return `${count} ${food.servingDescription}`;
   }
   if (food.servingDescription && !food.gramWeight) {
@@ -391,12 +390,11 @@ function scaledLabel(food, servings) {
 
 /** Weekly meal plan PDF — gram weights where applicable. */
 function gramWeightLabel(food, servings) {
-  if (food.name === 'Eggs') {
-    if (servings === 1) return '2 whites/1 yolk';
-    return `${fmtServings(servings)} × 2 whites/1 yolk`;
-  }
   if (food.unitsPerServing > 0) {
     const count = Math.ceil(food.unitsPerServing * servings);
+    if (food.name === 'Eggs') {
+      return count === 1 ? '1 egg' : `${count} eggs`;
+    }
     return `${count} ${food.servingDescription}`;
   }
   if (!food.gramWeight && food.servingDescription) {

@@ -30,7 +30,6 @@ export const STAPLE_RED_MEAT_NAMES = [
 /** Lunch/dinner — poultry. */
 export const STAPLE_WHITE_MEAT_NAMES = [
   'Chicken breast, no skin',
-  'Ground turkey, 93% lean',
 ];
 
 /** Lunch/dinner — seafood. */
