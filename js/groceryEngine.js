@@ -40,7 +40,7 @@ function parseLeadingNumber(label) {
 }
 
 export function groceryDisplayName(foodName) {
-  if (foodName === 'Eggs') return 'Eggs';
+  if (foodName === 'Eggs') return 'Whole eggs';
   if (foodName === 'Egg whites') return 'Egg whites';
   return foodName;
 }
