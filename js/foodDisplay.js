@@ -26,7 +26,7 @@ const PLANNER_LABEL_OVERRIDES = {
   'Sweet potato, baked': 'Sweet potato',
   'Potato, baked (flesh + skin)': 'Russet potato',
   'Beans, black': 'Black beans',
-  'Cod, Atlantic, baked': 'Atlantic cod',
+  'Cod, Atlantic, baked': 'Cod',
   'Crab, blue, steamed': 'Blue crab',
   'Flounder, baked': 'Flounder',
   'Haddock, baked': 'Haddock',
