@@ -78,7 +78,7 @@ async function openProgramReport() {
     }
     persistProgramBridge(store.builtPackage);
   }
-  window.location.href = programReportHref();
+  window.location.href = programReportHref({ page: 'menuplanner' });
 }
 
 function renderPlanReadyAppHandoff(unlocked) {
@@ -87,7 +87,7 @@ function renderPlanReadyAppHandoff(unlocked) {
   }
   restoreBuiltPackage();
   if (store.builtPackage) persistProgramBridge(store.builtPackage);
-  const reportUrl = programReportHref();
+  const reportUrl = programReportHref({ page: 'menuplanner' });
   return `
           <a class="btn-primary unlock-cta plan-ready-open-program" href="${reportUrl}" data-open-program-report>View your program →</a>
           <p class="unlock-tagline">Review your servings, print your week, tape it up — come back to swap foods anytime.</p>`;

@@ -499,13 +499,6 @@ a.r-nav__btn {
   color: var(--muted);
 }
 
-.r-doc__note {
-  font-size: 0.82rem;
-  line-height: 1.6;
-  margin-bottom: 14px;
-  color: var(--muted);
-}
-
 .r-doc__today-label {
   font-weight: 700;
   font-size: 0.72rem;
