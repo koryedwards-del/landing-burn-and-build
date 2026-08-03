@@ -104,10 +104,8 @@ async function applyProgramPackage(pkg) {
   renderReactiveSurface();
   if (seeded) {
     reactiveViews?.showReactiveToast(
-      saved?.plannerUiVersion && saved.plannerUiVersion >= 3
-        ? 'Your week is filled using your servings. Swap any protein, g/s, veggie, or fruit to personalize.'
-        : 'Your planner layout updated — a fresh week is filled from your servings. Swap anything you want to change.',
-      { durationMs: 9000 },
+      'Your week is ready. Open Print → Week at-a-glance and Grocery list, then follow the sheet daily.',
+      { durationMs: 12000 },
     );
   }
 }

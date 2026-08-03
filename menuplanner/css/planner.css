@@ -1876,6 +1876,26 @@ html.mp-handoff-pending #planner-root {
   display: none;
 }
 
+.planner-start-guide {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.06);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.55;
+}
+
+.planner-start-guide strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
 .planner-page--reactive .planner-swap-hint {
   display: block;
   margin: 0;

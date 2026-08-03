@@ -90,7 +90,7 @@ function renderPlanReadyAppHandoff(unlocked) {
   const reportUrl = programReportHref();
   return `
           <a class="btn-primary unlock-cta plan-ready-open-program" href="${reportUrl}" data-open-program-report>View your program →</a>
-          <p class="unlock-tagline">Projections, plan/servings, and menu planner.</p>`;
+          <p class="unlock-tagline">Review your servings, print your week, tape it up — come back to swap foods anytime.</p>`;
 }
 
 function ensurePlanReadyEmail() {
@@ -137,9 +137,9 @@ function renderPlanReady() {
   const showPaywall = !hasPaidAccess;
   let lead;
   if (paidThisSession) {
-    lead = 'Payment complete. Your program is ready — open your food plan, servings, and menu planner.';
+    lead = 'Payment complete. Open your program, print your week and grocery list, then follow the sheet daily.';
   } else if (store.programPaid) {
-    lead = 'Your program is unlocked. Open your food plan, servings, and menu planner.';
+    lead = 'Your program is unlocked. Print your week and grocery list — follow the sheet daily, not the screen.';
   } else if (store.saveError) {
     lead = 'Your diet is ready on this device. Save it to your account, then complete checkout.';
   } else {

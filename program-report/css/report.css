@@ -471,7 +471,35 @@ a.r-nav__btn {
   margin-bottom: 6px;
 }
 
+.r-doc__list--steps {
+  margin-top: 0;
+}
+
+.r-doc__guide {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.r-doc__guide h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.r-doc__guide .r-doc__list {
+  margin-bottom: 0;
+}
+
 .r-doc__stats-line {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+
+.r-doc__note {
   font-size: 0.82rem;
   line-height: 1.6;
   margin-bottom: 14px;
@@ -755,6 +783,21 @@ a.r-nav__btn {
   margin-top: 8px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
+}
+
+.r-actions__note {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.06);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.r-actions__note + .r-actions {
+  margin-top: 12px;
 }
 
 .r-actions--end {

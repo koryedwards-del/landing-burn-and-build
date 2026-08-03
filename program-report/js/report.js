@@ -232,6 +232,17 @@ function renderWelcome(pkg) {
       <article class="r-doc">
         ${programMetaHtml(pkg)}
 
+        <div class="r-doc__guide">
+          <h3>Start here</h3>
+          <ol class="r-doc__list r-doc__list--steps">
+            <li><strong>Review</strong> your projections and servings (pages 2–3).</li>
+            <li><strong>Open the menu planner</strong> — your week is already filled from your servings.</li>
+            <li><strong>Print</strong> Week at-a-glance and Grocery list. Tape the week sheet where you prep meals.</li>
+            <li><strong>Follow the sheet daily</strong> — weigh and measure. You do not need to keep this website open.</li>
+            <li><strong>Come back with your email</strong> when you want to swap foods or print a new week.</li>
+          </ol>
+        </div>
+
         <h3>Welcome</h3>
         <p>
           Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is
@@ -263,8 +274,9 @@ function renderWelcome(pkg) {
 
         <h3>Menu planner</h3>
         <p>
-          After your servings page, the menu planner is where you build your week. Choose meals for breakfast,
-          lunch, dinner, and snacks that hit your daily serving targets — and get your grocery list.
+          Page four fills a full week from your servings. Most clients print the week and grocery list, then follow
+          the sheet in the kitchen. Use the menu planner on screen only when you want to swap a food — the grocery
+          list updates automatically.
         </p>
       </article>
 
@@ -517,6 +529,7 @@ function renderServings(pkg) {
         </table>
       </article>
 
+      <p class="r-actions__note">Next: your week is already filled — open the menu planner, print your sheets, and follow them daily.</p>
       <footer class="r-actions">
         <button type="button" class="r-btn r-btn--ghost" data-report-back-food>← Projections</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next-planner>Menu planner →</button>

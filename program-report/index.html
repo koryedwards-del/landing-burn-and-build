@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=316" />
-  <link rel="stylesheet" href="css/report.css?v=316" />
-  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=316" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=317" />
+  <link rel="stylesheet" href="css/report.css?v=317" />
+  <link rel="stylesheet" href="../menuplanner/css/planner.css?v=317" />
 </head>
 <body>
   <section id="access-gate" class="mp-access" hidden>
@@ -115,6 +115,11 @@
                 </div>
               </div>
             </div>
+            <p class="planner-start-guide" id="planner-start-guide">
+              <strong>Start here:</strong> Open Print and save <strong>Week at-a-glance</strong> and
+              <strong>Grocery list</strong>. Tape the week sheet where you prep meals and follow it daily — you do
+              not need to keep this page open. Swap foods on screen only when you want to change something.
+            </p>
             <p class="pb-servings-note" id="planner-servings" hidden></p>
           </div>
 
@@ -149,6 +154,7 @@
   <dialog id="print-choice-dialog" class="save-dialog">
     <div class="save-dialog__form">
       <p class="save-dialog__title">Print Shop</p>
+      <p class="save-dialog__hint">Print these, then follow the paper during the week. Come back here when you want to swap foods or print again.</p>
       <div class="save-dialog__actions save-dialog__actions--stack">
         <button type="button" class="save-dialog__btn save-dialog__btn--primary" data-print-view="week">Week at-a-glance</button>
         <button type="button" class="save-dialog__btn save-dialog__btn--primary" data-print-view="shopping">Grocery list</button>
@@ -165,6 +171,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=316"></script>
+  <script type="module" src="js/report.js?v=317"></script>
 </body>
 </html>
