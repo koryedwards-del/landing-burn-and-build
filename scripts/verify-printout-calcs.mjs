@@ -196,8 +196,8 @@ function verifyKristiServingsGrid() {
     }
   };
 
-  expect('distributeWholeServings(10, 3)', distributeWholeServings(10, 3), [3, 3, 4]);
-  expect('distributeWholeServings(4, 3)', distributeWholeServings(4, 3), [1, 1, 2]);
+  expect('distributeWholeServings(10, 3)', distributeWholeServings(10, 3), [3, 4, 3]);
+  expect('distributeWholeServings(4, 3)', distributeWholeServings(4, 3), [1, 2, 1]);
 
   const protein = rows.find((row) => row.label === 'Protein');
   expect('Kristi protein row', protein, {

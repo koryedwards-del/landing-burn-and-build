@@ -2,8 +2,8 @@
 
 /**
  * Split a daily total into whole-number servings across meal/snack slots.
- * Remainder goes to the last slots (e.g. 10 across 3 meals → 3, 3, 4).
- * Matches legacy seminar PDF — no decimal cells on the printed planner.
+ * For 3 slots (breakfast/lunch/dinner or 3 snacks), extras go to lunch then dinner —
+ * not breakfast (e.g. 10 across 3 meals → 3, 4, 3).
  */
 export function distributeWholeServings(total, slotCount) {
   const daily = Math.round(Number(total));
@@ -12,9 +12,14 @@ export function distributeWholeServings(total, slotCount) {
     return Array(Math.max(0, slots)).fill(0);
   }
   const base = Math.floor(daily / slots);
-  let remainder = daily - base * slots;
+  const remainder = daily - base * slots;
   const parts = Array(slots).fill(base);
-  for (let i = slots - 1; i >= 0 && remainder > 0; i -= 1) {
+  if (slots === 3) {
+    if (remainder >= 1) parts[1] += 1;
+    if (remainder >= 2) parts[2] += 1;
+    return parts;
+  }
+  for (let i = slots - 1; remainder > 0 && i >= 0; i -= 1) {
     parts[i] += 1;
     remainder -= 1;
   }
