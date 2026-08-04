@@ -3,6 +3,8 @@ import { drawWatermark, logoPath } from './draw.js';
 
 export const SEMINAR_TOTAL_PAGES = 6;
 export const SEMINAR_FOOTER_ZONE = 30;
+export const SEMINAR_HEADER_LOGO_WIDTH = 68;
+export const SEMINAR_HEADER_LOGO_GAP = 16;
 
 export const SEMINAR_PDF = {
   bodySize: 9,
@@ -100,21 +102,21 @@ function formatPreparedDateOrdinal(value) {
 }
 
 export function drawPersonalizationHeader(doc, payload, box) {
-  const clientName = String(payload.clientName || '').trim();
+  const clientName = titleCaseWords(payload.clientName);
   const preparedDate = formatPreparedDateOrdinal(payload.preparedDateLong || payload.preparedDate);
   const logoY = box.y;
-  const logoWidth = PDF_HEADER.logoWidth;
+  const logoWidth = SEMINAR_HEADER_LOGO_WIDTH;
   const logoX = box.x + (box.width - logoWidth) / 2;
   const metaSize = SEMINAR_PDF.headerMetaSize;
 
   doc.image(logoPath, logoX, logoY, { width: logoWidth });
 
-  const rowY = logoY + logoWidth + 10;
+  const rowY = logoY + logoWidth + SEMINAR_HEADER_LOGO_GAP;
   doc
     .font('Helvetica-Bold')
     .fontSize(metaSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(`Prepared exclusively for: ${clientName}`, box.x, rowY, {
+    .text(`Personalized exclusively for: ${clientName}`, box.x, rowY, {
       width: box.width * 0.64,
       align: 'left',
       lineGap: 0,
@@ -128,7 +130,7 @@ export function drawPersonalizationHeader(doc, payload, box) {
       lineGap: 0,
     });
 
-  const y = Math.max(doc.y, rowY + 14) + 8;
+  const y = Math.max(doc.y, rowY + 14) + 10;
   drawGoldDivider(doc, box.x, y, box.width);
   return y + SEMINAR_PDF.ruleGap;
 }
