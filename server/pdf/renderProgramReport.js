@@ -2,6 +2,7 @@ import { createPrintPdf } from './creator.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
+  drawGettingStartedPage,
   drawNumberedSteps,
   drawParagraphs,
   drawSeminarHeader,
@@ -13,6 +14,12 @@ import {
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 
+function drawGettingStartedPdfPage(creator, payload) {
+  const doc = creator.doc;
+  const box = addSeminarPage(doc);
+  drawGettingStartedPage(doc, payload, box);
+}
+
 function drawStepsToSuccessPage(creator, payload) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
@@ -22,26 +29,15 @@ function drawStepsToSuccessPage(creator, payload) {
   y = drawParagraphs(doc, steps.intro, box.x, y, box.width);
   y = drawNumberedSteps(doc, steps.steps, box.x, y, box.width);
 
-  if (steps.motto) {
-    y += 4;
-    doc
-      .roundedRect(box.x, y, box.width, 28, 3)
-      .strokeColor(SEMINAR_COLORS.body)
-      .lineWidth(0.75)
-      .stroke();
-    doc
-      .font('Helvetica-BoldOblique')
-      .fontSize(10)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(String(steps.motto), box.x + 12, y + 8, {
-        width: box.width - 24,
-        align: 'center',
-        lineGap: 0,
-      });
-    y += 36;
-  }
-
   if (steps.footer) {
+    y += 8;
+    doc
+      .strokeColor(SEMINAR_COLORS.rule)
+      .lineWidth(0.5)
+      .moveTo(box.x, y)
+      .lineTo(box.x + box.width, y)
+      .stroke();
+    y += SEMINAR_PDF.paragraphGap;
     drawParagraphs(doc, [steps.footer], box.x, y, box.width);
   }
 }
@@ -72,7 +68,12 @@ function drawLegacyWelcomePage(creator, payload) {
   }
 }
 
-function drawProgramReportCoverPage(creator, payload) {
+function drawProgramReportOpeningPages(creator, payload) {
+  if (payload.gettingStarted) {
+    drawGettingStartedPdfPage(creator, payload);
+    drawStepsToSuccessPage(creator, payload);
+    return;
+  }
   if (payload.stepsToSuccess?.steps?.length) {
     drawStepsToSuccessPage(creator, payload);
     return;
@@ -385,7 +386,7 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
     author: 'Burn & Build Diet',
   });
 
-  drawProgramReportCoverPage(creator, payload);
+  drawProgramReportOpeningPages(creator, payload);
   drawLeanBodyAnalysisPage(creator, payload);
   drawHistoryPage(creator, payload);
   drawFoodPlanPage(creator, payload);

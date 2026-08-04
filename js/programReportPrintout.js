@@ -24,28 +24,36 @@ import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistor
 
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
-  website: 'www.eattolosefat.com',
-  email: 'kory.edwards@coachkory.com',
+  website: 'www.burnandbuilddiet.com',
+  email: 'support@burnandbuilddiet.com',
 });
 
 export const START_HERE_STEPS = Object.freeze([
   'Read this guide once.',
-  'Print pages 4–5.',
+  'Print pages 5–6.',
   'Put them somewhere you\'ll see every day.',
   'Build meals using the food list.',
   'Stay consistent for 8 weeks.',
 ]);
 
+export const GETTING_STARTED_COPY = Object.freeze({
+  intro: [
+    'This program was created specifically for you.',
+    'Your daily food targets are based on the information you provided, including body composition, activity level, work demands, and exercise.',
+    'Follow the servings—not calories—to simplify your day and stay consistent.',
+  ],
+  startHereLabel: 'START HERE',
+  startHere: START_HERE_STEPS,
+});
+
 export const STEPS_TO_SUCCESS_COPY = Object.freeze({
   intro: [
-    'This program is customized from your body composition, activity level, and goals. Follow your daily servings — not calories — for the next eight weeks.',
+    'Congratulations — you have the most individualized fat-loss program available, built from your lean body mass, workday, lifestyle, and exercise plan. These steps show you how to use it for maximum results.',
   ],
   steps: [
     {
       title: 'Know your numbers',
       body: 'Review your Lean Body Analysis. Your LBM drives your metabolic rate and your daily food prescription. The mirror — not the scale alone — tells you whether you have fat to lose.',
-      startHereLabel: 'Start here',
-      startHere: START_HERE_STEPS,
     },
     {
       title: 'Eat your servings',
@@ -68,7 +76,6 @@ export const STEPS_TO_SUCCESS_COPY = Object.freeze({
       body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
     },
   ],
-  motto: 'Consistency beats perfection.',
   footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
 });
 
@@ -82,7 +89,7 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 });
 
 /** Static Kristi sample — committed under docs/samples for direct download. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=4';
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=5';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;
@@ -245,6 +252,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
     header: { ...SEMINAR_REPORT_HEADER },
+    gettingStarted: { ...GETTING_STARTED_COPY },
     stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
     welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {

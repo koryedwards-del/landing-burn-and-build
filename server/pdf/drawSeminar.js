@@ -1,7 +1,7 @@
 import { PDF_HEADER, PDF_MARGIN } from './constants.js';
 import { logoPath } from './draw.js';
 
-export const SEMINAR_TOTAL_PAGES = 5;
+export const SEMINAR_TOTAL_PAGES = 6;
 
 export const SEMINAR_PDF = {
   bodySize: 9,
@@ -102,6 +102,117 @@ export function drawParagraphs(doc, paragraphs, x, y, width) {
     cy = doc.y + SEMINAR_PDF.paragraphGap;
   });
   return cy;
+}
+
+export function drawSeminarLetterhead(doc, payload, box) {
+  const { header, clientName, preparedDate } = payload;
+  const x = box.x;
+  const w = box.width;
+  const third = w / 3;
+  let y = box.y;
+
+  const drawRule = (ry) => {
+    doc
+      .strokeColor(SEMINAR_COLORS.rule)
+      .lineWidth(0.75)
+      .moveTo(x, ry)
+      .lineTo(x + w, ry)
+      .stroke();
+  };
+
+  drawRule(y);
+  y += 8;
+
+  doc.font('Helvetica').fontSize(SEMINAR_PDF.headerContactSize).fillColor(SEMINAR_COLORS.muted);
+  doc.text(String(header.phone || ''), x, y, { width: third, align: 'left', lineGap: 0 });
+  doc.text(String(header.website || ''), x + third, y, { width: third, align: 'center', lineGap: 0 });
+  doc.text(String(header.email || ''), x + third * 2, y, { width: third, align: 'right', lineGap: 0 });
+
+  y += 14;
+  drawRule(y);
+  y += 10;
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.headerMetaSize + 1)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`Prepared exclusively for: ${clientName}`, x, y, { width: w * 0.68, lineGap: 0 });
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.headerMetaSize + 1)
+    .text(`On: ${preparedDate}`, x + w * 0.68, y, { width: w * 0.32, align: 'right', lineGap: 0 });
+
+  y += 16;
+  drawRule(y);
+
+  return y + SEMINAR_PDF.sectionGap;
+}
+
+export function drawStartHereBox(doc, copy, x, y, width) {
+  const items = copy.startHere || [];
+  const pad = 16;
+  const labelH = 16;
+  const lineH = 15;
+  const boxH = pad * 2 + labelH + 8 + items.length * lineH;
+
+  doc.save();
+  doc.roundedRect(x, y, width, boxH, 6).fill(SEMINAR_COLORS.startHere);
+  doc.restore();
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(10)
+    .fillColor(SEMINAR_COLORS.startHereText)
+    .text(String(copy.startHereLabel || 'START HERE'), x + pad, y + pad, {
+      width: width - pad * 2,
+      characterSpacing: 1,
+    });
+
+  let itemY = y + pad + labelH + 6;
+  items.forEach((line, index) => {
+    const circleX = x + pad;
+    const circleY = itemY - 1;
+    doc.save();
+    doc.circle(circleX + 6, circleY + 6, 6).fill(SEMINAR_COLORS.startHereText);
+    doc.restore();
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(8)
+      .fillColor(SEMINAR_COLORS.startHere)
+      .text(String(index + 1), circleX + 3, circleY + 1, { width: 8, align: 'center', lineGap: 0 });
+    doc
+      .font('Helvetica')
+      .fontSize(10)
+      .fillColor(SEMINAR_COLORS.startHereText)
+      .text(String(line), x + pad + 20, itemY, { width: width - pad * 2 - 20, lineGap: 0 });
+    itemY += lineH;
+  });
+
+  return y + boxH;
+}
+
+export function drawGettingStartedPage(doc, payload, box) {
+  const copy = payload.gettingStarted;
+  let y = drawSeminarLetterhead(doc, payload, box);
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(22)
+    .fillColor(SEMINAR_COLORS.body)
+    .text('WELCOME', box.x, y, { width: box.width, lineGap: 0 });
+
+  y = doc.y + 8;
+  doc
+    .strokeColor(SEMINAR_COLORS.gold)
+    .lineWidth(3)
+    .moveTo(box.x, y)
+    .lineTo(box.x + box.width, y)
+    .stroke();
+
+  y += SEMINAR_PDF.ruleGap;
+  y = drawParagraphs(doc, copy.intro, box.x, y, box.width);
+  y += 8;
+  drawStartHereBox(doc, copy, box.x, y, box.width);
 }
 
 export function drawStepsToSuccessHeader(doc, payload, box) {
