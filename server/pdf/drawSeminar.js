@@ -6,6 +6,13 @@ export const SEMINAR_FOOTER_ZONE = 30;
 export const SEMINAR_HEADER_LOGO_WIDTH = 68;
 export const SEMINAR_HEADER_LOGO_GAP = 16;
 
+export const SEMINAR_FONTS = Object.freeze({
+  regular: 'Times-Roman',
+  bold: 'Times-Bold',
+  italic: 'Times-Italic',
+  boldItalic: 'Times-BoldItalic',
+});
+
 export const SEMINAR_PDF = {
   bodySize: 9,
   headerContactSize: 8,
@@ -115,7 +122,7 @@ export function drawPersonalizationHeader(doc, payload, box) {
 
   const rowY = logoY + logoWidth + SEMINAR_HEADER_LOGO_GAP;
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(metaSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(`Personalized exclusively for: ${clientName}`, box.x, rowY, {
@@ -124,7 +131,7 @@ export function drawPersonalizationHeader(doc, payload, box) {
       lineGap: 0,
     });
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(metaSize)
     .text(`On: ${preparedDate}`, box.x + box.width * 0.64, rowY, {
       width: box.width * 0.36,
@@ -144,7 +151,7 @@ export function drawSeminarTemplateHeader(doc, payload, _pageTitle, box) {
 
 export function drawContentPageTitle(doc, title, x, y, width) {
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.contentPageTitleSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(titleCaseWords(title), x, y, { width, lineGap: 0 });
@@ -159,7 +166,7 @@ export function drawSeminarTemplateFooter(doc, payload, box) {
   drawGoldDivider(doc, box.x, ruleY, box.width);
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.headerContactSize)
     .fillColor(SEMINAR_COLORS.muted)
     .text(`${header.website} · ${header.email}`, box.x, footerTextY, {
@@ -180,7 +187,7 @@ export function drawSeminarHeader(doc, payload, sectionTitle, box) {
   let y = box.y;
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.headerContactSize)
     .fillColor(SEMINAR_COLORS.muted)
     .text(
@@ -192,7 +199,7 @@ export function drawSeminarHeader(doc, payload, sectionTitle, box) {
 
   y = doc.y + SEMINAR_PDF.headerGap;
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.headerMetaSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(
@@ -204,7 +211,7 @@ export function drawSeminarHeader(doc, payload, sectionTitle, box) {
 
   y = doc.y + SEMINAR_PDF.sectionGap;
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.sectionTitleSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(sectionTitle || ''), box.x, y, { width: box.width, lineGap: 0 });
@@ -218,7 +225,7 @@ export function drawParagraphs(doc, paragraphs, x, y, width) {
   (paragraphs || []).forEach((paragraph) => {
     if (!paragraph) return;
     doc
-      .font('Helvetica')
+      .font(SEMINAR_FONTS.regular)
       .fontSize(SEMINAR_PDF.bodySize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(paragraph), x, cy, {
@@ -250,7 +257,7 @@ export function drawSeminarLetterhead(doc, payload, box) {
   drawRule(y);
   y += 8;
 
-  doc.font('Helvetica').fontSize(SEMINAR_PDF.headerContactSize).fillColor(SEMINAR_COLORS.muted);
+  doc.font(SEMINAR_FONTS.regular).fontSize(SEMINAR_PDF.headerContactSize).fillColor(SEMINAR_COLORS.muted);
   doc.text(String(header.phone || ''), x, y, { width: third, align: 'left', lineGap: 0 });
   doc.text(String(header.website || ''), x + third, y, { width: third, align: 'center', lineGap: 0 });
   doc.text(String(header.email || ''), x + third * 2, y, { width: third, align: 'right', lineGap: 0 });
@@ -260,12 +267,12 @@ export function drawSeminarLetterhead(doc, payload, box) {
   y += 10;
 
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.headerMetaSize + 1)
     .fillColor(SEMINAR_COLORS.body)
     .text(`Prepared exclusively for: ${clientName}`, x, y, { width: w * 0.68, lineGap: 0 });
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.headerMetaSize + 1)
     .text(`On: ${preparedDate}`, x + w * 0.68, y, { width: w * 0.32, align: 'right', lineGap: 0 });
 
@@ -287,7 +294,7 @@ export function drawStartHereBox(doc, copy, x, y, width) {
   doc.restore();
 
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(10)
     .fillColor(SEMINAR_COLORS.startHereText)
     .text(String(copy.startHereLabel || 'START HERE'), x + pad, y + pad, {
@@ -303,12 +310,12 @@ export function drawStartHereBox(doc, copy, x, y, width) {
     doc.circle(circleX + 6, circleY + 6, 6).fill(SEMINAR_COLORS.startHereText);
     doc.restore();
     doc
-      .font('Helvetica-Bold')
+      .font(SEMINAR_FONTS.bold)
       .fontSize(8)
       .fillColor(SEMINAR_COLORS.startHere)
       .text(String(index + 1), circleX + 3, circleY + 1, { width: 8, align: 'center', lineGap: 0 });
     doc
-      .font('Helvetica')
+      .font(SEMINAR_FONTS.regular)
       .fontSize(10)
       .fillColor(SEMINAR_COLORS.startHereText)
       .text(String(line), x + pad + 20, itemY, { width: width - pad * 2 - 20, lineGap: 0 });
@@ -334,7 +341,7 @@ export function drawStepsToSuccessHeader(doc, payload, box) {
   doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
 
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.headerContactSize)
     .fillColor(SEMINAR_COLORS.brand)
     .text('BURN & BUILD DIET', textX, logoY + 1, {
@@ -343,7 +350,7 @@ export function drawStepsToSuccessHeader(doc, payload, box) {
     });
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.headerContactSize)
     .fillColor(SEMINAR_COLORS.muted)
     .text(
@@ -354,7 +361,7 @@ export function drawStepsToSuccessHeader(doc, payload, box) {
     );
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.headerMetaSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(
@@ -366,7 +373,7 @@ export function drawStepsToSuccessHeader(doc, payload, box) {
 
   let y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + SEMINAR_PDF.sectionGap;
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
     .fillColor(SEMINAR_COLORS.body)
     .text('Steps to Success', box.x, y, { width: box.width, lineGap: 0 });
@@ -395,7 +402,7 @@ function drawStartHereBlock(doc, step, x, y, width) {
   doc.restore();
 
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(8)
     .fillColor(SEMINAR_COLORS.startHereText)
     .text(String(step.startHereLabel || 'Start here').toUpperCase(), x + pad, y + pad, {
@@ -406,12 +413,12 @@ function drawStartHereBlock(doc, step, x, y, width) {
   let itemY = y + pad + labelH;
   items.forEach((line, index) => {
     doc
-      .font('Helvetica-Bold')
+      .font(SEMINAR_FONTS.bold)
       .fontSize(SEMINAR_PDF.bodySize)
       .fillColor(SEMINAR_COLORS.startHereText)
       .text(`${index + 1}.`, x + pad, itemY, { continued: true, lineGap: 0 });
     doc
-      .font('Helvetica')
+      .font(SEMINAR_FONTS.regular)
       .text(`  ${line}`, { width: width - pad * 2 - 12, lineGap: 0 });
     itemY = doc.y + 3;
   });
@@ -432,13 +439,13 @@ export function drawNumberedSteps(doc, steps, x, y, width) {
     const title = step.title || step.text || '';
 
     doc
-      .font('Helvetica-Bold')
+      .font(SEMINAR_FONTS.bold)
       .fontSize(14)
       .fillColor(SEMINAR_COLORS.gold)
       .text(number, x, titleY, { width: numberCol, align: 'right', lineGap: 0 });
 
     doc
-      .font('Helvetica-Bold')
+      .font(SEMINAR_FONTS.bold)
       .fontSize(SEMINAR_PDF.subsectionSize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(title), textX, titleY, { width: textWidth, lineGap: 0 });
@@ -446,7 +453,7 @@ export function drawNumberedSteps(doc, steps, x, y, width) {
     let blockY = doc.y + 2;
     if (step.body) {
       doc
-        .font('Helvetica')
+        .font(SEMINAR_FONTS.regular)
         .fontSize(SEMINAR_PDF.bodySize)
         .fillColor(SEMINAR_COLORS.muted)
         .text(String(step.body), textX, blockY, {
@@ -468,7 +475,7 @@ export function drawNumberedSteps(doc, steps, x, y, width) {
 
 export function drawSubsectionTitle(doc, title, x, y, width) {
   doc
-    .font('Helvetica-Bold')
+    .font(SEMINAR_FONTS.bold)
     .fontSize(SEMINAR_PDF.subsectionSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(title || ''), x, y, { width, lineGap: 0 });
@@ -488,7 +495,7 @@ export function drawTable(doc, {
     let maxH = SEMINAR_PDF.tableBodySize + SEMINAR_PDF.tableRowPad * 2;
     columns.forEach((col, index) => {
       const cell = row[col.key] ?? '';
-      const font = isHeader ? 'Helvetica-Bold' : 'Helvetica';
+      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
       const size = isHeader ? SEMINAR_PDF.tableHeadSize : SEMINAR_PDF.tableBodySize;
       const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
         width: colWidths[index] - 8,
@@ -517,7 +524,7 @@ export function drawTable(doc, {
         .lineWidth(0.5)
         .stroke();
       doc
-        .font(isHeader ? 'Helvetica-Bold' : 'Helvetica')
+        .font(isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
         .fontSize(isHeader ? SEMINAR_PDF.tableHeadSize : SEMINAR_PDF.tableBodySize)
         .fillColor(SEMINAR_COLORS.body)
         .text(String(row[col.key] ?? ''), cx + 4, cy + SEMINAR_PDF.tableRowPad, {

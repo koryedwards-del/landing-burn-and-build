@@ -12,6 +12,7 @@ import {
   drawTable,
   SEMINAR_PDF,
   SEMINAR_COLORS,
+  SEMINAR_FONTS,
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 
@@ -89,7 +90,7 @@ function drawLeanBodyAnalysisPage(creator, payload) {
   let y = drawSeminarHeader(doc, payload, 'Lean Body Analysis', box);
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text(
