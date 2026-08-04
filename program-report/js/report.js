@@ -20,12 +20,6 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
-import { fetchProgramReportPdf } from './programReportPdf.js';
-import {
-  deliverPrintPdfToTab,
-  openPrintTab,
-  showPrintTabError,
-} from '../../menuplanner/js/printShopDelivery.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -586,15 +580,18 @@ function renderPage() {
     main.hidden = true;
     main.innerHTML = '';
     plannerPage.hidden = false;
+    showPlannerStatus('Loading menu planner…');
     bootMenuPlannerPage()
       .then(async () => {
         await applyMenuPlannerProgram(programPackage);
+        clearPlannerStatus();
       })
       .catch((err) => {
         console.error('Menu planner failed to load:', err);
-        applyMenuPlannerProgram(programPackage).catch((applyErr) => {
-          console.error('Menu planner apply failed:', applyErr);
-        });
+        showPlannerStatus(
+          'Menu planner could not load. Try Welcome in the sidebar, or refresh the page.',
+          { error: true },
+        );
       });
     return;
   }
@@ -624,8 +621,26 @@ function syncPlannerLayoutMode() {
   document.body.classList.toggle('r-body--planner', activePage === 3);
 }
 
+function showPlannerStatus(message, { error = false } = {}) {
+  const matrix = document.getElementById('week-grid-matrix');
+  if (!matrix) return;
+  matrix.innerHTML = `
+    <p class="r-planner-status${error ? ' r-planner-status--error' : ''}">${escapeHtml(message)}</p>
+  `;
+}
+
+function clearPlannerStatus() {
+  const matrix = document.getElementById('week-grid-matrix');
+  if (!matrix?.querySelector('.r-planner-status')) return;
+  matrix.innerHTML = '';
+}
+
 async function downloadProgramReportPdf() {
   if (!programPackage?.intake?.leanBodyMass) return;
+  const { openPrintTab, deliverPrintPdfToTab, showPrintTabError } = await import(
+    '../../menuplanner/js/printShopDelivery.js'
+  );
+  const { fetchProgramReportPdf } = await import('./programReportPdf.js');
   const printWin = openPrintTab('Program Report');
   if (!printWin) {
     window.alert('Allow pop-ups to download your program report PDF.');
@@ -726,7 +741,7 @@ async function init() {
 
   if (!programPackage?.intake?.leanBodyMass && wantsMenuPlannerFromUrl()) {
     await bootProgramAccess();
-    return;
+    if (!programPackage?.intake?.leanBodyMass) return;
   }
 
   if (programPackage?.intake?.leanBodyMass) {
@@ -736,4 +751,20 @@ async function init() {
   launchApp();
 }
 
-init();
+init().catch((err) => {
+  console.error(err);
+  const main = document.getElementById('r-main');
+  if (main) {
+    main.hidden = false;
+    main.innerHTML = `
+      <div class="r-empty">
+        <p class="r-empty__eyebrow">Something went wrong</p>
+        <h2 class="r-empty__title">Could not load your program</h2>
+        <p class="r-empty__lead">Refresh the page. If it keeps happening, open the sample preview or start from the questionnaire.</p>
+        <div class="r-empty__actions">
+          <a class="r-btn r-btn--primary" href="?preview=1">Preview sample program</a>
+          <a class="r-btn r-btn--ghost" href="${QUESTIONNAIRE_WELCOME_URL}">Create your diet</a>
+        </div>
+      </div>`;
+  }
+});

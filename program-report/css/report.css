@@ -796,6 +796,18 @@ a.r-nav__btn {
   background: transparent;
 }
 
+.r-planner-status {
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.r-planner-status--error {
+  color: #ff8a80;
+}
+
 .r-empty {
   padding: 36px 40px 40px;
   text-align: left;
