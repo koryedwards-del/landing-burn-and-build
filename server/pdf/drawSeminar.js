@@ -72,47 +72,8 @@ export function drawGoldDivider(doc, x, y, width) {
     .stroke();
 }
 
-export function drawSeminarTemplateHeader(doc, payload, pageTitle, box) {
-  const clientName = payload.clientName;
-  const preparedDate = payload.preparedDateLong || payload.preparedDate;
-  const logoY = box.y;
-  const textX = box.x + PDF_HEADER.logoWidth + 14;
-  const textWidth = box.width - PDF_HEADER.logoWidth - 14;
-
-  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
-
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(titleCaseWords(pageTitle), textX, logoY + 4, { width: textWidth, lineGap: 0 });
-
-  let y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + 8;
-
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(SEMINAR_PDF.headerMetaSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(`Prepared exclusively for: ${clientName}`, box.x, y, {
-      width: box.width * 0.64,
-      lineGap: 0,
-    });
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(SEMINAR_PDF.headerMetaSize)
-    .text(`On: ${preparedDate}`, box.x + box.width * 0.64, y, {
-      width: box.width * 0.36,
-      align: 'right',
-      lineGap: 0,
-    });
-
-  y = Math.max(doc.y, y + 14) + 8;
-  drawGoldDivider(doc, box.x, y, box.width);
-  return y + SEMINAR_PDF.ruleGap;
-}
-
-export function drawGettingStartedHeader(doc, payload, box) {
-  const clientName = payload.clientName;
+export function drawPersonalizationHeader(doc, payload, box) {
+  const clientName = titleCaseWords(payload.clientName);
   const preparedDate = payload.preparedDateLong || payload.preparedDate;
   const logoY = box.y;
   const textX = box.x + PDF_HEADER.logoWidth + 14;
@@ -125,14 +86,14 @@ export function drawGettingStartedHeader(doc, payload, box) {
     .font('Helvetica-Bold')
     .fontSize(titleSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(`Prepared exclusively for: ${clientName}`, textX, logoY + 4, {
+    .text(clientName, textX, logoY + 4, {
       width: textWidth * 0.64,
       lineGap: 0,
     });
   doc
     .font('Helvetica-Bold')
     .fontSize(titleSize)
-    .text(`On: ${preparedDate}`, textX + textWidth * 0.64, logoY + 4, {
+    .text(String(preparedDate), textX + textWidth * 0.64, logoY + 4, {
       width: textWidth * 0.36,
       align: 'right',
       lineGap: 0,
@@ -141,6 +102,20 @@ export function drawGettingStartedHeader(doc, payload, box) {
   const y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + 8;
   drawGoldDivider(doc, box.x, y, box.width);
   return y + SEMINAR_PDF.ruleGap;
+}
+
+/** @deprecated Use drawPersonalizationHeader — page titles belong in body content. */
+export function drawSeminarTemplateHeader(doc, payload, _pageTitle, box) {
+  return drawPersonalizationHeader(doc, payload, box);
+}
+
+export function drawContentPageTitle(doc, title, x, y, width) {
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(titleCaseWords(title), x, y, { width, lineGap: 0 });
+  return doc.y + SEMINAR_PDF.sectionGap;
 }
 
 export function drawSeminarTemplateFooter(doc, payload, box) {
@@ -313,9 +288,9 @@ export function drawStartHereBox(doc, copy, x, y, width) {
 export function drawGettingStartedPage(doc, payload, box) {
   const copy = payload.gettingStarted;
 
-  const bodyTop = drawGettingStartedHeader(doc, payload, box);
+  const bodyTop = drawPersonalizationHeader(doc, payload, box);
 
-  let y = bodyTop;
+  let y = drawContentPageTitle(doc, 'Getting Started', box.x, bodyTop, box.width);
 
   doc
     .font('Helvetica-Bold')
