@@ -2,8 +2,10 @@ import { createPrintPdf } from './creator.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
+  drawNumberedSteps,
   drawParagraphs,
   drawSeminarHeader,
+  drawStepsToSuccessHeader,
   drawSubsectionTitle,
   drawTable,
   SEMINAR_PDF,
@@ -11,24 +13,26 @@ import {
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 
-function drawWelcomePage(creator, payload) {
+function drawStepsToSuccessPage(creator, payload) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
-  let y = drawSeminarHeader(doc, payload, 'Welcome', box);
+  const steps = payload.stepsToSuccess;
 
-  y = drawParagraphs(doc, payload.welcome.intro, box.x, y, box.width);
+  let y = drawStepsToSuccessHeader(doc, payload, box);
+  y = drawParagraphs(doc, steps.intro, box.x, y, box.width);
+  y = drawNumberedSteps(doc, steps.steps, box.x, y, box.width);
 
-  y = drawSubsectionTitle(doc, 'Lean Body Analysis', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.leanBodyAnalysis], box.x, y, box.width);
-
-  y = drawSubsectionTitle(doc, 'History', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.history], box.x, y, box.width);
-
-  y = drawSubsectionTitle(doc, 'Food Plan', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.foodPlan], box.x, y, box.width);
-
-  y = drawSubsectionTitle(doc, 'Servings', box.x, y, box.width);
-  drawParagraphs(doc, [payload.welcome.servings], box.x, y, box.width);
+  if (steps.footer) {
+    y += 4;
+    doc
+      .strokeColor(SEMINAR_COLORS.rule)
+      .lineWidth(0.5)
+      .moveTo(box.x, y)
+      .lineTo(box.x + box.width, y)
+      .stroke();
+    y += SEMINAR_PDF.paragraphGap;
+    drawParagraphs(doc, [steps.footer], box.x, y, box.width);
+  }
 }
 
 function drawLeanBodyAnalysisPage(creator, payload) {
@@ -336,7 +340,7 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
     author: 'Burn & Build Diet',
   });
 
-  drawWelcomePage(creator, payload);
+  drawStepsToSuccessPage(creator, payload);
   drawLeanBodyAnalysisPage(creator, payload);
   drawHistoryPage(creator, payload);
   drawFoodPlanPage(creator, payload);

@@ -1,4 +1,5 @@
-import { PDF_MARGIN } from './constants.js';
+import { PDF_HEADER, PDF_MARGIN } from './constants.js';
+import { logoPath } from './draw.js';
 
 export const SEMINAR_TOTAL_PAGES = 5;
 
@@ -23,6 +24,8 @@ export const SEMINAR_COLORS = {
   muted: '#444444',
   rule: '#cccccc',
   tableHead: '#f2f2f2',
+  gold: '#c99700',
+  brand: '#888888',
 };
 
 export function seminarContentBox(doc) {
@@ -94,6 +97,102 @@ export function drawParagraphs(doc, paragraphs, x, y, width) {
       });
     cy = doc.y + SEMINAR_PDF.paragraphGap;
   });
+  return cy;
+}
+
+export function drawStepsToSuccessHeader(doc, payload, box) {
+  const { header, clientName, preparedDate } = payload;
+  const logoY = box.y;
+  const textX = box.x + PDF_HEADER.logoWidth + 14;
+  const textWidth = box.width - PDF_HEADER.logoWidth - 14;
+
+  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.headerContactSize)
+    .fillColor(SEMINAR_COLORS.brand)
+    .text('BURN & BUILD DIET', textX, logoY + 1, {
+      width: textWidth,
+      characterSpacing: 1.2,
+    });
+
+  doc
+    .font('Helvetica')
+    .fontSize(SEMINAR_PDF.headerContactSize)
+    .fillColor(SEMINAR_COLORS.muted)
+    .text(
+      `${header.phone}  ·  ${header.website}  ·  ${header.email}`,
+      textX,
+      doc.y + 3,
+      { width: textWidth, lineGap: 0 },
+    );
+
+  doc
+    .font('Helvetica')
+    .fontSize(SEMINAR_PDF.headerMetaSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(
+      `Prepared exclusively for: ${clientName}  ·  ${preparedDate}`,
+      textX,
+      doc.y + 4,
+      { width: textWidth, lineGap: 0 },
+    );
+
+  let y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + SEMINAR_PDF.sectionGap;
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
+    .fillColor(SEMINAR_COLORS.body)
+    .text('Steps to Success', box.x, y, { width: box.width, lineGap: 0 });
+
+  y = doc.y + 6;
+  doc
+    .strokeColor(SEMINAR_COLORS.gold)
+    .lineWidth(2)
+    .moveTo(box.x, y)
+    .lineTo(box.x + box.width, y)
+    .stroke();
+
+  return y + SEMINAR_PDF.ruleGap;
+}
+
+export function drawNumberedSteps(doc, steps, x, y, width) {
+  const numberCol = 22;
+  const gap = 10;
+  const textX = x + numberCol + gap;
+  const textWidth = width - numberCol - gap;
+  let cy = y;
+
+  (steps || []).forEach((step, index) => {
+    const number = String(index + 1);
+    const titleY = cy;
+
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(14)
+      .fillColor(SEMINAR_COLORS.gold)
+      .text(number, x, titleY, { width: numberCol, align: 'right', lineGap: 0 });
+
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(SEMINAR_PDF.subsectionSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(step.title || ''), textX, titleY, { width: textWidth, lineGap: 0 });
+
+    const bodyY = doc.y + 2;
+    doc
+      .font('Helvetica')
+      .fontSize(SEMINAR_PDF.bodySize)
+      .fillColor(SEMINAR_COLORS.muted)
+      .text(String(step.body || ''), textX, bodyY, {
+        width: textWidth,
+        lineGap: SEMINAR_PDF.lineGap,
+      });
+
+    cy = doc.y + 10;
+  });
+
   return cy;
 }
 
