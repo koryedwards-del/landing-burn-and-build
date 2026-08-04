@@ -162,6 +162,20 @@ function loadPreviewProgram() {
   showPage(initialPageFromUrl());
 }
 
+function shouldShowProgramPdf() {
+  return Boolean(programPackage?.intake?.leanBodyMass);
+}
+
+function syncProgramPdfNavVisibility() {
+  const programPdf = document.getElementById('program-pdf');
+  if (!programPdf) return;
+  if (shouldShowProgramPdf()) {
+    programPdf.removeAttribute('hidden');
+  } else {
+    programPdf.setAttribute('hidden', '');
+  }
+}
+
 function shouldShowPrintShop() {
   return activePage === 3 && Boolean(programPackage?.intake?.leanBodyMass);
 }
@@ -223,6 +237,7 @@ function renderNav() {
   const activeId = PAGES[activePage]?.id || 'welcome';
   list.innerHTML = programNavListHtml(activeId);
   mountPrintShopUnderMenuPlanner(list);
+  syncProgramPdfNavVisibility();
   syncPrintShopNavVisibility();
   remountProgramLibraryNav();
 }
@@ -275,7 +290,7 @@ function renderWelcome(pkg) {
       </article>
 
       <footer class="r-actions r-actions--split">
-        <button type="button" class="r-btn r-btn--ghost" id="report-download-pdf">Download PDF report</button>
+        <button type="button" class="r-btn r-btn--ghost" data-report-download-pdf>Download PDF report</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -656,7 +671,8 @@ function bindEvents() {
       showPage(1);
       return;
     }
-    if (event.target.closest('#report-download-pdf')) {
+    if (event.target.closest('[data-report-download-pdf]')) {
+      document.getElementById('print-choice-dialog')?.close();
       downloadProgramReportPdf().catch((err) => console.error(err));
       return;
     }
