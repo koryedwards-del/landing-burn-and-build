@@ -20,6 +20,11 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
+import {
+  deliverPrintPdfToTab,
+  openPrintTab,
+  showPrintTabError,
+} from '../../menuplanner/js/printShopDelivery.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -635,22 +640,54 @@ function clearPlannerStatus() {
   matrix.innerHTML = '';
 }
 
-async function downloadProgramReportPdf() {
-  if (!programPackage?.intake?.leanBodyMass) return;
-  const { openPrintTab, deliverPrintPdfToTab, showPrintTabError } = await import(
-    '../../menuplanner/js/printShopDelivery.js'
-  );
-  const { fetchProgramReportPdf } = await import('./programReportPdf.js');
-  const printWin = openPrintTab('Program Report');
-  if (!printWin) {
-    window.alert('Allow pop-ups to download your program report PDF.');
+function startProgramReportPdfDownload() {
+  if (!programPackage?.intake?.leanBodyMass) {
+    window.alert('Load a program first — try Preview sample report on the welcome screen.');
     return;
   }
+
+  const printWin = openPrintTab('Program Report');
+  if (!printWin) {
+    void downloadProgramReportPdfFile();
+    return;
+  }
+
+  void deliverProgramReportPdfToTab(printWin);
+}
+
+async function deliverProgramReportPdfToTab(printWin) {
   try {
+    const { fetchProgramReportPdf } = await import('./programReportPdf.js');
     const blob = await fetchProgramReportPdf(programPackage);
+    if (printWin.closed) {
+      await downloadProgramReportPdfFile(blob);
+      return;
+    }
     deliverPrintPdfToTab(printWin, blob);
   } catch (err) {
-    showPrintTabError(printWin, err.message || 'Could not generate program report PDF.');
+    const message = err.message || 'Could not generate program report PDF.';
+    if (!printWin.closed) {
+      showPrintTabError(printWin, message);
+      return;
+    }
+    window.alert(message);
+  }
+}
+
+async function downloadProgramReportPdfFile(existingBlob) {
+  try {
+    const blob = existingBlob || await (await import('./programReportPdf.js')).fetchProgramReportPdf(programPackage);
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Burn-and-Build-Program-Report.pdf';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  } catch (err) {
+    window.alert(err.message || 'Could not download program report PDF.');
   }
 }
 
@@ -688,7 +725,7 @@ function bindEvents() {
     }
     if (event.target.closest('[data-report-download-pdf]')) {
       document.getElementById('print-choice-dialog')?.close();
-      downloadProgramReportPdf().catch((err) => console.error(err));
+      startProgramReportPdfDownload();
       return;
     }
     if (event.target.closest('[data-report-back]')) {
