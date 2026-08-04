@@ -111,6 +111,38 @@ export function drawSeminarTemplateHeader(doc, payload, pageTitle, box) {
   return y + SEMINAR_PDF.ruleGap;
 }
 
+export function drawGettingStartedHeader(doc, payload, box) {
+  const clientName = payload.clientName;
+  const preparedDate = payload.preparedDateLong || payload.preparedDate;
+  const logoY = box.y;
+  const textX = box.x + PDF_HEADER.logoWidth + 14;
+  const textWidth = box.width - PDF_HEADER.logoWidth - 14;
+  const titleSize = SEMINAR_PDF.sectionTitleSize + 2;
+
+  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(titleSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`Prepared exclusively for: ${clientName}`, textX, logoY + 4, {
+      width: textWidth * 0.64,
+      lineGap: 0,
+    });
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(titleSize)
+    .text(`On: ${preparedDate}`, textX + textWidth * 0.64, logoY + 4, {
+      width: textWidth * 0.36,
+      align: 'right',
+      lineGap: 0,
+    });
+
+  const y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + 8;
+  drawGoldDivider(doc, box.x, y, box.width);
+  return y + SEMINAR_PDF.ruleGap;
+}
+
 export function drawSeminarTemplateFooter(doc, payload, box) {
   const { header } = payload;
   const footerTextY = box.bottom - 12;
@@ -281,7 +313,7 @@ export function drawStartHereBox(doc, copy, x, y, width) {
 export function drawGettingStartedPage(doc, payload, box) {
   const copy = payload.gettingStarted;
 
-  const bodyTop = drawSeminarTemplateHeader(doc, payload, 'Getting Started', box);
+  const bodyTop = drawGettingStartedHeader(doc, payload, box);
 
   let y = bodyTop;
 
