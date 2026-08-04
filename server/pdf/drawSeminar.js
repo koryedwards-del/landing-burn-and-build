@@ -11,6 +11,7 @@ export const SEMINAR_PDF = {
   headerContactSize: 8,
   headerMetaSize: 9,
   personalizationSize: 12,
+  contentPageTitleSize: 18,
   sectionTitleSize: 12,
   subsectionSize: 10,
   tableHeadSize: 7.5,
@@ -144,7 +145,7 @@ export function drawSeminarTemplateHeader(doc, payload, _pageTitle, box) {
 export function drawContentPageTitle(doc, title, x, y, width) {
   doc
     .font('Helvetica-Bold')
-    .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
+    .fontSize(SEMINAR_PDF.contentPageTitleSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(titleCaseWords(title), x, y, { width, lineGap: 0 });
   return doc.y + SEMINAR_PDF.sectionGap;
