@@ -1,7 +1,7 @@
 /** Program report PDF — client fetch for the five-page seminar document. */
 
-import { apiUrl } from '../js/apiConfig.js';
-import { buildProgramReportPayload, programReportDocumentTitle } from '../js/programReportPrintout.js';
+import { apiUrl } from '../../js/apiConfig.js';
+import { buildProgramReportPayload, programReportDocumentTitle } from '../../js/programReportPrintout.js';
 
 export function buildProgramReportPrintPayload(programPackage, options = {}) {
   return buildProgramReportPayload(programPackage, options);
