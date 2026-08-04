@@ -10,6 +10,7 @@ export const SEMINAR_PDF = {
   bodySize: 9,
   headerContactSize: 8,
   headerMetaSize: 9,
+  personalizationSize: 12,
   sectionTitleSize: 12,
   subsectionSize: 10,
   tableHeadSize: 7.5,
@@ -107,7 +108,7 @@ export function drawPersonalizationHeader(doc, payload, box) {
   const logoY = box.y;
   const logoWidth = SEMINAR_HEADER_LOGO_WIDTH;
   const logoX = box.x + (box.width - logoWidth) / 2;
-  const metaSize = SEMINAR_PDF.headerMetaSize;
+  const metaSize = SEMINAR_PDF.personalizationSize;
 
   doc.image(logoPath, logoX, logoY, { width: logoWidth });
 
