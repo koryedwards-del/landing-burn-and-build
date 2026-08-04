@@ -177,7 +177,7 @@ app.post('/api/print/pdf', async (req, res) => {
   if (!isPersonalizedPdfView(view)) {
     res.status(400).json({
       ok: false,
-      message: 'POST print PDF requires a personalized view (week or shopping).',
+      message: 'POST print PDF requires a personalized view (week, shopping, or programreport).',
     });
     return;
   }

@@ -20,6 +20,12 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
+import { fetchProgramReportPdf } from './programReportPdf.js';
+import {
+  deliverPrintPdfToTab,
+  openPrintTab,
+  showPrintTabError,
+} from '../../menuplanner/js/printShopDelivery.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -268,7 +274,8 @@ function renderWelcome(pkg) {
         </p>
       </article>
 
-      <footer class="r-actions r-actions--end">
+      <footer class="r-actions r-actions--split">
+        <button type="button" class="r-btn r-btn--ghost" id="report-download-pdf">Download PDF report</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -602,6 +609,21 @@ function syncPlannerLayoutMode() {
   document.body.classList.toggle('r-body--planner', activePage === 3);
 }
 
+async function downloadProgramReportPdf() {
+  if (!programPackage?.intake?.leanBodyMass) return;
+  const printWin = openPrintTab('Program Report');
+  if (!printWin) {
+    window.alert('Allow pop-ups to download your program report PDF.');
+    return;
+  }
+  try {
+    const blob = await fetchProgramReportPdf(programPackage);
+    deliverPrintPdfToTab(printWin, blob);
+  } catch (err) {
+    showPrintTabError(printWin, err.message || 'Could not generate program report PDF.');
+  }
+}
+
 function bindEvents() {
   document.getElementById('r-nav-list')?.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-page]');
@@ -632,6 +654,10 @@ function bindEvents() {
     }
     if (event.target.closest('[data-report-back-food]')) {
       showPage(1);
+      return;
+    }
+    if (event.target.closest('#report-download-pdf')) {
+      downloadProgramReportPdf().catch((err) => console.error(err));
       return;
     }
     if (event.target.closest('[data-report-back]')) {

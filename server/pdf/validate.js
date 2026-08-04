@@ -73,6 +73,25 @@ export function validatePrintPayload(view, payload) {
     });
   }
 
+  if (view === 'programreport') {
+    requireString(payload.preparedDate, 'preparedDate', { required: true });
+    if (!payload.welcome || typeof payload.welcome !== 'object') {
+      throw pdfError('welcome is required.');
+    }
+    if (!payload.leanBodyAnalysis || typeof payload.leanBodyAnalysis !== 'object') {
+      throw pdfError('leanBodyAnalysis is required.');
+    }
+    if (!payload.history || !Array.isArray(payload.history.rows)) {
+      throw pdfError('history.rows is required.');
+    }
+    if (!payload.foodPlan || typeof payload.foodPlan !== 'object') {
+      throw pdfError('foodPlan is required.');
+    }
+    if (!payload.servings || typeof payload.servings !== 'object') {
+      throw pdfError('servings is required.');
+    }
+  }
+
   if (view === 'shopping') {
     requireArray(payload.groups, 'groups');
 

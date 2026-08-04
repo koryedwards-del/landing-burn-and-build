@@ -6,9 +6,10 @@ export const PRINT_SHOP_VIEWS = Object.freeze([
   'bestresults',
   'week',
   'shopping',
+  'programreport',
 ]);
 
-export const PRINT_SHOP_PERSONALIZED_VIEWS = Object.freeze(['week', 'shopping']);
+export const PRINT_SHOP_PERSONALIZED_VIEWS = Object.freeze(['week', 'shopping', 'programreport']);
 
 /** Body bytes identical for every client; title only affects metadata. */
 export const PRINT_SHOP_STATIC_BODY_VIEWS = Object.freeze(['faq', 'bestresults']);

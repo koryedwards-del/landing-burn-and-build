@@ -9,6 +9,7 @@ export const PRINT_VIEW_TITLES = Object.freeze({
   foodlist: 'Food List',
   bestresults: 'For Best Results',
   faq: 'Frequently Asked Questions',
+  programreport: 'Program Report',
 });
 
 export function printDocumentTitle(view, programPackage) {

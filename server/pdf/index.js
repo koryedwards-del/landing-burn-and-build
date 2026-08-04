@@ -11,6 +11,7 @@ import { renderBestResultsPdf } from './renderBestResults.js';
 import { renderFaqPdf } from './renderFaq.js';
 import { renderFoodListPdf } from './renderFoodList.js';
 import { renderShoppingListPdf } from './renderShoppingList.js';
+import { renderProgramReportPdf } from './renderProgramReport.js';
 import { renderWeekPlanPdf } from './renderWeekPlan.js';
 import { validatePrintPayload, validatePrintView } from './validate.js';
 
@@ -31,6 +32,7 @@ const RENDERERS = Object.freeze({
   bestresults: renderBestResultsPdf,
   week: renderWeekPlanPdf,
   shopping: renderShoppingListPdf,
+  programreport: renderProgramReportPdf,
 });
 
 /** Bump when layout changes so Render cache cannot serve stale PDFs. */
