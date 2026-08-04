@@ -20,7 +20,7 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
-import { PREVIEW_PROGRAM_REPORT_PDF } from '../../js/programReportPrintout.js';
+import { PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 import {
   deliverPrintPdfToTab,
   openPrintTab,
@@ -244,50 +244,8 @@ function renderNav() {
 
 function renderWelcome(pkg) {
   return `
-    <section class="r-panel">
-      <div class="pb-page-head">
-        <p class="pb-eyebrow">Page 1</p>
-        <h2 class="pb-panel__title">Welcome</h2>
-      </div>
-
-      <article class="r-doc">
-        ${programMetaHtml(pkg)}
-
-        <h3>Welcome</h3>
-        <p>
-          Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is
-          the most individualized program available for losing fat. This diet will not work effectively for anyone
-          else because it has been created just for you, using your LBM, your job, your lifestyle and your daily
-          plan for exercise &amp; activities.
-        </p>
-
-        <p>
-          How we did it. We determined your lean weight using sophisticated body composition testing. Then you
-          told us about your job, lifestyle, exercise and activities. With this information, the computer generated
-          this five-page report. Included is your ultrasound body composition report that I call your Body Recomp
-          Analysis, your body composition history and the last two pages are your custom designed diet.
-        </p>
-
-        <h3>Projections</h3>
-        <p>
-          Page two shows your eight-week fat-loss projection and longer-term timeline — how much fat you can
-          lose based on your lean body mass, job, lifestyle, and exercise plan.
-        </p>
-
-        <h3>Plan/Servings</h3>
-        <p>
-          Page three is your plan and servings. How much food you need each day depends on your LBM, your job,
-          and your exercise. The macro table shows calories and protein, carbs, and fat at rest, at work, and
-          per hour of exercise. The servings grid breaks that into daily meal targets — no counting calories
-          on your own.
-        </p>
-
-        <h3>Menu planner</h3>
-        <p>
-          After your servings page, the menu planner is where you build your week. Choose meals for breakfast,
-          lunch, dinner, and snacks that hit your daily serving targets — and get your grocery list.
-        </p>
-      </article>
+    <section class="r-panel r-panel--welcome">
+      ${welcomeCoverHtml(pkg)}
 
       <footer class="r-actions r-actions--split">
         ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>` : ''}

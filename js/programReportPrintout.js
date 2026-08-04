@@ -10,7 +10,7 @@ import {
   lbmStatusMessage,
   weightGoalRanges,
 } from './lbaPrintout.js';
-import { formatProgramDateLong, programClientName } from './programBridgeUi.js';
+import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
@@ -53,7 +53,46 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 });
 
 /** Static Kristi sample — committed under docs/samples for direct download. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf';
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=3';
+
+export function welcomeCoverHtml(pkg) {
+  const copy = STEPS_TO_SUCCESS_COPY;
+  const name = String(programClientName(pkg) || 'You').trim();
+  const date = formatProgramDateLong(
+    pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
+  );
+  const steps = copy.steps.map((step, index) => `
+    <li class="r-welcome-start__step">
+      <span class="r-welcome-start__num">${index + 1}.</span>
+      <span>${escapeHtml(step.text)}</span>
+    </li>
+  `).join('');
+
+  return `
+    <section class="r-welcome-cover">
+      <div class="r-welcome-cover__panel r-welcome-cover__panel--brand">
+        <p class="r-welcome-cover__badge">1</p>
+        <img class="r-welcome-cover__logo" src="../img/brand/bblogo1.png" alt="" width="56" height="56" />
+        <p class="r-welcome-cover__program-label">Burn &amp; Build Program</p>
+        <h2 class="r-welcome-cover__program-title">Your <span class="r-welcome-cover__accent">Burn &amp;</span> Build Program</h2>
+        <div class="r-welcome-cover__meta">
+          <p>Prepared exclusively for</p>
+          <p class="r-welcome-cover__name">${escapeHtml(name)}</p>
+          <p>Prepared on ${escapeHtml(date)}</p>
+        </div>
+      </div>
+      <div class="r-welcome-cover__panel r-welcome-cover__panel--body">
+        <h2 class="r-welcome-cover__welcome">Welcome</h2>
+        ${copy.intro.map((paragraph) => `<p class="r-welcome-cover__intro">${escapeHtml(paragraph)}</p>`).join('')}
+        <div class="r-welcome-start">
+          <p class="r-welcome-start__label">${escapeHtml(copy.startHereLabel)}</p>
+          <ol class="r-welcome-start__list">${steps}</ol>
+        </div>
+        <p class="r-welcome-motto">${escapeHtml(copy.motto)}</p>
+      </div>
+    </section>
+  `;
+}
 
 export const LBA_FOOTER_COPY = 'How much fat is right for each individual is a personal choice. How you look in the mirror is the only true judge of whether you have fat to lose. If you see more fat than you personally want, then exercise and follow your this plan until you reach your desired goals.';
 
