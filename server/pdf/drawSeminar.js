@@ -112,8 +112,9 @@ export function drawPersonalizationHeader(doc, payload, box) {
     .font('Helvetica-Bold')
     .fontSize(titleSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(`Prepared for ${clientName} on ${preparedDate}`, box.x, row2Y, {
+    .text(`Prepared exclusively for ${clientName} on ${preparedDate}`, box.x, row2Y, {
       width: box.width,
+      align: 'center',
       lineGap: 0,
     });
 
