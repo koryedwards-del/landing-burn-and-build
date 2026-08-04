@@ -100,26 +100,35 @@ function formatPreparedDateOrdinal(value) {
 }
 
 export function drawPersonalizationHeader(doc, payload, box) {
-  const clientName = titleCaseWords(payload.clientName);
+  const clientName = String(payload.clientName || '').trim();
   const preparedDate = formatPreparedDateOrdinal(payload.preparedDateLong || payload.preparedDate);
   const logoY = box.y;
-  const logoHeight = PDF_HEADER.logoWidth;
-  const titleSize = SEMINAR_PDF.sectionTitleSize + 2;
-  const line = `Prepared exclusively for ${clientName} on ${preparedDate}`;
+  const logoWidth = PDF_HEADER.logoWidth;
+  const logoX = box.x + (box.width - logoWidth) / 2;
+  const metaSize = SEMINAR_PDF.headerMetaSize;
 
-  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
+  doc.image(logoPath, logoX, logoY, { width: logoWidth });
 
-  doc.font('Helvetica-Bold').fontSize(titleSize).fillColor(SEMINAR_COLORS.body);
-  const textHeight = doc.heightOfString(line, { width: box.width, lineGap: 0 });
-  const textY = logoY + logoHeight - textHeight;
+  const rowY = logoY + logoWidth + 10;
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(metaSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`Prepared exclusively for: ${clientName}`, box.x, rowY, {
+      width: box.width * 0.64,
+      align: 'left',
+      lineGap: 0,
+    });
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(metaSize)
+    .text(`On: ${preparedDate}`, box.x + box.width * 0.64, rowY, {
+      width: box.width * 0.36,
+      align: 'right',
+      lineGap: 0,
+    });
 
-  doc.text(line, box.x, textY, {
-    width: box.width,
-    align: 'center',
-    lineGap: 0,
-  });
-
-  const y = logoY + logoHeight + 8;
+  const y = Math.max(doc.y, rowY + 14) + 8;
   drawGoldDivider(doc, box.x, y, box.width);
   return y + SEMINAR_PDF.ruleGap;
 }
