@@ -698,6 +698,13 @@ function bindEvents() {
     showPage(Number(btn.dataset.navPage));
   });
 
+  document.body.addEventListener('click', (event) => {
+    if (event.target.closest('[data-report-download-pdf]')) {
+      document.getElementById('print-choice-dialog')?.close();
+      startProgramReportPdfDownload();
+    }
+  });
+
   document.getElementById('r-app')?.addEventListener('click', (event) => {
     if (event.target.closest('[data-report-preview]')) {
       loadPreviewProgram();
@@ -721,11 +728,6 @@ function bindEvents() {
     }
     if (event.target.closest('[data-report-back-food]')) {
       showPage(1);
-      return;
-    }
-    if (event.target.closest('[data-report-download-pdf]')) {
-      document.getElementById('print-choice-dialog')?.close();
-      startProgramReportPdfDownload();
       return;
     }
     if (event.target.closest('[data-report-back]')) {
