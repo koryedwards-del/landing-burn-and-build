@@ -24,8 +24,12 @@ export const SEMINAR_COLORS = {
   muted: '#444444',
   rule: '#cccccc',
   tableHead: '#f2f2f2',
-  gold: '#c99700',
+  gold: '#fdc500',
   brand: '#888888',
+  panel: '#111111',
+  panelMuted: '#cccccc',
+  startHere: '#fdc500',
+  startHereText: '#111111',
 };
 
 export function seminarContentBox(doc) {
@@ -98,6 +102,160 @@ export function drawParagraphs(doc, paragraphs, x, y, width) {
     cy = doc.y + SEMINAR_PDF.paragraphGap;
   });
   return cy;
+}
+
+export function drawProgramCoverPage(doc, payload) {
+  const cover = payload.stepsToSuccess;
+  const { clientName, preparedDate } = payload;
+  const pageW = doc.page.width;
+  const pageH = doc.page.height;
+  const leftW = pageW * 0.36;
+  const pad = 40;
+  const rightPad = 32;
+  const rightX = leftW + rightPad;
+  const rightW = pageW - leftW - rightPad * 2;
+
+  doc.rect(0, 0, leftW, pageH).fill(SEMINAR_COLORS.panel);
+
+  doc
+    .save()
+    .rect(pad - 8, pad - 8, 22, 22)
+    .fill(SEMINAR_COLORS.gold)
+    .restore();
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(11)
+    .fillColor(SEMINAR_COLORS.panel)
+    .text('1', pad - 8, pad - 5, { width: 22, align: 'center', lineGap: 0 });
+
+  doc.image(logoPath, pad, pad + 22, { width: 46 });
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(7.5)
+    .fillColor(SEMINAR_COLORS.panelMuted)
+    .text('BURN & BUILD PROGRAM', pad, pad + 74, {
+      width: leftW - pad * 2,
+      characterSpacing: 1.4,
+    });
+
+  const titleY = pageH * 0.38;
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(26)
+    .fillColor('#ffffff')
+    .text('YOUR ', pad, titleY, { continued: true, lineGap: 0 });
+  doc
+    .fillColor(SEMINAR_COLORS.gold)
+    .text('BURN &\n', { continued: true, lineGap: 2 });
+  doc
+    .fillColor('#ffffff')
+    .text('BUILD\nPROGRAM', { width: leftW - pad * 2, lineGap: 2 });
+
+  const metaY = pageH - pad - 52;
+  doc
+    .font('Helvetica')
+    .fontSize(8.5)
+    .fillColor(SEMINAR_COLORS.panelMuted)
+    .text('Prepared exclusively for', pad, metaY, { width: leftW - pad * 2, lineGap: 0 });
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(10)
+    .fillColor('#ffffff')
+    .text(String(clientName || 'YOU'), pad, doc.y + 4, { width: leftW - pad * 2, lineGap: 0 });
+  doc
+    .font('Helvetica')
+    .fontSize(8.5)
+    .fillColor(SEMINAR_COLORS.panelMuted)
+    .text(`Prepared on ${String(preparedDate || '')}`, pad, doc.y + 10, {
+      width: leftW - pad * 2,
+      lineGap: 0,
+    });
+
+  let y = pad + 18;
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(28)
+    .fillColor(SEMINAR_COLORS.body)
+    .text('WELCOME', rightX, y, { width: rightW, lineGap: 0 });
+
+  y = doc.y + 16;
+  (cover.intro || []).forEach((paragraph) => {
+    doc
+      .font('Helvetica')
+      .fontSize(9.5)
+      .fillColor(SEMINAR_COLORS.muted)
+      .text(String(paragraph), rightX, y, { width: rightW, lineGap: 4 });
+    y = doc.y + 12;
+  });
+
+  const boxPad = 14;
+  const boxX = rightX;
+  const boxW = rightW;
+  const labelH = 18;
+  const steps = cover.steps || [];
+  const stepLineH = 14;
+  const boxH = boxPad * 2 + labelH + 8 + steps.length * stepLineH;
+
+  doc.save();
+  doc.roundedRect(boxX, y, boxW, boxH, 4).fill(SEMINAR_COLORS.startHere);
+  doc.restore();
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(9)
+    .fillColor(SEMINAR_COLORS.startHereText)
+    .text(String(cover.startHereLabel || 'START HERE'), boxX + boxPad, y + boxPad, {
+      width: boxW - boxPad * 2,
+      characterSpacing: 1.2,
+    });
+
+  let stepY = y + boxPad + labelH + 4;
+  steps.forEach((step, index) => {
+    const line = step.text || step.title || '';
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(9.5)
+      .fillColor(SEMINAR_COLORS.startHereText)
+      .text(`${index + 1}.`, boxX + boxPad, stepY, { continued: true, lineGap: 0 });
+    doc
+      .font('Helvetica')
+      .text(`  ${line}`, { width: boxW - boxPad * 2 - 12, lineGap: 0 });
+    stepY = doc.y + 4;
+  });
+
+  y = y + boxH + 16;
+  const motto = String(cover.motto || '');
+  if (motto) {
+    const mottoPad = 12;
+    const mottoH = 36;
+    doc
+      .roundedRect(boxX, y, boxW, mottoH, 3)
+      .strokeColor(SEMINAR_COLORS.body)
+      .lineWidth(1)
+      .stroke();
+    doc
+      .font('Helvetica-BoldOblique')
+      .fontSize(10)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(motto, boxX + mottoPad, y + mottoPad - 2, {
+        width: boxW - mottoPad * 2,
+        align: 'center',
+        lineGap: 0,
+      });
+  }
+
+  const footerY = pageH - 28;
+  doc
+    .font('Helvetica')
+    .fontSize(8)
+    .fillColor(SEMINAR_COLORS.muted)
+    .text(
+      `Prepared for ${String(clientName || 'You')} · ${String(preparedDate || '')}`,
+      pad,
+      footerY,
+      { width: pageW - pad * 2, align: 'center', lineGap: 0 },
+    );
 }
 
 export function drawStepsToSuccessHeader(doc, payload, box) {

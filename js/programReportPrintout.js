@@ -30,35 +30,17 @@ export const SEMINAR_REPORT_HEADER = Object.freeze({
 
 export const STEPS_TO_SUCCESS_COPY = Object.freeze({
   intro: [
-    'Congratulations — you have the most individualized fat-loss program available, built from your lean body mass, workday, lifestyle, and exercise plan. These steps show you how to use it for maximum results.',
+    'This program is customized from your body composition, activity level, and goals. Follow your daily servings — not calories — for the next eight weeks.',
   ],
+  startHereLabel: 'START HERE',
   steps: [
-    {
-      title: 'Know your numbers',
-      body: 'Review your Lean Body Analysis. Your LBM drives your metabolic rate and your daily food prescription. The mirror — not the scale alone — tells you whether you have fat to lose.',
-    },
-    {
-      title: 'Eat your servings',
-      body: 'Follow the daily serving totals on your Servings page. No calorie or macro counting — the computer already did that work. Stay within the approved food groups.',
-    },
-    {
-      title: 'Plan your week',
-      body: 'Use the menu planner online to assign foods to each meal, track servings, and build your grocery list. Print your week at a glance from Print Shop before you shop.',
-    },
-    {
-      title: 'Eat on schedule',
-      body: 'Spread protein through breakfast, lunch, and dinner. Eat vegetables at dinner and fruit at snack times. Regular feedings keep energy steady and protect lean mass.',
-    },
-    {
-      title: 'Stay consistent',
-      body: 'Keep your exercise and activity aligned with what you reported when this plan was built. Changing workouts without updating your program can slow fat loss.',
-    },
-    {
-      title: 'Check in regularly',
-      body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
-    },
+    { text: 'Read this guide once.' },
+    { text: 'Print pages 4–5.' },
+    { text: 'Put them somewhere you\'ll see every day.' },
+    { text: 'Build meals using the food list.' },
+    { text: 'Stay consistent for 8 weeks.' },
   ],
-  footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
+  motto: 'Consistency beats perfection.',
 });
 
 /** Kept in payload until production API deploys — old Render build requires welcome. */

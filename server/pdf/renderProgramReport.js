@@ -4,6 +4,7 @@ import {
   addSeminarPage,
   drawNumberedSteps,
   drawParagraphs,
+  drawProgramCoverPage,
   drawSeminarHeader,
   drawStepsToSuccessHeader,
   drawSubsectionTitle,
@@ -15,24 +16,8 @@ import { validatePrintPayload } from './validate.js';
 
 function drawStepsToSuccessPage(creator, payload) {
   const doc = creator.doc;
-  const box = addSeminarPage(doc);
-  const steps = payload.stepsToSuccess;
-
-  let y = drawStepsToSuccessHeader(doc, payload, box);
-  y = drawParagraphs(doc, steps.intro, box.x, y, box.width);
-  y = drawNumberedSteps(doc, steps.steps, box.x, y, box.width);
-
-  if (steps.footer) {
-    y += 4;
-    doc
-      .strokeColor(SEMINAR_COLORS.rule)
-      .lineWidth(0.5)
-      .moveTo(box.x, y)
-      .lineTo(box.x + box.width, y)
-      .stroke();
-    y += SEMINAR_PDF.paragraphGap;
-    drawParagraphs(doc, [steps.footer], box.x, y, box.width);
-  }
+  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+  drawProgramCoverPage(doc, payload);
 }
 
 function drawLegacyWelcomePage(creator, payload) {
