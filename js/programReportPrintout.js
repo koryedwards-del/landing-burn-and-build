@@ -61,6 +61,18 @@ export const STEPS_TO_SUCCESS_COPY = Object.freeze({
   footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
 });
 
+/** Kept in payload until production API deploys — old Render build requires welcome. */
+export const LEGACY_WELCOME_COPY = Object.freeze({
+  intro: [''],
+  leanBodyAnalysis: '',
+  history: '',
+  foodPlan: '',
+  servings: '',
+});
+
+/** Static Kristi sample — committed under docs/samples for direct download. */
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf';
+
 export const LBA_FOOTER_COPY = 'How much fat is right for each individual is a personal choice. How you look in the mirror is the only true judge of whether you have fat to lose. If you see more fat than you personally want, then exercise and follow your this plan until you reach your desired goals.';
 
 export const LBA_MONITOR_COPY = 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.';
@@ -174,6 +186,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
     ),
     header: { ...SEMINAR_REPORT_HEADER },
     stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
+    welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {
       heightInches: intake.heightInches,
       sex: formatSexLabel(intake.sex),

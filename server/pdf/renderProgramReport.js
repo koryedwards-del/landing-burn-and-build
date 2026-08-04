@@ -35,6 +35,40 @@ function drawStepsToSuccessPage(creator, payload) {
   }
 }
 
+function drawLegacyWelcomePage(creator, payload) {
+  const doc = creator.doc;
+  const box = addSeminarPage(doc);
+  const welcome = payload.welcome;
+  let y = drawSeminarHeader(doc, payload, 'Welcome', box);
+
+  y = drawParagraphs(doc, welcome.intro, box.x, y, box.width);
+
+  if (welcome.leanBodyAnalysis) {
+    y = drawSubsectionTitle(doc, 'Lean Body Analysis', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.leanBodyAnalysis], box.x, y, box.width);
+  }
+  if (welcome.history) {
+    y = drawSubsectionTitle(doc, 'History', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.history], box.x, y, box.width);
+  }
+  if (welcome.foodPlan) {
+    y = drawSubsectionTitle(doc, 'Food Plan', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.foodPlan], box.x, y, box.width);
+  }
+  if (welcome.servings) {
+    y = drawSubsectionTitle(doc, 'Servings', box.x, y, box.width);
+    drawParagraphs(doc, [welcome.servings], box.x, y, box.width);
+  }
+}
+
+function drawProgramReportCoverPage(creator, payload) {
+  if (payload.stepsToSuccess?.steps?.length) {
+    drawStepsToSuccessPage(creator, payload);
+    return;
+  }
+  drawLegacyWelcomePage(creator, payload);
+}
+
 function drawLeanBodyAnalysisPage(creator, payload) {
   const doc = creator.doc;
   const lba = payload.leanBodyAnalysis;
@@ -340,7 +374,7 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
     author: 'Burn & Build Diet',
   });
 
-  drawStepsToSuccessPage(creator, payload);
+  drawProgramReportCoverPage(creator, payload);
   drawLeanBodyAnalysisPage(creator, payload);
   drawHistoryPage(creator, payload);
   drawFoodPlanPage(creator, payload);
