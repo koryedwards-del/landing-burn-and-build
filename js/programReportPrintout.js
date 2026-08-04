@@ -28,19 +28,48 @@ export const SEMINAR_REPORT_HEADER = Object.freeze({
   email: 'kory.edwards@coachkory.com',
 });
 
+export const START_HERE_STEPS = Object.freeze([
+  'Read this guide once.',
+  'Print pages 4–5.',
+  'Put them somewhere you\'ll see every day.',
+  'Build meals using the food list.',
+  'Stay consistent for 8 weeks.',
+]);
+
 export const STEPS_TO_SUCCESS_COPY = Object.freeze({
   intro: [
     'This program is customized from your body composition, activity level, and goals. Follow your daily servings — not calories — for the next eight weeks.',
   ],
-  startHereLabel: 'START HERE',
   steps: [
-    { text: 'Read this guide once.' },
-    { text: 'Print pages 4–5.' },
-    { text: 'Put them somewhere you\'ll see every day.' },
-    { text: 'Build meals using the food list.' },
-    { text: 'Stay consistent for 8 weeks.' },
+    {
+      title: 'Know your numbers',
+      body: 'Review your Lean Body Analysis. Your LBM drives your metabolic rate and your daily food prescription. The mirror — not the scale alone — tells you whether you have fat to lose.',
+      startHereLabel: 'Start here',
+      startHere: START_HERE_STEPS,
+    },
+    {
+      title: 'Eat your servings',
+      body: 'Follow the daily serving totals on your Servings page. No calorie or macro counting — the computer already did that work. Stay within the approved food groups.',
+    },
+    {
+      title: 'Plan your week',
+      body: 'Use the menu planner online to assign foods to each meal, track servings, and build your grocery list. Print your week at a glance from Print Shop before you shop.',
+    },
+    {
+      title: 'Eat on schedule',
+      body: 'Spread protein through breakfast, lunch, and dinner. Eat vegetables at dinner and fruit at snack times. Regular feedings keep energy steady and protect lean mass.',
+    },
+    {
+      title: 'Stay consistent',
+      body: 'Keep your exercise and activity aligned with what you reported when this plan was built. Changing workouts without updating your program can slow fat loss.',
+    },
+    {
+      title: 'Check in regularly',
+      body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
+    },
   ],
   motto: 'Consistency beats perfection.',
+  footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
 });
 
 /** Kept in payload until production API deploys — old Render build requires welcome. */
@@ -53,7 +82,7 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 });
 
 /** Static Kristi sample — committed under docs/samples for direct download. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=3';
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=4';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;
@@ -61,36 +90,46 @@ export function welcomeCoverHtml(pkg) {
   const date = formatProgramDateLong(
     pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
   );
-  const steps = copy.steps.map((step, index) => `
-    <li class="r-welcome-start__step">
-      <span class="r-welcome-start__num">${index + 1}.</span>
-      <span>${escapeHtml(step.text)}</span>
-    </li>
-  `).join('');
+  const stepsHtml = copy.steps.map((step, index) => {
+    const startHere = Array.isArray(step.startHere) && step.startHere.length
+      ? `
+        <div class="r-steps-start">
+          <p class="r-steps-start__label">${escapeHtml(step.startHereLabel || 'Start here')}</p>
+          <ol class="r-steps-start__list">
+            ${step.startHere.map((line, i) => `
+              <li><span class="r-steps-start__num">${i + 1}.</span> ${escapeHtml(line)}</li>
+            `).join('')}
+          </ol>
+        </div>
+      `
+      : '';
+    return `
+      <li class="r-steps-success__item">
+        <span class="r-steps-success__num">${index + 1}</span>
+        <div class="r-steps-success__body">
+          <h3 class="r-steps-success__title">${escapeHtml(step.title || step.text || '')}</h3>
+          ${step.body ? `<p>${escapeHtml(step.body)}</p>` : ''}
+          ${startHere}
+        </div>
+      </li>
+    `;
+  }).join('');
 
   return `
-    <section class="r-welcome-cover">
-      <div class="r-welcome-cover__panel r-welcome-cover__panel--brand">
-        <p class="r-welcome-cover__badge">1</p>
-        <img class="r-welcome-cover__logo" src="../img/brand/bblogo1.png" alt="" width="56" height="56" />
-        <p class="r-welcome-cover__program-label">Burn &amp; Build Program</p>
-        <h2 class="r-welcome-cover__program-title">Your <span class="r-welcome-cover__accent">Burn &amp;</span> Build Program</h2>
-        <div class="r-welcome-cover__meta">
-          <p>Prepared exclusively for</p>
-          <p class="r-welcome-cover__name">${escapeHtml(name)}</p>
-          <p>Prepared on ${escapeHtml(date)}</p>
+    <article class="r-steps-success">
+      <header class="r-steps-success__head">
+        <img class="r-steps-success__logo" src="../img/brand/bblogo1.png" alt="" width="48" height="48" />
+        <div>
+          <p class="r-steps-success__brand">Burn &amp; Build Diet</p>
+          <p class="r-steps-success__meta">Prepared exclusively for ${escapeHtml(name)} · ${escapeHtml(date)}</p>
         </div>
-      </div>
-      <div class="r-welcome-cover__panel r-welcome-cover__panel--body">
-        <h2 class="r-welcome-cover__welcome">Welcome</h2>
-        ${copy.intro.map((paragraph) => `<p class="r-welcome-cover__intro">${escapeHtml(paragraph)}</p>`).join('')}
-        <div class="r-welcome-start">
-          <p class="r-welcome-start__label">${escapeHtml(copy.startHereLabel)}</p>
-          <ol class="r-welcome-start__list">${steps}</ol>
-        </div>
-        <p class="r-welcome-motto">${escapeHtml(copy.motto)}</p>
-      </div>
-    </section>
+      </header>
+      <h2 class="r-steps-success__heading">Steps to Success</h2>
+      ${copy.intro.map((paragraph) => `<p class="r-steps-success__intro">${escapeHtml(paragraph)}</p>`).join('')}
+      <ol class="r-steps-success__list">${stepsHtml}</ol>
+      <p class="r-steps-success__motto">${escapeHtml(copy.motto)}</p>
+      ${copy.footer ? `<p class="r-steps-success__footer">${escapeHtml(copy.footer)}</p>` : ''}
+    </article>
   `;
 }
 
