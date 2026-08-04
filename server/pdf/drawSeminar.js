@@ -72,34 +72,52 @@ export function drawGoldDivider(doc, x, y, width) {
     .stroke();
 }
 
+function ordinalSuffix(day) {
+  if (day >= 11 && day <= 13) return 'th';
+  switch (day % 10) {
+    case 1: return 'st';
+    case 2: return 'nd';
+    case 3: return 'rd';
+    default: return 'th';
+  }
+}
+
+function formatPreparedDateOrdinal(value) {
+  if (!value) return '';
+  const isoMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    const d = new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T12:00:00`);
+    const month = d.toLocaleDateString('en-US', { month: 'long' });
+    const day = d.getDate();
+    return `${month} ${day}${ordinalSuffix(day)}, ${d.getFullYear()}`;
+  }
+  const longMatch = String(value).match(/^(\w+)\s+(\d{1,2}),?\s+(\d{4})$/);
+  if (longMatch) {
+    const day = Number(longMatch[2]);
+    return `${longMatch[1]} ${day}${ordinalSuffix(day)}, ${longMatch[3]}`;
+  }
+  return String(value);
+}
+
 export function drawPersonalizationHeader(doc, payload, box) {
   const clientName = titleCaseWords(payload.clientName);
-  const preparedDate = payload.preparedDateLong || payload.preparedDate;
+  const preparedDate = formatPreparedDateOrdinal(payload.preparedDateLong || payload.preparedDate);
   const logoY = box.y;
-  const textX = box.x + PDF_HEADER.logoWidth + 14;
-  const textWidth = box.width - PDF_HEADER.logoWidth - 14;
   const titleSize = SEMINAR_PDF.sectionTitleSize + 2;
 
   doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
 
+  const row2Y = logoY + PDF_HEADER.logoWidth + 8;
   doc
     .font('Helvetica-Bold')
     .fontSize(titleSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(clientName, textX, logoY + 4, {
-      width: textWidth * 0.64,
-      lineGap: 0,
-    });
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(titleSize)
-    .text(String(preparedDate), textX + textWidth * 0.64, logoY + 4, {
-      width: textWidth * 0.36,
-      align: 'right',
+    .text(`Prepared for ${clientName} on ${preparedDate}`, box.x, row2Y, {
+      width: box.width,
       lineGap: 0,
     });
 
-  const y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + 8;
+  const y = doc.y + 8;
   drawGoldDivider(doc, box.x, y, box.width);
   return y + SEMINAR_PDF.ruleGap;
 }
