@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/program-bridge.css?v=316" />
-  <link rel="stylesheet" href="css/report.css?v=322" />
+  <link rel="stylesheet" href="../css/program-bridge.css?v=317" />
+  <link rel="stylesheet" href="css/report.css?v=323" />
   <link rel="stylesheet" href="../menuplanner/css/planner.css?v=316" />
 </head>
 <body>
@@ -74,34 +74,30 @@
   </section>
 
   <div class="r-app" id="r-app">
-    <header class="r-header">
-      <div class="r-brand">
-        <img class="r-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="56" height="56" />
-        <div class="r-brand__text">
-          <h1 class="r-title">Your Program</h1>
-        </div>
+    <header class="r-topbar">
+      <div class="r-topbar__brand">
+        <img class="r-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="48" height="48" />
+        <h1 class="r-title">Your Program</h1>
       </div>
+
+      <nav class="r-topnav pb-nav" aria-label="Program navigation">
+        <ol id="r-nav-list" class="pb-nav__list r-topnav__pages"></ol>
+        <div class="r-topnav__tools">
+          <div id="program-pdf" class="pb-nav__print-shop" hidden>
+            <button type="button" class="pb-nav__btn pb-nav__btn--aux r-topnav__tool" data-report-download-pdf>
+              Program PDF
+            </button>
+          </div>
+          <div id="print-shop" class="pb-nav__print-shop" hidden>
+            <button type="button" class="pb-nav__btn pb-nav__btn--aux r-topnav__tool" id="print-shop-open">
+              Print Shop
+            </button>
+          </div>
+        </div>
+      </nav>
     </header>
 
-    <div class="r-layout pb-layout">
-      <aside class="pb-aside">
-        <nav class="r-nav pb-nav" aria-label="Program report">
-          <ol id="r-nav-list" class="pb-nav__list"></ol>
-        </nav>
-        <div id="program-pdf" class="pb-nav__print-shop" hidden>
-          <button type="button" class="pb-nav__btn pb-nav__btn--aux" data-report-download-pdf>
-            <span class="pb-nav__btn-line">Program PDF</span>
-            <span class="pb-nav__btn-sub">5-page report · Welcome through Servings</span>
-          </button>
-        </div>
-        <div id="print-shop" class="pb-nav__print-shop" hidden>
-          <button type="button" class="pb-nav__btn pb-nav__btn--aux pb-nav__btn--nested" id="print-shop-open">
-            <span class="pb-nav__btn-line">Print Shop</span>
-            <span class="pb-nav__btn-sub">Week at-a-glance · Grocery list</span>
-          </button>
-        </div>
-      </aside>
-
+    <div class="r-layout pb-layout pb-layout--topnav">
       <div class="pb-main">
         <main class="r-main" id="r-main"></main>
 
@@ -173,6 +169,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=322"></script>
+  <script type="module" src="js/report.js?v=323"></script>
 </body>
 </html>

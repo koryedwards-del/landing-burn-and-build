@@ -177,66 +177,24 @@ function syncProgramPdfNavVisibility() {
 }
 
 function shouldShowPrintShop() {
-  return activePage === 3 && Boolean(programPackage?.intake?.leanBodyMass);
+  return Boolean(programPackage?.intake?.leanBodyMass);
 }
 
 function syncPrintShopNavVisibility() {
   const show = shouldShowPrintShop();
   const printShop = document.getElementById('print-shop');
-  const slot = printShop?.closest('.pb-nav__item--print-shop');
-  document.querySelector('.pb-aside')?.classList.toggle('pb-aside--print-shop', show);
   if (show) {
     printShop?.removeAttribute('hidden');
-    slot?.removeAttribute('hidden');
   } else {
     printShop?.setAttribute('hidden', '');
-    slot?.setAttribute('hidden', '');
   }
-}
-
-function detachPrintShopFromNav() {
-  const printShop = document.getElementById('print-shop');
-  const aside = document.querySelector('.pb-aside');
-  const nav = aside?.querySelector('nav');
-  if (printShop && aside && nav && printShop.parentElement !== aside) {
-    aside.insertBefore(printShop, nav.nextSibling);
-  }
-}
-
-function mountPrintShopUnderMenuPlanner(list) {
-  const printShop = document.getElementById('print-shop');
-  if (!printShop || !list) return;
-
-  const menuItem = list.querySelector('[data-nav-page="3"]')?.closest('.pb-nav__item');
-  if (!menuItem) return;
-
-  menuItem.classList.add('pb-nav__group', 'pb-nav__group--menu-planner');
-
-  let groupList = menuItem.querySelector('.pb-nav__group-list');
-  if (!groupList) {
-    groupList = document.createElement('ul');
-    groupList.className = 'pb-nav__group-list';
-    groupList.setAttribute('aria-label', 'Menu planner tools');
-    menuItem.appendChild(groupList);
-  }
-
-  let slot = groupList.querySelector('.pb-nav__item--print-shop');
-  if (!slot) {
-    slot = document.createElement('li');
-    slot.className = 'pb-nav__item pb-nav__item--nested pb-nav__item--print-shop';
-    groupList.appendChild(slot);
-  }
-
-  slot.appendChild(printShop);
 }
 
 function renderNav() {
   const list = document.getElementById('r-nav-list');
   if (!list) return;
-  detachPrintShopFromNav();
   const activeId = PAGES[activePage]?.id || 'welcome';
   list.innerHTML = programNavListHtml(activeId);
-  mountPrintShopUnderMenuPlanner(list);
   syncProgramPdfNavVisibility();
   syncPrintShopNavVisibility();
   remountProgramLibraryNav();
@@ -555,7 +513,7 @@ function renderPage() {
       .catch((err) => {
         console.error('Menu planner failed to load:', err);
         showPlannerStatus(
-          'Menu planner could not load. Try Welcome in the sidebar, or refresh the page.',
+          'Menu planner could not load. Try Your program in the top navigation, or refresh the page.',
           { error: true },
         );
       });
@@ -580,10 +538,6 @@ function showPage(index) {
 }
 
 function syncPlannerLayoutMode() {
-  const layout = document.querySelector('.r-layout');
-  if (layout) {
-    layout.classList.toggle('r-layout--planner', activePage === 3);
-  }
   document.body.classList.toggle('r-body--planner', activePage === 3);
 }
 

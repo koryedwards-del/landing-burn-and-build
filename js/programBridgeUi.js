@@ -64,7 +64,7 @@ export function programNavListHtml(activeId) {
               class="pb-nav__btn${isActive ? ' is-active' : ''}"
               data-nav-page="${page.reportPage}"
               ${isActive ? ' aria-current="page"' : ''}
-            >${page.step}. ${page.label}</button>
+            >${page.label}</button>
           </li>`;
   }).join('');
 }

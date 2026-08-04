@@ -46,44 +46,56 @@ body {
   min-height: calc(100vh - 72px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-.r-header {
+.r-topbar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 16px;
 }
 
-.r-brand {
+.r-topbar__brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-.r-logo {
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
+.r-topnav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
 }
 
-.r-title {
-  font-family: Oswald, system-ui, sans-serif;
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.r-topnav__pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.r-tag {
-  margin-top: 4px;
-  font-size: 0.82rem;
-  color: var(--muted);
+.r-topnav__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
 }
 
-.r-layout {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 24px;
+.r-topnav__tool {
+  min-height: 40px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+.r-layout,
+.r-layout.pb-layout {
+  display: block;
   flex: 1;
   min-height: 0;
 }
@@ -98,26 +110,38 @@ body {
   min-height: 0;
 }
 
-/* Menu planner — full width, hide sidebar */
-.r-layout--planner,
-.pb-layout.r-layout--planner {
-  grid-template-columns: 1fr;
-  gap: 0;
+.r-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
 }
 
-.r-layout--planner .pb-aside {
-  display: none;
+.r-title {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .r-body--planner {
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @media (max-width: 720px) {
-  .r-body--planner {
-    padding-left: 16px;
-    padding-right: 16px;
+  .r-topnav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .r-topnav__tools {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .r-topnav__tool {
+    flex: 1 1 auto;
   }
 }
 
@@ -1038,9 +1062,9 @@ a.r-nav__btn {
     padding: 0;
   }
 
-  .r-nav,
+  .r-topnav,
   .r-actions,
-  .r-header .r-tag {
+  .r-topbar .r-title + .r-tag {
     display: none !important;
   }
 
