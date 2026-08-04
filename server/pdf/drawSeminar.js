@@ -286,23 +286,9 @@ export function drawStartHereBox(doc, copy, x, y, width) {
 }
 
 export function drawGettingStartedPage(doc, payload, box) {
-  const copy = payload.gettingStarted;
-
   const bodyTop = drawPersonalizationHeader(doc, payload, box);
 
-  let y = drawContentPageTitle(doc, 'Getting Started', box.x, bodyTop, box.width);
-
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(18)
-    .fillColor(SEMINAR_COLORS.body)
-    .text('Welcome', box.x, y, { width: box.width, lineGap: 0 });
-
-  y = doc.y + SEMINAR_PDF.paragraphGap;
-  y = drawParagraphs(doc, copy.intro, box.x, y, box.width);
-  y += 10;
-  drawStartHereBox(doc, copy, box.x, y, box.width);
-
+  drawContentPageTitle(doc, 'Getting Started', box.x, bodyTop, box.width);
   drawSeminarTemplateFooter(doc, payload, box);
 }
 
