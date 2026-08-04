@@ -1,7 +1,8 @@
 import { PDF_HEADER, PDF_MARGIN } from './constants.js';
-import { logoPath } from './draw.js';
+import { drawWatermark, logoPath } from './draw.js';
 
 export const SEMINAR_TOTAL_PAGES = 6;
+export const SEMINAR_FOOTER_ZONE = 30;
 
 export const SEMINAR_PDF = {
   bodySize: 9,
@@ -46,6 +47,92 @@ export function seminarContentBox(doc) {
 export function addSeminarPage(doc) {
   doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
   return seminarContentBox(doc);
+}
+
+export function addSeminarTemplatePage(doc) {
+  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+  drawWatermark(doc);
+  return seminarContentBox(doc);
+}
+
+function titleCaseWords(text) {
+  return String(text || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+export function drawGoldDivider(doc, x, y, width) {
+  doc
+    .strokeColor(SEMINAR_COLORS.gold)
+    .lineWidth(1.5)
+    .moveTo(x, y)
+    .lineTo(x + width, y)
+    .stroke();
+}
+
+export function drawSeminarTemplateHeader(doc, payload, pageTitle, box) {
+  const clientName = payload.clientName;
+  const preparedDate = payload.preparedDateLong || payload.preparedDate;
+  const logoY = box.y;
+  const textX = box.x + PDF_HEADER.logoWidth + 14;
+  const textWidth = box.width - PDF_HEADER.logoWidth - 14;
+
+  doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.sectionTitleSize + 2)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(titleCaseWords(pageTitle), textX, logoY + 4, { width: textWidth, lineGap: 0 });
+
+  let y = Math.max(doc.y, logoY + PDF_HEADER.logoWidth) + 8;
+
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.headerMetaSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`Prepared exclusively for: ${clientName}`, box.x, y, {
+      width: box.width * 0.64,
+      lineGap: 0,
+    });
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(SEMINAR_PDF.headerMetaSize)
+    .text(`On: ${preparedDate}`, box.x + box.width * 0.64, y, {
+      width: box.width * 0.36,
+      align: 'right',
+      lineGap: 0,
+    });
+
+  y = Math.max(doc.y, y + 14) + 8;
+  drawGoldDivider(doc, box.x, y, box.width);
+  return y + SEMINAR_PDF.ruleGap;
+}
+
+export function drawSeminarTemplateFooter(doc, payload, box) {
+  const { header } = payload;
+  const footerTextY = box.bottom - 12;
+  const ruleY = footerTextY - 12;
+
+  drawGoldDivider(doc, box.x, ruleY, box.width);
+
+  doc
+    .font('Helvetica')
+    .fontSize(SEMINAR_PDF.headerContactSize)
+    .fillColor(SEMINAR_COLORS.muted)
+    .text(`${header.website} · ${header.email}`, box.x, footerTextY, {
+      width: box.width,
+      align: 'center',
+      lineGap: 0,
+    });
+
+  return ruleY;
+}
+
+export function seminarTemplateBodyBottom(box) {
+  return box.bottom - SEMINAR_FOOTER_ZONE;
 }
 
 export function drawSeminarHeader(doc, payload, sectionTitle, box) {
@@ -193,26 +280,23 @@ export function drawStartHereBox(doc, copy, x, y, width) {
 
 export function drawGettingStartedPage(doc, payload, box) {
   const copy = payload.gettingStarted;
-  let y = drawSeminarLetterhead(doc, payload, box);
+
+  const bodyTop = drawSeminarTemplateHeader(doc, payload, 'Getting Started', box);
+
+  let y = bodyTop;
 
   doc
     .font('Helvetica-Bold')
-    .fontSize(22)
+    .fontSize(18)
     .fillColor(SEMINAR_COLORS.body)
-    .text('WELCOME', box.x, y, { width: box.width, lineGap: 0 });
+    .text('Welcome', box.x, y, { width: box.width, lineGap: 0 });
 
-  y = doc.y + 8;
-  doc
-    .strokeColor(SEMINAR_COLORS.gold)
-    .lineWidth(3)
-    .moveTo(box.x, y)
-    .lineTo(box.x + box.width, y)
-    .stroke();
-
-  y += SEMINAR_PDF.ruleGap;
+  y = doc.y + SEMINAR_PDF.paragraphGap;
   y = drawParagraphs(doc, copy.intro, box.x, y, box.width);
-  y += 8;
+  y += 10;
   drawStartHereBox(doc, copy, box.x, y, box.width);
+
+  drawSeminarTemplateFooter(doc, payload, box);
 }
 
 export function drawStepsToSuccessHeader(doc, payload, box) {

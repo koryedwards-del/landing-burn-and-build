@@ -89,7 +89,7 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 });
 
 /** Static Kristi sample — committed under docs/samples for direct download. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=5';
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=6';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;

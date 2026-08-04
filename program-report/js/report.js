@@ -21,11 +21,6 @@ import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/progr
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
 import { PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
-import {
-  deliverPrintPdfToTab,
-  openPrintTab,
-  showPrintTabError,
-} from '../../menuplanner/js/printShopDelivery.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -207,7 +202,7 @@ function renderWelcome(pkg) {
 
       <footer class="r-actions r-actions--split">
         ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>` : ''}
-        <button type="button" class="r-btn r-btn--ghost" data-report-download-pdf>Download PDF report</button>
+        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -561,32 +556,7 @@ function startProgramReportPdfDownload() {
     return;
   }
 
-  const printWin = openPrintTab('Program Report');
-  if (!printWin) {
-    void downloadProgramReportPdfFile();
-    return;
-  }
-
-  void deliverProgramReportPdfToTab(printWin);
-}
-
-async function deliverProgramReportPdfToTab(printWin) {
-  try {
-    const { fetchProgramReportPdf } = await import('./programReportPdf.js');
-    const blob = await fetchProgramReportPdf(programPackage);
-    if (printWin.closed) {
-      await downloadProgramReportPdfFile(blob);
-      return;
-    }
-    deliverPrintPdfToTab(printWin, blob);
-  } catch (err) {
-    const message = err.message || 'Could not generate program report PDF.';
-    if (!printWin.closed) {
-      showPrintTabError(printWin, message);
-      return;
-    }
-    window.alert(message);
-  }
+  void downloadProgramReportPdfFile();
 }
 
 async function downloadProgramReportPdfFile(existingBlob) {

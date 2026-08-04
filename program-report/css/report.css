@@ -145,7 +145,7 @@ body {
   }
 }
 
-.r-body--planner .r-header {
+.r-body--planner .r-topbar {
   padding-bottom: 10px;
 }
 
@@ -912,11 +912,6 @@ a.r-nav__btn {
 
   .r-doc {
     padding: 20px 16px 24px;
-  }
-
-  .r-layout {
-    grid-template-columns: 1fr;
-    gap: 16px;
   }
 }
 

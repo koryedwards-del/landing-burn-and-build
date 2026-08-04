@@ -2,6 +2,7 @@ import { createPrintPdf } from './creator.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
+  addSeminarTemplatePage,
   drawGettingStartedPage,
   drawNumberedSteps,
   drawParagraphs,
@@ -16,7 +17,7 @@ import { validatePrintPayload } from './validate.js';
 
 function drawGettingStartedPdfPage(creator, payload) {
   const doc = creator.doc;
-  const box = addSeminarPage(doc);
+  const box = addSeminarTemplatePage(doc);
   drawGettingStartedPage(doc, payload, box);
 }
 
