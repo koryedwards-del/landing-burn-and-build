@@ -1,17 +1,23 @@
 import { PDF_HEADER, PDF_MARGIN } from './constants.js';
 import { drawWatermark, logoPath } from './draw.js';
+import {
+  addFramePage,
+  drawFrameFooter,
+  drawFrameHeader,
+  drawFramePageTitle,
+  drawGoldDivider,
+  PDF_FRAME_FONTS,
+  PDF_FRAME_TAGLINE,
+} from './drawFrame.js';
+
+export { PDF_FRAME_TAGLINE };
 
 export const SEMINAR_TOTAL_PAGES = 6;
 export const SEMINAR_FOOTER_ZONE = 30;
 export const SEMINAR_HEADER_LOGO_WIDTH = 68;
 export const SEMINAR_HEADER_LOGO_GAP = 16;
 
-export const SEMINAR_FONTS = Object.freeze({
-  regular: 'Times-Roman',
-  bold: 'Times-Bold',
-  italic: 'Times-Italic',
-  boldItalic: 'Times-BoldItalic',
-});
+export const SEMINAR_FONTS = PDF_FRAME_FONTS;
 
 export const SEMINAR_PDF = {
   bodySize: 9,
@@ -61,9 +67,7 @@ export function addSeminarPage(doc) {
 }
 
 export function addSeminarTemplatePage(doc) {
-  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-  drawWatermark(doc);
-  return seminarContentBox(doc);
+  return addFramePage(doc);
 }
 
 function titleCaseWords(text) {
@@ -74,74 +78,15 @@ function titleCaseWords(text) {
     .join(' ');
 }
 
-export function drawGoldDivider(doc, x, y, width) {
-  doc
-    .strokeColor(SEMINAR_COLORS.gold)
-    .lineWidth(1.5)
-    .moveTo(x, y)
-    .lineTo(x + width, y)
-    .stroke();
-}
-
-function ordinalSuffix(day) {
-  if (day >= 11 && day <= 13) return 'th';
-  switch (day % 10) {
-    case 1: return 'st';
-    case 2: return 'nd';
-    case 3: return 'rd';
-    default: return 'th';
-  }
-}
-
-function formatPreparedDateOrdinal(value) {
-  if (!value) return '';
-  const isoMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) {
-    const d = new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T12:00:00`);
-    const month = d.toLocaleDateString('en-US', { month: 'long' });
-    const day = d.getDate();
-    return `${month} ${day}${ordinalSuffix(day)}, ${d.getFullYear()}`;
-  }
-  const longMatch = String(value).match(/^(\w+)\s+(\d{1,2}),?\s+(\d{4})$/);
-  if (longMatch) {
-    const day = Number(longMatch[2]);
-    return `${longMatch[1]} ${day}${ordinalSuffix(day)}, ${longMatch[3]}`;
-  }
-  return String(value);
-}
+export { drawGoldDivider };
 
 export function drawPersonalizationHeader(doc, payload, box) {
-  const clientName = titleCaseWords(payload.clientName);
-  const preparedDate = formatPreparedDateOrdinal(payload.preparedDateLong || payload.preparedDate);
-  const logoY = box.y;
-  const logoWidth = SEMINAR_HEADER_LOGO_WIDTH;
-  const logoX = box.x + (box.width - logoWidth) / 2;
-  const metaSize = SEMINAR_PDF.personalizationSize;
-
-  doc.image(logoPath, logoX, logoY, { width: logoWidth });
-
-  const rowY = logoY + logoWidth + SEMINAR_HEADER_LOGO_GAP;
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(metaSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(`Personalized exclusively for: ${clientName}`, box.x, rowY, {
-      width: box.width * 0.64,
-      align: 'left',
-      lineGap: 0,
-    });
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(metaSize)
-    .text(`On: ${preparedDate}`, box.x + box.width * 0.64, rowY, {
-      width: box.width * 0.36,
-      align: 'right',
-      lineGap: 0,
-    });
-
-  const y = Math.max(doc.y, rowY + 14) + 10;
-  drawGoldDivider(doc, box.x, y, box.width);
-  return y + SEMINAR_PDF.ruleGap;
+  return drawFrameHeader(doc, box, {
+    personalized: true,
+    clientName: payload.clientName,
+    preparedDateLong: payload.preparedDateLong,
+    preparedDate: payload.preparedDate,
+  });
 }
 
 /** @deprecated Use drawPersonalizationHeader — page titles belong in body content. */
@@ -150,32 +95,11 @@ export function drawSeminarTemplateHeader(doc, payload, _pageTitle, box) {
 }
 
 export function drawContentPageTitle(doc, title, x, y, width) {
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(SEMINAR_PDF.contentPageTitleSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(titleCaseWords(title), x, y, { width, lineGap: 0 });
-  return doc.y + SEMINAR_PDF.sectionGap;
+  return drawFramePageTitle(doc, title, x, y, width);
 }
 
 export function drawSeminarTemplateFooter(doc, payload, box) {
-  const { header } = payload;
-  const footerTextY = box.bottom - 12;
-  const ruleY = footerTextY - 12;
-
-  drawGoldDivider(doc, box.x, ruleY, box.width);
-
-  doc
-    .font(SEMINAR_FONTS.regular)
-    .fontSize(SEMINAR_PDF.headerContactSize)
-    .fillColor(SEMINAR_COLORS.muted)
-    .text(`${header.website} · ${header.email}`, box.x, footerTextY, {
-      width: box.width,
-      align: 'center',
-      lineGap: 0,
-    });
-
-  return ruleY;
+  return drawFrameFooter(doc, box, payload.header);
 }
 
 export function seminarTemplateBodyBottom(box) {
