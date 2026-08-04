@@ -103,22 +103,23 @@ export function drawPersonalizationHeader(doc, payload, box) {
   const clientName = titleCaseWords(payload.clientName);
   const preparedDate = formatPreparedDateOrdinal(payload.preparedDateLong || payload.preparedDate);
   const logoY = box.y;
+  const logoHeight = PDF_HEADER.logoWidth;
   const titleSize = SEMINAR_PDF.sectionTitleSize + 2;
+  const line = `Prepared exclusively for ${clientName} on ${preparedDate}`;
 
   doc.image(logoPath, box.x, logoY, { width: PDF_HEADER.logoWidth });
 
-  const row2Y = logoY + PDF_HEADER.logoWidth + 8;
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(titleSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(`Prepared exclusively for ${clientName} on ${preparedDate}`, box.x, row2Y, {
-      width: box.width,
-      align: 'center',
-      lineGap: 0,
-    });
+  doc.font('Helvetica-Bold').fontSize(titleSize).fillColor(SEMINAR_COLORS.body);
+  const textHeight = doc.heightOfString(line, { width: box.width, lineGap: 0 });
+  const textY = logoY + logoHeight - textHeight;
 
-  const y = doc.y + 8;
+  doc.text(line, box.x, textY, {
+    width: box.width,
+    align: 'center',
+    lineGap: 0,
+  });
+
+  const y = logoY + logoHeight + 8;
   drawGoldDivider(doc, box.x, y, box.width);
   return y + SEMINAR_PDF.ruleGap;
 }
