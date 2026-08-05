@@ -7,6 +7,7 @@ import {
   drawFramePageTitle,
   drawGoldDivider,
   frameContentContainer,
+  frameContentContainerBottom,
   PDF_FRAME_FONTS,
   PDF_FRAME_TAGLINE,
 } from './drawFrame.js';
@@ -250,11 +251,99 @@ export function drawStartHereBox(doc, copy, x, y, width) {
   return y + boxH;
 }
 
-export function drawGettingStartedPage(doc, payload, box) {
+function welcomePageLayout(doc, payload, { showTitle = true } = {}) {
+  const box = addFramePage(doc);
   const topGoldY = drawPersonalizationHeader(doc, payload, box);
   const container = frameContentContainer(box, topGoldY);
+  const bottom = frameContentContainerBottom(box, topGoldY);
+  let y = container.top;
+  const pageTitle = payload.gettingStarted?.pageTitle || 'Welcome';
+  if (showTitle) {
+    y = drawContentPageTitle(doc, pageTitle, box.x, y, box.width);
+  }
+  return { box, x: box.x, y, width: box.width, bottom };
+}
 
-  drawContentPageTitle(doc, 'Getting Started', box.x, container.top, box.width);
+function measureNarrativeBlock(doc, block, width) {
+  const gap = 4;
+  const sectionGap = SEMINAR_PDF.sectionGap;
+  doc.font(SEMINAR_FONTS.bold).fontSize(SEMINAR_PDF.subsectionSize);
+  let h = doc.heightOfString(String(block.title || ''), { width, lineGap: 0 }) + SEMINAR_PDF.headerGap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(SEMINAR_PDF.bodySize);
+  h += doc.heightOfString(String(block.asked || ''), { width, lineGap: SEMINAR_PDF.lineGap }) + gap;
+  h += doc.heightOfString(String(block.why || ''), { width, lineGap: SEMINAR_PDF.lineGap }) + gap;
+  doc.font(SEMINAR_FONTS.bold).fontSize(SEMINAR_PDF.bodySize);
+  h += doc.heightOfString(`See: ${block.seeIt || ''}`, { width, lineGap: SEMINAR_PDF.lineGap }) + sectionGap;
+  return h;
+}
+
+function drawNarrativeBlock(doc, block, x, y, width) {
+  y = drawSubsectionTitle(doc, block.title, x, y, width);
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(SEMINAR_PDF.bodySize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(block.asked || ''), x, y, { width, lineGap: SEMINAR_PDF.lineGap });
+  y = doc.y + 4;
+  doc.text(String(block.why || ''), x, y, { width, lineGap: SEMINAR_PDF.lineGap });
+  y = doc.y + 4;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fillColor(SEMINAR_COLORS.muted)
+    .text(`See: ${block.seeIt || ''}`, x, y, { width, lineGap: SEMINAR_PDF.lineGap });
+  return doc.y + SEMINAR_PDF.sectionGap;
+}
+
+function measureStartHereBox(copy) {
+  const items = copy.startHere || [];
+  const pad = 16;
+  const labelH = 16;
+  const lineH = 15;
+  return pad * 2 + labelH + 8 + items.length * lineH + 8;
+}
+
+/** Welcome narrative — asked / why / see-it blocks; paginates inside unified frame. */
+export function drawWelcomeNarrative(doc, payload) {
+  const copy = payload.gettingStarted;
+  if (!copy) return;
+
+  let page = welcomePageLayout(doc, payload, { showTitle: true });
+  page.y = drawParagraphs(doc, copy.intro, page.x, page.y, page.width);
+
+  (copy.blocks || []).forEach((block) => {
+    const blockHeight = measureNarrativeBlock(doc, block, page.width);
+    if (page.y + blockHeight > page.bottom) {
+      drawFrameFooter(doc, page.box, payload.header);
+      page = welcomePageLayout(doc, payload, { showTitle: false });
+    }
+    page.y = drawNarrativeBlock(doc, block, page.x, page.y, page.width);
+    if (page.y > page.bottom) {
+      drawFrameFooter(doc, page.box, payload.header);
+      page = welcomePageLayout(doc, payload, { showTitle: false });
+    }
+  });
+
+  const closingHeight = (copy.closing || []).reduce((sum, paragraph) => {
+    doc.font(SEMINAR_FONTS.regular).fontSize(SEMINAR_PDF.bodySize);
+    return sum + doc.heightOfString(String(paragraph), {
+      width: page.width,
+      lineGap: SEMINAR_PDF.lineGap,
+    }) + SEMINAR_PDF.paragraphGap;
+  }, 0);
+  const startHereHeight = measureStartHereBox(copy);
+  if (page.y + closingHeight + startHereHeight > page.bottom) {
+    drawFrameFooter(doc, page.box, payload.header);
+    page = welcomePageLayout(doc, payload, { showTitle: false });
+  }
+
+  page.y = drawParagraphs(doc, copy.closing, page.x, page.y, page.width);
+  drawStartHereBox(doc, copy, page.x, page.y, page.width);
+  drawFrameFooter(doc, page.box, payload.header);
+}
+
+/** @deprecated Use drawWelcomeNarrative */
+export function drawGettingStartedPage(doc, payload, box) {
+  drawWelcomeNarrative(doc, payload);
 }
 
 export function drawStepsToSuccessHeader(doc, payload, box) {

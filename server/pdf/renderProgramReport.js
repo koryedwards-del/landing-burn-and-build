@@ -3,8 +3,7 @@ import { drawFrameFooter } from './drawFrame.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
-  addSeminarTemplatePage,
-  drawGettingStartedPage,
+  drawWelcomeNarrative,
   drawNumberedSteps,
   drawParagraphs,
   drawSeminarHeader,
@@ -22,10 +21,7 @@ function finishProgramReportPage(doc, box, payload) {
 }
 
 function drawGettingStartedPdfPage(creator, payload) {
-  const doc = creator.doc;
-  const box = addSeminarTemplatePage(doc);
-  drawGettingStartedPage(doc, payload, box);
-  finishProgramReportPage(doc, box, payload);
+  drawWelcomeNarrative(creator.doc, payload);
 }
 
 function drawStepsToSuccessPage(creator, payload) {
@@ -413,8 +409,8 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
 
   const buffer = await creator.finish();
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages !== SEMINAR_TOTAL_PAGES) {
-    throw new Error(`Program report PDF expected ${SEMINAR_TOTAL_PAGES} pages, got ${pages}`);
+  if (pages < SEMINAR_TOTAL_PAGES) {
+    throw new Error(`Program report PDF expected at least ${SEMINAR_TOTAL_PAGES} pages, got ${pages}`);
   }
   return buffer;
 }
