@@ -7,7 +7,7 @@ alwaysApply: true
 
 - Full map: `docs/DOMAINS.md`
 - This repo: **Burn & Build** — full desktop web product on **burnandbuilddiet.com**
-- API backend: `server/` → Render (`program-creator-3tzd.onrender.com`)
+- API backend: `server/` → Render project **Burn & Build**, service `program-creator` (`program-creator-3tzd.onrender.com`)
 
 Push to `main` deploys static site via GitHub Pages.
 
@@ -20,7 +20,7 @@ Push to `main` deploys static site via GitHub Pages.
 | `createyourfoodplan/` | Stripe checkout paywall |
 | `program-report/` | Unified program shell (Welcome → Menu planner) |
 | `menuplanner/` | Redirect → program-report page 4 |
-| `server/` | Express API + SQLite (Render) |
+| `server/` | Express API + SQLite (Render — Burn & Build project) |
 | `contacts/` | Admin contact list |
 
 **Product name:** Menu planner (never “meal planner” in user-facing copy).

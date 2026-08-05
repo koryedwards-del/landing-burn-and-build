@@ -28,25 +28,37 @@ Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
 | `/support`, `/privacypolicy` | Support & legal |
 | `/contacts/` | Admin contact list (key auth) |
 
+## Hosting
+
+| Layer | Platform | Notes |
+|-------|----------|-------|
+| **Static site** | GitHub Pages | `burnandbuilddiet.com` — push to `main` deploys |
+| **API** | Render | Project **Burn & Build** — not Signal+ |
+
 ## API (Render)
 
-**Project:** The Burn & Build  
+**Project:** Burn & Build  
+**Environment:** Production  
 **Service:** `program-creator`  
 **URL:** https://program-creator-3tzd.onrender.com  
+**Database:** SQLite on persistent disk (`bnb-data`, 1 GB) — not Postgres  
 **Code:** `server/` in this repo  
 **Config:** `render.yaml`, `.env.example`
 
-Handles program save/load, Stripe checkout, webhooks, and admin contacts. The static site calls this API via `js/apiConfig.js`.
+Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
 
-### Render reconnect (required before deleting `pwa-burn-and-build`)
+### Render checklist
 
-The Render service currently deploys from the archived **`pwa-burn-and-build`** repo. Before deleting that repo:
+- [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
+- [ ] Service deploys from **`landing-burn-and-build`** (not archived `pwa-burn-and-build`)
+- [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.
+- [ ] Smoke test: `/health`, questionnaire save, checkout, program-report load
 
-1. Render Dashboard → project **The Burn & Build** → **program-creator** → Settings → connect **this repo** (`landing-burn-and-build`) instead.
+### Before deleting `pwa-burn-and-build`
+
+1. Render Dashboard → project **Burn & Build** → **program-creator** → Settings → connect **this repo** (`landing-burn-and-build`).
 2. Confirm build command `npm install` and start command match `render.yaml`.
-3. Verify env vars are still set (`STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.).
-4. Smoke test: `/health`, questionnaire save, checkout, program-report load.
-5. Disable GitHub Pages on `pwa-burn-and-build` if still enabled (both repos had the same `CNAME`).
+3. Disable GitHub Pages on `pwa-burn-and-build` if still enabled (both repos had the same `CNAME`).
 
 ## Deprecated
 

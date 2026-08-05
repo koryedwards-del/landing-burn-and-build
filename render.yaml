@@ -1,9 +1,9 @@
-# Burn & Build — program creator (Render)
-# Project: The Burn & Build · Service: program-creator · Repo: landing-burn-and-build
-# Dashboard: move program-creator into project "The Burn & Build" if not synced from Blueprint yet.
+# Burn & Build API on Render
+# Project: Burn & Build · Environment: Production · Service: program-creator
+# Repo: landing-burn-and-build
 
 projects:
-  - name: The Burn & Build
+  - name: Burn & Build
     environments:
       - name: Production
         services:
