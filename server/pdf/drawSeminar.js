@@ -255,7 +255,6 @@ export function drawGettingStartedPage(doc, payload, box) {
   const container = frameContentContainer(box, topGoldY);
 
   drawContentPageTitle(doc, 'Getting Started', box.x, container.top, box.width);
-  drawSeminarTemplateFooter(doc, payload, box);
 }
 
 export function drawStepsToSuccessHeader(doc, payload, box) {

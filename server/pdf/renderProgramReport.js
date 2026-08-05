@@ -1,4 +1,5 @@
 import { createPrintPdf } from './creator.js';
+import { drawFramePageFooter } from './drawFrame.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
@@ -16,13 +17,22 @@ import {
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 
-function drawGettingStartedPdfPage(creator, payload) {
+function finishProgramReportPage(doc, box, payload, page) {
+  drawFramePageFooter(doc, box, {
+    page,
+    total: SEMINAR_TOTAL_PAGES,
+    contact: payload.header,
+  });
+}
+
+function drawGettingStartedPdfPage(creator, payload, page) {
   const doc = creator.doc;
   const box = addSeminarTemplatePage(doc);
   drawGettingStartedPage(doc, payload, box);
+  finishProgramReportPage(doc, box, payload, page);
 }
 
-function drawStepsToSuccessPage(creator, payload) {
+function drawStepsToSuccessPage(creator, payload, page) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
   const steps = payload.stepsToSuccess;
@@ -42,9 +52,11 @@ function drawStepsToSuccessPage(creator, payload) {
     y += SEMINAR_PDF.paragraphGap;
     drawParagraphs(doc, [steps.footer], box.x, y, box.width);
   }
+
+  finishProgramReportPage(doc, box, payload, page);
 }
 
-function drawLegacyWelcomePage(creator, payload) {
+function drawLegacyWelcomePage(creator, payload, page) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
   const welcome = payload.welcome;
@@ -68,22 +80,24 @@ function drawLegacyWelcomePage(creator, payload) {
     y = drawSubsectionTitle(doc, 'Servings', box.x, y, box.width);
     drawParagraphs(doc, [welcome.servings], box.x, y, box.width);
   }
+
+  finishProgramReportPage(doc, box, payload, page);
 }
 
 function drawProgramReportOpeningPages(creator, payload) {
   if (payload.gettingStarted) {
-    drawGettingStartedPdfPage(creator, payload);
-    drawStepsToSuccessPage(creator, payload);
+    drawGettingStartedPdfPage(creator, payload, 1);
+    drawStepsToSuccessPage(creator, payload, 2);
     return;
   }
   if (payload.stepsToSuccess?.steps?.length) {
-    drawStepsToSuccessPage(creator, payload);
+    drawStepsToSuccessPage(creator, payload, 1);
     return;
   }
-  drawLegacyWelcomePage(creator, payload);
+  drawLegacyWelcomePage(creator, payload, 1);
 }
 
-function drawLeanBodyAnalysisPage(creator, payload) {
+function drawLeanBodyAnalysisPage(creator, payload, page) {
   const doc = creator.doc;
   const lba = payload.leanBodyAnalysis;
   const box = addSeminarPage(doc);
@@ -166,9 +180,10 @@ function drawLeanBodyAnalysisPage(creator, payload) {
   }) + SEMINAR_PDF.paragraphGap;
 
   drawParagraphs(doc, [lba.monitorCopy], box.x, y, box.width);
+  finishProgramReportPage(doc, box, payload, page);
 }
 
-function drawHistoryPage(creator, payload) {
+function drawHistoryPage(creator, payload, page) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
   const y = drawSeminarHeader(doc, payload, 'Body Composition History', box);
@@ -202,9 +217,11 @@ function drawHistoryPage(creator, payload) {
     ],
     headerRows: 1,
   });
+
+  finishProgramReportPage(doc, box, payload, page);
 }
 
-function drawFoodPlanPage(creator, payload) {
+function drawFoodPlanPage(creator, payload, page) {
   const doc = creator.doc;
   const fp = payload.foodPlan;
   const box = addSeminarPage(doc);
@@ -316,9 +333,11 @@ function drawFoodPlanPage(creator, payload) {
     ],
     headerRows: 2,
   });
+
+  finishProgramReportPage(doc, box, payload, page);
 }
 
-function drawServingsPage(creator, payload) {
+function drawServingsPage(creator, payload, page) {
   const doc = creator.doc;
   const servings = payload.servings;
   const box = addSeminarPage(doc);
@@ -378,6 +397,8 @@ function drawServingsPage(creator, payload) {
     ],
     headerRows: 1,
   });
+
+  finishProgramReportPage(doc, box, payload, page);
 }
 
 export async function renderProgramReportPdf(payload, { title } = {}) {
@@ -389,10 +410,10 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
   });
 
   drawProgramReportOpeningPages(creator, payload);
-  drawLeanBodyAnalysisPage(creator, payload);
-  drawHistoryPage(creator, payload);
-  drawFoodPlanPage(creator, payload);
-  drawServingsPage(creator, payload);
+  drawLeanBodyAnalysisPage(creator, payload, 3);
+  drawHistoryPage(creator, payload, 4);
+  drawFoodPlanPage(creator, payload, 5);
+  drawServingsPage(creator, payload, 6);
 
   const buffer = await creator.finish();
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;

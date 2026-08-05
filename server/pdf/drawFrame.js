@@ -25,6 +25,7 @@ export const PDF_FRAME = Object.freeze({
   personalizationSize: 12,
   contentPageTitleSize: 18,
   footerContactSize: 8,
+  pageNumberSize: 9,
   sectionGap: 12,
 });
 
@@ -212,4 +213,37 @@ export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
     });
 
   return ruleY;
+}
+
+/** Centered at bottom of content band, above the footer gold line. */
+export function drawFramePageNumber(doc, box, { page, total }) {
+  const label = `Page ${page} of ${total}`;
+  doc
+    .font(PDF_FRAME_FONTS.regular)
+    .fontSize(PDF_FRAME.pageNumberSize)
+    .fillColor(PDF_FRAME_COLORS.muted);
+
+  const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
+  const y = frameFooterRuleY(box) - PDF_FRAME.contentPad - textHeight;
+
+  doc.text(label, box.x, y, {
+    width: box.width,
+    align: 'center',
+    lineGap: 0,
+  });
+
+  return y;
+}
+
+/** Program report: page number (optional) + gold footer.contact */
+export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
+  if (page != null && total != null) {
+    drawFramePageNumber(doc, box, { page, total });
+  }
+  drawFrameFooter(doc, box, contact);
+}
+
+/** Max y for body content when a page number is shown. */
+export function frameContentBottomLimit(box) {
+  return frameFooterRuleY(box) - PDF_FRAME.contentPad - PDF_FRAME.pageNumberSize - 4;
 }
