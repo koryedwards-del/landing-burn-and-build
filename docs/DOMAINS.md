@@ -67,7 +67,7 @@ Verify: `curl https://program-creator-3tzd.onrender.com/health` should return `"
 ### Render checklist
 
 - [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
-- [ ] Service deploys from **`landing-burn-and-build`** (not archived `pwa-burn-and-build`)
+- [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.
 - [ ] Smoke test: `/health`, questionnaire save, checkout, program-report load
 
