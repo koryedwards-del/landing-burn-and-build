@@ -30,6 +30,8 @@ Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
 
 ## API (Render)
 
+**Project:** The Burn & Build  
+**Service:** `program-creator`  
 **URL:** https://program-creator-3tzd.onrender.com  
 **Code:** `server/` in this repo  
 **Config:** `render.yaml`, `.env.example`
@@ -40,7 +42,7 @@ Handles program save/load, Stripe checkout, webhooks, and admin contacts. The st
 
 The Render service currently deploys from the archived **`pwa-burn-and-build`** repo. Before deleting that repo:
 
-1. Render Dashboard → **program-creator** service → Settings → connect **this repo** (`landing-burn-and-build`) instead.
+1. Render Dashboard → project **The Burn & Build** → **program-creator** → Settings → connect **this repo** (`landing-burn-and-build`) instead.
 2. Confirm build command `npm install` and start command match `render.yaml`.
 3. Verify env vars are still set (`STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.).
 4. Smoke test: `/health`, questionnaire save, checkout, program-report load.

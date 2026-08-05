@@ -1,39 +1,44 @@
-# Burn & Build — program creator (Render Web Service)
-# Render Dashboard → program-creator → connect landing-burn-and-build repo
+# Burn & Build — program creator (Render)
+# Project: The Burn & Build · Service: program-creator · Repo: landing-burn-and-build
+# Dashboard: move program-creator into project "The Burn & Build" if not synced from Blueprint yet.
 
-services:
-  - type: web
-    name: program-creator
-    runtime: node
-    region: oregon
-    plan: starter
-    buildCommand: npm install
-    startCommand: DATABASE_PATH=/var/data/programs.db npm start
-    healthCheckPath: /health
-    disk:
-      name: bnb-data
-      mountPath: /var/data
-      sizeGB: 1
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: NODE_VERSION
-        value: 20.18.0
-      - key: DATABASE_PATH
-        value: /var/data/programs.db
-      - key: WEBPAGE_URL
-        value: https://burnandbuilddiet.com
-      - key: CREATOR_BASE_URL
-        value: https://burnandbuilddiet.com
-      - key: API_BASE_URL
-        value: https://program-creator-3tzd.onrender.com
-      - key: CONTACTS_ADMIN_KEY
-        sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_PRICE_ID
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
-        sync: false
-      - key: STRIPE_TEST_BYPASS
-        sync: false
+projects:
+  - name: The Burn & Build
+    environments:
+      - name: Production
+        services:
+          - type: web
+            name: program-creator
+            runtime: node
+            region: oregon
+            plan: starter
+            buildCommand: npm install
+            startCommand: DATABASE_PATH=/var/data/programs.db npm start
+            healthCheckPath: /health
+            disk:
+              name: bnb-data
+              mountPath: /var/data
+              sizeGB: 1
+            envVars:
+              - key: NODE_ENV
+                value: production
+              - key: NODE_VERSION
+                value: 20.18.0
+              - key: DATABASE_PATH
+                value: /var/data/programs.db
+              - key: WEBPAGE_URL
+                value: https://burnandbuilddiet.com
+              - key: CREATOR_BASE_URL
+                value: https://burnandbuilddiet.com
+              - key: API_BASE_URL
+                value: https://program-creator-3tzd.onrender.com
+              - key: CONTACTS_ADMIN_KEY
+                sync: false
+              - key: STRIPE_SECRET_KEY
+                sync: false
+              - key: STRIPE_PRICE_ID
+                sync: false
+              - key: STRIPE_WEBHOOK_SECRET
+                sync: false
+              - key: STRIPE_TEST_BYPASS
+                sync: false
