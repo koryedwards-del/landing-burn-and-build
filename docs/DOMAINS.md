@@ -47,6 +47,23 @@ Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
 
 Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
 
+### Connect program-creator to this repo
+
+Render Dashboard (no API key):
+
+1. [Render Dashboard](https://dashboard.render.com) → project **Burn & Build** → **program-creator**
+2. **Settings** → **Build & Deploy** → **Connected Repository**
+3. Connect **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
+4. **Manual Deploy** → Deploy latest commit (or push to `main` with auto-deploy on)
+
+Or from terminal (Render API key required):
+
+```bash
+RENDER_API_KEY=rnd_... node scripts/render-connect-repo.mjs
+```
+
+Verify: `curl https://program-creator-3tzd.onrender.com/health` should return `"project":"Burn & Build"` after deploy.
+
 ### Render checklist
 
 - [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
