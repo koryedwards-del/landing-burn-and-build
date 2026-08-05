@@ -1,38 +1,32 @@
-import { HANDBOOK_FAQ_PRINT_PAGES } from '../../data/handbookFaqPrintout.js';
+import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 import { createPrintPdf } from './creator.js';
-import { drawQaItem } from './draw.js';
-import {
-  addFramePage,
-  drawFrameFooter,
-  drawFrameHeader,
-  drawFramePageTitle,
-} from './drawFrame.js';
+import { drawQaItem, measureQaItemHeight } from './draw.js';
+import { createFramePaginator } from './framePaginator.js';
 
 export async function renderFaqPdf({ title } = {}) {
   const docTitle = title || 'B&B - Frequently Asked Questions';
   const creator = createPrintPdf({ title: docTitle });
   const doc = creator.doc;
-  let questionNumber = 0;
+  const paginator = createFramePaginator(doc, { personalized: false });
 
-  HANDBOOK_FAQ_PRINT_PAGES.forEach((pageDef, pageIndex) => {
-    const box = addFramePage(doc);
-    let y = drawFrameHeader(doc, box, { personalized: false });
+  paginator.startPage({ pageTitle: 'Frequently Asked Questions' });
+  const { x, width } = paginator.container;
 
-    if (pageIndex === 0) {
-      y = drawFramePageTitle(doc, 'Frequently Asked Questions', box.x, y, box.width);
-    }
-
-    pageDef.items.forEach((item) => {
-      questionNumber += 1;
-      y = drawQaItem(
-        doc,
-        { question: item.q, answer: item.a, x: box.x, y, width: box.width },
-        { questionNumber, uppercaseQuestion: true },
-      );
-    });
-
-    drawFrameFooter(doc, box);
+  HANDBOOK_FAQ_ITEMS.forEach((item, index) => {
+    const questionNumber = index + 1;
+    const blockHeight = measureQaItemHeight(
+      doc,
+      { question: item.q, answer: item.a, width },
+      { questionNumber, uppercaseQuestion: true },
+    );
+    paginator.ensureSpace(blockHeight);
+    paginator.y = drawQaItem(
+      doc,
+      { question: item.q, answer: item.a, x, y: paginator.y, width },
+      { questionNumber, uppercaseQuestion: true },
+    );
   });
 
+  paginator.close();
   return creator.finish();
 }

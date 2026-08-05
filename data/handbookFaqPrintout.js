@@ -38,6 +38,8 @@ const HANDBOOK_FAQ_ITEMS = [
   { q: "What about GMOs?", a: "You should do your best to avoid GMO foods regardless of the diet you are using. The world is always changing so this list may change. The eight GM food crops are Corn, Soybeans, Canola, Cottonseed, Sugar Beets, Hawaiian Papaya (most) and a small amount of Zucchini and Yellow Squash. To get started look for this, the USDA Organic symbol. Also use the PLU code for produce. Organic produce will start with a 9. Genetically Modified will start with an 8. For example; conventionally grown banana has a PLU of 4078, an organic corn is 94078 and GMO corn is 84078." },
 ];
 
+export { HANDBOOK_FAQ_ITEMS };
+
 export const HANDBOOK_FAQ_PRINT_PAGES = [
   { page: 1, items: HANDBOOK_FAQ_ITEMS.slice(0, 13) },
   { page: 2, items: HANDBOOK_FAQ_ITEMS.slice(13, 26) },

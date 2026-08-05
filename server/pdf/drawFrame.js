@@ -19,7 +19,8 @@ export const PDF_FRAME_FONTS = Object.freeze({
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
-  footerZone: 30,
+  footerZone: 36,
+  contentBottomPad: 6,
   personalizationSize: 12,
   contentPageTitleSize: 18,
   footerContactSize: 8,
@@ -52,6 +53,20 @@ export function addFramePage(doc) {
 
 export function frameBodyBottom(box) {
   return box.bottom - PDF_FRAME.footerZone;
+}
+
+/** Content area between header gold line and footer gold line. */
+export function frameContentContainer(box, bodyTop) {
+  const bottom = frameBodyBottom(box) - PDF_FRAME.contentBottomPad;
+  const top = bodyTop;
+  return {
+    x: box.x,
+    y: top,
+    width: box.width,
+    top,
+    bottom,
+    height: Math.max(0, bottom - top),
+  };
 }
 
 function titleCaseWords(text) {

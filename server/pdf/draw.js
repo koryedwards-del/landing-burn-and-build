@@ -204,3 +204,24 @@ export function drawQaItem(
 
   return doc.y + PDF_QA.itemGap;
 }
+
+export function measureQaItemHeight(
+  doc,
+  { question, answer, width },
+  { questionNumber, uppercaseQuestion = false } = {},
+) {
+  const prefix = questionNumber != null ? `${questionNumber}. ` : '';
+  const questionText = `${prefix}${question}`;
+  const displayQuestion = uppercaseQuestion ? questionText.toUpperCase() : questionText;
+
+  doc.font('Helvetica-Bold').fontSize(PDF_QA.questionSize);
+  const questionH = doc.heightOfString(displayQuestion, { width, lineGap: 0 });
+
+  doc.font('Helvetica').fontSize(PDF_QA.answerSize);
+  const answerH = doc.heightOfString(String(answer || ''), {
+    width,
+    lineGap: PDF_QA.lineGap,
+  });
+
+  return questionH + PDF_QA.questionAnswerGap + answerH + PDF_QA.itemGap;
+}
