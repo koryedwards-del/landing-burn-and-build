@@ -5,6 +5,7 @@ import {
   createLandscapePdf,
   createPortraitPdf,
 } from './draw.js';
+import { stampAllPageNumbers } from './drawFrame.js';
 
 /**
  * Burn & Build Print Shop PDF creator.
@@ -58,6 +59,7 @@ export class PrintPdfCreator {
   }
 
   async finish() {
+    stampAllPageNumbers(this.#doc);
     this.#doc.end();
     return this.#bufferPromise;
   }

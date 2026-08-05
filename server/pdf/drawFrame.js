@@ -247,3 +247,23 @@ export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
 export function frameContentBottomLimit(box) {
   return frameFooterRuleY(box) - PDF_FRAME.contentPad - PDF_FRAME.pageNumberSize - 4;
 }
+
+/** Content container bottom when page numbers are reserved above the footer rule. */
+export function frameContentContainerBottom(box, topGoldY) {
+  return frameContentBottomLimit(box);
+}
+
+/** Stamp centered "Page X of Y" on every buffered page before finalize. */
+export function stampAllPageNumbers(doc) {
+  if (typeof doc.bufferedPageRange !== 'function') return;
+
+  const range = doc.bufferedPageRange();
+  const total = range.count;
+  if (total <= 0) return;
+
+  for (let index = 0; index < total; index += 1) {
+    doc.switchToPage(range.start + index);
+    const box = frameContentBox(doc);
+    drawFramePageNumber(doc, box, { page: index + 1, total });
+  }
+}

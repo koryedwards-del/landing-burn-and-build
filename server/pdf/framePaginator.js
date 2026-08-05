@@ -4,6 +4,7 @@ import {
   drawFrameHeader,
   drawFramePageTitle,
   frameContentContainer,
+  frameContentContainerBottom,
   PDF_FRAME_CONTACT,
 } from './drawFrame.js';
 
@@ -17,6 +18,7 @@ export function createFramePaginator(doc, {
   preparedDateLong,
   preparedDate,
   contact = PDF_FRAME_CONTACT,
+  pageNumbers = true,
 } = {}) {
   let box = null;
   let container = null;
@@ -40,6 +42,9 @@ export function createFramePaginator(doc, {
       preparedDate,
     });
     container = frameContentContainer(box, topGoldY);
+    if (pageNumbers) {
+      container = { ...container, bottom: frameContentContainerBottom(box, topGoldY) };
+    }
     y = container.top;
     if (pageTitle) {
       y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width);

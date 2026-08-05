@@ -23,12 +23,13 @@ export function collectPdfBuffer(doc) {
   });
 }
 
-export function createPortraitPdf({ title, author = 'Burn & Build Diet' } = {}) {
+export function createPortraitPdf({ title, author = 'Burn & Build Diet', bufferPages = true } = {}) {
   return new PDFDocument({
     size: 'LETTER',
     layout: 'portrait',
     margin: 0,
     autoFirstPage: false,
+    bufferPages,
     info: {
       Title: title || 'Burn & Build Diet',
       Author: author,
@@ -36,12 +37,13 @@ export function createPortraitPdf({ title, author = 'Burn & Build Diet' } = {}) 
   });
 }
 
-export function createLandscapePdf({ title, author = 'Burn & Build Diet' } = {}) {
+export function createLandscapePdf({ title, author = 'Burn & Build Diet', bufferPages = true } = {}) {
   return new PDFDocument({
     size: 'LETTER',
     layout: 'landscape',
     margin: 0,
     autoFirstPage: false,
+    bufferPages,
     info: {
       Title: title || 'Burn & Build Diet',
       Author: author,
