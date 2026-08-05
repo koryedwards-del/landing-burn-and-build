@@ -68,8 +68,8 @@ Verify: `curl https://program-creator-3tzd.onrender.com/health` should return `"
 
 - [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
 - [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
+- [x] End-to-end flow verified: questionnaire → payment → download printout
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.
-- [ ] Smoke test: `/health`, questionnaire save, checkout, program-report load
 
 ### Before deleting `pwa-burn-and-build`
 
