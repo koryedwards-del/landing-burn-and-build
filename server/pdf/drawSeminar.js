@@ -6,6 +6,7 @@ import {
   drawFrameHeader,
   drawFramePageTitle,
   drawGoldDivider,
+  frameContentContainer,
   PDF_FRAME_FONTS,
   PDF_FRAME_TAGLINE,
 } from './drawFrame.js';
@@ -250,9 +251,10 @@ export function drawStartHereBox(doc, copy, x, y, width) {
 }
 
 export function drawGettingStartedPage(doc, payload, box) {
-  const bodyTop = drawPersonalizationHeader(doc, payload, box);
+  const topGoldY = drawPersonalizationHeader(doc, payload, box);
+  const container = frameContentContainer(box, topGoldY);
 
-  drawContentPageTitle(doc, 'Getting Started', box.x, bodyTop, box.width);
+  drawContentPageTitle(doc, 'Getting Started', box.x, container.top, box.width);
   drawSeminarTemplateFooter(doc, payload, box);
 }
 

@@ -33,17 +33,17 @@ export function createFramePaginator(doc, {
   function startPage({ pageTitle } = {}) {
     finishPage();
     box = addFramePage(doc);
-    y = drawFrameHeader(doc, box, {
+    const topGoldY = drawFrameHeader(doc, box, {
       personalized,
       clientName,
       preparedDateLong,
       preparedDate,
     });
+    container = frameContentContainer(box, topGoldY);
+    y = container.top;
     if (pageTitle) {
       y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width);
     }
-    container = frameContentContainer(box, y);
-    y = container.top;
     pageOpen = true;
     return container;
   }

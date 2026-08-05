@@ -19,13 +19,13 @@ export const PDF_FRAME_FONTS = Object.freeze({
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
-  footerZone: 36,
-  contentBottomPad: 6,
+  contentPad: 12,
+  footerContactOffset: 12,
+  footerRuleAboveText: 12,
   personalizationSize: 12,
   contentPageTitleSize: 18,
   footerContactSize: 8,
   sectionGap: 12,
-  ruleGap: 10,
 });
 
 export const PDF_FRAME_COLORS = Object.freeze({
@@ -51,20 +51,29 @@ export function addFramePage(doc) {
   return frameContentBox(doc);
 }
 
-export function frameBodyBottom(box) {
-  return box.bottom - PDF_FRAME.footerZone;
+export function frameFooterRuleY(box) {
+  return box.bottom - PDF_FRAME.footerContactOffset - PDF_FRAME.footerRuleAboveText;
 }
 
-/** Content area between header gold line and footer gold line. */
-export function frameContentContainer(box, bodyTop) {
-  const bottom = frameBodyBottom(box) - PDF_FRAME.contentBottomPad;
-  const top = bodyTop;
+/** @deprecated Use frameContentContainer with topGoldY */
+export function frameBodyBottom(box) {
+  return frameFooterRuleY(box) - PDF_FRAME.contentPad;
+}
+
+/** Content band between top and bottom gold dividers with equal padding. */
+export function frameContentContainer(box, topGoldY) {
+  const bottomGoldY = frameFooterRuleY(box);
+  const pad = PDF_FRAME.contentPad;
+  const top = topGoldY + pad;
+  const bottom = bottomGoldY - pad;
   return {
     x: box.x,
     y: top,
     width: box.width,
     top,
     bottom,
+    topGoldY,
+    bottomGoldY,
     height: Math.max(0, bottom - top),
   };
 }
@@ -166,7 +175,7 @@ export function drawFrameHeader(doc, box, {
 
   const y = Math.max(doc.y, rowY + 14) + 10;
   drawGoldDivider(doc, box.x, y, box.width);
-  return y + PDF_FRAME.ruleGap;
+  return y;
 }
 
 export function drawFramePageTitle(doc, title, x, y, width) {
@@ -185,8 +194,8 @@ export function drawFramePageTitle(doc, title, x, y, width) {
 }
 
 export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
-  const footerTextY = box.bottom - 12;
-  const ruleY = footerTextY - 12;
+  const footerTextY = box.bottom - PDF_FRAME.footerContactOffset;
+  const ruleY = frameFooterRuleY(box);
   const website = contact?.website || PDF_FRAME_CONTACT.website;
   const email = contact?.email || PDF_FRAME_CONTACT.email;
 

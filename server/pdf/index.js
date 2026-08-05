@@ -37,7 +37,7 @@ const RENDERERS = Object.freeze({
 
 /** Bump when layout changes so Render cache cannot serve stale PDFs. */
 const STATIC_BODY_CACHE_KEYS = Object.freeze({
-  faq: 'faq:frame:v2',
+  faq: 'faq:frame:v3',
   bestresults: 'bestresults:v5',
 });
 
