@@ -1,4 +1,4 @@
-/** Resolve API origin — GitHub Pages serves static files; API lives on Render. */
+/** Resolve API origin — GitHub Pages (static) + Render project Burn & Build (API). */
 
 const RENDER_API_ORIGIN = 'https://program-creator-3tzd.onrender.com';
 

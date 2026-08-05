@@ -143,6 +143,7 @@ function requireContactsAdmin(req, res, next) {
 app.get('/health', (_req, res) => {
   res.json({
     ok: true,
+    project: 'Burn & Build',
     service: 'program-creator',
     env: isProd ? 'production' : 'development',
     database: dbPathForHealth(),

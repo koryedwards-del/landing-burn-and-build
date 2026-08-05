@@ -20,11 +20,7 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
-import {
-  deliverPrintPdfToTab,
-  openPrintTab,
-  showPrintTabError,
-} from '../../menuplanner/js/printShopDelivery.js';
+import { PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -176,66 +172,24 @@ function syncProgramPdfNavVisibility() {
 }
 
 function shouldShowPrintShop() {
-  return activePage === 3 && Boolean(programPackage?.intake?.leanBodyMass);
+  return Boolean(programPackage?.intake?.leanBodyMass);
 }
 
 function syncPrintShopNavVisibility() {
   const show = shouldShowPrintShop();
   const printShop = document.getElementById('print-shop');
-  const slot = printShop?.closest('.pb-nav__item--print-shop');
-  document.querySelector('.pb-aside')?.classList.toggle('pb-aside--print-shop', show);
   if (show) {
     printShop?.removeAttribute('hidden');
-    slot?.removeAttribute('hidden');
   } else {
     printShop?.setAttribute('hidden', '');
-    slot?.setAttribute('hidden', '');
   }
-}
-
-function detachPrintShopFromNav() {
-  const printShop = document.getElementById('print-shop');
-  const aside = document.querySelector('.pb-aside');
-  const nav = aside?.querySelector('nav');
-  if (printShop && aside && nav && printShop.parentElement !== aside) {
-    aside.insertBefore(printShop, nav.nextSibling);
-  }
-}
-
-function mountPrintShopUnderMenuPlanner(list) {
-  const printShop = document.getElementById('print-shop');
-  if (!printShop || !list) return;
-
-  const menuItem = list.querySelector('[data-nav-page="3"]')?.closest('.pb-nav__item');
-  if (!menuItem) return;
-
-  menuItem.classList.add('pb-nav__group', 'pb-nav__group--menu-planner');
-
-  let groupList = menuItem.querySelector('.pb-nav__group-list');
-  if (!groupList) {
-    groupList = document.createElement('ul');
-    groupList.className = 'pb-nav__group-list';
-    groupList.setAttribute('aria-label', 'Menu planner tools');
-    menuItem.appendChild(groupList);
-  }
-
-  let slot = groupList.querySelector('.pb-nav__item--print-shop');
-  if (!slot) {
-    slot = document.createElement('li');
-    slot.className = 'pb-nav__item pb-nav__item--nested pb-nav__item--print-shop';
-    groupList.appendChild(slot);
-  }
-
-  slot.appendChild(printShop);
 }
 
 function renderNav() {
   const list = document.getElementById('r-nav-list');
   if (!list) return;
-  detachPrintShopFromNav();
   const activeId = PAGES[activePage]?.id || 'welcome';
   list.innerHTML = programNavListHtml(activeId);
-  mountPrintShopUnderMenuPlanner(list);
   syncProgramPdfNavVisibility();
   syncPrintShopNavVisibility();
   remountProgramLibraryNav();
@@ -243,53 +197,12 @@ function renderNav() {
 
 function renderWelcome(pkg) {
   return `
-    <section class="r-panel">
-      <div class="pb-page-head">
-        <p class="pb-eyebrow">Page 1</p>
-        <h2 class="pb-panel__title">Welcome</h2>
-      </div>
-
-      <article class="r-doc">
-        ${programMetaHtml(pkg)}
-
-        <h3>Welcome</h3>
-        <p>
-          Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is
-          the most individualized program available for losing fat. This diet will not work effectively for anyone
-          else because it has been created just for you, using your LBM, your job, your lifestyle and your daily
-          plan for exercise &amp; activities.
-        </p>
-
-        <p>
-          How we did it. We determined your lean weight using sophisticated body composition testing. Then you
-          told us about your job, lifestyle, exercise and activities. With this information, the computer generated
-          this five-page report. Included is your ultrasound body composition report that I call your Body Recomp
-          Analysis, your body composition history and the last two pages are your custom designed diet.
-        </p>
-
-        <h3>Projections</h3>
-        <p>
-          Page two shows your eight-week fat-loss projection and longer-term timeline — how much fat you can
-          lose based on your lean body mass, job, lifestyle, and exercise plan.
-        </p>
-
-        <h3>Plan/Servings</h3>
-        <p>
-          Page three is your plan and servings. How much food you need each day depends on your LBM, your job,
-          and your exercise. The macro table shows calories and protein, carbs, and fat at rest, at work, and
-          per hour of exercise. The servings grid breaks that into daily meal targets — no counting calories
-          on your own.
-        </p>
-
-        <h3>Menu planner</h3>
-        <p>
-          After your servings page, the menu planner is where you build your week. Choose meals for breakfast,
-          lunch, dinner, and snacks that hit your daily serving targets — and get your grocery list.
-        </p>
-      </article>
+    <section class="r-panel r-panel--welcome">
+      ${welcomeCoverHtml(pkg)}
 
       <footer class="r-actions r-actions--split">
-        <button type="button" class="r-btn r-btn--ghost" data-report-download-pdf>Download PDF report</button>
+        ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>` : ''}
+        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -563,6 +476,7 @@ function renderMissingProgram() {
       <div class="r-empty__actions">
         <a class="r-btn r-btn--primary" href="${QUESTIONNAIRE_WELCOME_URL}">Create your diet →</a>
         <button type="button" class="r-btn r-btn--ghost" data-report-preview>Preview sample report</button>
+        <a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>
       </div>
       <p class="r-note r-empty__hint">Preview uses Kristi Warner&rsquo;s seminar sample before you build yours.</p>
     </div>
@@ -594,7 +508,7 @@ function renderPage() {
       .catch((err) => {
         console.error('Menu planner failed to load:', err);
         showPlannerStatus(
-          'Menu planner could not load. Try Welcome in the sidebar, or refresh the page.',
+          'Menu planner could not load. Try Your program in the top navigation, or refresh the page.',
           { error: true },
         );
       });
@@ -619,10 +533,6 @@ function showPage(index) {
 }
 
 function syncPlannerLayoutMode() {
-  const layout = document.querySelector('.r-layout');
-  if (layout) {
-    layout.classList.toggle('r-layout--planner', activePage === 3);
-  }
   document.body.classList.toggle('r-body--planner', activePage === 3);
 }
 
@@ -646,32 +556,7 @@ function startProgramReportPdfDownload() {
     return;
   }
 
-  const printWin = openPrintTab('Program Report');
-  if (!printWin) {
-    void downloadProgramReportPdfFile();
-    return;
-  }
-
-  void deliverProgramReportPdfToTab(printWin);
-}
-
-async function deliverProgramReportPdfToTab(printWin) {
-  try {
-    const { fetchProgramReportPdf } = await import('./programReportPdf.js');
-    const blob = await fetchProgramReportPdf(programPackage);
-    if (printWin.closed) {
-      await downloadProgramReportPdfFile(blob);
-      return;
-    }
-    deliverPrintPdfToTab(printWin, blob);
-  } catch (err) {
-    const message = err.message || 'Could not generate program report PDF.';
-    if (!printWin.closed) {
-      showPrintTabError(printWin, message);
-      return;
-    }
-    window.alert(message);
-  }
+  void downloadProgramReportPdfFile();
 }
 
 async function downloadProgramReportPdfFile(existingBlob) {

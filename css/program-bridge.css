@@ -18,6 +18,65 @@
   min-height: 0;
 }
 
+.pb-layout--topnav {
+  display: block;
+  grid-template-columns: none;
+}
+
+.pb-layout--topnav .pb-nav__list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pb-layout--topnav .pb-nav__btn {
+  width: auto;
+  min-height: 40px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+.pb-layout--topnav .pb-nav__group--diet-plans {
+  position: relative;
+}
+
+.pb-layout--topnav .pb-nav__diet-panel {
+  position: relative;
+}
+
+.pb-layout--topnav .pb-nav__group--diet-plans .pb-nav__group-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  min-width: 220px;
+  max-width: min(320px, 90vw);
+  flex-direction: column;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.pb-layout--topnav .pb-nav__group--diet-plans:not(.is-expanded) .pb-nav__group-list {
+  display: none;
+}
+
+.pb-layout--topnav .pb-nav__group--diet-plans.is-expanded .pb-nav__group-list {
+  display: flex;
+}
+
+.pb-layout--topnav .pb-nav__btn-sub {
+  display: none;
+}
+
+.pb-layout--topnav .pb-nav__print-shop[hidden] {
+  display: none;
+}
+
 .pb-main {
   display: flex;
   flex-direction: column;

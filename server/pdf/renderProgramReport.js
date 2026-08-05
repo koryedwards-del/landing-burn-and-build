@@ -2,33 +2,85 @@ import { createPrintPdf } from './creator.js';
 import {
   SEMINAR_TOTAL_PAGES,
   addSeminarPage,
+  addSeminarTemplatePage,
+  drawGettingStartedPage,
+  drawNumberedSteps,
   drawParagraphs,
   drawSeminarHeader,
+  drawStepsToSuccessHeader,
   drawSubsectionTitle,
   drawTable,
   SEMINAR_PDF,
   SEMINAR_COLORS,
+  SEMINAR_FONTS,
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 
-function drawWelcomePage(creator, payload) {
+function drawGettingStartedPdfPage(creator, payload) {
+  const doc = creator.doc;
+  const box = addSeminarTemplatePage(doc);
+  drawGettingStartedPage(doc, payload, box);
+}
+
+function drawStepsToSuccessPage(creator, payload) {
   const doc = creator.doc;
   const box = addSeminarPage(doc);
+  const steps = payload.stepsToSuccess;
+
+  let y = drawStepsToSuccessHeader(doc, payload, box);
+  y = drawParagraphs(doc, steps.intro, box.x, y, box.width);
+  y = drawNumberedSteps(doc, steps.steps, box.x, y, box.width);
+
+  if (steps.footer) {
+    y += 8;
+    doc
+      .strokeColor(SEMINAR_COLORS.rule)
+      .lineWidth(0.5)
+      .moveTo(box.x, y)
+      .lineTo(box.x + box.width, y)
+      .stroke();
+    y += SEMINAR_PDF.paragraphGap;
+    drawParagraphs(doc, [steps.footer], box.x, y, box.width);
+  }
+}
+
+function drawLegacyWelcomePage(creator, payload) {
+  const doc = creator.doc;
+  const box = addSeminarPage(doc);
+  const welcome = payload.welcome;
   let y = drawSeminarHeader(doc, payload, 'Welcome', box);
 
-  y = drawParagraphs(doc, payload.welcome.intro, box.x, y, box.width);
+  y = drawParagraphs(doc, welcome.intro, box.x, y, box.width);
 
-  y = drawSubsectionTitle(doc, 'Lean Body Analysis', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.leanBodyAnalysis], box.x, y, box.width);
+  if (welcome.leanBodyAnalysis) {
+    y = drawSubsectionTitle(doc, 'Lean Body Analysis', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.leanBodyAnalysis], box.x, y, box.width);
+  }
+  if (welcome.history) {
+    y = drawSubsectionTitle(doc, 'History', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.history], box.x, y, box.width);
+  }
+  if (welcome.foodPlan) {
+    y = drawSubsectionTitle(doc, 'Food Plan', box.x, y, box.width);
+    y = drawParagraphs(doc, [welcome.foodPlan], box.x, y, box.width);
+  }
+  if (welcome.servings) {
+    y = drawSubsectionTitle(doc, 'Servings', box.x, y, box.width);
+    drawParagraphs(doc, [welcome.servings], box.x, y, box.width);
+  }
+}
 
-  y = drawSubsectionTitle(doc, 'History', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.history], box.x, y, box.width);
-
-  y = drawSubsectionTitle(doc, 'Food Plan', box.x, y, box.width);
-  y = drawParagraphs(doc, [payload.welcome.foodPlan], box.x, y, box.width);
-
-  y = drawSubsectionTitle(doc, 'Servings', box.x, y, box.width);
-  drawParagraphs(doc, [payload.welcome.servings], box.x, y, box.width);
+function drawProgramReportOpeningPages(creator, payload) {
+  if (payload.gettingStarted) {
+    drawGettingStartedPdfPage(creator, payload);
+    drawStepsToSuccessPage(creator, payload);
+    return;
+  }
+  if (payload.stepsToSuccess?.steps?.length) {
+    drawStepsToSuccessPage(creator, payload);
+    return;
+  }
+  drawLegacyWelcomePage(creator, payload);
 }
 
 function drawLeanBodyAnalysisPage(creator, payload) {
@@ -38,7 +90,7 @@ function drawLeanBodyAnalysisPage(creator, payload) {
   let y = drawSeminarHeader(doc, payload, 'Lean Body Analysis', box);
 
   doc
-    .font('Helvetica')
+    .font(SEMINAR_FONTS.regular)
     .fontSize(SEMINAR_PDF.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text(
@@ -336,7 +388,7 @@ export async function renderProgramReportPdf(payload, { title } = {}) {
     author: 'Burn & Build Diet',
   });
 
-  drawWelcomePage(creator, payload);
+  drawProgramReportOpeningPages(creator, payload);
   drawLeanBodyAnalysisPage(creator, payload);
   drawHistoryPage(creator, payload);
   drawFoodPlanPage(creator, payload);

@@ -39,7 +39,8 @@ Application code already uses **burnandbuilddiet.com** only (`js/siteUrls.js`). 
 
 ## Before deleting `pwa-burn-and-build`
 
-- [ ] Reconnect Render **program-creator** service to `landing-burn-and-build`
+- [x] **program-creator** in Render project **Burn & Build** (not Signal+)
+- [x] **program-creator** connected to `koryedwards-del/landing-burn-and-build` (`main`)
 - [ ] Verify `/health`, checkout, webhooks, program save/load
 - [ ] Confirm GitHub Pages serves from **this repo** only (`burnandbuilddiet.com` CNAME)
 - [ ] Disable GitHub Pages on `pwa-burn-and-build`

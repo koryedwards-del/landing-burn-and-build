@@ -6,7 +6,8 @@
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
     "verify:pdf": "node scripts/verify-pdf.mjs",
-    "verify:meals": "node scripts/verify-meal-images.mjs"
+    "verify:meals": "node scripts/verify-meal-images.mjs",
+    "render:connect": "node scripts/render-connect-repo.mjs"
   },
   "engines": {
     "node": ">=20"

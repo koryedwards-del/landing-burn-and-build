@@ -10,7 +10,7 @@ import {
   lbmStatusMessage,
   weightGoalRanges,
 } from './lbaPrintout.js';
-import { formatProgramDateLong, programClientName } from './programBridgeUi.js';
+import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
@@ -24,20 +24,121 @@ import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistor
 
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
-  website: 'www.eattolosefat.com',
-  email: 'kory.edwards@coachkory.com',
+  website: 'www.burnandbuilddiet.com',
+  email: 'support@burnandbuilddiet.com',
 });
 
-export const WELCOME_COPY = Object.freeze({
+export const START_HERE_STEPS = Object.freeze([
+  'Read this guide once.',
+  'Print pages 5–6.',
+  'Put them somewhere you\'ll see every day.',
+  'Build meals using the food list.',
+  'Stay consistent for 8 weeks.',
+]);
+
+export const GETTING_STARTED_COPY = Object.freeze({
   intro: [
-    'Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is the most individualized program available for losing fat. This diet will not work effectively for anyone else because it has been created just for you, using your LBM, your job, your lifestyle and your daily plan for exercise & activities.',
-    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, lifestyle, exercise and activities. With this information, the computer generated this five-page report. Included is your ultrasound body composition report that I call your Lean Body Analysis, your body composition history and the last two pages are your custom designed diet.',
+    'This program was created specifically for you.',
+    'Your daily food targets are based on the information you provided, including body composition, activity level, work demands, and exercise.',
+    'Follow the servings—not calories—to simplify your day and stay consistent.',
   ],
-  leanBodyAnalysis: 'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes a breakdown of your current body composition with an emphasis on the good stuff. LBM (lean body mass) is used by the computer to calculate your metabolic rate (RMR). In addition, the Lean Body Analysis projects appropriate weight goals based on your current lean body mass.',
-  history: 'Page three is a record of your body composition history with me. Having a history of body compositions can give you valuable information about how your eating habits are affecting your weight loss. That\'s why I recommend having your body composition checked every 6-8 weeks. I call it a check-in.',
-  foodPlan: 'Page four is your custom-designed diet. How much food you need each day depends on how much LBM you have, your job, lifestyle and the type and amount of exercise you participate in. Based on the information you provide, this diet gives you the amount of protein, carbohydrates and fat you need per day to lose fat. It also tells you how much fat you can lose in eight weeks. And it shows you what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.',
-  servings: 'Page five is the servings page. No need to count calories or macros in this diet. The computer breaks down all the information from the table on page four and shows you the number of servings you need daily to have maximum strength & energy and to lose fat as fast as possible.',
+  startHereLabel: 'START HERE',
+  startHere: START_HERE_STEPS,
 });
+
+export const STEPS_TO_SUCCESS_COPY = Object.freeze({
+  intro: [
+    'Congratulations — you have the most individualized fat-loss program available, built from your lean body mass, workday, lifestyle, and exercise plan. These steps show you how to use it for maximum results.',
+  ],
+  steps: [
+    {
+      title: 'Know your numbers',
+      body: 'Review your Lean Body Analysis. Your LBM drives your metabolic rate and your daily food prescription. The mirror — not the scale alone — tells you whether you have fat to lose.',
+    },
+    {
+      title: 'Eat your servings',
+      body: 'Follow the daily serving totals on your Servings page. No calorie or macro counting — the computer already did that work. Stay within the approved food groups.',
+    },
+    {
+      title: 'Plan your week',
+      body: 'Use the menu planner online to assign foods to each meal, track servings, and build your grocery list. Print your week at a glance from Print Shop before you shop.',
+    },
+    {
+      title: 'Eat on schedule',
+      body: 'Spread protein through breakfast, lunch, and dinner. Eat vegetables at dinner and fruit at snack times. Regular feedings keep energy steady and protect lean mass.',
+    },
+    {
+      title: 'Stay consistent',
+      body: 'Keep your exercise and activity aligned with what you reported when this plan was built. Changing workouts without updating your program can slow fat loss.',
+    },
+    {
+      title: 'Check in regularly',
+      body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
+    },
+  ],
+  footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
+});
+
+/** Kept in payload until production API deploys — old Render build requires welcome. */
+export const LEGACY_WELCOME_COPY = Object.freeze({
+  intro: [''],
+  leanBodyAnalysis: '',
+  history: '',
+  foodPlan: '',
+  servings: '',
+});
+
+/** Static Kristi sample — committed under docs/samples for direct download. */
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=6';
+
+export function welcomeCoverHtml(pkg) {
+  const copy = STEPS_TO_SUCCESS_COPY;
+  const name = String(programClientName(pkg) || 'You').trim();
+  const date = formatProgramDateLong(
+    pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
+  );
+  const stepsHtml = copy.steps.map((step, index) => {
+    const startHere = Array.isArray(step.startHere) && step.startHere.length
+      ? `
+        <div class="r-steps-start">
+          <p class="r-steps-start__label">${escapeHtml(step.startHereLabel || 'Start here')}</p>
+          <ol class="r-steps-start__list">
+            ${step.startHere.map((line, i) => `
+              <li><span class="r-steps-start__num">${i + 1}.</span> ${escapeHtml(line)}</li>
+            `).join('')}
+          </ol>
+        </div>
+      `
+      : '';
+    return `
+      <li class="r-steps-success__item">
+        <span class="r-steps-success__num">${index + 1}</span>
+        <div class="r-steps-success__body">
+          <h3 class="r-steps-success__title">${escapeHtml(step.title || step.text || '')}</h3>
+          ${step.body ? `<p>${escapeHtml(step.body)}</p>` : ''}
+          ${startHere}
+        </div>
+      </li>
+    `;
+  }).join('');
+
+  return `
+    <article class="r-steps-success">
+      <header class="r-steps-success__head">
+        <img class="r-steps-success__logo" src="../img/brand/bblogo1.png" alt="" width="48" height="48" />
+        <div>
+          <p class="r-steps-success__brand">Burn &amp; Build Diet</p>
+          <p class="r-steps-success__meta">Prepared exclusively for ${escapeHtml(name)} · ${escapeHtml(date)}</p>
+        </div>
+      </header>
+      <h2 class="r-steps-success__heading">Steps to Success</h2>
+      ${copy.intro.map((paragraph) => `<p class="r-steps-success__intro">${escapeHtml(paragraph)}</p>`).join('')}
+      <ol class="r-steps-success__list">${stepsHtml}</ol>
+      <p class="r-steps-success__motto">${escapeHtml(copy.motto)}</p>
+      ${copy.footer ? `<p class="r-steps-success__footer">${escapeHtml(copy.footer)}</p>` : ''}
+    </article>
+  `;
+}
 
 export const LBA_FOOTER_COPY = 'How much fat is right for each individual is a personal choice. How you look in the mirror is the only true judge of whether you have fat to lose. If you see more fat than you personally want, then exercise and follow your this plan until you reach your desired goals.';
 
@@ -151,7 +252,9 @@ export function buildProgramReportPayload(pkg, options = {}) {
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
     header: { ...SEMINAR_REPORT_HEADER },
-    welcome: { ...WELCOME_COPY },
+    gettingStarted: { ...GETTING_STARTED_COPY },
+    stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
+    welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {
       heightInches: intake.heightInches,
       sex: formatSexLabel(intake.sex),
