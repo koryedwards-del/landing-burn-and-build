@@ -21,7 +21,7 @@ import {
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
-import { buildWelcomeNarrative } from './welcomeNarrativePrintout.js';
+import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
@@ -243,6 +243,14 @@ export function buildProgramReportPayload(pkg, options = {}) {
 
   const macroRows = macroTableRows(pkg?.plan?.formula, intake.workIntensity).filter((row) => !row.spacer);
 
+  const narratives = buildProgramReportNarratives(pkg, {
+    today,
+    gender,
+    projection,
+    hours,
+    historyRows,
+  });
+
   return {
     view: 'programreport',
     title: programReportDocumentTitle(pkg),
@@ -253,7 +261,11 @@ export function buildProgramReportPayload(pkg, options = {}) {
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
     header: { ...SEMINAR_REPORT_HEADER },
-    gettingStarted: buildWelcomeNarrative(pkg),
+    gettingStarted: narratives.welcome,
+    bodyTodayNarrative: narratives.bodyToday,
+    progressNarrative: narratives.progress,
+    foodPlanNarrative: narratives.foodPlan,
+    servingsNarrative: narratives.servings,
     stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
     welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {

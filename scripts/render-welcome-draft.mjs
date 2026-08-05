@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Render Kristi welcome-narrative program report draft — run: node scripts/render-welcome-draft.mjs */
+/** Render Kristi guided-learning program report — run: node scripts/render-welcome-draft.mjs */
 
 import fs from 'fs';
 import path from 'path';
@@ -68,7 +68,7 @@ function buildKristiPreviewPackage() {
 const payload = buildProgramReportPayload(buildKristiPreviewPackage());
 const pdf = await renderPrintPdf('programreport', { payload });
 
-const outPath = path.join(root, 'docs/samples/welcome-narrative-draft-kristi.pdf');
+const outPath = path.join(root, 'docs/samples/guided-learning-kristi.pdf');
 fs.writeFileSync(outPath, pdf);
 
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
