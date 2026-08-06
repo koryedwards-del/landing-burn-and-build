@@ -5,7 +5,6 @@
 import { createPrintPdf } from './creator.js';
 import {
   addFramePage,
-  drawCompactPersonalizedHeader,
   drawContinuationHeader,
   drawFramePageFooter,
   drawFramePageTitle,
@@ -37,33 +36,40 @@ const LAYOUT = {
   contentPad: PT.contentPad,
 };
 
-function drawBodyParagraphs(doc, paragraphs, x, y, width) {
-  let cy = y;
+function measureParagraph(doc, paragraph, width) {
+  if (!paragraph) return 0;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  return doc.heightOfString(String(paragraph), {
+    width,
+    lineGap: LAYOUT.lineGap,
+  }) + LAYOUT.paragraphGap;
+}
+
+function drawBodyParagraphs(doc, payload, page, paragraphs, { fullHeader = false, pageTitle = null } = {}) {
+  let current = page;
   (paragraphs || []).forEach((paragraph) => {
     if (!paragraph) return;
+    const blockH = measureParagraph(doc, paragraph, current.width);
+    current = ensureLockedSpace(doc, payload, current, blockH, { fullHeader });
     doc
       .font(SEMINAR_FONTS.regular)
       .fontSize(LAYOUT.bodySize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(String(paragraph), x, cy, {
-        width,
+      .text(String(paragraph), current.x, current.y, {
+        width: current.width,
         lineGap: LAYOUT.lineGap,
         align: 'left',
       });
-    cy = doc.y + LAYOUT.paragraphGap;
+    current = { ...current, y: doc.y + LAYOUT.paragraphGap };
   });
-  return cy;
+  return current;
 }
 
 function measureBodyParagraphs(doc, paragraphs, width) {
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
-  return (paragraphs || []).reduce((sum, paragraph) => {
-    if (!paragraph) return sum;
-    return sum + doc.heightOfString(String(paragraph), {
-      width,
-      lineGap: LAYOUT.lineGap,
-    }) + LAYOUT.paragraphGap;
-  }, 0);
+  return (paragraphs || []).reduce(
+    (sum, paragraph) => sum + measureParagraph(doc, paragraph, width),
+    0,
+  );
 }
 
 /** Tables only — gold border, light fill. */
@@ -159,22 +165,14 @@ function drawLayoutTable(doc, opts) {
   return tableY + totalH;
 }
 
-function beginLockedPage(doc, payload, pageTitle, { compactHeader = false, continuation = false } = {}) {
+function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   const box = addFramePage(doc);
-  const topGoldY = continuation
-    ? drawContinuationHeader(doc, box)
-    : compactHeader
-      ? drawCompactPersonalizedHeader(doc, box, {
-        clientName: payload.clientName,
-        preparedDateLong: payload.preparedDateLong,
-        preparedDate: payload.preparedDate,
-        contact: payload.header,
-        showContact: false,
-      })
-      : drawPersonalizationHeader(doc, payload, box);
+  const topGoldY = fullHeader
+    ? drawPersonalizationHeader(doc, payload, box)
+    : drawContinuationHeader(doc, box);
 
   const bottom = frameContentContainerBottom(box, topGoldY);
-  let y = continuation ? topGoldY + LAYOUT.contentPad + 4 : framePageTitleStartY(topGoldY);
+  let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, {
       size: PT.pageTitle,
@@ -188,32 +186,24 @@ function finishLockedPage(doc, box, payload) {
   drawFramePageFooter(doc, box, { contact: payload.header });
 }
 
-function startLockedPage(doc, payload, pageTitle, { compactHeader = false, continuation = false } = {}) {
-  return beginLockedPage(doc, payload, pageTitle, { compactHeader, continuation });
+function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
+  return beginLockedPage(doc, payload, pageTitle, { fullHeader });
 }
 
-function ensureLockedSpace(doc, payload, page, needed, { compactHeader, pageTitle } = {}) {
+function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = {}) {
   if (page.y + needed <= page.bottom) return page;
   finishLockedPage(doc, page.box, payload);
-  const next = startLockedPage(doc, payload, pageTitle || null, {
-    compactHeader: compactHeader ?? false,
-    continuation: !pageTitle && (compactHeader ?? false),
-  });
-  return next;
+  return startLockedPage(doc, payload, null, { fullHeader });
 }
 
 function drawWelcomePage(doc, payload) {
-  let page = startLockedPage(doc, payload, 'Welcome', { compactHeader: false });
+  let page = startLockedPage(doc, payload, 'Welcome', { fullHeader: true });
 
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, payload.welcome.intro, page.width),
-    { compactHeader: false, pageTitle: 'Welcome' },
-  );
-  page.y = drawBodyParagraphs(doc, payload.welcome.intro, page.x, page.y, page.width);
-  page.y += LAYOUT.sectionGap;
+  page = drawBodyParagraphs(doc, payload, page, payload.welcome.intro, {
+    fullHeader: true,
+    pageTitle: 'Welcome',
+  });
+  page = { ...page, y: page.y + LAYOUT.sectionGap };
 
   const sections = [
     ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
@@ -222,16 +212,17 @@ function drawWelcomePage(doc, payload) {
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
-    const blockH = LAYOUT.subsectionSize + LAYOUT.headerGap
-      + measureBodyParagraphs(doc, [body], page.width);
-    page = ensureLockedSpace(doc, payload, page, blockH, {
-      compactHeader: false,
-      pageTitle: 'Welcome',
-    });
-    page.y = drawSectionTitle(doc, title, page.x, page.y, page.width);
-    page.y = drawBodyParagraphs(doc, [body], page.x, page.y, page.width);
+    page = ensureLockedSpace(
+      doc,
+      payload,
+      page,
+      LAYOUT.subsectionSize + LAYOUT.headerGap + measureParagraph(doc, body, page.width),
+      { fullHeader: true },
+    );
+    page = { ...page, y: drawSectionTitle(doc, title, page.x, page.y, page.width) };
+    page = drawBodyParagraphs(doc, payload, page, [body], { fullHeader: true, pageTitle: 'Welcome' });
     if (index < sections.length - 1) {
-      page.y += LAYOUT.sectionGap;
+      page = { ...page, y: page.y + LAYOUT.sectionGap };
     }
   });
 
@@ -244,26 +235,16 @@ function measureLayoutTable(doc, opts) {
 
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
-  let page = startLockedPage(doc, payload, 'Lean Body Analysis', { compactHeader: true });
+  let page = startLockedPage(doc, payload, 'Lean Body Analysis');
 
   const profileLine = `Height: ${lba.heightInches} inches  Sex: ${lba.sex}  Thigh: ${lba.thigh}  Waist: ${lba.waist}  Age: ${lba.age} years of experience`;
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, [profileLine], page.width),
-    { compactHeader: true, pageTitle: 'Lean Body Analysis' },
-  );
-  page.y = drawBodyParagraphs(doc, [profileLine], page.x, page.y, page.width);
-  page.y += LAYOUT.sectionGap;
+  page = drawBodyParagraphs(doc, payload, page, [profileLine]);
+  page = { ...page, y: page.y + LAYOUT.sectionGap };
 
-  page = ensureLockedSpace(doc, payload, page, LAYOUT.subsectionSize + LAYOUT.headerGap + 60, {
-    compactHeader: true,
-    pageTitle: 'Lean Body Analysis',
-  });
-  page.y = drawSectionTitle(doc, '--TODAY--', page.x, page.y, page.width);
+  page = ensureLockedSpace(doc, payload, page, LAYOUT.subsectionSize + LAYOUT.headerGap + 60);
+  page = { ...page, y: drawSectionTitle(doc, '--TODAY--', page.x, page.y, page.width) };
 
-  page.y = drawCalloutRow(
+  page = { ...page, y: drawCalloutRow(
     doc,
     [
       { label: 'Lean weight', value: `${lba.today.leanLbs} lbs`, detail: `${lba.today.leanPct}% of you` },
@@ -273,7 +254,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     page.x,
     page.y,
     page.width,
-  );
+  ) };
 
   const aceTableOpts = {
     x: page.x,
@@ -290,12 +271,9 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     ],
     headerRows: 1,
   };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts), {
-    compactHeader: true,
-    pageTitle: 'Lean Body Analysis',
-  });
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts));
   aceTableOpts.y = page.y;
-  page.y = drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap;
+  page = { ...page, y: drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap };
 
   const proseParagraphs = [
     lba.riskMessage,
@@ -304,14 +282,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     lba.lbmCongrats,
   ].filter(Boolean);
   if (proseParagraphs.length) {
-    page = ensureLockedSpace(
-      doc,
-      payload,
-      page,
-      measureBodyParagraphs(doc, proseParagraphs, page.width),
-      { compactHeader: true, pageTitle: 'Lean Body Analysis' },
-    );
-    page.y = drawBodyParagraphs(doc, proseParagraphs, page.x, page.y, page.width);
+    page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
   }
 
   const weightTableOpts = {
@@ -329,37 +300,20 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     ],
     headerRows: 1,
   };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts), {
-    compactHeader: true,
-    pageTitle: 'Lean Body Analysis',
-  });
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts));
   weightTableOpts.y = page.y;
-  page.y = drawLayoutTable(doc, weightTableOpts) + LAYOUT.paragraphGap;
+  page = { ...page, y: drawLayoutTable(doc, weightTableOpts) + LAYOUT.paragraphGap };
 
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, [lba.monitorCopy], page.width),
-    { compactHeader: true, pageTitle: 'Lean Body Analysis' },
-  );
-  drawBodyParagraphs(doc, [lba.monitorCopy], page.x, page.y, page.width);
+  page = drawBodyParagraphs(doc, payload, page, [lba.monitorCopy]);
   finishLockedPage(doc, page.box, payload);
 }
 
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
-  let page = startLockedPage(doc, payload, 'Food Plan', { compactHeader: true });
+  let page = startLockedPage(doc, payload, 'Food Plan');
 
   const intro = `The following food program contains a sophisticated calculation that is based on your individual lean body mass (LBM), and on your activities. This is the most individualized food program available for losing fat. In eight weeks, you could safely lose ${fp.fatLostLbs} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${fp.introHours.total} hour(s) per week. ${fp.introHours.wt} hour(s) of weight training, ${fp.introHours.cardio} hour(s) of cardiovascular activities, ${fp.introHours.fatBurn} hour(s) of fat-burning activities`;
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, [intro], page.width),
-    { compactHeader: true, pageTitle: 'Food Plan' },
-  );
-  page.y = drawBodyParagraphs(doc, [intro], page.x, page.y, page.width);
+  page = drawBodyParagraphs(doc, payload, page, [intro]);
 
   if (fp.goal) {
     const goalTableOpts = {
@@ -410,24 +364,13 @@ function drawFoodPlanPage(doc, payload) {
       ],
       headerRows: 1,
     };
-    page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts), {
-      compactHeader: true,
-      pageTitle: 'Food Plan',
-    });
+    page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts));
     goalTableOpts.y = page.y;
-    page.y = drawLayoutTable(doc, goalTableOpts) + LAYOUT.paragraphGap;
+    page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.paragraphGap };
   }
 
   const weekly = `You project to lose an average of ${fp.weeklyFatLossLbs} pounds of fat per week. In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.`;
-  const closingParagraphs = [weekly, fp.macroIntro].filter(Boolean);
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, closingParagraphs, page.width),
-    { compactHeader: true, pageTitle: 'Food Plan' },
-  );
-  page.y = drawBodyParagraphs(doc, closingParagraphs, page.x, page.y, page.width);
+  page = drawBodyParagraphs(doc, payload, page, [weekly, fp.macroIntro].filter(Boolean));
 
   const macroTableOpts = {
     x: page.x,
@@ -477,10 +420,7 @@ function drawFoodPlanPage(doc, payload) {
     ],
     headerRows: 2,
   };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, macroTableOpts), {
-    compactHeader: true,
-    pageTitle: 'Food Plan',
-  });
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, macroTableOpts));
   macroTableOpts.y = page.y;
   drawLayoutTable(doc, macroTableOpts);
   finishLockedPage(doc, page.box, payload);
@@ -488,16 +428,9 @@ function drawFoodPlanPage(doc, payload) {
 
 function drawServingsPage(doc, payload) {
   const servings = payload.servings;
-  let page = startLockedPage(doc, payload, 'Servings', { compactHeader: true });
+  let page = startLockedPage(doc, payload, 'Servings');
 
-  page = ensureLockedSpace(
-    doc,
-    payload,
-    page,
-    measureBodyParagraphs(doc, [servings.note], page.width),
-    { compactHeader: true, pageTitle: 'Servings' },
-  );
-  page.y = drawBodyParagraphs(doc, [servings.note], page.x, page.y, page.width);
+  page = drawBodyParagraphs(doc, payload, page, [servings.note]);
 
   const gridRows = servings.gridRows.map((row) => ({
     label: row.label,
@@ -551,10 +484,7 @@ function drawServingsPage(doc, payload) {
     ],
     headerRows: 1,
   };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts), {
-    compactHeader: true,
-    pageTitle: 'Servings',
-  });
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
   servingsTableOpts.y = page.y;
   drawLayoutTable(doc, servingsTableOpts);
   finishLockedPage(doc, page.box, payload);

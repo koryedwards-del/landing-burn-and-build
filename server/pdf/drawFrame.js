@@ -240,11 +240,21 @@ export function drawCompactPersonalizedHeader(doc, box, {
   return y;
 }
 
-/** Mid-section page break — gold rule only; no footer/header contact stack. */
 export function drawContinuationHeader(doc, box) {
-  const y = box.y + 10;
+  const y = box.y + 14;
   drawGoldDivider(doc, box.x, y, box.width);
   return y;
+}
+
+/** Clear the gap between body content and footer rule (page-number band). */
+export function clearContentFooterGap(doc, box) {
+  const ruleY = frameFooterRuleY(box);
+  const bandTop = frameContentBottomLimit(box);
+  const bandHeight = ruleY - bandTop - 2;
+  if (bandHeight <= 0) return;
+  doc.save();
+  doc.rect(box.x, bandTop, box.width, bandHeight).fill('#ffffff');
+  doc.restore();
 }
 
 /** Y to start page title — clears the header gold rule. */
@@ -284,10 +294,14 @@ export function frameContentContainerTight(box, topGoldY, pad = 6) {
 }
 
 export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
-  const footerTextY = box.bottom - PDF_FRAME.footerContactOffset;
+  clearContentFooterGap(doc, box);
+
   const ruleY = frameFooterRuleY(box);
   const website = contact?.website || PDF_FRAME_CONTACT.website;
   const email = contact?.email || PDF_FRAME_CONTACT.email;
+  const phone = contact?.phone || '';
+  const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
+  const footerTextY = box.bottom - PDF_FRAME.footerContactOffset;
 
   drawGoldDivider(doc, box.x, ruleY, box.width);
 
@@ -295,7 +309,7 @@ export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
     .font(PDF_FRAME_FONTS.regular)
     .fontSize(PDF_FRAME.footerContactSize)
     .fillColor(PDF_FRAME_COLORS.muted)
-    .text(`${website} · ${email}`, box.x, footerTextY, {
+    .text(footerLine, box.x, footerTextY, {
       width: box.width,
       align: 'center',
       lineGap: 0,
@@ -360,6 +374,7 @@ export function stampAllPageNumbers(doc) {
   for (let index = 0; index < total; index += 1) {
     doc.switchToPage(range.start + index);
     const box = frameContentBox(doc);
+    clearContentFooterGap(doc, box);
     drawFramePageNumber(doc, box, { page: index + 1, total });
   }
 }
