@@ -122,6 +122,80 @@ export function drawCalloutRow(doc, callouts, x, y, width) {
   return y + rowH + SEMINAR_PDF.sectionGap;
 }
 
+function contentBoxTypography(opts = {}) {
+  return {
+    pad: opts.pad ?? 10,
+    titleSize: opts.titleSize ?? SEMINAR_PDF.subsectionSize,
+    bodySize: opts.bodySize ?? SEMINAR_PDF.bodySize,
+    lineGap: opts.lineGap ?? SEMINAR_PDF.lineGap,
+    paragraphGap: opts.paragraphGap ?? SEMINAR_PDF.paragraphGap,
+    sectionGap: opts.sectionGap ?? SEMINAR_PDF.sectionGap,
+  };
+}
+
+/** Titled prose inside a gold-bordered container — easier to scan than flat paragraphs. */
+export function measureContentBox(doc, block, width, opts = {}) {
+  const typography = contentBoxTypography(opts);
+  const innerW = width - typography.pad * 2 - 4;
+  let h = typography.pad;
+  if (block?.title) {
+    doc.font(SEMINAR_FONTS.bold).fontSize(typography.titleSize);
+    h += doc.heightOfString(String(block.title), { width: innerW, lineGap: 0 }) + 8;
+  }
+  doc.font(SEMINAR_FONTS.regular).fontSize(typography.bodySize);
+  const paragraphs = block?.paragraphs || [];
+  paragraphs.forEach((paragraph, index) => {
+    if (!paragraph) return;
+    h += doc.heightOfString(String(paragraph), { width: innerW, lineGap: typography.lineGap });
+    if (index < paragraphs.length - 1) h += typography.paragraphGap;
+  });
+  h += typography.pad;
+  return h + typography.sectionGap;
+}
+
+export function drawContentBox(doc, block, x, y, width, opts = {}) {
+  if (!block?.paragraphs?.length && !block?.title) return y;
+  const typography = contentBoxTypography(opts);
+  const boxH = measureContentBox(doc, block, width, opts) - typography.sectionGap;
+  const innerW = width - typography.pad * 2 - 4;
+  const inset = 2;
+
+  doc.save();
+  doc.roundedRect(x + inset, y, width - inset * 2, boxH, 4).fill('#f8f8f8');
+  doc.restore();
+  doc
+    .strokeColor(PDF_FRAME_COLORS.gold)
+    .lineWidth(1)
+    .roundedRect(x + inset, y, width - inset * 2, boxH, 4)
+    .stroke();
+
+  let cy = y + typography.pad;
+  if (block.title) {
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(typography.titleSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(block.title), x + typography.pad, cy, { width: innerW, lineGap: 0 });
+    cy = doc.y + 8;
+  }
+
+  (block.paragraphs || []).forEach((paragraph) => {
+    if (!paragraph) return;
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(typography.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(paragraph), x + typography.pad, cy, {
+        width: innerW,
+        lineGap: typography.lineGap,
+        align: 'left',
+      });
+    cy = doc.y + typography.paragraphGap;
+  });
+
+  return y + boxH + typography.sectionGap;
+}
+
 /** Guided lesson — intro, optional callouts, prose blocks; unified frame with pagination. */
 export function drawGuidedLesson(doc, payload, section) {
   if (!section) return;
