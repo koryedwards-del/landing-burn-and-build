@@ -179,7 +179,52 @@ export function drawFrameHeader(doc, box, {
   return y;
 }
 
-export function drawFramePageTitle(doc, title, x, y, width) {
+/** Content pages — contact + personalization rows, no logo (more vertical space). */
+export function drawCompactPersonalizedHeader(doc, box, {
+  clientName,
+  preparedDateLong,
+  preparedDate,
+  contact = PDF_FRAME_CONTACT,
+} = {}) {
+  const phone = contact?.phone || '';
+  const website = contact?.website || PDF_FRAME_CONTACT.website;
+  const email = contact?.email || PDF_FRAME_CONTACT.email;
+  const contactLine = [phone, website, email].filter(Boolean).join('  ·  ');
+  let y = box.y;
+
+  doc
+    .font(PDF_FRAME_FONTS.regular)
+    .fontSize(PDF_FRAME.footerContactSize + 1)
+    .fillColor(PDF_FRAME_COLORS.muted)
+    .text(contactLine, box.x, y, { width: box.width, align: 'center', lineGap: 0 });
+
+  y = doc.y + 6;
+  const name = titleCaseWords(clientName);
+  const date = formatPreparedDateOrdinal(preparedDateLong || preparedDate);
+  doc
+    .font(PDF_FRAME_FONTS.bold)
+    .fontSize(PDF_FRAME.personalizationSize)
+    .fillColor(PDF_FRAME_COLORS.body)
+    .text(`Prepared exclusively for: ${name}`, box.x, y, {
+      width: box.width * 0.64,
+      align: 'left',
+      lineGap: 0,
+    });
+  doc
+    .font(PDF_FRAME_FONTS.bold)
+    .fontSize(PDF_FRAME.personalizationSize)
+    .text(`On: ${date}`, box.x + box.width * 0.64, y, {
+      width: box.width * 0.36,
+      align: 'right',
+      lineGap: 0,
+    });
+
+  y = Math.max(doc.y, y + 14) + 8;
+  drawGoldDivider(doc, box.x, y, box.width);
+  return y;
+}
+
+export function drawFramePageTitle(doc, title, x, y, width, { size } = {}) {
   const display = String(title || '')
     .split(/\s+/)
     .filter(Boolean)
@@ -188,10 +233,26 @@ export function drawFramePageTitle(doc, title, x, y, width) {
 
   doc
     .font(PDF_FRAME_FONTS.bold)
-    .fontSize(PDF_FRAME.contentPageTitleSize)
+    .fontSize(size || PDF_FRAME.contentPageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(display, x, y, { width, lineGap: 0 });
   return doc.y + PDF_FRAME.sectionGap;
+}
+
+export function frameContentContainerTight(box, topGoldY, pad = 6) {
+  const bottomGoldY = frameFooterRuleY(box);
+  const top = topGoldY + pad;
+  const bottom = bottomGoldY - pad;
+  return {
+    x: box.x,
+    y: top,
+    width: box.width,
+    top,
+    bottom,
+    topGoldY,
+    bottomGoldY,
+    height: Math.max(0, bottom - top),
+  };
 }
 
 export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {

@@ -5,19 +5,14 @@
 import { createPrintPdf } from './creator.js';
 import {
   addFramePage,
+  drawCompactPersonalizedHeader,
   drawFramePageFooter,
-  frameContentContainer,
+  drawFramePageTitle,
   frameContentContainerBottom,
+  frameContentContainerTight,
 } from './drawFrame.js';
+import { drawPersonalizationHeader } from './drawSeminar.js';
 import {
-  drawContentPageTitle,
-  drawPersonalizationHeader,
-} from './drawSeminar.js';
-import {
-  drawParagraphs,
-  drawSubsectionTitle,
-  drawTable,
-  SEMINAR_PDF,
   SEMINAR_COLORS,
   SEMINAR_FONTS,
 } from './drawSeminar.js';
@@ -25,14 +20,116 @@ import { validatePrintPayload } from './validate.js';
 
 export const KWARNER_LOCKED_TOTAL_PAGES = 5;
 
-function beginLockedPage(doc, payload, pageTitle) {
+/** Typography tuned to fill the content band without crowding. */
+const LAYOUT = Object.freeze({
+  bodySize: 10.5,
+  subsectionSize: 11.5,
+  tableHeadSize: 9,
+  tableBodySize: 9.5,
+  tableRowPad: 7,
+  lineGap: 4,
+  paragraphGap: 12,
+  sectionGap: 14,
+  headerGap: 8,
+  pageTitleSize: 20,
+  contentPad: 6,
+});
+
+function drawBodyParagraphs(doc, paragraphs, x, y, width) {
+  let cy = y;
+  (paragraphs || []).forEach((paragraph) => {
+    if (!paragraph) return;
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(paragraph), x, cy, {
+        width,
+        lineGap: LAYOUT.lineGap,
+        align: 'left',
+      });
+    cy = doc.y + LAYOUT.paragraphGap;
+  });
+  return cy;
+}
+
+function drawSectionTitle(doc, title, x, y, width) {
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(title || ''), x, y, { width, lineGap: 0 });
+  return doc.y + LAYOUT.headerGap;
+}
+
+function drawLayoutTable(doc, opts) {
+  const columns = opts.columns;
+  const colWidths = columns.map((col) => col.width * opts.width);
+  const rowHeight = (row, isHeader) => {
+    let maxH = LAYOUT.tableBodySize + LAYOUT.tableRowPad * 2;
+    columns.forEach((col, index) => {
+      const cell = row[col.key] ?? '';
+      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+      const size = isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize;
+      const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
+        width: colWidths[index] - 8,
+        lineGap: 0,
+      });
+      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
+    });
+    return maxH;
+  };
+
+  let cy = opts.y;
+  opts.rows.forEach((row, rowIndex) => {
+    const isHeader = rowIndex < (opts.headerRows ?? 1);
+    const rh = rowHeight(row, isHeader);
+    let cx = opts.x;
+    columns.forEach((col, index) => {
+      const w = colWidths[index];
+      if (isHeader) {
+        doc.save();
+        doc.rect(cx, cy, w, rh).fill(SEMINAR_COLORS.tableHead);
+        doc.restore();
+      }
+      doc
+        .rect(cx, cy, w, rh)
+        .strokeColor(SEMINAR_COLORS.rule)
+        .lineWidth(0.5)
+        .stroke();
+      doc
+        .font(isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
+        .fontSize(isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize)
+        .fillColor(SEMINAR_COLORS.body)
+        .text(String(row[col.key] ?? ''), cx + 4, cy + LAYOUT.tableRowPad, {
+          width: w - 8,
+          lineGap: 0,
+          align: col.align || 'left',
+        });
+      cx += w;
+    });
+    cy += rh;
+  });
+
+  return cy;
+}
+
+function beginLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}) {
   const box = addFramePage(doc);
-  const topGoldY = drawPersonalizationHeader(doc, payload, box);
-  const container = frameContentContainer(box, topGoldY);
+  const topGoldY = compactHeader
+    ? drawCompactPersonalizedHeader(doc, box, {
+      clientName: payload.clientName,
+      preparedDateLong: payload.preparedDateLong,
+      preparedDate: payload.preparedDate,
+      contact: payload.header,
+    })
+    : drawPersonalizationHeader(doc, payload, box);
+
+  const container = frameContentContainerTight(box, topGoldY, LAYOUT.contentPad);
   const bottom = frameContentContainerBottom(box, topGoldY);
   let y = container.top;
   if (pageTitle) {
-    y = drawContentPageTitle(doc, pageTitle, box.x, y, box.width);
+    y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, { size: LAYOUT.pageTitleSize });
   }
   return { box, x: box.x, y, width: box.width, bottom };
 }
@@ -46,53 +143,56 @@ function finishLockedPage(doc, box, payload, page) {
 }
 
 function drawWelcomePage(doc, payload) {
-  const page = beginLockedPage(doc, payload, 'Welcome');
+  const page = beginLockedPage(doc, payload, 'Welcome', { compactHeader: false });
   let { y } = page;
 
-  y = drawParagraphs(doc, payload.welcome.intro, page.x, y, page.width);
+  y = drawBodyParagraphs(doc, payload.welcome.intro, page.x, y, page.width);
 
-  y = drawSubsectionTitle(doc, 'Lean Body Analysis', page.x, y, page.width);
-  y = drawParagraphs(doc, [payload.welcome.leanBodyAnalysis], page.x, y, page.width);
+  const sections = [
+    ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
+    ['History', payload.welcome.history],
+    ['Food Plan', payload.welcome.foodPlan],
+    ['Servings', payload.welcome.servings],
+  ];
 
-  y = drawSubsectionTitle(doc, 'History', page.x, y, page.width);
-  y = drawParagraphs(doc, [payload.welcome.history], page.x, y, page.width);
-
-  y = drawSubsectionTitle(doc, 'Food Plan', page.x, y, page.width);
-  y = drawParagraphs(doc, [payload.welcome.foodPlan], page.x, y, page.width);
-
-  y = drawSubsectionTitle(doc, 'Servings', page.x, y, page.width);
-  drawParagraphs(doc, [payload.welcome.servings], page.x, y, page.width);
+  sections.forEach(([title, body], index) => {
+    y = drawSectionTitle(doc, title, page.x, y, page.width);
+    y = drawBodyParagraphs(doc, [body], page.x, y, page.width);
+    if (index < sections.length - 1 && page.bottom - y > 40) {
+      y += Math.min(18, (page.bottom - y) / (sections.length - index));
+    }
+  });
 
   finishLockedPage(doc, page.box, payload, 1);
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
-  const page = beginLockedPage(doc, payload, 'Lean Body Analysis');
+  const page = beginLockedPage(doc, payload, 'Lean Body Analysis', { compactHeader: true });
   let { y } = page;
 
   doc
     .font(SEMINAR_FONTS.regular)
-    .fontSize(SEMINAR_PDF.bodySize)
+    .fontSize(LAYOUT.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text(
       `Height: ${lba.heightInches} inches  Sex: ${lba.sex}  Thigh: ${lba.thigh}  Waist: ${lba.waist}  Age: ${lba.age} years of experience`,
       page.x,
       y,
-      { width: page.width, lineGap: 0 },
+      { width: page.width, lineGap: LAYOUT.lineGap },
     );
 
-  y = doc.y + SEMINAR_PDF.sectionGap;
-  y = drawSubsectionTitle(doc, '--TODAY--', page.x, y, page.width);
+  y = doc.y + LAYOUT.sectionGap;
+  y = drawSectionTitle(doc, '--TODAY--', page.x, y, page.width);
 
-  y = drawTable(doc, {
+  y = drawLayoutTable(doc, {
     x: page.x,
     y,
     width: page.width,
     columns: [
-      { key: 'label', width: 0.2 },
-      { key: 'pct', width: 0.2, align: 'right' },
-      { key: 'lbs', width: 0.2, align: 'right' },
+      { key: 'label', width: 0.34 },
+      { key: 'pct', width: 0.33, align: 'right' },
+      { key: 'lbs', width: 0.33, align: 'right' },
     ],
     rows: [
       { label: 'LEAN', pct: `${lba.today.leanPct} %`, lbs: `${lba.today.leanLbs} lbs.` },
@@ -100,9 +200,9 @@ function drawLeanBodyAnalysisPage(doc, payload) {
       { label: 'TOTAL', pct: `${lba.today.totalPct} %`, lbs: `${lba.today.totalLbs} lbs.` },
     ],
     headerRows: 0,
-  }) + SEMINAR_PDF.paragraphGap;
+  }) + LAYOUT.paragraphGap;
 
-  y = drawTable(doc, {
+  y = drawLayoutTable(doc, {
     x: page.x,
     y,
     width: page.width,
@@ -116,22 +216,22 @@ function drawLeanBodyAnalysisPage(doc, payload) {
       Object.fromEntries(lba.aceHeaders.map((label, index) => [`c${index}`, label])),
     ],
     headerRows: 1,
-  }) + SEMINAR_PDF.paragraphGap;
+  }) + LAYOUT.paragraphGap;
 
   if (lba.riskMessage) {
-    y = drawParagraphs(doc, [lba.riskMessage], page.x, y, page.width);
+    y = drawBodyParagraphs(doc, [lba.riskMessage], page.x, y, page.width);
   }
 
-  y = drawParagraphs(doc, [lba.footerCopy], page.x, y, page.width);
+  y = drawBodyParagraphs(doc, [lba.footerCopy], page.x, y, page.width);
 
   if (lba.lbmLead) {
-    y = drawParagraphs(doc, [lba.lbmLead], page.x, y, page.width);
+    y = drawBodyParagraphs(doc, [lba.lbmLead], page.x, y, page.width);
   }
   if (lba.lbmCongrats) {
-    y = drawParagraphs(doc, [lba.lbmCongrats], page.x, y, page.width);
+    y = drawBodyParagraphs(doc, [lba.lbmCongrats], page.x, y, page.width);
   }
 
-  y = drawTable(doc, {
+  y = drawLayoutTable(doc, {
     x: page.x,
     y,
     width: page.width,
@@ -145,15 +245,15 @@ function drawLeanBodyAnalysisPage(doc, payload) {
       Object.fromEntries(lba.weightGoalRanges.map((row, index) => [`c${index}`, row.range])),
     ],
     headerRows: 1,
-  }) + SEMINAR_PDF.paragraphGap;
+  }) + LAYOUT.paragraphGap;
 
-  drawParagraphs(doc, [lba.monitorCopy], page.x, y, page.width);
+  drawBodyParagraphs(doc, [lba.monitorCopy], page.x, y, page.width);
   finishLockedPage(doc, page.box, payload, 2);
 }
 
 function drawHistoryPage(doc, payload) {
-  const page = beginLockedPage(doc, payload, 'Body Composition History');
-  drawTable(doc, {
+  const page = beginLockedPage(doc, payload, 'Body Composition History', { compactHeader: true });
+  drawLayoutTable(doc, {
     x: page.x,
     y: page.y,
     width: page.width,
@@ -187,22 +287,22 @@ function drawHistoryPage(doc, payload) {
 
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
-  const page = beginLockedPage(doc, payload, 'Food Plan');
+  const page = beginLockedPage(doc, payload, 'Food Plan', { compactHeader: true });
   let { y } = page;
 
   const intro = `The following food program contains a sophisticated calculation that is based on your individual lean body mass (LBM), and on your activities. This is the most individualized food program available for losing fat. In eight weeks, you could safely lose ${fp.fatLostLbs} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${fp.introHours.total} hour(s) per week. ${fp.introHours.wt} hour(s) of weight training, ${fp.introHours.cardio} hour(s) of cardiovascular activities, ${fp.introHours.fatBurn} hour(s) of fat-burning activities`;
-  y = drawParagraphs(doc, [intro], page.x, y, page.width);
+  y = drawBodyParagraphs(doc, [intro], page.x, y, page.width);
 
   if (fp.goal) {
-    y = drawTable(doc, {
+    y = drawLayoutTable(doc, {
       x: page.x,
       y,
       width: page.width,
       columns: [
-        { key: 'label', width: 0.12 },
+        { key: 'label', width: 0.14 },
         { key: 'todayPct', width: 0.14, align: 'right' },
         { key: 'todayLbs', width: 0.14, align: 'right' },
-        { key: 'mid', width: 0.18, align: 'center' },
+        { key: 'mid', width: 0.16, align: 'center' },
         { key: 'goalPct', width: 0.14, align: 'right' },
         { key: 'goalLbs', width: 0.14, align: 'right' },
       ],
@@ -241,26 +341,26 @@ function drawFoodPlanPage(doc, payload) {
         },
       ],
       headerRows: 1,
-    }) + SEMINAR_PDF.paragraphGap;
+    }) + LAYOUT.paragraphGap;
   }
 
   const weekly = `You project to lose an average of ${fp.weeklyFatLossLbs} pounds of fat per week. In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.`;
-  y = drawParagraphs(doc, [weekly], page.x, y, page.width);
-  y = drawParagraphs(doc, [fp.macroIntro], page.x, y, page.width);
+  y = drawBodyParagraphs(doc, [weekly], page.x, y, page.width);
+  y = drawBodyParagraphs(doc, [fp.macroIntro], page.x, y, page.width);
 
-  drawTable(doc, {
+  drawLayoutTable(doc, {
     x: page.x,
     y,
     width: page.width,
     columns: [
-      { key: 'label', width: 0.22 },
-      { key: 'proteinG', width: 0.08, align: 'right' },
-      { key: 'proteinCal', width: 0.1, align: 'right' },
-      { key: 'carbsG', width: 0.08, align: 'right' },
-      { key: 'carbsCal', width: 0.1, align: 'right' },
-      { key: 'fatsG', width: 0.08, align: 'right' },
-      { key: 'fatsCal', width: 0.1, align: 'right' },
-      { key: 'totalCal', width: 0.1, align: 'right' },
+      { key: 'label', width: 0.24 },
+      { key: 'proteinG', width: 0.09, align: 'right' },
+      { key: 'proteinCal', width: 0.11, align: 'right' },
+      { key: 'carbsG', width: 0.09, align: 'right' },
+      { key: 'carbsCal', width: 0.11, align: 'right' },
+      { key: 'fatsG', width: 0.09, align: 'right' },
+      { key: 'fatsCal', width: 0.11, align: 'right' },
+      { key: 'totalCal', width: 0.11, align: 'right' },
     ],
     rows: [
       {
@@ -301,10 +401,10 @@ function drawFoodPlanPage(doc, payload) {
 
 function drawServingsPage(doc, payload) {
   const servings = payload.servings;
-  const page = beginLockedPage(doc, payload, 'Servings');
+  const page = beginLockedPage(doc, payload, 'Servings', { compactHeader: true });
   let { y } = page;
 
-  y = drawParagraphs(doc, [servings.note], page.x, y, page.width);
+  y = drawBodyParagraphs(doc, [servings.note], page.x, y, page.width);
 
   const gridRows = servings.gridRows.map((row) => ({
     label: row.label,
@@ -328,18 +428,18 @@ function drawServingsPage(doc, payload) {
     snack3: '',
   }));
 
-  drawTable(doc, {
+  drawLayoutTable(doc, {
     x: page.x,
     y,
     width: page.width,
     columns: [
-      { key: 'label', width: 0.16 },
+      { key: 'label', width: 0.18 },
       { key: 'daily', width: 0.1, align: 'center' },
       { key: 'breakfast', width: 0.12, align: 'center' },
       { key: 'snack1', width: 0.1, align: 'center' },
       { key: 'lunch', width: 0.1, align: 'center' },
       { key: 'snack2', width: 0.1, align: 'center' },
-      { key: 'dinner', width: 0.1, align: 'center' },
+      { key: 'dinner', width: 0.12, align: 'center' },
       { key: 'snack3', width: 0.1, align: 'center' },
     ],
     rows: [
