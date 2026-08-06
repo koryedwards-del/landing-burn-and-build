@@ -20,7 +20,7 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
-import { PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
+import { KWARNER_LOCKED_PREVIEW_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -201,7 +201,7 @@ function renderWelcome(pkg) {
       ${welcomeCoverHtml(pkg)}
 
       <footer class="r-actions r-actions--split">
-        ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>` : ''}
+        ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${KWARNER_LOCKED_PREVIEW_PDF}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>` : ''}
         <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>

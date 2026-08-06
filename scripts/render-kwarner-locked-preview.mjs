@@ -81,14 +81,9 @@ delete payload.stepsToSuccess;
 
 const pdf = await renderProgramReportKwarnerLockedPreview(payload);
 
-const samplePaths = [
-  path.join(root, 'docs/samples/kwarner-locked-preview-kristi.pdf'),
-  path.join(root, 'docs/samples/kristi-program-report-preview.pdf'),
-];
-for (const outPath of samplePaths) {
-  fs.writeFileSync(outPath, pdf);
-  console.log(`Wrote ${outPath}`);
-}
+const outPath = path.join(root, 'docs/samples/kwarner-locked-preview-kristi.pdf');
+fs.writeFileSync(outPath, pdf);
+console.log(`Wrote ${outPath}`);
 
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 console.log(`${pages} page(s), ${pdf.length} bytes`);
