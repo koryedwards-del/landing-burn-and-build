@@ -93,7 +93,7 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=6';
 
 /** KWarner 1982 locked-frame preview — separate file, not production sample. */
-export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-locked-preview-kristi.pdf?v=2';
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-locked-preview-kristi.pdf?v=3';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;

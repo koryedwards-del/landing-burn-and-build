@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KWarner locked preview — Kristi Warner</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #1a1a1a;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: #111;
+      color: #f5f5f5;
+      font: 14px/1.4 system-ui, sans-serif;
+      border-bottom: 1px solid #333;
+    }
+    .bar a {
+      color: #fdc500;
+      text-decoration: none;
+    }
+    .bar a:hover { text-decoration: underline; }
+    embed {
+      display: block;
+      width: 100%;
+      height: calc(100% - 45px);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <span>KWarner 1982 locked preview — Kristi Warner (4 pages)</span>
+    <a href="./?preview=1">← Back to program report</a>
+  </div>
+  <embed id="pdf" type="application/pdf" title="KWarner locked preview PDF" />
+  <script type="module">
+    import { KWARNER_LOCKED_PREVIEW_PDF } from '../js/programReportPrintout.js';
+    document.getElementById('pdf').src = KWARNER_LOCKED_PREVIEW_PDF;
+  </script>
+</body>
+</html>
