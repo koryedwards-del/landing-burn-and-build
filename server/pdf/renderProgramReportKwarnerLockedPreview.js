@@ -6,10 +6,10 @@ import { createPrintPdf } from './creator.js';
 import {
   addFramePage,
   drawContinuationHeader,
-  drawFramePageFooter,
   drawFramePageTitle,
-  frameContentContainerBottom,
   framePageTitleStartY,
+  pinnedContentBottomY,
+  stampPinnedProgramFooters,
   PDF_FRAME_COLORS,
 } from './drawFrame.js';
 import { drawPersonalizationHeader } from './drawSeminar.js';
@@ -171,7 +171,7 @@ function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
     ? drawPersonalizationHeader(doc, payload, box)
     : drawContinuationHeader(doc, box);
 
-  const bottom = frameContentContainerBottom(box, topGoldY);
+  const bottom = pinnedContentBottomY(box);
   let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, {
@@ -182,8 +182,8 @@ function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   return { box, x: box.x, y, width: box.width, bottom };
 }
 
-function finishLockedPage(doc, box, payload) {
-  drawFramePageFooter(doc, box, { contact: payload.header });
+function finishLockedPage(_doc, _box, _payload) {
+  /* Footers stamped once after all pages — see stampPinnedProgramFooters */
 }
 
 function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
@@ -490,7 +490,7 @@ function drawServingsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-export async function renderProgramReportKwarnerLockedPreview(payload, { title } = {}) {
+export async function renderProgramReportKwarnerLockedPreview(payload, { title, buildLabel } = {}) {
   validatePrintPayload('programreport', payload);
 
   const creator = createPrintPdf({
@@ -499,12 +499,18 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title }
   });
 
   const doc = creator.doc;
+  if (buildLabel) {
+    doc.info.Subject = `KWarner locked preview ${buildLabel}`;
+  }
+
   drawWelcomePage(doc, payload);
   drawLeanBodyAnalysisPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
 
-  const buffer = await creator.finish({ stampPageNumbers: true });
+  stampPinnedProgramFooters(doc, payload.header);
+
+  const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
   if (pages < KWARNER_LOCKED_MIN_PAGES) {
     throw new Error(`Preview PDF expected at least ${KWARNER_LOCKED_MIN_PAGES} pages, got ${pages}`);

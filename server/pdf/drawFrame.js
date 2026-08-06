@@ -369,3 +369,75 @@ export function stampAllPageNumbers(doc) {
     drawFramePageNumber(doc, box, { page: index + 1, total });
   }
 }
+
+/** KWarner program report — single footer draw, pinned to bottom (no gap hacks). */
+export const PINNED_FOOTER = Object.freeze({
+  bottomPad: 4,
+  contactGap: 4,
+  pageNumGap: 4,
+  contentClearance: 4,
+});
+
+export function pinnedFooterBelowRule() {
+  return PINNED_FOOTER.contactGap + PT.contact + PINNED_FOOTER.bottomPad;
+}
+
+export function pinnedFooterAboveRule() {
+  return PINNED_FOOTER.pageNumGap + PT.pageNumber + PINNED_FOOTER.contentClearance;
+}
+
+export function pinnedContentBottomY(box) {
+  return box.bottom - pinnedFooterBelowRule() - pinnedFooterAboveRule();
+}
+
+export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT } = {}) {
+  const ruleY = box.bottom - pinnedFooterBelowRule();
+  const contactY = box.bottom - PINNED_FOOTER.bottomPad - PT.contact;
+  const phone = contact?.phone || '';
+  const website = contact?.website || PDF_FRAME_CONTACT.website;
+  const email = contact?.email || PDF_FRAME_CONTACT.email;
+  const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
+
+  if (page != null && total != null) {
+    const label = `Page ${page} of ${total}`;
+    doc
+      .font(PDF_FRAME_FONTS.regular)
+      .fontSize(PT.pageNumber)
+      .fillColor(PDF_FRAME_COLORS.muted);
+    const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
+    doc.text(label, box.x, ruleY - PINNED_FOOTER.pageNumGap - textHeight, {
+      width: box.width,
+      align: 'center',
+      lineGap: 0,
+    });
+  }
+
+  drawGoldDivider(doc, box.x, ruleY, box.width);
+
+  doc
+    .font(PDF_FRAME_FONTS.regular)
+    .fontSize(PT.contact)
+    .fillColor(PDF_FRAME_COLORS.muted)
+    .text(footerLine, box.x, contactY, {
+      width: box.width,
+      align: 'center',
+      lineGap: 0,
+    });
+
+  return ruleY;
+}
+
+export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT) {
+  if (typeof doc.bufferedPageRange !== 'function') return 0;
+  const range = doc.bufferedPageRange();
+  const total = range.count;
+  for (let index = 0; index < total; index += 1) {
+    doc.switchToPage(range.start + index);
+    drawPinnedProgramFooter(doc, frameContentBox(doc), {
+      page: index + 1,
+      total,
+      contact,
+    });
+  }
+  return total;
+}

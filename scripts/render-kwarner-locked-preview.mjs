@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/** Preview: KWarner 5-page content + locked personalized frame — not production. */
+/** Preview: KWarner 4-page content + locked personalized frame — not production. */
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -74,16 +75,31 @@ function buildKristiPreviewPackage() {
   return pkg;
 }
 
+const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildProgramReportPayload(buildKristiPreviewPackage());
 payload.welcome = KWARNER_WELCOME_COPY;
 delete payload.gettingStarted;
 delete payload.stepsToSuccess;
 
-const pdf = await renderProgramReportKwarnerLockedPreview(payload);
+const pdf = await renderProgramReportKwarnerLockedPreview(payload, { buildLabel });
 
 const outPath = path.join(root, 'docs/samples/kwarner-locked-preview-kristi.pdf');
 fs.writeFileSync(outPath, pdf);
-console.log(`Wrote ${outPath}`);
 
+const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-console.log(`${pages} page(s), ${pdf.length} bytes`);
+
+const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
+export const KWARNER_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
+export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-locked-preview-kristi.pdf';
+
+export function kwarnerPreviewPdfUrl() {
+  return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
+}
+`;
+
+fs.writeFileSync(path.join(root, 'js/kwarnerPreviewBuild.js'), buildModule);
+
+console.log(`Wrote ${outPath}`);
+console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}, build=${buildLabel}`);

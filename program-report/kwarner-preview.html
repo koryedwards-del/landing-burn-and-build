@@ -41,8 +41,10 @@
   </div>
   <embed id="pdf" type="application/pdf" title="KWarner locked preview PDF" />
   <script type="module">
-    import { KWARNER_LOCKED_PREVIEW_PDF } from '../js/programReportPrintout.js';
-    document.getElementById('pdf').src = KWARNER_LOCKED_PREVIEW_PDF;
+    import { kwarnerPreviewPdfUrl, KWARNER_PREVIEW_BUILD, KWARNER_PREVIEW_MD5 } from '../js/kwarnerPreviewBuild.js';
+    document.getElementById('pdf').src = kwarnerPreviewPdfUrl();
+    document.querySelector('.bar span').textContent =
+      `KWarner 1982 locked preview — Kristi Warner (4 pages) · build ${KWARNER_PREVIEW_BUILD.slice(0, 19)} · ${KWARNER_PREVIEW_MD5.slice(0, 8)}`;
   </script>
 </body>
 </html>
