@@ -50,17 +50,13 @@ const TABLE_CONTAINER = Object.freeze({
   stroke: PDF_FRAME_COLORS.gold,
   radius: 4,
   inset: 2,
-  cellPad: 4,
+  cellPad: 8,
 });
-
-function tableInnerWidth(outerWidth) {
-  return outerWidth - TABLE_CONTAINER.inset * 2;
-}
 
 function layoutTableRowHeights(doc, opts) {
   const columns = opts.columns;
-  const innerW = tableInnerWidth(opts.width);
-  const colWidths = columns.map((col) => col.width * innerW);
+  const tableW = opts.width;
+  const colWidths = columns.map((col) => col.width * tableW);
   const headerRows = opts.headerRows ?? 1;
 
   return opts.rows.map((row, rowIndex) => {
@@ -92,19 +88,20 @@ function drawSectionTitle(doc, title, x, y, width) {
 function drawLayoutTable(doc, opts) {
   const columns = opts.columns;
   const headerRows = opts.headerRows ?? 1;
-  const tableX = opts.x + TABLE_CONTAINER.inset;
+  const tableX = opts.x;
   const tableY = opts.y;
-  const tableW = tableInnerWidth(opts.width);
+  const tableW = opts.width;
   const colWidths = columns.map((col) => col.width * tableW);
-  const rowHeights = layoutTableRowHeights(doc, opts);
+  const rowHeights = layoutTableRowHeights(doc, { ...opts, width: tableW });
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
+  const pad = TABLE_CONTAINER.cellPad;
 
   doc.save();
   doc.roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius).fill(TABLE_CONTAINER.fill);
   doc.restore();
   doc
     .strokeColor(TABLE_CONTAINER.stroke)
-    .lineWidth(1)
+    .lineWidth(1.25)
     .roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius)
     .stroke();
 
@@ -116,22 +113,25 @@ function drawLayoutTable(doc, opts) {
     columns.forEach((col, index) => {
       const w = colWidths[index];
       doc
-        .rect(cx, cy, w, rh)
-        .strokeColor(TABLE_CONTAINER.stroke)
-        .lineWidth(0.5)
-        .stroke();
-      doc
         .font(isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
         .fontSize(isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize)
         .fillColor(SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), cx + TABLE_CONTAINER.cellPad, cy + LAYOUT.tableRowPad, {
-          width: w - TABLE_CONTAINER.cellPad * 2,
+        .text(String(row[col.key] ?? ''), cx + pad, cy + LAYOUT.tableRowPad, {
+          width: w - pad * 2,
           lineGap: 0,
           align: col.align || 'left',
         });
       cx += w;
     });
     cy += rh;
+    if (rowIndex < opts.rows.length - 1) {
+      doc
+        .strokeColor(TABLE_CONTAINER.stroke)
+        .lineWidth(0.5)
+        .moveTo(tableX + TABLE_CONTAINER.radius, cy)
+        .lineTo(tableX + tableW - TABLE_CONTAINER.radius, cy)
+        .stroke();
+    }
   });
 
   return tableY + totalH;
