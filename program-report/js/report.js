@@ -304,7 +304,7 @@ function renderFoodPlan(pkg) {
         <h2 class="pb-panel__title">Projections</h2>
       </div>
 
-      <article class="r-doc">
+      <article class="r-doc print-template">
         ${programMetaHtml(pkg)}
 
         <h3>Projections</h3>
@@ -420,7 +420,7 @@ function renderServings(pkg) {
         <h2 class="pb-panel__title">Plan/Servings</h2>
       </div>
 
-      <article class="r-doc">
+      <article class="r-doc print-template">
         ${programMetaHtml(pkg)}
 
         ${macroTableSectionHtml(pkg)}

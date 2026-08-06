@@ -11,6 +11,10 @@ import {
   PDF_FRAME_FONTS,
   PDF_FRAME_TAGLINE,
 } from './drawFrame.js';
+import {
+  PRINT_TEMPLATE_SEMINAR_HEADER,
+  PRINT_TEMPLATE_TYPOGRAPHY as PT,
+} from '../../js/printTemplateTypography.js';
 
 export { PDF_FRAME_TAGLINE };
 
@@ -22,20 +26,20 @@ export const SEMINAR_HEADER_LOGO_GAP = 16;
 export const SEMINAR_FONTS = PDF_FRAME_FONTS;
 
 export const SEMINAR_PDF = {
-  bodySize: 9,
-  headerContactSize: 8,
-  headerMetaSize: 9,
-  personalizationSize: 12,
-  contentPageTitleSize: 18,
-  sectionTitleSize: 12,
-  subsectionSize: 10,
-  tableHeadSize: 7.5,
-  tableBodySize: 8,
-  lineGap: 3,
-  paragraphGap: 8,
-  sectionGap: 12,
-  tableRowPad: 4,
-  headerGap: 6,
+  bodySize: PT.body,
+  headerContactSize: PRINT_TEMPLATE_SEMINAR_HEADER.contact,
+  headerMetaSize: PRINT_TEMPLATE_SEMINAR_HEADER.meta,
+  personalizationSize: PT.personalization,
+  contentPageTitleSize: PT.pageTitle,
+  sectionTitleSize: PT.sectionTitle,
+  subsectionSize: PT.subsection,
+  tableHeadSize: PT.tableHead,
+  tableBodySize: PT.tableBody,
+  lineGap: PT.lineGap,
+  paragraphGap: PT.paragraphGap,
+  sectionGap: PT.sectionGap,
+  tableRowPad: PT.tableRowPad,
+  headerGap: PT.headerGap,
   ruleGap: 10,
 };
 

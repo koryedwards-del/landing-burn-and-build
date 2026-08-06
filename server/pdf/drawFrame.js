@@ -1,5 +1,6 @@
 import { PDF_MARGIN } from './constants.js';
 import { drawWatermark, logoPath } from './draw.js';
+import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 
 /** Generic row 2 — non-personalized PDFs (FAQ, food list, etc.). */
 export const PDF_FRAME_TAGLINE = 'Burn & Build — Stronger Today. Leaner Tomorrow.';
@@ -19,14 +20,14 @@ export const PDF_FRAME_FONTS = Object.freeze({
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
-  contentPad: 12,
+  contentPad: PT.contentPad,
   footerContactOffset: 12,
   footerRuleAboveText: 12,
-  personalizationSize: 12,
-  contentPageTitleSize: 18,
-  footerContactSize: 8,
-  pageNumberSize: 9,
-  sectionGap: 12,
+  personalizationSize: PT.personalization,
+  contentPageTitleSize: PT.pageTitle,
+  footerContactSize: PT.contact,
+  pageNumberSize: PT.pageNumber,
+  sectionGap: PT.sectionGap,
 });
 
 export const PDF_FRAME_COLORS = Object.freeze({

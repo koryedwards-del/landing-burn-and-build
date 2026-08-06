@@ -17,23 +17,22 @@ import {
   SEMINAR_FONTS,
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
+import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 
 export const KWARNER_LOCKED_TOTAL_PAGES = 5;
 
-/** Typography tuned to fill the content band without crowding. */
-const LAYOUT = Object.freeze({
-  bodySize: 10.5,
-  subsectionSize: 11.5,
-  tableHeadSize: 9,
-  tableBodySize: 9.5,
-  tableRowPad: 7,
-  lineGap: 4,
-  paragraphGap: 12,
-  sectionGap: 14,
-  headerGap: 8,
-  pageTitleSize: 20,
-  contentPad: 6,
-});
+const LAYOUT = {
+  bodySize: PT.body,
+  subsectionSize: PT.subsection,
+  tableHeadSize: PT.tableHead,
+  tableBodySize: PT.tableBody,
+  tableRowPad: PT.tableRowPad,
+  lineGap: PT.lineGap,
+  paragraphGap: PT.paragraphGap,
+  sectionGap: PT.sectionGap,
+  headerGap: PT.headerGap,
+  contentPad: PT.contentPad,
+};
 
 function drawBodyParagraphs(doc, paragraphs, x, y, width) {
   let cy = y;
@@ -129,7 +128,7 @@ function beginLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}
   const bottom = frameContentContainerBottom(box, topGoldY);
   let y = container.top;
   if (pageTitle) {
-    y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, { size: LAYOUT.pageTitleSize });
+    y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, { size: PT.pageTitle });
   }
   return { box, x: box.x, y, width: box.width, bottom };
 }
