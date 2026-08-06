@@ -18,7 +18,8 @@
   --print-paragraph-gap: 12pt;
   --print-section-gap: 14pt;
   --print-header-gap: 8pt;
-  --print-title-top-gap: 14pt;
+  --print-title-top-gap: 28pt;
+  --print-title-bottom-gap: 20pt;
 
   font-family: "Times New Roman", Times, serif;
   font-size: var(--print-body);
@@ -40,7 +41,7 @@
   font-size: var(--print-page-title);
   font-weight: 700;
   line-height: 1.2;
-  margin: var(--print-title-top-gap) 0 var(--print-section-gap);
+  margin: var(--print-title-top-gap) 0 var(--print-title-bottom-gap);
 }
 
 .print-template__subsection {

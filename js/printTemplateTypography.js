@@ -19,7 +19,10 @@ export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
   sectionGap: 14,
   headerGap: 8,
   contentPad: 6,
-  titleTopGap: 14,
+  /** Space below header gold rule before page title. */
+  titleTopGap: 28,
+  /** Space below page title before body content. */
+  titleBottomGap: 20,
 });
 
 /** Legacy seminar header lines (older letterhead pages). */

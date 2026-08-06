@@ -228,7 +228,12 @@ export function drawCompactPersonalizedHeader(doc, box, {
   return y;
 }
 
-export function drawFramePageTitle(doc, title, x, y, width, { size } = {}) {
+/** Y to start page title — clears the header gold rule. */
+export function framePageTitleStartY(topGoldY) {
+  return topGoldY + 2 + PT.titleTopGap;
+}
+
+export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } = {}) {
   const display = String(title || '')
     .split(/\s+/)
     .filter(Boolean)
@@ -240,7 +245,7 @@ export function drawFramePageTitle(doc, title, x, y, width, { size } = {}) {
     .fontSize(size || PDF_FRAME.contentPageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(display, x, y, { width, lineGap: 0 });
-  return doc.y + PDF_FRAME.sectionGap;
+  return doc.y + (gapAfter ?? PDF_FRAME.sectionGap);
 }
 
 export function frameContentContainerTight(box, topGoldY, pad = 6) {
