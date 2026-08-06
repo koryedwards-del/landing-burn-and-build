@@ -17,23 +17,21 @@ export const PDF_FRAME_FONTS = Object.freeze({
   boldItalic: 'Times-BoldItalic',
 });
 
-const FOOTER_CONTACT_BOTTOM_PAD = 16;
-const FOOTER_RULE_GAP = 10;
-const FOOTER_PAGE_NUMBER_GAP = 10;
+const FOOTER_BOTTOM_PAD = 6;
+const FOOTER_CONTACT_GAP = 3;
+const FOOTER_PAGE_NUM_GAP = 3;
 
-const FOOTER_BAND_HEIGHT = FOOTER_CONTACT_BOTTOM_PAD
-  + PT.contact
-  + FOOTER_RULE_GAP
-  + PT.pageNumber
-  + FOOTER_PAGE_NUMBER_GAP
-  + PT.contentPad;
+/** Below rule: gap + contact + bottom pad. Above rule: page number + gap (reserved at stamp). */
+const FOOTER_BELOW_RULE = FOOTER_CONTACT_GAP + PT.contact + FOOTER_BOTTOM_PAD;
+const FOOTER_ABOVE_RULE = FOOTER_PAGE_NUM_GAP + PT.pageNumber + PT.contentPad;
+const FOOTER_BAND_HEIGHT = FOOTER_BELOW_RULE + FOOTER_ABOVE_RULE;
 
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
   contentPad: PT.contentPad,
-  footerContactOffset: FOOTER_CONTACT_BOTTOM_PAD,
-  footerRuleAboveText: FOOTER_RULE_GAP,
+  footerContactOffset: FOOTER_BOTTOM_PAD + PT.contact,
+  footerRuleAboveText: FOOTER_CONTACT_GAP,
   footerBandHeight: FOOTER_BAND_HEIGHT,
   personalizationSize: PT.personalization,
   contentPageTitleSize: PT.pageTitle,
@@ -66,7 +64,7 @@ export function addFramePage(doc) {
 }
 
 export function frameFooterRuleY(box) {
-  return box.bottom - PDF_FRAME.footerBandHeight;
+  return box.bottom - FOOTER_BELOW_RULE;
 }
 
 /** @deprecated Use frameContentContainer with topGoldY */
@@ -301,7 +299,7 @@ export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
   const email = contact?.email || PDF_FRAME_CONTACT.email;
   const phone = contact?.phone || '';
   const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
-  const footerTextY = box.bottom - PDF_FRAME.footerContactOffset;
+  const footerTextY = box.bottom - FOOTER_BOTTOM_PAD - PT.contact;
 
   drawGoldDivider(doc, box.x, ruleY, box.width);
 
@@ -327,10 +325,7 @@ export function drawFramePageNumber(doc, box, { page, total }) {
     .fillColor(PDF_FRAME_COLORS.muted);
 
   const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
-  const y = frameFooterRuleY(box)
-    - PDF_FRAME.contentPad
-    - FOOTER_PAGE_NUMBER_GAP
-    - textHeight;
+  const y = frameFooterRuleY(box) - FOOTER_PAGE_NUM_GAP - textHeight;
 
   doc.text(label, box.x, y, {
     width: box.width,
@@ -351,11 +346,7 @@ export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
 
 /** Max y for body content when a page number is shown. */
 export function frameContentBottomLimit(box) {
-  return frameFooterRuleY(box)
-    - PDF_FRAME.contentPad
-    - FOOTER_PAGE_NUMBER_GAP
-    - PDF_FRAME.pageNumberSize
-    - 6;
+  return frameFooterRuleY(box) - FOOTER_ABOVE_RULE;
 }
 
 /** Content container bottom when page numbers are reserved above the footer rule. */
