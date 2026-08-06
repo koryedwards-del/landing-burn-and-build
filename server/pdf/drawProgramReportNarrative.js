@@ -65,7 +65,7 @@ function drawProseBlock(doc, block, x, y, width) {
   return drawParagraphs(doc, block.paragraphs, x, y, width);
 }
 
-function measureCalloutRow(doc, callouts, width) {
+export function measureCalloutRow(doc, callouts, width) {
   const colW = width / Math.max(callouts?.length || 1, 1);
   const pad = 8;
   let maxH = 52;
@@ -81,7 +81,7 @@ function measureCalloutRow(doc, callouts, width) {
   return maxH + SEMINAR_PDF.sectionGap;
 }
 
-function drawCalloutRow(doc, callouts, x, y, width) {
+export function drawCalloutRow(doc, callouts, x, y, width) {
   const items = callouts || [];
   if (!items.length) return y;
   const colW = width / items.length;

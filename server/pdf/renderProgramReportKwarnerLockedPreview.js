@@ -18,6 +18,7 @@ import {
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
+import { drawCalloutRow } from './drawProgramReportNarrative.js';
 
 export const KWARNER_LOCKED_TOTAL_PAGES = 4;
 
@@ -186,22 +187,17 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   y = doc.y + LAYOUT.sectionGap;
   y = drawSectionTitle(doc, '--TODAY--', page.x, y, page.width);
 
-  y = drawLayoutTable(doc, {
-    x: page.x,
+  y = drawCalloutRow(
+    doc,
+    [
+      { label: 'Lean weight', value: `${lba.today.leanLbs} lbs`, detail: `${lba.today.leanPct}% of you` },
+      { label: 'Fat weight', value: `${lba.today.fatLbs} lbs`, detail: `${lba.today.fatPct}% of you` },
+      { label: 'Total weight', value: `${lba.today.totalLbs} lbs`, detail: 'on the scale today' },
+    ],
+    page.x,
     y,
-    width: page.width,
-    columns: [
-      { key: 'label', width: 0.34 },
-      { key: 'pct', width: 0.33, align: 'right' },
-      { key: 'lbs', width: 0.33, align: 'right' },
-    ],
-    rows: [
-      { label: 'LEAN', pct: `${lba.today.leanPct} %`, lbs: `${lba.today.leanLbs} lbs.` },
-      { label: 'FAT', pct: `${lba.today.fatPct} %`, lbs: `${lba.today.fatLbs} lbs.` },
-      { label: 'TOTAL', pct: `${lba.today.totalPct} %`, lbs: `${lba.today.totalLbs} lbs.` },
-    ],
-    headerRows: 0,
-  }) + LAYOUT.paragraphGap;
+    page.width,
+  );
 
   y = drawLayoutTable(doc, {
     x: page.x,
