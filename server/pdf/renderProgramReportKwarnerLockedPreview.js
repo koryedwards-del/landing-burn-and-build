@@ -72,9 +72,8 @@ function measureBodyParagraphs(doc, paragraphs, width) {
   );
 }
 
-/** Tables only — gold border, light fill. */
+/** Tables only — gold border, no fill (watermark shows through). */
 const TABLE_CONTAINER = Object.freeze({
-  fill: '#f8f8f8',
   stroke: PDF_FRAME_COLORS.gold,
   radius: 4,
   inset: 2,
@@ -124,9 +123,6 @@ function drawLayoutTable(doc, opts) {
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
   const pad = TABLE_CONTAINER.cellPad;
 
-  doc.save();
-  doc.roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius).fill(TABLE_CONTAINER.fill);
-  doc.restore();
   doc
     .strokeColor(TABLE_CONTAINER.stroke)
     .lineWidth(1.25)
