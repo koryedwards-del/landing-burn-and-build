@@ -9,7 +9,6 @@ import {
   drawFramePageFooter,
   drawFramePageTitle,
   frameContentContainerBottom,
-  frameContentContainerTight,
 } from './drawFrame.js';
 import { drawPersonalizationHeader } from './drawSeminar.js';
 import {
@@ -124,9 +123,8 @@ function beginLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}
     })
     : drawPersonalizationHeader(doc, payload, box);
 
-  const container = frameContentContainerTight(box, topGoldY, LAYOUT.contentPad);
   const bottom = frameContentContainerBottom(box, topGoldY);
-  let y = container.top;
+  let y = topGoldY + PT.titleTopGap;
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, { size: PT.pageTitle });
   }

@@ -19,6 +19,7 @@ export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
   sectionGap: 14,
   headerGap: 8,
   contentPad: 6,
+  titleTopGap: 14,
 });
 
 /** Legacy seminar header lines (older letterhead pages). */
