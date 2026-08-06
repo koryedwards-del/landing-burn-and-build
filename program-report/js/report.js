@@ -202,7 +202,7 @@ function renderWelcome(pkg) {
 
       <footer class="r-actions r-actions--split">
         ${wantsPreviewFromUrl() ? `
-          <a class="r-btn r-btn--ghost" href="./kwarner-preview.html" target="_blank" rel="noopener">View KWarner preview PDF</a>
+          <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">View KWarner preview PDF</a>
           <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>
         ` : ''}
         <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
