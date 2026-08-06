@@ -10,6 +10,7 @@ import {
   drawFramePageTitle,
   frameContentContainerBottom,
   framePageTitleStartY,
+  PDF_FRAME_COLORS,
 } from './drawFrame.js';
 import { drawPersonalizationHeader } from './drawSeminar.js';
 import {
@@ -43,6 +44,42 @@ const BOX_TYPO = {
   sectionGap: LAYOUT.sectionGap,
 };
 
+/** Match callout/content boxes — gold border, light fill. */
+const TABLE_CONTAINER = Object.freeze({
+  fill: '#f8f8f8',
+  stroke: PDF_FRAME_COLORS.gold,
+  radius: 4,
+  inset: 2,
+  cellPad: 4,
+});
+
+function tableInnerWidth(outerWidth) {
+  return outerWidth - TABLE_CONTAINER.inset * 2;
+}
+
+function layoutTableRowHeights(doc, opts) {
+  const columns = opts.columns;
+  const innerW = tableInnerWidth(opts.width);
+  const colWidths = columns.map((col) => col.width * innerW);
+  const headerRows = opts.headerRows ?? 1;
+
+  return opts.rows.map((row, rowIndex) => {
+    const isHeader = rowIndex < headerRows;
+    let maxH = LAYOUT.tableBodySize + LAYOUT.tableRowPad * 2;
+    columns.forEach((col, index) => {
+      const cell = row[col.key] ?? '';
+      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+      const size = isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize;
+      const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
+        width: colWidths[index] - TABLE_CONTAINER.cellPad * 2,
+        lineGap: 0,
+      });
+      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
+    });
+    return maxH;
+  });
+}
+
 function drawSectionTitle(doc, title, x, y, width) {
   doc
     .font(SEMINAR_FONTS.bold)
@@ -54,45 +91,41 @@ function drawSectionTitle(doc, title, x, y, width) {
 
 function drawLayoutTable(doc, opts) {
   const columns = opts.columns;
-  const colWidths = columns.map((col) => col.width * opts.width);
-  const rowHeight = (row, isHeader) => {
-    let maxH = LAYOUT.tableBodySize + LAYOUT.tableRowPad * 2;
-    columns.forEach((col, index) => {
-      const cell = row[col.key] ?? '';
-      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-      const size = isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize;
-      const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
-        width: colWidths[index] - 8,
-        lineGap: 0,
-      });
-      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
-    });
-    return maxH;
-  };
+  const headerRows = opts.headerRows ?? 1;
+  const tableX = opts.x + TABLE_CONTAINER.inset;
+  const tableY = opts.y;
+  const tableW = tableInnerWidth(opts.width);
+  const colWidths = columns.map((col) => col.width * tableW);
+  const rowHeights = layoutTableRowHeights(doc, opts);
+  const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
 
-  let cy = opts.y;
+  doc.save();
+  doc.roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius).fill(TABLE_CONTAINER.fill);
+  doc.restore();
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1)
+    .roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  let cy = tableY;
   opts.rows.forEach((row, rowIndex) => {
-    const isHeader = rowIndex < (opts.headerRows ?? 1);
-    const rh = rowHeight(row, isHeader);
-    let cx = opts.x;
+    const isHeader = rowIndex < headerRows;
+    const rh = rowHeights[rowIndex];
+    let cx = tableX;
     columns.forEach((col, index) => {
       const w = colWidths[index];
-      if (isHeader) {
-        doc.save();
-        doc.rect(cx, cy, w, rh).fill(SEMINAR_COLORS.tableHead);
-        doc.restore();
-      }
       doc
         .rect(cx, cy, w, rh)
-        .strokeColor(SEMINAR_COLORS.rule)
+        .strokeColor(TABLE_CONTAINER.stroke)
         .lineWidth(0.5)
         .stroke();
       doc
         .font(isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
         .fontSize(isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize)
         .fillColor(SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), cx + 4, cy + LAYOUT.tableRowPad, {
-          width: w - 8,
+        .text(String(row[col.key] ?? ''), cx + TABLE_CONTAINER.cellPad, cy + LAYOUT.tableRowPad, {
+          width: w - TABLE_CONTAINER.cellPad * 2,
           lineGap: 0,
           align: col.align || 'left',
         });
@@ -101,7 +134,7 @@ function drawLayoutTable(doc, opts) {
     cy += rh;
   });
 
-  return cy;
+  return tableY + totalH;
 }
 
 function beginLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}) {
@@ -170,25 +203,7 @@ function drawWelcomePage(doc, payload) {
 }
 
 function measureLayoutTable(doc, opts) {
-  const columns = opts.columns;
-  const colWidths = columns.map((col) => col.width * opts.width);
-  let total = 0;
-  opts.rows.forEach((row, rowIndex) => {
-    const isHeader = rowIndex < (opts.headerRows ?? 1);
-    let maxH = LAYOUT.tableBodySize + LAYOUT.tableRowPad * 2;
-    columns.forEach((col, index) => {
-      const cell = row[col.key] ?? '';
-      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-      const size = isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize;
-      const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
-        width: colWidths[index] - 8,
-        lineGap: 0,
-      });
-      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
-    });
-    total += maxH;
-  });
-  return total;
+  return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
