@@ -6,6 +6,7 @@ import { createPrintPdf } from './creator.js';
 import {
   addFramePage,
   drawCompactPersonalizedHeader,
+  drawContinuationHeader,
   drawFramePageFooter,
   drawFramePageTitle,
   frameContentContainerBottom,
@@ -158,19 +159,22 @@ function drawLayoutTable(doc, opts) {
   return tableY + totalH;
 }
 
-function beginLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}) {
+function beginLockedPage(doc, payload, pageTitle, { compactHeader = false, continuation = false } = {}) {
   const box = addFramePage(doc);
-  const topGoldY = compactHeader
-    ? drawCompactPersonalizedHeader(doc, box, {
-      clientName: payload.clientName,
-      preparedDateLong: payload.preparedDateLong,
-      preparedDate: payload.preparedDate,
-      contact: payload.header,
-    })
-    : drawPersonalizationHeader(doc, payload, box);
+  const topGoldY = continuation
+    ? drawContinuationHeader(doc, box)
+    : compactHeader
+      ? drawCompactPersonalizedHeader(doc, box, {
+        clientName: payload.clientName,
+        preparedDateLong: payload.preparedDateLong,
+        preparedDate: payload.preparedDate,
+        contact: payload.header,
+        showContact: false,
+      })
+      : drawPersonalizationHeader(doc, payload, box);
 
   const bottom = frameContentContainerBottom(box, topGoldY);
-  let y = framePageTitleStartY(topGoldY);
+  let y = continuation ? topGoldY + LAYOUT.contentPad + 4 : framePageTitleStartY(topGoldY);
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, {
       size: PT.pageTitle,
@@ -184,14 +188,17 @@ function finishLockedPage(doc, box, payload) {
   drawFramePageFooter(doc, box, { contact: payload.header });
 }
 
-function startLockedPage(doc, payload, pageTitle, { compactHeader = false } = {}) {
-  return beginLockedPage(doc, payload, pageTitle, { compactHeader });
+function startLockedPage(doc, payload, pageTitle, { compactHeader = false, continuation = false } = {}) {
+  return beginLockedPage(doc, payload, pageTitle, { compactHeader, continuation });
 }
 
 function ensureLockedSpace(doc, payload, page, needed, { compactHeader, pageTitle } = {}) {
   if (page.y + needed <= page.bottom) return page;
   finishLockedPage(doc, page.box, payload);
-  const next = startLockedPage(doc, payload, pageTitle || null, { compactHeader: compactHeader ?? false });
+  const next = startLockedPage(doc, payload, pageTitle || null, {
+    compactHeader: compactHeader ?? false,
+    continuation: !pageTitle && (compactHeader ?? false),
+  });
   return next;
 }
 
