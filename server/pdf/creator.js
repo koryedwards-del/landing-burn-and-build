@@ -58,8 +58,10 @@ export class PrintPdfCreator {
       .text(String(message || ''), box.x, y, { width: box.width, lineGap: 2 });
   }
 
-  async finish() {
-    stampAllPageNumbers(this.#doc);
+  async finish({ stampPageNumbers = true } = {}) {
+    if (stampPageNumbers) {
+      stampAllPageNumbers(this.#doc);
+    }
     this.#doc.end();
     return this.#bufferPromise;
   }

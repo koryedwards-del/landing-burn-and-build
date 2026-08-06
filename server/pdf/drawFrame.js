@@ -17,12 +17,15 @@ export const PDF_FRAME_FONTS = Object.freeze({
   boldItalic: 'Times-BoldItalic',
 });
 
+const FOOTER_BAND_HEIGHT = 14 + PT.contact + 10 + 4;
+
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
   contentPad: PT.contentPad,
-  footerContactOffset: 12,
-  footerRuleAboveText: 12,
+  footerContactOffset: 14,
+  footerRuleAboveText: 10,
+  footerBandHeight: FOOTER_BAND_HEIGHT,
   personalizationSize: PT.personalization,
   contentPageTitleSize: PT.pageTitle,
   footerContactSize: PT.contact,
@@ -54,7 +57,7 @@ export function addFramePage(doc) {
 }
 
 export function frameFooterRuleY(box) {
-  return box.bottom - PDF_FRAME.footerContactOffset - PDF_FRAME.footerRuleAboveText;
+  return box.bottom - PDF_FRAME.footerBandHeight;
 }
 
 /** @deprecated Use frameContentContainer with topGoldY */
@@ -307,7 +310,10 @@ export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
 
 /** Max y for body content when a page number is shown. */
 export function frameContentBottomLimit(box) {
-  return frameFooterRuleY(box) - PDF_FRAME.contentPad - PDF_FRAME.pageNumberSize - 4;
+  return frameFooterRuleY(box)
+    - PDF_FRAME.contentPad
+    - PDF_FRAME.pageNumberSize
+    - 10;
 }
 
 /** Content container bottom when page numbers are reserved above the footer rule. */

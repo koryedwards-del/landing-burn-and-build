@@ -19,7 +19,7 @@ import {
 import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 
-export const KWARNER_LOCKED_TOTAL_PAGES = 5;
+export const KWARNER_LOCKED_TOTAL_PAGES = 4;
 
 const LAYOUT = {
   bodySize: PT.body,
@@ -146,19 +146,19 @@ function drawWelcomePage(doc, payload) {
   let { y } = page;
 
   y = drawBodyParagraphs(doc, payload.welcome.intro, page.x, y, page.width);
+  y += LAYOUT.sectionGap;
 
   const sections = [
     ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
-    ['History', payload.welcome.history],
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
-  ];
+  ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
     y = drawSectionTitle(doc, title, page.x, y, page.width);
     y = drawBodyParagraphs(doc, [body], page.x, y, page.width);
-    if (index < sections.length - 1 && page.bottom - y > 40) {
-      y += Math.min(18, (page.bottom - y) / (sections.length - index));
+    if (index < sections.length - 1) {
+      y += LAYOUT.sectionGap;
     }
   });
 
@@ -248,40 +248,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
 
   drawBodyParagraphs(doc, [lba.monitorCopy], page.x, y, page.width);
   finishLockedPage(doc, page.box, payload, 2);
-}
-
-function drawHistoryPage(doc, payload) {
-  const page = beginLockedPage(doc, payload, 'Body Composition History', { compactHeader: true });
-  drawLayoutTable(doc, {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: [
-      { key: 'testDate', width: 0.14 },
-      { key: 'thigh', width: 0.1 },
-      { key: 'waist', width: 0.1 },
-      { key: 'weight', width: 0.12 },
-      { key: 'lean', width: 0.12 },
-      { key: 'fat', width: 0.12 },
-      { key: 'percent', width: 0.12 },
-      { key: 'activity', width: 0.18 },
-    ],
-    rows: [
-      {
-        testDate: 'TEST\nDATE',
-        thigh: 'THIGH',
-        waist: 'WAIST',
-        weight: 'WEIGHT',
-        lean: 'LEAN',
-        fat: 'FAT',
-        percent: 'PERCENT',
-        activity: 'ACTIVITY',
-      },
-      ...payload.history.rows,
-    ],
-    headerRows: 1,
-  });
-  finishLockedPage(doc, page.box, payload, 3);
 }
 
 function drawFoodPlanPage(doc, payload) {
@@ -395,7 +361,7 @@ function drawFoodPlanPage(doc, payload) {
     ],
     headerRows: 2,
   });
-  finishLockedPage(doc, page.box, payload, 4);
+  finishLockedPage(doc, page.box, payload, 3);
 }
 
 function drawServingsPage(doc, payload) {
@@ -457,7 +423,7 @@ function drawServingsPage(doc, payload) {
     ],
     headerRows: 1,
   });
-  finishLockedPage(doc, page.box, payload, 5);
+  finishLockedPage(doc, page.box, payload, 4);
 }
 
 export async function renderProgramReportKwarnerLockedPreview(payload, { title } = {}) {
@@ -471,11 +437,10 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title }
   const doc = creator.doc;
   drawWelcomePage(doc, payload);
   drawLeanBodyAnalysisPage(doc, payload);
-  drawHistoryPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
 
-  const buffer = await creator.finish();
+  const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
   if (pages !== KWARNER_LOCKED_TOTAL_PAGES) {
     throw new Error(`Preview PDF expected ${KWARNER_LOCKED_TOTAL_PAGES} pages, got ${pages}`);
