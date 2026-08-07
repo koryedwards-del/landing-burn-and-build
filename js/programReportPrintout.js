@@ -308,9 +308,10 @@ export function buildProgramReportPayload(pkg, options = {}) {
       inputGrid: {
         lbm: Number(intake.leanBodyMass).toFixed(1),
         wt: hours.wt,
-        hia: hours.cardio,
-        lia: hours.fatBurn,
+        hht: hours.cardio,
+        lhr: hours.fatBurn,
       },
+      workdayFactor: Number(intake.workIntensity).toFixed(1),
       jobLabel: WORK_PHYSICAL.find((item) => item.id === intake.workPhysical)?.label || '—',
       lifestyleLabel: WORK_STRESS.find((item) => item.id === intake.workStress)?.label || '—',
       today,
