@@ -652,12 +652,183 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const REPORT_GRID = {
+  valueSize: 17,
+  labelSize: PT.body,
+  unitSize: PT.body - 1,
+  labelLineGap: 2,
+};
+
+/** @param {import('pdfkit')} doc @param {Array<{ label: string, value: string, unit: string }>} columns */
+function measureMetricColumnGrid(doc, columns, width) {
+  const colW = width / columns.length;
+  const pad = TABLE_CONTAINER.cellPad;
+  const innerW = colW - pad * 2;
+  doc.font(SEMINAR_FONTS.bold).fontSize(REPORT_GRID.labelSize);
+  const maxLabelH = columns.reduce(
+    (max, col) => Math.max(
+      max,
+      doc.heightOfString(col.label, { width: innerW, lineGap: REPORT_GRID.labelLineGap }),
+    ),
+    0,
+  );
+  doc.font(SEMINAR_FONTS.bold).fontSize(REPORT_GRID.valueSize);
+  const valueH = doc.heightOfString('113.7', { width: innerW });
+  doc.font(SEMINAR_FONTS.regular).fontSize(REPORT_GRID.unitSize);
+  const unitH = doc.heightOfString('hours per week', { width: innerW });
+  return pad * 2 + maxLabelH + 6 + valueH + 4 + unitH;
+}
+
+/** @param {import('pdfkit')} doc @param {Array<{ label: string, value: string, unit: string }>} columns */
+function drawMetricColumnGrid(doc, x, y, width, columns) {
+  const colW = width / columns.length;
+  const pad = TABLE_CONTAINER.cellPad;
+  const gridH = measureMetricColumnGrid(doc, columns, width);
+
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, gridH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  const ruleTop = y + TABLE_CONTAINER.radius * 0.5;
+  const ruleBottom = y + gridH - TABLE_CONTAINER.radius * 0.5;
+  for (let i = 1; i < columns.length; i += 1) {
+    const ruleX = x + colW * i;
+    doc
+      .strokeColor(TABLE_CONTAINER.stroke)
+      .lineWidth(STAPLES_LIST.ruleWidth)
+      .moveTo(ruleX, ruleTop)
+      .lineTo(ruleX, ruleBottom)
+      .stroke();
+  }
+
+  columns.forEach((col, index) => {
+    const cx = x + colW * index;
+    const innerW = colW - pad * 2;
+    let cy = y + pad;
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(REPORT_GRID.labelSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(col.label, cx + pad, cy, {
+        width: innerW,
+        align: 'center',
+        lineGap: REPORT_GRID.labelLineGap,
+      });
+    cy += doc.heightOfString(col.label, { width: innerW, lineGap: REPORT_GRID.labelLineGap }) + 6;
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(REPORT_GRID.valueSize)
+      .text(col.value, cx + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+    cy += doc.heightOfString(col.value, { width: innerW }) + 4;
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(REPORT_GRID.unitSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(col.unit, cx + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+  });
+
+  return y + gridH;
+}
+
+function drawFatLossHero(doc, x, y, width, fatLostLbs) {
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(PT.pageTitle - 2)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`Lose ${fatLostLbs} lbs of fat in 8 weeks`, x, y, { width, align: 'center', lineGap: 0 });
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(LAYOUT.bodySize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(
+      'Your eight-week fat-loss target from the Burn Engine, based on your lean body mass, job, lifestyle, and weekly exercise hours.',
+      x,
+      doc.y + 6,
+      { width, align: 'center', lineGap: LAYOUT.lineGap },
+    );
+  return doc.y + LAYOUT.sectionGap;
+}
+
+const FOOD_PLAN_MACRO_GRID = Object.freeze([
+  {
+    label: 'Protein',
+    tooMuch: 'Gain fat',
+    tooLittle: 'Lose lean body mass (muscle)',
+  },
+  {
+    label: 'Carbohydrates',
+    tooMuch: 'Gain fat',
+    tooLittle: 'Lose energy between meals',
+  },
+  {
+    label: 'Fat',
+    tooMuch: 'Gain fat',
+    tooLittle: 'Slow fat loss',
+  },
+]);
+
+const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
+  { key: 'lbm', label: 'Lean body mass (LBM)', unit: 'lbs' },
+  { key: 'wt', label: 'Weight training (WT)', unit: 'hours per week' },
+  { key: 'hht', label: 'High heart rate aerobic (HHT)', unit: 'hours per week' },
+  { key: 'lhr', label: 'Low heart rate aerobic (LHR)', unit: 'hours per week' },
+]);
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
 
-  const intro = `The following food program contains a sophisticated calculation that is based on your individual lean body mass (LBM), and on your activities. This is the most individualized food program available for losing fat. In eight weeks, you could safely lose ${fp.fatLostLbs} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${fp.introHours.total} hour(s) per week. ${fp.introHours.wt} hour(s) of weight training, ${fp.introHours.cardio} hour(s) of cardiovascular activities, ${fp.introHours.fatBurn} hour(s) of fat-burning activities`;
-  page = drawBodyParagraphs(doc, payload, page, [intro]);
+  page = { ...page, y: drawFatLossHero(doc, page.x, page.y, page.width, fp.fatLostLbs) };
+
+  const inputColumns = FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
+    label,
+    unit,
+    value: fp.inputGrid?.[key]
+      ?? (key === 'lbm' ? fp.lbmLbs : null)
+      ?? (key === 'wt' ? fp.introHours?.wt : null)
+      ?? (key === 'hht' ? fp.introHours?.cardio : null)
+      ?? (key === 'lhr' ? fp.introHours?.fatBurn : null)
+      ?? '—',
+  }));
+  const inputGridH = measureMetricColumnGrid(doc, inputColumns, page.width);
+  page = ensureLockedSpace(doc, payload, page, inputGridH + LAYOUT.headerGap);
+  page = {
+    ...page,
+    y: drawMetricColumnGrid(doc, page.x, page.y, page.width, inputColumns) + LAYOUT.headerGap,
+  };
+
+  const contextParts = [];
+  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
+  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
+  if (fp.workdayFactor) {
+    contextParts.push(
+      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
+    );
+  }
+  const contextLine = contextParts.join('   ·   ');
+  if (contextLine) {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(contextLine, page.x, page.y, { width: page.width, align: 'center', lineGap: 0 });
+    page = { ...page, y: doc.y + LAYOUT.sectionGap };
+  }
+
+  const story1 = [
+    'We use your body composition information to determine your LBM (lean body mass) — the weight of everything in your body except fat, mostly muscle and organs. The computer uses your LBM to set your protein needs and your metabolic rate.',
+    'You also told us how you work and train: weight training (WT), high heart rate aerobic activity (HHT) such as running or hard cardio, and low heart rate aerobic activity (LHR) such as walking or easy cycling. Those hours, together with your job and lifestyle, are the inputs that build your food plan and your servings on the next page.',
+  ].join(' ');
+  page = drawBodyParagraphs(doc, payload, page, [story1]);
+
+  const goalIntro = fp.goal
+    ? 'If you follow this plan for eight weeks, the table compares your body today with where you project to be. Lean mass is muscle and organs; body fat is stored fat; total weight is what the scale shows.'
+    : null;
+  if (goalIntro) {
+    page = drawBodyParagraphs(doc, payload, page, [goalIntro]);
+  }
 
   if (fp.goal) {
     const goalTableOpts = {
@@ -665,24 +836,24 @@ function drawFoodPlanPage(doc, payload) {
       y: page.y,
       width: page.width,
       columns: [
-        { key: 'label', width: 0.14 },
+        { key: 'label', width: 0.16 },
         { key: 'todayPct', width: 0.14, align: 'right' },
         { key: 'todayLbs', width: 0.14, align: 'right' },
-        { key: 'mid', width: 0.16, align: 'center' },
+        { key: 'mid', width: 0.14, align: 'center' },
         { key: 'goalPct', width: 0.14, align: 'right' },
         { key: 'goalLbs', width: 0.14, align: 'right' },
       ],
       rows: [
         {
           label: '',
-          todayPct: 'TODAY',
+          todayPct: 'Today',
           todayLbs: '',
-          mid: '',
-          goalPct: 'EIGHT WEEK GOAL',
+          mid: 'Change',
+          goalPct: '8-week goal',
           goalLbs: '',
         },
         {
-          label: 'LEAN',
+          label: 'Lean mass',
           todayPct: `${fp.today.leanPct}%`,
           todayLbs: `${fp.today.leanLbs} lbs.`,
           mid: '',
@@ -690,15 +861,15 @@ function drawFoodPlanPage(doc, payload) {
           goalLbs: fp.goal.leanLbs,
         },
         {
-          label: 'FAT',
+          label: 'Body fat',
           todayPct: `${fp.today.fatPct}%`,
           todayLbs: `${fp.today.fatLbs} lbs.`,
-          mid: `-${fp.fatLostLbs} lbs. of fat`,
+          mid: `−${fp.fatLostLbs} lbs.`,
           goalPct: fp.goal.fatPct,
           goalLbs: fp.goal.fatLbs,
         },
         {
-          label: 'TOTAL',
+          label: 'Total weight',
           todayPct: `${fp.today.totalPct}%`,
           todayLbs: `${fp.today.totalLbs} lbs.`,
           mid: '',
@@ -707,29 +878,42 @@ function drawFoodPlanPage(doc, payload) {
         },
       ],
       headerRows: 1,
+      boldColumnKeys: ['label'],
     };
     page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts));
     goalTableOpts.y = page.y;
-    page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.paragraphGap };
+    page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.sectionGap };
   }
 
-  const weekly = `You project to lose an average of ${fp.weeklyFatLossLbs} pounds of fat per week. In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.`;
-  page = drawBodyParagraphs(doc, payload, page, [weekly, fp.macroSignalIntro].filter(Boolean));
+  const story2 = [
+    `On this plan you project to lose about ${fp.weeklyFatLossLbs} pounds of fat per week on average.`,
+    'Macronutrients — protein, carbohydrates, and fat — are the three main parts of food that supply calories and shape body composition. The table below is not a food list; it explains what happens when each macro is too high or too low. That is why your daily servings on the next page are set the way they are: so you stay in the right range without counting grams yourself.',
+  ].join(' ');
+  page = drawBodyParagraphs(doc, payload, page, [story2]);
 
-  const macroRows = fp.macroSignalRows ?? [];
-  if (macroRows.length) {
-    page = ensureLockedSpace(doc, payload, page, measureMacroSignalTable(macroRows));
-    page = {
-      ...page,
-      y: drawMacroSignalTable(doc, {
-        x: page.x,
-        y: page.y,
-        width: page.width,
-        rows: macroRows,
-      }),
-    };
-  }
-
+  const macroGridOpts = {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns: [
+      { key: 'label', width: 0.34 },
+      { key: 'tooMuch', width: 0.33, align: 'center' },
+      { key: 'tooLittle', width: 0.33, align: 'center' },
+    ],
+    rows: [
+      { label: 'Macro', tooMuch: 'Too much', tooLittle: 'Too little' },
+      ...FOOD_PLAN_MACRO_GRID.map((row) => ({
+        label: row.label,
+        tooMuch: row.tooMuch,
+        tooLittle: row.tooLittle,
+      })),
+    ],
+    headerRows: 1,
+    boldColumnKeys: ['label', 'tooMuch', 'tooLittle'],
+  };
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, macroGridOpts));
+  macroGridOpts.y = page.y;
+  drawLayoutTable(doc, macroGridOpts);
   finishLockedPage(doc, page.box, payload);
 }
 

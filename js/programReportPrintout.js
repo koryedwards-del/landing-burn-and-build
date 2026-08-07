@@ -20,6 +20,7 @@ import {
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
+import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
 import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 
@@ -299,6 +300,16 @@ export function buildProgramReportPayload(pkg, options = {}) {
       introHours: hours,
       fatLostLbs: projection ? projection.fatLostLbs.toFixed(1) : '—',
       weeklyFatLossLbs: projection ? projection.weeklyFatLossLbs.toFixed(1) : '—',
+      lbmLbs: Number(intake.leanBodyMass).toFixed(1),
+      inputGrid: {
+        lbm: Number(intake.leanBodyMass).toFixed(1),
+        wt: hours.wt,
+        hht: hours.cardio,
+        lhr: hours.fatBurn,
+      },
+      workdayFactor: Number(intake.workIntensity).toFixed(1),
+      jobLabel: WORK_PHYSICAL.find((item) => item.id === intake.workPhysical)?.label || '—',
+      lifestyleLabel: WORK_STRESS.find((item) => item.id === intake.workStress)?.label || '—',
       today,
       goal: projection ? {
         leanPct: `${projection.endLeanPct.toFixed(2)}%`,

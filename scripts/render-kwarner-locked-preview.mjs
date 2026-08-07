@@ -15,9 +15,8 @@ const LOCKED_BASENAME = 'kwarner-locked-preview-kristi-';
 const VEG_FRUIT_BASENAME = 'kwarner-preview-kristi-veg-fruit-v';
 const LOCKED_RE = new RegExp(`^${LOCKED_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
 const VEG_FRUIT_RE = new RegExp(`^${VEG_FRUIT_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
-const RAW_REPO = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples';
 
-const LOCKED_MIN = 10; // continue local series after kristi-9
+const LOCKED_MIN = 10;
 
 function nextNumber(re, basename, min = 0) {
   let max = min;
