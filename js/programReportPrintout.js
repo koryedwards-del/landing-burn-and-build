@@ -16,12 +16,12 @@ import {
   exerciseHoursSummary,
   MACRO_SIGNAL_INTRO,
   MACRO_SIGNAL_ROWS,
-  macroSignalIconMarkup,
   workdayActivityLabel,
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
+import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
@@ -91,6 +91,9 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
 
 /** Static Kristi sample — committed under docs/samples for direct download. */
 export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=6';
+
+/** KWarner 1982 locked-frame preview — separate file, not production sample. */
+export { KWARNER_LOCKED_PREVIEW_PDF, kwarnerPreviewPdfUrl, KWARNER_PREVIEW_BUILD, KWARNER_PREVIEW_MD5 } from './kwarnerPreviewBuild.js';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;
@@ -239,6 +242,14 @@ export function buildProgramReportPayload(pkg, options = {}) {
     sampleHistory,
   });
 
+  const narratives = buildProgramReportNarratives(pkg, {
+    today,
+    gender,
+    projection,
+    hours,
+    historyRows,
+  });
+
   return {
     view: 'programreport',
     title: programReportDocumentTitle(pkg),
@@ -249,7 +260,11 @@ export function buildProgramReportPayload(pkg, options = {}) {
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
     header: { ...SEMINAR_REPORT_HEADER },
-    gettingStarted: { ...GETTING_STARTED_COPY },
+    gettingStarted: narratives.welcome,
+    bodyTodayNarrative: narratives.bodyToday,
+    progressNarrative: narratives.progress,
+    foodPlanNarrative: narratives.foodPlan,
+    servingsNarrative: narratives.servings,
     stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
     welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {

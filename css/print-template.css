@@ -1,0 +1,192 @@
+/**
+ * Locked personalized print template — unified typography.
+ * Source of truth for sizes: js/printTemplateTypography.js (points).
+ * Apply .print-template on document shells that should match program-report PDFs.
+ */
+
+.print-template {
+  --print-contact: 9pt;
+  --print-personalization: 12pt;
+  --print-page-title: 20pt;
+  --print-page-number: 9pt;
+  --print-body: 10.5pt;
+  --print-subsection: 11.5pt;
+  --print-section-title: 12pt;
+  --print-table-head: 9pt;
+  --print-table-body: 9.5pt;
+  --print-line-height: 1.45;
+  --print-paragraph-gap: 12pt;
+  --print-section-gap: 14pt;
+  --print-header-gap: 8pt;
+  --print-title-top-gap: 28pt;
+  --print-title-bottom-gap: 20pt;
+
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-body);
+  line-height: var(--print-line-height);
+  color: #111111;
+}
+
+.print-template__contact {
+  font-size: var(--print-contact);
+  color: #444444;
+}
+
+.print-template__personalization {
+  font-size: var(--print-personalization);
+  font-weight: 700;
+}
+
+.print-template__page-title {
+  font-size: var(--print-page-title);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: var(--print-title-top-gap) 0 var(--print-title-bottom-gap);
+}
+
+.print-template__subsection {
+  font-size: var(--print-subsection);
+  font-weight: 700;
+  margin: var(--print-section-gap) 0 var(--print-header-gap, 8pt);
+}
+
+.print-template__page-number {
+  font-size: var(--print-page-number);
+  color: #444444;
+  text-align: center;
+}
+
+/* Program report web shell — match PDF when .print-template is on .r-doc */
+.r-doc.print-template {
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-body);
+  line-height: var(--print-line-height);
+}
+
+.r-doc.print-template .pb-panel__title,
+.r-doc.print-template .print-template__page-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-page-title);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #111111;
+}
+
+.r-doc.print-template h3 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-subsection);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #111111;
+  margin: var(--print-section-gap) 0 8pt;
+}
+
+.r-doc.print-template p {
+  font-size: var(--print-body);
+  line-height: var(--print-line-height);
+  margin-bottom: var(--print-paragraph-gap);
+  color: #111111;
+}
+
+.r-doc.print-template .r-doc__meta {
+  font-size: var(--print-personalization);
+  color: #111111;
+}
+
+.r-doc.print-template .r-doc__stats-line {
+  font-size: var(--print-body);
+  color: #111111;
+}
+
+.r-doc.print-template .r-doc__today-label {
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-subsection);
+  letter-spacing: 0;
+  text-transform: none;
+  color: #111111;
+}
+
+.r-doc.print-template .r-report-table,
+.r-doc.print-template .r-goal-table,
+.r-doc.print-template .r-macro-table,
+.r-doc.print-template .r-projection-table,
+.r-doc.print-template .r-servings-table,
+.r-doc.print-template .r-ace-table {
+  font-size: var(--print-table-body);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1.25px solid #fdc500;
+  border-radius: 8px;
+  background: #f8f8f8;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.r-doc.print-template .r-report-table th,
+.r-doc.print-template .r-report-table td,
+.r-doc.print-template .r-goal-table th,
+.r-doc.print-template .r-goal-table td,
+.r-doc.print-template .r-macro-table th,
+.r-doc.print-template .r-macro-table td,
+.r-doc.print-template .r-projection-table th,
+.r-doc.print-template .r-projection-table td,
+.r-doc.print-template .r-servings-table th,
+.r-doc.print-template .r-servings-table td,
+.r-doc.print-template .r-ace-table th,
+.r-doc.print-template .r-ace-table td {
+  border: none;
+  border-bottom: 1px solid rgba(253, 197, 0, 0.45);
+}
+
+.r-doc.print-template .r-report-table tr:last-child th,
+.r-doc.print-template .r-report-table tr:last-child td,
+.r-doc.print-template .r-goal-table tr:last-child th,
+.r-doc.print-template .r-goal-table tr:last-child td,
+.r-doc.print-template .r-macro-table tr:last-child th,
+.r-doc.print-template .r-macro-table tr:last-child td,
+.r-doc.print-template .r-projection-table tr:last-child th,
+.r-doc.print-template .r-projection-table tr:last-child td,
+.r-doc.print-template .r-servings-table tr:last-child th,
+.r-doc.print-template .r-servings-table tr:last-child td,
+.r-doc.print-template .r-ace-table tr:last-child th,
+.r-doc.print-template .r-ace-table tr:last-child td {
+  border-bottom: none;
+}
+
+.r-doc.print-template .r-report-table thead th,
+.r-doc.print-template .r-goal-table thead th,
+.r-doc.print-template .r-macro-table thead th,
+.r-doc.print-template .r-projection-table thead th,
+.r-doc.print-template .r-servings-table thead th,
+.r-doc.print-template .r-ace-table thead th {
+  font-size: var(--print-table-head);
+  background: transparent;
+  color: #111111;
+}
+
+.r-doc.print-template .r-goal-row-label,
+.r-doc.print-template .r-macro-label,
+.r-doc.print-template .r-servings-label {
+  background: transparent;
+}
+
+.r-doc.print-template .r-goal-table td:empty {
+  background: transparent;
+}
+
+.r-doc.print-template .r-macro-spacer td {
+  background: transparent;
+  border-bottom: none;
+}
+
+@media print {
+  .r-doc.print-template {
+    background: #ffffff;
+    color: #111111;
+    border: none;
+    padding: 0;
+  }
+}

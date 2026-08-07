@@ -598,6 +598,20 @@ a.r-nav__btn {
   white-space: nowrap;
 }
 
+.r-macro-total-head {
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+.r-macro-th-sub {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
 .r-projection-table tr.r-projection-current td {
   color: var(--muted);
   font-weight: 600;
@@ -621,108 +635,8 @@ a.r-nav__btn {
   color: var(--muted);
 }
 
-.r-macro-signal {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 2px solid var(--gold);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 16px 0 20px;
-  font-size: 0.82rem;
-  background: #e8e8e8;
-  color: #111111;
-}
-
-.r-macro-signal thead th {
-  background: var(--gold);
-  color: var(--on-gold);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 12px 14px;
-  border-right: 1px solid rgba(10, 10, 10, 0.12);
-}
-
-.r-macro-signal thead th:last-child {
-  border-right: none;
-}
-
-.r-macro-signal tbody th,
-.r-macro-signal tbody td {
-  border-top: 1px solid #cccccc;
-  border-right: 1px solid #cccccc;
-  padding: 14px 16px;
-  vertical-align: middle;
-}
-
-.r-macro-signal tbody tr:last-child th,
-.r-macro-signal tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.r-macro-signal tbody th:last-child,
-.r-macro-signal tbody td:last-child {
-  border-right: none;
-}
-
-.r-macro-signal__macro {
-  width: 34%;
-  background: #e8e8e8;
-  text-align: left;
-}
-
-.r-macro-signal__macro-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.r-macro-signal__icon {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #111111;
-}
-
-.r-macro-signal__icon-svg {
-  display: block;
-}
-
-.r-macro-signal__label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.r-macro-signal__effect {
-  width: 33%;
-  text-align: center;
-  background: #e8e8e8;
-}
-
-.r-macro-signal__effect-text {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.r-macro-signal__arrow {
-  display: block;
-  font-size: 1.35rem;
-  line-height: 1;
-  color: var(--gold);
-  text-shadow: 0 0 12px rgba(253, 197, 0, 0.35);
-}
-
 .r-goal-table,
+.r-macro-table,
 .r-servings-table {
   width: 100%;
   border-collapse: collapse;
@@ -732,6 +646,8 @@ a.r-nav__btn {
 
 .r-goal-table th,
 .r-goal-table td,
+.r-macro-table th,
+.r-macro-table td,
 .r-servings-table th,
 .r-servings-table td {
   border: 1px solid var(--border);
@@ -740,6 +656,7 @@ a.r-nav__btn {
 }
 
 .r-goal-table thead th,
+.r-macro-table thead th,
 .r-servings-table thead th {
   background: var(--surface-2);
   font-size: 0.68rem;
@@ -751,6 +668,7 @@ a.r-nav__btn {
 }
 
 .r-goal-row-label,
+.r-macro-label,
 .r-servings-label {
   font-size: 0.68rem;
   font-weight: 700;
@@ -779,8 +697,25 @@ a.r-nav__btn {
   color: var(--gold);
 }
 
+.r-macro-table td,
 .r-servings-table td {
   text-align: center;
+}
+
+.r-macro-table .r-table-num,
+.r-macro-table thead th:not(:first-child):not(.r-macro-total-head) {
+  text-align: right;
+}
+
+.r-macro-table thead th.r-macro-total-head {
+  text-align: center;
+}
+
+.r-macro-spacer td {
+  height: 8px;
+  border-left: none;
+  border-right: none;
+  background: var(--surface);
 }
 
 .r-callout {
@@ -1140,20 +1075,18 @@ a.r-nav__btn {
 
   .r-doc h3,
   .r-goal-table thead th,
+  .r-macro-table thead th,
   .r-servings-table thead th,
   .r-goal-fat-loss {
     color: #111;
   }
 
   .r-goal-row-label,
+  .r-macro-label,
   .r-servings-label,
   .r-goal-table thead th,
+  .r-macro-table thead th,
   .r-servings-table thead th {
     background: #eee;
-  }
-
-  .r-macro-signal thead th {
-    background: #fdc500;
-    color: #111;
   }
 }

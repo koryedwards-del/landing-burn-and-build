@@ -1,5 +1,6 @@
 import { PDF_MARGIN } from './constants.js';
 import { drawWatermark, logoPath } from './draw.js';
+import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 
 /** Generic row 2 — non-personalized PDFs (FAQ, food list, etc.). */
 export const PDF_FRAME_TAGLINE = 'Burn & Build — Stronger Today. Leaner Tomorrow.';
@@ -16,17 +17,27 @@ export const PDF_FRAME_FONTS = Object.freeze({
   boldItalic: 'Times-BoldItalic',
 });
 
+const FOOTER_BOTTOM_PAD = 6;
+const FOOTER_CONTACT_GAP = 3;
+const FOOTER_PAGE_NUM_GAP = 3;
+
+/** Below rule: gap + contact + bottom pad. Above rule: page number + gap (reserved at stamp). */
+const FOOTER_BELOW_RULE = FOOTER_CONTACT_GAP + PT.contact + FOOTER_BOTTOM_PAD;
+const FOOTER_ABOVE_RULE = FOOTER_PAGE_NUM_GAP + PT.pageNumber + PT.contentPad;
+const FOOTER_BAND_HEIGHT = FOOTER_BELOW_RULE + FOOTER_ABOVE_RULE;
+
 export const PDF_FRAME = Object.freeze({
   logoWidth: 68,
   logoGap: 16,
-  contentPad: 12,
-  footerContactOffset: 12,
-  footerRuleAboveText: 12,
-  personalizationSize: 12,
-  contentPageTitleSize: 18,
-  footerContactSize: 8,
-  pageNumberSize: 9,
-  sectionGap: 12,
+  contentPad: PT.contentPad,
+  footerContactOffset: FOOTER_BOTTOM_PAD + PT.contact,
+  footerRuleAboveText: FOOTER_CONTACT_GAP,
+  footerBandHeight: FOOTER_BAND_HEIGHT,
+  personalizationSize: PT.personalization,
+  contentPageTitleSize: PT.pageTitle,
+  footerContactSize: PT.contact,
+  pageNumberSize: PT.pageNumber,
+  sectionGap: PT.sectionGap,
 });
 
 export const PDF_FRAME_COLORS = Object.freeze({
@@ -53,7 +64,7 @@ export function addFramePage(doc) {
 }
 
 export function frameFooterRuleY(box) {
-  return box.bottom - PDF_FRAME.footerContactOffset - PDF_FRAME.footerRuleAboveText;
+  return box.bottom - FOOTER_BELOW_RULE;
 }
 
 /** @deprecated Use frameContentContainer with topGoldY */
@@ -179,7 +190,77 @@ export function drawFrameHeader(doc, box, {
   return y;
 }
 
-export function drawFramePageTitle(doc, title, x, y, width) {
+/** Content pages — personalization row + gold divider; contact lives in footer only. */
+export function drawCompactPersonalizedHeader(doc, box, {
+  clientName,
+  preparedDateLong,
+  preparedDate,
+  contact = PDF_FRAME_CONTACT,
+  showContact = false,
+} = {}) {
+  let y = box.y + 6;
+
+  if (showContact) {
+    const phone = contact?.phone || '';
+    const website = contact?.website || PDF_FRAME_CONTACT.website;
+    const email = contact?.email || PDF_FRAME_CONTACT.email;
+    const contactLine = [phone, website, email].filter(Boolean).join('  ·  ');
+    doc
+      .font(PDF_FRAME_FONTS.regular)
+      .fontSize(PDF_FRAME.footerContactSize + 1)
+      .fillColor(PDF_FRAME_COLORS.muted)
+      .text(contactLine, box.x, y, { width: box.width, align: 'center', lineGap: 0 });
+    y = doc.y + 8;
+  }
+
+  const name = titleCaseWords(clientName);
+  const date = formatPreparedDateOrdinal(preparedDateLong || preparedDate);
+  doc
+    .font(PDF_FRAME_FONTS.bold)
+    .fontSize(PDF_FRAME.personalizationSize)
+    .fillColor(PDF_FRAME_COLORS.body)
+    .text(`Prepared exclusively for: ${name}`, box.x, y, {
+      width: box.width * 0.64,
+      align: 'left',
+      lineGap: 0,
+    });
+  doc
+    .font(PDF_FRAME_FONTS.bold)
+    .fontSize(PDF_FRAME.personalizationSize)
+    .text(`On: ${date}`, box.x + box.width * 0.64, y, {
+      width: box.width * 0.36,
+      align: 'right',
+      lineGap: 0,
+    });
+
+  y = Math.max(doc.y, y + 14) + 10;
+  drawGoldDivider(doc, box.x, y, box.width);
+  return y;
+}
+
+export function drawContinuationHeader(doc, box) {
+  const y = box.y + 14;
+  drawGoldDivider(doc, box.x, y, box.width);
+  return y;
+}
+
+/** Clear the gap between body content and footer rule (page-number band). */
+export function clearContentFooterGap(doc, box) {
+  const ruleY = frameFooterRuleY(box);
+  const bandTop = frameContentBottomLimit(box);
+  const bandHeight = ruleY - bandTop - 2;
+  if (bandHeight <= 0) return;
+  doc.save();
+  doc.rect(box.x, bandTop, box.width, bandHeight).fill('#ffffff');
+  doc.restore();
+}
+
+/** Y to start page title — clears the header gold rule. */
+export function framePageTitleStartY(topGoldY) {
+  return topGoldY + 2 + PT.titleTopGap;
+}
+
+export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } = {}) {
   const display = String(title || '')
     .split(/\s+/)
     .filter(Boolean)
@@ -188,17 +269,37 @@ export function drawFramePageTitle(doc, title, x, y, width) {
 
   doc
     .font(PDF_FRAME_FONTS.bold)
-    .fontSize(PDF_FRAME.contentPageTitleSize)
+    .fontSize(size || PDF_FRAME.contentPageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(display, x, y, { width, lineGap: 0 });
-  return doc.y + PDF_FRAME.sectionGap;
+  return doc.y + (gapAfter ?? PDF_FRAME.sectionGap);
+}
+
+export function frameContentContainerTight(box, topGoldY, pad = 6) {
+  const bottomGoldY = frameFooterRuleY(box);
+  const top = topGoldY + pad;
+  const bottom = bottomGoldY - pad;
+  return {
+    x: box.x,
+    y: top,
+    width: box.width,
+    top,
+    bottom,
+    topGoldY,
+    bottomGoldY,
+    height: Math.max(0, bottom - top),
+  };
 }
 
 export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
-  const footerTextY = box.bottom - PDF_FRAME.footerContactOffset;
+  clearContentFooterGap(doc, box);
+
   const ruleY = frameFooterRuleY(box);
   const website = contact?.website || PDF_FRAME_CONTACT.website;
   const email = contact?.email || PDF_FRAME_CONTACT.email;
+  const phone = contact?.phone || '';
+  const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
+  const footerTextY = box.bottom - FOOTER_BOTTOM_PAD - PT.contact;
 
   drawGoldDivider(doc, box.x, ruleY, box.width);
 
@@ -206,7 +307,7 @@ export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
     .font(PDF_FRAME_FONTS.regular)
     .fontSize(PDF_FRAME.footerContactSize)
     .fillColor(PDF_FRAME_COLORS.muted)
-    .text(`${website} · ${email}`, box.x, footerTextY, {
+    .text(footerLine, box.x, footerTextY, {
       width: box.width,
       align: 'center',
       lineGap: 0,
@@ -224,7 +325,7 @@ export function drawFramePageNumber(doc, box, { page, total }) {
     .fillColor(PDF_FRAME_COLORS.muted);
 
   const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
-  const y = frameFooterRuleY(box) - PDF_FRAME.contentPad - textHeight;
+  const y = frameFooterRuleY(box) - FOOTER_PAGE_NUM_GAP - textHeight;
 
   doc.text(label, box.x, y, {
     width: box.width,
@@ -245,5 +346,98 @@ export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
 
 /** Max y for body content when a page number is shown. */
 export function frameContentBottomLimit(box) {
-  return frameFooterRuleY(box) - PDF_FRAME.contentPad - PDF_FRAME.pageNumberSize - 4;
+  return frameFooterRuleY(box) - FOOTER_ABOVE_RULE;
+}
+
+/** Content container bottom when page numbers are reserved above the footer rule. */
+export function frameContentContainerBottom(box, topGoldY) {
+  return frameContentBottomLimit(box);
+}
+
+/** Stamp centered "Page X of Y" on every buffered page before finalize. */
+export function stampAllPageNumbers(doc) {
+  if (typeof doc.bufferedPageRange !== 'function') return;
+
+  const range = doc.bufferedPageRange();
+  const total = range.count;
+  if (total <= 0) return;
+
+  for (let index = 0; index < total; index += 1) {
+    doc.switchToPage(range.start + index);
+    const box = frameContentBox(doc);
+    clearContentFooterGap(doc, box);
+    drawFramePageNumber(doc, box, { page: index + 1, total });
+  }
+}
+
+/** KWarner program report — single footer draw, pinned to bottom (no gap hacks). */
+export const PINNED_FOOTER = Object.freeze({
+  bottomPad: 4,
+  contactGap: 4,
+  pageNumGap: 4,
+  contentClearance: 4,
+});
+
+export function pinnedFooterBelowRule() {
+  return PINNED_FOOTER.contactGap + PT.contact + PINNED_FOOTER.bottomPad;
+}
+
+export function pinnedFooterAboveRule() {
+  return PINNED_FOOTER.pageNumGap + PT.pageNumber + PINNED_FOOTER.contentClearance;
+}
+
+export function pinnedContentBottomY(box) {
+  return box.bottom - pinnedFooterBelowRule() - pinnedFooterAboveRule();
+}
+
+export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT } = {}) {
+  const ruleY = box.bottom - pinnedFooterBelowRule();
+  const contactY = box.bottom - PINNED_FOOTER.bottomPad - PT.contact;
+  const phone = contact?.phone || '';
+  const website = contact?.website || PDF_FRAME_CONTACT.website;
+  const email = contact?.email || PDF_FRAME_CONTACT.email;
+  const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
+
+  if (page != null && total != null) {
+    const label = `Page ${page} of ${total}`;
+    doc
+      .font(PDF_FRAME_FONTS.regular)
+      .fontSize(PT.pageNumber)
+      .fillColor(PDF_FRAME_COLORS.muted);
+    const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
+    doc.text(label, box.x, ruleY - PINNED_FOOTER.pageNumGap - textHeight, {
+      width: box.width,
+      align: 'center',
+      lineGap: 0,
+    });
+  }
+
+  drawGoldDivider(doc, box.x, ruleY, box.width);
+
+  doc
+    .font(PDF_FRAME_FONTS.regular)
+    .fontSize(PT.contact)
+    .fillColor(PDF_FRAME_COLORS.muted)
+    .text(footerLine, box.x, contactY, {
+      width: box.width,
+      align: 'center',
+      lineGap: 0,
+    });
+
+  return ruleY;
+}
+
+export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT) {
+  if (typeof doc.bufferedPageRange !== 'function') return 0;
+  const range = doc.bufferedPageRange();
+  const total = range.count;
+  for (let index = 0; index < total; index += 1) {
+    doc.switchToPage(range.start + index);
+    drawPinnedProgramFooter(doc, frameContentBox(doc), {
+      page: index + 1,
+      total,
+      contact,
+    });
+  }
+  return total;
 }

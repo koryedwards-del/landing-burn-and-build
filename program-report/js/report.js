@@ -4,9 +4,8 @@ import { computePlan } from '../../js/burnEngine.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
-  MACRO_SIGNAL_INTRO,
-  MACRO_SIGNAL_ROWS,
-  macroSignalIconMarkup,
+  formatCalories,
+  macroTableRows,
   projectionTimelineFromPackage,
 } from '../../js/foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from '../../js/servingsPrintout.js';
@@ -21,7 +20,7 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
-import { PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
+import { kwarnerPreviewPdfUrl, PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -202,7 +201,10 @@ function renderWelcome(pkg) {
       ${welcomeCoverHtml(pkg)}
 
       <footer class="r-actions r-actions--split">
-        ${wantsPreviewFromUrl() ? `<a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>` : ''}
+        ${wantsPreviewFromUrl() ? `
+          <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">View KWarner preview PDF</a>
+          <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>
+        ` : ''}
         <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
@@ -221,39 +223,61 @@ function projectionTimelineRows(timeline) {
   `).join('');
 }
 
-function macroSignalSectionHtml() {
-  const rows = MACRO_SIGNAL_ROWS.map((row) => `
-    <tr>
-      <th scope="row" class="r-macro-signal__macro">
-        <span class="r-macro-signal__macro-inner">
-          <span class="r-macro-signal__icon">${macroSignalIconMarkup(row.id)}</span>
-          <span class="r-macro-signal__label">${escapeHtml(row.label)}</span>
-        </span>
-      </th>
-      <td class="r-macro-signal__effect r-macro-signal__effect--up">
-        <span class="r-macro-signal__effect-text">${escapeHtml(row.tooMuch)}</span>
-        <span class="r-macro-signal__arrow" aria-hidden="true">↑</span>
-      </td>
-      <td class="r-macro-signal__effect r-macro-signal__effect--down">
-        <span class="r-macro-signal__effect-text">${escapeHtml(row.tooLittle)}</span>
-        <span class="r-macro-signal__arrow" aria-hidden="true">↓</span>
-      </td>
-    </tr>
-  `).join('');
+function macroTableSectionHtml(pkg) {
+  const intake = pkg?.intake;
+  const macroRows = macroTableRows(pkg?.plan?.formula, intake?.workIntensity);
+  if (!macroRows.length) return '';
+
+  const macroBody = macroRows.map((row) => {
+    if (row.spacer) {
+      return '<tr class="r-macro-spacer"><td colspan="8"></td></tr>';
+    }
+    return `
+      <tr>
+        <th scope="row" class="r-macro-label r-table-label">${escapeHtml(row.label)}</th>
+        <td class="r-table-num">${row.proteinG}</td>
+        <td class="r-table-num">${formatCalories(row.proteinCal)}</td>
+        <td class="r-table-num">${row.carbsG}</td>
+        <td class="r-table-num">${formatCalories(row.carbsCal)}</td>
+        <td class="r-table-num">${row.fatsG}</td>
+        <td class="r-table-num">${formatCalories(row.fatsCal)}</td>
+        <td class="r-table-num">${formatCalories(row.totalCal)}</td>
+      </tr>`;
+  }).join('');
 
   return `
-        <p>${escapeHtml(MACRO_SIGNAL_INTRO)}</p>
+        <p>
+          How much food you need each day depends on how much LBM you have. Also, it depends on your
+          activity level and the type and amount of exercise you participate in. Based on the information you
+          provided, the following table gives you the number of calories and the amount of protein, carbohydrates
+          and fat you need per day to maintain your fat or to reduce body fat. Also listed is what your body
+          requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.
+        </p>
 
-        <table class="r-macro-signal" aria-label="Macronutrient balance guide">
+        <table class="r-macro-table r-report-table" aria-label="Daily macro and calorie requirements">
+          <colgroup>
+            <col class="r-col-label" />
+            <col class="r-col-num" span="7" />
+          </colgroup>
           <thead>
             <tr>
-              <th scope="col">The Macros</th>
-              <th scope="col">Too Much</th>
-              <th scope="col">Too Little</th>
+              <th scope="col" rowspan="2"></th>
+              <th scope="colgroup" colspan="2">PROTEIN</th>
+              <th scope="colgroup" colspan="2">CARBS</th>
+              <th scope="colgroup" colspan="2">FATS</th>
+              <th scope="colgroup" rowspan="2" class="r-macro-total-head">TOTAL<br /><span class="r-macro-th-sub">calories</span></th>
+            </tr>
+            <tr>
+              <th scope="col">grams</th>
+              <th scope="col">calories</th>
+              <th scope="col">grams</th>
+              <th scope="col">calories</th>
+              <th scope="col">grams</th>
+              <th scope="col">calories</th>
             </tr>
           </thead>
           <tbody>
-            ${rows}
+            ${macroBody}
           </tbody>
         </table>`;
 }
@@ -283,7 +307,7 @@ function renderFoodPlan(pkg) {
         <h2 class="pb-panel__title">Projections</h2>
       </div>
 
-      <article class="r-doc">
+      <article class="r-doc print-template">
         ${programMetaHtml(pkg)}
 
         <h3>Projections</h3>
@@ -399,10 +423,10 @@ function renderServings(pkg) {
         <h2 class="pb-panel__title">Plan/Servings</h2>
       </div>
 
-      <article class="r-doc">
+      <article class="r-doc print-template">
         ${programMetaHtml(pkg)}
 
-        ${macroSignalSectionHtml()}
+        ${macroTableSectionHtml(pkg)}
 
         <h3>Servings</h3>
         <p class="r-doc__note">
