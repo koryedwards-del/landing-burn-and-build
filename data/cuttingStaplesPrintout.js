@@ -112,24 +112,41 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** From grocery Carbohydrates — grains (G1: 14g carb / ≤1g fat), A–Z. */
-export const CUTTING_STAPLES_GRAINS = Object.freeze([
-  { name: 'Basmati or jasmine rice', serving: '50g' },
-  { name: 'Old-fashioned oats', serving: '21g' },
-  { name: 'Rice cakes', serving: '17g' },
-  { name: 'Whole wheat bread', serving: '32g' },
-  { name: 'Whole wheat tortillas', serving: '31g' },
-]);
+/** From grocery Carbohydrates — 8-item cutting shop subset (see comp roster below for full list). */
 
-/** From grocery Carbohydrates — starches (S2: 14g carb / ≤0.44g fat), A–Z. */
-export const CUTTING_STAPLES_STARCHES = Object.freeze([
-  { name: 'Black beans', serving: '59g' },
-  { name: 'Russet potatoes', serving: '66g' },
-  { name: 'Sweet potatoes', serving: '68g' },
-]);
-
-/** PDF page 5 — full grain/starch column from grocery Carbohydrates, A–Z. */
+/** 1982 competition grains + starches — 33 items, seminar gram weights, A–Z. */
 export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
-  ...CUTTING_STAPLES_GRAINS,
-  ...CUTTING_STAPLES_STARCHES,
-].sort((a, b) => a.name.localeCompare(b.name)));
+  { name: 'Bagel', serving: '25g' },
+  { name: 'Beans (any on list)', serving: '66g' },
+  { name: 'Cheerios', serving: '19g' },
+  { name: 'Corn grits', serving: '23g' },
+  { name: 'Corn, sweet', serving: '17g' },
+  { name: 'Cream of Wheat (dry)', serving: '19g' },
+  { name: 'English muffin', serving: '31g' },
+  { name: 'Farina (dry)', serving: '19g' },
+  { name: 'French bread', serving: '25g' },
+  { name: 'Hard roll', serving: '23g' },
+  { name: 'Mixed peas and carrots', serving: '139g' },
+  { name: 'Multigrain bread', serving: '29g' },
+  { name: 'Oatmeal (dry)', serving: '22g' },
+  { name: 'Pasta (cooked)', serving: '61g' },
+  { name: 'Pasta, whole wheat (cooked)', serving: '61g' },
+  { name: 'Peas, green', serving: '83g' },
+  { name: 'Peas, split', serving: '126g' },
+  { name: 'Pita (pocket)', serving: '24g' },
+  { name: 'Popcorn (air popped)', serving: '36g' },
+  { name: 'Potato, baked (with skin)', serving: '86g' },
+  { name: 'Potato, boiled', serving: '96g' },
+  { name: 'Quinoa (cooked)', serving: '66g' },
+  { name: 'Rice, brown (cooked)', serving: '55g' },
+  { name: 'Rice, white (cooked)', serving: '58g' },
+  { name: 'Rye bread', serving: '27g' },
+  { name: 'Squash, summer (yellow)', serving: '325g' },
+  { name: 'Squash, winter (hubbard)', serving: '160g' },
+  { name: 'Squash, zucchini', serving: '479g' },
+  { name: 'Sweet potato', serving: '55g' },
+  { name: 'Tortilla, corn (6-inch)', serving: '31g' },
+  { name: 'Tortilla, whole wheat', serving: '19g' },
+  { name: 'Whole wheat bread', serving: '29g' },
+  { name: 'Whole wheat roll', serving: '27g' },
+]);

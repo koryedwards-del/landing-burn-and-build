@@ -199,22 +199,60 @@ function drawStapleListRow(doc, item, x, y, width) {
   return y + lineH + restH + STAPLES_LIST.rowGap;
 }
 
+function drawStapleListItems(doc, items, col, yStart, bottomY, startIndex = 0) {
+  let y = yStart;
+  let index = startIndex;
+  const lineH = LAYOUT.bodySize + STAPLES_LIST.rowGap;
+  for (; index < items.length; index += 1) {
+    if (y + lineH > bottomY) break;
+    y = drawStapleListRow(doc, items[index], col.x, y, col.width);
+  }
+  return { y, nextIndex: index };
+}
+
 function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
   let y = drawSectionTitle(doc, title, col.x, yStart, col.width);
-  for (const item of items) {
-    if (y > bottomY - LAYOUT.bodySize * 2) break;
-    y = drawStapleListRow(doc, item, col.x, y, col.width);
-  }
-  return y;
+  return drawStapleListItems(doc, items, col, y, bottomY).nextIndex;
 }
 
 function drawStaplesFoodListPage(doc, payload) {
-  const page = startLockedPage(doc, payload, 'Food List');
+  let page = startLockedPage(doc, payload, 'Food List');
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
   drawStaplesColumn(doc, 'Protein Staples', CUTTING_STAPLES_PROTEIN_DAIRY, columns[0], page.y, page.bottom);
-  drawStaplesColumn(doc, 'Grains & Starches', CUTTING_STAPLES_GRAINS_STARCHES, columns[1], page.y, page.bottom);
+
+  let gsTitleY = drawSectionTitle(doc, 'Grains & Starches', columns[1].x, page.y, columns[1].width);
+  let gsIndex = 0;
+  let result = drawStapleListItems(
+    doc,
+    CUTTING_STAPLES_GRAINS_STARCHES,
+    columns[1],
+    gsTitleY,
+    page.bottom,
+    gsIndex,
+  );
+  gsIndex = result.nextIndex;
+
+  while (gsIndex < CUTTING_STAPLES_GRAINS_STARCHES.length) {
+    finishLockedPage(doc, page.box, payload);
+    page = startLockedPage(doc, payload, null);
+    drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+    result = drawStapleListItems(
+      doc,
+      CUTTING_STAPLES_GRAINS_STARCHES,
+      columns[1],
+      page.y,
+      page.bottom,
+      gsIndex,
+    );
+    gsIndex = result.nextIndex;
+  }
+
+  if (gsIndex !== CUTTING_STAPLES_GRAINS_STARCHES.length) {
+    throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${CUTTING_STAPLES_GRAINS_STARCHES.length}`);
+  }
+
   finishLockedPage(doc, page.box, payload);
 }
 
