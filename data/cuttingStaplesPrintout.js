@@ -61,7 +61,7 @@ export const GROCERY_STAPLES_FRUIT = Object.freeze([
   'Watermelon',
 ]);
 
-/** ### Flavor Builders */
+/** ### Flavor Builders — PDF page 7 (shop checklist, no gram servings). */
 export const GROCERY_STAPLES_FLAVOR = Object.freeze([
   'Salsa',
   'Mustard',
@@ -73,7 +73,7 @@ export const GROCERY_STAPLES_FLAVOR = Object.freeze([
   'Fresh herbs',
 ]);
 
-/** ### Seasonings */
+/** ### Seasonings — PDF page 7 (shop checklist, no gram servings). */
 export const GROCERY_STAPLES_SEASONINGS = Object.freeze([
   'Salt',
   'Black pepper',
@@ -86,7 +86,7 @@ export const GROCERY_STAPLES_SEASONINGS = Object.freeze([
   'Cinnamon',
 ]);
 
-/** ### Pantry */
+/** ### Pantry — PDF page 7 (shop checklist, no gram servings). */
 export const GROCERY_STAPLES_PANTRY = Object.freeze([
   'Cooking spray',
   'Nonstick foil',

@@ -25,9 +25,12 @@ import {
   CUTTING_STAPLES_GRAINS_STARCHES,
   CUTTING_STAPLES_PROTEIN_DAIRY,
   CUTTING_STAPLES_VEGETABLES,
+  GROCERY_STAPLES_FLAVOR,
+  GROCERY_STAPLES_PANTRY,
+  GROCERY_STAPLES_SEASONINGS,
 } from '../../data/cuttingStaplesPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 6;
+export const KWARNER_LOCKED_MIN_PAGES = 7;
 
 const LAYOUT = {
   bodySize: PT.body,
@@ -309,6 +312,52 @@ function drawVegFruitFoodListPage(doc, payload) {
   if (fruitIndex !== CUTTING_STAPLES_FRUIT.length) {
     throw new Error(`Fruit list truncated: drew ${fruitIndex} of ${CUTTING_STAPLES_FRUIT.length}`);
   }
+}
+
+const BULLET_LIST = {
+  indent: 14,
+  gap: 3,
+};
+
+/** @param {import('pdfkit')} doc @param {ReadonlyArray<string>} items */
+function drawBulletList(doc, items, x, y, width, bottomY) {
+  const bullet = '\u2022';
+  const textX = x + BULLET_LIST.indent;
+  const lineH = LAYOUT.bodySize + BULLET_LIST.gap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize).fillColor(SEMINAR_COLORS.body);
+
+  for (const item of items) {
+    const blockH = Math.max(
+      lineH,
+      doc.heightOfString(String(item), { width: width - BULLET_LIST.indent, lineGap: 0 }) + BULLET_LIST.gap,
+    );
+    if (y + blockH > bottomY) {
+      throw new Error(`Bullet list truncated near "${item}"`);
+    }
+    doc.text(bullet, x, y, { lineBreak: false });
+    doc.text(String(item), textX, y, { width: width - BULLET_LIST.indent, lineGap: 0 });
+    y += blockH;
+  }
+  return y;
+}
+
+/** PDF page 7 — flavor builders, seasonings, pantry (shop checklist, no servings). */
+function drawFlavorSeasoningsPantryPage(doc, payload) {
+  const page = startLockedPage(doc, payload, null);
+  const sections = [
+    ['Flavor Builders', GROCERY_STAPLES_FLAVOR],
+    ['Seasonings', GROCERY_STAPLES_SEASONINGS],
+    ['Pantry', GROCERY_STAPLES_PANTRY],
+  ];
+
+  let y = page.y;
+  sections.forEach(([title, items], index) => {
+    y = drawSectionTitle(doc, title, page.x, y, page.width);
+    y = drawBulletList(doc, items, page.x, y, page.width, page.bottom);
+    if (index < sections.length - 1) y += LAYOUT.sectionGap;
+  });
+
+  finishLockedPage(doc, page.box, payload);
 }
 
 function drawLayoutTable(doc, opts) {
@@ -704,6 +753,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);
   drawVegFruitFoodListPage(doc, payload);
+  drawFlavorSeasoningsPantryPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 
