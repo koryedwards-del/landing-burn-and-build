@@ -204,6 +204,7 @@ function renderWelcome(pkg) {
         ${wantsPreviewFromUrl() ? `
           <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">View KWarner preview PDF</a>
           <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>
+          <a class="r-btn r-btn--ghost" href="/api/preview/kwarner-locked-pdf" target="_blank" rel="noopener">Live preview PDF (API)</a>
         ` : ''}
         <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>

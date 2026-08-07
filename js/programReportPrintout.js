@@ -14,8 +14,8 @@ import { formatProgramDateLong, programClientName, escapeHtml } from './programB
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
-  formatCalories,
-  macroTableRows,
+  MACRO_SIGNAL_INTRO,
+  MACRO_SIGNAL_ROWS,
   workdayActivityLabel,
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
@@ -149,8 +149,6 @@ export const LBA_FOOTER_COPY = 'How much fat is right for each individual is a p
 
 export const LBA_MONITOR_COPY = 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.';
 
-export const FOOD_PLAN_MACRO_INTRO = 'How much food you need each day depends on how much LBM you have. Also, it depends on your activity level and the type and amount of exercise you participate in. Based on the information you provided, the following table gives you the number of calories and the amount of protein, carbohydrates and fat you need per day to maintain your fat or to reduce body fat. Also listed is what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.';
-
 export const SERVINGS_NOTE = 'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
 export function seminarPreparedDate(pkg) {
@@ -245,8 +243,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
     sampleHistory,
   });
 
-  const macroRows = macroTableRows(pkg?.plan?.formula, intake.workIntensity).filter((row) => !row.spacer);
-
   const narratives = buildProgramReportNarratives(pkg, {
     today,
     gender,
@@ -323,17 +319,8 @@ export function buildProgramReportPayload(pkg, options = {}) {
         totalPct: '100.00%',
         totalLbs: `${projection.endWeight.toFixed(1)} lbs.`,
       } : null,
-      macroIntro: FOOD_PLAN_MACRO_INTRO,
-      macroRows: macroRows.map((row) => ({
-        label: row.label,
-        proteinG: row.proteinG,
-        proteinCal: formatCalories(row.proteinCal),
-        carbsG: row.carbsG,
-        carbsCal: formatCalories(row.carbsCal),
-        fatsG: row.fatsG,
-        fatsCal: formatCalories(row.fatsCal),
-        totalCal: formatCalories(row.totalCal),
-      })),
+      macroSignalIntro: MACRO_SIGNAL_INTRO,
+      macroSignalRows: MACRO_SIGNAL_ROWS.map((row) => ({ ...row })),
       workdayLabel: workdayActivityLabel(intake.workIntensity),
     },
     servings: {

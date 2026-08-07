@@ -12,7 +12,7 @@ import {
   stampPinnedProgramFooters,
   PDF_FRAME_COLORS,
 } from './drawFrame.js';
-import { drawPersonalizationHeader } from './drawSeminar.js';
+import { drawPersonalizationHeader, drawMacroSignalTable, measureMacroSignalTable } from './drawSeminar.js';
 import {
   SEMINAR_COLORS,
   SEMINAR_FONTS,

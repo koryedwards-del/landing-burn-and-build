@@ -45,3 +45,9 @@ Five print documents, **two header templates**:
 **Print Shop PDF pipeline:** View registry in `js/printShopViews.js`. Server: `server/pdf/` (PDFKit via `PrintPdfCreator`). Client: `printShopClient.js` (fetch), `printShopDelivery.js` (new tab), `plannerPrintPayload.js` (planner data). Static docs — `GET /api/print/pdf`. Personalized docs — `POST /api/print/pdf`. Verify: `npm run verify:pdf`.
 
 **Deprecated:** `pwa-burn-and-build` (archived), `gettheburnandbuildapp.com`, `/myplan/` phone app.
+
+## KWarner program-report preview PDF
+
+Active printout work uses the **locked preview pipeline** — see `.cursor/rules/kwarner-preview-pdf.mdc`.
+
+After any PDF/layout change: `npm run render:kwarner-preview` → new `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf` (auto-increment, never overwrite). Commit the new PDF + `js/kwarnerPreviewBuild.js`.

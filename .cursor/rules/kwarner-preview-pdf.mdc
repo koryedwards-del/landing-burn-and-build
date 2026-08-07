@@ -1,0 +1,37 @@
+---
+description: KWarner locked preview PDF — mandatory render workflow for program-report printout work
+alwaysApply: true
+---
+
+# KWarner preview PDF (program report printout)
+
+When the user asks for **PDF creation, PDF updates, printout layout, or program-report print changes**, work in the **KWarner locked preview pipeline** — not the web UI unless they explicitly ask for web.
+
+## Pipeline (source of truth)
+
+| Piece | Path |
+|-------|------|
+| Renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
+| Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
+| Macro signal data | `js/foodPlanPrintout.js` |
+| Payload | `js/programReportPrintout.js` + `js/kwarnerLockedPreviewFixtures.js` |
+
+## Mandatory after every PDF change
+
+1. Run **`npm run render:kwarner-preview`**
+2. Script writes **two new files** (never overwrites):
+   - **Primary:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N increments: …-9, …-10, …)
+   - **Archive:** `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf`
+3. Copy primary file to `/opt/cursor/artifacts/` when that folder exists.
+4. Commit new PDFs + `js/kwarnerPreviewBuild.js`.
+
+## What to give the user
+
+**Give them the downloadable FILE — not a website URL.**
+
+In the response, state the exact filename and workspace path, e.g.:
+
+> **Download:** `kwarner-locked-preview-kristi-10.pdf`  
+> Path: `docs/samples/kwarner-locked-preview-kristi-10.pdf`
+
+The user downloads the file from the **Cursor agent files / artifacts panel** in this run. Do **not** send `burnandbuilddiet.com` links or GitHub raw URLs unless they explicitly ask for a hosted link.
