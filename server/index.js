@@ -28,6 +28,8 @@ import {
   sendPrintPdfResponse,
   validatePrintView,
 } from './pdf/index.js';
+import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
+import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -183,6 +185,20 @@ app.post('/api/print/pdf', async (req, res) => {
     return;
   }
   await handlePrintPdfRequest(req, res, { view, title, payload: body });
+});
+
+app.get('/api/preview/kwarner-locked-pdf', async (_req, res) => {
+  try {
+    const payload = buildKristiKwarnerPreviewPayload();
+    const pdf = await renderProgramReportKwarnerLockedPreview(payload);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename="kwarner-preview-latest.pdf"');
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(pdf);
+  } catch (err) {
+    console.error('KWarner preview PDF error:', err);
+    res.status(500).json({ ok: false, message: err.message || 'Preview PDF failed.' });
+  }
 });
 
 function creatorBaseUrl(req) {

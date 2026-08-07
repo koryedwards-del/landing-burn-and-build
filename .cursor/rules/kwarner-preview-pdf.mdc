@@ -24,8 +24,9 @@ When the user asks for **PDF creation, PDF updates, printout layout, or program-
 
 1. Run **`npm run render:kwarner-preview`** (or `node scripts/render-kwarner-locked-preview.mjs`).
 2. The script **always writes a new file** — `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf` — by scanning for the highest existing `vN` and incrementing. **Never overwrite** an existing version.
-3. Commit the **new PDF** plus auto-updated `js/kwarnerPreviewBuild.js`.
-4. Tell the user the **new filename** (e.g. `v11`) in the summary.
+3. It also refreshes stable open paths: `docs/samples/kwarner-preview-kristi-latest.pdf` and `program-report/samples/kwarner-preview-latest.pdf` (use this link in preview mode).
+4. Commit the **new versioned PDF**, both **latest** copies, and auto-updated `js/kwarnerPreviewBuild.js`.
+5. Tell the user the **new filename** (e.g. `v12`) and the stable URL `/program-report/samples/kwarner-preview-latest.pdf`.
 
 Optional sanity check: `npm run verify:pdf`.
 
