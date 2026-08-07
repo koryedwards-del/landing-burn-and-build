@@ -42,11 +42,14 @@ fs.writeFileSync(latestProgramReportPath, pdf);
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 
+const SITE_ORIGIN = 'https://burnandbuilddiet.com';
+
 const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
 export const KWARNER_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
 export const KWARNER_PREVIEW_VERSION = ${JSON.stringify(PREVIEW_PDF_NAME)};
-export const KWARNER_LOCKED_PREVIEW_PDF = '/program-report/samples/${LATEST_PROGRAM_REPORT_NAME}';
+export const KWARNER_LOCKED_PREVIEW_PDF = '${SITE_ORIGIN}/docs/samples/${LATEST_DOCS_NAME}';
+export const KWARNER_LOCKED_PREVIEW_VERSIONED_PDF = '${SITE_ORIGIN}/docs/samples/${PREVIEW_PDF_NAME}';
 
 export function kwarnerPreviewPdfUrl() {
   return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
@@ -59,4 +62,5 @@ console.log(`Wrote versioned: ${versionedPath}`);
 console.log(`Wrote latest:    ${latestDocsPath}`);
 console.log(`Wrote open link: ${latestProgramReportPath}`);
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}, build=${buildLabel}`);
-console.log(`Open: /program-report/?preview=1 then View KWarner preview PDF`);
+console.log(`Download (latest): ${SITE_ORIGIN}/docs/samples/${LATEST_DOCS_NAME}`);
+console.log(`Download (vN):     ${SITE_ORIGIN}/docs/samples/${PREVIEW_PDF_NAME}`);
