@@ -155,7 +155,7 @@
     "name": "Cottage cheese, nonfat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 72.7,
+    "gramWeight": 73,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -171,7 +171,7 @@
     "name": "Greek yogurt, nonfat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 78.4,
+    "gramWeight": 78,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1091,7 +1091,7 @@
     "name": "Beef, ground round",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 26.756,
+    "gramWeight": 27,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1099,7 +1099,7 @@
     "name": "Beef, top sirloin",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 27.6,
+    "gramWeight": 28,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1107,7 +1107,7 @@
     "name": "Chicken breast, no skin",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 25.8,
+    "gramWeight": 26,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1123,7 +1123,7 @@
     "name": "Cod, Atlantic, baked",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 35.1,
+    "gramWeight": 35,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1147,7 +1147,7 @@
     "name": "Egg whites",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 73.4,
+    "gramWeight": 73,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1211,7 +1211,7 @@
     "name": "Shrimp, steamed",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 33.3,
+    "gramWeight": 33,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1235,7 +1235,7 @@
     "name": "Tilapia, baked",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 30.8,
+    "gramWeight": 31,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1243,7 +1243,7 @@
     "name": "Tuna, canned in water",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 33.9,
+    "gramWeight": 34,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1259,7 +1259,7 @@
     "name": "Turkey breast",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 27.6,
+    "gramWeight": 28,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
