@@ -12,10 +12,9 @@ export const STAPLE_FRUIT_NAMES = [
   'Strawberries',
 ];
 
-/** Breakfast protein — dairy & eggs. */
+/** Breakfast protein — dairy & egg whites. */
 export const STAPLE_DAIRY_EGG_NAMES = [
   'Egg whites',
-  'Eggs',
   'Greek yogurt, nonfat',
   'Cottage cheese, nonfat',
 ];
@@ -30,6 +29,7 @@ export const STAPLE_RED_MEAT_NAMES = [
 /** Lunch/dinner — poultry. */
 export const STAPLE_WHITE_MEAT_NAMES = [
   'Chicken breast, no skin',
+  'Turkey breast',
 ];
 
 /** Lunch/dinner — seafood. */

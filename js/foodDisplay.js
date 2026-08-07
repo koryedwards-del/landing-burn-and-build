@@ -1,8 +1,6 @@
 /** User-facing food names — print food list, planner picker, grocery labels. */
 
-const DISPLAY_OVERRIDES = {
-  'Egg whites': 'Egg whites (2 large whites)',
-};
+const DISPLAY_OVERRIDES = {};
 
 /**
  * Shorter planner grid labels — add entries one by one as needed.
