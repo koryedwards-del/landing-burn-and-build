@@ -1,6 +1,6 @@
 /**
  * Bodybuilder's Cutting Diet Grocery Staples — source list for program report PDF food list pages.
- * All PDF food lists derive from GROCERY_STAPLES_* below (not 1982 seminar roster, not full catalog).
+ * All PDF food lists derive from GROCERY_STAPLES_* below, except page 5 grains & starches (33 items).
  */
 
 /** @typedef {{ name: string, serving?: string }} StapleRow */
@@ -112,16 +112,41 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** PDF page 5 — grocery Carbohydrates block, A–Z. */
+/** PDF page 5 — grains & starches, 33 items, A–Z. */
 export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
-  { name: 'Basmati or jasmine rice', serving: '50g' },
-  { name: 'Black beans', serving: '59g' },
-  { name: 'Old-fashioned oats', serving: '21g' },
-  { name: 'Rice cakes', serving: '17g' },
-  { name: 'Russet potatoes', serving: '66g' },
-  { name: 'Sweet potatoes', serving: '68g' },
-  { name: 'Whole wheat bread', serving: '32g' },
-  { name: 'Whole wheat tortillas', serving: '31g' },
+  { name: 'Bagel', serving: '25g' },
+  { name: 'Beans (any on list)', serving: '66g' },
+  { name: 'Cheerios', serving: '19g' },
+  { name: 'Corn grits', serving: '23g' },
+  { name: 'Corn, sweet', serving: '17g' },
+  { name: 'Cream of Wheat (dry)', serving: '19g' },
+  { name: 'English muffin', serving: '31g' },
+  { name: 'Farina (dry)', serving: '19g' },
+  { name: 'French bread', serving: '25g' },
+  { name: 'Hard roll', serving: '23g' },
+  { name: 'Mixed peas and carrots', serving: '139g' },
+  { name: 'Multigrain bread', serving: '29g' },
+  { name: 'Oatmeal (dry)', serving: '22g' },
+  { name: 'Pasta (cooked)', serving: '61g' },
+  { name: 'Pasta, whole wheat (cooked)', serving: '61g' },
+  { name: 'Peas, green', serving: '83g' },
+  { name: 'Peas, split', serving: '126g' },
+  { name: 'Pita (pocket)', serving: '24g' },
+  { name: 'Popcorn (air popped)', serving: '36g' },
+  { name: 'Potato, baked (with skin)', serving: '86g' },
+  { name: 'Potato, boiled', serving: '96g' },
+  { name: 'Quinoa (cooked)', serving: '66g' },
+  { name: 'Rice, brown (cooked)', serving: '55g' },
+  { name: 'Rice, white (cooked)', serving: '58g' },
+  { name: 'Rye bread', serving: '27g' },
+  { name: 'Squash, summer (yellow)', serving: '325g' },
+  { name: 'Squash, winter (hubbard)', serving: '160g' },
+  { name: 'Squash, zucchini', serving: '479g' },
+  { name: 'Sweet potato', serving: '55g' },
+  { name: 'Tortilla, corn (6-inch)', serving: '31g' },
+  { name: 'Tortilla, whole wheat', serving: '19g' },
+  { name: 'Whole wheat bread', serving: '29g' },
+  { name: 'Whole wheat roll', serving: '27g' },
 ]);
 
 /** PDF page 6 — grocery Vegetables block, A–Z (catalog gram weights, cooked where applicable). */
