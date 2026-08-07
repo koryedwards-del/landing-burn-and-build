@@ -24,4 +24,7 @@ export const CUTTING_STAPLES_DAIRY = Object.freeze([
   { name: 'Greek yogurt, lowfat', serving: '84g' },
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
   { name: 'Skim milk', serving: '237g' },
+  { name: '1% milk', serving: '235g' },
+  { name: 'Lactose-free skim milk', serving: '237g' },
+  { name: 'Ricotta, nonfat', serving: '73g' },
 ]);
