@@ -22,16 +22,19 @@ When the user asks for **PDF creation, PDF updates, printout layout, or program-
 2. Script writes **two new files** (never overwrites):
    - **Primary:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N increments: …-9, …-10, …)
    - **Archive:** `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf`
-3. Copy primary file to `/opt/cursor/artifacts/` when that folder exists.
-4. Commit new PDFs + `js/kwarnerPreviewBuild.js`.
+3. Copy primary file to `/opt/cursor/artifacts/` when that folder exists (secondary).
+4. **Commit and push to `main`** so the raw download URL works immediately.
 
 ## What to give the user
 
-**Give them the downloadable FILE — not a website URL.**
+**One link only — the raw download URL.** It saves straight to Mac Downloads. Do **not** use `github.com/.../blob/...` (that opens GitHub in the browser).
 
-In the response, state the exact filename and workspace path, e.g.:
+After push to `main`, paste:
 
-> **Download:** `kwarner-locked-preview-kristi-10.pdf`  
-> Path: `docs/samples/kwarner-locked-preview-kristi-10.pdf`
+`https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<locked-filename>`
 
-The user downloads the file from the **Cursor agent files / artifacts panel** in this run. Do **not** send `burnandbuilddiet.com` links or GitHub raw URLs unless they explicitly ask for a hosted link.
+Also refresh `docs/samples/kwarner-locked-preview-kristi-latest.pdf` each render so this stable link always serves the newest file:
+
+`https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-locked-preview-kristi-latest.pdf`
+
+State the exact versioned filename too (e.g. `kwarner-locked-preview-kristi-24.pdf`). Do not use the artifacts panel.

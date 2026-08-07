@@ -10,6 +10,9 @@ import { renderProgramReportKwarnerLockedPreview } from '../server/pdf/renderPro
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
 const artifactsDir = '/opt/cursor/artifacts';
+const GITHUB_REPO = 'koryedwards-del/landing-burn-and-build';
+const GITHUB_BRANCH = 'main';
+const LATEST_LOCKED_NAME = 'kwarner-locked-preview-kristi-latest.pdf';
 
 const LOCKED_BASENAME = 'kwarner-locked-preview-kristi-';
 const VEG_FRUIT_BASENAME = 'kwarner-preview-kristi-veg-fruit-v';
@@ -37,6 +40,7 @@ const lockedPath = path.join(samplesDir, lockedName);
 const vegFruitPath = path.join(samplesDir, vegFruitName);
 fs.writeFileSync(lockedPath, pdf);
 fs.writeFileSync(vegFruitPath, pdf);
+fs.writeFileSync(path.join(samplesDir, LATEST_LOCKED_NAME), pdf);
 
 if (fs.existsSync(artifactsDir)) {
   fs.copyFileSync(lockedPath, path.join(artifactsDir, lockedName));
@@ -64,4 +68,10 @@ console.log(`FILE ${vegFruitPath}`);
 if (fs.existsSync(artifactsDir)) {
   console.log(`FILE ${path.join(artifactsDir, lockedName)}`);
 }
+const githubPath = `docs/samples/${lockedName}`;
+const latestPath = `docs/samples/${LATEST_LOCKED_NAME}`;
+const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${githubPath}`;
+const latestDownloadUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${latestPath}`;
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
+console.log(`DOWNLOAD ${downloadUrl}`);
+console.log(`DOWNLOAD_LATEST ${latestDownloadUrl}`);
