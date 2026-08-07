@@ -1,25 +1,9 @@
 /**
  * Bodybuilder's Cutting Diet Grocery Staples — source list for program report PDF food list pages.
- * Names match the user master list; servings added per section as pages are built.
+ * All PDF food lists derive from GROCERY_STAPLES_* below (not 1982 seminar roster, not full catalog).
  */
-import { readFileSync } from 'node:fs';
-import { foodListLabel } from '../js/foodDisplay.js';
-
-const FOODS_CATALOG = JSON.parse(
-  readFileSync(new URL('./foods.json', import.meta.url), 'utf8'),
-);
 
 /** @typedef {{ name: string, serving?: string }} StapleRow */
-
-function compCatalogStaples(category) {
-  return FOODS_CATALOG
-    .filter((food) => food.category === category)
-    .sort((a, b) => foodListLabel(a).localeCompare(foodListLabel(b)))
-    .map((food) => ({
-      name: foodListLabel(food),
-      serving: `${food.gramWeight}g`,
-    }));
-}
 
 /** ### Protein */
 export const GROCERY_STAPLES_PROTEIN = Object.freeze([
@@ -128,47 +112,35 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** From grocery Carbohydrates — 8-item cutting shop subset (see comp roster below for full list). */
-
-/** 1982 competition grains + starches — 33 items, seminar gram weights, A–Z. */
+/** PDF page 5 — grocery Carbohydrates block, A–Z. */
 export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
-  { name: 'Bagel', serving: '25g' },
-  { name: 'Beans (any on list)', serving: '66g' },
-  { name: 'Cheerios', serving: '19g' },
-  { name: 'Corn grits', serving: '23g' },
-  { name: 'Corn, sweet', serving: '17g' },
-  { name: 'Cream of Wheat (dry)', serving: '19g' },
-  { name: 'English muffin', serving: '31g' },
-  { name: 'Farina (dry)', serving: '19g' },
-  { name: 'French bread', serving: '25g' },
-  { name: 'Hard roll', serving: '23g' },
-  { name: 'Mixed peas and carrots', serving: '139g' },
-  { name: 'Multigrain bread', serving: '29g' },
-  { name: 'Oatmeal (dry)', serving: '22g' },
-  { name: 'Pasta (cooked)', serving: '61g' },
-  { name: 'Pasta, whole wheat (cooked)', serving: '61g' },
-  { name: 'Peas, green', serving: '83g' },
-  { name: 'Peas, split', serving: '126g' },
-  { name: 'Pita (pocket)', serving: '24g' },
-  { name: 'Popcorn (air popped)', serving: '36g' },
-  { name: 'Potato, baked (with skin)', serving: '86g' },
-  { name: 'Potato, boiled', serving: '96g' },
-  { name: 'Quinoa (cooked)', serving: '66g' },
-  { name: 'Rice, brown (cooked)', serving: '55g' },
-  { name: 'Rice, white (cooked)', serving: '58g' },
-  { name: 'Rye bread', serving: '27g' },
-  { name: 'Squash, summer (yellow)', serving: '325g' },
-  { name: 'Squash, winter (hubbard)', serving: '160g' },
-  { name: 'Squash, zucchini', serving: '479g' },
-  { name: 'Sweet potato', serving: '55g' },
-  { name: 'Tortilla, corn (6-inch)', serving: '31g' },
-  { name: 'Tortilla, whole wheat', serving: '19g' },
-  { name: 'Whole wheat bread', serving: '29g' },
-  { name: 'Whole wheat roll', serving: '27g' },
+  { name: 'Basmati or jasmine rice', serving: '50g' },
+  { name: 'Black beans', serving: '59g' },
+  { name: 'Old-fashioned oats', serving: '21g' },
+  { name: 'Rice cakes', serving: '17g' },
+  { name: 'Russet potatoes', serving: '66g' },
+  { name: 'Sweet potatoes', serving: '68g' },
+  { name: 'Whole wheat bread', serving: '32g' },
+  { name: 'Whole wheat tortillas', serving: '31g' },
 ]);
 
-/** Competition catalog — vegetables (Print Shop / foods.json), A–Z. */
-export const CUTTING_STAPLES_VEGETABLES = Object.freeze(compCatalogStaples('vegetable'));
+/** PDF page 6 — grocery Vegetables block, A–Z (catalog gram weights, cooked where applicable). */
+export const CUTTING_STAPLES_VEGETABLES = Object.freeze([
+  { name: 'Asparagus', serving: '244g' },
+  { name: 'Bell peppers', serving: '159g' },
+  { name: 'Broccoli', serving: '139g' },
+  { name: 'Cauliflower', serving: '244g' },
+  { name: 'Green beans', serving: '141g' },
+  { name: 'Mixed salad greens', serving: '303g' },
+  { name: 'Mushrooms', serving: '189g' },
+  { name: 'Spinach', serving: '263g' },
+]);
 
-/** Competition catalog — fruit (Print Shop / foods.json), A–Z. */
-export const CUTTING_STAPLES_FRUIT = Object.freeze(compCatalogStaples('fruit'));
+/** PDF page 6 — grocery Fruit block, A–Z. */
+export const CUTTING_STAPLES_FRUIT = Object.freeze([
+  { name: 'Apples', serving: '130g' },
+  { name: 'Bananas', serving: '79g' },
+  { name: 'Blueberries', serving: '124g' },
+  { name: 'Clementines', serving: '150g' },
+  { name: 'Strawberries', serving: '234g' },
+]);
