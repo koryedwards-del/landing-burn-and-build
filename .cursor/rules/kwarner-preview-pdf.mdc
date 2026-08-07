@@ -13,33 +13,25 @@ When the user asks for **PDF creation, PDF updates, printout layout, or program-
 |-------|------|
 | Renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
 | Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
-| Macro signal data | `js/foodPlanPrintout.js` (`MACRO_SIGNAL_ROWS`, `drawMacroSignalTable`) |
-| Payload | `js/programReportPrintout.js` |
-| Staples / veg-fruit / flavor kits | `data/cuttingStaplesPrintout.js`, `menuplanner/data/flavorKits.js` |
-| Typography tokens | `js/printTemplateTypography.js` |
-
-**Not in scope** unless requested: `program-report/js/report.js` (web shell), production `server/pdf/renderProgramReport.js` (narrative lesson format).
+| Macro signal data | `js/foodPlanPrintout.js` |
+| Payload | `js/programReportPrintout.js` + `js/kwarnerLockedPreviewFixtures.js` |
 
 ## Mandatory after every PDF change
 
-1. Run **`npm run render:kwarner-preview`** (or `node scripts/render-kwarner-locked-preview.mjs`).
-2. The script **always writes a new file** — `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf` — by scanning for the highest existing `vN` and incrementing. **Never overwrite** an existing version.
-3. It also refreshes stable open paths: `docs/samples/kwarner-preview-kristi-latest.pdf` and `program-report/samples/kwarner-preview-latest.pdf` (use this link in preview mode).
-4. Commit the **new versioned PDF**, both **latest** copies, and auto-updated `js/kwarnerPreviewBuild.js`.
-5. Tell the user the **new filename** (e.g. `v12`) and **paste a direct download link** in the response:
+1. Run **`npm run render:kwarner-preview`**
+2. Script writes **two new files** (never overwrites):
+   - **Primary:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N increments: …-9, …-10, …)
+   - **Archive:** `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf`
+3. Copy primary file to `/opt/cursor/artifacts/` when that folder exists.
+4. Commit new PDFs + `js/kwarnerPreviewBuild.js`.
 
-   - **Latest (always use this):** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-preview-kristi-latest.pdf`
-   - **Versioned:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<PREVIEW_PDF_NAME>`
-   - **After Pages deploy:** `https://burnandbuilddiet.com/docs/samples/kwarner-preview-kristi-latest.pdf`
+## What to give the user
 
-   Do not tell the user to run local commands unless they ask — give them a clickable download URL.
+**Give them the downloadable FILE — not a website URL.**
 
-Optional sanity check: `npm run verify:pdf`.
+In the response, state the exact filename and workspace path, e.g.:
 
-## User prompts
+> **Download:** `kwarner-locked-preview-kristi-10.pdf`  
+> Path: `docs/samples/kwarner-locked-preview-kristi-10.pdf`
 
-Short prompts are enough — e.g. “update macro table border” or “add row to veg list page”. Apply the change in the renderer/data files above, then **always render a new PDF** without being reminded.
-
-## Sample client
-
-Kristi Warner preview package — see `scripts/render-kwarner-locked-preview.mjs` (`KRISTI_FORM`, `KWARNER_WELCOME_COPY`). Output is currently **7 pages** (Welcome, LBA, History, Food Plan, Servings, veg/fruit staples, flavor kits).
+The user downloads the file from the **Cursor agent files / artifacts panel** in this run. Do **not** send `burnandbuilddiet.com` links or GitHub raw URLs unless they explicitly ask for a hosted link.

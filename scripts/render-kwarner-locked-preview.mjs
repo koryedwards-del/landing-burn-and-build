@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-/** Preview: KWarner locked frame + seminar content — not production.
- *  Always writes a NEW versioned PDF (never overwrites) plus a stable latest copy. */
+/** Preview: KWarner locked frame — always writes a NEW numbered PDF file (never overwrites). */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -10,46 +9,49 @@ import { renderProgramReportKwarnerLockedPreview } from '../server/pdf/renderPro
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
-const programReportSamplesDir = path.join(root, 'program-report/samples');
-const PREVIEW_BASENAME = 'kwarner-preview-kristi-veg-fruit-v';
-const VERSION_RE = new RegExp(`^${PREVIEW_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
-const LATEST_DOCS_NAME = 'kwarner-preview-kristi-latest.pdf';
-const LATEST_PROGRAM_REPORT_NAME = 'kwarner-preview-latest.pdf';
+const artifactsDir = '/opt/cursor/artifacts';
 
-function nextPreviewPdfName() {
-  let maxVersion = 0;
+const LOCKED_BASENAME = 'kwarner-locked-preview-kristi-';
+const VEG_FRUIT_BASENAME = 'kwarner-preview-kristi-veg-fruit-v';
+const LOCKED_RE = new RegExp(`^${LOCKED_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
+const VEG_FRUIT_RE = new RegExp(`^${VEG_FRUIT_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
+const RAW_REPO = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples';
+
+const LOCKED_MIN = 10; // continue local series after kristi-9
+
+function nextNumber(re, basename, min = 0) {
+  let max = min;
   for (const entry of fs.readdirSync(samplesDir)) {
-    const match = entry.match(VERSION_RE);
-    if (match) maxVersion = Math.max(maxVersion, Number(match[1]));
+    const match = entry.match(re);
+    if (match) max = Math.max(max, Number(match[1]));
   }
-  return `${PREVIEW_BASENAME}${maxVersion + 1}.pdf`;
+  return `${basename}${max + 1}.pdf`;
 }
 
-const PREVIEW_PDF_NAME = nextPreviewPdfName();
+const lockedName = nextNumber(LOCKED_RE, LOCKED_BASENAME, LOCKED_MIN);
+const vegFruitName = nextNumber(VEG_FRUIT_RE, VEG_FRUIT_BASENAME);
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildKristiKwarnerPreviewPayload();
 const pdf = await renderProgramReportKwarnerLockedPreview(payload, { buildLabel });
 
-const versionedPath = path.join(samplesDir, PREVIEW_PDF_NAME);
-const latestDocsPath = path.join(samplesDir, LATEST_DOCS_NAME);
-const latestProgramReportPath = path.join(programReportSamplesDir, LATEST_PROGRAM_REPORT_NAME);
+const lockedPath = path.join(samplesDir, lockedName);
+const vegFruitPath = path.join(samplesDir, vegFruitName);
+fs.writeFileSync(lockedPath, pdf);
+fs.writeFileSync(vegFruitPath, pdf);
 
-fs.mkdirSync(programReportSamplesDir, { recursive: true });
-fs.writeFileSync(versionedPath, pdf);
-fs.writeFileSync(latestDocsPath, pdf);
-fs.writeFileSync(latestProgramReportPath, pdf);
+if (fs.existsSync(artifactsDir)) {
+  fs.copyFileSync(lockedPath, path.join(artifactsDir, lockedName));
+}
 
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 
-const SITE_ORIGIN = 'https://burnandbuilddiet.com';
-
 const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
 export const KWARNER_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
-export const KWARNER_PREVIEW_VERSION = ${JSON.stringify(PREVIEW_PDF_NAME)};
-export const KWARNER_LOCKED_PREVIEW_PDF = '${SITE_ORIGIN}/docs/samples/${LATEST_DOCS_NAME}';
-export const KWARNER_LOCKED_PREVIEW_VERSIONED_PDF = '${SITE_ORIGIN}/docs/samples/${PREVIEW_PDF_NAME}';
+export const KWARNER_LOCKED_PREVIEW_FILE = ${JSON.stringify(lockedName)};
+export const KWARNER_VEG_FRUIT_FILE = ${JSON.stringify(vegFruitName)};
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/' + ${JSON.stringify(lockedName)};
 
 export function kwarnerPreviewPdfUrl() {
   return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
@@ -58,9 +60,9 @@ export function kwarnerPreviewPdfUrl() {
 
 fs.writeFileSync(path.join(root, 'js/kwarnerPreviewBuild.js'), buildModule);
 
-console.log(`Wrote versioned: ${versionedPath}`);
-console.log(`Wrote latest:    ${latestDocsPath}`);
-console.log(`Wrote open link: ${latestProgramReportPath}`);
-console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}, build=${buildLabel}`);
-console.log(`Download (latest): ${SITE_ORIGIN}/docs/samples/${LATEST_DOCS_NAME}`);
-console.log(`Download (vN):     ${SITE_ORIGIN}/docs/samples/${PREVIEW_PDF_NAME}`);
+console.log(`FILE ${lockedPath}`);
+console.log(`FILE ${vegFruitPath}`);
+if (fs.existsSync(artifactsDir)) {
+  console.log(`FILE ${path.join(artifactsDir, lockedName)}`);
+}
+console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
