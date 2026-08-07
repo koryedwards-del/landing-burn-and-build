@@ -1,6 +1,6 @@
 /** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
-export const KWARNER_PREVIEW_BUILD = "2026-08-07T01-05-30-128Z";
-export const KWARNER_PREVIEW_MD5 = "f53f3c3835ac6ad5f8fa73052257a210";
+export const KWARNER_PREVIEW_BUILD = "2026-08-07T01-08-07-073Z";
+export const KWARNER_PREVIEW_MD5 = "69c204497fb7f78b9422b04b5da0f79a";
 export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-locked-preview-kristi.pdf';
 
 export function kwarnerPreviewPdfUrl() {

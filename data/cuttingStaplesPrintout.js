@@ -2,8 +2,24 @@
  * Bodybuilder's Cutting Diet Grocery Staples — source list for program report PDF food list pages.
  * Names match the user master list; servings added per section as pages are built.
  */
+import { readFileSync } from 'node:fs';
+import { foodListLabel } from '../js/foodDisplay.js';
+
+const FOODS_CATALOG = JSON.parse(
+  readFileSync(new URL('./foods.json', import.meta.url), 'utf8'),
+);
 
 /** @typedef {{ name: string, serving?: string }} StapleRow */
+
+function compCatalogStaples(category) {
+  return FOODS_CATALOG
+    .filter((food) => food.category === category)
+    .sort((a, b) => foodListLabel(a).localeCompare(foodListLabel(b)))
+    .map((food) => ({
+      name: foodListLabel(food),
+      serving: `${food.gramWeight}g`,
+    }));
+}
 
 /** ### Protein */
 export const GROCERY_STAPLES_PROTEIN = Object.freeze([
@@ -150,3 +166,9 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
   { name: 'Whole wheat bread', serving: '29g' },
   { name: 'Whole wheat roll', serving: '27g' },
 ]);
+
+/** Competition catalog — vegetables (Print Shop / foods.json), A–Z. */
+export const CUTTING_STAPLES_VEGETABLES = Object.freeze(compCatalogStaples('vegetable'));
+
+/** Competition catalog — fruit (Print Shop / foods.json), A–Z. */
+export const CUTTING_STAPLES_FRUIT = Object.freeze(compCatalogStaples('fruit'));

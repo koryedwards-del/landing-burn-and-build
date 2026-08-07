@@ -21,11 +21,13 @@ import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 import { drawCalloutRow } from './drawProgramReportNarrative.js';
 import {
+  CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_GRAINS_STARCHES,
   CUTTING_STAPLES_PROTEIN_DAIRY,
+  CUTTING_STAPLES_VEGETABLES,
 } from '../../data/cuttingStaplesPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 5;
+export const KWARNER_LOCKED_MIN_PAGES = 6;
 
 const LAYOUT = {
   bodySize: PT.body,
@@ -254,6 +256,57 @@ function drawStaplesFoodListPage(doc, payload) {
   }
 
   finishLockedPage(doc, page.box, payload);
+}
+
+function drawVegFruitFoodListPage(doc, payload) {
+  let vegIndex = 0;
+  let fruitIndex = 0;
+
+  while (vegIndex < CUTTING_STAPLES_VEGETABLES.length || fruitIndex < CUTTING_STAPLES_FRUIT.length) {
+    const page = startLockedPage(doc, payload, null);
+    const columns = staplesColumnLayout(page);
+    const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
+    drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+
+    if (vegIndex < CUTTING_STAPLES_VEGETABLES.length) {
+      let y = page.y;
+      if (vegIndex === 0) {
+        y = drawSectionTitle(doc, 'Vegetables', columns[0].x, y, columns[0].width);
+      }
+      vegIndex = drawStapleListItems(
+        doc,
+        CUTTING_STAPLES_VEGETABLES,
+        columns[0],
+        y,
+        page.bottom,
+        vegIndex,
+      ).nextIndex;
+    }
+
+    if (fruitIndex < CUTTING_STAPLES_FRUIT.length) {
+      let y = page.y;
+      if (fruitIndex === 0) {
+        y = drawSectionTitle(doc, 'Fruit', columns[1].x, y, columns[1].width);
+      }
+      fruitIndex = drawStapleListItems(
+        doc,
+        CUTTING_STAPLES_FRUIT,
+        columns[1],
+        y,
+        page.bottom,
+        fruitIndex,
+      ).nextIndex;
+    }
+
+    finishLockedPage(doc, page.box, payload);
+  }
+
+  if (vegIndex !== CUTTING_STAPLES_VEGETABLES.length) {
+    throw new Error(`Vegetable list truncated: drew ${vegIndex} of ${CUTTING_STAPLES_VEGETABLES.length}`);
+  }
+  if (fruitIndex !== CUTTING_STAPLES_FRUIT.length) {
+    throw new Error(`Fruit list truncated: drew ${fruitIndex} of ${CUTTING_STAPLES_FRUIT.length}`);
+  }
 }
 
 function drawLayoutTable(doc, opts) {
@@ -648,6 +701,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);
+  drawVegFruitFoodListPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 
