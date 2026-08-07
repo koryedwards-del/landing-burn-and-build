@@ -32,25 +32,33 @@ export const GROCERY_STAPLES_CARBOHYDRATES = Object.freeze([
   'Black beans',
 ]);
 
-/** ### Vegetables */
+/** ### Vegetables — grocery staples + YouGov Q1 2025 popular (starches excluded). */
 export const GROCERY_STAPLES_VEGETABLES = Object.freeze([
-  'Broccoli',
-  'Green beans',
-  'Spinach',
-  'Bell peppers',
-  'Mushrooms',
-  'Cauliflower',
   'Asparagus',
+  'Bell peppers',
+  'Broccoli',
+  'Carrots',
+  'Cauliflower',
+  'Cucumbers',
+  'Garlic',
+  'Green beans',
   'Mixed salad greens',
+  'Mushrooms',
+  'Spinach',
+  'Tomatoes',
 ]);
 
-/** ### Fruit */
+/** ### Fruit — grocery staples + YouGov Q1 2025 popular. */
 export const GROCERY_STAPLES_FRUIT = Object.freeze([
   'Apples',
   'Bananas',
   'Blueberries',
   'Clementines',
+  'Grapes',
+  'Pineapple',
   'Strawberries',
+  'Tangerines',
+  'Watermelon',
 ]);
 
 /** ### Flavor Builders */
@@ -149,23 +157,37 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
   { name: 'Whole wheat roll', serving: '27g' },
 ]);
 
-/** PDF page 6 — grocery Vegetables block, A–Z (catalog gram weights, cooked where applicable). */
+/**
+ * PDF page 6 — Vegetables, A–Z. Burn Engine VE: ~10g carbs (40 cal), ≤3g fat.
+ * Gram weights from data/foods.json (1000 / carbs_per_100g). Run: node scripts/veg-fruit-audit.mjs
+ */
 export const CUTTING_STAPLES_VEGETABLES = Object.freeze([
   { name: 'Asparagus', serving: '244g' },
   { name: 'Bell peppers', serving: '159g' },
   { name: 'Broccoli', serving: '139g' },
+  { name: 'Carrots', serving: '122g' },
   { name: 'Cauliflower', serving: '244g' },
+  { name: 'Cucumbers', serving: '278g' },
+  { name: 'Garlic', serving: '30g' },
   { name: 'Green beans', serving: '141g' },
   { name: 'Mixed salad greens', serving: '303g' },
   { name: 'Mushrooms', serving: '189g' },
   { name: 'Spinach', serving: '263g' },
+  { name: 'Tomatoes', serving: '256g' },
 ]);
 
-/** PDF page 6 — grocery Fruit block, A–Z. */
+/**
+ * PDF page 6 — Fruit, A–Z. Burn Engine FQ: 72 cal, ≤4g fat.
+ * Gram weights from data/foods.json (7200 / kcal_per_100g).
+ */
 export const CUTTING_STAPLES_FRUIT = Object.freeze([
   { name: 'Apples', serving: '130g' },
   { name: 'Bananas', serving: '79g' },
   { name: 'Blueberries', serving: '124g' },
   { name: 'Clementines', serving: '150g' },
+  { name: 'Grapes', serving: '99g' },
+  { name: 'Pineapple', serving: '137g' },
   { name: 'Strawberries', serving: '234g' },
+  { name: 'Tangerines', serving: '135g' },
+  { name: 'Watermelon', serving: '237g' },
 ]);
