@@ -119,9 +119,34 @@ function drawSectionTitle(doc, title, x, y, width) {
 const STAPLES_LIST = {
   columnGap: 20,
   rowGap: 3,
-  nameWidthRatio: 0.68,
+  leaderPad: 4,
   ruleWidth: 0.75,
 };
+
+function staplesFirstLine(doc, text, maxWidth) {
+  const words = String(text).split(/\s+/);
+  let line = '';
+  for (let i = 0; i < words.length; i += 1) {
+    const candidate = line ? `${line} ${words[i]}` : words[i];
+    if (doc.widthOfString(candidate) > maxWidth && line) {
+      return { first: line, rest: words.slice(i).join(' ') };
+    }
+    line = candidate;
+  }
+  return { first: line, rest: '' };
+}
+
+function drawStapleDotLeaders(doc, xStart, xEnd, y) {
+  if (xEnd <= xStart) return;
+  const dot = '.';
+  const dotW = doc.widthOfString(dot);
+  const step = dotW + 1.5;
+  let x = xStart;
+  while (x + dotW <= xEnd) {
+    doc.text(dot, x, y, { lineBreak: false });
+    x += step;
+  }
+}
 
 function staplesColumnLayout(page) {
   const gap = STAPLES_LIST.columnGap;
@@ -142,17 +167,36 @@ function drawStaplesColumnRule(doc, x, yTop, yBottom) {
 }
 
 function drawStapleListRow(doc, item, x, y, width) {
-  const nameW = width * STAPLES_LIST.nameWidthRatio;
-  const gap = 8;
-  const servX = x + nameW + gap;
-  const servW = width - nameW - gap;
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize).fillColor(SEMINAR_COLORS.body);
-  const nameH = doc.heightOfString(String(item.name), { width: nameW, lineGap: 0 });
-  const servH = doc.heightOfString(String(item.serving), { width: servW, lineGap: 0 });
-  const rowH = Math.max(nameH, servH, LAYOUT.bodySize) + STAPLES_LIST.rowGap;
-  doc.text(String(item.name), x, y, { width: nameW, align: 'left', lineGap: 0 });
-  doc.text(String(item.serving), servX, y, { width: servW, align: 'left', lineGap: 0 });
-  return y + rowH;
+  const name = String(item.name);
+  const serving = String(item.serving);
+  const pad = STAPLES_LIST.leaderPad;
+  const lineH = LAYOUT.bodySize;
+
+  doc.font(SEMINAR_FONTS.regular).fontSize(lineH).fillColor(SEMINAR_COLORS.body);
+
+  const servingW = doc.widthOfString(serving);
+  const servingX = x + width - servingW;
+  const minLeader = doc.widthOfString(' . . .');
+  const nameMaxW = width - servingW - pad * 2 - minLeader;
+
+  if (doc.widthOfString(name) <= nameMaxW) {
+    doc.text(name, x, y, { lineBreak: false });
+    drawStapleDotLeaders(doc, x + doc.widthOfString(name) + pad, servingX - pad, y);
+    doc.text(serving, servingX, y, { lineBreak: false });
+    return y + lineH + STAPLES_LIST.rowGap;
+  }
+
+  const { first, rest } = staplesFirstLine(doc, name, nameMaxW);
+  const firstW = doc.widthOfString(first);
+  doc.text(first, x, y, { lineBreak: false });
+  drawStapleDotLeaders(doc, x + firstW + pad, servingX - pad, y);
+  doc.text(serving, servingX, y, { lineBreak: false });
+
+  if (!rest) return y + lineH + STAPLES_LIST.rowGap;
+
+  const restH = doc.heightOfString(rest, { width, lineGap: 0 });
+  doc.text(rest, x, y + lineH, { width, lineGap: 0 });
+  return y + lineH + restH + STAPLES_LIST.rowGap;
 }
 
 function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
