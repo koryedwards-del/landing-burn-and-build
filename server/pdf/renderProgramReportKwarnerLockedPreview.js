@@ -20,8 +20,12 @@ import {
 import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 import { drawCalloutRow } from './drawProgramReportNarrative.js';
+import {
+  CUTTING_STAPLES_GRAINS_STARCHES,
+  CUTTING_STAPLES_PROTEIN_DAIRY,
+} from '../../data/cuttingStaplesPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 4;
+export const KWARNER_LOCKED_MIN_PAGES = 5;
 
 const LAYOUT = {
   bodySize: PT.body,
@@ -110,6 +114,64 @@ function drawSectionTitle(doc, title, x, y, width) {
     .fillColor(SEMINAR_COLORS.body)
     .text(String(title || ''), x, y, { width, lineGap: 0 });
   return doc.y + LAYOUT.headerGap;
+}
+
+const STAPLES_LIST = {
+  columnGap: 20,
+  rowGap: 3,
+  nameWidthRatio: 0.68,
+  ruleWidth: 0.75,
+};
+
+function staplesColumnLayout(page) {
+  const gap = STAPLES_LIST.columnGap;
+  const colWidth = (page.width - gap) / 2;
+  return [
+    { x: page.x, width: colWidth },
+    { x: page.x + colWidth + gap, width: colWidth },
+  ];
+}
+
+function drawStaplesColumnRule(doc, x, yTop, yBottom) {
+  doc
+    .strokeColor(PDF_FRAME_COLORS.gold)
+    .lineWidth(STAPLES_LIST.ruleWidth)
+    .moveTo(x, yTop)
+    .lineTo(x, yBottom)
+    .stroke();
+}
+
+function drawStapleListRow(doc, item, x, y, width) {
+  const nameW = width * STAPLES_LIST.nameWidthRatio;
+  const gap = 8;
+  const servX = x + nameW + gap;
+  const servW = width - nameW - gap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize).fillColor(SEMINAR_COLORS.body);
+  const nameH = doc.heightOfString(String(item.name), { width: nameW, lineGap: 0 });
+  const servH = doc.heightOfString(String(item.serving), { width: servW, lineGap: 0 });
+  const rowH = Math.max(nameH, servH, LAYOUT.bodySize) + STAPLES_LIST.rowGap;
+  doc.text(String(item.name), x, y, { width: nameW, align: 'left', lineGap: 0 });
+  doc.text(String(item.serving), servX, y, { width: servW, align: 'left', lineGap: 0 });
+  return y + rowH;
+}
+
+function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
+  let y = drawSectionTitle(doc, title, col.x, yStart, col.width);
+  for (const item of items) {
+    if (y > bottomY - LAYOUT.bodySize * 2) break;
+    y = drawStapleListRow(doc, item, col.x, y, col.width);
+  }
+  return y;
+}
+
+function drawStaplesFoodListPage(doc, payload) {
+  const page = startLockedPage(doc, payload, 'Food List');
+  const columns = staplesColumnLayout(page);
+  const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
+  drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+  drawStaplesColumn(doc, 'Protein Staples', CUTTING_STAPLES_PROTEIN_DAIRY, columns[0], page.y, page.bottom);
+  drawStaplesColumn(doc, 'Grains & Starches', CUTTING_STAPLES_GRAINS_STARCHES, columns[1], page.y, page.bottom);
+  finishLockedPage(doc, page.box, payload);
 }
 
 function drawLayoutTable(doc, opts) {
@@ -503,6 +565,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawLeanBodyAnalysisPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
+  drawStaplesFoodListPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 
