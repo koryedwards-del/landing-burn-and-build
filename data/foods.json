@@ -2056,6 +2056,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Peppers, orange bell, raw",
+    "category": "vegetable",
+    "servingDescription": "raw",
+    "gramWeight": 117,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
     "name": "Peppers, orange bell, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
@@ -2076,6 +2084,14 @@
     "category": "vegetable",
     "servingDescription": "raw",
     "gramWeight": 167,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Peppers, yellow bell, raw",
+    "category": "vegetable",
+    "servingDescription": "raw",
+    "gramWeight": 159,
     "unitsPerServing": 0,
     "fatBracket": 0
   },

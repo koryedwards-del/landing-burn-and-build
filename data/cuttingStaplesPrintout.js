@@ -3,6 +3,8 @@
  * All PDF food lists derive from GROCERY_STAPLES_* below, except page 5 grains & starches (33 items).
  */
 
+import foods from './foods.json' with { type: 'json' };
+
 /** @typedef {{ name: string, serving?: string }} StapleRow */
 
 /** ### Protein */
@@ -156,36 +158,62 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
 ]);
 
 /**
- * PDF page 6 — Vegetables, A–Z. Burn Engine VE: ~10g carbs (40 cal), ≤3g fat.
- * Gram weights from data/foods.json (1000 / carbs_per_100g). Run: node scripts/veg-fruit-audit.mjs
+ * Build a PDF staple row from a foods.json catalog entry.
+ * Prep label matches catalog servingDescription (raw / cooked).
+ * @param {string} label
+ * @param {string} catalogName
  */
-export const CUTTING_STAPLES_VEGETABLES = Object.freeze([
-  { name: 'Asparagus (cooked)', serving: '244g' },
-  { name: 'Bell peppers, orange (cooked)', serving: '118g' },
-  { name: 'Bell peppers, red (cooked)', serving: '159g' },
-  { name: 'Bell peppers, yellow (cooked)', serving: '159g' },
-  { name: 'Broccoli (cooked)', serving: '139g' },
-  { name: 'Carrots (cooked)', serving: '122g' },
-  { name: 'Cauliflower (cooked)', serving: '244g' },
-  { name: 'Cucumbers (raw)', serving: '278g' },
-  { name: 'Green beans (cooked)', serving: '141g' },
-  { name: 'Mushrooms, white (cooked)', serving: '189g' },
-  { name: 'Spinach (cooked)', serving: '263g' },
-  { name: 'Tomatoes (raw)', serving: '256g' },
-]);
+function catalogStapleRow(label, catalogName) {
+  const food = foods.find((f) => f.name === catalogName);
+  if (!food) throw new Error(`Missing catalog food: ${catalogName}`);
+  const prep = food.servingDescription === 'raw' ? 'raw' : 'cooked';
+  return Object.freeze({
+    name: `${label} (${prep})`,
+    serving: `${food.gramWeight}g`,
+  });
+}
+
+/**
+ * PDF page 6 — Vegetables, A–Z. Burn Engine VE: ~10g carbs (40 cal), ≤3g fat.
+ * Catalog gram weights = 1000 / carbs_per_100g. Prep per handbook: measure after cooking
+ * (vegetableTipsPrintout.js) — cooked entries except cucumber and fresh tomatoes (raw).
+ * Run: node scripts/veg-fruit-audit.mjs
+ */
+const VEGETABLE_CATALOG = [
+  ['Asparagus', 'Asparagus, cooked'],
+  ['Bell peppers, orange', 'Peppers, orange bell, cooked'],
+  ['Bell peppers, red', 'Peppers, red bell, cooked'],
+  ['Bell peppers, yellow', 'Peppers, yellow bell, cooked'],
+  ['Broccoli', 'Broccoli, cooked'],
+  ['Carrots', 'Carrots, cooked'],
+  ['Cauliflower', 'Cauliflower, cooked'],
+  ['Cucumbers', 'Cucumber'],
+  ['Green beans', 'Green beans, cooked'],
+  ['Mushrooms, white', 'Mushrooms, white, cooked'],
+  ['Spinach', 'Spinach, cooked'],
+  ['Tomatoes', 'Tomato, raw'],
+];
+
+export const CUTTING_STAPLES_VEGETABLES = Object.freeze(
+  VEGETABLE_CATALOG.map(([label, catalog]) => catalogStapleRow(label, catalog)),
+);
 
 /**
  * PDF page 6 — Fruit, A–Z. Burn Engine FQ: 72 cal, ≤4g fat.
- * Gram weights from data/foods.json (7200 / kcal_per_100g). All catalog fruit = raw.
+ * Gram weights from data/foods.json (7200 / kcal_per_100g).
  */
-export const CUTTING_STAPLES_FRUIT = Object.freeze([
-  { name: 'Apples (raw)', serving: '130g' },
-  { name: 'Bananas (raw)', serving: '79g' },
-  { name: 'Blueberries (raw)', serving: '124g' },
-  { name: 'Clementines (raw)', serving: '150g' },
-  { name: 'Grapes (raw)', serving: '99g' },
-  { name: 'Pineapple (raw)', serving: '137g' },
-  { name: 'Strawberries (raw)', serving: '234g' },
-  { name: 'Tangerines (raw)', serving: '135g' },
-  { name: 'Watermelon (raw)', serving: '237g' },
-]);
+const FRUIT_CATALOG = [
+  ['Apples', 'Apples'],
+  ['Bananas', 'Bananas'],
+  ['Blueberries', 'Blueberries'],
+  ['Clementines', 'Clementines'],
+  ['Grapes', 'Grapes'],
+  ['Pineapple', 'Pineapple'],
+  ['Strawberries', 'Strawberries'],
+  ['Tangerines', 'Tangerines'],
+  ['Watermelon', 'Watermelon'],
+];
+
+export const CUTTING_STAPLES_FRUIT = Object.freeze(
+  FRUIT_CATALOG.map(([label, catalog]) => catalogStapleRow(label, catalog)),
+);

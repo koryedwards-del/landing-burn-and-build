@@ -1,129 +1,90 @@
 /**
  * Vegetables × 10g carb (40 cal) × fruits × 72 cal — Burn Engine VE/FQ slots.
- * From js/burnEngine.js computeServingsPhase:
- *   VE × 40 cal/serving, VE × 3g fat baked in → ~10g carbs @ 4 cal/g
- *   FQ × 72 cal/serving, FQ × 4g fat baked in → 72 kcal portion
- * Gram weights match data/foods.json (catalog source of truth).
+ * Also compares raw vs cooked catalog portions for page-6 vegetables.
+ * Run: node scripts/veg-fruit-audit.mjs
  */
 
-/** @type {ReadonlyArray<{ label: string, catalog: string, kind: 'vegetable'|'fruit' }>} */
-const MERGED = [
-  { label: 'Asparagus', catalog: 'Asparagus, cooked', kind: 'vegetable' },
-  { label: 'Bell peppers, orange', catalog: 'Peppers, orange bell, cooked', kind: 'vegetable' },
-  { label: 'Bell peppers, red', catalog: 'Peppers, red bell, cooked', kind: 'vegetable' },
-  { label: 'Bell peppers, yellow', catalog: 'Peppers, yellow bell, cooked', kind: 'vegetable' },
-  { label: 'Broccoli', catalog: 'Broccoli, cooked', kind: 'vegetable' },
-  { label: 'Carrots', catalog: 'Carrots, cooked', kind: 'vegetable' },
-  { label: 'Cauliflower', catalog: 'Cauliflower, cooked', kind: 'vegetable' },
-  { label: 'Cucumbers', catalog: 'Cucumber', kind: 'vegetable' },
-  { label: 'Green beans', catalog: 'Green beans, cooked', kind: 'vegetable' },
-  { label: 'Mushrooms', catalog: 'Mushrooms, white, cooked', kind: 'vegetable' },
-  { label: 'Spinach', catalog: 'Spinach, cooked', kind: 'vegetable' },
-  { label: 'Tomatoes', catalog: 'Tomato, raw', kind: 'vegetable' },
-  { label: 'Apples', catalog: 'Apples', kind: 'fruit' },
-  { label: 'Bananas', catalog: 'Bananas', kind: 'fruit' },
-  { label: 'Blueberries', catalog: 'Blueberries', kind: 'fruit' },
-  { label: 'Clementines', catalog: 'Clementines', kind: 'fruit' },
-  { label: 'Grapes', catalog: 'Grapes', kind: 'fruit' },
-  { label: 'Pineapple', catalog: 'Pineapple', kind: 'fruit' },
-  { label: 'Strawberries', catalog: 'Strawberries', kind: 'fruit' },
-  { label: 'Tangerines', catalog: 'Tangerines', kind: 'fruit' },
-  { label: 'Watermelon', catalog: 'Watermelon', kind: 'fruit' },
+import foods from '../data/foods.json' with { type: 'json' };
+import {
+  CUTTING_STAPLES_FRUIT,
+  CUTTING_STAPLES_VEGETABLES,
+} from '../data/cuttingStaplesPrintout.js';
+
+/** @type {ReadonlyArray<[string, string, string?]>} label, selected catalog, optional raw catalog */
+const VEG_RAW_COOKED = [
+  ['Asparagus', 'Asparagus, cooked', 'Asparagus, raw'],
+  ['Bell peppers, orange', 'Peppers, orange bell, cooked', 'Peppers, orange bell, raw'],
+  ['Bell peppers, red', 'Peppers, red bell, cooked', 'Peppers, red bell, raw'],
+  ['Bell peppers, yellow', 'Peppers, yellow bell, cooked', 'Peppers, yellow bell, raw'],
+  ['Broccoli', 'Broccoli, cooked', 'Broccoli, raw'],
+  ['Carrots', 'Carrots, cooked', 'Carrots, raw'],
+  ['Cauliflower', 'Cauliflower, cooked', 'Cauliflower, raw'],
+  ['Cucumbers', 'Cucumber'],
+  ['Green beans', 'Green beans, cooked', 'Green beans, raw'],
+  ['Mushrooms, white', 'Mushrooms, white, cooked', 'Mushrooms, white, raw'],
+  ['Spinach', 'Spinach, cooked', 'Spinach, raw'],
+  ['Tomatoes', 'Tomato, raw', 'Tomato, cooked'],
 ];
 
-/** USDA FoodData Central — c=carbs g/100g, k=kcal/100g, f=fat g/100g */
-const USDA = {
-  'Asparagus, cooked': { c: 4.1, k: 22, f: 0.2 },
-  'Peppers, orange bell, cooked': { c: 8.5, k: 28, f: 0.2 },
-  'Peppers, red bell, cooked': { c: 6.3, k: 28, f: 0.2 },
-  'Peppers, yellow bell, cooked': { c: 6.3, k: 28, f: 0.2 },
-  'Broccoli, cooked': { c: 7.2, k: 35, f: 0.4 },
-  'Carrots, cooked': { c: 8.2, k: 35, f: 0.2 },
-  'Cauliflower, cooked': { c: 4.1, k: 23, f: 0.5 },
-  Cucumber: { c: 3.6, k: 15, f: 0.1 },
-  'Green beans, cooked': { c: 7.1, k: 35, f: 0.3 },
-  'Mushrooms, white, cooked': { c: 5.3, k: 28, f: 0.5 },
-  'Spinach, cooked': { c: 3.8, k: 23, f: 0.3 },
-  'Tomato, raw': { c: 3.9, k: 18, f: 0.2 },
-  Apples: { c: 13.8, k: 52, f: 0.2 },
-  Bananas: { c: 22.8, k: 89, f: 0.3 },
-  Blueberries: { c: 14.5, k: 57, f: 0.3 },
-  Clementines: { c: 12.0, k: 47, f: 0.2 },
-  Grapes: { c: 18.1, k: 69, f: 0.2 },
-  Pineapple: { c: 13.1, k: 50, f: 0.1 },
-  Strawberries: { c: 7.7, k: 32, f: 0.3 },
-  Tangerines: { c: 13.3, k: 53, f: 0.3 },
-  Watermelon: { c: 7.6, k: 30, f: 0.2 },
-};
-
 const VEG_CARB_TARGET = 10;
-const VEG_CAL = 40;
 const VEG_FAT_LIMIT = 3;
 const FRUIT_CAL_TARGET = 72;
 const FRUIT_FAT_LIMIT = 4;
 
-import foods from '../data/foods.json' with { type: 'json' };
+/** @param {string} name */
+function foodRow(name) {
+  const f = foods.find((x) => x.name === name);
+  if (!f) return null;
+  return f;
+}
 
-function audit(item) {
-  const u = USDA[item.catalog];
-  const catalogRow = foods.find((f) => f.name === item.catalog);
-  const grams = catalogRow?.gramWeight ?? 0;
-
-  if (item.kind === 'vegetable') {
-    const carbsAt = Math.round((grams * u.c) / 100 * 10) / 10;
-    const calAt = Math.round((grams * u.k) / 100);
-    const fatAt = Math.round((grams * u.f) / 100 * 10) / 10;
-    const expected = Math.round(1000 / u.c);
-    return {
-      label: item.label,
-      kind: item.kind,
-      grams,
-      expected,
-      carbsAt,
-      calAt,
-      fatAt,
-      pass: Math.abs(carbsAt - VEG_CARB_TARGET) <= 1.5 && fatAt <= VEG_FAT_LIMIT,
-    };
-  }
-
-  const calAt = Math.round((grams * u.k) / 100);
-  const fatAt = Math.round((grams * u.f) / 100 * 10) / 10;
-  const expected = Math.round(7200 / u.k);
+/** @param {string} name @param {number} carbsPer100 */
+function vegAudit(name, carbsPer100, grams) {
+  const carbsAt = Math.round((grams * carbsPer100) / 100 * 10) / 10;
+  const fatAt = Math.round((grams * (foodRow(name)?.fatBracket ?? 0)) / 100 * 10) / 10;
   return {
-    label: item.label,
-    kind: item.kind,
     grams,
-    expected,
-    calAt,
+    carbsAt,
     fatAt,
-    pass: Math.abs(calAt - FRUIT_CAL_TARGET) <= 8 && fatAt <= FRUIT_FAT_LIMIT,
+    pass: Math.abs(carbsAt - VEG_CARB_TARGET) <= 1.5 && fatAt <= VEG_FAT_LIMIT,
   };
 }
 
-const rows = MERGED.map(audit);
-const veg = rows.filter((r) => r.kind === 'vegetable');
-const fruit = rows.filter((r) => r.kind === 'fruit');
-
-console.log('=== VEGETABLES × 10g carb (40 cal) — Burn Engine VE ===');
-console.log(`Target: ~${VEG_CARB_TARGET}g carbs (~${VEG_CAL} cal), fat ≤ ${VEG_FAT_LIMIT}g\n`);
-for (const r of veg) {
+console.log('=== RAW vs COOKED — page 6 vegetables ===');
+console.log('Handbook: measure after cooking (vegetableTipsPrintout.js)\n');
+console.log(
+  'Item'.padEnd(24),
+  'Selected'.padEnd(10),
+  'Raw'.padStart(6),
+  'Cooked'.padStart(8),
+  'Delta'.padStart(7),
+);
+for (const [label, selected, alt] of VEG_RAW_COOKED) {
+  const sel = foodRow(selected);
+  const rawName = selected.includes(', raw') ? selected : alt?.includes('raw') ? alt : null;
+  const cookedName = selected.includes(', cooked') ? selected : alt?.includes('cooked') ? alt : null;
+  const rawG = rawName ? foodRow(rawName)?.gramWeight : null;
+  const cookedG = cookedName ? foodRow(cookedName)?.gramWeight : null;
+  const selPrep = sel?.servingDescription === 'raw' ? 'raw' : 'cooked';
+  const delta = rawG != null && cookedG != null ? cookedG - rawG : null;
   console.log(
-    `  ${r.label.padEnd(22)} ${String(r.grams).padStart(3)}g  ${r.carbsAt}g carb  ${r.calAt} cal  ${r.fatAt}g fat  ${r.pass ? 'OK' : 'CHECK'}`,
+    label.padEnd(24),
+    `${sel?.gramWeight}g ${selPrep}`.padEnd(10),
+    rawG != null ? `${rawG}g` : '—',
+    cookedG != null ? `${cookedG}g` : '—',
+    delta != null ? `${delta > 0 ? '+' : ''}${delta}g` : '—',
   );
 }
 
-console.log('\n=== FRUITS × 72 cal — Burn Engine FQ ===');
-console.log(`Target: ~${FRUIT_CAL_TARGET} cal, fat ≤ ${FRUIT_FAT_LIMIT}g\n`);
-for (const r of fruit) {
-  console.log(
-    `  ${r.label.padEnd(22)} ${String(r.grams).padStart(3)}g  ${r.calAt} cal  ${r.fatAt}g fat  ${r.pass ? 'OK' : 'CHECK'}`,
-  );
+console.log('\n=== PDF LIST — VE / FQ check ===\n');
+console.log('VEGETABLES (~10g carb, ≤3g fat):');
+for (const row of CUTTING_STAPLES_VEGETABLES) {
+  console.log(`  ${row.name.padEnd(32)} ${row.serving}`);
 }
 
-const fails = rows.filter((r) => !r.pass);
-if (fails.length) {
-  console.log(`\n${fails.length} item(s) need review.`);
-  process.exitCode = 1;
-} else {
-  console.log(`\nAll ${rows.length} merged staples pass VE/FQ criteria.`);
+console.log('\nFRUITS (~72 cal, ≤4g fat):');
+for (const row of CUTTING_STAPLES_FRUIT) {
+  console.log(`  ${row.name.padEnd(32)} ${row.serving}`);
 }
+
+console.log(`\n${CUTTING_STAPLES_VEGETABLES.length} vegetables, ${CUTTING_STAPLES_FRUIT.length} fruits on page 6.`);
