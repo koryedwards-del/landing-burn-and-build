@@ -25,8 +25,14 @@ import {
   CUTTING_STAPLES_GRAINS_STARCHES,
   CUTTING_STAPLES_PROTEIN_DAIRY,
   CUTTING_STAPLES_VEGETABLES,
+  GROCERY_STAPLES_PANTRY,
 } from '../../data/cuttingStaplesPrintout.js';
-import { flavorKitList } from '../../menuplanner/data/flavorKits.js';
+import {
+  COMMON_SPLASHES,
+  FLAVOR_KIT_RULE,
+  flavorKitList,
+  SPLASH_RULE,
+} from '../../menuplanner/data/flavorKits.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -312,27 +318,144 @@ function drawVegFruitFoodListPage(doc, payload) {
   }
 }
 
-/** PDF page 7 — flavor kits: four rows, kit name | stacked spices. */
+const PANEL_BULLET = { indent: 12, gap: 3, kitGap: 8 };
+
+function measurePanelBullets(doc, items, width) {
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  return items.reduce((sum, item) => {
+    const line = `\u2022 ${item}`;
+    return sum + Math.max(
+      LAYOUT.bodySize + PANEL_BULLET.gap,
+      doc.heightOfString(line, { width: width - PANEL_BULLET.indent, lineGap: 0 }) + PANEL_BULLET.gap,
+    );
+  }, 0);
+}
+
+function measurePanelSection(doc, title, items, innerWidth) {
+  doc.font(SEMINAR_FONTS.bold).fontSize(LAYOUT.subsectionSize);
+  let h = doc.heightOfString(title, { width: innerWidth, lineGap: 0 }) + LAYOUT.headerGap;
+  h += measurePanelBullets(doc, items, innerWidth);
+  return h;
+}
+
+/** @param {import('pdfkit')} doc @param {ReadonlyArray<{ label: string, flavors: readonly string[] }>} kits */
+function measureFlavorKitsColumn(doc, kits, innerWidth) {
+  doc.font(SEMINAR_FONTS.bold).fontSize(LAYOUT.subsectionSize);
+  let h = doc.heightOfString('Flavor Kits', { width: innerWidth, lineGap: 0 }) + LAYOUT.headerGap;
+  kits.forEach((kit, index) => {
+    doc.font(SEMINAR_FONTS.bold).fontSize(LAYOUT.bodySize);
+    h += doc.heightOfString(kit.label, { width: innerWidth, lineGap: 0 }) + 4;
+    h += measurePanelBullets(doc, kit.flavors, innerWidth);
+    if (index < kits.length - 1) h += PANEL_BULLET.kitGap;
+  });
+  return h;
+}
+
+function drawPanelBullets(doc, items, x, y, width, bottomY) {
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize).fillColor(SEMINAR_COLORS.body);
+  for (const item of items) {
+    const line = `\u2022 ${item}`;
+    const blockH = Math.max(
+      LAYOUT.bodySize + PANEL_BULLET.gap,
+      doc.heightOfString(line, { width: width - PANEL_BULLET.indent, lineGap: 0 }) + PANEL_BULLET.gap,
+    );
+    if (y + blockH > bottomY) throw new Error(`Panel list truncated near "${item}"`);
+    doc.text('\u2022', x, y, { lineBreak: false });
+    doc.text(String(item), x + PANEL_BULLET.indent, y, {
+      width: width - PANEL_BULLET.indent,
+      lineGap: 0,
+    });
+    y += blockH;
+  }
+  return y;
+}
+
+function drawPanelSectionTitle(doc, title, x, y, width) {
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(title, x, y, { width, lineGap: 0 });
+  return doc.y + LAYOUT.headerGap;
+}
+
+/** @param {import('pdfkit')} doc @param {ReadonlyArray<{ label: string, flavors: readonly string[] }>} kits */
+function drawFlavorKitsColumn(doc, kits, x, y, width, bottomY) {
+  let cy = drawPanelSectionTitle(doc, 'Flavor Kits', x, y, width);
+  kits.forEach((kit, index) => {
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(kit.label, x, cy, { width, lineGap: 0 });
+    cy = doc.y + 4;
+    cy = drawPanelBullets(doc, kit.flavors, x, cy, width, bottomY);
+    if (index < kits.length - 1) cy += PANEL_BULLET.kitGap;
+  });
+  return cy;
+}
+
+function drawPanelNote(doc, text, x, y, width) {
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(LAYOUT.bodySize - 0.5)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), x, y, { width, lineGap: LAYOUT.lineGap });
+  return doc.y + LAYOUT.paragraphGap;
+}
+
+/** PDF page 7 — full-width three-column panel: flavor kits | splashes | pantry. */
 function drawFlavorKitsPage(doc, payload) {
   const page = startLockedPage(doc, payload, null);
   const kits = flavorKitList();
-  let y = drawSectionTitle(doc, 'Flavor Kits', page.x, page.y, page.width);
-  const tableOpts = {
-    x: page.x,
-    y,
-    width: page.width,
-    columns: [
-      { key: 'kit', width: 0.24 },
-      { key: 'spices', width: 0.76 },
-    ],
-    rows: kits.map((kit) => ({
-      kit: kit.label,
-      spices: kit.flavors.map((item) => `\u2022 ${item}`).join('\n'),
-    })),
-    headerRows: 0,
-    boldColumnKeys: ['kit'],
-  };
-  drawLayoutTable(doc, tableOpts);
+  const pad = TABLE_CONTAINER.cellPad;
+  const colW = page.width / 3;
+  const innerW = colW - pad * 2;
+
+  const colHeights = [
+    pad * 2 + measureFlavorKitsColumn(doc, kits, innerW),
+    pad * 2 + measurePanelSection(doc, 'Splashes', COMMON_SPLASHES, innerW),
+    pad * 2 + measurePanelSection(doc, 'Pantry', GROCERY_STAPLES_PANTRY, innerW),
+  ];
+  const panelH = Math.max(...colHeights);
+  const panelBottom = page.y + panelH;
+
+  if (panelBottom > page.bottom) {
+    throw new Error('Page 7 three-column panel does not fit');
+  }
+
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(page.x, page.y, page.width, panelH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  const ruleTop = page.y + TABLE_CONTAINER.radius * 0.5;
+  const ruleBottom = page.y + panelH - TABLE_CONTAINER.radius * 0.5;
+  [1, 2].forEach((index) => {
+    const ruleX = page.x + colW * index;
+    doc
+      .strokeColor(TABLE_CONTAINER.stroke)
+      .lineWidth(STAPLES_LIST.ruleWidth)
+      .moveTo(ruleX, ruleTop)
+      .lineTo(ruleX, ruleBottom)
+      .stroke();
+  });
+
+  const colXs = [page.x + pad, page.x + colW + pad, page.x + colW * 2 + pad];
+  drawFlavorKitsColumn(doc, kits, colXs[0], page.y + pad, innerW, panelBottom - pad);
+
+  let cy = drawPanelSectionTitle(doc, 'Splashes', colXs[1], page.y + pad, innerW);
+  drawPanelBullets(doc, COMMON_SPLASHES, colXs[1], cy, innerW, panelBottom - pad);
+
+  cy = drawPanelSectionTitle(doc, 'Pantry', colXs[2], page.y + pad, innerW);
+  drawPanelBullets(doc, GROCERY_STAPLES_PANTRY, colXs[2], cy, innerW, panelBottom - pad);
+
+  let y = panelBottom + LAYOUT.sectionGap;
+  y = drawPanelNote(doc, FLAVOR_KIT_RULE, page.x, y, page.width);
+  y += LAYOUT.paragraphGap;
+  drawPanelNote(doc, SPLASH_RULE, page.x, y, page.width);
+
   finishLockedPage(doc, page.box, payload);
 }
 
