@@ -21,7 +21,8 @@ import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 import { drawCalloutRow } from './drawProgramReportNarrative.js';
 import {
-  CUTTING_STAPLES_GRAINS_STARCHES,
+  CUTTING_STAPLES_COMP_STARCHES,
+  CUTTING_STAPLES_GRAINS,
   CUTTING_STAPLES_PROTEIN_DAIRY,
 } from '../../data/cuttingStaplesPrintout.js';
 
@@ -208,13 +209,30 @@ function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
   return y;
 }
 
+function drawStaplesColumnSections(doc, sections, col, yStart, bottomY) {
+  let y = yStart;
+  for (const section of sections) {
+    if (y > bottomY - LAYOUT.bodySize * 4) break;
+    y = drawSectionTitle(doc, section.title, col.x, y, col.width);
+    for (const item of section.items) {
+      if (y > bottomY - LAYOUT.bodySize * 2) break;
+      y = drawStapleListRow(doc, item, col.x, y, col.width);
+    }
+    if (y <= bottomY - LAYOUT.bodySize * 4) y += LAYOUT.sectionGap;
+  }
+  return y;
+}
+
 function drawStaplesFoodListPage(doc, payload) {
   const page = startLockedPage(doc, payload, 'Food List');
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
   drawStaplesColumn(doc, 'Protein Staples', CUTTING_STAPLES_PROTEIN_DAIRY, columns[0], page.y, page.bottom);
-  drawStaplesColumn(doc, 'Grains & Starches', CUTTING_STAPLES_GRAINS_STARCHES, columns[1], page.y, page.bottom);
+  drawStaplesColumnSections(doc, [
+    { title: 'Grains', items: CUTTING_STAPLES_GRAINS },
+    { title: 'Starches', items: CUTTING_STAPLES_COMP_STARCHES },
+  ], columns[1], page.y, page.bottom);
   finishLockedPage(doc, page.box, payload);
 }
 
