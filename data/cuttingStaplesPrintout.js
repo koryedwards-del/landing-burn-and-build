@@ -112,14 +112,24 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** PDF page 5 — Carbohydrates block, A–Z (catalog gram weights for 14g-carb / starch portions). */
-export const CUTTING_STAPLES_CARBOHYDRATES = Object.freeze([
+/** From grocery Carbohydrates — grains (G1: 14g carb / ≤1g fat), A–Z. */
+export const CUTTING_STAPLES_GRAINS = Object.freeze([
   { name: 'Basmati or jasmine rice', serving: '50g' },
-  { name: 'Black beans', serving: '59g' },
   { name: 'Old-fashioned oats', serving: '21g' },
   { name: 'Rice cakes', serving: '17g' },
-  { name: 'Russet potatoes', serving: '66g' },
-  { name: 'Sweet potatoes', serving: '68g' },
   { name: 'Whole wheat bread', serving: '32g' },
   { name: 'Whole wheat tortillas', serving: '31g' },
 ]);
+
+/** From grocery Carbohydrates — starches (S2: 14g carb / ≤0.44g fat), A–Z. */
+export const CUTTING_STAPLES_STARCHES = Object.freeze([
+  { name: 'Black beans', serving: '59g' },
+  { name: 'Russet potatoes', serving: '66g' },
+  { name: 'Sweet potatoes', serving: '68g' },
+]);
+
+/** PDF page 5 — full grain/starch column from grocery Carbohydrates, A–Z. */
+export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
+  ...CUTTING_STAPLES_GRAINS,
+  ...CUTTING_STAPLES_STARCHES,
+].sort((a, b) => a.name.localeCompare(b.name)));

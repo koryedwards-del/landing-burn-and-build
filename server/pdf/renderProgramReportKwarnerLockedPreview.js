@@ -21,7 +21,7 @@ import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
 import { drawCalloutRow } from './drawProgramReportNarrative.js';
 import {
-  CUTTING_STAPLES_CARBOHYDRATES,
+  CUTTING_STAPLES_GRAINS_STARCHES,
   CUTTING_STAPLES_PROTEIN_DAIRY,
 } from '../../data/cuttingStaplesPrintout.js';
 
@@ -214,7 +214,7 @@ function drawStaplesFoodListPage(doc, payload) {
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
   drawStaplesColumn(doc, 'Protein Staples', CUTTING_STAPLES_PROTEIN_DAIRY, columns[0], page.y, page.bottom);
-  drawStaplesColumn(doc, 'Carbohydrates', CUTTING_STAPLES_CARBOHYDRATES, columns[1], page.y, page.bottom);
+  drawStaplesColumn(doc, 'Grains & Starches', CUTTING_STAPLES_GRAINS_STARCHES, columns[1], page.y, page.bottom);
   finishLockedPage(doc, page.box, payload);
 }
 
