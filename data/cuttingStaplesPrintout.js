@@ -175,27 +175,28 @@ function catalogStapleRow(label, catalogName) {
 
 /**
  * PDF page 6 — Vegetables, A–Z. Burn Engine VE: ~10g carbs (40 cal), ≤3g fat.
- * Catalog gram weights = 1000 / carbs_per_100g. Prep per handbook: measure after cooking
- * (vegetableTipsPrintout.js) — cooked entries except cucumber and fresh tomatoes (raw).
+ * Both raw and cooked catalog entries where available (measure per prep).
  * Run: node scripts/veg-fruit-audit.mjs
  */
 const VEGETABLE_CATALOG = [
-  ['Asparagus', 'Asparagus, cooked'],
-  ['Bell peppers, orange', 'Peppers, orange bell, cooked'],
-  ['Bell peppers, red', 'Peppers, red bell, cooked'],
-  ['Bell peppers, yellow', 'Peppers, yellow bell, cooked'],
-  ['Broccoli', 'Broccoli, cooked'],
-  ['Carrots', 'Carrots, cooked'],
-  ['Cauliflower', 'Cauliflower, cooked'],
-  ['Cucumbers', 'Cucumber'],
-  ['Green beans', 'Green beans, cooked'],
-  ['Mushrooms, white', 'Mushrooms, white, cooked'],
-  ['Spinach', 'Spinach, cooked'],
-  ['Tomatoes', 'Tomato, raw'],
+  ['Asparagus', ['Asparagus, cooked', 'Asparagus, raw']],
+  ['Bell peppers, orange', ['Peppers, orange bell, cooked', 'Peppers, orange bell, raw']],
+  ['Bell peppers, red', ['Peppers, red bell, cooked', 'Peppers, red bell, raw']],
+  ['Bell peppers, yellow', ['Peppers, yellow bell, cooked', 'Peppers, yellow bell, raw']],
+  ['Broccoli', ['Broccoli, cooked', 'Broccoli, raw']],
+  ['Carrots', ['Carrots, cooked', 'Carrots, raw']],
+  ['Cauliflower', ['Cauliflower, cooked', 'Cauliflower, raw']],
+  ['Cucumbers', ['Cucumber']],
+  ['Green beans', ['Green beans, cooked', 'Green beans, raw']],
+  ['Mushrooms, white', ['Mushrooms, white, cooked', 'Mushrooms, white, raw']],
+  ['Spinach', ['Spinach, cooked', 'Spinach, raw']],
+  ['Tomatoes', ['Tomato, cooked', 'Tomato, raw']],
 ];
 
 export const CUTTING_STAPLES_VEGETABLES = Object.freeze(
-  VEGETABLE_CATALOG.map(([label, catalog]) => catalogStapleRow(label, catalog)),
+  VEGETABLE_CATALOG.flatMap(([label, catalogs]) =>
+    catalogs.map((catalog) => catalogStapleRow(label, catalog)),
+  ).sort((a, b) => a.name.localeCompare(b.name)),
 );
 
 /**

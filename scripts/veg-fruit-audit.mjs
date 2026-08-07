@@ -76,10 +76,10 @@ for (const [label, selected, alt] of VEG_RAW_COOKED) {
   );
 }
 
-console.log('\n=== PDF LIST — VE / FQ check ===\n');
-console.log('VEGETABLES (~10g carb, ≤3g fat):');
+console.log('\n=== PDF LIST — page 6 ===\n');
+console.log(`VEGETABLES (${CUTTING_STAPLES_VEGETABLES.length} rows):`);
 for (const row of CUTTING_STAPLES_VEGETABLES) {
-  console.log(`  ${row.name.padEnd(32)} ${row.serving}`);
+  console.log(`  ${row.name.padEnd(36)} ${row.serving}`);
 }
 
 console.log('\nFRUITS (~72 cal, ≤4g fat):');

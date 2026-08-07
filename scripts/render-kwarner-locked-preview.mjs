@@ -75,7 +75,7 @@ function buildKristiPreviewPackage() {
   return pkg;
 }
 
-const PREVIEW_PDF_NAME = 'kwarner-preview-kristi-veg-fruit-v3.pdf';
+const PREVIEW_PDF_NAME = 'kwarner-preview-kristi-veg-fruit-v4.pdf';
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildProgramReportPayload(buildKristiPreviewPackage());
 payload.welcome = KWARNER_WELCOME_COPY;
@@ -93,7 +93,7 @@ const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).lengt
 const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
 export const KWARNER_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
-export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-preview-kristi-veg-fruit-v3.pdf';
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-preview-kristi-veg-fruit-v4.pdf';
 
 export function kwarnerPreviewPdfUrl() {
   return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
