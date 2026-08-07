@@ -1,0 +1,38 @@
+---
+description: KWarner locked preview PDF — mandatory render workflow for program-report printout work
+alwaysApply: true
+---
+
+# KWarner preview PDF (program report printout)
+
+When the user asks for **PDF creation, PDF updates, printout layout, or program-report print changes**, work in the **KWarner locked preview pipeline** — not the web UI unless they explicitly ask for web.
+
+## Pipeline (source of truth)
+
+| Piece | Path |
+|-------|------|
+| Renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
+| Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
+| Macro signal data | `js/foodPlanPrintout.js` (`MACRO_SIGNAL_ROWS`, `drawMacroSignalTable`) |
+| Payload | `js/programReportPrintout.js` |
+| Staples / veg-fruit / flavor kits | `data/cuttingStaplesPrintout.js`, `menuplanner/data/flavorKits.js` |
+| Typography tokens | `js/printTemplateTypography.js` |
+
+**Not in scope** unless requested: `program-report/js/report.js` (web shell), production `server/pdf/renderProgramReport.js` (narrative lesson format).
+
+## Mandatory after every PDF change
+
+1. Run **`npm run render:kwarner-preview`** (or `node scripts/render-kwarner-locked-preview.mjs`).
+2. The script **always writes a new file** — `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf` — by scanning for the highest existing `vN` and incrementing. **Never overwrite** an existing version.
+3. Commit the **new PDF** plus auto-updated `js/kwarnerPreviewBuild.js`.
+4. Tell the user the **new filename** (e.g. `v11`) in the summary.
+
+Optional sanity check: `npm run verify:pdf`.
+
+## User prompts
+
+Short prompts are enough — e.g. “update macro table border” or “add row to veg list page”. Apply the change in the renderer/data files above, then **always render a new PDF** without being reminded.
+
+## Sample client
+
+Kristi Warner preview package — see `scripts/render-kwarner-locked-preview.mjs` (`KRISTI_FORM`, `KWARNER_WELCOME_COPY`). Output is currently **7 pages** (Welcome, LBA, History, Food Plan, Servings, veg/fruit staples, flavor kits).
