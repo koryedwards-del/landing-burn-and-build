@@ -1,6 +1,93 @@
-/** Bodybuilder cutting staples — program report PDF pages 5–6 (fixed copy + servings). */
+/**
+ * Bodybuilder's Cutting Diet Grocery Staples — source list for program report PDF food list pages.
+ * Names match the user master list; servings added per section as pages are built.
+ */
 
-/** Protein + dairy competition staples, A–Z. P1: 8g pro / ≤2g fat. D1: 8g P / 12g C / 2.44g F booked per serving. */
+/** @typedef {{ name: string, serving?: string }} StapleRow */
+
+/** ### Protein */
+export const GROCERY_STAPLES_PROTEIN = Object.freeze([
+  'Chicken breast',
+  'Lean ground turkey',
+  '93–96% lean ground beef',
+  'Sirloin steak',
+  'Egg whites',
+  'Eggs',
+  'White fish (cod, tilapia)',
+  'Shrimp',
+  'Tuna (canned)',
+  'Plain Greek yogurt',
+  'Cottage cheese',
+]);
+
+/** ### Carbohydrates */
+export const GROCERY_STAPLES_CARBOHYDRATES = Object.freeze([
+  'Old-fashioned oats',
+  'Basmati or jasmine rice',
+  'Sweet potatoes',
+  'Russet potatoes',
+  'Whole wheat bread',
+  'Whole wheat tortillas',
+  'Rice cakes',
+  'Black beans',
+]);
+
+/** ### Vegetables */
+export const GROCERY_STAPLES_VEGETABLES = Object.freeze([
+  'Broccoli',
+  'Green beans',
+  'Spinach',
+  'Bell peppers',
+  'Mushrooms',
+  'Cauliflower',
+  'Asparagus',
+  'Mixed salad greens',
+]);
+
+/** ### Fruit */
+export const GROCERY_STAPLES_FRUIT = Object.freeze([
+  'Apples',
+  'Bananas',
+  'Blueberries',
+  'Clementines',
+  'Strawberries',
+]);
+
+/** ### Flavor Builders */
+export const GROCERY_STAPLES_FLAVOR = Object.freeze([
+  'Salsa',
+  'Mustard',
+  'Hot sauce',
+  'Low-sodium soy sauce',
+  'Lemon/lime',
+  'Garlic',
+  'Onion',
+  'Fresh herbs',
+]);
+
+/** ### Seasonings */
+export const GROCERY_STAPLES_SEASONINGS = Object.freeze([
+  'Salt',
+  'Black pepper',
+  'Paprika',
+  'Chili powder',
+  'Cumin',
+  'Italian seasoning',
+  'Garlic powder',
+  'Onion powder',
+  'Cinnamon',
+]);
+
+/** ### Pantry */
+export const GROCERY_STAPLES_PANTRY = Object.freeze([
+  'Cooking spray',
+  'Nonstick foil',
+  'Coffee',
+  'Tea',
+  'Zero-calorie beverages',
+]);
+
+/** PDF page 5 — protein + dairy, A–Z. P1/D1 engine-curated servings (session work). */
 export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: '1% milk', serving: '235g' },
   { name: 'Chicken breast', serving: '26g' },
@@ -25,26 +112,14 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** Cutting grocery grains — Carbohydrates block (user list, A–Z). */
-export const CUTTING_STAPLES_GRAINS = Object.freeze([
+/** PDF page 5 — Carbohydrates block, A–Z (catalog gram weights for 14g-carb / starch portions). */
+export const CUTTING_STAPLES_CARBOHYDRATES = Object.freeze([
   { name: 'Basmati or jasmine rice', serving: '50g' },
+  { name: 'Black beans', serving: '59g' },
   { name: 'Old-fashioned oats', serving: '21g' },
   { name: 'Rice cakes', serving: '17g' },
+  { name: 'Russet potatoes', serving: '66g' },
+  { name: 'Sweet potatoes', serving: '68g' },
   { name: 'Whole wheat bread', serving: '32g' },
   { name: 'Whole wheat tortillas', serving: '31g' },
-]);
-
-/** 1982 competition starch roster — tested seminar portions (A–Z). S2: 14g carbs / ≤0.44g fat. */
-export const CUTTING_STAPLES_COMP_STARCHES = Object.freeze([
-  { name: 'Beans (any on list)', serving: '66g' },
-  { name: 'Corn, sweet', serving: '17g' },
-  { name: 'Mixed peas and carrots', serving: '139g' },
-  { name: 'Peas, green', serving: '83g' },
-  { name: 'Peas, split', serving: '126g' },
-  { name: 'Potato, baked (with skin)', serving: '86g' },
-  { name: 'Potato, boiled', serving: '96g' },
-  { name: 'Squash, summer (yellow)', serving: '325g' },
-  { name: 'Squash, winter (hubbard)', serving: '160g' },
-  { name: 'Squash, zucchini', serving: '479g' },
-  { name: 'Sweet potato', serving: '55g' },
 ]);
