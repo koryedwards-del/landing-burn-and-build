@@ -50,4 +50,4 @@ Five print documents, **two header templates**:
 
 Active printout work uses the **locked preview pipeline** — see `.cursor/rules/kwarner-preview-pdf.mdc`.
 
-After any PDF/layout change: `npm run render:kwarner-preview` → new `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf` (auto-increment, never overwrite). Commit the new PDF + `js/kwarnerPreviewBuild.js`.
+After any PDF/layout change: `npm run render:kwarner-preview` → commit versioned + latest PDFs + `js/kwarnerPreviewBuild.js` → push to `main` → give user raw `raw.githubusercontent.com` download links (see `.cursor/rules/kwarner-preview-pdf.mdc`).

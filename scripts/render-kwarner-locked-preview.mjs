@@ -12,6 +12,7 @@ const samplesDir = path.join(root, 'docs/samples');
 const artifactsDir = '/opt/cursor/artifacts';
 const GITHUB_REPO = 'koryedwards-del/landing-burn-and-build';
 const GITHUB_BRANCH = 'main';
+const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/docs/samples`;
 const LATEST_LOCKED_NAME = 'kwarner-locked-preview-kristi-latest.pdf';
 
 const LOCKED_BASENAME = 'kwarner-locked-preview-kristi-';
@@ -55,6 +56,9 @@ export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
 export const KWARNER_LOCKED_PREVIEW_FILE = ${JSON.stringify(lockedName)};
 export const KWARNER_VEG_FRUIT_FILE = ${JSON.stringify(vegFruitName)};
 export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/' + ${JSON.stringify(lockedName)};
+export const KWARNER_LOCKED_PREVIEW_LATEST_FILE = ${JSON.stringify(LATEST_LOCKED_NAME)};
+export const KWARNER_LOCKED_PREVIEW_DOWNLOAD_URL = '${GITHUB_RAW}/' + ${JSON.stringify(lockedName)};
+export const KWARNER_LOCKED_PREVIEW_LATEST_DOWNLOAD_URL = '${GITHUB_RAW}/${LATEST_LOCKED_NAME}';
 
 export function kwarnerPreviewPdfUrl() {
   return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
@@ -68,10 +72,8 @@ console.log(`FILE ${vegFruitPath}`);
 if (fs.existsSync(artifactsDir)) {
   console.log(`FILE ${path.join(artifactsDir, lockedName)}`);
 }
-const githubPath = `docs/samples/${lockedName}`;
-const latestPath = `docs/samples/${LATEST_LOCKED_NAME}`;
-const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${githubPath}`;
-const latestDownloadUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${latestPath}`;
+const downloadUrl = `${GITHUB_RAW}/${lockedName}`;
+const latestDownloadUrl = `${GITHUB_RAW}/${LATEST_LOCKED_NAME}`;
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
 console.log(`DOWNLOAD ${downloadUrl}`);
 console.log(`DOWNLOAD_LATEST ${latestDownloadUrl}`);

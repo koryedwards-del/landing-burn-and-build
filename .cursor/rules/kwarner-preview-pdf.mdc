@@ -15,26 +15,41 @@ When the user asks for **PDF creation, PDF updates, printout layout, or program-
 | Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
 | Macro signal data | `js/foodPlanPrintout.js` |
 | Payload | `js/programReportPrintout.js` + `js/kwarnerLockedPreviewFixtures.js` |
+| Render script | `scripts/render-kwarner-locked-preview.mjs` |
+| Build metadata | `js/kwarnerPreviewBuild.js` (auto-generated) |
 
 ## Mandatory after every PDF change
 
 1. Run **`npm run render:kwarner-preview`**
-2. Script writes **two new files** (never overwrites):
-   - **Primary:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N increments: …-9, …-10, …)
+2. Script writes **three sample files**:
+   - **Versioned:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N auto-increments, never overwrite)
    - **Archive:** `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf`
-3. Copy primary file to `/opt/cursor/artifacts/` when that folder exists (secondary).
-4. **Commit and push to `main`** so the raw download URL works immediately.
+   - **Latest (stable):** `docs/samples/kwarner-locked-preview-kristi-latest.pdf` (overwritten each render)
+3. **Commit and push to `main`:** versioned PDF, latest PDF, veg-fruit archive, and `js/kwarnerPreviewBuild.js`
+4. **Give the user the raw download link** (see below)
 
-## What to give the user
+Optional: copy to `/opt/cursor/artifacts/` when that folder exists — never rely on it for delivery.
 
-**One link only — the raw download URL.** It saves straight to Mac Downloads. Do **not** use `github.com/.../blob/...` (that opens GitHub in the browser).
+## Download delivery (locked — do not change)
 
-After push to `main`, paste:
+The user downloads PDFs to **Mac Downloads** by tapping a **raw GitHub URL**. This is the only delivery method unless they explicitly ask for something else.
 
-`https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<locked-filename>`
+### Give the user
 
-Also refresh `docs/samples/kwarner-locked-preview-kristi-latest.pdf` each render so this stable link always serves the newest file:
+Paste **both** raw links after every render (after push to `main`):
 
-`https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-locked-preview-kristi-latest.pdf`
+- **Versioned:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<locked-filename>`
+- **Latest:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-locked-preview-kristi-latest.pdf`
 
-State the exact versioned filename too (e.g. `kwarner-locked-preview-kristi-24.pdf`). Do not use the artifacts panel.
+State the exact versioned filename (e.g. `kwarner-locked-preview-kristi-24.pdf`).
+
+### Never use for delivery
+
+| Wrong | Why |
+|-------|-----|
+| `github.com/.../blob/...` | Opens GitHub in the browser — does not download |
+| Cursor artifacts panel | PDFs have no web preview; download UX is broken on Cursor Web |
+| `burnandbuilddiet.com` links | Only when user explicitly asks for a hosted link |
+| Telling user to run local commands | They expect a tap-to-download link |
+
+The render script prints `DOWNLOAD` and `DOWNLOAD_LATEST` lines — use those URLs in the response.
