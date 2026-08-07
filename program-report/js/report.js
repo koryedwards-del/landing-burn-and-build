@@ -4,8 +4,9 @@ import { computePlan } from '../../js/burnEngine.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
-  formatCalories,
-  macroTableRows,
+  MACRO_SIGNAL_INTRO,
+  MACRO_SIGNAL_ROWS,
+  macroSignalIconMarkup,
   projectionTimelineFromPackage,
 } from '../../js/foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from '../../js/servingsPrintout.js';
@@ -220,61 +221,39 @@ function projectionTimelineRows(timeline) {
   `).join('');
 }
 
-function macroTableSectionHtml(pkg) {
-  const intake = pkg?.intake;
-  const macroRows = macroTableRows(pkg?.plan?.formula, intake?.workIntensity);
-  if (!macroRows.length) return '';
-
-  const macroBody = macroRows.map((row) => {
-    if (row.spacer) {
-      return '<tr class="r-macro-spacer"><td colspan="8"></td></tr>';
-    }
-    return `
-      <tr>
-        <th scope="row" class="r-macro-label r-table-label">${escapeHtml(row.label)}</th>
-        <td class="r-table-num">${row.proteinG}</td>
-        <td class="r-table-num">${formatCalories(row.proteinCal)}</td>
-        <td class="r-table-num">${row.carbsG}</td>
-        <td class="r-table-num">${formatCalories(row.carbsCal)}</td>
-        <td class="r-table-num">${row.fatsG}</td>
-        <td class="r-table-num">${formatCalories(row.fatsCal)}</td>
-        <td class="r-table-num">${formatCalories(row.totalCal)}</td>
-      </tr>`;
-  }).join('');
+function macroSignalSectionHtml() {
+  const rows = MACRO_SIGNAL_ROWS.map((row) => `
+    <tr>
+      <th scope="row" class="r-macro-signal__macro">
+        <span class="r-macro-signal__macro-inner">
+          <span class="r-macro-signal__icon">${macroSignalIconMarkup(row.id)}</span>
+          <span class="r-macro-signal__label">${escapeHtml(row.label)}</span>
+        </span>
+      </th>
+      <td class="r-macro-signal__effect r-macro-signal__effect--up">
+        <span class="r-macro-signal__effect-text">${escapeHtml(row.tooMuch)}</span>
+        <span class="r-macro-signal__arrow" aria-hidden="true">↑</span>
+      </td>
+      <td class="r-macro-signal__effect r-macro-signal__effect--down">
+        <span class="r-macro-signal__effect-text">${escapeHtml(row.tooLittle)}</span>
+        <span class="r-macro-signal__arrow" aria-hidden="true">↓</span>
+      </td>
+    </tr>
+  `).join('');
 
   return `
-        <p>
-          How much food you need each day depends on how much LBM you have. Also, it depends on your
-          activity level and the type and amount of exercise you participate in. Based on the information you
-          provided, the following table gives you the number of calories and the amount of protein, carbohydrates
-          and fat you need per day to maintain your fat or to reduce body fat. Also listed is what your body
-          requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.
-        </p>
+        <p>${escapeHtml(MACRO_SIGNAL_INTRO)}</p>
 
-        <table class="r-macro-table r-report-table" aria-label="Daily macro and calorie requirements">
-          <colgroup>
-            <col class="r-col-label" />
-            <col class="r-col-num" span="7" />
-          </colgroup>
+        <table class="r-macro-signal" aria-label="Macronutrient balance guide">
           <thead>
             <tr>
-              <th scope="col" rowspan="2"></th>
-              <th scope="colgroup" colspan="2">PROTEIN</th>
-              <th scope="colgroup" colspan="2">CARBS</th>
-              <th scope="colgroup" colspan="2">FATS</th>
-              <th scope="colgroup" rowspan="2" class="r-macro-total-head">TOTAL<br /><span class="r-macro-th-sub">calories</span></th>
-            </tr>
-            <tr>
-              <th scope="col">grams</th>
-              <th scope="col">calories</th>
-              <th scope="col">grams</th>
-              <th scope="col">calories</th>
-              <th scope="col">grams</th>
-              <th scope="col">calories</th>
+              <th scope="col">The Macros</th>
+              <th scope="col">Too Much</th>
+              <th scope="col">Too Little</th>
             </tr>
           </thead>
           <tbody>
-            ${macroBody}
+            ${rows}
           </tbody>
         </table>`;
 }
@@ -423,7 +402,7 @@ function renderServings(pkg) {
       <article class="r-doc">
         ${programMetaHtml(pkg)}
 
-        ${macroTableSectionHtml(pkg)}
+        ${macroSignalSectionHtml()}
 
         <h3>Servings</h3>
         <p class="r-doc__note">

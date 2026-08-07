@@ -464,3 +464,157 @@ export function drawTable(doc, {
 
   return cy;
 }
+
+const MACRO_SIGNAL_PDF = {
+  bg: '#e8e8e8',
+  border: SEMINAR_COLORS.gold,
+  headerH: 26,
+  rowH: 54,
+  iconSize: 22,
+  radius: 8,
+};
+
+function drawMacroSignalPdfIcon(doc, id, x, y, size) {
+  const scale = size / 40;
+  doc.save();
+  doc.translate(x, y);
+  doc.scale(scale);
+  doc.fillColor(SEMINAR_COLORS.body);
+
+  if (id === 'protein') {
+    doc.moveTo(6, 28)
+      .bezierCurveTo(6, 20, 10, 14, 16, 12)
+      .bezierCurveTo(18, 6, 24, 4, 30, 6)
+      .bezierCurveTo(34, 14, 32, 24, 26, 30)
+      .bezierCurveTo(20, 36, 12, 38, 6, 28)
+      .fill();
+    doc.moveTo(30, 10)
+      .bezierCurveTo(32, 16, 30, 22, 26, 26)
+      .lineWidth(2)
+      .strokeColor(SEMINAR_COLORS.body)
+      .stroke();
+  } else if (id === 'carbohydrates') {
+    doc.roundedRect(4, 14, 16, 20, 3).fill(SEMINAR_COLORS.body);
+    doc.fillColor('#666666').roundedRect(22, 10, 16, 20, 3).fill();
+  } else {
+    doc.moveTo(20, 6)
+      .bezierCurveTo(30, 6, 36, 14, 36, 24)
+      .bezierCurveTo(36, 34, 30, 42, 20, 42)
+      .bezierCurveTo(10, 42, 4, 34, 4, 24)
+      .bezierCurveTo(4, 14, 10, 6, 20, 6)
+      .fill();
+    doc.fillColor(MACRO_SIGNAL_PDF.bg).circle(20, 24, 6).fill();
+  }
+
+  doc.restore();
+}
+
+export function drawMacroSignalTable(doc, { x, y, width, rows }) {
+  const { bg, border, headerH, rowH, iconSize, radius } = MACRO_SIGNAL_PDF;
+  const tableH = headerH + rowH * rows.length;
+  const colWidths = [width * 0.36, width * 0.32, width * 0.32];
+  const headers = ['The Macros', 'Too Much', 'Too Little'];
+
+  doc.save();
+  doc.roundedRect(x, y, width, tableH, radius)
+    .lineWidth(2)
+    .strokeColor(border)
+    .stroke();
+  doc.restore();
+
+  doc.save();
+  doc.roundedRect(x, y, width, headerH, radius).clip();
+  doc.rect(x, y, width, headerH).fill(border);
+  doc.restore();
+
+  let cx = x;
+  headers.forEach((label, index) => {
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(8)
+      .fillColor(SEMINAR_COLORS.startHereText)
+      .text(label.toUpperCase(), cx + 4, y + 9, {
+        width: colWidths[index] - 8,
+        align: 'center',
+        lineGap: 0,
+      });
+    if (index < headers.length - 1) {
+      const edge = cx + colWidths[index];
+      doc
+        .moveTo(edge, y)
+        .lineTo(edge, y + headerH)
+        .strokeColor('#d9c04d')
+        .lineWidth(0.5)
+        .stroke();
+    }
+    cx += colWidths[index];
+  });
+
+  let rowY = y + headerH;
+  rows.forEach((row, rowIndex) => {
+    cx = x;
+    colWidths.forEach((colWidth, colIndex) => {
+      doc.rect(cx, rowY, colWidth, rowH).fill(bg);
+      if (colIndex < colWidths.length - 1) {
+        doc
+          .moveTo(cx + colWidth, rowY)
+          .lineTo(cx + colWidth, rowY + rowH)
+          .strokeColor(SEMINAR_COLORS.rule)
+          .lineWidth(0.5)
+          .stroke();
+      }
+      cx += colWidth;
+    });
+
+    if (rowIndex > 0) {
+      doc
+        .moveTo(x, rowY)
+        .lineTo(x + width, rowY)
+        .strokeColor(SEMINAR_COLORS.rule)
+        .lineWidth(0.5)
+        .stroke();
+    }
+
+    const iconX = x + 14;
+    const iconY = rowY + (rowH - iconSize) / 2;
+    drawMacroSignalPdfIcon(doc, row.id, iconX, iconY, iconSize);
+
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(7.5)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(row.label, iconX + iconSize + 8, rowY + rowH / 2 - 4, {
+        width: colWidths[0] - iconSize - 28,
+        lineGap: 0,
+      });
+
+    [
+      { text: row.tooMuch, arrow: '↑' },
+      { text: row.tooLittle, arrow: '↓' },
+    ].forEach((cell, cellIndex) => {
+      const cellX = x + colWidths.slice(0, cellIndex + 1).reduce((sum, w) => sum + w, 0);
+      doc
+        .font(SEMINAR_FONTS.bold)
+        .fontSize(7.5)
+        .fillColor(SEMINAR_COLORS.body)
+        .text(cell.text, cellX + 4, rowY + 12, {
+          width: colWidths[cellIndex + 1] - 8,
+          align: 'center',
+          lineGap: 0,
+        });
+      doc
+        .font(SEMINAR_FONTS.bold)
+        .fontSize(16)
+        .fillColor(border)
+        .text(cell.arrow, cellX + 4, rowY + 28, {
+          width: colWidths[cellIndex + 1] - 8,
+          align: 'center',
+          lineGap: 0,
+        });
+    });
+
+    rowY += rowH;
+  });
+
+  return y + tableH;
+}

@@ -11,6 +11,7 @@ import {
   drawStepsToSuccessHeader,
   drawSubsectionTitle,
   drawTable,
+  drawMacroSignalTable,
   SEMINAR_PDF,
   SEMINAR_COLORS,
   SEMINAR_FONTS,
@@ -283,56 +284,6 @@ function drawFoodPlanPage(creator, payload, page) {
 
   const weekly = `You project to lose an average of ${fp.weeklyFatLossLbs} pounds of fat per week. In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.`;
   y = drawParagraphs(doc, [weekly], box.x, y, box.width);
-  y = drawParagraphs(doc, [fp.macroIntro], box.x, y, box.width);
-
-  drawTable(doc, {
-    x: box.x,
-    y,
-    width: box.width,
-    columns: [
-      { key: 'label', width: 0.22 },
-      { key: 'proteinG', width: 0.08, align: 'right' },
-      { key: 'proteinCal', width: 0.1, align: 'right' },
-      { key: 'carbsG', width: 0.08, align: 'right' },
-      { key: 'carbsCal', width: 0.1, align: 'right' },
-      { key: 'fatsG', width: 0.08, align: 'right' },
-      { key: 'fatsCal', width: 0.1, align: 'right' },
-      { key: 'totalCal', width: 0.1, align: 'right' },
-    ],
-    rows: [
-      {
-        label: '',
-        proteinG: 'grams',
-        proteinCal: 'calories',
-        carbsG: 'grams',
-        carbsCal: 'calories',
-        fatsG: 'grams',
-        fatsCal: 'calories',
-        totalCal: 'calories',
-      },
-      {
-        label: '',
-        proteinG: 'PROTEIN',
-        proteinCal: '',
-        carbsG: 'CARBS',
-        carbsCal: '',
-        fatsG: 'FATS',
-        fatsCal: '',
-        totalCal: 'TOTAL',
-      },
-      ...fp.macroRows.map((row) => ({
-        label: row.label,
-        proteinG: String(row.proteinG),
-        proteinCal: row.proteinCal,
-        carbsG: String(row.carbsG),
-        carbsCal: row.carbsCal,
-        fatsG: String(row.fatsG),
-        fatsCal: row.fatsCal,
-        totalCal: row.totalCal,
-      })),
-    ],
-    headerRows: 2,
-  });
 
   finishProgramReportPage(doc, box, payload, page);
 }
@@ -340,8 +291,17 @@ function drawFoodPlanPage(creator, payload, page) {
 function drawServingsPage(creator, payload, page) {
   const doc = creator.doc;
   const servings = payload.servings;
+  const fp = payload.foodPlan;
   const box = addSeminarPage(doc);
   let y = drawSeminarHeader(doc, payload, 'Servings', box);
+
+  y = drawParagraphs(doc, [fp.macroSignalIntro], box.x, y, box.width);
+  y = drawMacroSignalTable(doc, {
+    x: box.x,
+    y,
+    width: box.width,
+    rows: fp.macroSignalRows,
+  }) + SEMINAR_PDF.paragraphGap;
 
   y = drawParagraphs(doc, [servings.note], box.x, y, box.width);
 
