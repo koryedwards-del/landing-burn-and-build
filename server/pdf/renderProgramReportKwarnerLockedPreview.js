@@ -261,9 +261,11 @@ function drawStaplesFoodListPage(doc, payload) {
 function drawVegFruitFoodListPage(doc, payload) {
   let vegIndex = 0;
   let fruitIndex = 0;
+  let firstPage = true;
 
   while (vegIndex < CUTTING_STAPLES_VEGETABLES.length || fruitIndex < CUTTING_STAPLES_FRUIT.length) {
-    const page = startLockedPage(doc, payload, null);
+    const page = startLockedPage(doc, payload, firstPage ? 'Food List' : null);
+    firstPage = false;
     const columns = staplesColumnLayout(page);
     const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
