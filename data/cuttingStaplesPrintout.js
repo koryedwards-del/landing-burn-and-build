@@ -25,13 +25,14 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** Grains & starches competition staples, A–Z. G1: 14g carbs / ≤1g fat. S2: 14g carbs / ≤0.44g fat. */
+/** Grains & starches — Bodybuilder's Cutting Diet Carbohydrates block (user list, A–Z). */
 export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
-  { name: 'Basmati rice', serving: '50g' },
+  { name: 'Basmati or jasmine rice', serving: '50g' },
   { name: 'Black beans', serving: '59g' },
-  { name: 'Jasmine rice', serving: '50g' },
+  { name: 'Old-fashioned oats', serving: '21g' },
   { name: 'Rice cakes', serving: '17g' },
-  { name: 'Russet potato', serving: '66g' },
-  { name: 'Sweet potato', serving: '68g' },
-  { name: 'Whole wheat tortilla', serving: '30g' },
+  { name: 'Russet potatoes', serving: '66g' },
+  { name: 'Sweet potatoes', serving: '68g' },
+  { name: 'Whole wheat bread', serving: '32g' },
+  { name: 'Whole wheat tortillas', serving: '31g' },
 ]);
