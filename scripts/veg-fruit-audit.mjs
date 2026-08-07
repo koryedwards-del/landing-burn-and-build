@@ -9,7 +9,9 @@
 /** @type {ReadonlyArray<{ label: string, catalog: string, kind: 'vegetable'|'fruit' }>} */
 const MERGED = [
   { label: 'Asparagus', catalog: 'Asparagus, cooked', kind: 'vegetable' },
-  { label: 'Bell peppers', catalog: 'Peppers, red bell, cooked', kind: 'vegetable' },
+  { label: 'Bell peppers, orange', catalog: 'Peppers, orange bell, cooked', kind: 'vegetable' },
+  { label: 'Bell peppers, red', catalog: 'Peppers, red bell, cooked', kind: 'vegetable' },
+  { label: 'Bell peppers, yellow', catalog: 'Peppers, yellow bell, cooked', kind: 'vegetable' },
   { label: 'Broccoli', catalog: 'Broccoli, cooked', kind: 'vegetable' },
   { label: 'Carrots', catalog: 'Carrots, cooked', kind: 'vegetable' },
   { label: 'Cauliflower', catalog: 'Cauliflower, cooked', kind: 'vegetable' },
@@ -33,7 +35,9 @@ const MERGED = [
 /** USDA FoodData Central — c=carbs g/100g, k=kcal/100g, f=fat g/100g */
 const USDA = {
   'Asparagus, cooked': { c: 4.1, k: 22, f: 0.2 },
+  'Peppers, orange bell, cooked': { c: 8.5, k: 28, f: 0.2 },
   'Peppers, red bell, cooked': { c: 6.3, k: 28, f: 0.2 },
+  'Peppers, yellow bell, cooked': { c: 6.3, k: 28, f: 0.2 },
   'Broccoli, cooked': { c: 7.2, k: 35, f: 0.4 },
   'Carrots, cooked': { c: 8.2, k: 35, f: 0.2 },
   'Cauliflower, cooked': { c: 4.1, k: 23, f: 0.5 },

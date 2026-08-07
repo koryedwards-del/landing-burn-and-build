@@ -162,7 +162,9 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
  */
 export const CUTTING_STAPLES_VEGETABLES = Object.freeze([
   { name: 'Asparagus (cooked)', serving: '244g' },
+  { name: 'Bell peppers, orange (cooked)', serving: '118g' },
   { name: 'Bell peppers, red (cooked)', serving: '159g' },
+  { name: 'Bell peppers, yellow (cooked)', serving: '159g' },
   { name: 'Broccoli (cooked)', serving: '139g' },
   { name: 'Carrots (cooked)', serving: '122g' },
   { name: 'Cauliflower (cooked)', serving: '244g' },
