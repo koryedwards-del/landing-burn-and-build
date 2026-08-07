@@ -818,7 +818,7 @@ function drawFoodPlanPage(doc, payload) {
   }
 
   const story1 = [
-    'Lean body mass (LBM) is the weight of everything in your body except fat — mostly muscle and organs. The computer uses your LBM to set your protein needs and your metabolic rate.',
+    'We use your body composition information to determine your LBM (lean body mass) — the weight of everything in your body except fat, mostly muscle and organs. The computer uses your LBM to set your protein needs and your metabolic rate.',
     'You also told us how you work and train: weight training (WT), high heart rate aerobic activity (HHT) such as running or hard cardio, and low heart rate aerobic activity (LHR) such as walking or easy cycling. Those hours, together with your job and lifestyle, are the inputs that build your food plan and your servings on the next page.',
   ].join(' ');
   page = drawBodyParagraphs(doc, payload, page, [story1]);

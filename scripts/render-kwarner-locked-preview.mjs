@@ -17,7 +17,7 @@ const KWARNER_WELCOME_COPY = {
     'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, lifestyle, and exercise hours. With this information, the computer generated this report. Included is your ultrasound body composition report that I call your Lean Body Analysis, and the following pages are your custom-designed diet.',
   ],
   leanBodyAnalysis: 'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes a breakdown of your current body composition with an emphasis on the good stuff. Lean body mass (LBM) — everything in you except fat — is used by the computer to calculate your resting metabolic rate (RMR), the calories your body burns at rest. The Lean Body Analysis also projects appropriate weight goals based on your current lean body mass.',
-  foodPlan: 'Page three is your custom-designed food plan. How much food you need each day depends on your lean body mass (LBM), your job, your day-to-day pace, and how many hours per week you spend on weight training (WT), high heart rate aerobic work (HHT) such as running or hard cardio, and low heart rate aerobic work (LHR) such as walking or easy cycling. The page shows how much fat you can lose in eight weeks, compares your body today with your eight-week goal, and explains what happens when protein, carbohydrates, or fat are too high or too low — so the servings on the next page make sense without counting grams.',
+  foodPlan: 'Page three is your custom-designed food plan. We use your body composition information to determine your LBM (lean body mass), then factor in your job, your day-to-day pace, and how many hours per week you spend on weight training (WT), high heart rate aerobic work (HHT) such as running or hard cardio, and low heart rate aerobic work (LHR) such as walking or easy cycling. The page shows how much fat you can lose in eight weeks, compares your body today with your eight-week goal, and explains what happens when protein, carbohydrates, or fat are too high or too low — so the servings on the next page make sense without counting grams.',
   servings: 'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
 };
 
@@ -75,7 +75,7 @@ function buildKristiPreviewPackage() {
   return pkg;
 }
 
-const PREVIEW_PDF_NAME = 'kwarner-preview-kristi-food-plan-v2.pdf';
+const PREVIEW_PDF_NAME = 'kwarner-preview-kristi-food-plan-v3.pdf';
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildProgramReportPayload(buildKristiPreviewPackage());
 payload.welcome = KWARNER_WELCOME_COPY;
@@ -93,7 +93,7 @@ const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).lengt
 const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
 export const KWARNER_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const KWARNER_PREVIEW_MD5 = ${JSON.stringify(md5)};
-export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-preview-kristi-food-plan-v2.pdf';
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/kwarner-preview-kristi-food-plan-v3.pdf';
 
 export function kwarnerPreviewPdfUrl() {
   return \`\${KWARNER_LOCKED_PREVIEW_PDF}?build=\${encodeURIComponent(KWARNER_PREVIEW_BUILD)}&md5=\${KWARNER_PREVIEW_MD5.slice(0, 8)}\`;
