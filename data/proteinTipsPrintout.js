@@ -22,6 +22,6 @@ export const PROTEIN_TIPS_QA = [
   },
   {
     q: 'How are egg whites listed?',
-    a: 'Each egg whites serving on this list equals 2 large whites. Adjust yolks separately if you use whole eggs elsewhere in your day.',
+    a: 'Each egg whites serving on this list is a weighed portion that equals 8 grams of protein. Adjust volume to match the gram weight shown for your plan.',
   },
 ];

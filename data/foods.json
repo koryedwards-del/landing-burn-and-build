@@ -155,7 +155,7 @@
     "name": "Cottage cheese, nonfat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 78,
+    "gramWeight": 73,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1083,7 +1083,7 @@
     "name": "Beef, eye of round",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 27,
+    "gramWeight": 25,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1146,9 +1146,9 @@
   {
     "name": "Egg whites",
     "category": "protein",
-    "servingDescription": "large whites",
-    "gramWeight": 0,
-    "unitsPerServing": 2,
+    "servingDescription": "cooked",
+    "gramWeight": 73,
+    "unitsPerServing": 0,
     "fatBracket": 0
   },
   {
