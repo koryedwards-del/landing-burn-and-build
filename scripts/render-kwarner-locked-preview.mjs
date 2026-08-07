@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/** Preview: KWarner 4-page content + locked personalized frame — not production. */
+/** Preview: KWarner locked frame + seminar content — not production.
+ *  Always writes a NEW versioned PDF (never overwrites). */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -10,6 +11,18 @@ import { buildProgramReportPayload } from '../js/programReportPrintout.js';
 import { renderProgramReportKwarnerLockedPreview } from '../server/pdf/renderProgramReportKwarnerLockedPreview.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+const samplesDir = path.join(root, 'docs/samples');
+const PREVIEW_BASENAME = 'kwarner-preview-kristi-veg-fruit-v';
+const VERSION_RE = new RegExp(`^${PREVIEW_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
+
+function nextPreviewPdfName() {
+  let maxVersion = 0;
+  for (const entry of fs.readdirSync(samplesDir)) {
+    const match = entry.match(VERSION_RE);
+    if (match) maxVersion = Math.max(maxVersion, Number(match[1]));
+  }
+  return `${PREVIEW_BASENAME}${maxVersion + 1}.pdf`;
+}
 
 const KWARNER_WELCOME_COPY = {
   intro: [
@@ -75,7 +88,7 @@ function buildKristiPreviewPackage() {
   return pkg;
 }
 
-const PREVIEW_PDF_NAME = 'kwarner-preview-kristi-veg-fruit-v9.pdf';
+const PREVIEW_PDF_NAME = nextPreviewPdfName();
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildProgramReportPayload(buildKristiPreviewPackage());
 payload.welcome = KWARNER_WELCOME_COPY;
@@ -84,7 +97,7 @@ delete payload.stepsToSuccess;
 
 const pdf = await renderProgramReportKwarnerLockedPreview(payload, { buildLabel });
 
-const outPath = path.join(root, 'docs/samples', PREVIEW_PDF_NAME);
+const outPath = path.join(samplesDir, PREVIEW_PDF_NAME);
 fs.writeFileSync(outPath, pdf);
 
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
