@@ -7,6 +7,7 @@ import {
   desirableLeanBodyMassLbs,
 } from '../js/bodyCompositionAnalysis.js';
 import { buildProgramPackage } from '../js/programPackage.js';
+import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
 
 const rnd = (x) => Math.round(x);
 
@@ -185,8 +186,64 @@ function verifyKristiPackage() {
   return true;
 }
 
+function verifyKristiServingsGrid() {
+  const pkg = buildProgramPackage(KRISTI_FORM);
+  const rows = servingsGridRows(pkg);
+  const errors = [];
+  const expect = (label, actual, expected) => {
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      errors.push(`${label}: got ${JSON.stringify(actual)}, want ${JSON.stringify(expected)}`);
+    }
+  };
+
+  expect('distributeWholeServings(10, 3)', distributeWholeServings(10, 3), [3, 4, 3]);
+  expect('distributeWholeServings(4, 3)', distributeWholeServings(4, 3), [1, 2, 1]);
+
+  const protein = rows.find((row) => row.label === 'Protein');
+  expect('Kristi protein row', protein, {
+    label: 'Protein',
+    daily: '9',
+    breakfast: '3',
+    snack1: '',
+    lunch: '3',
+    snack2: '',
+    dinner: '3',
+    snack3: '',
+  });
+
+  const fruits = rows.find((row) => row.label === 'Fruits');
+  expect('Kristi fruit row', fruits, {
+    label: 'Fruits',
+    daily: '3',
+    breakfast: '',
+    snack1: '1',
+    lunch: '',
+    snack2: '1',
+    dinner: '',
+    snack3: '1',
+  });
+
+  for (const row of rows) {
+    for (const [key, value] of Object.entries(row)) {
+      if (key === 'label' || value === '') continue;
+      if (String(value).includes('.')) {
+        errors.push(`${row.label}.${key}: decimal cell "${value}"`);
+      }
+    }
+  }
+
+  if (errors.length) {
+    console.error('FAIL Kristi servings grid');
+    errors.forEach((e) => console.error(`  ${e}`));
+    return false;
+  }
+  console.log('OK Kristi servings grid');
+  return true;
+}
+
 const ok = [
   verifyKristiPackage(),
+  verifyKristiServingsGrid(),
   verifyCase('Kristi Warner', KRISTI_INTAKE, KRISTI_PDF),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,
