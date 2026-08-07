@@ -25,10 +25,14 @@ import {
   CUTTING_STAPLES_GRAINS_STARCHES,
   CUTTING_STAPLES_PROTEIN_DAIRY,
   CUTTING_STAPLES_VEGETABLES,
-  GROCERY_STAPLES_FLAVOR,
   GROCERY_STAPLES_PANTRY,
-  GROCERY_STAPLES_SEASONINGS,
 } from '../../data/cuttingStaplesPrintout.js';
+import {
+  COMMON_SPLASHES,
+  FLAVOR_KIT_RULE,
+  flavorKitList,
+  SPLASH_RULE,
+} from '../../menuplanner/data/flavorKits.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -319,6 +323,122 @@ const BULLET_LIST = {
   gap: 3,
 };
 
+const FLAVOR_KIT_GRID = {
+  gap: 14,
+  pad: 10,
+};
+
+function drawGoldBox(doc, x, y, width, height) {
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, height, TABLE_CONTAINER.radius)
+    .stroke();
+}
+
+/** @param {import('pdfkit')} doc @param {{ label: string, flavors: readonly string[] }} kit */
+function measureFlavorKitCell(doc, kit, cellWidth) {
+  const pad = FLAVOR_KIT_GRID.pad;
+  const innerW = cellWidth - pad * 2;
+  doc.font(SEMINAR_FONTS.bold).fontSize(LAYOUT.subsectionSize);
+  let h = doc.heightOfString(`${kit.label} Flavor Kit`, { width: innerW, lineGap: 0 }) + LAYOUT.headerGap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  for (const flavor of kit.flavors) {
+    h += Math.max(
+      LAYOUT.bodySize + BULLET_LIST.gap,
+      doc.heightOfString(String(flavor), { width: innerW - BULLET_LIST.indent, lineGap: 0 }) + BULLET_LIST.gap,
+    );
+  }
+  return h + pad * 2;
+}
+
+/** @param {import('pdfkit')} doc @param {{ label: string, flavors: readonly string[] }} kit */
+function drawFlavorKitCell(doc, kit, x, y, cellWidth, cellHeight) {
+  drawGoldBox(doc, x, y, cellWidth, cellHeight);
+  const pad = FLAVOR_KIT_GRID.pad;
+  const innerW = cellWidth - pad * 2;
+  let cy = y + pad;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(`${kit.label} Flavor Kit`, x + pad, cy, { width: innerW, lineGap: 0 });
+  cy = doc.y + LAYOUT.headerGap;
+  drawBulletList(doc, kit.flavors, x + pad, cy, innerW, y + cellHeight - pad);
+}
+
+/** @param {import('pdfkit')} doc @param {ReadonlyArray<{ label: string, flavors: readonly string[] }>} kits */
+function drawFlavorKitGrid(doc, kits, x, y, width, bottomY) {
+  const gap = FLAVOR_KIT_GRID.gap;
+  const cellW = (width - gap) / 2;
+  const heights = kits.map((kit) => measureFlavorKitCell(doc, kit, cellW));
+  const rowHeights = [
+    Math.max(heights[0], heights[1]),
+    Math.max(heights[2], heights[3]),
+  ];
+  const totalH = rowHeights[0] + gap + rowHeights[1];
+  if (y + totalH > bottomY) {
+    throw new Error('Flavor kit grid does not fit on page');
+  }
+
+  let rowY = y;
+  for (let row = 0; row < 2; row += 1) {
+    const rowH = rowHeights[row];
+    for (let col = 0; col < 2; col += 1) {
+      const index = row * 2 + col;
+      const cellX = x + col * (cellW + gap);
+      drawFlavorKitCell(doc, kits[index], cellX, rowY, cellW, rowH);
+    }
+    rowY += rowH + gap;
+  }
+  return rowY;
+}
+
+function drawNoteLine(doc, text, x, y, width) {
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(LAYOUT.bodySize - 0.5)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), x, y, { width, lineGap: LAYOUT.lineGap });
+  return doc.y + LAYOUT.paragraphGap;
+}
+
+/** @param {import('pdfkit')} doc @param {ReadonlyArray<string>} items */
+function measureBulletList(doc, items, width) {
+  const textX = BULLET_LIST.indent;
+  const lineH = LAYOUT.bodySize + BULLET_LIST.gap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  return items.reduce((sum, item) => sum + Math.max(
+    lineH,
+    doc.heightOfString(String(item), { width: width - textX, lineGap: 0 }) + BULLET_LIST.gap,
+  ), 0);
+}
+
+function measureSplashesBox(doc, width) {
+  const pad = FLAVOR_KIT_GRID.pad;
+  const innerW = width - pad * 2;
+  doc.font(SEMINAR_FONTS.bold).fontSize(LAYOUT.subsectionSize);
+  let h = doc.heightOfString('Splashes', { width: innerW }) + LAYOUT.headerGap;
+  h += measureBulletList(doc, COMMON_SPLASHES, innerW);
+  return h + pad * 2;
+}
+
+function drawSplashesBox(doc, x, y, width) {
+  const pad = FLAVOR_KIT_GRID.pad;
+  const innerW = width - pad * 2;
+  const boxH = measureSplashesBox(doc, width);
+  drawGoldBox(doc, x, y, width, boxH);
+  let cy = y + pad;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text('Splashes', x + pad, cy, { width: innerW, lineGap: 0 });
+  cy = doc.y + LAYOUT.headerGap;
+  drawBulletList(doc, COMMON_SPLASHES, x + pad, cy, innerW, y + boxH - pad);
+  return y + boxH;
+}
+
 /** @param {import('pdfkit')} doc @param {ReadonlyArray<string>} items */
 function drawBulletList(doc, items, x, y, width, bottomY) {
   const bullet = '\u2022';
@@ -341,21 +461,21 @@ function drawBulletList(doc, items, x, y, width, bottomY) {
   return y;
 }
 
-/** PDF page 7 — flavor builders, seasonings, pantry (shop checklist, no servings). */
+/** PDF page 7 — flavor kits (2×2 grid), splashes, pantry. */
 function drawFlavorSeasoningsPantryPage(doc, payload) {
   const page = startLockedPage(doc, payload, null);
-  const sections = [
-    ['Flavor Builders', GROCERY_STAPLES_FLAVOR],
-    ['Seasonings', GROCERY_STAPLES_SEASONINGS],
-    ['Pantry', GROCERY_STAPLES_PANTRY],
-  ];
-
-  let y = page.y;
-  sections.forEach(([title, items], index) => {
-    y = drawSectionTitle(doc, title, page.x, y, page.width);
-    y = drawBulletList(doc, items, page.x, y, page.width, page.bottom);
-    if (index < sections.length - 1) y += LAYOUT.sectionGap;
-  });
+  const kits = flavorKitList();
+  let y = drawSectionTitle(doc, 'Flavor Kits', page.x, page.y, page.width);
+  y = drawFlavorKitGrid(doc, kits, page.x, y, page.width, page.bottom);
+  y += LAYOUT.sectionGap;
+  y = drawNoteLine(doc, FLAVOR_KIT_RULE, page.x, y, page.width);
+  y += LAYOUT.sectionGap;
+  y = drawSplashesBox(doc, page.x, y, page.width);
+  y += LAYOUT.paragraphGap;
+  y = drawNoteLine(doc, SPLASH_RULE, page.x, y, page.width);
+  y += LAYOUT.sectionGap;
+  y = drawSectionTitle(doc, 'Pantry', page.x, y, page.width);
+  drawBulletList(doc, GROCERY_STAPLES_PANTRY, page.x, y, page.width, page.bottom);
 
   finishLockedPage(doc, page.box, payload);
 }
