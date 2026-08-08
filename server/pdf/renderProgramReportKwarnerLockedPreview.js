@@ -1065,10 +1065,6 @@ function buildServingsTableRows(gridRows, extraRows) {
   ];
 }
 
-function servingsNarrativeBlock(payload, title) {
-  return payload.servingsNarrative?.blocks?.find((block) => block.title === title);
-}
-
 function drawServingsTable(doc, payload, page, gridRows, extraRows) {
   const servingsTableOpts = {
     x: page.x,
@@ -1142,36 +1138,6 @@ function drawServingsPage(doc, payload) {
   }));
 
   page = drawServingsTable(doc, payload, page, gridRows, extraRows);
-
-  const practiceBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
-  const dailyTotalsBlock = servingsNarrativeBlock(payload, 'Your daily totals');
-  const homeworkParagraphs = [
-    ...(practiceBlock?.paragraphs || []),
-    ...(dailyTotalsBlock?.paragraphs?.[1] ? [dailyTotalsBlock.paragraphs[1]] : []),
-  ];
-
-  if (homeworkParagraphs.length) {
-    const homeworkIntroH = homeworkParagraphs.reduce(
-      (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
-      LAYOUT.subsectionSize + LAYOUT.headerGap,
-    );
-    const homeworkTableH = measureLayoutTable(doc, {
-      columns: SERVINGS_TABLE_COLUMNS,
-      rows: buildServingsTableRows(servings.homeworkGridRows, servings.homeworkExtraFats),
-      headerRows: 1,
-      width: page.width,
-    });
-    page = ensureLockedSpace(doc, payload, page, homeworkIntroH + homeworkTableH);
-
-    if (practiceBlock?.title) {
-      page = { ...page, y: drawSectionTitle(doc, practiceBlock.title, page.x, page.y, page.width) };
-    }
-    page = drawBodyParagraphs(doc, payload, page, homeworkParagraphs);
-
-    const homeworkGridRows = servings.homeworkGridRows.map((row) => ({ ...row }));
-    const homeworkExtraRows = servings.homeworkExtraFats.map((row) => ({ ...row }));
-    page = drawServingsTable(doc, payload, page, homeworkGridRows, homeworkExtraRows);
-  }
 
   finishLockedPage(doc, page.box, payload);
 }

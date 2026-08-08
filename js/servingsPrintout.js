@@ -115,30 +115,4 @@ export function extraFatLines(pkg) {
   ];
 }
 
-export function servingsHomeworkGridRows(pkg) {
-  return servingsGridRows(pkg).map((row) => ({
-    label: row.label,
-    daily: row.daily,
-    breakfast: '',
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-  }));
-}
-
-export function servingsHomeworkExtraFatRows(pkg) {
-  return extraFatLines(pkg).map((line, index) => ({
-    label: index === 0 ? 'Extra Fats' : '',
-    daily: '',
-    breakfast: line.note,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-  }));
-}
-
 export { SLOT_COLUMNS };
