@@ -33,6 +33,7 @@ import {
   flavorKitList,
   SPLASH_RULE,
 } from '../../menuplanner/data/flavorKits.js';
+import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -93,6 +94,32 @@ const TABLE_CONTAINER = Object.freeze({
   cellPad: 8,
 });
 
+function tableColumnSpanBounds(columns, colSpan) {
+  if (!colSpan?.from || !colSpan?.to) return null;
+  const fromIndex = columns.findIndex((col) => col.key === colSpan.from);
+  const toIndex = columns.findIndex((col) => col.key === colSpan.to);
+  if (fromIndex < 0 || toIndex < fromIndex) return null;
+  return { fromIndex, toIndex };
+}
+
+function tableColumnSpanWidth(colWidths, spanBounds) {
+  return colWidths.slice(spanBounds.fromIndex, spanBounds.toIndex + 1).reduce((sum, w) => sum + w, 0);
+}
+
+function isTableColumnSpanned(columns, row, colIndex) {
+  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
+  if (!spanBounds) return false;
+  return colIndex > spanBounds.fromIndex && colIndex <= spanBounds.toIndex;
+}
+
+function tableCellWidth(colWidths, columns, row, colIndex) {
+  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
+  if (spanBounds && colIndex === spanBounds.fromIndex) {
+    return tableColumnSpanWidth(colWidths, spanBounds);
+  }
+  return colWidths[colIndex];
+}
+
 function resolveTableCellStyle(opts, row, rowIndex, col) {
   const headerRows = opts.headerRows ?? 1;
   const isHeader = rowIndex < headerRows;
@@ -125,10 +152,11 @@ function layoutTableRowHeights(doc, opts) {
     const isHeader = rowIndex < headerRows;
     let maxH = (opts.bodyFontSize ?? LAYOUT.tableBodySize) + LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
+      if (isTableColumnSpanned(columns, row, index)) return;
       const cell = row[col.key] ?? '';
       const { font, fontSize } = resolveTableCellStyle(opts, row, rowIndex, col);
       const h = doc.font(font).fontSize(fontSize).heightOfString(String(cell), {
-        width: colWidths[index] - TABLE_CONTAINER.cellPad * 2,
+        width: tableCellWidth(colWidths, columns, row, index) - TABLE_CONTAINER.cellPad * 2,
         lineGap: 0,
       });
       maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
@@ -502,7 +530,8 @@ function drawLayoutTable(doc, opts) {
     const rh = rowHeights[rowIndex];
     let cx = tableX;
     columns.forEach((col, index) => {
-      const w = colWidths[index];
+      if (isTableColumnSpanned(columns, row, index)) return;
+      const w = tableCellWidth(colWidths, columns, row, index);
       const { font, fontSize } = resolveTableCellStyle(opts, row, rowIndex, col);
       doc
         .font(font)
@@ -1182,15 +1211,9 @@ function drawFoodPlanPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-function drawServingsPage(doc, payload) {
-  const servings = payload.servings;
-  let page = startLockedPage(doc, payload, 'Servings');
-
-  page = drawBodyParagraphs(doc, payload, page, [servings.note]);
-
-  const gridRows = servings.gridRows.map((row) => ({ ...row }));
-  const extraRows = servings.extraFats.map((line, index) => ({
-    label: index === 0 ? 'Extra Fats' : '',
+function buildExtraFatTableRows(extraFats = []) {
+  return extraFats.map((line, index) => ({
+    label: index === 0 ? EXTRA_FATS_LABEL : '',
     daily: line.value,
     breakfast: line.note,
     snack1: '',
@@ -1198,7 +1221,18 @@ function drawServingsPage(doc, payload) {
     snack2: '',
     dinner: '',
     snack3: '',
+    _colSpan: { from: 'breakfast', to: 'snack3' },
   }));
+}
+
+function drawServingsPage(doc, payload) {
+  const servings = payload.servings;
+  let page = startLockedPage(doc, payload, 'Servings');
+
+  page = drawBodyParagraphs(doc, payload, page, [servings.note]);
+
+  const gridRows = servings.gridRows.map((row) => ({ ...row }));
+  const extraRows = buildExtraFatTableRows(servings.extraFats);
 
   page = drawServingsTable(doc, payload, page, gridRows, extraRows);
 
