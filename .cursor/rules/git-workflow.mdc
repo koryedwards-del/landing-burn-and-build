@@ -1,0 +1,25 @@
+---
+description: Git workflow — push directly to main; no pull requests
+alwaysApply: true
+---
+
+# Git workflow
+
+The user does **not** review pull requests. Do not use the PR workflow.
+
+## Required flow
+
+1. Work on `main` (or a short-lived local branch — merge/rebase to `main` before push).
+2. **Commit** with a clear message.
+3. **Push** to `origin main`.
+4. For PDF work: run `npm run render:kwarner-preview`, commit the new PDFs + `js/kwarnerPreviewBuild.js`, push again if needed.
+
+## Do not
+
+- Create pull requests (`ManagePullRequest`, `gh pr create`, draft PRs).
+- Leave work only on a feature branch without pushing to `main`.
+- Ask the user to review or merge a PR.
+
+## Delivery
+
+After push to `main`, give raw GitHub PDF download links per `kwarner-preview-pdf.mdc`.
