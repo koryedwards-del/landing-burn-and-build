@@ -597,9 +597,11 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
+const PROJECTION_TABLE_HEAD_SIZE = PT.body * 1.5;
+
 function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
   if (isHeader) {
-    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
   }
   if (row.isCurrent) {
     return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
@@ -618,9 +620,9 @@ function measureProjectionTimelineTable(doc, opts) {
 
   return opts.rows.map((row, rowIndex) => {
     const isHeader = rowIndex < (opts.headerRows ?? 1);
-    let maxH = PT.subsection + LAYOUT.tableRowPad * 2;
+    const { font, fontSize } = projectionTimelineRowStyle(row, rowIndex, { isHeader });
+    let maxH = doc.font(font).fontSize(fontSize).currentLineHeight() + LAYOUT.tableRowPad * 2;
     keys.forEach((key) => {
-      const { font, fontSize } = projectionTimelineRowStyle(row, rowIndex, { isHeader });
       const h = doc.font(font).fontSize(fontSize).heightOfString(String(row[key] ?? ''), {
         width: innerW,
         align: 'center',
@@ -637,6 +639,16 @@ function drawCenteredTableCell(doc, text, cellX, cellY, cellW, cellH, { font, fo
   const innerW = cellW - pad * 2;
   const str = String(text ?? '');
   doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+
+  const lineH = doc.currentLineHeight();
+  const singleLine = !str.includes('\n') && doc.widthOfString(str) <= innerW;
+  if (singleLine) {
+    const textX = cellX + (cellW - doc.widthOfString(str)) / 2;
+    const textY = cellY + (cellH - lineH) / 2;
+    doc.text(str, textX, textY, { lineBreak: false });
+    return;
+  }
+
   const textH = doc.heightOfString(str, { width: innerW, align: 'center', lineGap: 0 });
   const textY = cellY + (cellH - textH) / 2;
   doc.text(str, cellX + pad, textY, {
