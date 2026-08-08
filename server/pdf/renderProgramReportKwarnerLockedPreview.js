@@ -745,7 +745,7 @@ function buildFoodPlanInputContextParts(fp) {
   return parts;
 }
 
-function measureFoodPlanInputContext(doc, fp, width) {
+function measureFoodPlanInputContextContent(doc, fp, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return 0;
   const pad = INPUT_CONTEXT_STYLE.pad;
@@ -765,10 +765,10 @@ function measureFoodPlanInputContext(doc, fp, width) {
     ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
     : 0;
 
-  return leadH + noteH + pad * 2 + LAYOUT.sectionGap;
+  return leadH + noteH + pad * 2;
 }
 
-function drawFoodPlanInputContext(doc, fp, x, y, width) {
+function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return y;
 
@@ -777,47 +777,40 @@ function drawFoodPlanInputContext(doc, fp, x, y, width) {
   const fontSize = INPUT_CONTEXT_STYLE.fontSize;
   const notePart = parts.find((part) => part.note);
 
-  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
-  const lead = parts.map((part, index) => {
-    const prefix = index > 0 ? '   ·   ' : '';
-    return `${prefix}${part.label} ${part.value}`;
-  }).join('');
-  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 2 });
-  doc.font(SEMINAR_FONTS.regular).fontSize(fontSize);
-  const noteH = notePart?.note
-    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
-    : 0;
-  const boxH = leadH + noteH + pad * 2;
-
-  doc
-    .strokeColor(TABLE_CONTAINER.stroke)
-    .lineWidth(1.25)
-    .roundedRect(x, y, width, boxH, TABLE_CONTAINER.radius)
-    .stroke();
-
-  let textY = y + pad;
   doc
     .font(SEMINAR_FONTS.bold)
     .fontSize(fontSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(lead, x + pad, textY, { width: innerW, align: 'center', lineGap: 2 });
-  textY = doc.y;
+    .text(
+      parts.map((part, index) => {
+        const prefix = index > 0 ? '   ·   ' : '';
+        return `${prefix}${part.label} ${part.value}`;
+      }).join(''),
+      x + pad,
+      y + pad,
+      { width: innerW, align: 'center', lineGap: 2 },
+    );
+
   if (notePart?.note) {
     doc
       .font(SEMINAR_FONTS.regular)
       .fontSize(fontSize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(notePart.note, x + pad, textY, { width: innerW, align: 'center', lineGap: 2 });
+      .text(notePart.note, x + pad, doc.y, { width: innerW, align: 'center', lineGap: 2 });
   }
 
-  return y + boxH;
+  return y + measureFoodPlanInputContextContent(doc, fp, width);
+}
+
+function measureActivityInputBox(doc, columns, fp, width) {
+  const gridH = measureMetricColumnGrid(doc, columns, width);
+  const contextH = measureFoodPlanInputContextContent(doc, fp, width);
+  return gridH + contextH;
 }
 
 function measureFoodPlanInputBlock(doc, fp, width) {
   const inputColumns = buildFoodPlanInputColumns(fp);
-  return measureMetricColumnGrid(doc, inputColumns, width)
-    + LAYOUT.headerGap
-    + measureFoodPlanInputContext(doc, fp, width);
+  return measureActivityInputBox(doc, inputColumns, fp, width) + LAYOUT.sectionGap;
 }
 
 function drawFoodPlanInputBlock(doc, payload, page) {
@@ -828,13 +821,8 @@ function drawFoodPlanInputBlock(doc, payload, page) {
   page = ensureLockedSpace(doc, payload, page, measureFoodPlanInputBlock(doc, fp, page.width));
   page = {
     ...page,
-    y: drawMetricColumnGrid(doc, page.x, page.y, page.width, inputColumns) + LAYOUT.headerGap,
+    y: drawActivityInputBox(doc, fp, inputColumns, page.x, page.y, page.width) + LAYOUT.sectionGap,
   };
-
-  const contextBottom = drawFoodPlanInputContext(doc, fp, page.x, page.y, page.width);
-  if (contextBottom > page.y) {
-    page = { ...page, y: contextBottom + LAYOUT.sectionGap };
-  }
 
   return page;
 }
@@ -977,19 +965,21 @@ function measureMetricColumnGrid(doc, columns, width) {
 }
 
 /** @param {import('pdfkit')} doc @param {Array<{ label: string, value: string, unit: string }>} columns */
-function drawMetricColumnGrid(doc, x, y, width, columns) {
+function drawActivityInputBox(doc, fp, columns, x, y, width) {
   const colW = width / columns.length;
   const pad = TABLE_CONTAINER.cellPad;
   const gridH = measureMetricColumnGrid(doc, columns, width);
+  const contextH = measureFoodPlanInputContextContent(doc, fp, width);
+  const totalH = gridH + contextH;
 
   doc
     .strokeColor(TABLE_CONTAINER.stroke)
     .lineWidth(1.25)
-    .roundedRect(x, y, width, gridH, TABLE_CONTAINER.radius)
+    .roundedRect(x, y, width, totalH, TABLE_CONTAINER.radius)
     .stroke();
 
   const ruleTop = y + TABLE_CONTAINER.radius * 0.5;
-  const ruleBottom = y + gridH - TABLE_CONTAINER.radius * 0.5;
+  const ruleBottom = y + gridH - (contextH > 0 ? 0 : TABLE_CONTAINER.radius * 0.5);
   for (let i = 1; i < columns.length; i += 1) {
     const ruleX = x + colW * i;
     doc
@@ -1026,7 +1016,18 @@ function drawMetricColumnGrid(doc, x, y, width, columns) {
       .text(col.unit, cx + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
   });
 
-  return y + gridH;
+  if (contextH > 0) {
+    const dividerY = y + gridH;
+    doc
+      .strokeColor(TABLE_CONTAINER.stroke)
+      .lineWidth(0.5)
+      .moveTo(x + TABLE_CONTAINER.radius, dividerY)
+      .lineTo(x + width - TABLE_CONTAINER.radius, dividerY)
+      .stroke();
+    drawFoodPlanInputContextContent(doc, fp, x, dividerY, width);
+  }
+
+  return y + totalH;
 }
 
 const FOOD_PLAN_MACRO_GRID = Object.freeze([
