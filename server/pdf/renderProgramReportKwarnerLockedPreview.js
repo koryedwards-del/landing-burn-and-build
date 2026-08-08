@@ -835,13 +835,6 @@ function buildFoodPlanInputContextParts(fp) {
   const parts = [];
   if (fp.jobLabel) parts.push({ label: 'Job:', value: fp.jobLabel });
   if (fp.lifestyleLabel) parts.push({ label: 'Day-to-day pace:', value: fp.lifestyleLabel });
-  if (fp.workdayFactor) {
-    parts.push({
-      label: 'Workday activity level:',
-      value: String(fp.workdayFactor),
-      note: ' — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)',
-    });
-  }
   return parts;
 }
 
@@ -850,7 +843,6 @@ function measureFoodPlanInputContextContent(doc, fp, width) {
   if (!parts.length) return 0;
   const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
   const innerW = width - padX * 2;
-  const notePart = parts.find((part) => part.note);
 
   doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
   const lead = parts.map((part, index) => {
@@ -859,12 +851,7 @@ function measureFoodPlanInputContextContent(doc, fp, width) {
   }).join('');
   const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 0 });
 
-  doc.font(SEMINAR_FONTS.regular).fontSize(fontSize);
-  const noteH = notePart?.note
-    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 0 })
-    : 0;
-
-  return leadH + noteH + padY * 2;
+  return leadH + padY * 2;
 }
 
 function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
@@ -873,7 +860,6 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
 
   const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
   const innerW = width - padX * 2;
-  const notePart = parts.find((part) => part.note);
 
   doc
     .font(SEMINAR_FONTS.bold)
@@ -888,14 +874,6 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
       y + padY,
       { width: innerW, align: 'center', lineGap: 0 },
     );
-
-  if (notePart?.note) {
-    doc
-      .font(SEMINAR_FONTS.regular)
-      .fontSize(fontSize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(notePart.note, x + padX, doc.y, { width: innerW, align: 'center', lineGap: 0 });
-  }
 
   return y + measureFoodPlanInputContextContent(doc, fp, width);
 }

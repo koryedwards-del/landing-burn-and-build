@@ -309,7 +309,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
         hht: hours.cardio,
         lhr: hours.fatBurn,
       },
-      workdayFactor: Number(intake.workIntensity).toFixed(1),
       jobLabel: WORK_PHYSICAL.find((item) => item.id === intake.workPhysical)?.label || '—',
       lifestyleLabel: WORK_STRESS.find((item) => item.id === intake.workStress)?.label || '—',
       today,
@@ -323,7 +322,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
       } : null,
       macroSignalIntro: MACRO_SIGNAL_INTRO,
       macroSignalRows: MACRO_SIGNAL_ROWS.map((row) => ({ ...row })),
-      workdayLabel: workdayActivityLabel(intake.workIntensity),
     },
     servings: {
       note: SERVINGS_NOTE,
