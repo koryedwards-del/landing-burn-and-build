@@ -130,19 +130,19 @@ export const MACRO_SIGNAL_ROWS = [
     id: 'protein',
     label: 'PROTEIN',
     tooMuch: 'GAIN FAT',
-    tooLittle: 'Lose LBM (muscle)',
+    tooLittle: 'LOSE LBM (MUSCLE)',
   },
   {
     id: 'carbohydrates',
     label: 'CARBOHYDRATES',
     tooMuch: 'GAIN FAT',
-    tooLittle: 'lose energy',
+    tooLittle: 'LOSE ENERGY',
   },
   {
     id: 'fat',
     label: 'FAT',
     tooMuch: 'GAIN FAT',
-    tooLittle: 'lose fat',
+    tooLittle: 'LOSE FAT',
     emphasizeTooLittle: true,
   },
 ];
