@@ -1094,6 +1094,10 @@ function drawProjectionsPage(doc, payload) {
 
   page = drawFoodPlanInputBlock(doc, payload, page);
 
+  if (projections.rmrBridge) {
+    page = drawBodyParagraphs(doc, payload, page, [projections.rmrBridge]);
+  }
+
   if (projections.timelineRows.length) {
     const timelineTableOpts = {
       x: page.x,

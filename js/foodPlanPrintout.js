@@ -69,6 +69,10 @@ export function projectionTimelineFromPackage(pkg) {
   });
 }
 
+/** Projections page — between input grid and timeline table. */
+export const PROJECTIONS_RMR_BRIDGE =
+  'The burn engine uses the  information above to calculate your RMR (resting metabolic rate). In other words how much protein, carbohydrates and fat do use every day.';
+
 /** Projections page — burn-engine 8-week cycles (program-report page 2 / landing-style table). */
 export function buildProjectionsPrintoutSection(pkg) {
   const intake = pkg?.intake;
@@ -91,6 +95,7 @@ export function buildProjectionsPrintoutSection(pkg) {
 
   return {
     intro,
+    rmrBridge: PROJECTIONS_RMR_BRIDGE,
     fatLostLbs: projection.fatLostLbs.toFixed(1),
     weeklyFatLossLbs: projection.weeklyFatLossLbs.toFixed(1),
     timelineRows: timeline?.valid
