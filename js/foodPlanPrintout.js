@@ -96,10 +96,12 @@ export function buildProjectionsPrintoutSection(pkg) {
     timelineRows: timeline?.valid
       ? timeline.rows.map((row) => ({
         timeline: row.timeline,
-        bodyFat: row.badge ? `${row.bodyFatDisplay} (${row.badge})` : row.bodyFatDisplay,
+        bodyFat: row.badge && row.badge !== 'Average'
+          ? `${row.bodyFatDisplay} (${row.badge})`
+          : row.bodyFatDisplay,
         weight: row.weightDisplay,
         isCurrent: Boolean(row.isCurrent),
-        badge: row.badge ?? null,
+        badge: row.badge === 'Average' ? null : (row.badge ?? null),
       }))
       : [],
   };
