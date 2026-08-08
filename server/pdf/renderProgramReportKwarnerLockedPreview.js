@@ -988,11 +988,11 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
   const padTop = INPUT_GRID.cellPadTop;
-  const { labelSize, valueSize, labelGap } = INPUT_GRID.metric;
+  const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
   let cy = y + padTop;
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(labelFont)
     .fontSize(labelSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(cell.label, x + pad, cy, {
@@ -1002,7 +1002,7 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
     });
   cy += doc.heightOfString(cell.label, { width: innerW, lineGap: 0 }) + labelGap;
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(valueFont)
     .fontSize(valueSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(valueLine, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
