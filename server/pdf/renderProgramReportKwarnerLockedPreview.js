@@ -606,7 +606,6 @@ function drawProjectionsPage(doc, payload) {
         })),
       ],
       headerRows: 1,
-      boldColumnKeys: ['weight', 'timeline', 'bodyFat'],
     };
     page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, timelineTableOpts));
     timelineTableOpts.y = page.y;
