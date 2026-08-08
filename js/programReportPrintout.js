@@ -19,7 +19,7 @@ import {
   MACRO_SIGNAL_ROWS,
   workdayActivityLabel,
 } from './foodPlanPrintout.js';
-import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
+import { extraFatLines, servingsGridRows, servingsHomeworkExtraFatRows, servingsHomeworkGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
@@ -329,6 +329,8 @@ export function buildProgramReportPayload(pkg, options = {}) {
       note: SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
+      homeworkGridRows: servingsHomeworkGridRows(pkg),
+      homeworkExtraFats: servingsHomeworkExtraFatRows(pkg),
     },
   };
 }

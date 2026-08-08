@@ -1055,6 +1055,52 @@ const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
   { key: 'lhr', label: 'Low heart rate aerobic (LHR)', unit: 'hours per week' },
 ]);
 
+const SERVINGS_TABLE_COLUMNS = Object.freeze([
+  { key: 'label', width: 0.18 },
+  { key: 'daily', width: 0.1, align: 'center' },
+  { key: 'breakfast', width: 0.12, align: 'center' },
+  { key: 'snack1', width: 0.1, align: 'center' },
+  { key: 'lunch', width: 0.1, align: 'center' },
+  { key: 'snack2', width: 0.1, align: 'center' },
+  { key: 'dinner', width: 0.12, align: 'center' },
+  { key: 'snack3', width: 0.1, align: 'center' },
+]);
+
+function buildServingsTableRows(gridRows, extraRows) {
+  return [
+    {
+      label: '',
+      daily: 'Daily',
+      breakfast: 'Breakfast',
+      snack1: 'Snack',
+      lunch: 'Lunch',
+      snack2: 'Snack',
+      dinner: 'Dinner',
+      snack3: 'Snack',
+    },
+    ...gridRows,
+    ...extraRows,
+  ];
+}
+
+function servingsNarrativeBlock(payload, title) {
+  return payload.servingsNarrative?.blocks?.find((block) => block.title === title);
+}
+
+function drawServingsTable(doc, payload, page, gridRows, extraRows) {
+  const servingsTableOpts = {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns: SERVINGS_TABLE_COLUMNS,
+    rows: buildServingsTableRows(gridRows, extraRows),
+    headerRows: 1,
+  };
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
+  servingsTableOpts.y = page.y;
+  return { ...page, y: drawLayoutTable(doc, servingsTableOpts) + LAYOUT.sectionGap };
+}
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
@@ -1102,17 +1148,7 @@ function drawServingsPage(doc, payload) {
 
   page = drawBodyParagraphs(doc, payload, page, [servings.note]);
 
-  const gridRows = servings.gridRows.map((row) => ({
-    label: row.label,
-    daily: row.daily,
-    breakfast: row.breakfast,
-    snack1: row.snack1,
-    lunch: row.lunch,
-    snack2: row.snack2,
-    dinner: row.dinner,
-    snack3: row.snack3,
-  }));
-
+  const gridRows = servings.gridRows.map((row) => ({ ...row }));
   const extraRows = servings.extraFats.map((line, index) => ({
     label: index === 0 ? 'Extra Fats' : '',
     daily: line.value,
@@ -1124,39 +1160,38 @@ function drawServingsPage(doc, payload) {
     snack3: '',
   }));
 
-  const servingsTableOpts = {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: [
-      { key: 'label', width: 0.18 },
-      { key: 'daily', width: 0.1, align: 'center' },
-      { key: 'breakfast', width: 0.12, align: 'center' },
-      { key: 'snack1', width: 0.1, align: 'center' },
-      { key: 'lunch', width: 0.1, align: 'center' },
-      { key: 'snack2', width: 0.1, align: 'center' },
-      { key: 'dinner', width: 0.12, align: 'center' },
-      { key: 'snack3', width: 0.1, align: 'center' },
-    ],
-    rows: [
-      {
-        label: '',
-        daily: 'Daily',
-        breakfast: 'Breakfast',
-        snack1: 'Snack',
-        lunch: 'Lunch',
-        snack2: 'Snack',
-        dinner: 'Dinner',
-        snack3: 'Snack',
-      },
-      ...gridRows,
-      ...extraRows,
-    ],
-    headerRows: 1,
-  };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
-  servingsTableOpts.y = page.y;
-  drawLayoutTable(doc, servingsTableOpts);
+  page = drawServingsTable(doc, payload, page, gridRows, extraRows);
+
+  const homeworkBlock = servingsNarrativeBlock(payload, 'How to use this page');
+  const dailyTotalsBlock = servingsNarrativeBlock(payload, 'Your daily totals');
+  const homeworkParagraphs = [
+    ...(homeworkBlock?.paragraphs?.[0] ? [homeworkBlock.paragraphs[0]] : []),
+    ...(dailyTotalsBlock?.paragraphs?.[1] ? [dailyTotalsBlock.paragraphs[1]] : []),
+  ];
+
+  if (homeworkParagraphs.length) {
+    const homeworkIntroH = homeworkParagraphs.reduce(
+      (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
+      LAYOUT.subsectionSize + LAYOUT.headerGap,
+    );
+    const homeworkTableH = measureLayoutTable(doc, {
+      columns: SERVINGS_TABLE_COLUMNS,
+      rows: buildServingsTableRows(servings.homeworkGridRows, servings.homeworkExtraFats),
+      headerRows: 1,
+      width: page.width,
+    });
+    page = ensureLockedSpace(doc, payload, page, homeworkIntroH + homeworkTableH);
+
+    if (homeworkBlock?.title) {
+      page = { ...page, y: drawSectionTitle(doc, homeworkBlock.title, page.x, page.y, page.width) };
+    }
+    page = drawBodyParagraphs(doc, payload, page, homeworkParagraphs);
+
+    const homeworkGridRows = servings.homeworkGridRows.map((row) => ({ ...row }));
+    const homeworkExtraRows = servings.homeworkExtraFats.map((row) => ({ ...row }));
+    page = drawServingsTable(doc, payload, page, homeworkGridRows, homeworkExtraRows);
+  }
+
   finishLockedPage(doc, page.box, payload);
 }
 
