@@ -728,9 +728,9 @@ function buildFoodPlanInputColumns(fp) {
 
 const INPUT_CONTEXT_STYLE = {
   fontSize: PT.subsection,
-  padX: TABLE_CONTAINER.cellPad + 4,
-  padY: TABLE_CONTAINER.cellPad + 6,
-  lineGap: 6,
+  padX: 0,
+  padY: 0,
+  lineGap: 4,
 };
 
 function buildFoodPlanInputContextParts(fp) {
