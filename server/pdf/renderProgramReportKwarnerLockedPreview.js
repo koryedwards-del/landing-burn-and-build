@@ -570,7 +570,7 @@ function drawWelcomePage(doc, payload) {
   page = { ...page, y: page.y + LAYOUT.sectionGap };
 
   const sections = [
-    ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
+    ['Projections', payload.welcome.projections],
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
   ].filter(([, body]) => body);
