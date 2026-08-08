@@ -726,19 +726,91 @@ function buildFoodPlanInputColumns(fp) {
   }));
 }
 
-function measureFoodPlanInputContext(doc, fp, width) {
-  const contextParts = [];
-  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
-  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
+const INPUT_CONTEXT_STYLE = {
+  fontSize: PT.subsection,
+  pad: TABLE_CONTAINER.cellPad,
+};
+
+function buildFoodPlanInputContextParts(fp) {
+  const parts = [];
+  if (fp.jobLabel) parts.push({ label: 'Job:', value: fp.jobLabel });
+  if (fp.lifestyleLabel) parts.push({ label: 'Day-to-day pace:', value: fp.lifestyleLabel });
   if (fp.workdayFactor) {
-    contextParts.push(
-      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
-    );
+    parts.push({
+      label: 'Workday activity level:',
+      value: String(fp.workdayFactor),
+      note: ' — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)',
+    });
   }
-  const contextLine = contextParts.join('   ·   ');
-  if (!contextLine) return 0;
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
-  return doc.heightOfString(contextLine, { width }) + LAYOUT.sectionGap;
+  return parts;
+}
+
+function measureFoodPlanInputContext(doc, fp, width) {
+  const parts = buildFoodPlanInputContextParts(fp);
+  if (!parts.length) return 0;
+  const pad = INPUT_CONTEXT_STYLE.pad;
+  const innerW = width - pad * 2;
+  const fontSize = INPUT_CONTEXT_STYLE.fontSize;
+  const notePart = parts.find((part) => part.note);
+
+  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
+  const lead = parts.map((part, index) => {
+    const prefix = index > 0 ? '   ·   ' : '';
+    return `${prefix}${part.label} ${part.value}`;
+  }).join('');
+  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 2 });
+
+  doc.font(SEMINAR_FONTS.regular).fontSize(fontSize);
+  const noteH = notePart?.note
+    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
+    : 0;
+
+  return leadH + noteH + pad * 2 + LAYOUT.sectionGap;
+}
+
+function drawFoodPlanInputContext(doc, fp, x, y, width) {
+  const parts = buildFoodPlanInputContextParts(fp);
+  if (!parts.length) return y;
+
+  const pad = INPUT_CONTEXT_STYLE.pad;
+  const innerW = width - pad * 2;
+  const fontSize = INPUT_CONTEXT_STYLE.fontSize;
+  const notePart = parts.find((part) => part.note);
+
+  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
+  const lead = parts.map((part, index) => {
+    const prefix = index > 0 ? '   ·   ' : '';
+    return `${prefix}${part.label} ${part.value}`;
+  }).join('');
+  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 2 });
+  doc.font(SEMINAR_FONTS.regular).fontSize(fontSize);
+  const noteH = notePart?.note
+    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
+    : 0;
+  const boxH = leadH + noteH + pad * 2;
+
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, boxH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  let textY = y + pad;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(fontSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(lead, x + pad, textY, { width: innerW, align: 'center', lineGap: 2 });
+  textY = doc.y;
+  if (notePart?.note) {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(fontSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(notePart.note, x + pad, textY, { width: innerW, align: 'center', lineGap: 2 });
+  }
+
+  return y + boxH;
 }
 
 function measureFoodPlanInputBlock(doc, fp, width) {
@@ -759,22 +831,9 @@ function drawFoodPlanInputBlock(doc, payload, page) {
     y: drawMetricColumnGrid(doc, page.x, page.y, page.width, inputColumns) + LAYOUT.headerGap,
   };
 
-  const contextParts = [];
-  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
-  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
-  if (fp.workdayFactor) {
-    contextParts.push(
-      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
-    );
-  }
-  const contextLine = contextParts.join('   ·   ');
-  if (contextLine) {
-    doc
-      .font(SEMINAR_FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(contextLine, page.x, page.y, { width: page.width, align: 'center', lineGap: 0 });
-    page = { ...page, y: doc.y + LAYOUT.sectionGap };
+  const contextBottom = drawFoodPlanInputContext(doc, fp, page.x, page.y, page.width);
+  if (contextBottom > page.y) {
+    page = { ...page, y: contextBottom + LAYOUT.sectionGap };
   }
 
   return page;
