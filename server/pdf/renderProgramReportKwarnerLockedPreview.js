@@ -33,7 +33,6 @@ import {
   flavorKitList,
   SPLASH_RULE,
 } from '../../menuplanner/data/flavorKits.js';
-import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -1125,17 +1124,17 @@ const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
 ]);
 
 const SERVINGS_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.26 },
-  { key: 'daily', width: 0.08, align: 'center' },
-  { key: 'breakfast', width: 0.11, align: 'center' },
-  { key: 'snack1', width: 0.11, align: 'center' },
-  { key: 'lunch', width: 0.11, align: 'center' },
-  { key: 'snack2', width: 0.11, align: 'center' },
-  { key: 'dinner', width: 0.11, align: 'center' },
-  { key: 'snack3', width: 0.11, align: 'center' },
+  { key: 'label', width: 0.18 },
+  { key: 'daily', width: 0.1, align: 'center' },
+  { key: 'breakfast', width: 0.12, align: 'center' },
+  { key: 'snack1', width: 0.1, align: 'center' },
+  { key: 'lunch', width: 0.1, align: 'center' },
+  { key: 'snack2', width: 0.1, align: 'center' },
+  { key: 'dinner', width: 0.12, align: 'center' },
+  { key: 'snack3', width: 0.1, align: 'center' },
 ]);
 
-function buildServingsTableRows(gridRows, extraRows) {
+function buildServingsTableRows(gridRows) {
   return [
     {
       label: '',
@@ -1148,17 +1147,16 @@ function buildServingsTableRows(gridRows, extraRows) {
       snack3: 'Snack',
     },
     ...gridRows,
-    ...extraRows,
   ];
 }
 
-function drawServingsTable(doc, payload, page, gridRows, extraRows) {
+function drawServingsTable(doc, payload, page, gridRows) {
   const servingsTableOpts = {
     x: page.x,
     y: page.y,
     width: page.width,
     columns: SERVINGS_TABLE_COLUMNS,
-    rows: buildServingsTableRows(gridRows, extraRows),
+    rows: buildServingsTableRows(gridRows),
     headerRows: 1,
   };
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
@@ -1211,20 +1209,6 @@ function drawFoodPlanPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-function buildExtraFatTableRows(extraFats = []) {
-  return extraFats.map((line, index) => ({
-    label: index === 0 ? EXTRA_FATS_LABEL : '',
-    daily: line.value,
-    breakfast: line.note,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-    _colSpan: { from: 'breakfast', to: 'snack3' },
-  }));
-}
-
 function drawServingsPage(doc, payload) {
   const servings = payload.servings;
   let page = startLockedPage(doc, payload, 'Servings');
@@ -1232,9 +1216,7 @@ function drawServingsPage(doc, payload) {
   page = drawBodyParagraphs(doc, payload, page, [servings.note]);
 
   const gridRows = servings.gridRows.map((row) => ({ ...row }));
-  const extraRows = buildExtraFatTableRows(servings.extraFats);
-
-  page = drawServingsTable(doc, payload, page, gridRows, extraRows);
+  page = drawServingsTable(doc, payload, page, gridRows);
 
   finishLockedPage(doc, page.box, payload);
 }
