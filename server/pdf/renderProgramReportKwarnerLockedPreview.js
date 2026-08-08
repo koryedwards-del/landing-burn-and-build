@@ -1101,44 +1101,50 @@ function drawServingsTable(doc, payload, page, gridRows, extraRows) {
   return { ...page, y: drawLayoutTable(doc, servingsTableOpts) + LAYOUT.sectionGap };
 }
 
+function foodPlanNarrativeBlock(payload, title) {
+  return payload.foodPlanNarrative?.blocks?.find((block) => block.title === title);
+}
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
 
-  const story1 = [
-    'We use your body composition information to determine your LBM (lean body mass) — the weight of everything in your body except fat, mostly muscle and organs. The computer uses your LBM to set your protein needs and your metabolic rate.',
-    'You also told us how you work and train: weight training (WT), high heart rate aerobic activity (HHT) such as running or hard cardio, and low heart rate aerobic activity (LHR) such as walking or easy cycling. Those hours, together with your job and lifestyle, are the inputs that build your food plan and your servings on the next page.',
-  ].join(' ');
-  page = drawBodyParagraphs(doc, payload, page, [story1]);
+  const intro = payload.foodPlanNarrative?.intro || [];
+  if (intro.length) {
+    page = drawBodyParagraphs(doc, payload, page, intro);
+  }
 
-  const story2 = [
-    'Macronutrients — protein, carbohydrates, and fat — are the three main parts of food that supply calories and shape body composition. The table below is not a food list; it explains what happens when each macro is too high or too low. That is why your daily servings on the next page are set the way they are: so you stay in the right range without counting grams yourself.',
-  ].join(' ');
-  page = drawBodyParagraphs(doc, payload, page, [story2]);
+  const servingsBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
+  if (servingsBlock?.paragraphs?.length) {
+    page = ensureLockedSpace(
+      doc,
+      payload,
+      page,
+      LAYOUT.subsectionSize + LAYOUT.headerGap + servingsBlock.paragraphs.reduce(
+        (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
+        0,
+      ),
+    );
+    page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
+    page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
+  }
 
-  const macroGridOpts = {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: [
-      { key: 'label', width: 0.34 },
-      { key: 'tooMuch', width: 0.33, align: 'center' },
-      { key: 'tooLittle', width: 0.33, align: 'center' },
-    ],
-    rows: [
-      { label: 'Macro', tooMuch: 'Too much', tooLittle: 'Too little' },
-      ...FOOD_PLAN_MACRO_GRID.map((row) => ({
-        label: row.label,
-        tooMuch: row.tooMuch,
-        tooLittle: row.tooLittle,
-      })),
-    ],
-    headerRows: 1,
-    boldColumnKeys: ['label', 'tooMuch', 'tooLittle'],
-  };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, macroGridOpts));
-  macroGridOpts.y = page.y;
-  drawLayoutTable(doc, macroGridOpts);
+  if (fp.macroSignalIntro) {
+    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
+  }
+
+  const macroRows = fp.macroSignalRows || [];
+  if (macroRows.length) {
+    const macroTableH = measureMacroSignalTable(macroRows);
+    page = ensureLockedSpace(doc, payload, page, macroTableH + LAYOUT.sectionGap);
+    drawMacroSignalTable(doc, {
+      x: page.x,
+      y: page.y,
+      width: page.width,
+      rows: macroRows,
+    });
+  }
+
   finishLockedPage(doc, page.box, payload);
 }
 
@@ -1162,10 +1168,10 @@ function drawServingsPage(doc, payload) {
 
   page = drawServingsTable(doc, payload, page, gridRows, extraRows);
 
-  const homeworkBlock = servingsNarrativeBlock(payload, 'How to use this page');
+  const practiceBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
   const dailyTotalsBlock = servingsNarrativeBlock(payload, 'Your daily totals');
   const homeworkParagraphs = [
-    ...(homeworkBlock?.paragraphs?.[0] ? [homeworkBlock.paragraphs[0]] : []),
+    ...(practiceBlock?.paragraphs || []),
     ...(dailyTotalsBlock?.paragraphs?.[1] ? [dailyTotalsBlock.paragraphs[1]] : []),
   ];
 
@@ -1182,8 +1188,8 @@ function drawServingsPage(doc, payload) {
     });
     page = ensureLockedSpace(doc, payload, page, homeworkIntroH + homeworkTableH);
 
-    if (homeworkBlock?.title) {
-      page = { ...page, y: drawSectionTitle(doc, homeworkBlock.title, page.x, page.y, page.width) };
+    if (practiceBlock?.title) {
+      page = { ...page, y: drawSectionTitle(doc, practiceBlock.title, page.x, page.y, page.width) };
     }
     page = drawBodyParagraphs(doc, payload, page, homeworkParagraphs);
 
