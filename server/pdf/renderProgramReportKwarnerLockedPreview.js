@@ -867,13 +867,46 @@ const INPUT_GRID = {
   },
   radio: {
     titleSize: PT.subsection - 0.5,
-    optionSize: PT.tableBody,
-    radioRadius: 3,
+    optionSize: 7.5,
+    radioRadius: 2.5,
     optionGap: 2,
     titleGap: 4,
-    labelPad: 12,
+    labelPad: 9,
   },
 };
+
+function measureRadioOptionRow(doc, cell, innerW) {
+  const { optionSize, labelPad, radioRadius } = INPUT_GRID.radio;
+  const slotW = innerW / cell.options.length;
+  const textW = Math.max(1, slotW - labelPad - 2);
+  let maxH = radioRadius * 2;
+  cell.options.forEach((option) => {
+    const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    doc.font(font).fontSize(optionSize);
+    maxH = Math.max(maxH, doc.heightOfString(option.label, { width: textW, lineGap: 0 }), radioRadius * 2);
+  });
+  return maxH;
+}
+
+function drawRadioOptionRow(doc, cell, x, y, innerW) {
+  const { optionSize, labelPad, radioRadius } = INPUT_GRID.radio;
+  const slotW = innerW / cell.options.length;
+  cell.options.forEach((option, index) => {
+    const selected = option.id === cell.selectedId;
+    const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    const slotX = x + slotW * index;
+    doc.font(font).fontSize(optionSize);
+    const labelW = doc.widthOfString(option.label);
+    const groupW = labelPad + labelW;
+    const startX = slotX + Math.max(0, (slotW - groupW) / 2);
+    drawPdfRadioButton(doc, startX, y, radioRadius, selected);
+    doc
+      .font(font)
+      .fontSize(optionSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(option.label, startX + labelPad, y, { lineBreak: false });
+  });
+}
 
 function metricValueLine(cell) {
   return `${cell.value} ${cell.unit}`;
@@ -889,20 +922,10 @@ function measureMetricInputCell(doc, cell, innerW) {
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
-  const { titleSize, optionSize, optionGap, titleGap, labelPad } = INPUT_GRID.radio;
+  const { titleSize, titleGap } = INPUT_GRID.radio;
   doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
-  let h = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
-  const textW = innerW - labelPad;
-  cell.options.forEach((option) => {
-    const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-    doc.font(font).fontSize(optionSize);
-    const lineH = Math.max(
-      optionSize + optionGap,
-      doc.heightOfString(option.label, { width: textW, lineGap: 0 }) + optionGap,
-    );
-    h += lineH;
-  });
-  return h;
+  const titleH = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
+  return titleH + measureRadioOptionRow(doc, cell, innerW);
 }
 
 function measureInputCell(doc, cell, innerW) {
@@ -962,7 +985,7 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
 
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
-  const { titleSize, optionSize, optionGap, titleGap, labelPad, radioRadius } = INPUT_GRID.radio;
+  const { titleSize, titleGap } = INPUT_GRID.radio;
   let cy = y + pad;
 
   doc
@@ -972,23 +995,7 @@ function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
     .text(cell.title, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
   cy += doc.heightOfString(cell.title, { width: innerW, lineGap: 0 }) + titleGap;
 
-  const textW = innerW - labelPad;
-  cell.options.forEach((option) => {
-    const selected = option.id === cell.selectedId;
-    const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-    const lineTop = cy;
-    drawPdfRadioButton(doc, x + pad, lineTop, radioRadius, selected);
-    doc
-      .font(font)
-      .fontSize(optionSize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(option.label, x + pad + labelPad, lineTop, { width: textW, lineGap: 0 });
-    const lineH = Math.max(
-      optionSize + optionGap,
-      doc.heightOfString(option.label, { width: textW, lineGap: 0 }) + optionGap,
-    );
-    cy += lineH;
-  });
+  drawRadioOptionRow(doc, cell, x + pad, cy, innerW);
 }
 
 function drawInputCell(doc, cell, x, y, innerW, cellH) {
