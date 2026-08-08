@@ -729,8 +729,8 @@ function buildFoodPlanInputColumns(fp) {
 const INPUT_CONTEXT_STYLE = {
   fontSize: PT.subsection,
   padX: 0,
-  padY: 0,
-  lineGap: 4,
+  padY: TABLE_CONTAINER.cellPad,
+  lineGap: 0,
 };
 
 function buildFoodPlanInputContextParts(fp) {
@@ -750,7 +750,7 @@ function buildFoodPlanInputContextParts(fp) {
 function measureFoodPlanInputContextContent(doc, fp, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return 0;
-  const { padX, padY, fontSize, lineGap } = INPUT_CONTEXT_STYLE;
+  const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
   const innerW = width - padX * 2;
   const notePart = parts.find((part) => part.note);
 
@@ -759,21 +759,21 @@ function measureFoodPlanInputContextContent(doc, fp, width) {
     const prefix = index > 0 ? '   ·   ' : '';
     return `${prefix}${part.label} ${part.value}`;
   }).join('');
-  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 2 });
+  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 0 });
 
   doc.font(SEMINAR_FONTS.regular).fontSize(fontSize);
   const noteH = notePart?.note
-    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
+    ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 0 })
     : 0;
 
-  return leadH + (noteH ? lineGap + noteH : 0) + padY * 2;
+  return leadH + noteH + padY * 2;
 }
 
 function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return y;
 
-  const { padX, padY, fontSize, lineGap } = INPUT_CONTEXT_STYLE;
+  const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
   const innerW = width - padX * 2;
   const notePart = parts.find((part) => part.note);
 
@@ -788,7 +788,7 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
       }).join(''),
       x + padX,
       y + padY,
-      { width: innerW, align: 'center', lineGap: 2 },
+      { width: innerW, align: 'center', lineGap: 0 },
     );
 
   if (notePart?.note) {
@@ -796,7 +796,7 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
       .font(SEMINAR_FONTS.regular)
       .fontSize(fontSize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(notePart.note, x + padX, doc.y + lineGap, { width: innerW, align: 'center', lineGap: 2 });
+      .text(notePart.note, x + padX, doc.y, { width: innerW, align: 'center', lineGap: 0 });
   }
 
   return y + measureFoodPlanInputContextContent(doc, fp, width);
