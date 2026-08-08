@@ -95,11 +95,18 @@ export function buildProjectionsPrintoutSection(pkg) {
     `${hours.fatBurn} hour(s) of fat-burning activities`,
   ].join(' ');
 
+  const fatLost = projection.fatLostLbs.toFixed(1);
+  const startBf = projection.startBf.toFixed(2);
+  const endBf = projection.endBf.toFixed(2);
+
   return {
     intro,
+    headline: `−${fatLost} lbs fat · ${startBf}% → ${endBf}% in 8 weeks`,
     rmrBridge: PROJECTIONS_RMR_BRIDGE,
-    fatLostLbs: projection.fatLostLbs.toFixed(1),
+    fatLostLbs: fatLost,
     weeklyFatLossLbs: projection.weeklyFatLossLbs.toFixed(1),
+    startBf,
+    endBf,
     timelineRows: timeline?.valid
       ? timeline.rows.map((row) => ({
         timeline: row.timeline,

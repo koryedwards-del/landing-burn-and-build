@@ -86,6 +86,22 @@ function measureBodyParagraphs(doc, paragraphs, width) {
   );
 }
 
+const PROJECTION_HEADLINE_SIZE = PT.sectionTitle + 2;
+
+function measureProjectionHeadline(doc, text, width) {
+  doc.font(SEMINAR_FONTS.bold).fontSize(PROJECTION_HEADLINE_SIZE);
+  return doc.heightOfString(String(text), { width, align: 'center', lineGap: 0 }) + LAYOUT.sectionGap;
+}
+
+function drawProjectionHeadline(doc, text, x, y, width) {
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(PROJECTION_HEADLINE_SIZE)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), x, y, { width, align: 'center', lineGap: 0 });
+  return doc.y + LAYOUT.sectionGap;
+}
+
 /** Tables only — gold border, no fill (watermark shows through). */
 const TABLE_CONTAINER = Object.freeze({
   stroke: PDF_FRAME_COLORS.gold,
@@ -1104,6 +1120,14 @@ function drawProjectionsPage(doc, payload) {
   if (!projections) return;
 
   let page = startLockedPage(doc, payload, 'Projections');
+
+  if (projections.headline) {
+    page = ensureLockedSpace(doc, payload, page, measureProjectionHeadline(doc, projections.headline, page.width));
+    page = {
+      ...page,
+      y: drawProjectionHeadline(doc, projections.headline, page.x, page.y, page.width),
+    };
+  }
 
   page = drawBodyParagraphs(doc, payload, page, [projections.intro]);
 
