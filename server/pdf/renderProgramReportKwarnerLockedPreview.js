@@ -597,6 +597,110 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
+function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
+  if (isHeader) {
+    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+  }
+  if (row.isCurrent) {
+    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+  }
+  if (row.badge === 'Average') {
+    return { font: SEMINAR_FONTS.italic, fontSize: PT.subsection };
+  }
+  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+}
+
+function measureProjectionTimelineTable(doc, opts) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const colW = opts.width / 3;
+  const innerW = colW - pad * 2;
+  const keys = ['weight', 'timeline', 'bodyFat'];
+
+  return opts.rows.map((row, rowIndex) => {
+    const isHeader = rowIndex < (opts.headerRows ?? 1);
+    let maxH = PT.subsection + LAYOUT.tableRowPad * 2;
+    keys.forEach((key) => {
+      const { font, fontSize } = projectionTimelineRowStyle(row, rowIndex, { isHeader });
+      const h = doc.font(font).fontSize(fontSize).heightOfString(String(row[key] ?? ''), {
+        width: innerW,
+        align: 'center',
+        lineGap: 0,
+      });
+      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
+    });
+    return maxH;
+  });
+}
+
+function drawCenteredTableCell(doc, text, cellX, cellY, cellW, cellH, { font, fontSize }) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const innerW = cellW - pad * 2;
+  const str = String(text ?? '');
+  doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  const textH = doc.heightOfString(str, { width: innerW, align: 'center', lineGap: 0 });
+  const textY = cellY + (cellH - textH) / 2;
+  doc.text(str, cellX + pad, textY, {
+    width: innerW,
+    align: 'center',
+    lineGap: 0,
+  });
+}
+
+function drawProjectionTimelineTable(doc, opts) {
+  const tableX = opts.x;
+  const tableY = opts.y;
+  const tableW = opts.width;
+  const colW = tableW / 3;
+  const keys = ['weight', 'timeline', 'bodyFat'];
+  const rowHeights = measureProjectionTimelineTable(doc, opts);
+  const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
+  const headerRows = opts.headerRows ?? 1;
+
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(tableX, tableY, tableW, totalH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  const ruleTop = tableY + TABLE_CONTAINER.radius * 0.5;
+  const ruleBottom = tableY + totalH - TABLE_CONTAINER.radius * 0.5;
+  for (let i = 1; i < 3; i += 1) {
+    const ruleX = tableX + colW * i;
+    doc
+      .strokeColor(TABLE_CONTAINER.stroke)
+      .lineWidth(STAPLES_LIST.ruleWidth)
+      .moveTo(ruleX, ruleTop)
+      .lineTo(ruleX, ruleBottom)
+      .stroke();
+  }
+
+  let cy = tableY;
+  opts.rows.forEach((row, rowIndex) => {
+    const rh = rowHeights[rowIndex];
+    const isHeader = rowIndex < headerRows;
+    keys.forEach((key, index) => {
+      const cellX = tableX + colW * index;
+      const style = projectionTimelineRowStyle(row, rowIndex, { isHeader });
+      drawCenteredTableCell(doc, row[key], cellX, cy, colW, rh, style);
+    });
+    cy += rh;
+    if (rowIndex < opts.rows.length - 1) {
+      doc
+        .strokeColor(TABLE_CONTAINER.stroke)
+        .lineWidth(0.5)
+        .moveTo(tableX + TABLE_CONTAINER.radius, cy)
+        .lineTo(tableX + tableW - TABLE_CONTAINER.radius, cy)
+        .stroke();
+    }
+  });
+
+  return tableY + totalH;
+}
+
+function measureProjectionTimelineTableHeight(doc, opts) {
+  return measureProjectionTimelineTable(doc, opts).reduce((sum, h) => sum + h, 0);
+}
+
 function buildFoodPlanInputColumns(fp) {
   return FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
     label,
@@ -679,13 +783,6 @@ function drawProjectionsPage(doc, payload) {
       x: page.x,
       y: page.y,
       width: page.width,
-      headFontSize: PT.body,
-      bodyFontSize: PT.subsection,
-      columns: [
-        { key: 'weight', width: 0.34, align: 'center' },
-        { key: 'timeline', width: 0.33, align: 'center' },
-        { key: 'bodyFat', width: 0.33, align: 'center' },
-      ],
       rows: [
         { weight: 'Bodyweight', timeline: 'Timeline', bodyFat: 'Body Fat %' },
         ...projections.timelineRows.map((row) => ({
@@ -697,22 +794,10 @@ function drawProjectionsPage(doc, payload) {
         })),
       ],
       headerRows: 1,
-      getRowStyle(row, _rowIndex, { isHeader }) {
-        if (isHeader) {
-          return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
-        }
-        if (row.isCurrent) {
-          return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
-        }
-        if (row.badge === 'Average') {
-          return { font: SEMINAR_FONTS.italic, fontSize: PT.subsection };
-        }
-        return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
-      },
     };
-    page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, timelineTableOpts));
+    page = ensureLockedSpace(doc, payload, page, measureProjectionTimelineTableHeight(doc, timelineTableOpts));
     timelineTableOpts.y = page.y;
-    page = { ...page, y: drawLayoutTable(doc, timelineTableOpts) + LAYOUT.sectionGap };
+    page = { ...page, y: drawProjectionTimelineTable(doc, timelineTableOpts) + LAYOUT.sectionGap };
   }
 
   finishLockedPage(doc, page.box, payload);
