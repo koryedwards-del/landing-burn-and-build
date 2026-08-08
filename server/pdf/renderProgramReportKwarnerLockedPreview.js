@@ -818,19 +818,19 @@ function buildProjectionsInputGridRows(fp) {
     [
       {
         type: 'metric',
-        label: 'Lean body mass\n(LBM)',
+        label: 'LEAN BODY MASS (LBM)',
         value: fp.inputGrid?.lbm ?? fp.lbmLbs ?? '—',
         unit: 'lbs',
       },
       {
         type: 'radio',
-        title: 'Job',
+        title: 'JOB',
         selectedId: fp.workPhysical,
         options: QUESTIONNAIRE_JOB_OPTIONS,
       },
       {
         type: 'radio',
-        title: 'Day to day',
+        title: 'DAY TO DAY',
         selectedId: fp.workStress,
         options: WORK_STRESS,
       },
@@ -838,19 +838,19 @@ function buildProjectionsInputGridRows(fp) {
     [
       {
         type: 'metric',
-        label: 'Weight training\n(WT)',
+        label: 'WEIGHT TRAINING (WT)',
         value: fp.inputGrid?.wt ?? hours.wt ?? '—',
         unit: 'hours per week',
       },
       {
         type: 'metric',
-        label: 'High heart rate aerobic\n(HHT)',
+        label: 'HIGH HEART RATE AEROBIC (HHT)',
         value: fp.inputGrid?.hht ?? hours.cardio ?? '—',
         unit: 'hours per week',
       },
       {
         type: 'metric',
-        label: 'Low heart rate aerobic\n(LHR)',
+        label: 'LOW HEART RATE AEROBIC (LHR)',
         value: fp.inputGrid?.lhr ?? hours.fatBurn ?? '—',
         unit: 'hours per week',
       },
@@ -858,21 +858,38 @@ function buildProjectionsInputGridRows(fp) {
   ];
 }
 
-const INPUT_GRID_RADIO = {
-  titleSize: PT.body,
-  optionSize: PT.subsection - 0.5,
-  radioRadius: 3.5,
-  optionGap: 4,
-  titleGap: 6,
-  labelPad: 14,
+const INPUT_GRID = {
+  cellPad: 5,
+  metric: {
+    labelSize: PT.subsection - 0.5,
+    valueSize: PT.body + 1,
+    labelGap: 3,
+  },
+  radio: {
+    titleSize: PT.subsection - 0.5,
+    optionSize: PT.tableBody,
+    radioRadius: 3,
+    optionGap: 2,
+    titleGap: 4,
+    labelPad: 12,
+  },
 };
 
+function metricValueLine(cell) {
+  return `${cell.value} ${cell.unit}`;
+}
+
 function measureMetricInputCell(doc, cell, innerW) {
-  return measureMetricColumnGrid(doc, [{ label: cell.label, value: cell.value, unit: cell.unit }], innerW);
+  const { labelSize, valueSize, labelGap } = INPUT_GRID.metric;
+  doc.font(SEMINAR_FONTS.bold).fontSize(labelSize);
+  const labelH = doc.heightOfString(cell.label, { width: innerW, align: 'center', lineGap: 0 });
+  doc.font(SEMINAR_FONTS.bold).fontSize(valueSize);
+  const valueH = doc.heightOfString(metricValueLine(cell), { width: innerW, align: 'center', lineGap: 0 });
+  return labelH + labelGap + valueH;
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
-  const { titleSize, optionSize, optionGap, titleGap, labelPad } = INPUT_GRID_RADIO;
+  const { titleSize, optionSize, optionGap, titleGap, labelPad } = INPUT_GRID.radio;
   doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
   let h = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
   const textW = innerW - labelPad;
@@ -894,7 +911,7 @@ function measureInputCell(doc, cell, innerW) {
 }
 
 function measureProjectionsInputGrid(doc, fp, width) {
-  const pad = TABLE_CONTAINER.cellPad;
+  const pad = INPUT_GRID.cellPad;
   const colW = width / 3;
   const innerW = colW - pad * 2;
   const rows = buildProjectionsInputGridRows(fp);
@@ -922,33 +939,30 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 }
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
-  const pad = TABLE_CONTAINER.cellPad;
+  const pad = INPUT_GRID.cellPad;
+  const { labelSize, valueSize, labelGap } = INPUT_GRID.metric;
+  const valueLine = metricValueLine(cell);
   let cy = y + pad;
   doc
     .font(SEMINAR_FONTS.bold)
-    .fontSize(REPORT_GRID.labelSize)
+    .fontSize(labelSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(cell.label, x + pad, cy, {
       width: innerW,
       align: 'center',
-      lineGap: REPORT_GRID.labelLineGap,
+      lineGap: 0,
     });
-  cy += doc.heightOfString(cell.label, { width: innerW, lineGap: REPORT_GRID.labelLineGap }) + 6;
+  cy += doc.heightOfString(cell.label, { width: innerW, lineGap: 0 }) + labelGap;
   doc
     .font(SEMINAR_FONTS.bold)
-    .fontSize(REPORT_GRID.valueSize)
-    .text(String(cell.value), x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
-  cy += doc.heightOfString(String(cell.value), { width: innerW }) + 4;
-  doc
-    .font(SEMINAR_FONTS.regular)
-    .fontSize(REPORT_GRID.unitSize)
+    .fontSize(valueSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(cell.unit, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+    .text(valueLine, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
 }
 
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
-  const pad = TABLE_CONTAINER.cellPad;
-  const { titleSize, optionSize, optionGap, titleGap, labelPad, radioRadius } = INPUT_GRID_RADIO;
+  const pad = INPUT_GRID.cellPad;
+  const { titleSize, optionSize, optionGap, titleGap, labelPad, radioRadius } = INPUT_GRID.radio;
   let cy = y + pad;
 
   doc
@@ -986,7 +1000,7 @@ function drawInputCell(doc, cell, x, y, innerW, cellH) {
 }
 
 function drawProjectionsInputGrid(doc, fp, x, y, width) {
-  const pad = TABLE_CONTAINER.cellPad;
+  const pad = INPUT_GRID.cellPad;
   const colW = width / 3;
   const innerW = colW - pad * 2;
   const rows = buildProjectionsInputGridRows(fp);
