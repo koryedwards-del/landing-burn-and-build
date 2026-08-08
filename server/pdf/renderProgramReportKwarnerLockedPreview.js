@@ -577,6 +577,73 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
+function buildFoodPlanInputColumns(fp) {
+  return FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
+    label,
+    unit,
+    value: fp.inputGrid?.[key]
+      ?? (key === 'lbm' ? fp.lbmLbs : null)
+      ?? (key === 'wt' ? fp.introHours?.wt : null)
+      ?? (key === 'hht' ? fp.introHours?.cardio : null)
+      ?? (key === 'lhr' ? fp.introHours?.fatBurn : null)
+      ?? '—',
+  }));
+}
+
+function measureFoodPlanInputContext(doc, fp, width) {
+  const contextParts = [];
+  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
+  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
+  if (fp.workdayFactor) {
+    contextParts.push(
+      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
+    );
+  }
+  const contextLine = contextParts.join('   ·   ');
+  if (!contextLine) return 0;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  return doc.heightOfString(contextLine, { width }) + LAYOUT.sectionGap;
+}
+
+function measureFoodPlanInputBlock(doc, fp, width) {
+  const inputColumns = buildFoodPlanInputColumns(fp);
+  return measureMetricColumnGrid(doc, inputColumns, width)
+    + LAYOUT.headerGap
+    + measureFoodPlanInputContext(doc, fp, width);
+}
+
+function drawFoodPlanInputBlock(doc, payload, page) {
+  const fp = payload.foodPlan;
+  if (!fp) return page;
+
+  const inputColumns = buildFoodPlanInputColumns(fp);
+  page = ensureLockedSpace(doc, payload, page, measureFoodPlanInputBlock(doc, fp, page.width));
+  page = {
+    ...page,
+    y: drawMetricColumnGrid(doc, page.x, page.y, page.width, inputColumns) + LAYOUT.headerGap,
+  };
+
+  const contextParts = [];
+  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
+  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
+  if (fp.workdayFactor) {
+    contextParts.push(
+      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
+    );
+  }
+  const contextLine = contextParts.join('   ·   ');
+  if (contextLine) {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(contextLine, page.x, page.y, { width: page.width, align: 'center', lineGap: 0 });
+    page = { ...page, y: doc.y + LAYOUT.sectionGap };
+  }
+
+  return page;
+}
+
 function drawProjectionsPage(doc, payload) {
   const projections = payload.projections;
   if (!projections) return;
@@ -584,6 +651,8 @@ function drawProjectionsPage(doc, payload) {
   let page = startLockedPage(doc, payload, 'Projections');
 
   page = drawBodyParagraphs(doc, payload, page, [projections.intro]);
+
+  page = drawFoodPlanInputBlock(doc, payload, page);
 
   page = drawBodyParagraphs(doc, payload, page, [projections.weeklyParagraph]);
 
@@ -798,41 +867,6 @@ const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
-
-  const inputColumns = FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
-    label,
-    unit,
-    value: fp.inputGrid?.[key]
-      ?? (key === 'lbm' ? fp.lbmLbs : null)
-      ?? (key === 'wt' ? fp.introHours?.wt : null)
-      ?? (key === 'hht' ? fp.introHours?.cardio : null)
-      ?? (key === 'lhr' ? fp.introHours?.fatBurn : null)
-      ?? '—',
-  }));
-  const inputGridH = measureMetricColumnGrid(doc, inputColumns, page.width);
-  page = ensureLockedSpace(doc, payload, page, inputGridH + LAYOUT.headerGap);
-  page = {
-    ...page,
-    y: drawMetricColumnGrid(doc, page.x, page.y, page.width, inputColumns) + LAYOUT.headerGap,
-  };
-
-  const contextParts = [];
-  if (fp.jobLabel) contextParts.push(`Job: ${fp.jobLabel}`);
-  if (fp.lifestyleLabel) contextParts.push(`Day-to-day pace: ${fp.lifestyleLabel}`);
-  if (fp.workdayFactor) {
-    contextParts.push(
-      `Workday activity level: ${fp.workdayFactor} — how much energy a typical workday adds above resting (higher means more physical work or stress; set from your job and day-to-day pace answers)`,
-    );
-  }
-  const contextLine = contextParts.join('   ·   ');
-  if (contextLine) {
-    doc
-      .font(SEMINAR_FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(contextLine, page.x, page.y, { width: page.width, align: 'center', lineGap: 0 });
-    page = { ...page, y: doc.y + LAYOUT.sectionGap };
-  }
 
   const story1 = [
     'We use your body composition information to determine your LBM (lean body mass) — the weight of everything in your body except fat, mostly muscle and organs. The computer uses your LBM to set your protein needs and your metabolic rate.',
