@@ -585,59 +585,6 @@ function drawProjectionsPage(doc, payload) {
 
   page = drawBodyParagraphs(doc, payload, page, [projections.intro]);
 
-  const goalTableOpts = {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: [
-      { key: 'label', width: 0.16 },
-      { key: 'todayPct', width: 0.14, align: 'right' },
-      { key: 'todayLbs', width: 0.14, align: 'right' },
-      { key: 'mid', width: 0.14, align: 'center' },
-      { key: 'goalPct', width: 0.14, align: 'right' },
-      { key: 'goalLbs', width: 0.14, align: 'right' },
-    ],
-    rows: [
-      {
-        label: '',
-        todayPct: 'TODAY',
-        todayLbs: '',
-        mid: '',
-        goalPct: 'EIGHT WEEK GOAL',
-        goalLbs: '',
-      },
-      {
-        label: 'LEAN',
-        todayPct: `${projections.today.leanPct}%`,
-        todayLbs: `${projections.today.leanLbs} lbs.`,
-        mid: '',
-        goalPct: projections.goal.leanPct,
-        goalLbs: projections.goal.leanLbs,
-      },
-      {
-        label: 'FAT',
-        todayPct: `${projections.today.fatPct}%`,
-        todayLbs: `${projections.today.fatLbs} lbs.`,
-        mid: projections.goal.fatLossMid,
-        goalPct: projections.goal.fatPct,
-        goalLbs: projections.goal.fatLbs,
-      },
-      {
-        label: 'TOTAL',
-        todayPct: `${projections.today.totalPct}%`,
-        todayLbs: `${projections.today.totalLbs} lbs.`,
-        mid: '',
-        goalPct: projections.goal.totalPct,
-        goalLbs: projections.goal.totalLbs,
-      },
-    ],
-    headerRows: 1,
-    boldColumnKeys: ['label'],
-  };
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts));
-  goalTableOpts.y = page.y;
-  page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.sectionGap };
-
   page = drawBodyParagraphs(doc, payload, page, [projections.weeklyParagraph]);
 
   if (projections.timelineRows.length) {

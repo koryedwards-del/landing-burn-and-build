@@ -73,7 +73,6 @@ export function projectionTimelineFromPackage(pkg) {
 /** Projections page — burn-engine 8-week cycles (program-report page 2 / landing-style table). */
 export function buildProjectionsPrintoutSection(pkg) {
   const intake = pkg?.intake;
-  const today = computeTodayBodyComposition(intake);
   const projection = eightWeekProjectionFromPackage(pkg);
   const timeline = projectionTimelineFromPackage(pkg);
   const hours = exerciseHoursSummary(intake);
@@ -102,16 +101,6 @@ export function buildProjectionsPrintoutSection(pkg) {
     weeklyParagraph,
     fatLostLbs: fatLost,
     weeklyFatLossLbs: weekly,
-    today,
-    goal: {
-      leanPct: `${projection.endLeanPct.toFixed(2)}%`,
-      leanLbs: `${projection.leanLbs.toFixed(1)} lbs.`,
-      fatPct: `${projection.endBf.toFixed(2)}%`,
-      fatLbs: `${projection.endFatLbs.toFixed(1)} lbs.`,
-      totalPct: '100.00%',
-      totalLbs: `${projection.endWeight.toFixed(1)} lbs.`,
-      fatLossMid: `−${fatLost} lbs. of fat`,
-    },
     timelineRows: timeline?.valid
       ? timeline.rows.map((row) => ({
         timeline: row.timeline,
