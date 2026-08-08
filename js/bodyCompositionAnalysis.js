@@ -186,6 +186,76 @@ export function computeDietProjectionTimeline({
   };
 }
 
+/** Body composition after a target number of weeks (partial 8-week cycles allowed). */
+export function computeDietProjectionAtWeeks({
+  gender,
+  weightLbs,
+  leanBodyMass,
+  bodyFatPercent,
+  maintainTotalCalories,
+  reduceTotalCalories,
+  weeks: targetWeeks,
+}) {
+  const weight = Number(weightLbs);
+  const lbm = Number(leanBodyMass);
+  const bf = Number(bodyFatPercent);
+  const maintainTotal = Number(maintainTotalCalories);
+  const reduceTotal = Number(reduceTotalCalories);
+  const g = gender === 'female' ? 'female' : 'male';
+  const targetBf = TARGET_BF[g];
+  const weeks = Number(targetWeeks);
+
+  if (!weight || weight <= 0 || !lbm || lbm <= 0 || lbm >= weight || !bf || bf <= targetBf || bf > 70) {
+    return { valid: false };
+  }
+  if (!weeks || weeks <= 0) return { valid: false };
+  if (!maintainTotal || !reduceTotal || maintainTotal <= reduceTotal) {
+    return { valid: false };
+  }
+
+  const cycleFatLossLbs = round1(fatLossPoundsFromCalorieGap(maintainTotal, reduceTotal, PROJECTION_CYCLE_DAYS));
+  const startFatLbs = round1(weight - lbm);
+  const startBf = round2(bf);
+
+  let curFatLbs = startFatLbs;
+  let curWeight = weight;
+  let elapsedWeeks = 0;
+
+  while (elapsedWeeks < weeks) {
+    const curBf = curFatLbs > 0 && curWeight > 0 ? (curFatLbs / curWeight) * 100 : 0;
+    if (curBf <= targetBf + 0.01) break;
+
+    const weeksThisStep = Math.min(PROJECTION_CYCLE_WEEKS, weeks - elapsedWeeks);
+    const stepFatLossLbs = round1((weeksThisStep / PROJECTION_CYCLE_WEEKS) * cycleFatLossLbs);
+
+    let endFatLbs = curFatLbs - stepFatLossLbs;
+    let endWeight = lbm + endFatLbs;
+    let endBf = endFatLbs > 0 && endWeight > 0 ? (endFatLbs / endWeight) * 100 : 0;
+
+    if (endBf <= targetBf) {
+      endBf = targetBf;
+      endFatLbs = (lbm * endBf) / 100;
+      endWeight = lbm + endFatLbs;
+    }
+
+    curFatLbs = round1(endFatLbs);
+    curWeight = round1(endWeight);
+    elapsedWeeks += weeksThisStep;
+  }
+
+  const endBf = curFatLbs > 0 && curWeight > 0 ? round2((curFatLbs / curWeight) * 100) : 0;
+
+  return {
+    valid: true,
+    weeks: elapsedWeeks,
+    startBf,
+    endBf,
+    bodyFatPercentLost: round2(startBf - endBf),
+    fatPoundsLost: round1(startFatLbs - curFatLbs),
+    endWeight: round1(curWeight),
+  };
+}
+
 export function computeTodayBodyComposition(intake) {
   const weight = Number(intake?.totalWeight) || 0;
   const lbm = Number(intake?.leanBodyMass) || 0;

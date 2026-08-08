@@ -2,6 +2,7 @@
 
 import {
   computeDietEightWeekProjection,
+  computeDietProjectionAtWeeks,
   computeDietProjectionTimeline,
 } from './bodyCompositionAnalysis.js';
 
@@ -69,25 +70,42 @@ export function projectionTimelineFromPackage(pkg) {
   });
 }
 
+export const PROJECTION_THREE_MONTH_WEEKS = 12;
+
 /** Projections page — burn-engine 8-week cycles (program-report page 2 / landing-style table). */
 export function buildProjectionsPrintoutSection(pkg) {
   const intake = pkg?.intake;
+  const summary = pkg?.plan?.summary;
   const projection = eightWeekProjectionFromPackage(pkg);
   const timeline = projectionTimelineFromPackage(pkg);
   const hours = exerciseHoursSummary(intake);
 
-  if (!projection) return null;
+  if (!projection || !intake?.leanBodyMass || !intake?.totalWeight || !intake?.fatPercent) return null;
+  if (!summary?.maintainTotalCals || !summary?.reduceTotalCals) return null;
 
-  const fatLost = projection.fatLostLbs.toFixed(1);
+  const threeMonth = computeDietProjectionAtWeeks({
+    gender: String(intake.sex || '').toLowerCase().startsWith('f') ? 'female' : 'male',
+    weightLbs: intake.totalWeight,
+    leanBodyMass: intake.leanBodyMass,
+    bodyFatPercent: intake.fatPercent,
+    maintainTotalCalories: summary.maintainTotalCals,
+    reduceTotalCalories: summary.reduceTotalCals,
+    weeks: PROJECTION_THREE_MONTH_WEEKS,
+  });
+
   const weekly = projection.weeklyFatLossLbs.toFixed(1);
-  const bodyFatLostPct = (projection.startBf - projection.endBf).toFixed(2);
+  const bodyFatLostPct = threeMonth.valid
+    ? threeMonth.bodyFatPercentLost.toFixed(2)
+    : (projection.startBf - projection.endBf).toFixed(2);
+  const fatLost = threeMonth.valid
+    ? threeMonth.fatPoundsLost.toFixed(1)
+    : projection.fatLostLbs.toFixed(1);
 
   const intro = [
     'The following food program contains a sophisticated calculation that is based on your individual lean',
     'body mass (LBM), and on your activities. This is the most individualized food program available for',
     'losing fat and building muscle.',
-    `In eight weeks you could safely lose ${bodyFatLostPct}% of body fat and ${fatLost} pounds of body fat.`,
-    'This is what recouping your body means in real life.',
+    `In three months that's ${bodyFatLostPct}% body and ${fatLost} pounds of fat.`,
     `In your questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
     `${hours.wt} hour(s) of weight training, ${hours.cardio} hour(s) of cardiovascular activities,`,
     `${hours.fatBurn} hour(s) of fat-burning activities`,
