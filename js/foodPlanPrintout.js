@@ -71,7 +71,8 @@ export function projectionTimelineFromPackage(pkg) {
 
 /** Projections page — between input grid and timeline table. */
 export const PROJECTIONS_RMR_BRIDGE =
-  'The burn engine uses the  information above to calculate your RMR (resting metabolic rate). In other words how much protein, carbohydrates and fat do use every day.';
+  'The burn engine uses the  information above to calculate your RMR (resting metabolic rate). In other words how much protein, carbohydrates and fat do use every day. '
+  + 'Now the burn engine can calculates how much body fat you can safely lose per day. The table below shows you projected body weight and fat% every eight weeks. Use this table to determine when to start your Burn & Build diet to reach your goal on time. Showtime is the extreme bodybuilder competition look. Dont panic the good news here is the look you want is somewhere between where you are now and Showtime. When you look like you want to look ease up on the diet. If you drift back up. Tighten up the diet. Fine tuning day to ay week to week keeps looking great year round.';
 
 /** Projections page — burn-engine 8-week cycles (program-report page 2 / landing-style table). */
 export function buildProjectionsPrintoutSection(pkg) {
