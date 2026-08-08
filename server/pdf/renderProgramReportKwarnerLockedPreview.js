@@ -1030,24 +1030,6 @@ function drawActivityInputBox(doc, fp, columns, x, y, width) {
   return y + totalH;
 }
 
-const FOOD_PLAN_MACRO_GRID = Object.freeze([
-  {
-    label: 'Protein',
-    tooMuch: 'Gain fat',
-    tooLittle: 'Lose lean body mass (muscle)',
-  },
-  {
-    label: 'Carbohydrates',
-    tooMuch: 'Gain fat',
-    tooLittle: 'Lose energy between meals',
-  },
-  {
-    label: 'Fat',
-    tooMuch: 'Gain fat',
-    tooLittle: 'Slow fat loss',
-  },
-]);
-
 const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
   { key: 'lbm', label: 'Lean body mass\n(LBM)', unit: 'lbs' },
   { key: 'wt', label: 'Weight training\n(WT)', unit: 'hours per week' },
@@ -1109,11 +1091,6 @@ function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
 
-  const intro = payload.foodPlanNarrative?.intro || [];
-  if (intro.length) {
-    page = drawBodyParagraphs(doc, payload, page, intro);
-  }
-
   const servingsBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
   if (servingsBlock?.paragraphs?.length) {
     page = ensureLockedSpace(
@@ -1125,12 +1102,10 @@ function drawFoodPlanPage(doc, payload) {
         0,
       ),
     );
-    page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
+    if (servingsBlock?.title) {
+      page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
+    }
     page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
-  }
-
-  if (fp.macroSignalIntro) {
-    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
   }
 
   const macroRows = fp.macroSignalRows || [];
