@@ -861,7 +861,8 @@ function buildProjectionsInputGridRows(fp) {
 const INPUT_GRID = {
   cellPad: 5,
   cellPadTop: 7,
-  /** Match projection table header row (BODYWEIGHT, TIMELINE, …). */
+  /** All 6 cell titles (LBM, JOB, …) — one size, bold. */
+  titleFont: SEMINAR_FONTS.bold,
   titleSize: PROJECTION_TABLE_HEAD_SIZE,
   /** Match projection table data rows (184 lbs, Current, …). */
   textSize: PT.subsection,
@@ -872,6 +873,19 @@ const INPUT_GRID = {
     labelPad: 9,
   },
 };
+
+function measureInputGridTitle(doc, text, innerW) {
+  doc.font(INPUT_GRID.titleFont).fontSize(INPUT_GRID.titleSize);
+  return doc.heightOfString(String(text), { width: innerW, align: 'center', lineGap: 0 });
+}
+
+function drawInputGridTitle(doc, text, x, y, innerW) {
+  doc
+    .font(INPUT_GRID.titleFont)
+    .fontSize(INPUT_GRID.titleSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), x + INPUT_GRID.cellPad, y, { width: innerW, align: 'center', lineGap: 0 });
+}
 
 function radioOptionFontSize(doc, cell, innerW) {
   const { textSize } = INPUT_GRID;
@@ -933,7 +947,7 @@ function metricValueLine(cell) {
 
 function metricCellTypography() {
   return {
-    labelFont: SEMINAR_FONTS.bold,
+    labelFont: INPUT_GRID.titleFont,
     labelSize: INPUT_GRID.titleSize,
     valueFont: SEMINAR_FONTS.regular,
     valueSize: INPUT_GRID.textSize,
@@ -942,19 +956,16 @@ function metricCellTypography() {
 }
 
 function measureMetricInputCell(doc, cell, innerW) {
-  const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
-  doc.font(labelFont).fontSize(labelSize);
-  const labelH = doc.heightOfString(cell.label, { width: innerW, align: 'center', lineGap: 0 });
+  const { valueFont, valueSize, labelGap } = metricCellTypography(cell);
+  const labelH = measureInputGridTitle(doc, cell.label, innerW);
   doc.font(valueFont).fontSize(valueSize);
   const valueH = doc.heightOfString(metricValueLine(cell), { width: innerW, align: 'center', lineGap: 0 });
   return labelH + labelGap + valueH;
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
-  const { titleSize } = INPUT_GRID;
   const { titleGap } = INPUT_GRID.radio;
-  doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
-  const titleH = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
+  const titleH = measureInputGridTitle(doc, cell.title, innerW) + titleGap;
   return titleH + measureRadioOptionRow(doc, cell, innerW);
 }
 
@@ -994,20 +1005,12 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
-  const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
+  const { valueFont, valueSize, labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
   const contentH = measureMetricInputCell(doc, cell, innerW);
   let cy = y + (cellH - contentH) / 2;
-  doc
-    .font(labelFont)
-    .fontSize(labelSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(cell.label, x + pad, cy, {
-      width: innerW,
-      align: 'center',
-      lineGap: 0,
-    });
-  cy += doc.heightOfString(cell.label, { width: innerW, lineGap: 0 }) + labelGap;
+  drawInputGridTitle(doc, cell.label, x, cy, innerW);
+  cy += measureInputGridTitle(doc, cell.label, innerW) + labelGap;
   doc
     .font(valueFont)
     .fontSize(valueSize)
@@ -1018,16 +1021,11 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
   const padTop = INPUT_GRID.cellPadTop;
-  const { titleSize } = INPUT_GRID;
   const { titleGap } = INPUT_GRID.radio;
   let cy = y + padTop;
 
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(titleSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(cell.title, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
-  cy += doc.heightOfString(cell.title, { width: innerW, lineGap: 0 }) + titleGap;
+  drawInputGridTitle(doc, cell.title, x, cy, innerW);
+  cy += measureInputGridTitle(doc, cell.title, innerW) + titleGap;
 
   drawRadioOptionRow(doc, cell, x + pad, cy, innerW);
 }
