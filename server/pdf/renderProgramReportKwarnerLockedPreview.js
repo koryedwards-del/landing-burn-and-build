@@ -1087,6 +1087,11 @@ function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
 
+  const lead = fp.lead || [];
+  if (lead.length) {
+    page = drawBodyParagraphs(doc, payload, page, lead);
+  }
+
   const servingsBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
   if (servingsBlock?.paragraphs?.length) {
     page = ensureLockedSpace(

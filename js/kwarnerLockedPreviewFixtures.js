@@ -14,6 +14,11 @@ export const KWARNER_WELCOME_COPY = {
   servings: 'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
 };
 
+export const KWARNER_FOOD_PLAN_LEAD = [
+  'We have been converting macros since 1982.',
+  'The challenge with macros is slippage.',
+];
+
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',
   email: 'preview@example.com',
@@ -71,6 +76,7 @@ export function buildKristiKwarnerPreviewPackage() {
 export function buildKristiKwarnerPreviewPayload() {
   const payload = buildProgramReportPayload(buildKristiKwarnerPreviewPackage());
   payload.welcome = KWARNER_WELCOME_COPY;
+  payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
   delete payload.gettingStarted;
   delete payload.stepsToSuccess;
   return payload;
