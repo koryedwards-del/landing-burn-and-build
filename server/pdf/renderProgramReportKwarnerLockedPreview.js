@@ -882,25 +882,28 @@ function drawInputGridTitle(doc, text, x, y, innerW) {
     .text(String(text), x + INPUT_GRID.cellPad, y, { width: innerW, align: 'center', lineGap: 0 });
 }
 
-function choiceRowFontSize(doc, row, innerW) {
-  const choiceCells = row.filter((cell) => cell.type === 'choice');
-  if (!choiceCells.length) return INPUT_GRID.textSize;
+function choiceCellFontSize(doc, cell, innerW) {
   const { textSize } = INPUT_GRID;
-  const slotW = innerW / 3;
+  const slotW = innerW / cell.options.length;
   let size = textSize;
   while (size > 6) {
     let fits = true;
-    choiceCells.forEach((cell) => {
-      cell.options.forEach((option) => {
-        const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-        doc.font(font).fontSize(size);
-        if (doc.widthOfString(option.label) > slotW - 4) fits = false;
-      });
+    cell.options.forEach((option) => {
+      const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+      doc.font(font).fontSize(size);
+      if (doc.widthOfString(option.label) > slotW - 4) fits = false;
     });
     if (fits) return size;
     size -= 0.25;
   }
   return 6;
+}
+
+/** Column 2 (JOB) sets choice content size — column 3 (DAY TO DAY) matches it. */
+function choiceRowFontSize(doc, row, innerW) {
+  const jobCell = row.find((cell) => cell.type === 'choice' && cell.title === 'JOB');
+  if (!jobCell) return INPUT_GRID.textSize;
+  return choiceCellFontSize(doc, jobCell, innerW);
 }
 
 function measureChoiceOptionRow(doc, optionSize) {
