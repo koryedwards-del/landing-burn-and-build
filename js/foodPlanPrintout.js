@@ -93,7 +93,6 @@ export function buildProjectionsPrintoutSection(pkg) {
     weeks: PROJECTION_THREE_MONTH_WEEKS,
   });
 
-  const weekly = projection.weeklyFatLossLbs.toFixed(1);
   const bodyFatLostPct = threeMonth.valid
     ? threeMonth.bodyFatPercentLost.toFixed(2)
     : (projection.startBf - projection.endBf).toFixed(2);
@@ -111,16 +110,10 @@ export function buildProjectionsPrintoutSection(pkg) {
     `${hours.fatBurn} hour(s) of fat-burning activities`,
   ].join(' ');
 
-  const weeklyParagraph = [
-    `You project to lose an average of ${weekly} pounds of fat per week. In addition, you could gain lean weight.`,
-    'Gaining lean weight will increase your strength and energy and offset your fat loss.',
-  ].join(' ');
-
   return {
     intro,
-    weeklyParagraph,
     fatLostLbs: fatLost,
-    weeklyFatLossLbs: weekly,
+    weeklyFatLossLbs: projection.weeklyFatLossLbs.toFixed(1),
     timelineRows: timeline?.valid
       ? timeline.rows.map((row) => ({
         timeline: row.timeline,

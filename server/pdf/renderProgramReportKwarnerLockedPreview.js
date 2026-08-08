@@ -654,8 +654,6 @@ function drawProjectionsPage(doc, payload) {
 
   page = drawFoodPlanInputBlock(doc, payload, page);
 
-  page = drawBodyParagraphs(doc, payload, page, [projections.weeklyParagraph]);
-
   if (projections.timelineRows.length) {
     const timelineTableOpts = {
       x: page.x,
