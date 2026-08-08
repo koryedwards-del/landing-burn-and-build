@@ -728,7 +728,9 @@ function buildFoodPlanInputColumns(fp) {
 
 const INPUT_CONTEXT_STYLE = {
   fontSize: PT.subsection,
-  pad: TABLE_CONTAINER.cellPad,
+  padX: TABLE_CONTAINER.cellPad + 4,
+  padY: TABLE_CONTAINER.cellPad + 6,
+  lineGap: 6,
 };
 
 function buildFoodPlanInputContextParts(fp) {
@@ -748,9 +750,8 @@ function buildFoodPlanInputContextParts(fp) {
 function measureFoodPlanInputContextContent(doc, fp, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return 0;
-  const pad = INPUT_CONTEXT_STYLE.pad;
-  const innerW = width - pad * 2;
-  const fontSize = INPUT_CONTEXT_STYLE.fontSize;
+  const { padX, padY, fontSize, lineGap } = INPUT_CONTEXT_STYLE;
+  const innerW = width - padX * 2;
   const notePart = parts.find((part) => part.note);
 
   doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
@@ -765,16 +766,15 @@ function measureFoodPlanInputContextContent(doc, fp, width) {
     ? doc.heightOfString(notePart.note, { width: innerW, align: 'center', lineGap: 2 })
     : 0;
 
-  return leadH + noteH + pad * 2;
+  return leadH + (noteH ? lineGap + noteH : 0) + padY * 2;
 }
 
 function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
   const parts = buildFoodPlanInputContextParts(fp);
   if (!parts.length) return y;
 
-  const pad = INPUT_CONTEXT_STYLE.pad;
-  const innerW = width - pad * 2;
-  const fontSize = INPUT_CONTEXT_STYLE.fontSize;
+  const { padX, padY, fontSize, lineGap } = INPUT_CONTEXT_STYLE;
+  const innerW = width - padX * 2;
   const notePart = parts.find((part) => part.note);
 
   doc
@@ -786,8 +786,8 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
         const prefix = index > 0 ? '   ·   ' : '';
         return `${prefix}${part.label} ${part.value}`;
       }).join(''),
-      x + pad,
-      y + pad,
+      x + padX,
+      y + padY,
       { width: innerW, align: 'center', lineGap: 2 },
     );
 
@@ -796,7 +796,7 @@ function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
       .font(SEMINAR_FONTS.regular)
       .fontSize(fontSize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(notePart.note, x + pad, doc.y, { width: innerW, align: 'center', lineGap: 2 });
+      .text(notePart.note, x + padX, doc.y + lineGap, { width: innerW, align: 'center', lineGap: 2 });
   }
 
   return y + measureFoodPlanInputContextContent(doc, fp, width);
