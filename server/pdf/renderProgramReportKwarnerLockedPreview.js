@@ -859,18 +859,19 @@ function buildProjectionsInputGridRows(fp) {
 }
 
 const INPUT_GRID = {
-  cellPad: 5,
-  cellPadTop: 7,
+  /** Match projection table horizontal inset (`TABLE_CONTAINER.cellPad`). */
+  cellPad: TABLE_CONTAINER.cellPad,
+  /** Match projection table vertical inset (`LAYOUT.tableRowPad`). */
+  cellPadV: LAYOUT.tableRowPad,
   /** Match projection table header row (BODYWEIGHT, TIMELINE, …). */
   titleSize: PROJECTION_TABLE_HEAD_SIZE,
   /** Match projection table data rows (184 lbs, Current, …). */
   textSize: PT.subsection,
-  labelGap: 3,
+  /** Space between cell title and content — ~one content line. */
+  titleGap: PT.subsection,
   radio: {
     radioRadius: 2.5,
-    optionGap: 2,
-    titleGap: 4,
-    labelPad: 9,
+    labelPad: 7,
   },
 };
 
@@ -893,22 +894,20 @@ function radioOptionFontSize(doc, cell, innerW) {
 
 function measureRadioOptionRow(doc, cell, innerW) {
   const optionSize = radioOptionFontSize(doc, cell, innerW);
-  const { labelPad, radioRadius } = INPUT_GRID.radio;
-  const slotW = innerW / cell.options.length;
-  const textW = Math.max(1, slotW - labelPad - 2);
-  let maxH = radioRadius * 2;
-  cell.options.forEach((option) => {
-    const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-    doc.font(font).fontSize(optionSize);
-    maxH = Math.max(maxH, doc.heightOfString(option.label, { width: textW, lineGap: 0 }), radioRadius * 2);
-  });
-  return maxH;
+  const { radioRadius } = INPUT_GRID.radio;
+  const radioD = radioRadius * 2;
+  doc.font(SEMINAR_FONTS.regular).fontSize(optionSize);
+  return Math.max(doc.currentLineHeight(), radioD);
 }
 
 function drawRadioOptionRow(doc, cell, x, y, innerW) {
   const optionSize = radioOptionFontSize(doc, cell, innerW);
   const { labelPad, radioRadius } = INPUT_GRID.radio;
   const slotW = innerW / cell.options.length;
+  const radioD = radioRadius * 2;
+  doc.font(SEMINAR_FONTS.regular).fontSize(optionSize);
+  const lineH = doc.currentLineHeight();
+  const rowH = Math.max(lineH, radioD);
   cell.options.forEach((option, index) => {
     const selected = option.id === cell.selectedId;
     const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
@@ -917,12 +916,14 @@ function drawRadioOptionRow(doc, cell, x, y, innerW) {
     const labelW = doc.widthOfString(option.label);
     const groupW = labelPad + labelW;
     const startX = slotX + Math.max(0, (slotW - groupW) / 2);
-    drawPdfRadioButton(doc, startX, y, radioRadius, selected);
+    const textY = y + (rowH - lineH) / 2 + lineH * 0.78;
+    const radioY = textY - lineH * 0.38 - radioRadius;
+    drawPdfRadioButton(doc, startX, radioY, radioRadius, selected);
     doc
       .font(font)
       .fontSize(optionSize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(option.label, startX + labelPad, y, { lineBreak: false });
+      .text(option.label, startX + labelPad, textY, { lineBreak: false });
   });
 }
 
@@ -936,7 +937,7 @@ function metricCellTypography() {
     labelSize: INPUT_GRID.titleSize,
     valueFont: SEMINAR_FONTS.regular,
     valueSize: INPUT_GRID.textSize,
-    labelGap: INPUT_GRID.labelGap,
+    labelGap: INPUT_GRID.titleGap,
   };
 }
 
@@ -950,8 +951,7 @@ function measureMetricInputCell(doc, cell, innerW) {
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
-  const { titleSize } = INPUT_GRID;
-  const { titleGap } = INPUT_GRID.radio;
+  const { titleSize, titleGap } = INPUT_GRID;
   doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
   const titleH = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
   return titleH + measureRadioOptionRow(doc, cell, innerW);
@@ -963,17 +963,16 @@ function measureInputCell(doc, cell, innerW) {
 }
 
 function measureProjectionsInputGrid(doc, fp, width) {
-  const pad = INPUT_GRID.cellPad;
-  const padTop = INPUT_GRID.cellPadTop;
+  const { cellPad, cellPadV } = INPUT_GRID;
   const colW = width / 3;
-  const innerW = colW - pad * 2;
+  const innerW = colW - cellPad * 2;
   const rows = buildProjectionsInputGridRows(fp);
   const rowHeights = rows.map((row) => {
-    let maxH = padTop + pad;
+    let contentH = 0;
     row.forEach((cell) => {
-      maxH = Math.max(maxH, padTop + pad + measureInputCell(doc, cell, innerW));
+      contentH = Math.max(contentH, measureInputCell(doc, cell, innerW));
     });
-    return maxH;
+    return cellPadV * 2 + contentH;
   });
   return rowHeights.reduce((sum, h) => sum + h, 0);
 }
@@ -992,16 +991,16 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 }
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
-  const pad = INPUT_GRID.cellPad;
-  const padTop = INPUT_GRID.cellPadTop;
+  const { cellPad, cellPadV } = INPUT_GRID;
   const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
-  let cy = y + padTop;
+  const contentH = measureMetricInputCell(doc, cell, innerW);
+  let cy = y + (cellH - contentH) / 2;
   doc
     .font(labelFont)
     .fontSize(labelSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(cell.label, x + pad, cy, {
+    .text(cell.label, x + cellPad, cy, {
       width: innerW,
       align: 'center',
       lineGap: 0,
@@ -1011,24 +1010,22 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
     .font(valueFont)
     .fontSize(valueSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(valueLine, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+    .text(valueLine, x + cellPad, cy, { width: innerW, align: 'center', lineGap: 0 });
 }
 
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
-  const pad = INPUT_GRID.cellPad;
-  const padTop = INPUT_GRID.cellPadTop;
-  const { titleSize } = INPUT_GRID;
-  const { titleGap } = INPUT_GRID.radio;
-  let cy = y + padTop;
+  const { cellPad, titleSize, titleGap } = INPUT_GRID;
+  const contentH = measureRadioInputCell(doc, cell, innerW);
+  let cy = y + (cellH - contentH) / 2;
 
   doc
     .font(SEMINAR_FONTS.bold)
     .fontSize(titleSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(cell.title, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+    .text(cell.title, x + cellPad, cy, { width: innerW, align: 'center', lineGap: 0 });
   cy += doc.heightOfString(cell.title, { width: innerW, lineGap: 0 }) + titleGap;
 
-  drawRadioOptionRow(doc, cell, x + pad, cy, innerW);
+  drawRadioOptionRow(doc, cell, x + cellPad, cy, innerW);
 }
 
 function drawInputCell(doc, cell, x, y, innerW, cellH) {
@@ -1040,16 +1037,16 @@ function drawInputCell(doc, cell, x, y, innerW, cellH) {
 }
 
 function drawProjectionsInputGrid(doc, fp, x, y, width) {
-  const pad = INPUT_GRID.cellPad;
+  const { cellPad, cellPadV } = INPUT_GRID;
   const colW = width / 3;
-  const innerW = colW - pad * 2;
+  const innerW = colW - cellPad * 2;
   const rows = buildProjectionsInputGridRows(fp);
   const rowHeights = rows.map((row) => {
-    let maxH = pad * 2;
+    let contentH = 0;
     row.forEach((cell) => {
-      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW));
+      contentH = Math.max(contentH, measureInputCell(doc, cell, innerW));
     });
-    return maxH;
+    return cellPadV * 2 + contentH;
   });
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
 
