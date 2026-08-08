@@ -34,6 +34,8 @@ Five print documents, **two header templates**:
 | **Personalized** (name + date) | Weekly meal plan, Grocery list |
 | **Generic** (brand + title) | Food list, For Best Results, FAQ |
 
+**User-authored copy is fixed everywhere** — see `.cursor/rules/user-authored-copy.mdc`. Never reauthor or ad lib; use source text as written unless the user supplies exact replacement words.
+
 **Generic doc content is fixed** — do not ad lib or refactor copy/layout unless explicitly requested. Source data:
 
 | Document | Data |

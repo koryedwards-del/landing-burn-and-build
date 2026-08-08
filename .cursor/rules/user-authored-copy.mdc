@@ -1,0 +1,22 @@
+---
+description: User-authored copy is fixed — never reauthor or ad lib
+alwaysApply: true
+---
+
+# User-authored copy
+
+Everything the user authors is **fixed source text**. This applies to **all** user-facing and product copy across the repo — not only printouts.
+
+## Rules
+
+- **Do not** reauthor, paraphrase, tighten, “improve,” or ad lib user-written copy.
+- **Do not** substitute your own wording for the user’s messaging, positioning, or voice.
+- **Do not** merge, split, or refactor copy unless the user explicitly requests that edit.
+- **Use** existing approved text from the codebase and data files as written.
+- **Change wording only** when the user supplies exact replacement text (paste-in or quoted).
+
+## Scope
+
+Print Shop PDFs, program report, questionnaire, landing pages, handbook/FAQ, tips, food lists, KWarner preview, menu planner UI, and any other surface where the user’s copy appears.
+
+Layout, rendering, wiring, and bugs are fair game. **Copy is not** unless the user gives the exact words.
