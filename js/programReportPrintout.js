@@ -14,6 +14,7 @@ import { formatProgramDateLong, programClientName, escapeHtml } from './programB
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
+  buildProjectionsPrintoutSection,
   MACRO_SIGNAL_INTRO,
   MACRO_SIGNAL_ROWS,
   workdayActivityLabel,
@@ -284,6 +285,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       lbmCongrats: lbmCopy.congrats,
       weightGoalRanges: weightGoalRanges(gender, intake.leanBodyMass),
     },
+    projections: buildProjectionsPrintoutSection(pkg),
     history: {
       rows: historyRows.map((row) => ({
         testDate: formatHistoryTestDate(row.testDate),

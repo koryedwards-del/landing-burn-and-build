@@ -577,6 +577,98 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
+function drawProjectionsPage(doc, payload) {
+  const projections = payload.projections;
+  if (!projections) return;
+
+  let page = startLockedPage(doc, payload, 'Projections');
+
+  page = drawBodyParagraphs(doc, payload, page, [projections.intro]);
+
+  const goalTableOpts = {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns: [
+      { key: 'label', width: 0.16 },
+      { key: 'todayPct', width: 0.14, align: 'right' },
+      { key: 'todayLbs', width: 0.14, align: 'right' },
+      { key: 'mid', width: 0.14, align: 'center' },
+      { key: 'goalPct', width: 0.14, align: 'right' },
+      { key: 'goalLbs', width: 0.14, align: 'right' },
+    ],
+    rows: [
+      {
+        label: '',
+        todayPct: 'TODAY',
+        todayLbs: '',
+        mid: '',
+        goalPct: 'EIGHT WEEK GOAL',
+        goalLbs: '',
+      },
+      {
+        label: 'LEAN',
+        todayPct: `${projections.today.leanPct}%`,
+        todayLbs: `${projections.today.leanLbs} lbs.`,
+        mid: '',
+        goalPct: projections.goal.leanPct,
+        goalLbs: projections.goal.leanLbs,
+      },
+      {
+        label: 'FAT',
+        todayPct: `${projections.today.fatPct}%`,
+        todayLbs: `${projections.today.fatLbs} lbs.`,
+        mid: projections.goal.fatLossMid,
+        goalPct: projections.goal.fatPct,
+        goalLbs: projections.goal.fatLbs,
+      },
+      {
+        label: 'TOTAL',
+        todayPct: `${projections.today.totalPct}%`,
+        todayLbs: `${projections.today.totalLbs} lbs.`,
+        mid: '',
+        goalPct: projections.goal.totalPct,
+        goalLbs: projections.goal.totalLbs,
+      },
+    ],
+    headerRows: 1,
+    boldColumnKeys: ['label'],
+  };
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts));
+  goalTableOpts.y = page.y;
+  page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.sectionGap };
+
+  page = drawBodyParagraphs(doc, payload, page, [projections.weeklyParagraph]);
+
+  if (projections.timelineRows.length) {
+    const timelineTableOpts = {
+      x: page.x,
+      y: page.y,
+      width: page.width,
+      columns: [
+        { key: 'timeline', width: 0.34 },
+        { key: 'bodyFat', width: 0.33, align: 'right' },
+        { key: 'weight', width: 0.33, align: 'right' },
+      ],
+      rows: [
+        { timeline: 'Timeline', bodyFat: 'Body Fat %', weight: 'Bodyweight' },
+        ...projections.timelineRows.map((row) => ({
+          timeline: row.timeline,
+          bodyFat: row.bodyFat,
+          weight: row.weight,
+        })),
+      ],
+      headerRows: 1,
+      boldColumnKeys: ['timeline', 'bodyFat', 'weight'],
+    };
+    page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, timelineTableOpts));
+    timelineTableOpts.y = page.y;
+    page = { ...page, y: drawLayoutTable(doc, timelineTableOpts) + LAYOUT.sectionGap };
+  }
+
+  finishLockedPage(doc, page.box, payload);
+}
+
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
@@ -732,25 +824,6 @@ function drawMetricColumnGrid(doc, x, y, width, columns) {
   return y + gridH;
 }
 
-function drawFatLossHero(doc, x, y, width, fatLostLbs) {
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(PT.pageTitle - 2)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(`Lose ${fatLostLbs} lbs of fat in 8 weeks`, x, y, { width, align: 'center', lineGap: 0 });
-  doc
-    .font(SEMINAR_FONTS.regular)
-    .fontSize(LAYOUT.bodySize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(
-      'Your eight-week fat-loss target from the Burn Engine, based on your lean body mass, job, lifestyle, and weekly exercise hours.',
-      x,
-      doc.y + 6,
-      { width, align: 'center', lineGap: LAYOUT.lineGap },
-    );
-  return doc.y + LAYOUT.sectionGap;
-}
-
 const FOOD_PLAN_MACRO_GRID = Object.freeze([
   {
     label: 'Protein',
@@ -779,8 +852,6 @@ const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
-
-  page = { ...page, y: drawFatLossHero(doc, page.x, page.y, page.width, fp.fatLostLbs) };
 
   const inputColumns = FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
     label,
@@ -823,70 +894,7 @@ function drawFoodPlanPage(doc, payload) {
   ].join(' ');
   page = drawBodyParagraphs(doc, payload, page, [story1]);
 
-  const goalIntro = fp.goal
-    ? 'If you follow this plan for eight weeks, the table compares your body today with where you project to be. Lean mass is muscle and organs; body fat is stored fat; total weight is what the scale shows.'
-    : null;
-  if (goalIntro) {
-    page = drawBodyParagraphs(doc, payload, page, [goalIntro]);
-  }
-
-  if (fp.goal) {
-    const goalTableOpts = {
-      x: page.x,
-      y: page.y,
-      width: page.width,
-      columns: [
-        { key: 'label', width: 0.16 },
-        { key: 'todayPct', width: 0.14, align: 'right' },
-        { key: 'todayLbs', width: 0.14, align: 'right' },
-        { key: 'mid', width: 0.14, align: 'center' },
-        { key: 'goalPct', width: 0.14, align: 'right' },
-        { key: 'goalLbs', width: 0.14, align: 'right' },
-      ],
-      rows: [
-        {
-          label: '',
-          todayPct: 'Today',
-          todayLbs: '',
-          mid: 'Change',
-          goalPct: '8-week goal',
-          goalLbs: '',
-        },
-        {
-          label: 'Lean mass',
-          todayPct: `${fp.today.leanPct}%`,
-          todayLbs: `${fp.today.leanLbs} lbs.`,
-          mid: '',
-          goalPct: fp.goal.leanPct,
-          goalLbs: fp.goal.leanLbs,
-        },
-        {
-          label: 'Body fat',
-          todayPct: `${fp.today.fatPct}%`,
-          todayLbs: `${fp.today.fatLbs} lbs.`,
-          mid: `−${fp.fatLostLbs} lbs.`,
-          goalPct: fp.goal.fatPct,
-          goalLbs: fp.goal.fatLbs,
-        },
-        {
-          label: 'Total weight',
-          todayPct: `${fp.today.totalPct}%`,
-          todayLbs: `${fp.today.totalLbs} lbs.`,
-          mid: '',
-          goalPct: fp.goal.totalPct,
-          goalLbs: fp.goal.totalLbs,
-        },
-      ],
-      headerRows: 1,
-      boldColumnKeys: ['label'],
-    };
-    page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, goalTableOpts));
-    goalTableOpts.y = page.y;
-    page = { ...page, y: drawLayoutTable(doc, goalTableOpts) + LAYOUT.sectionGap };
-  }
-
   const story2 = [
-    `On this plan you project to lose about ${fp.weeklyFatLossLbs} pounds of fat per week on average.`,
     'Macronutrients — protein, carbohydrates, and fat — are the three main parts of food that supply calories and shape body composition. The table below is not a food list; it explains what happens when each macro is too high or too low. That is why your daily servings on the next page are set the way they are: so you stay in the right range without counting grams yourself.',
   ].join(' ');
   page = drawBodyParagraphs(doc, payload, page, [story2]);
@@ -995,7 +1003,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   }
 
   drawWelcomePage(doc, payload);
-  drawLeanBodyAnalysisPage(doc, payload);
+  drawProjectionsPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);

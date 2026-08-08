@@ -3,6 +3,7 @@
 import {
   computeDietEightWeekProjection,
   computeDietProjectionTimeline,
+  computeTodayBodyComposition,
 } from './bodyCompositionAnalysis.js';
 
 function phpRound(x) {
@@ -67,6 +68,59 @@ export function projectionTimelineFromPackage(pkg) {
     maintainTotalCalories: summary.maintainTotalCals,
     reduceTotalCalories: summary.reduceTotalCals,
   });
+}
+
+/** Projections page — burn-engine 8-week cycles (program-report page 2 / landing-style table). */
+export function buildProjectionsPrintoutSection(pkg) {
+  const intake = pkg?.intake;
+  const today = computeTodayBodyComposition(intake);
+  const projection = eightWeekProjectionFromPackage(pkg);
+  const timeline = projectionTimelineFromPackage(pkg);
+  const hours = exerciseHoursSummary(intake);
+
+  if (!projection) return null;
+
+  const fatLost = projection.fatLostLbs.toFixed(1);
+  const weekly = projection.weeklyFatLossLbs.toFixed(1);
+
+  const intro = [
+    'The following food program contains a sophisticated calculation that is based on your individual lean',
+    'body mass (LBM), and on your activities. This is the most individualized food program available for',
+    `losing fat and building muscle. In eight weeks, you could safely lose ${fatLost} pounds of fat. In your`,
+    `questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
+    `${hours.wt} hour(s) of weight training, ${hours.cardio} hour(s) of cardiovascular activities,`,
+    `${hours.fatBurn} hour(s) of fat-burning activities`,
+  ].join(' ');
+
+  const weeklyParagraph = [
+    `You project to lose an average of ${weekly} pounds of fat per week. In addition, you could gain lean weight.`,
+    'Gaining lean weight will increase your strength and energy and offset your fat loss.',
+  ].join(' ');
+
+  return {
+    intro,
+    weeklyParagraph,
+    fatLostLbs: fatLost,
+    weeklyFatLossLbs: weekly,
+    today,
+    goal: {
+      leanPct: `${projection.endLeanPct.toFixed(2)}%`,
+      leanLbs: `${projection.leanLbs.toFixed(1)} lbs.`,
+      fatPct: `${projection.endBf.toFixed(2)}%`,
+      fatLbs: `${projection.endFatLbs.toFixed(1)} lbs.`,
+      totalPct: '100.00%',
+      totalLbs: `${projection.endWeight.toFixed(1)} lbs.`,
+      fatLossMid: `−${fatLost} lbs. of fat`,
+    },
+    timelineRows: timeline?.valid
+      ? timeline.rows.map((row) => ({
+        timeline: row.timeline,
+        bodyFat: row.badge ? `${row.bodyFatDisplay} (${row.badge})` : row.bodyFatDisplay,
+        weight: row.weightDisplay,
+        isCurrent: Boolean(row.isCurrent),
+      }))
+      : [],
+  };
 }
 
 function macroRow(label, proteinQ, carbsQuarter, fatCalories, totalCalories) {
