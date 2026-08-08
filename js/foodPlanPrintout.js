@@ -80,12 +80,15 @@ export function buildProjectionsPrintoutSection(pkg) {
 
   const fatLost = projection.fatLostLbs.toFixed(1);
   const weekly = projection.weeklyFatLossLbs.toFixed(1);
+  const bodyFatLostPct = (projection.startBf - projection.endBf).toFixed(2);
 
   const intro = [
     'The following food program contains a sophisticated calculation that is based on your individual lean',
     'body mass (LBM), and on your activities. This is the most individualized food program available for',
-    `losing fat and building muscle. In eight weeks, you could safely lose ${fatLost} pounds of fat. In your`,
-    `questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
+    'losing fat and building muscle.',
+    `In eight weeks you could safely lose ${bodyFatLostPct}% of body fat and ${fatLost} pounds of body fat.`,
+    'This is what recouping your body means in real life.',
+    `In your questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
     `${hours.wt} hour(s) of weight training, ${hours.cardio} hour(s) of cardiovascular activities,`,
     `${hours.fatBurn} hour(s) of fat-burning activities`,
   ].join(' ');
