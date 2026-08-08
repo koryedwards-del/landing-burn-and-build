@@ -33,6 +33,7 @@ import {
   flavorKitList,
   SPLASH_RULE,
 } from '../../menuplanner/data/flavorKits.js';
+import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngine.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -811,93 +812,244 @@ function measureProjectionTimelineTableHeight(doc, opts) {
   return measureProjectionTimelineTable(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
-function buildFoodPlanInputColumns(fp) {
-  return FOOD_PLAN_INPUT_COLUMNS.map(({ key, label, unit }) => ({
-    label,
-    unit,
-    value: fp.inputGrid?.[key]
-      ?? (key === 'lbm' ? fp.lbmLbs : null)
-      ?? (key === 'wt' ? fp.introHours?.wt : null)
-      ?? (key === 'hht' ? fp.introHours?.cardio : null)
-      ?? (key === 'lhr' ? fp.introHours?.fatBurn : null)
-      ?? '—',
-  }));
+function buildProjectionsInputGridRows(fp) {
+  const hours = fp.introHours || {};
+  return [
+    [
+      {
+        type: 'metric',
+        label: 'Lean body mass\n(LBM)',
+        value: fp.inputGrid?.lbm ?? fp.lbmLbs ?? '—',
+        unit: 'lbs',
+      },
+      {
+        type: 'radio',
+        title: 'Job',
+        selectedId: fp.workPhysical,
+        options: QUESTIONNAIRE_JOB_OPTIONS,
+      },
+      {
+        type: 'radio',
+        title: 'Day to day',
+        selectedId: fp.workStress,
+        options: WORK_STRESS,
+      },
+    ],
+    [
+      {
+        type: 'metric',
+        label: 'Weight training\n(WT)',
+        value: fp.inputGrid?.wt ?? hours.wt ?? '—',
+        unit: 'hours per week',
+      },
+      {
+        type: 'metric',
+        label: 'High heart rate aerobic\n(HHT)',
+        value: fp.inputGrid?.hht ?? hours.cardio ?? '—',
+        unit: 'hours per week',
+      },
+      {
+        type: 'metric',
+        label: 'Low heart rate aerobic\n(LHR)',
+        value: fp.inputGrid?.lhr ?? hours.fatBurn ?? '—',
+        unit: 'hours per week',
+      },
+    ],
+  ];
 }
 
-const INPUT_CONTEXT_STYLE = {
-  fontSize: PT.subsection,
-  padX: 0,
-  padY: TABLE_CONTAINER.cellPad,
-  lineGap: 0,
+const INPUT_GRID_RADIO = {
+  titleSize: PT.body,
+  optionSize: PT.subsection - 0.5,
+  radioRadius: 3.5,
+  optionGap: 4,
+  titleGap: 6,
+  labelPad: 14,
 };
 
-function buildFoodPlanInputContextParts(fp) {
-  const parts = [];
-  if (fp.jobLabel) parts.push({ label: 'Job:', value: fp.jobLabel });
-  if (fp.lifestyleLabel) parts.push({ label: 'Day to day:', value: fp.lifestyleLabel });
-  return parts;
+function measureMetricInputCell(doc, cell, innerW) {
+  return measureMetricColumnGrid(doc, [{ label: cell.label, value: cell.value, unit: cell.unit }], innerW);
 }
 
-function measureFoodPlanInputContextContent(doc, fp, width) {
-  const parts = buildFoodPlanInputContextParts(fp);
-  if (!parts.length) return 0;
-  const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
-  const innerW = width - padX * 2;
-
-  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
-  const lead = parts.map((part, index) => {
-    const prefix = index > 0 ? '   ·   ' : '';
-    return `${prefix}${part.label} ${part.value}`;
-  }).join('');
-  const leadH = doc.heightOfString(lead, { width: innerW, align: 'center', lineGap: 0 });
-
-  return leadH + padY * 2;
+function measureRadioInputCell(doc, cell, innerW) {
+  const { titleSize, optionSize, optionGap, titleGap, labelPad } = INPUT_GRID_RADIO;
+  doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
+  let h = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
+  const textW = innerW - labelPad;
+  cell.options.forEach((option) => {
+    const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    doc.font(font).fontSize(optionSize);
+    const lineH = Math.max(
+      optionSize + optionGap,
+      doc.heightOfString(option.label, { width: textW, lineGap: 0 }) + optionGap,
+    );
+    h += lineH;
+  });
+  return h;
 }
 
-function drawFoodPlanInputContextContent(doc, fp, x, y, width) {
-  const parts = buildFoodPlanInputContextParts(fp);
-  if (!parts.length) return y;
+function measureInputCell(doc, cell, innerW) {
+  if (cell.type === 'radio') return measureRadioInputCell(doc, cell, innerW);
+  return measureMetricInputCell(doc, cell, innerW);
+}
 
-  const { padX, padY, fontSize } = INPUT_CONTEXT_STYLE;
-  const innerW = width - padX * 2;
+function measureProjectionsInputGrid(doc, fp, width) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const colW = width / 3;
+  const innerW = colW - pad * 2;
+  const rows = buildProjectionsInputGridRows(fp);
+  const rowHeights = rows.map((row) => {
+    let maxH = pad * 2;
+    row.forEach((cell) => {
+      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW));
+    });
+    return maxH;
+  });
+  return rowHeights.reduce((sum, h) => sum + h, 0);
+}
+
+function drawPdfRadioButton(doc, x, y, radius, selected) {
+  const cx = x + radius;
+  const cy = y + radius;
+  doc
+    .strokeColor(SEMINAR_COLORS.body)
+    .lineWidth(0.75)
+    .circle(cx, cy, radius)
+    .stroke();
+  if (selected) {
+    doc.fillColor(SEMINAR_COLORS.body).circle(cx, cy, radius * 0.5).fill();
+  }
+}
+
+function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
+  const pad = TABLE_CONTAINER.cellPad;
+  let cy = y + pad;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(REPORT_GRID.labelSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(cell.label, x + pad, cy, {
+      width: innerW,
+      align: 'center',
+      lineGap: REPORT_GRID.labelLineGap,
+    });
+  cy += doc.heightOfString(cell.label, { width: innerW, lineGap: REPORT_GRID.labelLineGap }) + 6;
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(REPORT_GRID.valueSize)
+    .text(String(cell.value), x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+  cy += doc.heightOfString(String(cell.value), { width: innerW }) + 4;
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(REPORT_GRID.unitSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(cell.unit, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+}
+
+function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const { titleSize, optionSize, optionGap, titleGap, labelPad, radioRadius } = INPUT_GRID_RADIO;
+  let cy = y + pad;
 
   doc
     .font(SEMINAR_FONTS.bold)
-    .fontSize(fontSize)
+    .fontSize(titleSize)
     .fillColor(SEMINAR_COLORS.body)
-    .text(
-      parts.map((part, index) => {
-        const prefix = index > 0 ? '   ·   ' : '';
-        return `${prefix}${part.label} ${part.value}`;
-      }).join(''),
-      x + padX,
-      y + padY,
-      { width: innerW, align: 'center', lineGap: 0 },
-    );
+    .text(cell.title, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+  cy += doc.heightOfString(cell.title, { width: innerW, lineGap: 0 }) + titleGap;
 
-  return y + measureFoodPlanInputContextContent(doc, fp, width);
+  const textW = innerW - labelPad;
+  cell.options.forEach((option) => {
+    const selected = option.id === cell.selectedId;
+    const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    const lineTop = cy;
+    drawPdfRadioButton(doc, x + pad, lineTop, radioRadius, selected);
+    doc
+      .font(font)
+      .fontSize(optionSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(option.label, x + pad + labelPad, lineTop, { width: textW, lineGap: 0 });
+    const lineH = Math.max(
+      optionSize + optionGap,
+      doc.heightOfString(option.label, { width: textW, lineGap: 0 }) + optionGap,
+    );
+    cy += lineH;
+  });
 }
 
-function measureActivityInputBox(doc, columns, fp, width) {
-  const gridH = measureMetricColumnGrid(doc, columns, width);
-  const contextH = measureFoodPlanInputContextContent(doc, fp, width);
-  return gridH + contextH;
+function drawInputCell(doc, cell, x, y, innerW, cellH) {
+  if (cell.type === 'radio') {
+    drawRadioInputCell(doc, cell, x, y, innerW, cellH);
+    return;
+  }
+  drawMetricInputCell(doc, cell, x, y, innerW, cellH);
+}
+
+function drawProjectionsInputGrid(doc, fp, x, y, width) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const colW = width / 3;
+  const innerW = colW - pad * 2;
+  const rows = buildProjectionsInputGridRows(fp);
+  const rowHeights = rows.map((row) => {
+    let maxH = pad * 2;
+    row.forEach((cell) => {
+      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW));
+    });
+    return maxH;
+  });
+  const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
+
+  doc
+    .strokeColor(TABLE_CONTAINER.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, totalH, TABLE_CONTAINER.radius)
+    .stroke();
+
+  const ruleTop = y + TABLE_CONTAINER.radius * 0.5;
+  const ruleBottom = y + totalH - TABLE_CONTAINER.radius * 0.5;
+  [1, 2].forEach((index) => {
+    const ruleX = x + colW * index;
+    doc
+      .strokeColor(TABLE_CONTAINER.stroke)
+      .lineWidth(STAPLES_LIST.ruleWidth)
+      .moveTo(ruleX, ruleTop)
+      .lineTo(ruleX, ruleBottom)
+      .stroke();
+  });
+
+  let rowY = y;
+  rows.forEach((row, rowIndex) => {
+    const rowH = rowHeights[rowIndex];
+    row.forEach((cell, colIndex) => {
+      const cellX = x + colW * colIndex;
+      drawInputCell(doc, cell, cellX, rowY, innerW, rowH);
+    });
+    rowY += rowH;
+    if (rowIndex < rows.length - 1) {
+      doc
+        .strokeColor(TABLE_CONTAINER.stroke)
+        .lineWidth(0.5)
+        .moveTo(x + TABLE_CONTAINER.radius, rowY)
+        .lineTo(x + width - TABLE_CONTAINER.radius, rowY)
+        .stroke();
+    }
+  });
+
+  return y + totalH;
 }
 
 function measureFoodPlanInputBlock(doc, fp, width) {
-  const inputColumns = buildFoodPlanInputColumns(fp);
-  return measureActivityInputBox(doc, inputColumns, fp, width) + LAYOUT.sectionGap;
+  return measureProjectionsInputGrid(doc, fp, width) + LAYOUT.sectionGap;
 }
 
 function drawFoodPlanInputBlock(doc, payload, page) {
   const fp = payload.foodPlan;
   if (!fp) return page;
 
-  const inputColumns = buildFoodPlanInputColumns(fp);
   page = ensureLockedSpace(doc, payload, page, measureFoodPlanInputBlock(doc, fp, page.width));
   page = {
     ...page,
-    y: drawActivityInputBox(doc, fp, inputColumns, page.x, page.y, page.width) + LAYOUT.sectionGap,
+    y: drawProjectionsInputGrid(doc, fp, page.x, page.y, page.width) + LAYOUT.sectionGap,
   };
 
   return page;
@@ -1040,79 +1192,6 @@ function measureMetricColumnGrid(doc, columns, width) {
   const unitH = doc.heightOfString('hours per week', { width: innerW });
   return pad * 2 + maxLabelH + 6 + valueH + 4 + unitH;
 }
-
-/** @param {import('pdfkit')} doc @param {Array<{ label: string, value: string, unit: string }>} columns */
-function drawActivityInputBox(doc, fp, columns, x, y, width) {
-  const colW = width / columns.length;
-  const pad = TABLE_CONTAINER.cellPad;
-  const gridH = measureMetricColumnGrid(doc, columns, width);
-  const contextH = measureFoodPlanInputContextContent(doc, fp, width);
-  const totalH = gridH + contextH;
-
-  doc
-    .strokeColor(TABLE_CONTAINER.stroke)
-    .lineWidth(1.25)
-    .roundedRect(x, y, width, totalH, TABLE_CONTAINER.radius)
-    .stroke();
-
-  const ruleTop = y + TABLE_CONTAINER.radius * 0.5;
-  const ruleBottom = y + gridH - (contextH > 0 ? 0 : TABLE_CONTAINER.radius * 0.5);
-  for (let i = 1; i < columns.length; i += 1) {
-    const ruleX = x + colW * i;
-    doc
-      .strokeColor(TABLE_CONTAINER.stroke)
-      .lineWidth(STAPLES_LIST.ruleWidth)
-      .moveTo(ruleX, ruleTop)
-      .lineTo(ruleX, ruleBottom)
-      .stroke();
-  }
-
-  columns.forEach((col, index) => {
-    const cx = x + colW * index;
-    const innerW = colW - pad * 2;
-    let cy = y + pad;
-    doc
-      .font(SEMINAR_FONTS.bold)
-      .fontSize(REPORT_GRID.labelSize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(col.label, cx + pad, cy, {
-        width: innerW,
-        align: 'center',
-        lineGap: REPORT_GRID.labelLineGap,
-      });
-    cy += doc.heightOfString(col.label, { width: innerW, lineGap: REPORT_GRID.labelLineGap }) + 6;
-    doc
-      .font(SEMINAR_FONTS.bold)
-      .fontSize(REPORT_GRID.valueSize)
-      .text(col.value, cx + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
-    cy += doc.heightOfString(col.value, { width: innerW }) + 4;
-    doc
-      .font(SEMINAR_FONTS.regular)
-      .fontSize(REPORT_GRID.unitSize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(col.unit, cx + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
-  });
-
-  if (contextH > 0) {
-    const dividerY = y + gridH;
-    doc
-      .strokeColor(TABLE_CONTAINER.stroke)
-      .lineWidth(0.5)
-      .moveTo(x + TABLE_CONTAINER.radius, dividerY)
-      .lineTo(x + width - TABLE_CONTAINER.radius, dividerY)
-      .stroke();
-    drawFoodPlanInputContextContent(doc, fp, x, dividerY, width);
-  }
-
-  return y + totalH;
-}
-
-const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
-  { key: 'lbm', label: 'Lean body mass\n(LBM)', unit: 'lbs' },
-  { key: 'wt', label: 'Weight training\n(WT)', unit: 'hours per week' },
-  { key: 'hht', label: 'High heart rate aerobic (HHT)', unit: 'hours per week' },
-  { key: 'lhr', label: 'Low heart rate aerobic (LHR)', unit: 'hours per week' },
-]);
 
 const SERVINGS_TABLE_COLUMNS = Object.freeze([
   { key: 'label', width: 0.18 },

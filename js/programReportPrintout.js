@@ -309,6 +309,8 @@ export function buildProgramReportPayload(pkg, options = {}) {
         hht: hours.cardio,
         lhr: hours.fatBurn,
       },
+      workPhysical: intake.workPhysical || null,
+      workStress: intake.workStress || null,
       jobLabel: WORK_PHYSICAL.find((item) => item.id === intake.workPhysical)?.label || '—',
       lifestyleLabel: WORK_STRESS.find((item) => item.id === intake.workStress)?.label || '—',
       today,
