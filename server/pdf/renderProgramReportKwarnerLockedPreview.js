@@ -93,6 +93,28 @@ const TABLE_CONTAINER = Object.freeze({
   cellPad: 8,
 });
 
+function resolveTableCellStyle(opts, row, rowIndex, col) {
+  const headerRows = opts.headerRows ?? 1;
+  const isHeader = rowIndex < headerRows;
+  const boldKeys = new Set(opts.boldColumnKeys ?? []);
+
+  if (typeof opts.getRowStyle === 'function') {
+    const style = opts.getRowStyle(row, rowIndex, { isHeader });
+    const font = style.font
+      ?? (isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular);
+    const fontSize = style.fontSize
+      ?? (isHeader ? (opts.headFontSize ?? LAYOUT.tableHeadSize) : (opts.bodyFontSize ?? LAYOUT.tableBodySize));
+    return { font, fontSize };
+  }
+
+  return {
+    font: isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular,
+    fontSize: isHeader
+      ? (opts.headFontSize ?? LAYOUT.tableHeadSize)
+      : (opts.bodyFontSize ?? LAYOUT.tableBodySize),
+  };
+}
+
 function layoutTableRowHeights(doc, opts) {
   const columns = opts.columns;
   const tableW = opts.width;
@@ -101,12 +123,11 @@ function layoutTableRowHeights(doc, opts) {
 
   return opts.rows.map((row, rowIndex) => {
     const isHeader = rowIndex < headerRows;
-    let maxH = LAYOUT.tableBodySize + LAYOUT.tableRowPad * 2;
+    let maxH = (opts.bodyFontSize ?? LAYOUT.tableBodySize) + LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
       const cell = row[col.key] ?? '';
-      const font = isHeader ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-      const size = isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize;
-      const h = doc.font(font).fontSize(size).heightOfString(String(cell), {
+      const { font, fontSize } = resolveTableCellStyle(opts, row, rowIndex, col);
+      const h = doc.font(font).fontSize(fontSize).heightOfString(String(cell), {
         width: colWidths[index] - TABLE_CONTAINER.cellPad * 2,
         lineGap: 0,
       });
@@ -469,7 +490,6 @@ function drawLayoutTable(doc, opts) {
   const rowHeights = layoutTableRowHeights(doc, { ...opts, width: tableW });
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
   const pad = TABLE_CONTAINER.cellPad;
-  const boldKeys = new Set(opts.boldColumnKeys ?? []);
 
   doc
     .strokeColor(TABLE_CONTAINER.stroke)
@@ -479,14 +499,14 @@ function drawLayoutTable(doc, opts) {
 
   let cy = tableY;
   opts.rows.forEach((row, rowIndex) => {
-    const isHeader = rowIndex < headerRows;
     const rh = rowHeights[rowIndex];
     let cx = tableX;
     columns.forEach((col, index) => {
       const w = colWidths[index];
+      const { font, fontSize } = resolveTableCellStyle(opts, row, rowIndex, col);
       doc
-        .font(isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
-        .fontSize(isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize)
+        .font(font)
+        .fontSize(fontSize)
         .fillColor(SEMINAR_COLORS.body)
         .text(String(row[col.key] ?? ''), cx + pad, cy + LAYOUT.tableRowPad, {
           width: w - pad * 2,
@@ -659,6 +679,8 @@ function drawProjectionsPage(doc, payload) {
       x: page.x,
       y: page.y,
       width: page.width,
+      headFontSize: PT.body,
+      bodyFontSize: PT.subsection,
       columns: [
         { key: 'weight', width: 0.34, align: 'right' },
         { key: 'timeline', width: 0.33, align: 'right' },
@@ -670,9 +692,23 @@ function drawProjectionsPage(doc, payload) {
           weight: row.weight,
           timeline: row.timeline,
           bodyFat: row.bodyFat,
+          isCurrent: row.isCurrent,
+          badge: row.badge,
         })),
       ],
       headerRows: 1,
+      getRowStyle(row, _rowIndex, { isHeader }) {
+        if (isHeader) {
+          return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+        }
+        if (row.isCurrent) {
+          return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+        }
+        if (row.badge === 'Average') {
+          return { font: SEMINAR_FONTS.italic, fontSize: PT.subsection };
+        }
+        return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+      },
     };
     page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, timelineTableOpts));
     timelineTableOpts.y = page.y;
@@ -758,9 +794,9 @@ function drawLeanBodyAnalysisPage(doc, payload) {
 }
 
 const REPORT_GRID = {
-  valueSize: 17,
+  valueSize: 15,
   labelSize: PT.body,
-  unitSize: PT.body - 1,
+  unitSize: PT.body,
   labelLineGap: 2,
 };
 

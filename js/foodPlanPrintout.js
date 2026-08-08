@@ -99,6 +99,7 @@ export function buildProjectionsPrintoutSection(pkg) {
         bodyFat: row.badge ? `${row.bodyFatDisplay} (${row.badge})` : row.bodyFatDisplay,
         weight: row.weightDisplay,
         isCurrent: Boolean(row.isCurrent),
+        badge: row.badge ?? null,
       }))
       : [],
   };
