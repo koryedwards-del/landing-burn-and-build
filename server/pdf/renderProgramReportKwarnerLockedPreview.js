@@ -989,7 +989,7 @@ const FOOD_PLAN_MACRO_GRID = Object.freeze([
 ]);
 
 const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
-  { key: 'lbm', label: 'Lean body mass (LBM)', unit: 'lbs' },
+  { key: 'lbm', label: 'Lean body mass\n(LBM)', unit: 'lbs' },
   { key: 'wt', label: 'Weight training\n(WT)', unit: 'hours per week' },
   { key: 'hht', label: 'High heart rate aerobic (HHT)', unit: 'hours per week' },
   { key: 'lhr', label: 'Low heart rate aerobic (LHR)', unit: 'hours per week' },
