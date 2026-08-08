@@ -860,6 +860,7 @@ function buildProjectionsInputGridRows(fp) {
 
 const INPUT_GRID = {
   cellPad: 5,
+  cellPadTop: 7,
   metric: {
     labelSize: PT.subsection - 0.5,
     valueSize: PT.body + 1,
@@ -935,13 +936,14 @@ function measureInputCell(doc, cell, innerW) {
 
 function measureProjectionsInputGrid(doc, fp, width) {
   const pad = INPUT_GRID.cellPad;
+  const padTop = INPUT_GRID.cellPadTop;
   const colW = width / 3;
   const innerW = colW - pad * 2;
   const rows = buildProjectionsInputGridRows(fp);
   const rowHeights = rows.map((row) => {
-    let maxH = pad * 2;
+    let maxH = padTop + pad;
     row.forEach((cell) => {
-      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW));
+      maxH = Math.max(maxH, padTop + pad + measureInputCell(doc, cell, innerW));
     });
     return maxH;
   });
@@ -963,9 +965,10 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
+  const padTop = INPUT_GRID.cellPadTop;
   const { labelSize, valueSize, labelGap } = INPUT_GRID.metric;
   const valueLine = metricValueLine(cell);
-  let cy = y + pad;
+  let cy = y + padTop;
   doc
     .font(SEMINAR_FONTS.bold)
     .fontSize(labelSize)
@@ -985,8 +988,9 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
 
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
+  const padTop = INPUT_GRID.cellPadTop;
   const { titleSize, titleGap } = INPUT_GRID.radio;
-  let cy = y + pad;
+  let cy = y + padTop;
 
   doc
     .font(SEMINAR_FONTS.bold)
