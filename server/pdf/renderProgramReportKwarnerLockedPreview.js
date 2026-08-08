@@ -994,10 +994,10 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
-  const padTop = INPUT_GRID.cellPadTop;
   const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
-  let cy = y + padTop;
+  const contentH = measureMetricInputCell(doc, cell, innerW);
+  let cy = y + (cellH - contentH) / 2;
   doc
     .font(labelFont)
     .fontSize(labelSize)
