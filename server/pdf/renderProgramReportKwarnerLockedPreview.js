@@ -861,8 +861,10 @@ function buildProjectionsInputGridRows(fp) {
 const INPUT_GRID = {
   cellPad: 5,
   cellPadTop: 7,
-  titleSize: PT.subsection,
-  textSize: PT.subsection * 0.5,
+  /** Match projection table header row (BODYWEIGHT, TIMELINE, …). */
+  titleSize: PROJECTION_TABLE_HEAD_SIZE,
+  /** Match projection table data rows (184 lbs, Current, …). */
+  textSize: PT.subsection,
   labelGap: 3,
   radio: {
     radioRadius: 2.5,
@@ -872,36 +874,53 @@ const INPUT_GRID = {
   },
 };
 
-function measureRadioOptionRow(doc, cell, innerW) {
+function radioOptionFontSize(doc, cell, innerW) {
   const { textSize } = INPUT_GRID;
+  const { labelPad } = INPUT_GRID.radio;
+  const slotW = innerW / cell.options.length;
+  let size = textSize;
+  while (size > 6) {
+    let fits = true;
+    cell.options.forEach((option) => {
+      doc.font(SEMINAR_FONTS.regular).fontSize(size);
+      if (labelPad + doc.widthOfString(option.label) > slotW - 2) fits = false;
+    });
+    if (fits) return size;
+    size -= 0.25;
+  }
+  return 6;
+}
+
+function measureRadioOptionRow(doc, cell, innerW) {
+  const optionSize = radioOptionFontSize(doc, cell, innerW);
   const { labelPad, radioRadius } = INPUT_GRID.radio;
   const slotW = innerW / cell.options.length;
   const textW = Math.max(1, slotW - labelPad - 2);
   let maxH = radioRadius * 2;
   cell.options.forEach((option) => {
     const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-    doc.font(font).fontSize(textSize);
+    doc.font(font).fontSize(optionSize);
     maxH = Math.max(maxH, doc.heightOfString(option.label, { width: textW, lineGap: 0 }), radioRadius * 2);
   });
   return maxH;
 }
 
 function drawRadioOptionRow(doc, cell, x, y, innerW) {
-  const { textSize } = INPUT_GRID;
+  const optionSize = radioOptionFontSize(doc, cell, innerW);
   const { labelPad, radioRadius } = INPUT_GRID.radio;
   const slotW = innerW / cell.options.length;
   cell.options.forEach((option, index) => {
     const selected = option.id === cell.selectedId;
     const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
     const slotX = x + slotW * index;
-    doc.font(font).fontSize(textSize);
+    doc.font(font).fontSize(optionSize);
     const labelW = doc.widthOfString(option.label);
     const groupW = labelPad + labelW;
     const startX = slotX + Math.max(0, (slotW - groupW) / 2);
     drawPdfRadioButton(doc, startX, y, radioRadius, selected);
     doc
       .font(font)
-      .fontSize(textSize)
+      .fontSize(optionSize)
       .fillColor(SEMINAR_COLORS.body)
       .text(option.label, startX + labelPad, y, { lineBreak: false });
   });
