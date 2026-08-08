@@ -955,12 +955,24 @@ function metricCellTypography() {
   };
 }
 
+function metricValueFontSize(doc, text, innerW) {
+  const { textSize } = INPUT_GRID;
+  let size = textSize;
+  while (size > 6) {
+    doc.font(SEMINAR_FONTS.regular).fontSize(size);
+    if (doc.widthOfString(text) <= innerW) return size;
+    size -= 0.25;
+  }
+  return 6;
+}
+
 function measureMetricInputCell(doc, cell, innerW) {
-  const { valueFont, valueSize, labelGap } = metricCellTypography(cell);
+  const { labelGap } = metricCellTypography(cell);
   const labelH = measureInputGridTitle(doc, cell.label, innerW);
-  doc.font(valueFont).fontSize(valueSize);
-  const valueH = doc.heightOfString(metricValueLine(cell), { width: innerW, align: 'center', lineGap: 0 });
-  return labelH + labelGap + valueH;
+  const valueLine = metricValueLine(cell);
+  const valueSize = metricValueFontSize(doc, valueLine, innerW);
+  doc.font(SEMINAR_FONTS.regular).fontSize(valueSize);
+  return labelH + labelGap + doc.currentLineHeight();
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
@@ -1005,17 +1017,17 @@ function drawPdfRadioButton(doc, x, y, radius, selected) {
 
 function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
-  const { valueFont, valueSize, labelGap } = metricCellTypography(cell);
+  const { labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
+  const valueSize = metricValueFontSize(doc, valueLine, innerW);
   const contentH = measureMetricInputCell(doc, cell, innerW);
   let cy = y + (cellH - contentH) / 2;
   drawInputGridTitle(doc, cell.label, x, cy, innerW);
-  cy += measureInputGridTitle(doc, cell.label, innerW) + labelGap;
-  doc
-    .font(valueFont)
-    .fontSize(valueSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(valueLine, x + pad, cy, { width: innerW, align: 'center', lineGap: 0 });
+  const valueY = doc.y + labelGap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(valueSize).fillColor(SEMINAR_COLORS.body);
+  const valueW = doc.widthOfString(valueLine);
+  const valueX = x + pad + (innerW - valueW) / 2;
+  doc.text(valueLine, valueX, valueY, { lineBreak: false });
 }
 
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
