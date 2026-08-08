@@ -818,7 +818,7 @@ function buildProjectionsInputGridRows(fp) {
     [
       {
         type: 'metric',
-        label: 'LEAN BODY MASS (LBM)',
+        label: 'LBM',
         value: fp.inputGrid?.lbm ?? fp.lbmLbs ?? '—',
         unit: 'lbs',
       },
@@ -841,21 +841,18 @@ function buildProjectionsInputGridRows(fp) {
         label: 'WT',
         value: fp.inputGrid?.wt ?? hours.wt ?? '—',
         unit: 'hours per week',
-        projectionDataStyle: true,
       },
       {
         type: 'metric',
         label: 'HHT',
         value: fp.inputGrid?.hht ?? hours.cardio ?? '—',
         unit: 'hours per week',
-        projectionDataStyle: true,
       },
       {
         type: 'metric',
         label: 'LHR',
         value: fp.inputGrid?.lhr ?? hours.fatBurn ?? '—',
         unit: 'hours per week',
-        projectionDataStyle: true,
       },
     ],
   ];
@@ -864,14 +861,10 @@ function buildProjectionsInputGridRows(fp) {
 const INPUT_GRID = {
   cellPad: 5,
   cellPadTop: 7,
-  metric: {
-    labelSize: PT.subsection - 0.5,
-    valueSize: PT.body + 1,
-    labelGap: 3,
-  },
+  titleSize: PT.subsection,
+  textSize: PT.subsection * 0.5,
+  labelGap: 3,
   radio: {
-    titleSize: PT.subsection - 0.5,
-    optionSize: 7.5,
     radioRadius: 2.5,
     optionGap: 2,
     titleGap: 4,
@@ -880,33 +873,35 @@ const INPUT_GRID = {
 };
 
 function measureRadioOptionRow(doc, cell, innerW) {
-  const { optionSize, labelPad, radioRadius } = INPUT_GRID.radio;
+  const { textSize } = INPUT_GRID;
+  const { labelPad, radioRadius } = INPUT_GRID.radio;
   const slotW = innerW / cell.options.length;
   const textW = Math.max(1, slotW - labelPad - 2);
   let maxH = radioRadius * 2;
   cell.options.forEach((option) => {
     const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-    doc.font(font).fontSize(optionSize);
+    doc.font(font).fontSize(textSize);
     maxH = Math.max(maxH, doc.heightOfString(option.label, { width: textW, lineGap: 0 }), radioRadius * 2);
   });
   return maxH;
 }
 
 function drawRadioOptionRow(doc, cell, x, y, innerW) {
-  const { optionSize, labelPad, radioRadius } = INPUT_GRID.radio;
+  const { textSize } = INPUT_GRID;
+  const { labelPad, radioRadius } = INPUT_GRID.radio;
   const slotW = innerW / cell.options.length;
   cell.options.forEach((option, index) => {
     const selected = option.id === cell.selectedId;
     const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
     const slotX = x + slotW * index;
-    doc.font(font).fontSize(optionSize);
+    doc.font(font).fontSize(textSize);
     const labelW = doc.widthOfString(option.label);
     const groupW = labelPad + labelW;
     const startX = slotX + Math.max(0, (slotW - groupW) / 2);
     drawPdfRadioButton(doc, startX, y, radioRadius, selected);
     doc
       .font(font)
-      .fontSize(optionSize)
+      .fontSize(textSize)
       .fillColor(SEMINAR_COLORS.body)
       .text(option.label, startX + labelPad, y, { lineBreak: false });
   });
@@ -916,22 +911,13 @@ function metricValueLine(cell) {
   return `${cell.value} ${cell.unit}`;
 }
 
-function metricCellTypography(cell) {
-  if (cell.projectionDataStyle) {
-    return {
-      labelFont: SEMINAR_FONTS.regular,
-      labelSize: PT.subsection,
-      valueFont: SEMINAR_FONTS.regular,
-      valueSize: PT.subsection,
-      labelGap: 3,
-    };
-  }
+function metricCellTypography() {
   return {
     labelFont: SEMINAR_FONTS.bold,
-    labelSize: INPUT_GRID.metric.labelSize,
-    valueFont: SEMINAR_FONTS.bold,
-    valueSize: INPUT_GRID.metric.valueSize,
-    labelGap: INPUT_GRID.metric.labelGap,
+    labelSize: INPUT_GRID.titleSize,
+    valueFont: SEMINAR_FONTS.regular,
+    valueSize: INPUT_GRID.textSize,
+    labelGap: INPUT_GRID.labelGap,
   };
 }
 
@@ -945,7 +931,8 @@ function measureMetricInputCell(doc, cell, innerW) {
 }
 
 function measureRadioInputCell(doc, cell, innerW) {
-  const { titleSize, titleGap } = INPUT_GRID.radio;
+  const { titleSize } = INPUT_GRID;
+  const { titleGap } = INPUT_GRID.radio;
   doc.font(SEMINAR_FONTS.bold).fontSize(titleSize);
   const titleH = doc.heightOfString(cell.title, { width: innerW, align: 'center', lineGap: 0 }) + titleGap;
   return titleH + measureRadioOptionRow(doc, cell, innerW);
@@ -1011,7 +998,8 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
 function drawRadioInputCell(doc, cell, x, y, innerW, cellH) {
   const pad = INPUT_GRID.cellPad;
   const padTop = INPUT_GRID.cellPadTop;
-  const { titleSize, titleGap } = INPUT_GRID.radio;
+  const { titleSize } = INPUT_GRID;
+  const { titleGap } = INPUT_GRID.radio;
   let cy = y + padTop;
 
   doc
