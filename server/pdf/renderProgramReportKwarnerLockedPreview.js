@@ -593,20 +593,20 @@ function drawProjectionsPage(doc, payload) {
       y: page.y,
       width: page.width,
       columns: [
-        { key: 'timeline', width: 0.34 },
+        { key: 'weight', width: 0.34, align: 'right' },
+        { key: 'timeline', width: 0.33, align: 'right' },
         { key: 'bodyFat', width: 0.33, align: 'right' },
-        { key: 'weight', width: 0.33, align: 'right' },
       ],
       rows: [
-        { timeline: 'Timeline', bodyFat: 'Body Fat %', weight: 'Bodyweight' },
+        { weight: 'Bodyweight', timeline: 'Timeline', bodyFat: 'Body Fat %' },
         ...projections.timelineRows.map((row) => ({
+          weight: row.weight,
           timeline: row.timeline,
           bodyFat: row.bodyFat,
-          weight: row.weight,
         })),
       ],
       headerRows: 1,
-      boldColumnKeys: ['timeline', 'bodyFat', 'weight'],
+      boldColumnKeys: ['weight', 'timeline', 'bodyFat'],
     };
     page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, timelineTableOpts));
     timelineTableOpts.y = page.y;
