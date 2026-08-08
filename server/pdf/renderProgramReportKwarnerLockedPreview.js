@@ -597,7 +597,7 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
-const PROJECTION_TABLE_HEAD_SIZE = PT.body * 1.5;
+const PROJECTION_TABLE_HEAD_SIZE = PT.body * 1.5 * 0.75;
 
 function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
   if (isHeader) {
