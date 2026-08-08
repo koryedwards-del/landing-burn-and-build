@@ -882,16 +882,20 @@ function drawInputGridTitle(doc, text, x, y, innerW) {
     .text(String(text), x + INPUT_GRID.cellPad, y, { width: innerW, align: 'center', lineGap: 0 });
 }
 
-function choiceOptionFontSize(doc, cell, innerW) {
+function choiceRowFontSize(doc, row, innerW) {
+  const choiceCells = row.filter((cell) => cell.type === 'choice');
+  if (!choiceCells.length) return INPUT_GRID.textSize;
   const { textSize } = INPUT_GRID;
-  const slotW = innerW / cell.options.length;
+  const slotW = innerW / 3;
   let size = textSize;
   while (size > 6) {
     let fits = true;
-    cell.options.forEach((option) => {
-      const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-      doc.font(font).fontSize(size);
-      if (doc.widthOfString(option.label) > slotW - 4) fits = false;
+    choiceCells.forEach((cell) => {
+      cell.options.forEach((option) => {
+        const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+        doc.font(font).fontSize(size);
+        if (doc.widthOfString(option.label) > slotW - 4) fits = false;
+      });
     });
     if (fits) return size;
     size -= 0.25;
@@ -899,14 +903,12 @@ function choiceOptionFontSize(doc, cell, innerW) {
   return 6;
 }
 
-function measureChoiceOptionRow(doc, cell, innerW) {
-  const optionSize = choiceOptionFontSize(doc, cell, innerW);
+function measureChoiceOptionRow(doc, optionSize) {
   doc.font(SEMINAR_FONTS.regular).fontSize(optionSize);
   return doc.currentLineHeight();
 }
 
-function drawChoiceOptionRow(doc, cell, x, y, innerW) {
-  const optionSize = choiceOptionFontSize(doc, cell, innerW);
+function drawChoiceOptionRow(doc, cell, x, y, innerW, optionSize) {
   const slotW = innerW / cell.options.length;
   cell.options.forEach((option, index) => {
     const selected = option.id === cell.selectedId;
@@ -936,34 +938,33 @@ function metricCellTypography() {
   };
 }
 
-function metricValueFontSize(doc, text, innerW) {
+function metricValueFontSize(doc, text, innerW, minSize = 6) {
   const { textSize } = INPUT_GRID;
   let size = textSize;
-  while (size > 6) {
+  while (size > minSize) {
     doc.font(SEMINAR_FONTS.regular).fontSize(size);
     if (doc.widthOfString(text) <= innerW) return size;
     size -= 0.25;
   }
-  return 6;
+  return minSize;
 }
 
-function measureMetricInputCell(doc, cell, innerW) {
+function measureMetricInputCell(doc, cell, innerW, valueSize) {
   const { labelGap } = metricCellTypography(cell);
   const labelH = measureInputGridTitle(doc, cell.label, innerW);
-  const valueLine = metricValueLine(cell);
-  const valueSize = metricValueFontSize(doc, valueLine, innerW);
-  doc.font(SEMINAR_FONTS.regular).fontSize(valueSize);
+  const size = valueSize ?? metricValueFontSize(doc, metricValueLine(cell), innerW);
+  doc.font(SEMINAR_FONTS.regular).fontSize(size);
   return labelH + labelGap + doc.currentLineHeight();
 }
 
-function measureChoiceInputCell(doc, cell, innerW) {
+function measureChoiceInputCell(doc, cell, innerW, optionSize) {
   const titleH = measureInputGridTitle(doc, cell.title, innerW);
-  return titleH + INPUT_GRID.labelGap + measureChoiceOptionRow(doc, cell, innerW);
+  return titleH + INPUT_GRID.labelGap + measureChoiceOptionRow(doc, optionSize);
 }
 
-function measureInputCell(doc, cell, innerW) {
-  if (cell.type === 'choice') return measureChoiceInputCell(doc, cell, innerW);
-  return measureMetricInputCell(doc, cell, innerW);
+function measureInputCell(doc, cell, innerW, opts = {}) {
+  if (cell.type === 'choice') return measureChoiceInputCell(doc, cell, innerW, opts.choiceOptionSize);
+  return measureMetricInputCell(doc, cell, innerW, opts.metricValueSize);
 }
 
 function measureProjectionsInputGrid(doc, fp, width) {
@@ -972,46 +973,50 @@ function measureProjectionsInputGrid(doc, fp, width) {
   const colW = width / 3;
   const innerW = colW - pad * 2;
   const rows = buildProjectionsInputGridRows(fp);
-  const rowHeights = rows.map((row) => {
+  const choiceOptionSize = choiceRowFontSize(doc, rows[0], innerW);
+  const rowHeights = rows.map((row, rowIndex) => {
     let maxH = padTop + pad;
+    const cellOpts = rowIndex === 1
+      ? { metricValueSize: choiceOptionSize }
+      : { choiceOptionSize };
     row.forEach((cell) => {
-      maxH = Math.max(maxH, padTop + pad + measureInputCell(doc, cell, innerW));
+      maxH = Math.max(maxH, padTop + pad + measureInputCell(doc, cell, innerW, cellOpts));
     });
     return maxH;
   });
   return rowHeights.reduce((sum, h) => sum + h, 0);
 }
 
-function drawChoiceInputCell(doc, cell, x, y, innerW, cellH) {
+function drawChoiceInputCell(doc, cell, x, y, innerW, cellH, optionSize) {
   const pad = INPUT_GRID.cellPad;
-  const contentH = measureChoiceInputCell(doc, cell, innerW);
+  const contentH = measureChoiceInputCell(doc, cell, innerW, optionSize);
   let cy = y + (cellH - contentH) / 2;
   drawInputGridTitle(doc, cell.title, x, cy, innerW);
   const optionsY = doc.y + INPUT_GRID.labelGap;
-  drawChoiceOptionRow(doc, cell, x + pad, optionsY, innerW);
+  drawChoiceOptionRow(doc, cell, x + pad, optionsY, innerW, optionSize);
 }
 
-function drawMetricInputCell(doc, cell, x, y, innerW, cellH) {
+function drawMetricInputCell(doc, cell, x, y, innerW, cellH, valueSize) {
   const pad = INPUT_GRID.cellPad;
   const { labelGap } = metricCellTypography(cell);
   const valueLine = metricValueLine(cell);
-  const valueSize = metricValueFontSize(doc, valueLine, innerW);
-  const contentH = measureMetricInputCell(doc, cell, innerW);
+  const resolvedValueSize = valueSize ?? metricValueFontSize(doc, valueLine, innerW);
+  const contentH = measureMetricInputCell(doc, cell, innerW, resolvedValueSize);
   let cy = y + (cellH - contentH) / 2;
   drawInputGridTitle(doc, cell.label, x, cy, innerW);
   const valueY = doc.y + labelGap;
-  doc.font(SEMINAR_FONTS.regular).fontSize(valueSize).fillColor(SEMINAR_COLORS.body);
+  doc.font(SEMINAR_FONTS.regular).fontSize(resolvedValueSize).fillColor(SEMINAR_COLORS.body);
   const valueW = doc.widthOfString(valueLine);
   const valueX = x + pad + (innerW - valueW) / 2;
   doc.text(valueLine, valueX, valueY, { lineBreak: false });
 }
 
-function drawInputCell(doc, cell, x, y, innerW, cellH) {
+function drawInputCell(doc, cell, x, y, innerW, cellH, opts = {}) {
   if (cell.type === 'choice') {
-    drawChoiceInputCell(doc, cell, x, y, innerW, cellH);
+    drawChoiceInputCell(doc, cell, x, y, innerW, cellH, opts.choiceOptionSize);
     return;
   }
-  drawMetricInputCell(doc, cell, x, y, innerW, cellH);
+  drawMetricInputCell(doc, cell, x, y, innerW, cellH, opts.metricValueSize);
 }
 
 function drawProjectionsInputGrid(doc, fp, x, y, width) {
@@ -1019,10 +1024,14 @@ function drawProjectionsInputGrid(doc, fp, x, y, width) {
   const colW = width / 3;
   const innerW = colW - pad * 2;
   const rows = buildProjectionsInputGridRows(fp);
-  const rowHeights = rows.map((row) => {
+  const choiceOptionSize = choiceRowFontSize(doc, rows[0], innerW);
+  const rowHeights = rows.map((row, rowIndex) => {
+    const cellOpts = rowIndex === 1
+      ? { metricValueSize: choiceOptionSize }
+      : { choiceOptionSize };
     let maxH = pad * 2;
     row.forEach((cell) => {
-      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW));
+      maxH = Math.max(maxH, pad * 2 + measureInputCell(doc, cell, innerW, cellOpts));
     });
     return maxH;
   });
@@ -1049,9 +1058,12 @@ function drawProjectionsInputGrid(doc, fp, x, y, width) {
   let rowY = y;
   rows.forEach((row, rowIndex) => {
     const rowH = rowHeights[rowIndex];
+    const cellOpts = rowIndex === 1
+      ? { metricValueSize: choiceOptionSize }
+      : { choiceOptionSize };
     row.forEach((cell, colIndex) => {
       const cellX = x + colW * colIndex;
-      drawInputCell(doc, cell, cellX, rowY, innerW, rowH);
+      drawInputCell(doc, cell, cellX, rowY, innerW, rowH, cellOpts);
     });
     rowY += rowH;
     if (rowIndex < rows.length - 1) {
