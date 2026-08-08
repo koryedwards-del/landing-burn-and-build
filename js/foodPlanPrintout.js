@@ -3,7 +3,6 @@
 import {
   computeDietEightWeekProjection,
   computeDietProjectionTimeline,
-  computeTodayBodyComposition,
 } from './bodyCompositionAnalysis.js';
 
 function phpRound(x) {
