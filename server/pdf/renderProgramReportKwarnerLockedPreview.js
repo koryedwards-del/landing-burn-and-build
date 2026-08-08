@@ -682,9 +682,9 @@ function drawProjectionsPage(doc, payload) {
       headFontSize: PT.body,
       bodyFontSize: PT.subsection,
       columns: [
-        { key: 'weight', width: 0.34, align: 'right' },
-        { key: 'timeline', width: 0.33, align: 'right' },
-        { key: 'bodyFat', width: 0.33, align: 'right' },
+        { key: 'weight', width: 0.34, align: 'center' },
+        { key: 'timeline', width: 0.33, align: 'center' },
+        { key: 'bodyFat', width: 0.33, align: 'center' },
       ],
       rows: [
         { weight: 'Bodyweight', timeline: 'Timeline', bodyFat: 'Body Fat %' },
