@@ -367,6 +367,8 @@ function drawVegFruitFoodListPage(doc, payload) {
 }
 
 const PANEL_BULLET = { indent: 12, gap: 3, kitGap: 8 };
+/** PDFKit line-box slack so measure matches draw (avoids 1px truncation). */
+const PANEL_MEASURE_SLACK = 8;
 
 function measurePanelBullets(doc, items, width) {
   doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
@@ -396,7 +398,7 @@ function measureFlavorKitsColumn(doc, kits, innerWidth) {
     h += measurePanelBullets(doc, kit.flavors, innerWidth);
     if (index < kits.length - 1) h += PANEL_BULLET.kitGap;
   });
-  return h;
+  return h + PANEL_MEASURE_SLACK;
 }
 
 function drawPanelBullets(doc, items, x, y, width, bottomY) {
@@ -452,9 +454,14 @@ function drawPanelNote(doc, text, x, y, width) {
   return doc.y + LAYOUT.paragraphGap;
 }
 
-/** PDF page 7 — full-width three-column panel: flavor kits | splashes | pantry. */
+function measurePanelNote(doc, text, width) {
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize - 0.5);
+  return doc.heightOfString(String(text), { width, lineGap: LAYOUT.lineGap });
+}
+
+/** PDF page 7 — seasonings & splashes: flavor kits | splashes | pantry. */
 function drawFlavorKitsPage(doc, payload) {
-  const page = startLockedPage(doc, payload, null);
+  const page = startLockedPage(doc, payload, 'Seasonings and Splashes');
   const kits = flavorKitList();
   const pad = TABLE_CONTAINER.cellPad;
   const colW = page.width / 3;
@@ -465,12 +472,18 @@ function drawFlavorKitsPage(doc, payload) {
     pad * 2 + measurePanelSection(doc, 'Splashes', COMMON_SPLASHES, innerW),
     pad * 2 + measurePanelSection(doc, 'Pantry', GROCERY_STAPLES_PANTRY, innerW),
   ];
-  const panelH = Math.max(...colHeights);
-  const panelBottom = page.y + panelH;
+  const footerH = LAYOUT.sectionGap
+    + measurePanelNote(doc, FLAVOR_KIT_RULE, page.width)
+    + LAYOUT.paragraphGap
+    + measurePanelNote(doc, SPLASH_RULE, page.width);
+  const maxPanelH = page.bottom - page.y - footerH;
+  const panelH = Math.min(Math.max(...colHeights), maxPanelH);
 
-  if (panelBottom > page.bottom) {
-    throw new Error('Page 7 three-column panel does not fit');
+  if (panelH < Math.max(...colHeights)) {
+    throw new Error('Seasonings and Splashes panel does not fit below page title');
   }
+
+  const panelBottom = page.y + panelH;
 
   doc
     .strokeColor(TABLE_CONTAINER.stroke)
