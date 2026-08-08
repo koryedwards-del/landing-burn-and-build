@@ -86,22 +86,6 @@ function measureBodyParagraphs(doc, paragraphs, width) {
   );
 }
 
-const PROJECTION_HEADLINE_SIZE = PT.sectionTitle + 2;
-
-function measureProjectionHeadline(doc, text, width) {
-  doc.font(SEMINAR_FONTS.bold).fontSize(PROJECTION_HEADLINE_SIZE);
-  return doc.heightOfString(String(text), { width, align: 'center', lineGap: 0 }) + LAYOUT.sectionGap;
-}
-
-function drawProjectionHeadline(doc, text, x, y, width) {
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(PROJECTION_HEADLINE_SIZE)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(String(text), x, y, { width, align: 'center', lineGap: 0 });
-  return doc.y + LAYOUT.sectionGap;
-}
-
 /** Tables only — gold border, no fill (watermark shows through). */
 const TABLE_CONTAINER = Object.freeze({
   stroke: PDF_FRAME_COLORS.gold,
@@ -670,6 +654,30 @@ function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
   return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
 }
 
+function buildProjectionSummaryTableOpts(projections, x, y, width) {
+  return {
+    x,
+    y,
+    width,
+    keys: ['fatLoss', 'bodyFat', 'timeline'],
+    rows: [
+      { fatLoss: 'FAT LOSS', bodyFat: 'BODY FAT %', timeline: 'TIMELINE' },
+      {
+        fatLoss: `${projections.fatLostLbs} lbs`,
+        bodyFat: `${projections.startBf}% to ${projections.endBf}%`,
+        timeline: '8 weeks',
+      },
+    ],
+    headerRows: 1,
+    getRowStyle: projectionTimelineRowStyle,
+  };
+}
+
+function measureProjectionSummaryTable(doc, projections, width) {
+  return measureProjectionTimelineTable(doc, buildProjectionSummaryTableOpts(projections, 0, 0, width))
+    .reduce((sum, h) => sum + h, 0);
+}
+
 function measureProjectionTimelineTable(doc, opts) {
   const pad = TABLE_CONTAINER.cellPad;
   const colW = opts.width / 3;
@@ -1121,11 +1129,13 @@ function drawProjectionsPage(doc, payload) {
 
   let page = startLockedPage(doc, payload, 'Projections');
 
-  if (projections.headline) {
-    page = ensureLockedSpace(doc, payload, page, measureProjectionHeadline(doc, projections.headline, page.width));
+  if (projections.fatLostLbs && projections.startBf && projections.endBf) {
+    const summaryH = measureProjectionSummaryTable(doc, projections, page.width) + LAYOUT.sectionGap;
+    page = ensureLockedSpace(doc, payload, page, summaryH);
+    const summaryOpts = buildProjectionSummaryTableOpts(projections, page.x, page.y, page.width);
     page = {
       ...page,
-      y: drawProjectionHeadline(doc, projections.headline, page.x, page.y, page.width),
+      y: drawProjectionTimelineTable(doc, summaryOpts) + LAYOUT.sectionGap,
     };
   }
 

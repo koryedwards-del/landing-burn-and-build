@@ -101,7 +101,6 @@ export function buildProjectionsPrintoutSection(pkg) {
 
   return {
     intro,
-    headline: `−${fatLost} lbs fat · ${startBf}% → ${endBf}% in 8 weeks`,
     rmrBridge: PROJECTIONS_RMR_BRIDGE,
     fatLostLbs: fatLost,
     weeklyFatLossLbs: projection.weeklyFatLossLbs.toFixed(1),
