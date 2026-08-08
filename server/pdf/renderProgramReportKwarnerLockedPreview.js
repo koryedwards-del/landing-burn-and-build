@@ -1125,14 +1125,14 @@ const FOOD_PLAN_INPUT_COLUMNS = Object.freeze([
 ]);
 
 const SERVINGS_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.18 },
-  { key: 'daily', width: 0.1, align: 'center' },
-  { key: 'breakfast', width: 0.12, align: 'center' },
-  { key: 'snack1', width: 0.1, align: 'center' },
-  { key: 'lunch', width: 0.1, align: 'center' },
-  { key: 'snack2', width: 0.1, align: 'center' },
-  { key: 'dinner', width: 0.12, align: 'center' },
-  { key: 'snack3', width: 0.1, align: 'center' },
+  { key: 'label', width: 0.26 },
+  { key: 'daily', width: 0.08, align: 'center' },
+  { key: 'breakfast', width: 0.11, align: 'center' },
+  { key: 'snack1', width: 0.11, align: 'center' },
+  { key: 'lunch', width: 0.11, align: 'center' },
+  { key: 'snack2', width: 0.11, align: 'center' },
+  { key: 'dinner', width: 0.11, align: 'center' },
+  { key: 'snack3', width: 0.11, align: 'center' },
 ]);
 
 function buildServingsTableRows(gridRows, extraRows) {
