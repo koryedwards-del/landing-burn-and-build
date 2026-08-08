@@ -12,7 +12,7 @@ import {
   stampPinnedProgramFooters,
   PDF_FRAME_COLORS,
 } from './drawFrame.js';
-import { drawPersonalizationHeader, drawMacroSignalTable, measureMacroSignalTable } from './drawSeminar.js';
+import { drawPersonalizationHeader } from './drawSeminar.js';
 import {
   SEMINAR_COLORS,
   SEMINAR_FONTS,
@@ -616,14 +616,14 @@ function measureProjectionTimelineTable(doc, opts) {
   const pad = TABLE_CONTAINER.cellPad;
   const colW = opts.width / 3;
   const innerW = colW - pad * 2;
-  const keys = ['weight', 'timeline', 'bodyFat'];
+  const keys = opts.keys ?? ['weight', 'timeline', 'bodyFat'];
 
   return opts.rows.map((row, rowIndex) => {
     const isHeader = rowIndex < (opts.headerRows ?? 1);
-    const { font, fontSize } = projectionTimelineRowStyle(row, rowIndex, { isHeader });
-    let maxH = doc.font(font).fontSize(fontSize).currentLineHeight() + LAYOUT.tableRowPad * 2;
+    let maxH = LAYOUT.tableRowPad * 2;
     keys.forEach((key) => {
-      const h = doc.font(font).fontSize(fontSize).heightOfString(String(row[key] ?? ''), {
+      const style = resolveCenteredTableCellStyle(opts, row, rowIndex, key, { isHeader });
+      const h = doc.font(style.font).fontSize(style.fontSize).heightOfString(String(row[key] ?? ''), {
         width: innerW,
         align: 'center',
         lineGap: 0,
@@ -632,6 +632,16 @@ function measureProjectionTimelineTable(doc, opts) {
     });
     return maxH;
   });
+}
+
+function resolveCenteredTableCellStyle(opts, row, rowIndex, colKey, { isHeader }) {
+  if (typeof opts.getCellStyle === 'function') {
+    return opts.getCellStyle(row, rowIndex, colKey, { isHeader });
+  }
+  if (typeof opts.getRowStyle === 'function') {
+    return opts.getRowStyle(row, rowIndex, { isHeader });
+  }
+  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
 }
 
 function drawCenteredTableCell(doc, text, cellX, cellY, cellW, cellH, { font, fontSize }) {
@@ -663,7 +673,7 @@ function drawProjectionTimelineTable(doc, opts) {
   const tableY = opts.y;
   const tableW = opts.width;
   const colW = tableW / 3;
-  const keys = ['weight', 'timeline', 'bodyFat'];
+  const keys = opts.keys ?? ['weight', 'timeline', 'bodyFat'];
   const rowHeights = measureProjectionTimelineTable(doc, opts);
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
   const headerRows = opts.headerRows ?? 1;
@@ -692,7 +702,7 @@ function drawProjectionTimelineTable(doc, opts) {
     const isHeader = rowIndex < headerRows;
     keys.forEach((key, index) => {
       const cellX = tableX + colW * index;
-      const style = projectionTimelineRowStyle(row, rowIndex, { isHeader });
+      const style = resolveCenteredTableCellStyle(opts, row, rowIndex, key, { isHeader });
       drawCenteredTableCell(doc, row[key], cellX, cy, colW, rh, style);
     });
     cy += rh;
@@ -707,6 +717,53 @@ function drawProjectionTimelineTable(doc, opts) {
   });
 
   return tableY + totalH;
+}
+
+const MACRO_SIGNAL_TABLE_KEYS = ['macro', 'tooMuch', 'tooLittle'];
+
+function buildMacroSignalLayoutRows(macroRows = []) {
+  return [
+    { macro: 'The Macros', tooMuch: 'Too Much', tooLittle: 'Too Little' },
+    ...macroRows.map((row) => ({
+      macro: row.label,
+      tooMuch: row.tooMuch,
+      tooLittle: row.tooLittle,
+      emphasizeTooLittle: Boolean(row.emphasizeTooLittle),
+    })),
+  ];
+}
+
+function macroSignalCellStyle(row, rowIndex, colKey, { isHeader }) {
+  if (isHeader) {
+    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
+  }
+  if (colKey === 'tooLittle' && row.emphasizeTooLittle) {
+    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
+  }
+  if (colKey === 'macro') {
+    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+  }
+  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+}
+
+function measureMacroSignalLayoutTable(doc, width, macroRows = []) {
+  return measureProjectionTimelineTable(doc, {
+    width,
+    keys: MACRO_SIGNAL_TABLE_KEYS,
+    rows: buildMacroSignalLayoutRows(macroRows),
+    getCellStyle: macroSignalCellStyle,
+  }).reduce((sum, h) => sum + h, 0);
+}
+
+function drawMacroSignalLayoutTable(doc, { x, y, width, rows }) {
+  return drawProjectionTimelineTable(doc, {
+    x,
+    y,
+    width,
+    keys: MACRO_SIGNAL_TABLE_KEYS,
+    rows: buildMacroSignalLayoutRows(rows),
+    getCellStyle: macroSignalCellStyle,
+  });
 }
 
 function measureProjectionTimelineTableHeight(doc, opts) {
@@ -853,6 +910,7 @@ function drawProjectionsPage(doc, payload) {
         })),
       ],
       headerRows: 1,
+      getRowStyle: projectionTimelineRowStyle,
     };
     page = ensureLockedSpace(doc, payload, page, measureProjectionTimelineTableHeight(doc, timelineTableOpts));
     timelineTableOpts.y = page.y;
@@ -1111,9 +1169,9 @@ function drawFoodPlanPage(doc, payload) {
 
   const macroRows = fp.macroSignalRows || [];
   if (macroRows.length) {
-    const macroTableH = measureMacroSignalTable(macroRows);
+    const macroTableH = measureMacroSignalLayoutTable(doc, page.width, macroRows);
     page = ensureLockedSpace(doc, payload, page, macroTableH + LAYOUT.sectionGap);
-    drawMacroSignalTable(doc, {
+    drawMacroSignalLayoutTable(doc, {
       x: page.x,
       y: page.y,
       width: page.width,
