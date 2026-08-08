@@ -838,21 +838,24 @@ function buildProjectionsInputGridRows(fp) {
     [
       {
         type: 'metric',
-        label: 'WEIGHT TRAINING (WT)',
+        label: 'WT',
         value: fp.inputGrid?.wt ?? hours.wt ?? '—',
         unit: 'hours per week',
+        projectionDataStyle: true,
       },
       {
         type: 'metric',
-        label: 'HIGH HEART RATE AEROBIC (HHT)',
+        label: 'HHT',
         value: fp.inputGrid?.hht ?? hours.cardio ?? '—',
         unit: 'hours per week',
+        projectionDataStyle: true,
       },
       {
         type: 'metric',
-        label: 'LOW HEART RATE AEROBIC (LHR)',
+        label: 'LHR',
         value: fp.inputGrid?.lhr ?? hours.fatBurn ?? '—',
         unit: 'hours per week',
+        projectionDataStyle: true,
       },
     ],
   ];
@@ -913,11 +916,30 @@ function metricValueLine(cell) {
   return `${cell.value} ${cell.unit}`;
 }
 
+function metricCellTypography(cell) {
+  if (cell.projectionDataStyle) {
+    return {
+      labelFont: SEMINAR_FONTS.regular,
+      labelSize: PT.subsection,
+      valueFont: SEMINAR_FONTS.regular,
+      valueSize: PT.subsection,
+      labelGap: 3,
+    };
+  }
+  return {
+    labelFont: SEMINAR_FONTS.bold,
+    labelSize: INPUT_GRID.metric.labelSize,
+    valueFont: SEMINAR_FONTS.bold,
+    valueSize: INPUT_GRID.metric.valueSize,
+    labelGap: INPUT_GRID.metric.labelGap,
+  };
+}
+
 function measureMetricInputCell(doc, cell, innerW) {
-  const { labelSize, valueSize, labelGap } = INPUT_GRID.metric;
-  doc.font(SEMINAR_FONTS.bold).fontSize(labelSize);
+  const { labelFont, labelSize, valueFont, valueSize, labelGap } = metricCellTypography(cell);
+  doc.font(labelFont).fontSize(labelSize);
   const labelH = doc.heightOfString(cell.label, { width: innerW, align: 'center', lineGap: 0 });
-  doc.font(SEMINAR_FONTS.bold).fontSize(valueSize);
+  doc.font(valueFont).fontSize(valueSize);
   const valueH = doc.heightOfString(metricValueLine(cell), { width: innerW, align: 'center', lineGap: 0 });
   return labelH + labelGap + valueH;
 }
