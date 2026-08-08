@@ -7,6 +7,15 @@ alwaysApply: true
 
 When the user asks for **PDF creation, PDF updates, printout layout, or program-report print changes**, work in the **KWarner locked preview pipeline** — not the web UI unless they explicitly ask for web.
 
+## PDFKit (locked — do not change)
+
+These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `server/pdf/draw.js`). This is the **only** approved way to build and deliver program-report printouts.
+
+| Do | Don't |
+|----|-------|
+| Edit PDFKit renderer + draw helpers | HTML/CSS print views, browser print, or client-side PDF libs |
+| `npm run render:kwarner-preview` → commit PDFs → raw GitHub download links | Artifacts panel, blob URLs, or burnandbuilddiet.com unless explicitly asked |
+
 ## Pipeline (source of truth)
 
 | Piece | Path |
