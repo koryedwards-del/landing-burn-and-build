@@ -20,6 +20,7 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 
 | Piece | Path |
 |-------|------|
+| PDF engine | **PDFKit** — `server/pdf/draw.js` (`PDFDocument`) |
 | Renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
 | Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
 | Macro signal data | `js/foodPlanPrintout.js` |
