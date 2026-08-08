@@ -834,7 +834,7 @@ const INPUT_CONTEXT_STYLE = {
 function buildFoodPlanInputContextParts(fp) {
   const parts = [];
   if (fp.jobLabel) parts.push({ label: 'Job:', value: fp.jobLabel });
-  if (fp.lifestyleLabel) parts.push({ label: 'Day-to-day pace:', value: fp.lifestyleLabel });
+  if (fp.lifestyleLabel) parts.push({ label: 'Day to day:', value: fp.lifestyleLabel });
   return parts;
 }
 
