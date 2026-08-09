@@ -55,6 +55,7 @@ export const GROCERY_STAPLES_FRUIT = Object.freeze([
   'Blueberries',
   'Cantaloupe',
   'Clementines',
+  'Dried plums (pitted prunes)',
   'Grapes',
   'Pineapple',
   'Strawberries',
@@ -167,9 +168,13 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
 function catalogStapleRow(label, catalogName) {
   const food = foods.find((f) => f.name === catalogName);
   if (!food) throw new Error(`Missing catalog food: ${catalogName}`);
-  const prep = food.servingDescription === 'raw' ? 'raw' : 'cooked';
+  const prep = food.servingDescription === 'raw'
+    ? 'raw'
+    : food.servingDescription === 'dry'
+      ? null
+      : 'cooked';
   return Object.freeze({
-    name: `${label} (${prep})`,
+    name: prep ? `${label} (${prep})` : label,
     serving: `${food.gramWeight}g`,
   });
 }
@@ -210,6 +215,7 @@ const FRUIT_CATALOG = [
   ['Blueberries', 'Blueberries'],
   ['Cantaloupe', 'Cantaloupe'],
   ['Clementines', 'Clementines'],
+  ['Dried plums (pitted prunes)', 'Prunes, dried, pitted'],
   ['Grapes', 'Grapes'],
   ['Pineapple', 'Pineapple'],
   ['Strawberries', 'Strawberries'],

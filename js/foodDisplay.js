@@ -1,6 +1,8 @@
 /** User-facing food names — print food list, planner picker, grocery labels. */
 
-const DISPLAY_OVERRIDES = {};
+const DISPLAY_OVERRIDES = {
+  'Prunes, dried, pitted': 'Dried plums (pitted prunes)',
+};
 
 /**
  * Shorter planner grid labels — add entries one by one as needed.

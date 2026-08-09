@@ -696,6 +696,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Prunes, dried, pitted",
+    "category": "fruit",
+    "servingDescription": "dry",
+    "gramWeight": 40,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
     "name": "Pomegranate",
     "category": "fruit",
     "servingDescription": "raw",
