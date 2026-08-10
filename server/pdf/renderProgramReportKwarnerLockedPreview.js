@@ -2,6 +2,8 @@
  * Preview-only: KWarner 5-page seminar content + locked personalized frame.
  * Not wired to production API — run scripts/render-kwarner-locked-preview.mjs
  */
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { createPrintPdf } from './creator.js';
 import {
   addFramePage,
@@ -36,6 +38,59 @@ import {
 import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngine.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
+
+const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'images/fat-can-3lb.png');
+const FAT_CAN_INLINE_COUNT = 3;
+const FAT_CAN_INLINE_HEIGHT = 52;
+const FAT_CAN_INLINE_GAP = 5;
+
+function fatCanInlineCell() {
+  return {
+    type: 'inlineImages',
+    path: FAT_CAN_3LB_IMAGE,
+    count: FAT_CAN_INLINE_COUNT,
+    height: FAT_CAN_INLINE_HEIGHT,
+    gap: FAT_CAN_INLINE_GAP,
+  };
+}
+
+function isInlineImagesCell(content) {
+  return content && typeof content === 'object' && content.type === 'inlineImages';
+}
+
+function inlineImagesLayout(doc, content, maxWidth) {
+  const { path: imagePath, count, height, gap } = content;
+  const img = doc.openImage(imagePath);
+  const aspect = img.width / img.height;
+  let h = height;
+  let w = h * aspect;
+  let totalW = count * w + (count - 1) * gap;
+  if (totalW > maxWidth) {
+    h = (maxWidth - (count - 1) * gap) / (count * aspect);
+    w = h * aspect;
+    totalW = count * w + (count - 1) * gap;
+  }
+  return { height: h, width: w, totalWidth: totalW };
+}
+
+function measureInlineImagesCell(doc, content, innerW) {
+  const { height } = inlineImagesLayout(doc, content, innerW);
+  return height + TABLE_CONTAINER.cellPad * 2;
+}
+
+function drawInlineImagesCell(doc, content, cellX, cellY, cellW, cellH) {
+  const pad = TABLE_CONTAINER.cellPad;
+  const innerW = cellW - pad * 2;
+  const { path: imagePath, count, gap } = content;
+  const { height, width, totalWidth } = inlineImagesLayout(doc, content, innerW);
+  let x = cellX + (cellW - totalWidth) / 2;
+  const y = cellY + (cellH - height) / 2;
+  for (let i = 0; i < count; i += 1) {
+    doc.image(imagePath, x, y, { height });
+    x += width + gap;
+  }
+}
 
 const LAYOUT = {
   bodySize: PT.body,
@@ -663,7 +718,7 @@ function buildProjectionSummaryTableOpts(projections, x, y, width) {
     rows: [
       { fatLoss: 'FAT LOSS', bodyFat: 'BODY FAT %', timeline: 'TIMELINE' },
       {
-        fatLoss: `${projections.fatLostLbs} lbs`,
+        fatLoss: fatCanInlineCell(),
         bodyFat: `${projections.startBf}% to ${projections.endBf}%`,
         timeline: '8 weeks',
       },
@@ -688,8 +743,13 @@ function measureProjectionTimelineTable(doc, opts) {
     const isHeader = rowIndex < (opts.headerRows ?? 1);
     let maxH = LAYOUT.tableRowPad * 2;
     keys.forEach((key) => {
+      const content = row[key];
+      if (isInlineImagesCell(content)) {
+        maxH = Math.max(maxH, measureInlineImagesCell(doc, content, innerW) + LAYOUT.tableRowPad * 2);
+        return;
+      }
       const style = resolveCenteredTableCellStyle(opts, row, rowIndex, key, { isHeader });
-      const h = doc.font(style.font).fontSize(style.fontSize).heightOfString(String(row[key] ?? ''), {
+      const h = doc.font(style.font).fontSize(style.fontSize).heightOfString(String(content ?? ''), {
         width: innerW,
         align: 'center',
         lineGap: 0,
@@ -768,8 +828,13 @@ function drawProjectionTimelineTable(doc, opts) {
     const isHeader = rowIndex < headerRows;
     keys.forEach((key, index) => {
       const cellX = tableX + colW * index;
+      const content = row[key];
+      if (isInlineImagesCell(content)) {
+        drawInlineImagesCell(doc, content, cellX, cy, colW, rh);
+        return;
+      }
       const style = resolveCenteredTableCellStyle(opts, row, rowIndex, key, { isHeader });
-      drawCenteredTableCell(doc, row[key], cellX, cy, colW, rh, style);
+      drawCenteredTableCell(doc, content, cellX, cy, colW, rh, style);
     });
     cy += rh;
     if (rowIndex < opts.rows.length - 1) {
