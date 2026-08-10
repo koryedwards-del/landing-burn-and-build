@@ -40,7 +40,7 @@ import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngin
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.jpg');
+const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
 const FAT_CAN_INLINE_COUNT = 3;
 const FAT_CAN_INLINE_HEIGHT = 52;
 const FAT_CAN_INLINE_GAP = 5;
