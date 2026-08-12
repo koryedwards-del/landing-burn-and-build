@@ -217,7 +217,8 @@ function canProceed(stepIndex) {
     case 0:
       return true;
     case 1:
-      return values.preferredName && values.email && values.weight && values.sex && values.birthDate;
+      return values.preferredName && values.email && values.weight && values.sex && values.birthDate
+        && values.heightFeet !== '' && values.heightInchesPart !== '';
     case 2:
       return values.workPhysical && values.workStress;
     case 3:
