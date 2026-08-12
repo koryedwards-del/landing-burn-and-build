@@ -237,6 +237,11 @@ body {
   min-width: 0;
 }
 
+.q-personal-row fieldset.q-field {
+  margin: 0;
+  min-inline-size: 0;
+}
+
 .q-personal-row .q-field:last-child {
   border-right: none;
 }
