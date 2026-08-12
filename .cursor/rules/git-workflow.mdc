@@ -14,6 +14,7 @@ The user does **not** review pull requests. Do not use the PR workflow.
 3. **Push** to `origin main`.
 4. For PDF work: run `npm run render:kwarner-preview`, commit the new PDFs + `js/kwarnerPreviewBuild.js`, push again if needed.
 5. **Clean up after yourself** (see Housekeeping below).
+6. **Never end a session with uncommitted work.** If you changed files, commit and push to `main` in the same turn — do not wait for the user to ask.
 
 ## Housekeeping
 
