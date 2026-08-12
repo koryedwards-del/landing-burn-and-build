@@ -31,6 +31,11 @@
   --sheet-cell: #000000;
   --sheet-field: #000000;
   --sheet-border: #333333;
+  --input-inset-border: #2a2a2a;
+  --input-inset-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(0, 0, 0, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   --font-display: 'Barlow Condensed', Oswald, system-ui, sans-serif;
   --font-body: 'Barlow', 'Open Sans', system-ui, sans-serif;
 }
@@ -367,7 +372,8 @@ body {
   width: 100%;
   max-width: 100%;
   background: var(--sheet-field);
-  border-color: var(--sheet-border);
+  border-color: var(--input-inset-border);
+  box-shadow: var(--input-inset-shadow);
 }
 
 .q-personal-row .q-inline--tight {
@@ -692,24 +698,29 @@ select.q-input option,
 .q-input {
   width: 100%;
   background: var(--input-bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--input-inset-border);
   border-radius: 8px;
   color: var(--text);
   font-size: 0.95rem;
   padding: 10px 12px;
+  box-shadow: var(--input-inset-shadow);
 }
 
 .q-input:focus {
   outline: none;
   border-color: var(--gold);
-  box-shadow: 0 0 0 2px var(--gold-focus);
+  box-shadow:
+    var(--input-inset-shadow),
+    0 0 0 2px var(--gold-focus);
 }
 
 .q-input:-webkit-autofill,
 .q-input:-webkit-autofill:hover,
 .q-input:-webkit-autofill:focus,
 .q-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  -webkit-box-shadow:
+    0 0 0 1000px var(--input-bg) inset,
+    var(--input-inset-shadow);
   -webkit-text-fill-color: var(--text);
   caret-color: var(--text);
   transition: background-color 99999s ease-out 0s;
@@ -727,11 +738,12 @@ select.q-input option,
 .q-static-value {
   margin: 0;
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--input-inset-border);
   border-radius: 8px;
   background: var(--input-bg);
   color: var(--text);
   font-size: 0.95rem;
+  box-shadow: var(--input-inset-shadow);
 }
 
 .q-static-value--short {
