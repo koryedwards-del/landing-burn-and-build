@@ -73,7 +73,7 @@ export const PDF_WEEK = {
   cellPadY: 14,
   minRowHeight: 36,
   lineGap: 2,
-  accent: '#fdc500',
+  accent: '#FFCC00',
 };
 
 /** Grocery list — portrait checklist sections. */
