@@ -19,6 +19,10 @@
   --on-gold: #0a0a0a;
   --text-hint: #656565;
   --layout-width: var(--app-width, 1200px);
+  --sheet-bg: #171717;
+  --sheet-cell: #202020;
+  --sheet-field: #111111;
+  --sheet-border: #383838;
 }
 
 html, body {
