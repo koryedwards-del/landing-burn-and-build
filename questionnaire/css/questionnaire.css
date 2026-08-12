@@ -7,11 +7,12 @@
 }
 
 :root {
-  --bg: #080808;
-  --panel: #171717;
-  --section: #222222;
-  --input-bg: #0d0d0d;
+  --bg: #000000;
+  --panel: #b8b8b8;
+  --section: #000000;
+  --input-bg: #000000;
   --border: #454545;
+  --border-silver: #8a8a8a;
   --text: #f5f5f5;
   --muted: #afafaf;
   --silver: #b8b8b8;
@@ -20,14 +21,16 @@
   --gold-focus: rgba(253, 197, 0, 0.25);
   --gold-select-bg: rgba(253, 197, 0, 0.1);
   --on-gold: #000000;
+  --on-panel: #141414;
+  --on-panel-muted: #444444;
   --text-hint: #afafaf;
   --layout-width: var(--app-width, 1200px);
   --surface: var(--panel);
   --surface-2: var(--section);
-  --sheet-bg: var(--section);
-  --sheet-cell: var(--section);
-  --sheet-field: var(--input-bg);
-  --sheet-border: var(--border);
+  --sheet-bg: #000000;
+  --sheet-cell: #000000;
+  --sheet-field: #000000;
+  --sheet-border: #333333;
   --font-display: 'Barlow Condensed', Oswald, system-ui, sans-serif;
   --font-body: 'Barlow', 'Open Sans', system-ui, sans-serif;
 }
@@ -50,9 +53,6 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   padding: 24px 16px 48px;
-  background-image:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(253, 197, 0, 0.06), transparent 58%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 18%);
 }
 
 .q-app {
@@ -215,14 +215,14 @@ body {
 
 .q-main {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-silver);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   min-height: 560px;
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .q-form {
@@ -240,6 +240,7 @@ body {
 .q-panel__head {
   margin-bottom: 24px;
   padding-bottom: 4px;
+  color: var(--on-panel);
 }
 
 .q-panel__head::after {
@@ -275,15 +276,12 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 8px;
-  color: #d4d4d4;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.14),
-    0 -1px 0 rgba(0, 0, 0, 0.75),
-    0 3px 10px rgba(0, 0, 0, 0.45);
+  color: var(--on-panel);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .q-panel__lead {
-  color: var(--muted);
+  color: var(--on-panel-muted);
   font-size: 0.92rem;
   line-height: 1.5;
   max-width: 62ch;
@@ -307,7 +305,6 @@ body {
   border-radius: 8px;
   overflow: hidden;
   background: var(--sheet-bg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .q-personal-row {
@@ -360,6 +357,7 @@ body {
 .q-personal-row .q-label,
 .q-personal-row legend.q-label {
   margin: 0;
+  color: var(--silver);
 }
 
 .q-personal-row .q-input,
@@ -402,7 +400,7 @@ body {
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text-hint);
-  background: var(--panel);
+  background: var(--sheet-bg);
 }
 
 .q-input--xs {
@@ -519,6 +517,7 @@ select.q-input option,
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
@@ -579,7 +578,7 @@ select.q-input option,
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  background: var(--panel);
+  background: var(--section);
   border: 1px solid var(--gold);
   border-radius: 8px;
   padding: 14px 16px;
@@ -587,7 +586,6 @@ select.q-input option,
   font-size: 0.88rem;
   line-height: 1.55;
   color: var(--text);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .q-callout__icon {
@@ -676,7 +674,7 @@ select.q-input option,
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--silver);
+  color: var(--on-panel-muted);
 }
 
 .q-optional {
@@ -766,6 +764,7 @@ select.q-input option,
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
+  color: var(--text);
   font-size: 0.88rem;
   cursor: pointer;
 }
@@ -800,6 +799,7 @@ select.q-input option,
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -821,6 +821,7 @@ select.q-input option,
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
   position: relative;
 }
@@ -889,7 +890,7 @@ select.q-input option,
 
 .q-hint {
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--on-panel-muted);
   margin-bottom: 16px;
   line-height: 1.55;
 }
@@ -898,7 +899,7 @@ select.q-input option,
   display: block;
   font-size: 0.78rem;
   line-height: 1.45;
-  color: var(--text-hint);
+  color: var(--on-panel-muted);
 }
 
 .q-option-hint {
@@ -990,7 +991,7 @@ select.q-input option,
 
 .q-note {
   font-size: 0.82rem;
-  color: var(--text-hint);
+  color: var(--on-panel-muted);
   margin-bottom: 16px;
 }
 
@@ -1004,7 +1005,7 @@ select.q-input option,
   justify-content: space-between;
   gap: 12px;
   padding: 16px 32px 20px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-silver);
 }
 
 .q-btn {
@@ -1089,6 +1090,7 @@ select.q-input option,
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-2);
+  color: var(--text);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1125,6 +1127,16 @@ select.q-input option,
 @media (max-width: 900px) {
   body {
     padding: 16px 12px 32px;
+  }
+
+  .q-header__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .q-motto {
+    width: 100%;
+    text-align: left;
   }
 
   .q-input {
