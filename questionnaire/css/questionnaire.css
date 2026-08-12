@@ -8,7 +8,7 @@
 
 :root {
   --bg: #000000;
-  --panel: #b8b8b8;
+  --panel: #000000;
   --section: #000000;
   --input-bg: #000000;
   --border: #454545;
@@ -27,10 +27,10 @@
   --layout-width: var(--app-width, 1200px);
   --surface: var(--panel);
   --surface-2: var(--section);
-  --sheet-bg: #000000;
-  --sheet-cell: #000000;
+  --sheet-bg: #b8b8b8;
+  --sheet-cell: #b8b8b8;
   --sheet-field: #000000;
-  --sheet-border: #333333;
+  --sheet-border: #8a8a8a;
   --input-inset-border: #2a2a2a;
   --input-inset-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.72),
@@ -220,14 +220,14 @@ body {
 
 .q-main {
   background: var(--surface);
-  border: 1px solid var(--border-silver);
+  border: 1px solid var(--border);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   min-height: 560px;
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .q-form {
@@ -245,7 +245,6 @@ body {
 .q-panel__head {
   margin-bottom: 24px;
   padding-bottom: 4px;
-  color: var(--on-panel);
 }
 
 .q-panel__head::after {
@@ -281,12 +280,15 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 8px;
-  color: var(--on-panel);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  color: #d4d4d4;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14),
+    0 -1px 0 rgba(0, 0, 0, 0.75),
+    0 3px 10px rgba(0, 0, 0, 0.45);
 }
 
 .q-panel__lead {
-  color: var(--on-panel-muted);
+  color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.5;
   max-width: 62ch;
@@ -362,7 +364,11 @@ body {
 .q-personal-row .q-label,
 .q-personal-row legend.q-label {
   margin: 0;
-  color: var(--silver);
+  color: var(--on-panel-muted);
+}
+
+.q-personal-row .q-unit {
+  color: var(--on-panel-muted);
 }
 
 .q-personal-row .q-input,
@@ -405,8 +411,12 @@ body {
   border-top: 1px solid var(--sheet-border);
   font-size: 0.78rem;
   line-height: 1.45;
-  color: var(--text-hint);
+  color: var(--on-panel-muted);
   background: var(--sheet-bg);
+}
+
+.q-personal-sheet__note strong {
+  color: var(--on-panel);
 }
 
 .q-input--xs {
@@ -680,7 +690,7 @@ select.q-input option,
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--on-panel-muted);
+  color: var(--silver);
 }
 
 .q-optional {
@@ -902,7 +912,7 @@ select.q-input option,
 
 .q-hint {
   font-size: 0.85rem;
-  color: var(--on-panel-muted);
+  color: var(--muted);
   margin-bottom: 16px;
   line-height: 1.55;
 }
@@ -911,7 +921,7 @@ select.q-input option,
   display: block;
   font-size: 0.78rem;
   line-height: 1.45;
-  color: var(--on-panel-muted);
+  color: var(--text-hint);
 }
 
 .q-option-hint {
@@ -1003,7 +1013,7 @@ select.q-input option,
 
 .q-note {
   font-size: 0.82rem;
-  color: var(--on-panel-muted);
+  color: var(--text-hint);
   margin-bottom: 16px;
 }
 
@@ -1017,7 +1027,7 @@ select.q-input option,
   justify-content: space-between;
   gap: 12px;
   padding: 16px 32px 20px;
-  border-top: 1px solid var(--border-silver);
+  border-top: 1px solid var(--border);
 }
 
 .q-btn {
