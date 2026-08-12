@@ -9,7 +9,7 @@ import {
   verifyCheckoutSession,
 } from './checkoutApi.js';
 import { downloadDietPdfWithRetry } from './dietDeliveryApi.js';
-import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from './siteUrls.js';
+import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
 
 const store = {
   builtPackage: null,
@@ -199,7 +199,7 @@ function renderPlanReady() {
           ${renderPlanReadyAppHandoff(hasPaidAccess)}
           ${store.checkoutError ? `<div class="unlock-error">${store.checkoutError}</div>` : ''}
           ${store.saveError ? `<div class="unlock-error">${store.saveError}</div>` : ''}
-          <p class="unlock-hint">${DIET_CREATION_COMING_SOON
+          <p class="unlock-hint">${isDietCreationGated()
     ? '<a href="/">← Back to website</a>'
     : `<a href="${QUESTIONNAIRE_WELCOME_URL}">← Back to questionnaire</a>`}</p>
         </div>
@@ -435,7 +435,7 @@ bindGlobal();
   const returningFromStripe = checkoutParams.has('checkout');
 
   if (!store.builtPackage && !returningFromStripe) {
-    if (DIET_CREATION_COMING_SOON) {
+    if (isDietCreationGated()) {
       renderComingSoon();
       return;
     }
@@ -451,7 +451,7 @@ bindGlobal();
   }
 
   if (!store.builtPackage) {
-    if (DIET_CREATION_COMING_SOON) {
+    if (isDietCreationGated()) {
       renderComingSoon();
       return;
     }

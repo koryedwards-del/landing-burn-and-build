@@ -6,6 +6,49 @@ export const CREATOR_HOST_ORIGIN = MARKETING_ORIGIN;
 /** When true, hide questionnaire/checkout entry points; existing users use get-your-diet. */
 export const DIET_CREATION_COMING_SOON = true;
 
+/** URL param + session flag for internal testing while Coming Soon is on (?create=1). */
+export const DIET_CREATION_TEST_PARAM = 'create';
+const DIET_CREATION_TEST_STORAGE_KEY = 'bnb_diet_creation_test';
+
+export function captureDietCreationTestBypass(search = '') {
+  if (typeof sessionStorage === 'undefined') return false;
+  const params = new URLSearchParams(
+    search || (typeof location !== 'undefined' ? location.search : ''),
+  );
+  if (params.get(DIET_CREATION_TEST_PARAM) === '1' || params.has(DIET_CREATION_TEST_PARAM)) {
+    try {
+      sessionStorage.setItem(DIET_CREATION_TEST_STORAGE_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+    return true;
+  }
+  return false;
+}
+
+export function isDietCreationTestBypass() {
+  if (typeof sessionStorage === 'undefined') return false;
+  captureDietCreationTestBypass();
+  try {
+    return sessionStorage.getItem(DIET_CREATION_TEST_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+/** True when public Coming Soon gate should block new program creation. */
+export function isDietCreationGated() {
+  return DIET_CREATION_COMING_SOON && !isDietCreationTestBypass();
+}
+
+export function withDietCreationTestParam(url) {
+  if (!isDietCreationTestBypass()) return url;
+  const base = typeof window !== 'undefined' ? window.location.origin : MARKETING_ORIGIN;
+  const parsed = new URL(url, base);
+  parsed.searchParams.set(DIET_CREATION_TEST_PARAM, '1');
+  return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+}
+
 /** Return visit — download or resend purchased diet PDF */
 export const GET_YOUR_DIET_URL = `${CREATOR_HOST_ORIGIN}/get-your-diet/`;
 

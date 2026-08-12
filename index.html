@@ -208,6 +208,7 @@
       .calc-row { grid-template-columns: 1fr; gap: 16px; }
       .gender-tabs { max-width: 200px; }
     }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
@@ -445,6 +446,7 @@
       <li><a href="/support">Support</a></li>
     </ul>
     <p class="footer-copy">&copy; 2026 Burn &amp; Build. All rights reserved.</p>
+    <a href="/questionnaire/?create=1" class="sr-only" aria-hidden="true" tabindex="-1">Create program</a>
   </footer>
 
   <script>

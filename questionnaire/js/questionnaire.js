@@ -9,7 +9,7 @@ import { buildProgramPackage } from '../../js/programPackage.js';
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
-import { CREATOR_CHECKOUT_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
+import { CREATOR_CHECKOUT_URL, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
 
 const STEPS = [
   { id: 'welcome', label: 'Welcome' },
@@ -302,7 +302,7 @@ function bindEvents() {
         persistProgramBridge(program);
       }
 
-      window.location.href = CREATOR_CHECKOUT_URL;
+      window.location.href = withDietCreationTestParam(CREATOR_CHECKOUT_URL);
     } catch (error) {
       console.error(error);
       window.alert('Could not build your program. Check your answers and try again.');
@@ -310,6 +310,44 @@ function bindEvents() {
       continueBtn.textContent = prevLabel;
     }
   });
+}
+
+function restoreWelcomePanel() {
+  const panel = document.querySelector('.q-panel[data-step="0"]');
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="q-panel__head">
+      <p class="q-eyebrow">Welcome</p>
+      <h2 class="q-panel__title">You&rsquo;re in the right place</h2>
+      <p class="q-panel__lead">
+        You tapped <strong>Create Your Diet</strong> — this is where your program starts.
+        About 10 minutes of intake, then the Burn Engine builds your servings and full program.
+      </p>
+    </div>
+    <div class="q-callout">
+      <strong>Before you start, have these ready:</strong>
+      <ul>
+        <li>Your <strong>email</strong> — you will use it to open your program after checkout.</li>
+        <li><strong>Scale weight</strong> in pounds (morning weight, before eating, is best).</li>
+        <li><strong>Body fat percentage</strong> from a DEXA scan, calipers, BodPod, or ultrasound if you have one. If not, you can estimate — we explain how on that step.</li>
+        <li>A honest count of the <strong>exercise you will actually do</strong> for the next 8 weeks — not your best week ever.</li>
+      </ul>
+    </div>
+    <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
+    <div class="q-intro-actions">
+      <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet →</button>
+      <a class="q-btn q-btn--ghost" href="../program-report/?preview=1">Preview sample program</a>
+    </div>
+    <p class="q-intro-price">$149 one-time purchase · own your program forever</p>
+  `;
+}
+
+function restoreQuestionnaireChrome() {
+  const title = document.querySelector('.q-title');
+  const tag = document.querySelector('.q-tag');
+  if (title) title.textContent = 'Create Your Diet';
+  if (tag) tag.textContent = 'Build your personalized program';
+  restoreWelcomePanel();
 }
 
 function showBootError(message) {
@@ -325,10 +363,11 @@ function showBootError(message) {
 
 function boot() {
   try {
-    if (DIET_CREATION_COMING_SOON) {
+    if (isDietCreationGated()) {
       showStep(0);
       return;
     }
+    restoreQuestionnaireChrome();
     bindEvents();
     initDefaults();
     syncAgeField();
