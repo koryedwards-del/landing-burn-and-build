@@ -136,33 +136,6 @@ function syncBirthDateHidden() {
   hiddenInput.value = isoFromDisplayBirthDate(displayInput.value);
 }
 
-function bindGenderSegments() {
-  const group = document.getElementById('q-gender-group');
-  const hidden = form.elements.sex;
-  if (!group || !hidden) return;
-
-  const buttons = [...group.querySelectorAll('[data-sex-value]')];
-
-  function refreshNextButton() {
-    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
-  }
-
-  function select(value) {
-    hidden.value = value;
-    buttons.forEach((btn) => {
-      btn.classList.toggle('is-selected', btn.dataset.sexValue === value);
-    });
-    refreshNextButton();
-  }
-
-  buttons.forEach((btn) => {
-    btn.setAttribute('tabindex', '0');
-    btn.addEventListener('click', () => select(btn.dataset.sexValue));
-  });
-
-  if (hidden.value) select(hidden.value);
-}
-
 function bindBirthDateInput() {
   const displayInput = form.elements.birthDateDisplay;
   if (!displayInput) return;
@@ -348,7 +321,6 @@ function bindEvents() {
   }
 
   bindBirthDateInput();
-  bindGenderSegments();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');

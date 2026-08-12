@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=69" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=70" />
 </head>
 <body>
   <div class="q-app">
@@ -82,15 +82,15 @@
                   <span class="q-field-hint">Optional. We do not use this to unlock your plan — email does that.</span>
                 </label>
 
-                <div class="q-field q-personal-grid__gender">
-                  <span class="q-label" id="q-gender-label">Gender</span>
-                  <div class="q-segmented q-segmented--pair" id="q-gender-group">
-                    <button type="button" class="q-segment q-segment-btn" data-sex-value="female">Female</button>
-                    <button type="button" class="q-segment q-segment-btn" data-sex-value="male">Male</button>
-                  </div>
-                  <input type="hidden" name="sex" value="" />
+                <label class="q-field q-personal-grid__gender">
+                  <span class="q-label">Gender</span>
+                  <select class="q-input q-select" name="sex" required autocomplete="sex">
+                    <option value="" disabled selected>Select gender</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                  </select>
                   <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
-                </div>
+                </label>
               </div>
 
               <div class="q-personal-grid__stack q-personal-grid__contact-right">
@@ -306,6 +306,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=69"></script>
+  <script type="module" src="js/questionnaire.js?v=70"></script>
 </body>
 </html>
