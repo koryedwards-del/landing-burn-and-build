@@ -246,7 +246,6 @@ body {
 }
 
 .q-personal-grid .q-input,
-.q-personal-grid .q-select,
 .q-personal-grid .q-static-value {
   min-height: 42px;
 }
@@ -439,28 +438,6 @@ body {
   outline: none;
   border-color: var(--gold);
   box-shadow: 0 0 0 2px var(--gold-dim);
-}
-
-select.q-input,
-.q-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239c9c9c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-  cursor: pointer;
-}
-
-select.q-input:invalid,
-.q-select:invalid {
-  color: var(--muted);
-}
-
-select.q-input option,
-.q-select option {
-  background: var(--surface-2);
-  color: var(--text);
 }
 
 .q-input:-webkit-autofill,
