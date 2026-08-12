@@ -8,21 +8,25 @@
 
 :root {
   --bg: #0a0a0a;
-  --surface: #1c1c1c;
-  --surface-2: #262626;
-  --border: #333333;
+  --charcoal: #1b1b1b;
+  --surface: #1b1b1b;
+  --surface-2: #242424;
+  --border: #4a4a4a;
   --text: #f2f2f2;
-  --muted: #9c9c9c;
+  --steel: #8a8a8a;
+  --silver: #b8b8b8;
+  --muted: #8a8a8a;
   --gold: #fdc500;
-  --gold-dim: rgba(253, 197, 0, 0.12);
-  --gold-select-bg: rgba(253, 197, 0, 0.05);
+  --orange: #e8671a;
+  --gold-focus: rgba(253, 197, 0, 0.22);
+  --gold-select-bg: rgba(253, 197, 0, 0.08);
   --on-gold: #0a0a0a;
-  --text-hint: #656565;
+  --text-hint: #8a8a8a;
   --layout-width: var(--app-width, 1200px);
-  --sheet-bg: #171717;
-  --sheet-cell: #202020;
-  --sheet-field: #111111;
-  --sheet-border: #383838;
+  --sheet-bg: #1b1b1b;
+  --sheet-cell: #222222;
+  --sheet-field: #141414;
+  --sheet-border: #4a4a4a;
 }
 
 html, body {
@@ -145,11 +149,11 @@ body {
 .q-nav__item.is-active {
   color: var(--gold);
   background: var(--gold-select-bg);
-  border-color: rgba(253, 197, 0, 0.25);
+  border-color: rgba(253, 197, 0, 0.35);
 }
 
 .q-nav__item.is-done {
-  color: var(--text);
+  color: var(--silver);
   cursor: pointer;
 }
 
@@ -183,7 +187,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--silver);
   margin-bottom: 8px;
 }
 
@@ -473,17 +477,21 @@ select.q-input option,
 }
 
 .q-segmented--equal .q-segment:hover {
-  border-color: rgba(253, 197, 0, 0.35);
+  border-color: var(--silver);
 }
 
 .q-callout {
-  background: var(--gold-dim);
-  border: 1px solid rgba(253, 197, 0, 0.2);
+  background: var(--charcoal);
+  border: 1px solid var(--orange);
   border-radius: 8px;
   padding: 14px 16px;
-  margin-bottom: 20px;
+  margin: 0 0 20px;
   font-size: 0.88rem;
-  line-height: 1.5;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.q-callout strong {
   color: var(--text);
 }
 
@@ -539,7 +547,7 @@ select.q-input option,
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--silver);
 }
 
 .q-optional {
@@ -550,7 +558,7 @@ select.q-input option,
 }
 
 .q-required {
-  color: #ef4444;
+  color: var(--orange);
   font-weight: 700;
 }
 
@@ -567,7 +575,7 @@ select.q-input option,
 .q-input:focus {
   outline: none;
   border-color: var(--gold);
-  box-shadow: 0 0 0 2px var(--gold-dim);
+  box-shadow: 0 0 0 2px var(--gold-focus);
 }
 
 .q-input:-webkit-autofill,
@@ -752,24 +760,9 @@ select.q-input option,
 
 .q-hint {
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--steel);
   margin-bottom: 16px;
   line-height: 1.55;
-}
-
-.q-callout {
-  margin: 0 0 20px;
-  padding: 14px 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(253, 197, 0, 0.25);
-  background: var(--gold-dim);
-  font-size: 0.85rem;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-.q-callout strong {
-  color: var(--text);
 }
 
 .q-callout ul,
