@@ -8,7 +8,7 @@ import {
   fetchCheckoutStatus,
   verifyCheckoutSession,
 } from './checkoutApi.js';
-import { QUESTIONNAIRE_WELCOME_URL } from './siteUrls.js';
+import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from './siteUrls.js';
 
 const store = {
   builtPackage: null,
@@ -40,6 +40,23 @@ function restoreBuiltPackage() {
       sessionStorage.removeItem('bnb_built_package');
     }
   }
+}
+
+function renderComingSoon() {
+  document.getElementById('app').innerHTML = `
+    <div class="start-site">
+      <div class="screen unlock-screen">
+        <div class="start-success">
+          <div class="ob-welcome-line1">COMING</div>
+          <div class="ob-welcome-line2">SOON</div>
+        </div>
+        <div class="unlock-panel">
+          <p class="unlock-lead">New Burn &amp; Build programs are not open yet. We&rsquo;re finishing the launch so no one starts a diet that isn&rsquo;t ready.</p>
+          <p class="unlock-hint">Already purchased? <a href="/program-report/">Open your program report</a> and sign in with your email.</p>
+          <p class="unlock-hint"><a href="/">← Back to website</a></p>
+        </div>
+      </div>
+    </div>`;
 }
 
 function redirectToQuestionnaire() {
@@ -181,7 +198,9 @@ function renderPlanReady() {
           ${renderPlanReadyAppHandoff(hasPaidAccess)}
           ${store.checkoutError ? `<div class="unlock-error">${store.checkoutError}</div>` : ''}
           ${store.saveError ? `<div class="unlock-error">${store.saveError}</div>` : ''}
-          <p class="unlock-hint"><a href="${QUESTIONNAIRE_WELCOME_URL}">← Back to questionnaire</a></p>
+          <p class="unlock-hint">${DIET_CREATION_COMING_SOON
+    ? '<a href="/">← Back to website</a>'
+    : `<a href="${QUESTIONNAIRE_WELCOME_URL}">← Back to questionnaire</a>`}</p>
         </div>
       </div>
     </div>`;
@@ -374,6 +393,10 @@ bindGlobal();
   const returningFromStripe = checkoutParams.has('checkout');
 
   if (!store.builtPackage && !returningFromStripe) {
+    if (DIET_CREATION_COMING_SOON) {
+      renderComingSoon();
+      return;
+    }
     redirectToQuestionnaire();
     return;
   }
@@ -386,6 +409,10 @@ bindGlobal();
   }
 
   if (!store.builtPackage) {
+    if (DIET_CREATION_COMING_SOON) {
+      renderComingSoon();
+      return;
+    }
     redirectToQuestionnaire();
     return;
   }

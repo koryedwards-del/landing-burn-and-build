@@ -776,6 +776,12 @@ body {
   background: transparent;
 }
 
+.q-btn--soon {
+  opacity: 0.85;
+  cursor: default;
+  pointer-events: none;
+}
+
 .q-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;

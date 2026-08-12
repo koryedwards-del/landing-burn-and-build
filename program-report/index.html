@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/print-template.css?v=2" />
   <link rel="stylesheet" href="../css/program-bridge.css?v=317" />
-  <link rel="stylesheet" href="css/report.css?v=323" />
+  <link rel="stylesheet" href="css/report.css?v=325" />
   <link rel="stylesheet" href="../menuplanner/css/planner.css?v=316" />
 </head>
 <body>
@@ -39,7 +39,7 @@
         </form>
         <p class="mp-access__footer-note">
           Need a new diet?
-          <a class="mp-access__link" href="/questionnaire/#welcome">Create your diet</a>
+          <span class="mp-access__soon">Coming soon</span>
         </p>
       </div>
 
@@ -56,9 +56,9 @@
       <div id="access-screen-missing" class="mp-access__screen" hidden>
         <h1 class="mp-access__title">No program found</h1>
         <p class="mp-access__lead">We do not have a Burn &amp; Build program saved for <strong id="access-missing-email"></strong>.</p>
-        <p class="mp-access__copy">New programs start with the desktop questionnaire, then checkout, then your program report and menu planner.</p>
+        <p class="mp-access__copy">New program creation is coming soon. If you already purchased, try a different email or contact support.</p>
         <div class="mp-access__actions">
-          <a class="mp-access__submit mp-access__submit--link" href="/questionnaire/#welcome">Start your program</a>
+          <span class="mp-access__submit mp-access__soon" aria-disabled="true">Coming soon</span>
           <button type="button" class="mp-access__ghost" data-access-screen="email">Try a different email</button>
         </div>
       </div>
@@ -170,6 +170,6 @@
       event.preventDefault();
     });
   </script>
-  <script type="module" src="js/report.js?v=324"></script>
+  <script type="module" src="js/report.js?v=325"></script>
 </body>
 </html>

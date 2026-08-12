@@ -9,7 +9,7 @@ import { buildProgramPackage } from '../../js/programPackage.js';
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
-import { CREATOR_CHECKOUT_URL } from '../../js/siteUrls.js';
+import { CREATOR_CHECKOUT_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
 
 const STEPS = [
   { id: 'welcome', label: 'Welcome' },
@@ -325,6 +325,10 @@ function showBootError(message) {
 
 function boot() {
   try {
+    if (DIET_CREATION_COMING_SOON) {
+      showStep(0);
+      return;
+    }
     bindEvents();
     initDefaults();
     syncAgeField();

@@ -19,10 +19,20 @@ import { loadProgramBridge, persistProgramBridge } from '../../js/programBridgeH
 import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.js';
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
-import { QUESTIONNAIRE_WELCOME_URL } from '../../js/siteUrls.js';
+import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
 import { kwarnerPreviewPdfUrl, PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
+
+function renderCreateDietCta({ primary = true } = {}) {
+  if (DIET_CREATION_COMING_SOON) {
+    const style = primary ? 'r-btn--primary' : 'r-btn--ghost';
+    return `<span class="r-btn ${style} r-btn--soon" aria-disabled="true">Coming Soon</span>`;
+  }
+  const style = primary ? 'r-btn--primary' : 'r-btn--ghost';
+  const label = primary ? 'Create your diet →' : 'Create your diet';
+  return `<a class="r-btn ${style}" href="${QUESTIONNAIRE_WELCOME_URL}">${label}</a>`;
+}
 
 let plannerModulePromise = null;
 
@@ -478,7 +488,7 @@ function renderMissingProgram() {
         <li><strong>Menu planner</strong> — build your week and grocery list</li>
       </ol>
       <div class="r-empty__actions">
-        <a class="r-btn r-btn--primary" href="${QUESTIONNAIRE_WELCOME_URL}">Create your diet →</a>
+        ${renderCreateDietCta({ primary: true })}
         <button type="button" class="r-btn r-btn--ghost" data-report-preview>Preview sample report</button>
         <a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>
       </div>
@@ -688,10 +698,10 @@ init().catch((err) => {
       <div class="r-empty">
         <p class="r-empty__eyebrow">Something went wrong</p>
         <h2 class="r-empty__title">Could not load your program</h2>
-        <p class="r-empty__lead">Refresh the page. If it keeps happening, open the sample preview or start from the questionnaire.</p>
+        <p class="r-empty__lead">Refresh the page. If it keeps happening, open the sample preview${DIET_CREATION_COMING_SOON ? '.' : ' or start from the questionnaire.'}</p>
         <div class="r-empty__actions">
           <a class="r-btn r-btn--primary" href="?preview=1">Preview sample program</a>
-          <a class="r-btn r-btn--ghost" href="${QUESTIONNAIRE_WELCOME_URL}">Create your diet</a>
+          ${DIET_CREATION_COMING_SOON ? '' : renderCreateDietCta({ primary: false })}
         </div>
       </div>`;
   }

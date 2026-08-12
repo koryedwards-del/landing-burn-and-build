@@ -3,6 +3,9 @@
 export const MARKETING_ORIGIN = 'https://burnandbuilddiet.com';
 export const CREATOR_HOST_ORIGIN = MARKETING_ORIGIN;
 
+/** When true, hide questionnaire/checkout entry points; existing users use program-report access. */
+export const DIET_CREATION_COMING_SOON = true;
+
 /** Landing CTAs — questionnaire welcome only */
 export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}/questionnaire/#welcome`;
 
