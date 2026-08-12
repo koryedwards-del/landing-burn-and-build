@@ -53,6 +53,11 @@
       transition: opacity 0.15s;
     }
     .btn-cta:hover { opacity: 0.75; }
+    .btn-cta--soon {
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.85;
+    }
 
     .philosophy { background: var(--black); padding: 100px 40px; text-align: center; }
 
@@ -233,7 +238,7 @@
     <p class="hero-eyebrow">The Premier Body Recomp Diet</p>
     <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
     <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
-    <a class="btn-cta hero-cta" href="/questionnaire/#welcome">Create Your Diet &rarr;</a>
+    <span class="btn-cta btn-cta--soon hero-cta" aria-disabled="true">Coming Soon</span>
   </section>
 
   <section class="guide" id="guide">
@@ -253,7 +258,7 @@
           <div class="guide-cta-price">$149</div>
           <p class="guide-cta-period">One-Time Purchase</p>
           <p class="guide-cta-body">A precision body recomp diet built for your body — lose fat, keep muscle, no guesswork.</p>
-          <a class="btn-cta" href="/questionnaire/#welcome">Create Your Diet &rarr;</a>
+          <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
         </div>
         <div class="testi">
           <div class="guide-photo-label">
