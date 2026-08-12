@@ -278,7 +278,7 @@ app.get('/api/checkout/verify', async (req, res) => {
   }
 });
 
-app.post('/api/checkout/test-complete', (req, res) => {
+app.post('/api/checkout/test-complete', async (req, res) => {
   if (isProd && process.env.STRIPE_TEST_BYPASS !== '1') {
     res.status(404).json({ ok: false, message: 'Not found.' });
     return;
