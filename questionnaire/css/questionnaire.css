@@ -365,10 +365,23 @@ body {
 .q-personal-row legend.q-label {
   margin: 0;
   color: var(--on-panel-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.q-personal-row .q-optional {
+  color: var(--on-panel-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .q-personal-row .q-unit {
   color: var(--on-panel-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .q-personal-row .q-input,
@@ -380,6 +393,32 @@ body {
   background: var(--sheet-field);
   border-color: var(--input-inset-border);
   box-shadow: var(--input-inset-shadow);
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.q-personal-row .q-input::placeholder {
+  color: var(--on-panel-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 1;
+}
+
+.q-personal-row select.q-input:invalid,
+.q-personal-row .q-select:invalid {
+  color: var(--on-panel-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.q-personal-row .q-input:-webkit-autofill,
+.q-personal-row .q-input:-webkit-autofill:hover,
+.q-personal-row .q-input:-webkit-autofill:focus,
+.q-personal-row .q-input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--gold);
+  caret-color: var(--gold);
 }
 
 .q-personal-row .q-inline--tight {
