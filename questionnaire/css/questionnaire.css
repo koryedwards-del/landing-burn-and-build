@@ -275,6 +275,14 @@ body {
 
 .q-personal-row .q-inline--tight {
   gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.q-personal-row .q-input--xs {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  max-width: 2.75rem;
+  flex: 0 0 auto;
 }
 
 .q-personal-row .q-segmented--compact {
