@@ -221,25 +221,32 @@ body {
   grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
 }
 
-.q-personal-row--5 {
+.q-personal-row--contact {
+  grid-template-columns: minmax(0, 2fr) minmax(160px, 0.9fr) minmax(180px, 1fr);
+}
+
+.q-personal-sheet__email { grid-column: 1; grid-row: 1; }
+.q-personal-sheet__gender { grid-column: 2; grid-row: 1; }
+.q-personal-sheet__phone { grid-column: 3; grid-row: 1; }
+
+.q-personal-row--4 {
   grid-template-columns:
     minmax(0, 1fr)
-    minmax(0, 1.15fr)
-    minmax(0, 1fr)
+    minmax(0, 1.1fr)
     minmax(88px, 0.65fr)
     minmax(0, 0.85fr);
 }
+
+.q-personal-sheet__height { grid-column: 1; }
+.q-personal-sheet__birth { grid-column: 2; }
+.q-personal-sheet__age { grid-column: 3; }
+.q-personal-sheet__weight { grid-column: 4; }
 
 .q-personal-row .q-field {
   gap: 6px;
   padding: 12px 14px;
   border-right: 1px solid var(--border);
   min-width: 0;
-}
-
-.q-personal-row fieldset.q-field {
-  margin: 0;
-  min-inline-size: 0;
 }
 
 .q-personal-row .q-field:last-child {
@@ -296,6 +303,28 @@ body {
   max-width: none;
 }
 
+select.q-input,
+.q-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239c9c9c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+select.q-input:invalid,
+.q-select:invalid {
+  color: var(--muted);
+}
+
+select.q-input option,
+.q-select option {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
 .q-input--date {
   max-width: 9.5rem;
 }
@@ -308,8 +337,21 @@ body {
 
 @media (max-width: 720px) {
   .q-personal-row--2,
+  .q-personal-row--contact,
+  .q-personal-row--4,
   .q-personal-row--5 {
     grid-template-columns: 1fr;
+  }
+
+  .q-personal-sheet__email,
+  .q-personal-sheet__gender,
+  .q-personal-sheet__phone,
+  .q-personal-sheet__height,
+  .q-personal-sheet__birth,
+  .q-personal-sheet__age,
+  .q-personal-sheet__weight {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .q-personal-row .q-field {

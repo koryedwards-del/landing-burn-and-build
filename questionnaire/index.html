@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=74" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=75" />
 </head>
 <body>
   <div class="q-app">
@@ -75,18 +75,26 @@
                 </div>
               </div>
 
-              <div class="q-personal-row q-personal-row--2">
-                <label class="q-field q-personal-sheet__email">
-                  <span class="q-label">Email <span class="q-required" aria-hidden="true">*</span></span>
-                  <input class="q-input" type="email" name="email" autocomplete="email" required />
-                </label>
+              <div class="q-personal-row q-personal-row--contact">
                 <label class="q-field q-personal-sheet__phone">
                   <span class="q-label">Phone <span class="q-optional">(optional)</span></span>
                   <input class="q-input" type="tel" name="phone" autocomplete="tel" />
                 </label>
+                <label class="q-field q-personal-sheet__gender">
+                  <span class="q-label">Gender <span class="q-required" aria-hidden="true">*</span></span>
+                  <select class="q-input q-select" name="sex" required autocomplete="sex">
+                    <option value="" disabled selected>Select</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                  </select>
+                </label>
+                <label class="q-field q-personal-sheet__email">
+                  <span class="q-label">Email <span class="q-required" aria-hidden="true">*</span></span>
+                  <input class="q-input" type="email" name="email" autocomplete="email" required />
+                </label>
               </div>
 
-              <div class="q-personal-row q-personal-row--5">
+              <div class="q-personal-row q-personal-row--4">
                 <label class="q-field q-personal-sheet__height">
                   <span class="q-label">Height <span class="q-required" aria-hidden="true">*</span></span>
                   <div class="q-inline q-inline--tight">
@@ -94,13 +102,6 @@
                     <input class="q-input q-input--xs" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" required />
                   </div>
                 </label>
-                <fieldset class="q-field q-personal-sheet__gender">
-                  <legend class="q-label">Gender <span class="q-required" aria-hidden="true">*</span></legend>
-                  <div class="q-segmented q-segmented--pair q-segmented--compact">
-                    <label class="q-segment"><input type="radio" name="sex" value="female" required /> Female</label>
-                    <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
-                  </div>
-                </fieldset>
                 <label class="q-field q-personal-sheet__birth">
                   <span class="q-label">Birthdate <span class="q-required" aria-hidden="true">*</span></span>
                   <input
@@ -300,6 +301,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=74"></script>
+  <script type="module" src="js/questionnaire.js?v=75"></script>
 </body>
 </html>
