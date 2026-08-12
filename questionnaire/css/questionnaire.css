@@ -200,7 +200,7 @@ body {
 }
 
 .q-personal-sheet {
-  max-width: 760px;
+  width: 100%;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -218,16 +218,16 @@ body {
 }
 
 .q-personal-row--2 {
-  grid-template-columns: minmax(0, 1.75fr) minmax(148px, 0.75fr);
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
 }
 
 .q-personal-row--5 {
   grid-template-columns:
-    minmax(108px, 0.9fr)
-    minmax(148px, 1.1fr)
-    minmax(128px, 1fr)
-    minmax(64px, 0.55fr)
-    minmax(96px, 0.75fr);
+    minmax(0, 1fr)
+    minmax(0, 1.15fr)
+    minmax(0, 1fr)
+    minmax(88px, 0.65fr)
+    minmax(0, 0.85fr);
 }
 
 .q-personal-row .q-field {
@@ -292,6 +292,10 @@ body {
   text-align: center;
 }
 
+.q-personal-row .q-input--date {
+  max-width: none;
+}
+
 .q-input--date {
   max-width: 9.5rem;
 }
@@ -303,10 +307,6 @@ body {
 }
 
 @media (max-width: 720px) {
-  .q-personal-sheet {
-    max-width: none;
-  }
-
   .q-personal-row--2,
   .q-personal-row--5 {
     grid-template-columns: 1fr;
@@ -489,6 +489,11 @@ body {
   text-transform: none;
   letter-spacing: 0;
   color: var(--text-hint);
+}
+
+.q-required {
+  color: var(--gold);
+  font-weight: 700;
 }
 
 .q-input {
