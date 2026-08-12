@@ -150,30 +150,14 @@ function bindGenderSegments() {
   function select(value) {
     hidden.value = value;
     buttons.forEach((btn) => {
-      const selected = btn.dataset.sexValue === value;
-      btn.setAttribute('aria-checked', selected ? 'true' : 'false');
-      btn.classList.toggle('is-selected', selected);
+      btn.classList.toggle('is-selected', btn.dataset.sexValue === value);
     });
     refreshNextButton();
   }
 
-  buttons.forEach((btn, index) => {
+  buttons.forEach((btn) => {
+    btn.setAttribute('tabindex', '0');
     btn.addEventListener('click', () => select(btn.dataset.sexValue));
-    btn.addEventListener('keydown', (event) => {
-      if (event.key === ' ' || event.key === 'Enter') {
-        event.preventDefault();
-        select(btn.dataset.sexValue);
-        return;
-      }
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault();
-        buttons[(index + 1) % buttons.length].focus();
-      }
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        buttons[(index - 1 + buttons.length) % buttons.length].focus();
-      }
-    });
   });
 
   if (hidden.value) select(hidden.value);
@@ -364,6 +348,7 @@ function bindEvents() {
   }
 
   bindBirthDateInput();
+  bindGenderSegments();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');

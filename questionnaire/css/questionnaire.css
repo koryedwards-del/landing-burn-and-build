@@ -203,13 +203,19 @@ body {
 
 .q-personal-grid__name { grid-column: 1; grid-row: 1; }
 .q-personal-grid__date { grid-column: 2; grid-row: 1; }
-.q-personal-grid__phone { grid-column: 1; grid-row: 2; }
-.q-personal-grid__email { grid-column: 2; grid-row: 2; }
-.q-personal-grid__gender { grid-column: 1; grid-row: 3; }
-.q-personal-grid__height { grid-column: 1; grid-row: 4; }
-.q-personal-grid__weight { grid-column: 2; grid-row: 4; }
-.q-personal-grid__birth { grid-column: 1; grid-row: 5; }
-.q-personal-grid__age { grid-column: 2; grid-row: 5; }
+.q-personal-grid__contact-left { grid-column: 1; grid-row: 2; }
+.q-personal-grid__contact-right { grid-column: 2; grid-row: 2; }
+.q-personal-grid__height { grid-column: 1; grid-row: 3; }
+.q-personal-grid__weight { grid-column: 2; grid-row: 3; }
+.q-personal-grid__birth { grid-column: 1; grid-row: 4; }
+.q-personal-grid__age { grid-column: 2; grid-row: 4; }
+
+.q-personal-grid__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
 
 .q-segment-btn {
   appearance: none;
@@ -220,8 +226,7 @@ body {
   text-align: center;
 }
 
-.q-segment-btn.is-selected,
-.q-segment-btn[aria-checked="true"] {
+.q-segment-btn.is-selected {
   border-color: var(--gold);
   background: var(--gold-select-bg);
 }
