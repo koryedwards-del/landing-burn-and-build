@@ -444,13 +444,14 @@ app.get('/api/programs/resume-checkout', (req, res) => {
     return;
   }
 
-  const meta = getLatestProgramMeta(email);
+  const paidMeta = getLatestPaidProgramMeta(email);
+  const meta = paidMeta || getLatestProgramMeta(email);
   if (!meta) {
     res.status(404).json({ ok: false, message: 'No program saved for this email.' });
     return;
   }
 
-  const pkg = getLatestProgram(email);
+  const pkg = getProgramById(email, meta.id) || getLatestProgram(email);
   if (!pkg) {
     res.status(404).json({ ok: false, message: 'No program saved for this email.' });
     return;
