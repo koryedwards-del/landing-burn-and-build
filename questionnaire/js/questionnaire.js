@@ -104,7 +104,71 @@ function buildProgramFromValues(values) {
   });
 }
 
+function formatBirthDateDigits(raw) {
+  const digits = String(raw || '').replace(/\D/g, '').slice(0, 8);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
+function isoFromDisplayBirthDate(display) {
+  const match = String(display || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return '';
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > new Date().getFullYear()) {
+    return '';
+  }
+  const iso = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const check = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(check.getTime())) return '';
+  if (check.getUTCMonth() + 1 !== month || check.getUTCDate() !== day) return '';
+  return iso;
+}
+
+function syncBirthDateHidden() {
+  const displayInput = form.elements.birthDateDisplay;
+  const hiddenInput = form.elements.birthDate;
+  if (!displayInput || !hiddenInput) return;
+  hiddenInput.value = isoFromDisplayBirthDate(displayInput.value);
+}
+
+function bindBirthDateInput() {
+  const displayInput = form.elements.birthDateDisplay;
+  if (!displayInput) return;
+
+  displayInput.addEventListener('input', () => {
+    const cursor = displayInput.selectionStart ?? displayInput.value.length;
+    const digitsBefore = displayInput.value.slice(0, cursor).replace(/\D/g, '').length;
+    const formatted = formatBirthDateDigits(displayInput.value);
+    displayInput.value = formatted;
+    syncBirthDateHidden();
+
+    let nextCursor = formatted.length;
+    if (digitsBefore > 0) {
+      let seen = 0;
+      nextCursor = 0;
+      for (let i = 0; i < formatted.length; i += 1) {
+        if (/\d/.test(formatted[i])) seen += 1;
+        nextCursor = i + 1;
+        if (seen >= digitsBefore) break;
+      }
+    }
+
+    displayInput.setSelectionRange(nextCursor, nextCursor);
+    syncAgeField();
+    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
+  });
+
+  displayInput.addEventListener('blur', () => {
+    syncBirthDateHidden();
+    syncAgeField();
+  });
+}
+
 function syncAgeField() {
+  syncBirthDateHidden();
   const birthInput = form.elements.birthDate;
   const ageDisplay = document.getElementById('q-age-display');
   if (!birthInput || !ageDisplay) return;
@@ -368,7 +432,8 @@ function boot() {
       return;
     }
     restoreQuestionnaireChrome();
-    bindEvents();
+    bindBirthDateInput();
+  bindEvents();
     initDefaults();
     syncAgeField();
     showStep(0);

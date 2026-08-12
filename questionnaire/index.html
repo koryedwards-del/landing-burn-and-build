@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=66" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=67" />
 </head>
 <body>
   <div class="q-app">
@@ -75,28 +75,25 @@
                 <span class="q-field-hint">Recorded automatically — the day you create this program.</span>
               </div>
 
-              <div class="q-personal-grid__stack q-personal-grid__contact-left">
-                <label class="q-field">
-                  <span class="q-label">Phone <span class="q-optional">(optional)</span></span>
-                  <input class="q-input" type="tel" name="phone" autocomplete="tel" />
-                  <span class="q-field-hint">Optional. We do not use this to unlock your plan — email does that.</span>
-                </label>
-                <div class="q-field" role="group" aria-labelledby="q-gender-label">
-                  <span class="q-label" id="q-gender-label">Gender</span>
-                  <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
-                  <div class="q-segmented q-segmented--pair">
-                    <label class="q-segment"><input type="radio" name="sex" value="female" /> Female</label>
-                    <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
-                  </div>
-                </div>
-              </div>
+              <label class="q-field q-personal-grid__phone">
+                <span class="q-label">Phone <span class="q-optional">(optional)</span></span>
+                <input class="q-input" type="tel" name="phone" autocomplete="tel" />
+                <span class="q-field-hint">Optional. We do not use this to unlock your plan — email does that.</span>
+              </label>
 
-              <div class="q-personal-grid__stack q-personal-grid__contact-right">
-                <label class="q-field">
-                  <span class="q-label">Email</span>
-                  <input class="q-input" type="email" name="email" autocomplete="email" required />
-                  <span class="q-field-hint"><strong>Important:</strong> This is how you open your program after purchase and on return visits. Use an address you check — typos lock you out until support helps.</span>
-                </label>
+              <label class="q-field q-personal-grid__email">
+                <span class="q-label">Email</span>
+                <input class="q-input" type="email" name="email" autocomplete="email" required />
+                <span class="q-field-hint"><strong>Important:</strong> This is how you open your program after purchase and on return visits. Use an address you check — typos lock you out until support helps.</span>
+              </label>
+
+              <div class="q-field q-personal-grid__gender" role="radiogroup" aria-labelledby="q-gender-label">
+                <span class="q-label" id="q-gender-label">Gender</span>
+                <div class="q-segmented q-segmented--pair">
+                  <label class="q-segment"><input type="radio" name="sex" value="female" required /> Female</label>
+                  <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
+                </div>
+                <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
               </div>
 
               <label class="q-field q-personal-grid__height">
@@ -119,8 +116,18 @@
               </label>
               <label class="q-field q-personal-grid__birth">
                 <span class="q-label">Birthdate</span>
-                <input class="q-input" name="birthDate" type="date" />
-                <span class="q-field-hint">Used to calculate your age and personalized heart-rate zones on the exercise step.</span>
+                <input
+                  class="q-input"
+                  name="birthDateDisplay"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="bday"
+                  placeholder="MM/DD/YYYY"
+                  maxlength="10"
+                  aria-describedby="q-birthdate-hint"
+                />
+                <input type="hidden" name="birthDate" />
+                <span class="q-field-hint" id="q-birthdate-hint">Used to calculate your age and personalized heart-rate zones on the exercise step. Type digits only — slashes are added automatically.</span>
               </label>
               <div class="q-field q-personal-grid__age">
                 <span class="q-label">Age <span class="q-optional">(from birthdate)</span></span>
@@ -294,6 +301,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=66"></script>
+  <script type="module" src="js/questionnaire.js?v=67"></script>
 </body>
 </html>
