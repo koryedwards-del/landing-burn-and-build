@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=72" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=73" />
 </head>
 <body>
   <div class="q-app">
@@ -62,82 +62,76 @@
             <div class="q-callout">
               <strong>Accuracy matters.</strong> Small errors in weight or body fat change your lean body mass, which drives every serving on your plan. You&rsquo;re paying $149 for an accurate diet plan.
             </div>
-            <div class="q-personal-grid">
-              <label class="q-field q-personal-grid__name">
-                <span class="q-label">First name</span>
-                <input class="q-input" name="preferredName" autocomplete="given-name" required />
-                <span class="q-field-hint">Used on your printed meal plan and grocery list. First name only is fine.</span>
-              </label>
-              <div class="q-field q-personal-grid__date">
-                <span class="q-label">Today's date</span>
-                <p class="q-static-value" id="q-intake-date-display"></p>
-                <input type="hidden" name="intakeDate" />
-                <span class="q-field-hint">Recorded automatically — the day you create this program.</span>
+            <div class="q-personal-sheet">
+              <div class="q-personal-row q-personal-row--2">
+                <label class="q-field q-personal-sheet__name">
+                  <span class="q-label">First name</span>
+                  <input class="q-input" name="preferredName" autocomplete="given-name" required />
+                </label>
+                <div class="q-field q-personal-sheet__date">
+                  <span class="q-label">Today&rsquo;s date</span>
+                  <p class="q-static-value" id="q-intake-date-display"></p>
+                  <input type="hidden" name="intakeDate" />
+                </div>
               </div>
 
-              <div class="q-personal-grid__stack q-personal-grid__contact-left">
-                <label class="q-field">
+              <div class="q-personal-row q-personal-row--2">
+                <label class="q-field q-personal-sheet__email">
+                  <span class="q-label">Email</span>
+                  <input class="q-input" type="email" name="email" autocomplete="email" required />
+                </label>
+                <label class="q-field q-personal-sheet__phone">
                   <span class="q-label">Phone <span class="q-optional">(optional)</span></span>
                   <input class="q-input" type="tel" name="phone" autocomplete="tel" />
-                  <span class="q-field-hint">Optional. We do not use this to unlock your plan — email does that.</span>
                 </label>
+              </div>
 
-                <fieldset class="q-field q-personal-grid__gender">
+              <div class="q-personal-row q-personal-row--5">
+                <label class="q-field q-personal-sheet__height">
+                  <span class="q-label">Height</span>
+                  <div class="q-inline q-inline--tight">
+                    <input class="q-input q-input--xs" name="heightFeet" inputmode="numeric" placeholder="ft" aria-label="Feet" />
+                    <input class="q-input q-input--xs" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" />
+                  </div>
+                </label>
+                <fieldset class="q-field q-personal-sheet__gender">
                   <legend class="q-label">Gender</legend>
-                  <div class="q-segmented q-segmented--pair">
+                  <div class="q-segmented q-segmented--pair q-segmented--compact">
                     <label class="q-segment"><input type="radio" name="sex" value="female" required /> Female</label>
                     <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
                   </div>
-                  <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
                 </fieldset>
-              </div>
-
-              <div class="q-personal-grid__stack q-personal-grid__contact-right">
-                <label class="q-field">
-                  <span class="q-label">Email</span>
-                  <input class="q-input" type="email" name="email" autocomplete="email" required />
-                  <span class="q-field-hint"><strong>Important:</strong> This is how you open your program after purchase and on return visits. Use an address you check — typos lock you out until support helps.</span>
+                <label class="q-field q-personal-sheet__birth">
+                  <span class="q-label">Birthdate</span>
+                  <input
+                    class="q-input q-input--date"
+                    name="birthDateDisplay"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="MM/DD/YYYY"
+                    maxlength="10"
+                    aria-describedby="q-birthdate-hint"
+                  />
+                  <input type="hidden" name="birthDate" />
+                </label>
+                <div class="q-field q-personal-sheet__age">
+                  <span class="q-label">Age</span>
+                  <p class="q-static-value q-static-value--xs" id="q-age-display" aria-live="polite"></p>
+                </div>
+                <label class="q-field q-personal-sheet__weight">
+                  <span class="q-label">Weight</span>
+                  <div class="q-inline q-inline--tight">
+                    <input class="q-input q-input--xs" name="weight" inputmode="decimal" required aria-label="Weight in pounds" />
+                    <span class="q-unit">lbs</span>
+                  </div>
                 </label>
               </div>
 
-              <label class="q-field q-personal-grid__height">
-                <span class="q-label">Height</span>
-                <div class="q-inline">
-                  <input class="q-input q-input--short" name="heightFeet" inputmode="numeric" placeholder="ft" />
-                  <span class="q-unit">ft</span>
-                  <input class="q-input q-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" />
-                  <span class="q-unit">in</span>
-                </div>
-                <span class="q-field-hint">Example: 5 ft 6 in — enter feet and inches separately. Inches must be 0–11.</span>
-              </label>
-              <label class="q-field q-personal-grid__weight">
-                <span class="q-label">Weight</span>
-                <div class="q-inline">
-                  <input class="q-input q-input--short" name="weight" inputmode="decimal" required />
-                  <span class="q-unit">lbs</span>
-                </div>
-                <span class="q-field-hint">Current body weight on a scale, in pounds. Best: morning, after bathroom, before eating or drinking. Same conditions you would use for a body-composition test.</span>
-              </label>
-              <label class="q-field q-personal-grid__birth">
-                <span class="q-label">Birthdate</span>
-                <input
-                  class="q-input"
-                  name="birthDateDisplay"
-                  type="text"
-                  inputmode="numeric"
-                  autocomplete="off"
-                  placeholder="MM/DD/YYYY"
-                  maxlength="10"
-                  aria-describedby="q-birthdate-hint"
-                />
-                <input type="hidden" name="birthDate" />
-                <span class="q-field-hint" id="q-birthdate-hint">Used to calculate your age and personalized heart-rate zones on the exercise step. Type digits only — slashes are added automatically.</span>
-              </label>
-              <div class="q-field q-personal-grid__age">
-                <span class="q-label">Age <span class="q-optional">(from birthdate)</span></span>
-                <p class="q-static-value q-static-value--short" id="q-age-display" aria-live="polite"></p>
-                <span class="q-field-hint">Updates automatically when you pick a birthdate.</span>
-              </div>
+              <p class="q-personal-sheet__note" id="q-birthdate-hint">
+                <strong>Email</strong> unlocks your program after purchase — double-check spelling.
+                Height: feet and inches separately (inches 0–11). Birthdate sets your heart-rate zones on the exercise step.
+              </p>
             </div>
           </section>
 
@@ -305,6 +299,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=72"></script>
+  <script type="module" src="js/questionnaire.js?v=73"></script>
 </body>
 </html>
