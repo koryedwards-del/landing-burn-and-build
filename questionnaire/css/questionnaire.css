@@ -22,15 +22,40 @@
   --gold-select-bg: rgba(253, 197, 0, 0.1);
   --on-gold: #000000;
   --on-panel: #141414;
-  --on-panel-muted: #444444;
+  --on-panel-muted: #3a3a3a;
   --text-hint: #afafaf;
   --layout-width: var(--app-width, 1200px);
   --surface: var(--panel);
   --surface-2: var(--section);
-  --sheet-bg: #b8b8b8;
-  --sheet-cell: #b8b8b8;
+  --sheet-border: #707070;
   --sheet-field: #000000;
-  --sheet-border: #8a8a8a;
+  --aluminum-base: linear-gradient(
+    180deg,
+    #e8e8e8 0%,
+    #b8b8b8 16%,
+    #c9c9c9 38%,
+    #a6a6a6 62%,
+    #d2d2d2 100%
+  );
+  --aluminum-brush: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    rgba(0, 0, 0, 0.035) 1px,
+    rgba(0, 0, 0, 0.035) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  --aluminum-sheen: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.08) 32%,
+    rgba(0, 0, 0, 0) 52%,
+    rgba(0, 0, 0, 0.07) 100%
+  );
+  --sheet-aluminum: var(--aluminum-base), var(--aluminum-brush), var(--aluminum-sheen);
+  --sheet-bg: var(--sheet-aluminum);
+  --sheet-cell: transparent;
   --input-inset-border: #2a2a2a;
   --input-inset-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.72),
@@ -311,13 +336,18 @@ body {
   border: 1px solid var(--sheet-border);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--sheet-bg);
+  background: var(--sheet-aluminum);
+  background-color: #b8b8b8;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    0 6px 18px rgba(0, 0, 0, 0.28);
 }
 
 .q-personal-row {
   display: grid;
   gap: 0;
-  border-bottom: 1px solid var(--sheet-border);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
 }
 
 .q-personal-row:last-of-type {
@@ -352,7 +382,7 @@ body {
 .q-personal-row .q-field {
   gap: 6px;
   padding: 12px 14px;
-  border-right: 1px solid var(--sheet-border);
+  border-right: 1px solid rgba(0, 0, 0, 0.18);
   background: var(--sheet-cell);
   min-width: 0;
 }
@@ -463,11 +493,11 @@ body {
 .q-personal-sheet__note {
   margin: 0;
   padding: 10px 14px;
-  border-top: 1px solid var(--sheet-border);
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--on-panel-muted);
-  background: var(--sheet-bg);
+  background: transparent;
 }
 
 .q-personal-sheet__note strong {
