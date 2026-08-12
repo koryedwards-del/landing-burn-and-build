@@ -9,7 +9,9 @@ import { buildProgramPackage } from '../../js/programPackage.js';
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
-import { CREATOR_CHECKOUT_URL, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
+import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
+
+captureDietCreationTestBypass();
 
 const STEPS = [
   { id: 'welcome', label: 'Welcome' },
@@ -134,9 +136,68 @@ function syncBirthDateHidden() {
   hiddenInput.value = isoFromDisplayBirthDate(displayInput.value);
 }
 
+function bindGenderSegments() {
+  const group = document.getElementById('q-gender-group');
+  const hidden = form.elements.sex;
+  if (!group || !hidden) return;
+
+  const buttons = [...group.querySelectorAll('[data-sex-value]')];
+
+  function refreshNextButton() {
+    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
+  }
+
+  function select(value) {
+    hidden.value = value;
+    buttons.forEach((btn) => {
+      const selected = btn.dataset.sexValue === value;
+      btn.setAttribute('aria-checked', selected ? 'true' : 'false');
+      btn.classList.toggle('is-selected', selected);
+    });
+    refreshNextButton();
+  }
+
+  buttons.forEach((btn, index) => {
+    btn.addEventListener('click', () => select(btn.dataset.sexValue));
+    btn.addEventListener('keydown', (event) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        event.preventDefault();
+        select(btn.dataset.sexValue);
+        return;
+      }
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        buttons[(index + 1) % buttons.length].focus();
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        buttons[(index - 1 + buttons.length) % buttons.length].focus();
+      }
+    });
+  });
+
+  if (hidden.value) select(hidden.value);
+}
+
 function bindBirthDateInput() {
   const displayInput = form.elements.birthDateDisplay;
   if (!displayInput) return;
+
+  displayInput.addEventListener('beforeinput', (event) => {
+    if (event.inputType === 'insertText' && event.data && !/^\d$/.test(event.data)) {
+      event.preventDefault();
+    }
+  });
+
+  displayInput.addEventListener('paste', (event) => {
+    event.preventDefault();
+    const pasted = event.clipboardData?.getData('text') || '';
+    displayInput.value = formatBirthDateDigits(pasted);
+    syncBirthDateHidden();
+    syncAgeField();
+    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
+    displayInput.setSelectionRange(displayInput.value.length, displayInput.value.length);
+  });
 
   displayInput.addEventListener('input', () => {
     const cursor = displayInput.selectionStart ?? displayInput.value.length;

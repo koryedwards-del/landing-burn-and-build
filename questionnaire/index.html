@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=67" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=68" />
 </head>
 <body>
   <div class="q-app">
@@ -87,13 +87,14 @@
                 <span class="q-field-hint"><strong>Important:</strong> This is how you open your program after purchase and on return visits. Use an address you check — typos lock you out until support helps.</span>
               </label>
 
-              <div class="q-field q-personal-grid__gender" role="radiogroup" aria-labelledby="q-gender-label">
+              <div class="q-field q-personal-grid__gender">
                 <span class="q-label" id="q-gender-label">Gender</span>
-                <div class="q-segmented q-segmented--pair">
-                  <label class="q-segment"><input type="radio" name="sex" value="female" required /> Female</label>
-                  <label class="q-segment"><input type="radio" name="sex" value="male" /> Male</label>
+                <div class="q-segmented q-segmented--pair" id="q-gender-group" role="radiogroup" aria-labelledby="q-gender-label">
+                  <button type="button" class="q-segment q-segment-btn" role="radio" aria-checked="false" data-sex-value="female">Female</button>
+                  <button type="button" class="q-segment q-segment-btn" role="radio" aria-checked="false" data-sex-value="male">Male</button>
                 </div>
-                <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step.</span>
+                <input type="hidden" name="sex" value="" />
+                <span class="q-field-hint">Used for body-fat reference ranges and heart-rate zones on the exercise step. Tab to select, or use arrow keys.</span>
               </div>
 
               <label class="q-field q-personal-grid__height">
@@ -121,7 +122,7 @@
                   name="birthDateDisplay"
                   type="text"
                   inputmode="numeric"
-                  autocomplete="bday"
+                  autocomplete="off"
                   placeholder="MM/DD/YYYY"
                   maxlength="10"
                   aria-describedby="q-birthdate-hint"
@@ -301,6 +302,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=67"></script>
+  <script type="module" src="js/questionnaire.js?v=68"></script>
 </body>
 </html>
