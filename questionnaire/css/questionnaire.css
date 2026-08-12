@@ -205,16 +205,16 @@ body {
 
 .q-personal-sheet {
   width: 100%;
-  border: 1px solid var(--border);
+  border: 1px solid var(--sheet-border);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--sheet-bg);
 }
 
 .q-personal-row {
   display: grid;
   gap: 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--sheet-border);
 }
 
 .q-personal-row:last-of-type {
@@ -249,7 +249,8 @@ body {
 .q-personal-row .q-field {
   gap: 6px;
   padding: 12px 14px;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--sheet-border);
+  background: var(--sheet-cell);
   min-width: 0;
 }
 
@@ -263,10 +264,13 @@ body {
 }
 
 .q-personal-row .q-input,
-.q-personal-row .q-static-value {
+.q-personal-row .q-static-value,
+.q-personal-row select.q-input {
   min-height: 38px;
   width: 100%;
   max-width: 100%;
+  background: var(--sheet-field);
+  border-color: var(--sheet-border);
 }
 
 .q-personal-row .q-inline--tight {
@@ -287,11 +291,11 @@ body {
 .q-personal-sheet__note {
   margin: 0;
   padding: 10px 14px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--sheet-border);
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text-hint);
-  background: var(--surface);
+  background: var(--sheet-bg);
 }
 
 .q-input--xs {
