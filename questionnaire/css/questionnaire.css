@@ -433,6 +433,22 @@ body {
   flex: 0 0 auto;
 }
 
+.q-personal-row .q-input--3digit {
+  width: 4.5rem;
+  min-width: 4.5rem;
+  max-width: 4.5rem;
+  flex: 0 0 auto;
+}
+
+.q-input--3digit {
+  width: 4.5rem;
+  min-width: 4.5rem;
+  max-width: 4.5rem;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+}
+
 .q-personal-row .q-segmented--compact {
   gap: 6px;
 }
