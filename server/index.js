@@ -168,6 +168,7 @@ app.get('/health', (_req, res) => {
     database: dbPathForHealth(),
     stripe: stripeConfigured(),
     pdf: true,
+    commit: process.env.RENDER_GIT_COMMIT || null,
   });
 });
 

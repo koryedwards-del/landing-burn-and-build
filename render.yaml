@@ -12,7 +12,7 @@ projects:
             runtime: node
             region: oregon
             plan: starter
-            buildCommand: npm install
+            buildCommand: npm install && npm run verify:server
             startCommand: DATABASE_PATH=/var/data/programs.db npm start
             healthCheckPath: /health
             disk:
@@ -41,4 +41,8 @@ projects:
               - key: STRIPE_WEBHOOK_SECRET
                 sync: false
               - key: STRIPE_TEST_BYPASS
+                sync: false
+              - key: RESEND_API_KEY
+                sync: false
+              - key: DIET_EMAIL_FROM
                 sync: false
