@@ -302,6 +302,8 @@ function bindEvents() {
     throw new Error('Questionnaire markup is missing required elements.');
   }
 
+  bindBirthDateInput();
+
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
     if (!btn) return;
@@ -432,8 +434,7 @@ function boot() {
       return;
     }
     restoreQuestionnaireChrome();
-    bindBirthDateInput();
-  bindEvents();
+    bindEvents();
     initDefaults();
     syncAgeField();
     showStep(0);

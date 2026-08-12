@@ -48,11 +48,11 @@ export const SEMINAR_COLORS = {
   muted: '#444444',
   rule: '#cccccc',
   tableHead: '#f2f2f2',
-  gold: '#fdc500',
+  gold: '#FFCC00',
   brand: '#888888',
   panel: '#111111',
   panelMuted: '#cccccc',
-  startHere: '#fdc500',
+  startHere: '#FFCC00',
   startHereText: '#111111',
 };
 
