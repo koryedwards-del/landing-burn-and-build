@@ -10,6 +10,7 @@ import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/pro
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
 import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
+import { kwarnerPreviewPdfUrl } from '../../js/kwarnerPreviewBuild.js';
 
 captureDietCreationTestBypass();
 
@@ -424,7 +425,7 @@ function restoreWelcomePanel() {
     <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
     <div class="q-intro-actions">
       <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet</button>
-      <a class="q-btn q-btn--ghost" href="../program-report/?preview=1">Preview sample program</a>
+      <a class="q-btn q-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">Preview sample PDF</a>
     </div>
     <p class="q-intro-price">$149 one-time purchase · own your program forever</p>
   `;
