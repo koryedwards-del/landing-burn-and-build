@@ -9,10 +9,24 @@ The user does **not** review pull requests. Do not use the PR workflow.
 
 ## Required flow
 
-1. Work on `main` (or a short-lived local branch — merge/rebase to `main` before push).
+1. Work on **`main`** directly when possible. Short-lived `cursor/*` branches are OK only if needed for isolation — **merge to `main` and push in the same session**.
 2. **Commit** with a clear message.
 3. **Push** to `origin main`.
 4. For PDF work: run `npm run render:kwarner-preview`, commit the new PDFs + `js/kwarnerPreviewBuild.js`, push again if needed.
+5. **Clean up after yourself** (see Housekeeping below).
+
+## Housekeeping
+
+The user is not responsible for repo hygiene. **Every agent session must leave the repo tidy:**
+
+- **`main` is the only long-lived branch.** Everything shipped lives there.
+- **Do not create PRs** and do not leave `cursor/*` branches on the remote after work is done.
+- After pushing to `main`, **delete any remote `cursor/*` branches** you created or that are fully merged:
+  - `git push origin --delete cursor/<branch-name>`
+  - Or batch: delete all merged `cursor/*` branches before ending the session.
+- **Delete local** `cursor/*` branches after merge: `git branch -D cursor/<branch-name>`.
+- **Do not accumulate** stale agent branches. If you merged it, delete the branch — don't wait for the user to ask.
+- Before ending a session, verify: `git branch -r` should show only `origin/main` (no orphan `cursor/*` branches).
 
 ## Do not
 
