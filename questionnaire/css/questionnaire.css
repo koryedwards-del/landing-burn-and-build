@@ -534,7 +534,7 @@ select.q-input option,
 }
 
 .q-required {
-  color: var(--gold);
+  color: #ef4444;
   font-weight: 700;
 }
 
