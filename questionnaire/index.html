@@ -6,18 +6,21 @@
   <title>Burn &amp; Build — Program Questionnaire</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=81" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=82" />
 </head>
 <body>
   <div class="q-app">
     <header class="q-header">
-      <div class="q-brand">
-        <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="56" height="56" />
-        <div class="q-brand__text">
-          <h1 class="q-title">Coming Soon</h1>
-          <p class="q-tag">Personalized program creation is almost ready</p>
+      <div class="q-header__inner">
+        <div class="q-brand">
+          <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="72" height="72" />
+          <div class="q-brand__text">
+            <h1 class="q-title">Coming Soon</h1>
+            <p class="q-tag">Personalized program creation is almost ready</p>
+          </div>
         </div>
+        <p class="q-motto">Built on science. <span class="q-motto__accent">Forged in iron.</span></p>
       </div>
     </header>
 
@@ -39,11 +42,14 @@
               </p>
             </div>
             <div class="q-callout">
-              <strong>Already purchased?</strong>
-              <ul>
-                <li>Go to <a href="../get-your-diet/">Get your diet</a> and enter the email you used at checkout.</li>
-                <li>Questions? Email <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a>.</li>
-              </ul>
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <div class="q-callout__body">
+                <strong>Already purchased?</strong>
+                <ul>
+                  <li>Go to <a href="../get-your-diet/">Get your diet</a> and enter the email you used at checkout.</li>
+                  <li>Questions? Email <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a>.</li>
+                </ul>
+              </div>
             </div>
             <div class="q-intro-actions">
               <span class="q-btn q-btn--primary q-btn--soon" aria-disabled="true">Coming Soon</span>
@@ -60,7 +66,8 @@
               <p class="q-panel__lead">The basics we need before calculating your servings and food plan.</p>
             </div>
             <div class="q-callout">
-              <strong>Accuracy matters.</strong> Small errors in weight or body fat change your lean body mass, which drives every serving on your plan. You&rsquo;re paying $149 for an accurate diet plan.
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <p class="q-callout__body"><strong>Accuracy matters.</strong> Small errors in weight or body fat change your lean body mass, which drives every serving on your plan. You&rsquo;re paying $149 for an accurate diet plan.</p>
             </div>
             <div class="q-personal-sheet">
               <div class="q-personal-row q-personal-row--2">
@@ -144,7 +151,8 @@
               <p class="q-panel__lead">How active is your job, and how stressful is a typical day?</p>
             </div>
             <div class="q-callout">
-              <strong>Think typical week — not your hardest day.</strong> Your job activity and daily stress feed the Burn Engine work-intensity multiplier, which adjusts how many servings you need. When unsure, pick the option that describes most of your workdays.
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <p class="q-callout__body"><strong>Think typical week — not your hardest day.</strong> Your job activity and daily stress feed the Burn Engine work-intensity multiplier, which adjusts how many servings you need. When unsure, pick the option that describes most of your workdays.</p>
             </div>
             <div class="q-workday">
               <div class="q-field q-choice-group">
@@ -176,13 +184,16 @@
               <p class="q-panel__lead">Be realistic about the exercise you will commit to for the next 8 weeks. Conservative is better.</p>
             </div>
             <div class="q-callout">
-              <strong>Plan for what you will actually do — not what you wish you would do.</strong>
-              <ul>
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <div class="q-callout__body">
+                <strong>Plan for what you will actually do — not what you wish you would do.</strong>
+                <ul>
                 <li>All three categories can be <strong>0</strong> if you are not doing that type of activity.</li>
                 <li>Enter hours in decimals: <strong>0.25</strong> = 15 min, <strong>0.5</strong> = 30 min, <strong>0.75</strong> = 45 min, <strong>1.25</strong> = 1 hr 15 min.</li>
                 <li>Only count time <strong>moving or under load</strong> — not rest between sets, scrolling on the treadmill, or driving to the gym.</li>
                 <li>Heart-rate zones below update after you enter birthdate on the previous step.</li>
               </ul>
+              </div>
             </div>
             <p class="q-hint">Enter hours per week down to the quarter hour (15 minutes). Overstating exercise lowers your fat servings and makes the plan harder to follow.</p>
             <div class="q-activity-list">
@@ -222,7 +233,8 @@
               <p class="q-panel__lead">Required for accurate servings. Body composition drives the whole plan.</p>
             </div>
             <div class="q-callout">
-              <strong>Why this step matters:</strong> Your plan is built from <strong>lean body mass</strong> (weight minus fat). Wrong body fat % = wrong servings from day one. A professional test is worth it if you can get one.
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <p class="q-callout__body"><strong>Why this step matters:</strong> Your plan is built from <strong>lean body mass</strong> (weight minus fat). Wrong body fat % = wrong servings from day one. A professional test is worth it if you can get one.</p>
             </div>
             <fieldset class="q-field">
               <legend class="q-label">How do you know your body composition?</legend>
@@ -280,13 +292,16 @@
               <p class="q-panel__lead">Confirm your answers, then continue to secure checkout ($149).</p>
             </div>
             <div class="q-callout">
-              <strong>Double-check before checkout:</strong>
-              <ul>
-                <li><strong>Email</strong> — correct spelling; this unlocks your program.</li>
-                <li><strong>Body fat %</strong> — the number that drives all servings.</li>
-                <li><strong>Exercise hours</strong> — realistic for the next 8 weeks.</li>
-              </ul>
-              Use <strong>Back</strong> below to fix anything. After payment you can still create a new program later with updated stats.
+              <span class="q-callout__icon" aria-hidden="true">!</span>
+              <div class="q-callout__body">
+                <strong>Double-check before checkout:</strong>
+                <ul>
+                  <li><strong>Email</strong> — correct spelling; this unlocks your program.</li>
+                  <li><strong>Body fat %</strong> — the number that drives all servings.</li>
+                  <li><strong>Exercise hours</strong> — realistic for the next 8 weeks.</li>
+                </ul>
+                <p>Use <strong>Back</strong> below to fix anything. After payment you can still create a new program later with updated stats.</p>
+              </div>
             </div>
             <dl class="q-review" id="q-review"></dl>
             <button type="button" class="q-btn q-btn--primary" id="q-continue">Complete purchase →</button>
@@ -301,6 +316,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=81"></script>
+  <script type="module" src="js/questionnaire.js?v=82"></script>
 </body>
 </html>

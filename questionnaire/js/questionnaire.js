@@ -410,17 +410,20 @@ function restoreWelcomePanel() {
       </p>
     </div>
     <div class="q-callout">
-      <strong>Before you start, have these ready:</strong>
-      <ul>
-        <li>Your <strong>email</strong> — you will use it to open your program after checkout.</li>
-        <li><strong>Scale weight</strong> in pounds (morning weight, before eating, is best).</li>
-        <li><strong>Body fat percentage</strong> from a DEXA scan, calipers, BodPod, or ultrasound if you have one. If not, you can estimate — we explain how on that step.</li>
-        <li>A honest count of the <strong>exercise you will actually do</strong> for the next 8 weeks — not your best week ever.</li>
-      </ul>
+      <span class="q-callout__icon" aria-hidden="true">!</span>
+      <div class="q-callout__body">
+        <strong>Before you start, have these ready:</strong>
+        <ul>
+          <li>Your <strong>email</strong> — you will use it to open your program after checkout.</li>
+          <li><strong>Scale weight</strong> in pounds (morning weight, before eating, is best).</li>
+          <li><strong>Body fat percentage</strong> from a DEXA scan, calipers, BodPod, or ultrasound if you have one. If not, you can estimate — we explain how on that step.</li>
+          <li>A honest count of the <strong>exercise you will actually do</strong> for the next 8 weeks — not your best week ever.</li>
+        </ul>
+      </div>
     </div>
     <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
     <div class="q-intro-actions">
-      <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet →</button>
+      <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet</button>
       <a class="q-btn q-btn--ghost" href="../program-report/?preview=1">Preview sample program</a>
     </div>
     <p class="q-intro-price">$149 one-time purchase · own your program forever</p>
@@ -432,6 +435,7 @@ function restoreQuestionnaireChrome() {
   const tag = document.querySelector('.q-tag');
   if (title) title.textContent = 'Create Your Diet';
   if (tag) tag.textContent = 'Build your personalized program';
+  tag?.classList.add('q-tag--gold');
   restoreWelcomePanel();
 }
 
