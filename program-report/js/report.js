@@ -474,19 +474,27 @@ function renderServings(pkg) {
 }
 
 function renderMissingProgram() {
-  return `
-    <div class="r-empty">
-      <p class="r-empty__eyebrow">Get started</p>
-      <h2 class="r-empty__title">Create your personalized program</h2>
-      <p class="r-empty__lead">
-        Answer a short intake questionnaire — your body composition, workday, and exercise plan for the next 8 weeks.
-        Burn &amp; Build calculates your servings and builds your program report.
-      </p>
-      <ol class="r-empty__steps">
+  const eyebrow = DIET_CREATION_COMING_SOON ? 'Coming soon' : 'Get started';
+  const title = DIET_CREATION_COMING_SOON
+    ? 'New programs are not open yet'
+    : 'Create your personalized program';
+  const lead = DIET_CREATION_COMING_SOON
+    ? 'We&rsquo;re finishing the launch. Already purchased? Go to <strong>Get your diet</strong> and enter your checkout email to download your PDF.'
+    : `Answer a short intake questionnaire — your body composition, workday, and exercise plan for the next 8 weeks.
+        Burn &amp; Build calculates your servings and builds your program report.`;
+  const steps = DIET_CREATION_COMING_SOON
+    ? ''
+    : `<ol class="r-empty__steps">
         <li><strong>Intake</strong> — personal info, body fat, work &amp; exercise</li>
         <li><strong>Your program</strong> — welcome, projections, plan/servings, and menu planner</li>
         <li><strong>Menu planner</strong> — build your week and grocery list</li>
-      </ol>
+      </ol>`;
+  return `
+    <div class="r-empty">
+      <p class="r-empty__eyebrow">${eyebrow}</p>
+      <h2 class="r-empty__title">${title}</h2>
+      <p class="r-empty__lead">${lead}</p>
+      ${steps}
       <div class="r-empty__actions">
         ${renderCreateDietCta({ primary: true })}
         <button type="button" class="r-btn r-btn--ghost" data-report-preview>Preview sample report</button>
@@ -663,12 +671,13 @@ function launchApp() {
 }
 
 async function init() {
-  if (wantsPreviewFromUrl()) {
-    programPackage = buildPreviewProgram();
-    persistProgram(programPackage);
-  } else {
-    programPackage = loadProgramPackage();
+  if (!wantsPreviewFromUrl()) {
+    location.replace('/get-your-diet/');
+    return;
   }
+
+  programPackage = buildPreviewProgram();
+  persistProgram(programPackage);
 
   bindProgramAccess(async (pkg) => {
     programPackage = pkg;

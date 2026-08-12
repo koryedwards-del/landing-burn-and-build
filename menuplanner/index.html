@@ -2,21 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=/program-report/?page=menuplanner" />
+  <meta http-equiv="refresh" content="0; url=/get-your-diet/" />
   <title>Burn &amp; Build — Menu planner</title>
   <script>
     (function () {
-      var target = new URL('/program-report/', location.origin);
-      target.searchParams.set('page', 'menuplanner');
-      var incoming = new URLSearchParams(location.search);
-      incoming.forEach(function (value, key) {
-        if (key !== 'page') target.searchParams.set(key, value);
-      });
-      location.replace(target.pathname + target.search + location.hash);
+      location.replace('/get-your-diet/');
     })();
   </script>
 </head>
 <body>
-  <p><a href="/program-report/?page=menuplanner">Continue to Menu planner</a></p>
+  <p><a href="/get-your-diet/">Download your Burn &amp; Build Diet</a></p>
 </body>
 </html>

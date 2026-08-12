@@ -64,8 +64,16 @@ function migratePaidAtColumn() {
   }
 }
 
+function migrateDietEmailSentColumn() {
+  const cols = db.prepare('PRAGMA table_info(programs)').all();
+  if (!cols.some((c) => c.name === 'diet_email_sent_at')) {
+    db.exec('ALTER TABLE programs ADD COLUMN diet_email_sent_at TEXT');
+  }
+}
+
 migrateLegacyTable();
 migratePaidAtColumn();
+migrateDietEmailSentColumn();
 
 export function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
@@ -242,6 +250,20 @@ export function markProgramPaid(email, programId) {
     UPDATE programs SET paid_at = ? WHERE id = ? AND email = ?
   `).run(now, id, key);
   return result.changes > 0;
+}
+
+export function wasDietEmailSent(email, programId) {
+  const row = db.prepare(`
+    SELECT diet_email_sent_at FROM programs WHERE id = ? AND email = ?
+  `).get(String(programId || '').trim(), normalizeEmail(email));
+  return !!row?.diet_email_sent_at;
+}
+
+export function markDietEmailSent(email, programId) {
+  const now = new Date().toISOString();
+  db.prepare(`
+    UPDATE programs SET diet_email_sent_at = ? WHERE id = ? AND email = ?
+  `).run(now, String(programId || '').trim(), normalizeEmail(email));
 }
 
 export function dbPathForHealth() {

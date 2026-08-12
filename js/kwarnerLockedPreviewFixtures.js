@@ -2,7 +2,7 @@
 
 import { buildProgramPackage } from './programPackage.js';
 import { computePlan } from './burnEngine.js';
-import { buildProgramReportPayload } from './programReportPrintout.js';
+import { buildKwarnerLockedPayloadFromPackage } from './kwarnerLockedPayload.js';
 
 export const KWARNER_WELCOME_COPY = {
   intro: [
@@ -74,10 +74,5 @@ export function buildKristiKwarnerPreviewPackage() {
 }
 
 export function buildKristiKwarnerPreviewPayload() {
-  const payload = buildProgramReportPayload(buildKristiKwarnerPreviewPackage());
-  payload.welcome = KWARNER_WELCOME_COPY;
-  payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
-  delete payload.gettingStarted;
-  delete payload.stepsToSuccess;
-  return payload;
+  return buildKwarnerLockedPayloadFromPackage(buildKristiKwarnerPreviewPackage());
 }

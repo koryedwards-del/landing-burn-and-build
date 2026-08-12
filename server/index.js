@@ -12,7 +12,7 @@ import {
   setBurnAndBuild,
   upsertContact,
 } from './contacts.js';
-import { countPrograms, dbPathForHealth, deleteProgram, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, listPaidPrograms, markProgramPaid, normalizeEmail, saveProgram } from './db.js';
+import { countPrograms, dbPathForHealth, deleteProgram, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, listPaidPrograms, markProgramPaid, normalizeEmail, saveProgram } from './db.js';
 import { validateProgramPackage } from '../js/programPackage.js';
 import {
   constructStripeWebhookEvent,
@@ -30,6 +30,8 @@ import {
 } from './pdf/index.js';
 import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
 import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
+import { ensureDietPdf, fulfillDietDelivery } from './dietFulfillment.js';
+import { dietPdfFilename } from './dietPdfStorage.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -111,6 +113,11 @@ app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), (req
       res.status(500).json({ ok: false, message: result.message || 'Fulfillment failed.' });
       return;
     }
+    if (result.ok && result.email && result.programId) {
+      fulfillPaidProgram(result.email, result.programId).catch((err) => {
+        console.error('Stripe webhook diet fulfillment:', err.message);
+      });
+    }
     res.json({ ok: true, ...result });
   } catch (err) {
     console.error('Stripe webhook error:', err.message);
@@ -122,6 +129,16 @@ app.use(express.json({ limit: '512kb' }));
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
+}
+
+async function fulfillPaidProgram(email, programId) {
+  if (!email || !programId) return { pdfReady: false };
+  try {
+    return await fulfillDietDelivery(email, programId);
+  } catch (err) {
+    console.error('Diet fulfillment error:', err.message);
+    return { pdfReady: false, error: err.message };
+  }
 }
 
 function requireContactsAdmin(req, res, next) {
@@ -250,6 +267,10 @@ app.get('/api/checkout/verify', async (req, res) => {
 
   try {
     const result = await verifyCheckoutSession(sessionId);
+    if (result.ok && result.email && result.programId) {
+      const fulfillment = await fulfillPaidProgram(result.email, result.programId);
+      Object.assign(result, fulfillment);
+    }
     res.json(result);
   } catch (err) {
     console.error('Checkout verify error:', err.message);
@@ -277,7 +298,13 @@ app.post('/api/checkout/test-complete', (req, res) => {
     res.status(404).json({ ok: false, message: 'Program not found for this email.' });
     return;
   }
-  res.json({ ok: true, email, programId, paid: true, test: true });
+  try {
+    const fulfillment = await fulfillPaidProgram(email, programId);
+    res.json({ ok: true, email, programId, paid: true, test: true, ...fulfillment });
+  } catch (err) {
+    console.error('Test checkout diet fulfillment:', err.message);
+    res.json({ ok: true, email, programId, paid: true, test: true, pdfReady: false, error: err.message });
+  }
 });
 
 app.get('/api/contacts/lookup', (req, res) => {
@@ -455,6 +482,74 @@ app.get('/api/programs/payment-status', (req, res) => {
     programId,
     paid: isProgramPaid(email, programId),
   });
+});
+
+app.get('/api/programs/diet-pdf', async (req, res) => {
+  const email = normalizeEmail(req.query.email);
+  const programId = String(req.query.program_id || req.query.programId || '').trim();
+  if (!isValidEmail(email)) {
+    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
+    return;
+  }
+  if (!programId) {
+    res.status(400).json({ ok: false, message: 'Missing program id.' });
+    return;
+  }
+  if (!isProgramPaid(email, programId)) {
+    res.status(403).json({ ok: false, message: 'Purchase required to download this diet.' });
+    return;
+  }
+
+  try {
+    const pdf = await ensureDietPdf(email, programId);
+    const pkg = getProgramById(email, programId);
+    const filename = dietPdfFilename(pkg?.intake?.preferredName);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(pdf);
+  } catch (err) {
+    console.error('Diet PDF download error:', err.message);
+    res.status(500).json({ ok: false, message: err.message || 'Could not prepare your diet PDF.' });
+  }
+});
+
+app.post('/api/programs/resend-diet-email', async (req, res) => {
+  const email = normalizeEmail(req.body?.email);
+  let programId = String(req.body?.programId || req.body?.program_id || '').trim();
+  if (!isValidEmail(email)) {
+    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
+    return;
+  }
+  if (!programId) {
+    const meta = getLatestPaidProgramMeta(email);
+    programId = meta?.id || '';
+  }
+  if (!programId) {
+    res.status(404).json({ ok: false, message: 'No purchased program found for this email.' });
+    return;
+  }
+  if (!isProgramPaid(email, programId)) {
+    res.status(403).json({ ok: false, message: 'Purchase required to resend this diet.' });
+    return;
+  }
+
+  try {
+    const result = await fulfillDietDelivery(email, programId, { forceEmail: true });
+    if (!result.emailSent && result.emailError) {
+      res.status(500).json({ ok: false, message: result.emailError });
+      return;
+    }
+    res.json({
+      ok: true,
+      email,
+      programId,
+      emailSent: result.emailSent,
+      emailSkipped: result.emailSkipped,
+    });
+  } catch (err) {
+    console.error('Resend diet email error:', err.message);
+    res.status(500).json({ ok: false, message: err.message || 'Could not resend your diet email.' });
+  }
 });
 
 app.get('/api/programs', (req, res) => {

@@ -1,13 +1,14 @@
-/** Checkout paywall — questionnaire builds the program; this page handles Stripe only. */
+/** Checkout paywall — questionnaire builds the program; Stripe unlocks PDF delivery. */
 
 import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramFromServer, fetchProgramPaymentStatus } from './programApi.js';
-import { persistProgramBridge, loadProgramBridge, programReportHref } from './programBridgeHandoff.js';
+import { persistProgramBridge, loadProgramBridge } from './programBridgeHandoff.js';
 import {
   completeCheckoutForTest,
   createCheckoutSession,
   fetchCheckoutStatus,
   verifyCheckoutSession,
 } from './checkoutApi.js';
+import { downloadDietPdfWithRetry } from './dietDeliveryApi.js';
 import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from './siteUrls.js';
 
 const store = {
@@ -23,10 +24,19 @@ const store = {
   checkoutBusy: false,
   checkoutVerified: false,
   saveBusy: false,
+  dietPreparing: false,
+  dietDownloadBusy: false,
+  dietDownloaded: false,
+  dietEmailSent: false,
+  dietFulfillmentError: '',
 };
 
-function programName() {
-  return store.builtPackage?.intake?.preferredName || '';
+function escapeHtml(text) {
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function restoreBuiltPackage() {
@@ -52,7 +62,7 @@ function renderComingSoon() {
         </div>
         <div class="unlock-panel">
           <p class="unlock-lead">New Burn &amp; Build programs are not open yet. We&rsquo;re finishing the launch so no one starts a diet that isn&rsquo;t ready.</p>
-          <p class="unlock-hint">Already purchased? <a href="/program-report/">Open your program report</a> and sign in with your email.</p>
+          <p class="unlock-hint">Already purchased? <a href="/get-your-diet/">Download your diet PDF</a></p>
           <p class="unlock-hint"><a href="/">← Back to website</a></p>
         </div>
       </div>
@@ -71,43 +81,6 @@ async function restoreBuiltPackageFromServer(email) {
   store.builtPackage = result.package;
   persistProgramBridge(store.builtPackage);
   return true;
-}
-
-async function openProgramReport() {
-  restoreBuiltPackage();
-  const email = (store.email || getAppEmail() || store.builtPackage?.intake?.email || '').trim();
-  if (isValidEmail(email)) persistAppEmail(email);
-  if (store.builtPackage) {
-    if (isValidEmail(email)) {
-      store.saveBusy = true;
-      store.saveError = '';
-      const saved = await saveProgramToServer(email, store.builtPackage);
-      store.saveBusy = false;
-      if (!saved.ok) {
-        store.saveError = saved.message || 'Could not save your plan to your account.';
-        render();
-        return;
-      }
-      if (saved.programId && store.builtPackage?.program) {
-        store.builtPackage.program.id = saved.programId;
-        persistProgramBridge(store.builtPackage);
-      }
-    }
-    persistProgramBridge(store.builtPackage);
-  }
-  window.location.href = programReportHref();
-}
-
-function renderPlanReadyAppHandoff(unlocked) {
-  if (!unlocked) {
-    return '<p class="unlock-tagline">Complete purchase to unlock your program.</p>';
-  }
-  restoreBuiltPackage();
-  if (store.builtPackage) persistProgramBridge(store.builtPackage);
-  const reportUrl = programReportHref();
-  return `
-          <a class="btn-primary unlock-cta plan-ready-open-program" href="${reportUrl}" data-open-program-report>View your program →</a>
-          <p class="unlock-tagline">Projections, plan/servings, and menu planner.</p>`;
 }
 
 function ensurePlanReadyEmail() {
@@ -146,6 +119,31 @@ async function refreshProgramPaymentStatus() {
   store.programPaid = !!(result.ok && result.paid);
 }
 
+function renderPaidDietDelivery() {
+  const email = ensurePlanReadyEmail();
+  const downloadLabel = store.dietDownloadBusy
+    ? 'PREPARING YOUR PDF…'
+    : store.dietDownloaded
+      ? 'DOWNLOAD AGAIN'
+      : 'DOWNLOAD YOUR BURN & BUILD DIET';
+
+  return `
+          <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
+            ${downloadLabel}
+          </button>
+          <p class="unlock-tagline">Save the PDF — it is your full personalized Burn &amp; Build Diet.</p>
+          ${store.dietEmailSent ? `<p class="unlock-hint">We also emailed a copy to <strong>${escapeHtml(email)}</strong>.</p>` : ''}
+          <p class="unlock-hint"><a href="/get-your-diet/">Download or resend later</a></p>
+          ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
+}
+
+function renderPlanReadyAppHandoff(unlocked) {
+  if (!unlocked) {
+    return '<p class="unlock-tagline">Complete purchase to download your personalized diet PDF.</p>';
+  }
+  return renderPaidDietDelivery();
+}
+
 function renderPlanReady() {
   restoreBuiltPackage();
   ensurePlanReadyEmail();
@@ -153,14 +151,12 @@ function renderPlanReady() {
   const hasPaidAccess = paidThisSession || store.programPaid;
   const showPaywall = !hasPaidAccess;
   let lead;
-  if (paidThisSession) {
-    lead = 'Payment complete. Your program is ready — open your food plan, servings, and menu planner.';
-  } else if (store.programPaid) {
-    lead = 'Your program is unlocked. Open your food plan, servings, and menu planner.';
+  if (hasPaidAccess) {
+    lead = 'Payment complete. Download your Burn &amp; Build Diet below — and check your email for a copy.';
   } else if (store.saveError) {
     lead = 'Your diet is ready on this device. Save it to your account, then complete checkout.';
   } else {
-    lead = 'Your personalized diet is saved. Complete checkout to unlock your program.';
+    lead = 'Your personalized diet is saved. Complete checkout to download your Burn &amp; Build Diet PDF.';
   }
 
   const checkoutBlock = showPaywall
@@ -182,13 +178,18 @@ function renderPlanReady() {
     ? `<button type="button" class="btn-secondary unlock-cta-secondary" data-retry-save ${store.saveBusy ? 'disabled' : ''}>${store.saveBusy ? 'SAVING…' : 'Retry save'}</button>`
     : '';
 
+  const successLines = hasPaidAccess
+    ? `<div class="ob-welcome-line1">DOWNLOAD YOUR</div>
+          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>`
+    : `<div class="ob-welcome-line1">YOUR DIET</div>
+          <div class="ob-welcome-line2">IS READY</div>`;
+
   return `
     <div class="start-site">
       <div class="screen unlock-screen">
         <div class="start-success">
           <div class="check">✓</div>
-          <div class="ob-welcome-line1">YOUR DIET</div>
-          <div class="ob-welcome-line2">IS READY</div>
+          ${successLines}
         </div>
         <div class="unlock-panel">
           <p class="unlock-lead">${lead}</p>
@@ -252,6 +253,38 @@ function cleanCheckoutQuery() {
   history.replaceState({}, '', `${url.pathname}${url.search}`);
 }
 
+async function triggerDietDownload({ auto = false } = {}) {
+  const email = ensurePlanReadyEmail();
+  const programId = currentProgramId();
+  if (!isValidEmail(email) || !programId) {
+    store.dietFulfillmentError = 'Missing email or program id for download.';
+    render();
+    return;
+  }
+
+  store.dietDownloadBusy = true;
+  store.dietFulfillmentError = '';
+  if (!auto) render();
+
+  const result = await downloadDietPdfWithRetry(email, programId);
+  store.dietDownloadBusy = false;
+  if (!result.ok) {
+    store.dietFulfillmentError = result.message;
+    render();
+    return;
+  }
+
+  store.dietDownloaded = true;
+  store.dietFulfillmentError = '';
+  render();
+}
+
+function applyFulfillmentResult(result) {
+  store.dietEmailSent = !!result?.emailSent;
+  store.dietPreparing = !result?.pdfReady;
+  store.dietFulfillmentError = result?.error || result?.emailError || '';
+}
+
 async function handleCheckoutReturn() {
   const params = new URLSearchParams(location.search);
   const checkoutState = params.get('checkout');
@@ -289,9 +322,14 @@ async function handleCheckoutReturn() {
   }
   await restoreBuiltPackageFromServer(store.email);
 
-  store.checkoutMessage = 'Payment complete. Your program is unlocked.';
+  store.checkoutMessage = 'Payment complete.';
   store.checkoutVerified = true;
   store.programPaid = true;
+  applyFulfillmentResult(result);
+
+  if (result.pdfReady) {
+    await triggerDietDownload({ auto: true });
+  }
 }
 
 async function retrySavePlan() {
@@ -341,9 +379,13 @@ async function completeTestCheckout() {
     render();
     return;
   }
-  store.checkoutMessage = 'Test access granted. Your program is unlocked.';
+  store.checkoutMessage = 'Test access granted.';
   store.checkoutVerified = true;
   store.programPaid = true;
+  applyFulfillmentResult(result);
+  if (result.pdfReady) {
+    await triggerDietDownload({ auto: true });
+  }
   render();
 }
 
@@ -373,9 +415,9 @@ function bindGlobal() {
       retrySavePlan();
       return;
     }
-    if (e.target.closest('[data-open-program-report]')) {
-      e.preventDefault();
-      openProgramReport().catch((err) => console.error(err));
+    if (e.target.closest('[data-download-diet]')) {
+      triggerDietDownload().catch((err) => console.error(err));
+      return;
     }
     if (e.target.closest('[data-test-checkout]')) {
       completeTestCheckout();
