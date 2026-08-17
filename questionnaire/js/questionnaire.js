@@ -92,7 +92,7 @@ const BODY_FIELDS = [
 const BODY_FIELD_META = {
   height: {
     question: 'What is your height?',
-    guide: 'Stand straight, no shoes. Enter feet and inches in separate boxes.',
+    guide: 'Enter feet and inches in separate boxes.',
     example: 'Example: 5 ft 10 in (enter 5 and 10)',
   },
   weight: {
