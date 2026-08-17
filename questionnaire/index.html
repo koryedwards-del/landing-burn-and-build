@@ -433,12 +433,7 @@
                       <p class="intake-acc__guide" data-body-guide></p>
                       <p class="intake-acc__example" data-body-example></p>
                     </div>
-                    <div class="intake-radios intake-acc__field">
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="guess" required /> I'm estimating</label>
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="dexa" /> DEXA scan</label>
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="other" /> Other</label>
-                    </div>
+                    <div class="intake-radios intake-acc__field" id="fat-source-radios"></div>
                     <label class="intake-acc__field intake-fat-source-other" data-fat-source-other hidden>
                       <span class="sr-only">Describe how you know</span>
                       <input class="intake-input" name="fatSourceOther" autocomplete="off" disabled />
@@ -508,6 +503,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=127"></script>
+  <script type="module" src="js/questionnaire.js?v=128"></script>
 </body>
 </html>

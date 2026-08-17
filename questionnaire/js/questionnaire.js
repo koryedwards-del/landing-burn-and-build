@@ -104,7 +104,7 @@ const BODY_FIELD_META = {
   fatSource: {
     question: 'How do you know?',
     guide: 'Your plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
-    example: 'DEXA scan — gold standard. Calipers, ultrasound, or BodPod — professional test within the last few weeks. I\'m estimating — no recent test; be honest, rounding down makes the plan too aggressive.',
+    example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · skinfolds · Bod Pod · DEXA · hydrostatic weighing.',
   },
   fatPercent: {
     question: 'What is your body fat percentage?',
@@ -112,6 +112,20 @@ const BODY_FIELD_META = {
     example: 'Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower. Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement.',
   },
 };
+
+/** Body composition source — least to most involved. */
+const FAT_SOURCE_OPTIONS = [
+  { value: 'guess', label: "I'm estimating" },
+  { value: 'smart_scales', label: 'Smart scales' },
+  { value: 'tape', label: 'Tape measurements' },
+  { value: 'bia', label: 'InBody/BIA' },
+  { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
+  { value: 'skinfolds', label: 'Skinfolds' },
+  { value: 'bodpod', label: 'Bod Pod' },
+  { value: 'dexa', label: 'DEXA' },
+  { value: 'hydrostatic', label: 'Hydrostatic weighing' },
+  { value: 'other', label: 'Other' },
+];
 
 const OCCUPATION_FIELDS = [
   'workPhysical',
@@ -198,11 +212,22 @@ function workStressLabel(id) {
 }
 
 function fatSourceLabel(value, otherText = '') {
-  if (value === 'dexa') return 'DEXA scan';
-  if (value === 'recent') return 'Calipers / ultrasound / BodPod';
-  if (value === 'guess') return 'Estimating';
   if (value === 'other') return otherText || 'Other';
+  const match = FAT_SOURCE_OPTIONS.find((option) => option.value === value);
+  if (match) return match.label;
+  if (value === 'recent') return 'Calipers / ultrasound / BodPod';
   return '—';
+}
+
+function initFatSourceRadios() {
+  const container = document.getElementById('fat-source-radios');
+  if (!container) return;
+  container.innerHTML = FAT_SOURCE_OPTIONS.map((option, index) => `
+    <label class="intake-radio">
+      <input type="radio" name="fatSource" value="${option.value}"${index === 0 ? ' required' : ''} />
+      ${option.label}
+    </label>
+  `).join('');
 }
 
 function readForm() {
@@ -816,6 +841,7 @@ function bindBodyAccordion() {
   if (!bodyAccordion) return;
 
   initBodyFieldCopy();
+  initFatSourceRadios();
   syncFatSourceOtherField();
 
   bodyAccordion.addEventListener('click', (event) => {
