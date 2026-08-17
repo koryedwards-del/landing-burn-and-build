@@ -355,9 +355,7 @@ body.q-app--workroom,
 }
 
 .intake-choice {
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--border);
-  background: #fff;
+  margin: 0;
 }
 
 .intake-choice__sub {
