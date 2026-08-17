@@ -128,50 +128,9 @@
                   </div>
                 </div>
 
-                <div class="intake-acc__item" data-info-field="height">
-                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">4</span>
-                    <span class="intake-acc__label">Height</span>
-                    <span class="intake-acc__summary" hidden></span>
-                  </button>
-                  <div class="intake-acc__panel">
-                    <p class="intake-acc__question" data-info-question></p>
-                    <div class="intake-acc__howto">
-                      <p class="intake-acc__guide" data-info-guide></p>
-                      <p class="intake-acc__example" data-info-example></p>
-                    </div>
-                    <div class="intake-inline intake-acc__field">
-                      <input class="intake-input intake-input--short" name="heightFeet" inputmode="numeric" placeholder="ft" aria-label="Feet" required />
-                      <input class="intake-input intake-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" min="0" max="11" />
-                      <span class="intake-unit">ft / in</span>
-                    </div>
-                    <p class="intake-acc__error" hidden></p>
-                  </div>
-                </div>
-
-                <div class="intake-acc__item" data-info-field="weight">
-                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">5</span>
-                    <span class="intake-acc__label">Weight</span>
-                    <span class="intake-acc__summary" hidden></span>
-                  </button>
-                  <div class="intake-acc__panel">
-                    <p class="intake-acc__question" data-info-question></p>
-                    <div class="intake-acc__howto">
-                      <p class="intake-acc__guide" data-info-guide></p>
-                      <p class="intake-acc__example" data-info-example></p>
-                    </div>
-                    <div class="intake-inline intake-acc__field">
-                      <input class="intake-input intake-input--short" name="weight" inputmode="decimal" required aria-label="Weight in pounds" />
-                      <span class="intake-unit">lbs</span>
-                    </div>
-                    <p class="intake-acc__error" hidden></p>
-                  </div>
-                </div>
-
                 <div class="intake-acc__item" data-info-field="email">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">6</span>
+                    <span class="intake-acc__num">4</span>
                     <span class="intake-acc__label">Email address</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -191,7 +150,7 @@
 
                 <div class="intake-acc__item" data-info-field="emailConfirm">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">7</span>
+                    <span class="intake-acc__num">5</span>
                     <span class="intake-acc__label">Confirm email</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -319,35 +278,92 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="4" hidden>
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Step 5</p>
-              <h2 class="q-panel__title">Body composition</h2>
-              <p class="q-panel__lead">Required for accurate servings. Body composition drives the whole plan.</p>
-            </div>
-            <div class="q-callout">
-              <span class="q-callout__icon" aria-hidden="true">!</span>
-              <p class="q-callout__body"><strong>Why this step matters:</strong> Your plan is built from <strong>lean body mass</strong> (weight minus fat). Wrong body fat % = wrong servings from day one. A professional test is worth it if you can get one.</p>
-            </div>
-            <fieldset class="q-field">
-              <legend class="q-label">How do you know your body composition?</legend>
-              <span class="q-field-hint">Pick the most accurate source you actually have — not the one you wish you had.</span>
-              <div class="q-options">
-                <label class="q-option"><input type="radio" name="fatSource" value="dexa" /> DEXA scan<span class="q-option-hint">Gold standard — full-body X-ray composition. Most accurate option.</span></label>
-                <label class="q-option"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod<span class="q-option-hint">Professional or gym test within the last few weeks. Use that number.</span></label>
-                <label class="q-option"><input type="radio" name="fatSource" value="guess" /> I'm estimating<span class="q-option-hint">No recent test — you are guessing from mirror, photos, or a scale that estimates body fat. Be honest; rounding down makes the plan too aggressive.</span></label>
+          <section class="q-panel q-panel--intake" data-step="4" hidden>
+            <div class="intake-form" id="body-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Body composition</h2>
+              </header>
+
+              <div class="intake-acc" id="body-accordion">
+                <div class="intake-acc__item is-open" data-body-field="height">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num">1</span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="heightFeet" inputmode="numeric" placeholder="ft" aria-label="Feet" required />
+                      <input class="intake-input intake-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" min="0" max="11" />
+                      <span class="intake-unit">ft / in</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="weight">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">2</span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="weight" inputmode="decimal" required aria-label="Weight in pounds" />
+                      <span class="intake-unit">lbs</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="fatSource">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">3</span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="dexa" required /> DEXA scan</label>
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="guess" /> I'm estimating</label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="fatPercent">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" aria-label="Body fat percentage" />
+                      <span class="intake-unit">% body fat</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
-            </fieldset>
-            <label class="q-field">
-              <span class="q-label">Body composition</span>
-              <div class="q-inline">
-                <input class="q-input q-input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" />
-                <span class="q-unit">% body fat</span>
-              </div>
-              <span class="q-field-hint">Enter body fat as a percentage (not BMI). One decimal is fine — e.g. <strong>24.5</strong>.</span>
-              <span class="q-field-hint">Rough reference if you are estimating: many men fall <strong>18–28%</strong>; many women <strong>25–35%</strong>. Athletes and stage-ready competitors are lower. When unsure, estimate slightly <strong>higher</strong> rather than lower — a slightly conservative plan is easier to follow.</span>
-              <span class="q-field-hint">No number yet? Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement. Home scales that estimate body fat are less accurate than DEXA but better than estimating from the mirror alone.</span>
-            </label>
+            </div>
           </section>
 
           <section class="q-panel" data-step="5" hidden>
@@ -408,6 +424,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=107"></script>
+  <script type="module" src="js/questionnaire.js?v=108"></script>
 </body>
 </html>

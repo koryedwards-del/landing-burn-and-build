@@ -27,8 +27,6 @@ const INFO_FIELDS = [
   'fullName',
   'age',
   'sex',
-  'height',
-  'weight',
   'email',
   'emailConfirm',
 ];
@@ -49,6 +47,26 @@ const INFO_FIELD_META = {
     guide: 'Select the option used in the calorie formulas.',
     example: 'Example: Male or Female',
   },
+  email: {
+    question: 'What is your email address?',
+    guide: 'We deliver your program here and use it to unlock your plan after purchase.',
+    example: 'Example: you@email.com',
+  },
+  emailConfirm: {
+    question: 'Confirm your email address',
+    guide: 'Type the same address again. We cannot fix a typo after checkout.',
+    example: 'Must match the email you just entered.',
+  },
+};
+
+const BODY_FIELDS = [
+  'height',
+  'weight',
+  'fatSource',
+  'fatPercent',
+];
+
+const BODY_FIELD_META = {
   height: {
     question: 'What is your height?',
     guide: 'Stand straight, no shoes. Enter feet and inches in separate boxes.',
@@ -59,15 +77,15 @@ const INFO_FIELD_META = {
     guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
     example: 'Example: 168 lbs',
   },
-  email: {
-    question: 'What is your email address?',
-    guide: 'We deliver your program here and use it to unlock your plan after purchase.',
-    example: 'Example: you@email.com',
+  fatSource: {
+    question: 'How do you know your body composition?',
+    guide: 'Your plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
+    example: 'DEXA scan — gold standard. Calipers, ultrasound, or BodPod — professional test within the last few weeks. I\'m estimating — no recent test; be honest, rounding down makes the plan too aggressive.',
   },
-  emailConfirm: {
-    question: 'Confirm your email address',
-    guide: 'Type the same address again. We cannot fix a typo after checkout.',
-    example: 'Must match the email you just entered.',
+  fatPercent: {
+    question: 'What is your body fat percentage?',
+    guide: 'Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one.',
+    example: 'Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower. Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement.',
   },
 };
 
@@ -98,10 +116,12 @@ const stepNav = document.getElementById('q-step-nav');
 const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
 const occupationAccordion = document.getElementById('occupation-accordion');
+const bodyAccordion = document.getElementById('body-accordion');
 
 let step = 0;
 let infoFieldIndex = 0;
 let occupationFieldIndex = 0;
+let bodyFieldIndex = 0;
 
 function collapsePersonalInfoIfComplete() {
   if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
@@ -197,10 +217,6 @@ function infoFieldSummary(fieldId, values) {
       if (values.sex === 'female') return 'Female';
       if (values.sex === 'male') return 'Male';
       return '';
-    case 'height':
-      return heightLabel(values);
-    case 'weight':
-      return values.weight ? `${values.weight} lbs` : '';
     case 'email':
       return values.email || '';
     case 'emailConfirm':
@@ -226,25 +242,6 @@ function validateInfoField(fieldId, values) {
     case 'sex':
       if (!values.sex) return 'Select female or male.';
       return '';
-    case 'height': {
-      const feet = values.heightFeet;
-      const inches = values.heightInchesPart;
-      if (feet === '' || feet == null) return 'Enter height in feet.';
-      const feetNum = Number(feet);
-      if (!Number.isFinite(feetNum) || feetNum < 4 || feetNum > 8) return 'Enter a realistic height in feet (4–8).';
-      if (inches !== '' && inches != null) {
-        const inchesNum = Number(inches);
-        if (!Number.isFinite(inchesNum) || inchesNum < 0 || inchesNum > 11) return 'Inches must be 0–11.';
-      }
-      return '';
-    }
-    case 'weight': {
-      const weight = Number(values.weight);
-      if (!values.weight || !Number.isFinite(weight) || weight < 80 || weight > 500) {
-        return 'Enter your weight in pounds.';
-      }
-      return '';
-    }
     case 'email':
       if (!values.email) return 'Enter your email address.';
       if (!isValidEmail(values.email)) return 'Enter a valid email address.';
@@ -580,6 +577,210 @@ function bindOccupationAccordion() {
   renderOccupationAccordionState();
 }
 
+function bodyFieldSummary(fieldId, values) {
+  switch (fieldId) {
+    case 'height':
+      return heightLabel(values) !== '—' ? heightLabel(values) : '';
+    case 'weight':
+      return values.weight ? `${values.weight} lbs` : '';
+    case 'fatSource':
+      return values.fatSource ? fatSourceLabel(values.fatSource) : '';
+    case 'fatPercent':
+      return values.fatPercent ? `${values.fatPercent}%` : '';
+    default:
+      return '';
+  }
+}
+
+function validateBodyField(fieldId, values) {
+  switch (fieldId) {
+    case 'height': {
+      const feet = values.heightFeet;
+      const inches = values.heightInchesPart;
+      if (feet === '' || feet == null) return 'Enter height in feet.';
+      const feetNum = Number(feet);
+      if (!Number.isFinite(feetNum) || feetNum < 4 || feetNum > 8) return 'Enter a realistic height in feet (4–8).';
+      if (inches !== '' && inches != null) {
+        const inchesNum = Number(inches);
+        if (!Number.isFinite(inchesNum) || inchesNum < 0 || inchesNum > 11) return 'Inches must be 0–11.';
+      }
+      return '';
+    }
+    case 'weight': {
+      const weight = Number(values.weight);
+      if (!values.weight || !Number.isFinite(weight) || weight < 80 || weight > 500) {
+        return 'Enter your weight in pounds.';
+      }
+      return '';
+    }
+    case 'fatSource':
+      if (!values.fatSource) return 'Select how you know your body composition.';
+      return '';
+    case 'fatPercent': {
+      const fat = Number(values.fatPercent);
+      if (!values.fatPercent || !Number.isFinite(fat) || fat <= 0) {
+        return 'Enter your body fat percentage.';
+      }
+      return '';
+    }
+    default:
+      return '';
+  }
+}
+
+function bodyFieldIsValid(fieldId, values) {
+  return !validateBodyField(fieldId, values);
+}
+
+function bodySectionComplete(values) {
+  return BODY_FIELDS.every((fieldId) => bodyFieldIsValid(fieldId, values));
+}
+
+function setBodyFieldError(item, message) {
+  const errorEl = item?.querySelector('.intake-acc__error');
+  if (!errorEl) return;
+  if (message) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  } else {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+}
+
+function renderBodyAccordionState() {
+  if (!bodyAccordion) return;
+  const values = readForm();
+
+  BODY_FIELDS.forEach((fieldId, index) => {
+    const item = bodyAccordion.querySelector(`[data-body-field="${fieldId}"]`);
+    if (!item) return;
+
+    const summary = item.querySelector('.intake-acc__summary');
+    const trigger = item.querySelector('.intake-acc__trigger');
+    const isOpen = bodyFieldIndex >= 0 && index === bodyFieldIndex;
+    const isDone = bodyFieldIsValid(fieldId, values);
+
+    item.classList.toggle('is-open', isOpen);
+    item.classList.toggle('is-done', isDone && !isOpen);
+
+    if (summary) {
+      const text = bodyFieldSummary(fieldId, values);
+      summary.textContent = text;
+      summary.hidden = !text;
+    }
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      trigger.tabIndex = 0;
+    }
+
+    if (!isOpen) setBodyFieldError(item, '');
+  });
+}
+
+function initBodyFieldCopy() {
+  if (!bodyAccordion) return;
+  BODY_FIELDS.forEach((fieldId) => {
+    const item = bodyAccordion.querySelector(`[data-body-field="${fieldId}"]`);
+    const meta = BODY_FIELD_META[fieldId];
+    if (!item || !meta) return;
+    const label = item.querySelector('[data-body-label]');
+    const guide = item.querySelector('[data-body-guide]');
+    const example = item.querySelector('[data-body-example]');
+    if (label) label.textContent = meta.question;
+    if (guide) guide.textContent = meta.guide;
+    if (example) example.textContent = meta.example;
+  });
+}
+
+function collapseBodyIfComplete() {
+  if (bodyFieldIndex < 0 || BODY_FIELDS[bodyFieldIndex] !== 'fatPercent') return false;
+  const values = readForm();
+  if (!bodySectionComplete(values)) return false;
+  bodyFieldIndex = -1;
+  renderBodyAccordionState();
+  updateStepNav();
+  return true;
+}
+
+function advanceBodyField() {
+  const fieldId = BODY_FIELDS[bodyFieldIndex];
+  const values = readForm();
+  const item = bodyAccordion?.querySelector(`[data-body-field="${fieldId}"]`);
+  const error = validateBodyField(fieldId, values);
+  if (error) {
+    setBodyFieldError(item, error);
+    return false;
+  }
+
+  setBodyFieldError(item, '');
+
+  if (bodyFieldIndex < BODY_FIELDS.length - 1) {
+    openBodyField(bodyFieldIndex + 1);
+  } else {
+    collapseBodyIfComplete() || renderBodyAccordionState();
+  }
+
+  updateStepNav();
+  return true;
+}
+
+function openBodyField(index) {
+  bodyFieldIndex = Math.max(0, Math.min(index, BODY_FIELDS.length - 1));
+  renderBodyAccordionState();
+  const fieldId = BODY_FIELDS[bodyFieldIndex];
+  const item = bodyAccordion?.querySelector(`[data-body-field="${fieldId}"]`);
+  const focusTarget = item?.querySelector(
+    'input:not([type="hidden"]):not([type="radio"]), select, textarea',
+  ) || item?.querySelector('input[type="radio"]');
+  focusTarget?.focus();
+}
+
+function bindBodyAccordion() {
+  if (!bodyAccordion) return;
+
+  initBodyFieldCopy();
+
+  bodyAccordion.addEventListener('click', (event) => {
+    const trigger = event.target.closest('.intake-acc__trigger');
+    if (!trigger) return;
+    const item = trigger.closest('[data-body-field]');
+    if (!item) return;
+    const fieldId = item.dataset.bodyField;
+    const index = BODY_FIELDS.indexOf(fieldId);
+    if (index === -1) return;
+    openBodyField(index);
+  });
+
+  bodyAccordion.addEventListener('input', () => {
+    renderBodyAccordionState();
+    collapseBodyIfComplete();
+    updateStepNav();
+  });
+
+  bodyAccordion.addEventListener('change', () => {
+    renderBodyAccordionState();
+    const values = readForm();
+    if (bodyFieldIndex === 2 && bodyFieldIsValid('fatSource', values)) {
+      openBodyField(3);
+    } else {
+      collapseBodyIfComplete();
+    }
+    updateStepNav();
+  });
+
+  bodyAccordion.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target.type === 'radio') return;
+    event.preventDefault();
+    advanceBodyField();
+  });
+
+  renderBodyAccordionState();
+}
+
 function syncAgeField() {
   const ageInput = form.elements.age;
   const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
@@ -616,7 +817,7 @@ function canProceed(stepIndex) {
         && values.cardioHours !== ''
         && values.fatBurningHours !== '';
     case 4:
-      return values.fatSource && Number(values.fatPercent) > 0;
+      return bodySectionComplete(values);
     case 5:
       return values.waiverAccepted && values.signature;
     default:
@@ -700,6 +901,12 @@ function showStep(index) {
     }
     renderOccupationAccordionState();
   }
+  if (step === 4) {
+    if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
+      bodyFieldIndex = 0;
+    }
+    renderBodyAccordionState();
+  }
   updateStepNav();
 
   const base = `${location.pathname}${location.search}`;
@@ -730,6 +937,7 @@ function bindEvents() {
 
   bindInfoAccordion();
   bindOccupationAccordion();
+  bindBodyAccordion();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
