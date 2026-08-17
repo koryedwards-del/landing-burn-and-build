@@ -403,29 +403,9 @@
                   </div>
                 </div>
 
-                <div class="intake-acc__item" data-body-field="fatSource">
-                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">3</span>
-                    <span class="intake-acc__label" data-body-label></span>
-                    <span class="intake-acc__summary" hidden></span>
-                  </button>
-                  <div class="intake-acc__panel">
-                    <div class="intake-acc__howto">
-                      <p class="intake-acc__guide" data-body-guide></p>
-                      <p class="intake-acc__example" data-body-example></p>
-                    </div>
-                    <div class="intake-radios intake-acc__field">
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="dexa" required /> DEXA scan</label>
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
-                      <label class="intake-radio"><input type="radio" name="fatSource" value="guess" /> I'm estimating</label>
-                    </div>
-                    <p class="intake-acc__error" hidden></p>
-                  </div>
-                </div>
-
                 <div class="intake-acc__item" data-body-field="fatPercent">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__num">3</span>
                     <span class="intake-acc__label" data-body-label></span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -437,6 +417,26 @@
                     <div class="intake-inline intake-acc__field">
                       <input class="intake-input intake-input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" aria-label="Body fat percentage" />
                       <span class="intake-unit">% body fat</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="fatSource">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="guess" required /> I'm estimating</label>
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="dexa" /> DEXA scan</label>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -503,6 +503,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=125"></script>
+  <script type="module" src="js/questionnaire.js?v=126"></script>
 </body>
 </html>

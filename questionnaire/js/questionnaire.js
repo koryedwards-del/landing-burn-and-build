@@ -85,8 +85,8 @@ const EXERCISE_FIELD_META = {
 const BODY_FIELDS = [
   'height',
   'weight',
-  'fatSource',
   'fatPercent',
+  'fatSource',
 ];
 
 const BODY_FIELD_META = {
@@ -102,7 +102,7 @@ const BODY_FIELD_META = {
     alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $149 for this program. The program will only be as beneficial as your answers are accurate.',
   },
   fatSource: {
-    question: 'How do you know your body composition?',
+    question: 'How do you know?',
     guide: 'Your plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
     example: 'DEXA scan — gold standard. Calipers, ultrasound, or BodPod — professional test within the last few weeks. I\'m estimating — no recent test; be honest, rounding down makes the plan too aggressive.',
   },
@@ -668,7 +668,7 @@ function validateBodyField(fieldId, values) {
       return '';
     }
     case 'fatSource':
-      if (!values.fatSource) return 'Select how you know your body composition.';
+      if (!values.fatSource) return 'Select how you know.';
       return '';
     case 'fatPercent': {
       const fat = Number(values.fatPercent);
@@ -823,12 +823,7 @@ function bindBodyAccordion() {
 
   bodyAccordion.addEventListener('change', () => {
     renderBodyAccordionState();
-    const values = readForm();
-    if (bodyFieldIndex === 2 && bodyFieldIsValid('fatSource', values)) {
-      openBodyField(3);
-    } else {
-      collapseBodyIfComplete();
-    }
+    collapseBodyIfComplete();
     updateStepNav();
   });
 
