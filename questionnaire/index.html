@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=16" />
+  <link rel="stylesheet" href="css/intake-form.css?v=17" />
 </head>
 <body>
   <div class="q-app">
@@ -470,25 +470,14 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="5" hidden>
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Step 6</p>
-              <h2 class="q-panel__title">Review &amp; continue</h2>
-              <p class="q-panel__lead">Confirm your answers, then continue to secure checkout ($149).</p>
+          <section class="q-panel q-panel--intake" data-step="5" hidden>
+            <div class="intake-form" id="review-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Review &amp; continue</h2>
+                <p class="intake-form__note">Confirm your answers, then continue to secure checkout ($149). Use <strong>Back</strong> below to fix anything.</p>
+              </header>
+              <dl class="intake-review" id="q-review"></dl>
             </div>
-            <div class="q-callout">
-              <span class="q-callout__icon" aria-hidden="true">!</span>
-              <div class="q-callout__body">
-                <strong>Double-check before checkout:</strong>
-                <ul>
-                  <li><strong>Email</strong> — correct spelling; this unlocks your program.</li>
-                  <li><strong>Body fat %</strong> — the number that drives all servings.</li>
-                  <li><strong>Exercise hours</strong> — realistic for the next 8 weeks.</li>
-                </ul>
-                <p>Use <strong>Back</strong> below to fix anything.</p>
-              </div>
-            </div>
-            <dl class="q-review" id="q-review"></dl>
           </section>
         </form>
 
@@ -500,6 +489,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=133"></script>
+  <script type="module" src="js/questionnaire.js?v=134"></script>
 </body>
 </html>

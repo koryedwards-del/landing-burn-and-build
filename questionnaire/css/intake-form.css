@@ -479,6 +479,37 @@ body.q-app--workroom,
   letter-spacing: 0.04em;
 }
 
+.intake-review {
+  margin: 0;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.intake-review > div {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.75rem 1rem;
+  padding: 0.625rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.intake-review > div:first-child {
+  border-top: none;
+}
+
+.intake-review dt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.intake-review dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
 .intake-radios {
   display: flex;
   flex-direction: column;

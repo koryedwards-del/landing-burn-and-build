@@ -259,6 +259,21 @@ function workPhysicalLabel(id) {
     || WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
 }
 
+function formatReviewDate(isoDate) {
+  if (!isoDate) return '';
+  const parts = String(isoDate).split('-');
+  if (parts.length !== 3) return isoDate;
+  const [year, month, day] = parts;
+  return `${month} / ${day} / ${year}`;
+}
+
+function waiverSignedLabel(signature, signatureDate) {
+  const name = String(signature || '').trim();
+  if (!name) return '—';
+  const date = formatReviewDate(signatureDate);
+  return date ? `${name} — ${date}` : name;
+}
+
 function workStressLabel(id) {
   return WORK_STRESS.find((item) => item.id === id)?.label || id || '—';
 }
@@ -1237,12 +1252,6 @@ function renderNav() {
 
 function renderReview() {
   const values = readForm();
-  let program = null;
-  try {
-    program = buildProgramFromValues(values);
-  } catch (error) {
-    console.error(error);
-  }
 
   const rows = [
     ['Name', values.preferredName || '—'],
@@ -1253,16 +1262,12 @@ function renderReview() {
     ['Weight', values.weight ? `${values.weight} lbs` : '—'],
     ['Body composition', values.fatPercent ? `${values.fatPercent}% (${fatSourceLabel(values.fatSource, values.fatSourceOther)})` : '—'],
     ['Job activity', workPhysicalLabel(values.workPhysical)],
-    ['Day drain', workStressLabel(values.workStress)],
+    ['My Weeks', workStressLabel(values.workStress)],
     ['SAG hours / week', values.weightTrainingHours || '—'],
     ['Cardio training hours / week', values.cardioHours || '—'],
     ['Fat burning training hours / week', values.fatBurningHours || '—'],
-    ['Waiver signed', values.signature || '—'],
+    ['Waiver signed', waiverSignedLabel(values.signature, values.signatureDate)],
   ];
-
-  if (program?.intake) {
-    rows.push(['Lean body mass', `${program.intake.leanBodyMass.toFixed(1)} lbs`]);
-  }
 
   reviewEl.innerHTML = rows.map(([label, value]) => `
     <div><dt>${label}</dt><dd>${value}</dd></div>
