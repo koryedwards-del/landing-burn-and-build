@@ -230,18 +230,15 @@ function renderInfoAccordionState() {
     const summary = item.querySelector('.intake-acc__summary');
     const trigger = item.querySelector('.intake-acc__trigger');
     const isOpen = index === infoFieldIndex;
-    const isDone = infoFieldIsValid(fieldId, values)
-      && (index < infoFieldIndex || (infoSectionComplete(values) && index <= infoFieldIndex));
-    const isReachable = index <= infoFieldIndex;
+    const isDone = infoFieldIsValid(fieldId, values);
 
     item.classList.toggle('is-open', isOpen);
-    item.classList.toggle('is-done', isDone);
-    item.classList.toggle('is-locked', !isReachable && !isDone);
+    item.classList.toggle('is-done', isDone && !isOpen);
 
     if (summary) summary.textContent = infoFieldSummary(fieldId, values);
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      trigger.tabIndex = isReachable || isDone ? 0 : -1;
+      trigger.tabIndex = 0;
     }
 
     if (!isOpen) setInfoFieldError(item, '');
@@ -253,7 +250,9 @@ function openInfoField(index) {
   renderInfoAccordionState();
   const fieldId = INFO_FIELDS[infoFieldIndex];
   const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
-  const focusTarget = item?.querySelector('input:not([type="hidden"]), select, textarea');
+  const focusTarget = item?.querySelector(
+    'input:not([type="hidden"]):not([type="radio"]), select, textarea',
+  ) || item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
 }
 
@@ -298,7 +297,6 @@ function bindInfoAccordion() {
     const fieldId = item.dataset.infoField;
     const index = INFO_FIELDS.indexOf(fieldId);
     if (index === -1) return;
-    if (index > infoFieldIndex) return;
     openInfoField(index);
   });
 

@@ -157,14 +157,8 @@ body.q-app--workroom,
   border-bottom: 1px solid var(--border);
 }
 
-.intake-acc__item.is-done .intake-acc__trigger {
-  cursor: pointer;
-  background: #fafafa;
-}
-
-.intake-acc__item.is-locked .intake-acc__trigger {
-  cursor: default;
-  color: var(--muted);
+.intake-acc__item.is-done .intake-acc__trigger:hover {
+  background: #f0f0f0;
 }
 
 .intake-acc__num {
