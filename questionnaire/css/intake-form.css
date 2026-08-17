@@ -329,14 +329,6 @@ body.q-app--workroom,
   gap: 0.5rem;
   font-size: 0.9375rem;
   cursor: pointer;
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--border);
-  background: #fff;
-}
-
-.intake-radio:has(input:checked) {
-  border-color: var(--text);
-  background: #fafafa;
 }
 
 .intake-radio input {
