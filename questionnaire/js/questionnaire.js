@@ -365,7 +365,6 @@ function bindInfoAccordion() {
   if (!infoAccordion) return;
 
   initInfoFieldCopy();
-  bindEmailRetypeInput();
 
   infoAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
