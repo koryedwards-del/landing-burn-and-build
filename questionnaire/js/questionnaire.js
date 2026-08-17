@@ -83,6 +83,7 @@ let step = 0;
 let infoFieldIndex = 0;
 
 function collapsePersonalInfoIfComplete() {
+  if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
   const values = readForm();
   if (!infoSectionComplete(values)) return false;
   infoFieldIndex = -1;
