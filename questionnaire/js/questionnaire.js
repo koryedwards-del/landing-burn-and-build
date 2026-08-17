@@ -828,19 +828,13 @@ function openBodyField(index) {
   focusTarget?.focus();
 }
 
-function syncFatSourceFields() {
-  const values = readForm();
+function syncFatSourceOtherField() {
   const wrap = bodyAccordion?.querySelector('[data-fat-source-other]');
   const input = form.elements.fatSourceOther;
-  if (wrap && input) {
-    const isOther = values.fatSource === 'other';
-    wrap.hidden = !isOther;
-    input.disabled = !isOther;
-  }
-  const guessNote = bodyAccordion?.querySelector('[data-fat-source-guess-note]');
-  if (guessNote) {
-    guessNote.hidden = values.fatSource !== 'guess';
-  }
+  if (!wrap || !input) return;
+  const isOther = readForm().fatSource === 'other';
+  wrap.hidden = !isOther;
+  input.disabled = !isOther;
 }
 
 function bindBodyAccordion() {
@@ -848,7 +842,7 @@ function bindBodyAccordion() {
 
   initBodyFieldCopy();
   initFatSourceRadios();
-  syncFatSourceFields();
+  syncFatSourceOtherField();
 
   bodyAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
@@ -868,7 +862,7 @@ function bindBodyAccordion() {
   });
 
   bodyAccordion.addEventListener('change', (event) => {
-    syncFatSourceFields();
+    syncFatSourceOtherField();
     if (event.target instanceof HTMLInputElement && event.target.name === 'fatSource' && event.target.value === 'other') {
       form.elements.fatSourceOther?.focus();
     }
@@ -1218,7 +1212,7 @@ function showStep(index) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
       bodyFieldIndex = 0;
     }
-    syncFatSourceFields();
+    syncFatSourceOtherField();
     renderBodyAccordionState();
   }
   if (step === 2) {
