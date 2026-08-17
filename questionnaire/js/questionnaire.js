@@ -15,7 +15,7 @@ captureDietCreationTestBypass();
 const STEPS = [
   { id: 'welcome', label: 'Create Your Diet' },
   { id: 'personal', label: 'Personal info' },
-  { id: 'work', label: 'Workday' },
+  { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
   { id: 'waiver', label: 'Agreement' },
