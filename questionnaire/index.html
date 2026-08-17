@@ -66,14 +66,13 @@
                 <h2 class="intake-form__title">Personal information</h2>
                 <p class="intake-form__note">One field at a time. Accurate answers produce accurate servings.</p>
               </header>
-              <input type="hidden" name="preferredName" />
               <input type="hidden" name="intakeDate" />
 
               <div class="intake-acc" id="info-accordion">
-                <div class="intake-acc__item is-open" data-info-field="firstName">
+                <div class="intake-acc__item is-open" data-info-field="fullName">
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
                     <span class="intake-acc__num">1</span>
-                    <span class="intake-acc__label">First name</span>
+                    <span class="intake-acc__label">Full name</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
@@ -83,28 +82,8 @@
                       <p class="intake-acc__example" data-info-example></p>
                     </div>
                     <label class="intake-acc__field">
-                      <span class="sr-only">First name</span>
-                      <input class="intake-input" name="firstName" autocomplete="given-name" required />
-                    </label>
-                    <p class="intake-acc__error" hidden></p>
-                  </div>
-                </div>
-
-                <div class="intake-acc__item" data-info-field="lastName">
-                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">2</span>
-                    <span class="intake-acc__label">Last name</span>
-                    <span class="intake-acc__summary" hidden></span>
-                  </button>
-                  <div class="intake-acc__panel">
-                    <p class="intake-acc__question" data-info-question></p>
-                    <div class="intake-acc__howto">
-                      <p class="intake-acc__guide" data-info-guide></p>
-                      <p class="intake-acc__example" data-info-example></p>
-                    </div>
-                    <label class="intake-acc__field">
-                      <span class="sr-only">Last name</span>
-                      <input class="intake-input" name="lastName" autocomplete="family-name" required />
+                      <span class="sr-only">Full name</span>
+                      <input class="intake-input" name="preferredName" autocomplete="name" required />
                     </label>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -112,7 +91,7 @@
 
                 <div class="intake-acc__item" data-info-field="age">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">3</span>
+                    <span class="intake-acc__num">2</span>
                     <span class="intake-acc__label">Age</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -132,7 +111,7 @@
 
                 <div class="intake-acc__item" data-info-field="sex">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__num">3</span>
                     <span class="intake-acc__label">Gender</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -152,7 +131,7 @@
 
                 <div class="intake-acc__item" data-info-field="height">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">5</span>
+                    <span class="intake-acc__num">4</span>
                     <span class="intake-acc__label">Height</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -173,7 +152,7 @@
 
                 <div class="intake-acc__item" data-info-field="weight">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">6</span>
+                    <span class="intake-acc__num">5</span>
                     <span class="intake-acc__label">Weight</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -193,7 +172,7 @@
 
                 <div class="intake-acc__item" data-info-field="email">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">7</span>
+                    <span class="intake-acc__num">6</span>
                     <span class="intake-acc__label">Email address</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -385,6 +364,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=95"></script>
+  <script type="module" src="js/questionnaire.js?v=96"></script>
 </body>
 </html>

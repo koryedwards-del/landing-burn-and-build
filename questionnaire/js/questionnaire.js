@@ -23,8 +23,7 @@ const STEPS = [
 ];
 
 const INFO_FIELDS = [
-  'firstName',
-  'lastName',
+  'fullName',
   'age',
   'sex',
   'height',
@@ -33,46 +32,35 @@ const INFO_FIELDS = [
 ];
 
 const INFO_FIELD_META = {
-  firstName: {
-    question: 'What is your first name?',
-    guide: 'Use the name that should appear on your program printout.',
-    example: 'Example: Kory',
-  },
-  lastName: {
-    question: 'What is your last name?',
-    guide: 'Your family name as it should appear on your program.',
-    example: 'Example: Edwards',
-    help: 'Enter your legal last name. No abbreviations.',
+  fullName: {
+    question: 'What is your full name?',
+    guide: 'First and last name as it should appear on your program printout.',
+    example: 'Example: Kory Edwards',
   },
   age: {
     question: 'How old are you today?',
     guide: 'Enter your age in whole years — not birthdate.',
     example: 'Example: 45',
-    help: 'We use age to set heart-rate zones on the exercise step. Round down if you are between birthdays and unsure.',
   },
   sex: {
     question: 'What is your gender?',
     guide: 'Select the option used in the calorie formulas.',
     example: 'Example: Male or Female',
-    help: 'This is a biological sex input for the Burn Engine math, not a lifestyle question.',
   },
   height: {
     question: 'What is your height?',
     guide: 'Stand straight, no shoes. Enter feet and inches in separate boxes.',
     example: 'Example: 5 ft 10 in (enter 5 and 10)',
-    help: 'Inches can be 0. Do not round up. Measure in the morning if possible.',
   },
   weight: {
     question: 'What is your weight?',
     guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
     example: 'Example: 168 lbs',
-    help: 'Use today\'s weight if you cannot weigh in the morning. Do not subtract clothing.',
   },
   email: {
     question: 'What is your email address?',
     guide: 'We deliver your program here and use it to unlock your plan after purchase.',
     example: 'Example: you@email.com',
-    help: 'Double-check spelling. A typo means you cannot download your diet.',
   },
 };
 
@@ -103,26 +91,12 @@ function fatSourceLabel(value) {
   return '—';
 }
 
-function fullName(values) {
-  return [values.firstName, values.lastName].filter(Boolean).join(' ').trim();
-}
-
-function syncPreferredName() {
-  const values = readForm();
-  const hidden = form.elements.preferredName;
-  if (hidden) hidden.value = fullName(values);
-}
-
 function readForm() {
   const data = new FormData(form);
-  const firstName = String(data.get('firstName') || '').trim();
-  const lastName = String(data.get('lastName') || '').trim();
   const ageRaw = data.get('age');
   const age = ageRaw !== '' && ageRaw != null ? Number(ageRaw) : null;
   return {
-    firstName,
-    lastName,
-    preferredName: fullName({ firstName, lastName }),
+    preferredName: String(data.get('preferredName') || '').trim(),
     email: String(data.get('email') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
@@ -176,10 +150,8 @@ function buildProgramFromValues(values) {
 
 function infoFieldSummary(fieldId, values) {
   switch (fieldId) {
-    case 'firstName':
-      return values.firstName || '';
-    case 'lastName':
-      return values.lastName || '';
+    case 'fullName':
+      return values.preferredName || '';
     case 'age':
       return values.age != null ? String(values.age) : '';
     case 'sex':
@@ -199,11 +171,8 @@ function infoFieldSummary(fieldId, values) {
 
 function validateInfoField(fieldId, values) {
   switch (fieldId) {
-    case 'firstName':
-      if (!values.firstName) return 'Enter your first name.';
-      return '';
-    case 'lastName':
-      if (!values.lastName) return 'Enter your last name.';
+    case 'fullName':
+      if (!values.preferredName) return 'Enter your full name.';
       return '';
     case 'age': {
       const age = values.age;
@@ -265,7 +234,6 @@ function setInfoFieldError(item, message) {
 function renderInfoAccordionState() {
   if (!infoAccordion) return;
   const values = readForm();
-  syncPreferredName();
 
   INFO_FIELDS.forEach((fieldId, index) => {
     const item = infoAccordion.querySelector(`[data-info-field="${fieldId}"]`);
