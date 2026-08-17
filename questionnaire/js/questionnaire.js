@@ -12,7 +12,7 @@ import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGate
 captureDietCreationTestBypass();
 
 const STEPS = [
-  { id: 'start', label: 'Create Your Diet' },
+  { id: 'start', label: 'Build Your Diet Plan' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
