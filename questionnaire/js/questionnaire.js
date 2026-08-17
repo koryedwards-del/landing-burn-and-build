@@ -253,7 +253,7 @@ function readForm() {
     weightTrainingHours: data.get('weightTrainingHours'),
     cardioHours: data.get('cardioHours'),
     fatBurningHours: data.get('fatBurningHours'),
-    waiverAccepted: data.get('waiverAccepted') === 'on',
+    waiverAccepted: Boolean(String(data.get('signature') || '').trim()),
     signature: String(data.get('signature') || '').trim(),
     signatureDate: data.get('signatureDate'),
   };
@@ -1126,7 +1126,7 @@ function canProceed(stepIndex) {
     case 3:
       return bodySectionComplete(values);
     case 4:
-      return values.waiverAccepted && values.signature;
+      return Boolean(values.signature);
     default:
       return true;
   }

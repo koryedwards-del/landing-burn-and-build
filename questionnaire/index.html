@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=13" />
+  <link rel="stylesheet" href="css/intake-form.css?v=14" />
 </head>
 <body>
   <div class="q-app">
@@ -445,28 +445,24 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="4" hidden>
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Step 5</p>
-              <h2 class="q-panel__title">Agreement</h2>
-              <p class="q-panel__lead">Required before we calculate your program.</p>
-            </div>
-            <div class="q-waiver">
-              <p>I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
-            </div>
-            <label class="q-check q-check--block">
-              <input type="checkbox" name="waiverAccepted" required />
-              <span>I have read and agree to the above</span>
-            </label>
-            <div class="q-grid q-grid--2">
-              <label class="q-field">
-                <span class="q-label">Signature (type your name)</span>
-                <input class="q-input" name="signature" autocomplete="name" />
-              </label>
-              <label class="q-field">
-                <span class="q-label">Date signed</span>
-                <input class="q-input" type="date" name="signatureDate" />
-              </label>
+          <section class="q-panel q-panel--intake" data-step="4" hidden>
+            <div class="intake-form" id="waiver-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Waiver (please read and sign)</h2>
+              </header>
+              <div class="intake-waiver">
+                <p class="intake-waiver__text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
+                <div class="intake-waiver__sign">
+                  <label class="intake-waiver__cell intake-waiver__cell--signed">
+                    <span class="intake-waiver__label">Signed</span>
+                    <input class="intake-input intake-waiver__input" name="signature" autocomplete="name" required />
+                  </label>
+                  <label class="intake-waiver__cell intake-waiver__cell--date">
+                    <span class="intake-waiver__label">Date</span>
+                    <input class="intake-input intake-waiver__input" type="date" name="signatureDate" required />
+                  </label>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -500,6 +496,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=128"></script>
+  <script type="module" src="js/questionnaire.js?v=129"></script>
 </body>
 </html>
