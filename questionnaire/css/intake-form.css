@@ -213,34 +213,36 @@ body.q-app--workroom,
 }
 
 .intake-acc__howto {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
+  margin: 0 0 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  background: #fafafa;
 }
 
-.intake-acc__guidance {
+.intake-hours-help {
   position: relative;
-  margin: 0 0 0.75rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .intake-info-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--border);
-  background: #fff;
+  padding: 0;
+  border: none;
+  background: transparent;
   font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 600;
   color: var(--muted);
   cursor: pointer;
 }
 
+.intake-info-btn--icon {
+  padding: 0.125rem;
+}
+
 .intake-info-btn:hover {
   color: var(--text);
-  border-color: var(--text);
 }
 
 .intake-info-btn__icon {
@@ -258,25 +260,20 @@ body.q-app--workroom,
   font-family: Georgia, 'Times New Roman', serif;
 }
 
-.intake-info-popover {
-  margin-top: 0.5rem;
-  padding: 0.625rem 0.75rem;
+.intake-hours-popover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.375rem);
+  z-index: 2;
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.5rem 0.625rem;
   border: 1px solid var(--border);
-  background: #fafafa;
-}
-
-.intake-info-popover .intake-acc__guide {
-  margin: 0;
-}
-
-.intake-info-popover .intake-acc__guide + .intake-acc__example,
-.intake-info-popover .intake-acc__guide + .intake-choice__sub,
-.intake-info-popover .intake-acc__example + .intake-choice__sub {
-  margin-top: 0.375rem;
-}
-
-.intake-info-popover .intake-choice__sub {
-  margin: 0;
+  background: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .intake-acc__guide {

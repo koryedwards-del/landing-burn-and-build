@@ -286,6 +286,12 @@
                       <div class="intake-inline">
                         <input class="intake-input intake-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" aria-label="Stop and go hours per week" />
                         <span class="intake-unit">hrs / week</span>
+                        <span class="intake-hours-help">
+                          <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
+                            <span class="intake-info-btn__icon" aria-hidden="true">i</span>
+                          </button>
+                          <span class="intake-hours-popover" hidden data-hours-info-panel></span>
+                        </span>
                       </div>
                     </div>
                     <p class="intake-acc__error" hidden></p>
