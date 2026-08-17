@@ -492,10 +492,10 @@ function initOccupationFieldCopy() {
     const item = occupationAccordion.querySelector(`[data-occ-field="${fieldId}"]`);
     const meta = OCCUPATION_FIELD_META[fieldId];
     if (!item || !meta) return;
-    const question = item.querySelector('[data-occ-question]');
+    const label = item.querySelector('[data-occ-label]');
     const guide = item.querySelector('[data-occ-guide]');
     const example = item.querySelector('[data-occ-example]');
-    if (question) question.textContent = meta.question;
+    if (label) label.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
     if (example) example.textContent = meta.example;
   });

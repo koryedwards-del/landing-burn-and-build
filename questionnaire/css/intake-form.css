@@ -178,6 +178,7 @@ body.q-app--workroom,
 .intake-acc__label {
   font-size: 0.9375rem;
   font-weight: 600;
+  line-height: 1.35;
 }
 
 .intake-acc__summary {
