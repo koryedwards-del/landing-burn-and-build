@@ -192,6 +192,58 @@ let occupationFieldIndex = 0;
 let bodyFieldIndex = 0;
 let exerciseFieldIndex = 0;
 
+function accordionItemFocusables(item) {
+  if (!item?.classList.contains('is-open')) return [];
+  const panel = item.querySelector('.intake-acc__panel');
+  if (!panel) return [];
+  return [...panel.querySelectorAll(
+    'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button.intake-info-btn:not([disabled])',
+  )].filter((el) => el.getClientRects().length > 0);
+}
+
+function setAccordionTriggerTabOrder(trigger) {
+  if (!trigger) return;
+  trigger.tabIndex = -1;
+}
+
+function bindAccordionTabFlow({
+  accordion,
+  fields,
+  fieldAttr,
+  getIndex,
+  openField,
+}) {
+  if (!accordion) return;
+
+  accordion.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const index = getIndex();
+    if (index < 0) return;
+
+    const fieldId = fields[index];
+    const item = accordion.querySelector(`[${fieldAttr}="${fieldId}"]`);
+    const focusables = accordionItemFocusables(item);
+    if (!focusables.length) return;
+
+    const active = document.activeElement;
+    if (!(active instanceof HTMLElement) || !focusables.includes(active)) return;
+
+    if (!event.shiftKey && active === focusables[focusables.length - 1] && index < fields.length - 1) {
+      event.preventDefault();
+      openField(index + 1);
+      return;
+    }
+
+    if (event.shiftKey && active === focusables[0] && index > 0) {
+      event.preventDefault();
+      openField(index - 1);
+      const prevItem = accordion.querySelector(`[${fieldAttr}="${fields[index - 1]}"]`);
+      const prevFocusables = accordionItemFocusables(prevItem);
+      prevFocusables[prevFocusables.length - 1]?.focus();
+    }
+  });
+}
+
 function collapsePersonalInfoIfComplete() {
   if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
   const values = readForm();
@@ -374,7 +426,7 @@ function renderInfoAccordionState() {
     }
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      trigger.tabIndex = 0;
+      setAccordionTriggerTabOrder(trigger);
     }
 
     if (!isOpen) setInfoFieldError(item, '');
@@ -478,6 +530,14 @@ function bindInfoAccordion() {
     advanceInfoField();
   });
 
+  bindAccordionTabFlow({
+    accordion: infoAccordion,
+    fields: INFO_FIELDS,
+    fieldAttr: 'data-info-field',
+    getIndex: () => infoFieldIndex,
+    openField: openInfoField,
+  });
+
   renderInfoAccordionState();
 }
 
@@ -548,7 +608,7 @@ function renderOccupationAccordionState() {
     }
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      trigger.tabIndex = 0;
+      setAccordionTriggerTabOrder(trigger);
     }
 
     if (!isOpen) setOccupationFieldError(item, '');
@@ -656,6 +716,14 @@ function bindOccupationAccordion() {
     advanceOccupationField();
   });
 
+  bindAccordionTabFlow({
+    accordion: occupationAccordion,
+    fields: OCCUPATION_FIELDS,
+    fieldAttr: 'data-occ-field',
+    getIndex: () => occupationFieldIndex,
+    openField: openOccupationField,
+  });
+
   renderOccupationAccordionState();
 }
 
@@ -754,7 +822,7 @@ function renderBodyAccordionState() {
     }
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      trigger.tabIndex = 0;
+      setAccordionTriggerTabOrder(trigger);
     }
 
     if (!isOpen) setBodyFieldError(item, '');
@@ -880,6 +948,14 @@ function bindBodyAccordion() {
     advanceBodyField();
   });
 
+  bindAccordionTabFlow({
+    accordion: bodyAccordion,
+    fields: BODY_FIELDS,
+    fieldAttr: 'data-body-field',
+    getIndex: () => bodyFieldIndex,
+    openField: openBodyField,
+  });
+
   renderBodyAccordionState();
 }
 
@@ -976,7 +1052,7 @@ function renderExerciseAccordionState() {
     }
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      trigger.tabIndex = 0;
+      setAccordionTriggerTabOrder(trigger);
     }
 
     if (!isOpen) setExerciseFieldError(item, '');
@@ -1082,6 +1158,14 @@ function bindExerciseAccordion() {
     if (target.type === 'radio') return;
     event.preventDefault();
     advanceExerciseField();
+  });
+
+  bindAccordionTabFlow({
+    accordion: exerciseAccordion,
+    fields: EXERCISE_FIELDS,
+    fieldAttr: 'data-ex-field',
+    getIndex: () => exerciseFieldIndex,
+    openField: openExerciseField,
   });
 
   renderExerciseAccordionState();
