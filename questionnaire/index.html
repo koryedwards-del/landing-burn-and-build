@@ -63,7 +63,7 @@
           <section class="q-panel q-panel--intake" data-step="1" hidden>
             <div class="intake-form" id="info-form">
               <header class="intake-form__head">
-                <h2 class="intake-form__title">Personal information</h2>
+                <h2 class="intake-form__title">The Basics</h2>
               </header>
               <input type="hidden" name="intakeDate" />
 
@@ -220,35 +220,54 @@
             </div>
           </section>
 
-          <section class="q-panel q-panel--workday" data-step="2" hidden>
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Step 3</p>
-              <h2 class="q-panel__title">Occupation</h2>
-              <p class="q-panel__lead">How active is your job, and how stressful is a typical day?</p>
-            </div>
-            <div class="q-callout">
-              <span class="q-callout__icon" aria-hidden="true">!</span>
-              <p class="q-callout__body"><strong>Think typical week — not your hardest day.</strong> Your job activity and daily stress feed the Burn Engine work-intensity multiplier, which adjusts how many servings you need. When unsure, pick the option that describes most of your workdays.</p>
-            </div>
-            <div class="q-workday">
-              <div class="q-field q-choice-group">
-                <span class="q-label">Typical exertion at work</span>
-                <span class="q-field-hint">How much does your body move and lift during a normal shift?</span>
-                <div class="q-options q-options--cards">
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="sitting" /><span class="q-radio-card__body"><span class="q-radio-card__title">Sitting</span><span class="q-radio-card__sub">Office, reception, desk work — mostly seated with short walks</span></span></label>
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="feet" /><span class="q-radio-card__body"><span class="q-radio-card__title">Moving</span><span class="q-radio-card__sub">Retail, teaching, nursing, restaurant — on your feet most of the day</span></span></label>
-                  <label class="q-radio-card"><input type="radio" name="workPhysical" value="carrying" /><span class="q-radio-card__body"><span class="q-radio-card__title">Lifting</span><span class="q-radio-card__sub">Warehouse, delivery, trades — regular lifting, carrying, or loading</span></span></label>
+          <section class="q-panel q-panel--intake" data-step="2" hidden>
+            <div class="intake-form" id="occupation-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Occupation</h2>
+              </header>
+
+              <div class="intake-acc" id="occupation-accordion">
+                <div class="intake-acc__item is-open" data-occ-field="workPhysical">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num">1</span>
+                    <span class="intake-acc__label">Job activity</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-occ-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-occ-guide></p>
+                      <p class="intake-acc__example" data-occ-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio"><input type="radio" name="workPhysical" value="sitting" required /> Sitting — desk, office, mostly seated</label>
+                      <label class="intake-radio"><input type="radio" name="workPhysical" value="feet" /> Moving — on your feet most of the day</label>
+                      <label class="intake-radio"><input type="radio" name="workPhysical" value="carrying" /> Lifting — regular carrying, loading, or trades work</label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
                 </div>
-              </div>
-              <div class="q-field q-choice-group">
-                <span class="q-label">Is your typical day…</span>
-                <span class="q-field-hint">Mental and schedule pressure count — not just physical tiredness. A busy desk job can still be “busy.”</span>
-                <div class="q-segmented q-segmented--equal">
-                  <label class="q-segment"><input type="radio" name="workStress" value="comfortable" /> Comfortable</label>
-                  <label class="q-segment"><input type="radio" name="workStress" value="busy" /> Busy</label>
-                  <label class="q-segment"><input type="radio" name="workStress" value="stressful" /> Stressful</label>
+
+                <div class="intake-acc__item" data-occ-field="workStress">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">2</span>
+                    <span class="intake-acc__label">Day drain</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-occ-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-occ-guide></p>
+                      <p class="intake-acc__example" data-occ-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio"><input type="radio" name="workStress" value="comfortable" required /> Comfortable — relaxed pace most days</label>
+                      <label class="intake-radio"><input type="radio" name="workStress" value="busy" /> Busy — steady demands, tired but manageable</label>
+                      <label class="intake-radio"><input type="radio" name="workStress" value="stressful" /> Stressful — high pressure, come home drained</label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
                 </div>
-                <span class="q-field-hint"><strong>Comfortable</strong> = relaxed pace most days. <strong>Busy</strong> = steady demands, tired but manageable. <strong>Stressful</strong> = high pressure, you come home drained.</span>
               </div>
             </div>
           </section>
@@ -391,6 +410,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=102"></script>
+  <script type="module" src="js/questionnaire.js?v=105"></script>
 </body>
 </html>

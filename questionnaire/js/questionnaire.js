@@ -2,6 +2,7 @@ import {
   heartRates,
   WORK_PHYSICAL,
   WORK_STRESS,
+  QUESTIONNAIRE_JOB_OPTIONS,
 } from '../../js/onboardingEngine.js';
 import { buildProgramPackage } from '../../js/programPackage.js';
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
@@ -14,7 +15,7 @@ captureDietCreationTestBypass();
 
 const STEPS = [
   { id: 'welcome', label: 'Create Your Diet' },
-  { id: 'personal', label: 'Personal info' },
+  { id: 'personal', label: 'The Basics' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
@@ -70,6 +71,24 @@ const INFO_FIELD_META = {
   },
 };
 
+const OCCUPATION_FIELDS = [
+  'workPhysical',
+  'workStress',
+];
+
+const OCCUPATION_FIELD_META = {
+  workPhysical: {
+    question: 'How physically active is your job?',
+    guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day.',
+    example: 'Pick what describes most workdays, not your hardest day.',
+  },
+  workStress: {
+    question: 'How draining is a typical workday?',
+    guide: 'Physical work is only part of it. Mental pressure and pace add another level of drain — even at a desk job.',
+    example: 'Comfortable = relaxed pace. Busy = steady demands. Stressful = high pressure, you come home drained.',
+  },
+};
+
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
 const reviewEl = document.getElementById('q-review');
@@ -78,9 +97,11 @@ const stepNextBtn = document.querySelector('[data-q-step-next]');
 const stepNav = document.getElementById('q-step-nav');
 const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
+const occupationAccordion = document.getElementById('occupation-accordion');
 
 let step = 0;
 let infoFieldIndex = 0;
+let occupationFieldIndex = 0;
 
 function collapsePersonalInfoIfComplete() {
   if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
@@ -93,7 +114,8 @@ function collapsePersonalInfoIfComplete() {
 }
 
 function workPhysicalLabel(id) {
-  return WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
+  return QUESTIONNAIRE_JOB_OPTIONS.find((item) => item.id === id)?.label
+    || WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
 }
 
 function workStressLabel(id) {
@@ -390,6 +412,174 @@ function bindInfoAccordion() {
   renderInfoAccordionState();
 }
 
+function occupationFieldSummary(fieldId, values) {
+  switch (fieldId) {
+    case 'workPhysical':
+      return values.workPhysical ? workPhysicalLabel(values.workPhysical) : '';
+    case 'workStress':
+      return values.workStress ? workStressLabel(values.workStress) : '';
+    default:
+      return '';
+  }
+}
+
+function validateOccupationField(fieldId, values) {
+  switch (fieldId) {
+    case 'workPhysical':
+      if (!values.workPhysical) return 'Select how physically active your job is.';
+      return '';
+    case 'workStress':
+      if (!values.workStress) return 'Select how draining a typical workday is.';
+      return '';
+    default:
+      return '';
+  }
+}
+
+function occupationFieldIsValid(fieldId, values) {
+  return !validateOccupationField(fieldId, values);
+}
+
+function occupationSectionComplete(values) {
+  return OCCUPATION_FIELDS.every((fieldId) => occupationFieldIsValid(fieldId, values));
+}
+
+function setOccupationFieldError(item, message) {
+  const errorEl = item?.querySelector('.intake-acc__error');
+  if (!errorEl) return;
+  if (message) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  } else {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+}
+
+function renderOccupationAccordionState() {
+  if (!occupationAccordion) return;
+  const values = readForm();
+
+  OCCUPATION_FIELDS.forEach((fieldId, index) => {
+    const item = occupationAccordion.querySelector(`[data-occ-field="${fieldId}"]`);
+    if (!item) return;
+
+    const summary = item.querySelector('.intake-acc__summary');
+    const trigger = item.querySelector('.intake-acc__trigger');
+    const isOpen = occupationFieldIndex >= 0 && index === occupationFieldIndex;
+    const isDone = occupationFieldIsValid(fieldId, values);
+
+    item.classList.toggle('is-open', isOpen);
+    item.classList.toggle('is-done', isDone && !isOpen);
+
+    if (summary) {
+      const text = occupationFieldSummary(fieldId, values);
+      summary.textContent = text;
+      summary.hidden = !text;
+    }
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      trigger.tabIndex = 0;
+    }
+
+    if (!isOpen) setOccupationFieldError(item, '');
+  });
+}
+
+function initOccupationFieldCopy() {
+  if (!occupationAccordion) return;
+  OCCUPATION_FIELDS.forEach((fieldId) => {
+    const item = occupationAccordion.querySelector(`[data-occ-field="${fieldId}"]`);
+    const meta = OCCUPATION_FIELD_META[fieldId];
+    if (!item || !meta) return;
+    const question = item.querySelector('[data-occ-question]');
+    const guide = item.querySelector('[data-occ-guide]');
+    const example = item.querySelector('[data-occ-example]');
+    if (question) question.textContent = meta.question;
+    if (guide) guide.textContent = meta.guide;
+    if (example) example.textContent = meta.example;
+  });
+}
+
+function collapseOccupationIfComplete() {
+  if (occupationFieldIndex < 0 || OCCUPATION_FIELDS[occupationFieldIndex] !== 'workStress') return false;
+  const values = readForm();
+  if (!occupationSectionComplete(values)) return false;
+  occupationFieldIndex = -1;
+  renderOccupationAccordionState();
+  updateStepNav();
+  return true;
+}
+
+function advanceOccupationField() {
+  const fieldId = OCCUPATION_FIELDS[occupationFieldIndex];
+  const values = readForm();
+  const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
+  const error = validateOccupationField(fieldId, values);
+  if (error) {
+    setOccupationFieldError(item, error);
+    return false;
+  }
+
+  setOccupationFieldError(item, '');
+
+  if (occupationFieldIndex < OCCUPATION_FIELDS.length - 1) {
+    openOccupationField(occupationFieldIndex + 1);
+  } else {
+    collapseOccupationIfComplete() || renderOccupationAccordionState();
+  }
+
+  updateStepNav();
+  return true;
+}
+
+function openOccupationField(index) {
+  occupationFieldIndex = Math.max(0, Math.min(index, OCCUPATION_FIELDS.length - 1));
+  renderOccupationAccordionState();
+  const fieldId = OCCUPATION_FIELDS[occupationFieldIndex];
+  const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
+  const focusTarget = item?.querySelector('input[type="radio"]');
+  focusTarget?.focus();
+}
+
+function bindOccupationAccordion() {
+  if (!occupationAccordion) return;
+
+  initOccupationFieldCopy();
+
+  occupationAccordion.addEventListener('click', (event) => {
+    const trigger = event.target.closest('.intake-acc__trigger');
+    if (!trigger) return;
+    const item = trigger.closest('[data-occ-field]');
+    if (!item) return;
+    const fieldId = item.dataset.occField;
+    const index = OCCUPATION_FIELDS.indexOf(fieldId);
+    if (index === -1) return;
+    openOccupationField(index);
+  });
+
+  occupationAccordion.addEventListener('change', () => {
+    renderOccupationAccordionState();
+    if (occupationFieldIndex === 0 && occupationFieldIsValid('workPhysical', readForm())) {
+      openOccupationField(1);
+    } else {
+      collapseOccupationIfComplete();
+    }
+    updateStepNav();
+  });
+
+  occupationAccordion.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target.type === 'radio') return;
+    event.preventDefault();
+    advanceOccupationField();
+  });
+
+  renderOccupationAccordionState();
+}
+
 function syncAgeField() {
   const ageInput = form.elements.age;
   const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
@@ -420,7 +610,7 @@ function canProceed(stepIndex) {
     case 1:
       return infoSectionComplete(values);
     case 2:
-      return values.workPhysical && values.workStress;
+      return occupationSectionComplete(values);
     case 3:
       return values.weightTrainingHours !== ''
         && values.cardioHours !== ''
@@ -470,8 +660,8 @@ function renderReview() {
     ['Age', values.age != null ? String(values.age) : '—'],
     ['Weight', values.weight ? `${values.weight} lbs` : '—'],
     ['Body composition', values.fatPercent ? `${values.fatPercent}% (${fatSourceLabel(values.fatSource)})` : '—'],
-    ['Work exertion', workPhysicalLabel(values.workPhysical)],
-    ['Day stress', workStressLabel(values.workStress)],
+    ['Job activity', workPhysicalLabel(values.workPhysical)],
+    ['Day drain', workStressLabel(values.workStress)],
     ['SAG hours / week', values.weightTrainingHours || '—'],
     ['Vigorous hours / week', values.cardioHours || '—'],
     ['Moderate hours / week', values.fatBurningHours || '—'],
@@ -504,6 +694,12 @@ function showStep(index) {
   renderNav();
   if (step === 6) renderReview();
   if (step === 1) renderInfoAccordionState();
+  if (step === 2) {
+    if (occupationFieldIndex < 0 && !occupationSectionComplete(readForm())) {
+      occupationFieldIndex = 0;
+    }
+    renderOccupationAccordionState();
+  }
   updateStepNav();
 
   const base = `${location.pathname}${location.search}`;
@@ -533,6 +729,7 @@ function bindEvents() {
   }
 
   bindInfoAccordion();
+  bindOccupationAccordion();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
