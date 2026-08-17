@@ -290,6 +290,16 @@ body.q-app--workroom,
   color: var(--muted);
 }
 
+.intake-acc__alert {
+  margin: 0 0 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #8b0000;
+  background: #fff8f8;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 .intake-form__nav,
 .q-step-nav {
   display: flex;
