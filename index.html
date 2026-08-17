@@ -24,7 +24,17 @@
     .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.275rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; }
     .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: var(--gray-heading); }
     .hero-headline .hero-line-accent { color: var(--yellow); }
-    .hero-cta { margin-top: 32px; opacity: 0; animation: fadeUp 0.7s 0.85s forwards; }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.85s forwards;
+    }
+    .hero-cta .btn-cta { margin-top: 0; }
 
     .nav-cta {
       display: inline-flex;
@@ -57,6 +67,14 @@
       cursor: default;
       pointer-events: none;
       opacity: 0.85;
+    }
+    .btn-cta--ghost {
+      color: var(--text-dim);
+      border-color: var(--gray-mid);
+    }
+    .btn-cta--ghost:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
     }
 
     .philosophy { background: var(--black); padding: 100px 40px; text-align: center; }
@@ -239,7 +257,10 @@
     <p class="hero-eyebrow">The Premier Body Recomp Diet</p>
     <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
     <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
-    <span class="btn-cta btn-cta--soon hero-cta" aria-disabled="true">Coming Soon</span>
+    <div class="hero-cta">
+      <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
+      <a class="btn-cta btn-cta--ghost" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">Preview sample PDF</a>
+    </div>
   </section>
 
   <section class="guide" id="guide">
