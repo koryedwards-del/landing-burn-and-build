@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=1" />
+  <link rel="stylesheet" href="css/intake-form.css?v=2" />
 </head>
 <body>
   <div class="q-app">
@@ -74,16 +74,23 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
                     <span class="intake-acc__num">1</span>
                     <span class="intake-acc__label">First name</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Your legal first name. This appears on your program printout.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <label class="intake-acc__field">
                       <span class="sr-only">First name</span>
                       <input class="intake-input" name="firstName" autocomplete="given-name" required />
                     </label>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -91,16 +98,23 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">2</span>
                     <span class="intake-acc__label">Last name</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Your legal last name.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <label class="intake-acc__field">
                       <span class="sr-only">Last name</span>
                       <input class="intake-input" name="lastName" autocomplete="family-name" required />
                     </label>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -108,16 +122,23 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">3</span>
                     <span class="intake-acc__label">Age</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Your age in years today. Used for heart-rate zones on the exercise step.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <label class="intake-acc__field">
                       <span class="sr-only">Age</span>
                       <input class="intake-input intake-input--short" name="age" type="number" inputmode="numeric" min="16" max="99" required />
                     </label>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -125,16 +146,23 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">4</span>
                     <span class="intake-acc__label">Gender</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Select the option that matches your physiology. Used in calorie calculations.</p>
-                    <div class="intake-radios">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
+                    <div class="intake-radios intake-acc__field">
                       <label class="intake-radio"><input type="radio" name="sex" value="female" required /> Female</label>
                       <label class="intake-radio"><input type="radio" name="sex" value="male" /> Male</label>
                     </div>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -142,17 +170,24 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">5</span>
                     <span class="intake-acc__label">Height</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Stand straight, no shoes. Enter feet and inches separately. Inches can be 0.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <div class="intake-inline intake-acc__field">
                       <input class="intake-input intake-input--short" name="heightFeet" inputmode="numeric" placeholder="ft" aria-label="Feet" required />
                       <input class="intake-input intake-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" min="0" max="11" />
                       <span class="intake-unit">ft / in</span>
                     </div>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -160,16 +195,23 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">6</span>
                     <span class="intake-acc__label">Weight</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">Morning weight in pounds, before eating, after bathroom. Use the same scale each time.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <div class="intake-inline intake-acc__field">
                       <input class="intake-input intake-input--short" name="weight" inputmode="decimal" required aria-label="Weight in pounds" />
                       <span class="intake-unit">lbs</span>
                     </div>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
 
@@ -177,19 +219,31 @@
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
                     <span class="intake-acc__num">7</span>
                     <span class="intake-acc__label">Email address</span>
-                    <span class="intake-acc__summary"></span>
+                    <span class="intake-acc__summary" hidden></span>
                   </button>
                   <div class="intake-acc__panel">
-                    <p class="intake-acc__guide">We deliver your program to this address. Double-check spelling before you continue.</p>
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <details class="intake-acc__more">
+                      <summary><span class="intake-acc__info-icon" aria-hidden="true">i</span> More help</summary>
+                      <p class="intake-acc__help" data-info-help></p>
+                    </details>
                     <label class="intake-acc__field">
                       <span class="sr-only">Email address</span>
                       <input class="intake-input" name="email" type="email" autocomplete="email" required />
                     </label>
                     <p class="intake-acc__error" hidden></p>
-                    <button type="button" class="intake-acc__next">Next</button>
                   </div>
                 </div>
               </div>
+
+              <footer class="intake-form__nav" id="info-step-nav">
+                <button type="button" class="intake-nav-btn" data-info-back disabled>Back</button>
+                <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-info-forward>Forward</button>
+              </footer>
             </div>
           </section>
 
@@ -360,6 +414,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=92"></script>
+  <script type="module" src="js/questionnaire.js?v=93"></script>
 </body>
 </html>

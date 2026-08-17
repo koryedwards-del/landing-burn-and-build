@@ -32,12 +32,59 @@ const INFO_FIELDS = [
   'email',
 ];
 
+const INFO_FIELD_META = {
+  firstName: {
+    question: 'What is your first name?',
+    guide: 'Use the name that should appear on your program printout.',
+    example: 'Example: Kory',
+    help: 'Enter your legal first name. If you go by a nickname, still use your legal name here — it should match what you type on the agreement step.',
+  },
+  lastName: {
+    question: 'What is your last name?',
+    guide: 'Your family name as it should appear on your program.',
+    example: 'Example: Edwards',
+    help: 'Enter your legal last name. No abbreviations.',
+  },
+  age: {
+    question: 'How old are you today?',
+    guide: 'Enter your age in whole years — not birthdate.',
+    example: 'Example: 45',
+    help: 'We use age to set heart-rate zones on the exercise step. Round down if you are between birthdays and unsure.',
+  },
+  sex: {
+    question: 'What is your gender?',
+    guide: 'Select the option used in the calorie formulas.',
+    example: 'Example: Male or Female',
+    help: 'This is a biological sex input for the Burn Engine math, not a lifestyle question.',
+  },
+  height: {
+    question: 'What is your height?',
+    guide: 'Stand straight, no shoes. Enter feet and inches in separate boxes.',
+    example: 'Example: 5 ft 10 in (enter 5 and 10)',
+    help: 'Inches can be 0. Do not round up. Measure in the morning if possible.',
+  },
+  weight: {
+    question: 'What is your weight?',
+    guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
+    example: 'Example: 168 lbs',
+    help: 'Use today\'s weight if you cannot weigh in the morning. Do not subtract clothing.',
+  },
+  email: {
+    question: 'What is your email address?',
+    guide: 'We deliver your program here and use it to unlock your plan after purchase.',
+    example: 'Example: you@email.com',
+    help: 'Double-check spelling. A typo means you cannot download your diet.',
+  },
+};
+
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
 const reviewEl = document.getElementById('q-review');
 const continueBtn = document.getElementById('q-continue');
 const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
+const infoBackBtn = document.querySelector('[data-info-back]');
+const infoForwardBtn = document.querySelector('[data-info-forward]');
 
 let step = 0;
 let infoFieldIndex = 0;
@@ -233,7 +280,11 @@ function renderInfoAccordionState() {
     item.classList.toggle('is-open', isOpen);
     item.classList.toggle('is-done', isDone && !isOpen);
 
-    if (summary) summary.textContent = infoFieldSummary(fieldId, values);
+    if (summary) {
+      const text = infoFieldSummary(fieldId, values);
+      summary.textContent = text;
+      summary.hidden = !text;
+    }
     if (trigger) {
       trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       trigger.tabIndex = 0;
@@ -241,20 +292,37 @@ function renderInfoAccordionState() {
 
     if (!isOpen) setInfoFieldError(item, '');
   });
+
+  updateInfoStepNav();
 }
 
-function openInfoField(index) {
-  infoFieldIndex = Math.max(0, Math.min(index, INFO_FIELDS.length - 1));
-  renderInfoAccordionState();
-  const fieldId = INFO_FIELDS[infoFieldIndex];
-  const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
-  const focusTarget = item?.querySelector(
-    'input:not([type="hidden"]):not([type="radio"]), select, textarea',
-  ) || item?.querySelector('input[type="radio"]');
-  focusTarget?.focus();
+function updateInfoStepNav() {
+  if (!infoBackBtn || !infoForwardBtn) return;
+  infoBackBtn.disabled = infoFieldIndex === 0;
 }
 
-function advanceInfoField() {
+function initInfoFieldCopy() {
+  if (!infoAccordion) return;
+  INFO_FIELDS.forEach((fieldId) => {
+    const item = infoAccordion.querySelector(`[data-info-field="${fieldId}"]`);
+    const meta = INFO_FIELD_META[fieldId];
+    if (!item || !meta) return;
+    const question = item.querySelector('[data-info-question]');
+    const guide = item.querySelector('[data-info-guide]');
+    const example = item.querySelector('[data-info-example]');
+    const help = item.querySelector('[data-info-help]');
+    if (question) question.textContent = meta.question;
+    if (guide) guide.textContent = meta.guide;
+    if (example) example.textContent = meta.example;
+    if (help) help.textContent = meta.help;
+  });
+}
+
+function retreatInfoField() {
+  if (infoFieldIndex > 0) openInfoField(infoFieldIndex - 1);
+}
+
+function advanceInfoFieldOrStep() {
   const fieldId = INFO_FIELDS[infoFieldIndex];
   const values = readForm();
   const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
@@ -269,6 +337,8 @@ function advanceInfoField() {
 
   if (infoFieldIndex < INFO_FIELDS.length - 1) {
     openInfoField(infoFieldIndex + 1);
+  } else if (infoSectionComplete(values)) {
+    showStep(2);
   } else {
     renderInfoAccordionState();
   }
@@ -276,17 +346,23 @@ function advanceInfoField() {
   return true;
 }
 
+function openInfoField(index) {
+  infoFieldIndex = Math.max(0, Math.min(index, INFO_FIELDS.length - 1));
+  renderInfoAccordionState();
+  const fieldId = INFO_FIELDS[infoFieldIndex];
+  const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
+  const focusTarget = item?.querySelector(
+    'input:not([type="hidden"]):not([type="radio"]), select, textarea',
+  ) || item?.querySelector('input[type="radio"]');
+  focusTarget?.focus();
+}
+
 function bindInfoAccordion() {
   if (!infoAccordion) return;
 
-  infoAccordion.addEventListener('click', (event) => {
-    const next = event.target.closest('.intake-acc__next');
-    if (next) {
-      event.preventDefault();
-      advanceInfoField();
-      return;
-    }
+  initInfoFieldCopy();
 
+  infoAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
     if (!trigger) return;
     const item = trigger.closest('[data-info-field]');
@@ -296,6 +372,9 @@ function bindInfoAccordion() {
     if (index === -1) return;
     openInfoField(index);
   });
+
+  infoBackBtn?.addEventListener('click', () => retreatInfoField());
+  infoForwardBtn?.addEventListener('click', () => advanceInfoFieldOrStep());
 
   infoAccordion.addEventListener('input', () => {
     syncPreferredName();
@@ -315,7 +394,7 @@ function bindInfoAccordion() {
     if (!(target instanceof HTMLInputElement)) return;
     if (target.type === 'radio') return;
     event.preventDefault();
-    advanceInfoField();
+    advanceInfoFieldOrStep();
   });
 
   renderInfoAccordionState();
