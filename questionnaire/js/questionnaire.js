@@ -60,6 +60,8 @@ const EXERCISE_FIELDS = [
   'moderate',
 ];
 
+const EXERCISE_HOURS_BREAKDOWN = 'Enter hours in decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min, 1.25 = 1 hr 15 min.';
+
 const EXERCISE_FIELD_META = {
   age: {
     question: 'How young are you?',
@@ -69,7 +71,7 @@ const EXERCISE_FIELD_META = {
   sag: {
     question: 'How many hours per week of stop & go activity?',
     guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
-    sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none. Use decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min.',
+    sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.',
   },
   cardio: {
     question: 'How many hours per week in your cardio training range?',
@@ -1197,61 +1199,36 @@ function initDefaults() {
   }
 }
 
-function closeIntakeGuidancePopovers() {
-  document.querySelectorAll('.intake-info-popover').forEach((popover) => {
-    popover.hidden = true;
-  });
-  document.querySelectorAll('.intake-info-btn').forEach((btn) => {
-    btn.setAttribute('aria-expanded', 'false');
-  });
-}
+function bindExerciseHoursInfo() {
+  if (!exerciseAccordion) return;
 
-function setupIntakeGuidancePopovers(root) {
-  if (!root) return;
-  root.querySelectorAll('.intake-acc__panel').forEach((panel) => {
-    const howto = panel.querySelector('.intake-acc__howto');
-    const choiceSub = panel.querySelector('.intake-choice__sub');
-    if (!howto && !choiceSub) return;
-    if (panel.querySelector('.intake-acc__guidance')) return;
-
-    const guidance = document.createElement('div');
-    guidance.className = 'intake-acc__guidance';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'intake-info-btn';
-    btn.setAttribute('aria-label', 'More guidance');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.innerHTML = '<span class="intake-info-btn__icon" aria-hidden="true">i</span><span class="intake-info-btn__label">Guidance</span>';
-
-    const popover = document.createElement('div');
-    popover.className = 'intake-info-popover';
-    popover.hidden = true;
-
-    if (howto) {
-      while (howto.firstChild) popover.appendChild(howto.firstChild);
-      howto.remove();
-    }
-    if (choiceSub) {
-      popover.appendChild(choiceSub);
-    }
-
-    guidance.append(btn, popover);
-    panel.insertBefore(guidance, panel.firstChild);
+  exerciseAccordion.querySelectorAll('[data-hours-info-btn]').forEach((btn) => {
+    const panel = btn.parentElement?.querySelector('[data-hours-info-panel]');
+    if (!panel) return;
+    panel.textContent = EXERCISE_HOURS_BREAKDOWN;
 
     btn.addEventListener('click', (event) => {
       event.stopPropagation();
-      const opening = popover.hidden;
-      closeIntakeGuidancePopovers();
+      const opening = panel.hidden;
+      closeExerciseHoursInfoPanels();
       if (opening) {
-        popover.hidden = false;
+        panel.hidden = false;
         btn.setAttribute('aria-expanded', 'true');
       }
     });
 
-    popover.addEventListener('click', (event) => {
+    panel.addEventListener('click', (event) => {
       event.stopPropagation();
     });
+  });
+}
+
+function closeExerciseHoursInfoPanels() {
+  document.querySelectorAll('[data-hours-info-panel]').forEach((panel) => {
+    panel.hidden = true;
+  });
+  document.querySelectorAll('[data-hours-info-btn]').forEach((btn) => {
+    btn.setAttribute('aria-expanded', 'false');
   });
 }
 
@@ -1264,11 +1241,11 @@ function bindEvents() {
   bindOccupationAccordion();
   bindBodyAccordion();
   bindExerciseAccordion();
-  setupIntakeGuidancePopovers(form);
+  bindExerciseHoursInfo();
 
-  document.addEventListener('click', closeIntakeGuidancePopovers);
+  document.addEventListener('click', closeExerciseHoursInfoPanels);
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeIntakeGuidancePopovers();
+    if (event.key === 'Escape') closeExerciseHoursInfoPanels();
   });
 
   navList.addEventListener('click', (event) => {
