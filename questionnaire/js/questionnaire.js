@@ -1264,6 +1264,12 @@ function bindEvents() {
   bindOccupationAccordion();
   bindBodyAccordion();
   bindExerciseAccordion();
+  setupIntakeGuidancePopovers(form);
+
+  document.addEventListener('click', closeIntakeGuidancePopovers);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeIntakeGuidancePopovers();
+  });
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
