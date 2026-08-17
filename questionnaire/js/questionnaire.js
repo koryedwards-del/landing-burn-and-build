@@ -1,6 +1,4 @@
 import {
-  ageFromBirthDate,
-  formatBirthDateText,
   heartRates,
   WORK_PHYSICAL,
   WORK_STRESS,
@@ -24,6 +22,16 @@ const STEPS = [
   { id: 'review', label: 'Review' },
 ];
 
+const INFO_FIELDS = [
+  'firstName',
+  'lastName',
+  'age',
+  'sex',
+  'height',
+  'weight',
+  'email',
+];
+
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
 const reviewEl = document.getElementById('q-review');
@@ -31,8 +39,10 @@ const continueBtn = document.getElementById('q-continue');
 const backBtn = document.querySelector('[data-q-back]');
 const nextBtn = document.querySelector('#q-actions [data-q-next]');
 const panels = [...document.querySelectorAll('.q-panel')];
+const infoAccordion = document.getElementById('info-accordion');
 
 let step = 0;
+let infoFieldIndex = 0;
 
 function workPhysicalLabel(id) {
   return WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
@@ -49,19 +59,32 @@ function fatSourceLabel(value) {
   return '—';
 }
 
+function fullName(values) {
+  return [values.firstName, values.lastName].filter(Boolean).join(' ').trim();
+}
+
+function syncPreferredName() {
+  const values = readForm();
+  const hidden = form.elements.preferredName;
+  if (hidden) hidden.value = fullName(values);
+}
+
 function readForm() {
   const data = new FormData(form);
-  const birthDate = data.get('birthDate');
-  const age = birthDate ? ageFromBirthDate(birthDate) : null;
+  const firstName = String(data.get('firstName') || '').trim();
+  const lastName = String(data.get('lastName') || '').trim();
+  const ageRaw = data.get('age');
+  const age = ageRaw !== '' && ageRaw != null ? Number(ageRaw) : null;
   return {
-    preferredName: String(data.get('preferredName') || '').trim(),
+    firstName,
+    lastName,
+    preferredName: fullName({ firstName, lastName }),
     email: String(data.get('email') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
     heightFeet: data.get('heightFeet'),
     heightInchesPart: data.get('heightInchesPart'),
     sex: data.get('sex'),
-    birthDate,
     age,
     weight: data.get('weight'),
     fatSource: data.get('fatSource'),
@@ -86,8 +109,8 @@ function toOnboardingForm(values) {
     heightInchesPart: String(values.heightInchesPart || ''),
     heightInches: '',
     age: values.age,
-    birthDate: values.birthDate,
-    birthDateText: values.birthDate ? formatBirthDateText(values.birthDate) : '',
+    birthDate: '',
+    birthDateText: '',
     weightText: String(values.weight || ''),
     fatPercentText: String(values.fatPercent || ''),
     fatSource: values.fatSource,
@@ -107,93 +130,208 @@ function buildProgramFromValues(values) {
   });
 }
 
-function formatBirthDateDigits(raw) {
-  const digits = String(raw || '').replace(/\D/g, '').slice(0, 8);
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-}
-
-function isoFromDisplayBirthDate(display) {
-  const match = String(display || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!match) return '';
-  const month = Number(match[1]);
-  const day = Number(match[2]);
-  const year = Number(match[3]);
-  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > new Date().getFullYear()) {
-    return '';
+function infoFieldSummary(fieldId, values) {
+  switch (fieldId) {
+    case 'firstName':
+      return values.firstName || '';
+    case 'lastName':
+      return values.lastName || '';
+    case 'age':
+      return values.age != null ? String(values.age) : '';
+    case 'sex':
+      if (values.sex === 'female') return 'Female';
+      if (values.sex === 'male') return 'Male';
+      return '';
+    case 'height':
+      return heightLabel(values);
+    case 'weight':
+      return values.weight ? `${values.weight} lbs` : '';
+    case 'email':
+      return values.email || '';
+    default:
+      return '';
   }
-  const iso = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  const check = new Date(`${iso}T12:00:00`);
-  if (Number.isNaN(check.getTime())) return '';
-  if (check.getUTCMonth() + 1 !== month || check.getUTCDate() !== day) return '';
-  return iso;
 }
 
-function syncBirthDateHidden() {
-  const displayInput = form.elements.birthDateDisplay;
-  const hiddenInput = form.elements.birthDate;
-  if (!displayInput || !hiddenInput) return;
-  hiddenInput.value = isoFromDisplayBirthDate(displayInput.value);
-}
-
-function bindBirthDateInput() {
-  const displayInput = form.elements.birthDateDisplay;
-  if (!displayInput) return;
-
-  displayInput.addEventListener('beforeinput', (event) => {
-    if (event.inputType === 'insertText' && event.data && !/^\d$/.test(event.data)) {
-      event.preventDefault();
+function validateInfoField(fieldId, values) {
+  switch (fieldId) {
+    case 'firstName':
+      if (!values.firstName) return 'Enter your first name.';
+      return '';
+    case 'lastName':
+      if (!values.lastName) return 'Enter your last name.';
+      return '';
+    case 'age': {
+      const age = values.age;
+      if (age == null || !Number.isFinite(age)) return 'Enter your age in years.';
+      if (age < 16 || age > 99) return 'Enter an age between 16 and 99.';
+      return '';
     }
-  });
-
-  displayInput.addEventListener('paste', (event) => {
-    event.preventDefault();
-    const pasted = event.clipboardData?.getData('text') || '';
-    displayInput.value = formatBirthDateDigits(pasted);
-    syncBirthDateHidden();
-    syncAgeField();
-    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
-    displayInput.setSelectionRange(displayInput.value.length, displayInput.value.length);
-  });
-
-  displayInput.addEventListener('input', () => {
-    const cursor = displayInput.selectionStart ?? displayInput.value.length;
-    const digitsBefore = displayInput.value.slice(0, cursor).replace(/\D/g, '').length;
-    const formatted = formatBirthDateDigits(displayInput.value);
-    displayInput.value = formatted;
-    syncBirthDateHidden();
-
-    let nextCursor = formatted.length;
-    if (digitsBefore > 0) {
-      let seen = 0;
-      nextCursor = 0;
-      for (let i = 0; i < formatted.length; i += 1) {
-        if (/\d/.test(formatted[i])) seen += 1;
-        nextCursor = i + 1;
-        if (seen >= digitsBefore) break;
+    case 'sex':
+      if (!values.sex) return 'Select female or male.';
+      return '';
+    case 'height': {
+      const feet = values.heightFeet;
+      const inches = values.heightInchesPart;
+      if (feet === '' || feet == null) return 'Enter height in feet.';
+      const feetNum = Number(feet);
+      if (!Number.isFinite(feetNum) || feetNum < 4 || feetNum > 8) return 'Enter a realistic height in feet (4–8).';
+      if (inches !== '' && inches != null) {
+        const inchesNum = Number(inches);
+        if (!Number.isFinite(inchesNum) || inchesNum < 0 || inchesNum > 11) return 'Inches must be 0–11.';
       }
+      return '';
+    }
+    case 'weight': {
+      const weight = Number(values.weight);
+      if (!values.weight || !Number.isFinite(weight) || weight < 80 || weight > 500) {
+        return 'Enter your weight in pounds.';
+      }
+      return '';
+    }
+    case 'email':
+      if (!values.email) return 'Enter your email address.';
+      if (!isValidEmail(values.email)) return 'Enter a valid email address.';
+      return '';
+    default:
+      return '';
+  }
+}
+
+function infoFieldIsValid(fieldId, values) {
+  return !validateInfoField(fieldId, values);
+}
+
+function infoSectionComplete(values) {
+  return INFO_FIELDS.every((fieldId) => infoFieldIsValid(fieldId, values));
+}
+
+function setInfoFieldError(item, message) {
+  const errorEl = item?.querySelector('.intake-acc__error');
+  if (!errorEl) return;
+  if (message) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  } else {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+}
+
+function renderInfoAccordionState() {
+  if (!infoAccordion) return;
+  const values = readForm();
+  syncPreferredName();
+
+  INFO_FIELDS.forEach((fieldId, index) => {
+    const item = infoAccordion.querySelector(`[data-info-field="${fieldId}"]`);
+    if (!item) return;
+
+    const summary = item.querySelector('.intake-acc__summary');
+    const trigger = item.querySelector('.intake-acc__trigger');
+    const isOpen = index === infoFieldIndex;
+    const isDone = infoFieldIsValid(fieldId, values)
+      && (index < infoFieldIndex || (infoSectionComplete(values) && index <= infoFieldIndex));
+    const isReachable = index <= infoFieldIndex;
+
+    item.classList.toggle('is-open', isOpen);
+    item.classList.toggle('is-done', isDone);
+    item.classList.toggle('is-locked', !isReachable && !isDone);
+
+    if (summary) summary.textContent = infoFieldSummary(fieldId, values);
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      trigger.tabIndex = isReachable || isDone ? 0 : -1;
     }
 
-    displayInput.setSelectionRange(nextCursor, nextCursor);
-    syncAgeField();
-    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
+    if (!isOpen) setInfoFieldError(item, '');
+  });
+}
+
+function openInfoField(index) {
+  infoFieldIndex = Math.max(0, Math.min(index, INFO_FIELDS.length - 1));
+  renderInfoAccordionState();
+  const fieldId = INFO_FIELDS[infoFieldIndex];
+  const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
+  const focusTarget = item?.querySelector('input:not([type="hidden"]), select, textarea');
+  focusTarget?.focus();
+}
+
+function advanceInfoField() {
+  const fieldId = INFO_FIELDS[infoFieldIndex];
+  const values = readForm();
+  const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
+  const error = validateInfoField(fieldId, values);
+  if (error) {
+    setInfoFieldError(item, error);
+    return false;
+  }
+
+  setInfoFieldError(item, '');
+  syncAgeField();
+
+  if (infoFieldIndex < INFO_FIELDS.length - 1) {
+    openInfoField(infoFieldIndex + 1);
+  } else {
+    renderInfoAccordionState();
+  }
+
+  if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
+  return true;
+}
+
+function bindInfoAccordion() {
+  if (!infoAccordion) return;
+
+  infoAccordion.addEventListener('click', (event) => {
+    const next = event.target.closest('.intake-acc__next');
+    if (next) {
+      event.preventDefault();
+      advanceInfoField();
+      return;
+    }
+
+    const trigger = event.target.closest('.intake-acc__trigger');
+    if (!trigger) return;
+    const item = trigger.closest('[data-info-field]');
+    if (!item) return;
+    const fieldId = item.dataset.infoField;
+    const index = INFO_FIELDS.indexOf(fieldId);
+    if (index === -1) return;
+    if (index > infoFieldIndex) return;
+    openInfoField(index);
   });
 
-  displayInput.addEventListener('blur', () => {
-    syncBirthDateHidden();
+  infoAccordion.addEventListener('input', () => {
+    syncPreferredName();
     syncAgeField();
+    renderInfoAccordionState();
+    if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
   });
+
+  infoAccordion.addEventListener('change', () => {
+    syncPreferredName();
+    syncAgeField();
+    renderInfoAccordionState();
+    if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
+  });
+
+  infoAccordion.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target.type === 'radio') return;
+    event.preventDefault();
+    advanceInfoField();
+  });
+
+  renderInfoAccordionState();
 }
 
 function syncAgeField() {
-  syncBirthDateHidden();
-  const birthInput = form.elements.birthDate;
-  const ageDisplay = document.getElementById('q-age-display');
-  if (!birthInput || !ageDisplay) return;
-  const age = birthInput.value ? ageFromBirthDate(birthInput.value) : null;
-  ageDisplay.textContent = age != null ? String(age) : '—';
-  syncHeartRateHints(age);
+  const ageInput = form.elements.age;
+  const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
+  syncHeartRateHints(Number.isFinite(age) ? age : null);
 }
 
 function syncHeartRateHints(age) {
@@ -218,8 +356,7 @@ function canProceed(stepIndex) {
     case 0:
       return true;
     case 1:
-      return values.preferredName && values.email && values.weight && values.sex && values.birthDate
-        && values.heightFeet !== '' && values.heightInchesPart !== '';
+      return infoSectionComplete(values);
     case 2:
       return values.workPhysical && values.workStress;
     case 3:
@@ -286,6 +423,7 @@ function showStep(index) {
   });
   renderNav();
   if (step === 6) renderReview();
+  if (step === 1) renderInfoAccordionState();
   if (backBtn) backBtn.hidden = step === 0;
   if (nextBtn) {
     nextBtn.hidden = step === 0 || step === panels.length - 1;
@@ -307,8 +445,6 @@ function initDefaults() {
   if (form.elements.intakeDate) {
     form.elements.intakeDate.value = today;
   }
-  const intakeDisplay = document.getElementById('q-intake-date-display');
-  if (intakeDisplay) intakeDisplay.textContent = formatBirthDateText(today);
   if (form.elements.signatureDate && !form.elements.signatureDate.value) {
     form.elements.signatureDate.value = today;
   }
@@ -322,7 +458,7 @@ function bindEvents() {
     throw new Error('Questionnaire markup is missing required elements.');
   }
 
-  bindBirthDateInput();
+  bindInfoAccordion();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
@@ -332,11 +468,13 @@ function bindEvents() {
   });
 
   form.addEventListener('input', () => {
+    syncPreferredName();
     syncAgeField();
     if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
   });
 
   form.addEventListener('change', () => {
+    syncPreferredName();
     syncAgeField();
     if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
   });
@@ -432,11 +570,13 @@ function restoreWelcomePanel() {
 }
 
 function restoreQuestionnaireChrome() {
+  document.body.classList.add('q-app--workroom');
+  document.querySelector('.q-app')?.classList.add('q-app--workroom');
   const title = document.querySelector('.q-title');
   const tag = document.querySelector('.q-tag');
-  if (title) title.textContent = 'Create Your Diet';
-  if (tag) tag.textContent = 'Build your personalized program';
-  tag?.classList.add('q-tag--gold');
+  if (title) title.textContent = 'Intake form';
+  if (tag) tag.textContent = 'Burn & Build program questionnaire';
+  tag?.classList.remove('q-tag--gold');
   restoreWelcomePanel();
 }
 
