@@ -362,6 +362,24 @@ body.q-app--workroom,
   color: var(--muted);
 }
 
+.intake-choice {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.intake-choice__sub {
+  margin: 0 0 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.intake-choice__field {
+  display: block;
+  margin: 0;
+}
+
 .intake-acc__meta {
   margin: 0.5rem 0 0;
   font-size: 0.8125rem;
