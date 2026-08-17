@@ -82,6 +82,15 @@ const infoAccordion = document.getElementById('info-accordion');
 let step = 0;
 let infoFieldIndex = 0;
 
+function collapsePersonalInfoIfComplete() {
+  const values = readForm();
+  if (!infoSectionComplete(values)) return false;
+  infoFieldIndex = -1;
+  renderInfoAccordionState();
+  updateStepNav();
+  return true;
+}
+
 function workPhysicalLabel(id) {
   return WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
 }
@@ -338,27 +347,6 @@ function openInfoField(index) {
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
-}
-
-function bindEmailRetypeInput() {
-  const input = form?.elements.emailRetype;
-  if (!input) return;
-
-  input.setAttribute('readonly', 'readonly');
-  input.setAttribute('autocomplete', 'off');
-
-  const unlock = () => {
-    input.removeAttribute('readonly');
-  };
-  input.addEventListener('focus', unlock, { once: true });
-  input.addEventListener('click', unlock, { once: true });
-
-  input.addEventListener('paste', (event) => {
-    event.preventDefault();
-  });
-  input.addEventListener('drop', (event) => {
-    event.preventDefault();
-  });
 }
 
 function bindInfoAccordion() {
