@@ -116,6 +116,35 @@ body.q-app--workroom,
   max-width: 40rem;
 }
 
+.intake-form__intro {
+  margin-bottom: 1.25rem;
+}
+
+.intake-form__lede {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.intake-form__ready-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.intake-form__ready {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.intake-form__ready li + li {
+  margin-top: 0.35rem;
+}
+
 .intake-form__head {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
