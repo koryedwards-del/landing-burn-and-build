@@ -266,7 +266,7 @@ function renderInfoAccordionState() {
 
     const summary = item.querySelector('.intake-acc__summary');
     const trigger = item.querySelector('.intake-acc__trigger');
-    const isOpen = index === infoFieldIndex;
+    const isOpen = infoFieldIndex >= 0 && index === infoFieldIndex;
     const isDone = infoFieldIsValid(fieldId, values);
 
     item.classList.toggle('is-open', isOpen);
@@ -331,7 +331,7 @@ function advanceInfoField() {
   if (infoFieldIndex < INFO_FIELDS.length - 1) {
     openInfoField(infoFieldIndex + 1);
   } else {
-    renderInfoAccordionState();
+    collapsePersonalInfoIfComplete() || renderInfoAccordionState();
   }
 
   updateStepNav();
@@ -368,11 +368,13 @@ function bindInfoAccordion() {
   infoAccordion.addEventListener('input', () => {
     syncAgeField();
     renderInfoAccordionState();
+    collapsePersonalInfoIfComplete();
   });
 
   infoAccordion.addEventListener('change', () => {
     syncAgeField();
     renderInfoAccordionState();
+    collapsePersonalInfoIfComplete();
   });
 
   infoAccordion.addEventListener('keydown', (event) => {
