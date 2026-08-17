@@ -29,6 +29,7 @@ const INFO_FIELDS = [
   'height',
   'weight',
   'email',
+  'emailConfirm',
 ];
 
 const INFO_FIELD_META = {
@@ -61,6 +62,11 @@ const INFO_FIELD_META = {
     question: 'What is your email address?',
     guide: 'We deliver your program here and use it to unlock your plan after purchase.',
     example: 'Example: you@email.com',
+  },
+  emailConfirm: {
+    question: 'Confirm your email address',
+    guide: 'Type the same address again — do not paste. We cannot fix a typo after checkout.',
+    example: 'Must match the email you just entered.',
   },
 };
 
@@ -98,6 +104,7 @@ function readForm() {
   return {
     preferredName: String(data.get('preferredName') || '').trim(),
     email: String(data.get('email') || '').trim(),
+    emailConfirm: String(data.get('emailConfirm') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
     heightFeet: data.get('heightFeet'),
@@ -164,6 +171,10 @@ function infoFieldSummary(fieldId, values) {
       return values.weight ? `${values.weight} lbs` : '';
     case 'email':
       return values.email || '';
+    case 'emailConfirm':
+      if (!values.emailConfirm) return '';
+      if (values.email && values.emailConfirm === values.email) return 'Matches';
+      return values.emailConfirm;
     default:
       return '';
   }
@@ -205,6 +216,11 @@ function validateInfoField(fieldId, values) {
     case 'email':
       if (!values.email) return 'Enter your email address.';
       if (!isValidEmail(values.email)) return 'Enter a valid email address.';
+      return '';
+    case 'emailConfirm':
+      if (!values.emailConfirm) return 'Confirm your email address.';
+      if (!isValidEmail(values.emailConfirm)) return 'Enter a valid email address.';
+      if (values.email !== values.emailConfirm) return 'Email addresses do not match. Type it again — do not paste.';
       return '';
     default:
       return '';
@@ -324,10 +340,23 @@ function openInfoField(index) {
   focusTarget?.focus();
 }
 
+function bindNoPasteInputs() {
+  if (!infoAccordion) return;
+  infoAccordion.querySelectorAll('[data-no-paste]').forEach((input) => {
+    input.addEventListener('paste', (event) => {
+      event.preventDefault();
+    });
+    input.addEventListener('drop', (event) => {
+      event.preventDefault();
+    });
+  });
+}
+
 function bindInfoAccordion() {
   if (!infoAccordion) return;
 
   initInfoFieldCopy();
+  bindNoPasteInputs();
 
   infoAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
@@ -341,13 +370,11 @@ function bindInfoAccordion() {
   });
 
   infoAccordion.addEventListener('input', () => {
-    syncPreferredName();
     syncAgeField();
     renderInfoAccordionState();
   });
 
   infoAccordion.addEventListener('change', () => {
-    syncPreferredName();
     syncAgeField();
     renderInfoAccordionState();
   });
@@ -517,13 +544,11 @@ function bindEvents() {
   });
 
   form.addEventListener('input', () => {
-    syncPreferredName();
     syncAgeField();
     updateStepNav();
   });
 
   form.addEventListener('change', () => {
-    syncPreferredName();
     syncAgeField();
     updateStepNav();
   });
