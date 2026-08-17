@@ -13,7 +13,7 @@ import { kwarnerPreviewPdfUrl } from '../../js/kwarnerPreviewBuild.js';
 captureDietCreationTestBypass();
 
 const STEPS = [
-  { id: 'welcome', label: 'Welcome' },
+  { id: 'welcome', label: 'Create Your Diet' },
   { id: 'personal', label: 'Personal info' },
   { id: 'work', label: 'Workday' },
   { id: 'exercise', label: 'Exercise' },
@@ -36,8 +36,6 @@ const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
 const reviewEl = document.getElementById('q-review');
 const continueBtn = document.getElementById('q-continue');
-const backBtn = document.querySelector('[data-q-back]');
-const nextBtn = document.querySelector('#q-actions [data-q-next]');
 const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
 
@@ -275,7 +273,6 @@ function advanceInfoField() {
     renderInfoAccordionState();
   }
 
-  if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
   return true;
 }
 
@@ -304,14 +301,12 @@ function bindInfoAccordion() {
     syncPreferredName();
     syncAgeField();
     renderInfoAccordionState();
-    if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
   });
 
   infoAccordion.addEventListener('change', () => {
     syncPreferredName();
     syncAgeField();
     renderInfoAccordionState();
-    if (nextBtn && step === 1) nextBtn.disabled = !canProceed(step);
   });
 
   infoAccordion.addEventListener('keydown', (event) => {
@@ -371,13 +366,22 @@ function canProceed(stepIndex) {
 }
 
 function renderNav() {
-  navList.innerHTML = STEPS.map((item, index) => `
+  navList.innerHTML = STEPS.map((item, index) => {
+    const reachable = canReachStep(index);
+    const classes = [
+      'q-nav__item',
+      index === step ? 'is-active' : '',
+      index < step ? 'is-done' : '',
+      reachable && index !== step ? 'is-reachable' : '',
+    ].filter(Boolean).join(' ');
+    return `
     <li>
-      <button type="button" class="q-nav__item${index === step ? ' is-active' : ''}${index < step ? ' is-done' : ''}" data-nav-step="${index}">
+      <button type="button" class="${classes}" data-nav-step="${index}"${reachable ? '' : ' disabled'}>
         ${index + 1}. ${item.label}
       </button>
     </li>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderReview() {
@@ -414,6 +418,15 @@ function renderReview() {
   `).join('');
 }
 
+function canReachStep(target) {
+  if (target < 0 || target >= panels.length) return false;
+  if (target <= step) return true;
+  for (let i = 0; i < target; i += 1) {
+    if (!canProceed(i)) return false;
+  }
+  return true;
+}
+
 function showStep(index) {
   step = Math.max(0, Math.min(index, panels.length - 1));
   panels.forEach((panel, i) => {
@@ -422,13 +435,6 @@ function showStep(index) {
   renderNav();
   if (step === 6) renderReview();
   if (step === 1) renderInfoAccordionState();
-  if (backBtn) backBtn.hidden = step === 0;
-  if (nextBtn) {
-    nextBtn.hidden = step === 0 || step === panels.length - 1;
-    nextBtn.disabled = !canProceed(step);
-  }
-  const actions = document.getElementById('q-actions');
-  if (actions) actions.hidden = step === 0 || step === panels.length - 1;
 
   const base = `${location.pathname}${location.search}`;
   if (step === 0) {
@@ -462,19 +468,18 @@ function bindEvents() {
     const btn = event.target.closest('[data-nav-step]');
     if (!btn) return;
     const target = Number(btn.dataset.navStep);
-    if (target <= step) showStep(target);
+    if (!canReachStep(target)) return;
+    showStep(target);
   });
 
   form.addEventListener('input', () => {
     syncPreferredName();
     syncAgeField();
-    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
   });
 
   form.addEventListener('change', () => {
     syncPreferredName();
     syncAgeField();
-    if (nextBtn && step < panels.length - 1) nextBtn.disabled = !canProceed(step);
   });
 
   document.querySelectorAll('[data-q-next]').forEach((btn) => {
@@ -483,8 +488,6 @@ function bindEvents() {
       showStep(step + 1);
     });
   });
-
-  backBtn?.addEventListener('click', () => showStep(step - 1));
 
   window.addEventListener('hashchange', () => {
     if (location.hash === '#welcome' && step !== 0) showStep(0);

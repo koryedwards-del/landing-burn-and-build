@@ -67,8 +67,15 @@ body.q-app--workroom,
   border-bottom-color: var(--text);
 }
 
-.q-app--workroom .q-nav__item.is-done {
+.q-app--workroom .q-nav__item.is-done,
+.q-app--workroom .q-nav__item.is-reachable {
   color: var(--text);
+  cursor: pointer;
+}
+
+.q-app--workroom .q-nav__item:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
 .q-app--workroom .q-main {
