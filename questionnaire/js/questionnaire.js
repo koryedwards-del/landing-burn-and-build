@@ -9,13 +9,10 @@ import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/pro
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
 import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
-import { kwarnerPreviewPdfUrl } from '../../js/kwarnerPreviewBuild.js';
-
 captureDietCreationTestBypass();
 
 const STEPS = [
-  { id: 'welcome', label: 'Create Your Diet' },
-  { id: 'personal', label: 'The Basics' },
+  { id: 'start', label: 'Create Your Diet' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
@@ -1081,16 +1078,15 @@ function canProceed(stepIndex) {
   const values = readForm();
   switch (stepIndex) {
     case 0:
-      return true;
-    case 1:
+      if (isDietCreationGated()) return true;
       return infoSectionComplete(values);
-    case 2:
+    case 1:
       return occupationSectionComplete(values);
-    case 3:
+    case 2:
       return exerciseSectionComplete(values);
-    case 4:
+    case 3:
       return bodySectionComplete(values);
-    case 5:
+    case 4:
       return values.waiverAccepted && values.signature;
     default:
       return true;
@@ -1165,21 +1161,21 @@ function showStep(index) {
     panel.hidden = i !== step;
   });
   renderNav();
-  if (step === 6) renderReview();
-  if (step === 1) renderInfoAccordionState();
-  if (step === 2) {
+  if (step === 5) renderReview();
+  if (step === 0 && !isDietCreationGated()) renderInfoAccordionState();
+  if (step === 1) {
     if (occupationFieldIndex < 0 && !occupationSectionComplete(readForm())) {
       occupationFieldIndex = 0;
     }
     renderOccupationAccordionState();
   }
-  if (step === 4) {
+  if (step === 3) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
       bodyFieldIndex = 0;
     }
     renderBodyAccordionState();
   }
-  if (step === 3) {
+  if (step === 2) {
     if (exerciseFieldIndex < 0 && !exerciseSectionComplete(readForm())) {
       exerciseFieldIndex = 0;
     }
@@ -1296,12 +1292,12 @@ function bindEvents() {
 
 async function submitCheckout(triggerBtn) {
   const values = readForm();
-  if (!canProceed(5)) return;
+  if (!canProceed(4)) return;
 
   const email = String(values.email || '').trim();
   if (!isValidEmail(email)) {
     window.alert('Enter a valid email address before continuing.');
-    showStep(1);
+    showStep(0);
     return;
   }
 
@@ -1339,36 +1335,13 @@ async function submitCheckout(triggerBtn) {
   }
 }
 
-function restoreWelcomePanel() {
-  const panel = document.querySelector('.q-panel[data-step="0"]');
-  if (!panel) return;
-  panel.innerHTML = `
-    <div class="q-panel__head">
-      <p class="q-eyebrow">Welcome</p>
-      <h2 class="q-panel__title">You&rsquo;re in the right place</h2>
-      <p class="q-panel__lead">
-        You tapped <strong>Create Your Diet</strong> — this is where your program starts.
-        About 10 minutes of intake, then the Burn Engine builds your servings and full program.
-      </p>
-    </div>
-    <div class="q-callout">
-      <span class="q-callout__icon" aria-hidden="true">!</span>
-      <div class="q-callout__body">
-        <strong>Before you start, have these ready:</strong>
-        <ul>
-          <li>Your <strong>email</strong> — you will use it to open your program after checkout.</li>
-          <li><strong>Scale weight</strong> in pounds (morning weight, before eating, is best).</li>
-          <li><strong>Body fat percentage</strong> from a DEXA scan, calipers, BodPod, or ultrasound if you have one. If not, you can estimate — we explain how on that step.</li>
-          <li>A honest count of the <strong>exercise you will actually do</strong> for the next 8 weeks — not your best week ever.</li>
-        </ul>
-      </div>
-    </div>
-    <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
-    <div class="q-intro-actions">
-      <a class="q-btn q-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">Preview sample PDF</a>
-    </div>
-    <p class="q-intro-price">$149 one-time purchase · own your program forever</p>
-  `;
+function activateIntakeMode() {
+  const gate = document.getElementById('q-gate-content');
+  const infoForm = document.getElementById('info-form');
+  const startPanel = document.querySelector('.q-panel[data-step="0"]');
+  if (gate) gate.hidden = true;
+  if (infoForm) infoForm.hidden = false;
+  startPanel?.classList.add('q-panel--intake');
 }
 
 function restoreQuestionnaireChrome() {
@@ -1379,7 +1352,7 @@ function restoreQuestionnaireChrome() {
   if (title) title.textContent = 'Intake form';
   if (tag) tag.textContent = 'Burn & Build program questionnaire';
   tag?.classList.remove('q-tag--gold');
-  restoreWelcomePanel();
+  activateIntakeMode();
 }
 
 function showBootError(message) {

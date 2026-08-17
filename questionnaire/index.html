@@ -35,35 +35,35 @@
       <main class="q-main">
         <form class="q-form" id="q-form" novalidate>
           <section class="q-panel" data-step="0">
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Welcome</p>
-              <h2 class="q-panel__title">We&rsquo;re finishing the launch</h2>
-              <p class="q-panel__lead">
-                New Burn &amp; Build programs are <strong>coming soon</strong>. We&rsquo;re not taking new diet orders yet so no one starts a plan that isn&rsquo;t ready.
-              </p>
-            </div>
-            <div class="q-callout">
-              <span class="q-callout__icon" aria-hidden="true">!</span>
-              <div class="q-callout__body">
-                <strong>Already purchased?</strong>
-                <ul>
-                  <li>Go to <a href="../get-your-diet/">Get your diet</a> and enter the email you used at checkout.</li>
-                  <li>Questions? Email <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a>.</li>
-                </ul>
+            <div id="q-gate-content">
+              <div class="q-panel__head">
+                <p class="q-eyebrow">Welcome</p>
+                <h2 class="q-panel__title">We&rsquo;re finishing the launch</h2>
+                <p class="q-panel__lead">
+                  New Burn &amp; Build programs are <strong>coming soon</strong>. We&rsquo;re not taking new diet orders yet so no one starts a plan that isn&rsquo;t ready.
+                </p>
               </div>
+              <div class="q-callout">
+                <span class="q-callout__icon" aria-hidden="true">!</span>
+                <div class="q-callout__body">
+                  <strong>Already purchased?</strong>
+                  <ul>
+                    <li>Go to <a href="../get-your-diet/">Get your diet</a> and enter the email you used at checkout.</li>
+                    <li>Questions? Email <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a>.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="q-intro-actions">
+                <span class="q-btn q-btn--primary q-btn--soon" aria-disabled="true">Coming Soon</span>
+                <a class="q-btn q-btn--ghost" href="../docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">Preview sample PDF</a>
+                <a class="q-btn q-btn--ghost" href="/">Back to website</a>
+              </div>
+              <p class="q-intro-price">$149 one-time purchase when we open · own your program forever</p>
             </div>
-            <div class="q-intro-actions">
-              <span class="q-btn q-btn--primary q-btn--soon" aria-disabled="true">Coming Soon</span>
-              <a class="q-btn q-btn--ghost" href="../docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">Preview sample PDF</a>
-              <a class="q-btn q-btn--ghost" href="/">Back to website</a>
-            </div>
-            <p class="q-intro-price">$149 one-time purchase when we open · own your program forever</p>
-          </section>
 
-          <section class="q-panel q-panel--intake" data-step="1" hidden>
-            <div class="intake-form" id="info-form">
+            <div class="intake-form" id="info-form" hidden>
               <header class="intake-form__head">
-                <h2 class="intake-form__title">The Basics</h2>
+                <h2 class="intake-form__title">Create Your Diet</h2>
               </header>
               <input type="hidden" name="intakeDate" />
 
@@ -159,7 +159,7 @@
             </div>
           </section>
 
-          <section class="q-panel q-panel--intake" data-step="2" hidden>
+          <section class="q-panel q-panel--intake" data-step="1" hidden>
             <div class="intake-form" id="occupation-form">
               <header class="intake-form__head">
                 <h2 class="intake-form__title">Occupation</h2>
@@ -243,7 +243,7 @@
             </div>
           </section>
 
-          <section class="q-panel q-panel--intake" data-step="3" hidden>
+          <section class="q-panel q-panel--intake" data-step="2" hidden>
             <div class="intake-form" id="exercise-form">
               <header class="intake-form__head">
                 <h2 class="intake-form__title">Exercise</h2>
@@ -357,7 +357,7 @@
             </div>
           </section>
 
-          <section class="q-panel q-panel--intake" data-step="4" hidden>
+          <section class="q-panel q-panel--intake" data-step="3" hidden>
             <div class="intake-form" id="body-form">
               <header class="intake-form__head">
                 <h2 class="intake-form__title">Body composition</h2>
@@ -446,9 +446,9 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="5" hidden>
+          <section class="q-panel" data-step="4" hidden>
             <div class="q-panel__head">
-              <p class="q-eyebrow">Step 6</p>
+              <p class="q-eyebrow">Step 5</p>
               <h2 class="q-panel__title">Agreement</h2>
               <p class="q-panel__lead">Required before we calculate your program.</p>
             </div>
@@ -474,9 +474,9 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="6" hidden>
+          <section class="q-panel" data-step="5" hidden>
             <div class="q-panel__head">
-              <p class="q-eyebrow">Step 7</p>
+              <p class="q-eyebrow">Step 6</p>
               <h2 class="q-panel__title">Review &amp; continue</h2>
               <p class="q-panel__lead">Confirm your answers, then continue to secure checkout ($149).</p>
             </div>
@@ -504,6 +504,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=120"></script>
+  <script type="module" src="js/questionnaire.js?v=121"></script>
 </body>
 </html>
