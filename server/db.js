@@ -74,6 +74,51 @@ function migrateDietEmailSentColumn() {
 migrateLegacyTable();
 migratePaidAtColumn();
 migrateDietEmailSentColumn();
+migrateBodyCompFollowupTable();
+
+function migrateBodyCompFollowupTable() {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS body_comp_followups (
+      program_id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      scheduled_at TEXT NOT NULL,
+      sent_at TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_body_comp_followups_due
+      ON body_comp_followups (scheduled_at)
+      WHERE sent_at IS NULL;
+  `);
+}
+
+export function scheduleBodyCompFollowup(email, programId, scheduledAt) {
+  const key = normalizeEmail(email);
+  const id = String(programId || '').trim();
+  if (!key || !id || !scheduledAt) return false;
+  const existing = db.prepare('SELECT program_id FROM body_comp_followups WHERE program_id = ?').get(id);
+  if (existing) return false;
+  db.prepare(`
+    INSERT INTO body_comp_followups (program_id, email, scheduled_at, sent_at)
+    VALUES (?, ?, ?, NULL)
+  `).run(id, key, scheduledAt);
+  return true;
+}
+
+export function listDueBodyCompFollowups(nowIso = new Date().toISOString()) {
+  return db.prepare(`
+    SELECT program_id, email, scheduled_at
+    FROM body_comp_followups
+    WHERE sent_at IS NULL AND scheduled_at <= ?
+    ORDER BY scheduled_at ASC
+  `).all(nowIso);
+}
+
+export function markBodyCompFollowupSent(programId) {
+  const now = new Date().toISOString();
+  const result = db.prepare(`
+    UPDATE body_comp_followups SET sent_at = ? WHERE program_id = ? AND sent_at IS NULL
+  `).run(now, String(programId || '').trim());
+  return result.changes > 0;
+}
 
 export function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();

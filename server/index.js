@@ -32,6 +32,7 @@ import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramRepo
 import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
 import { ensureDietPdf, fulfillDietDelivery } from './dietFulfillment.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
+import { processDueBodyCompFollowups, scheduleBodyCompFollowupIfNeeded, startBodyCompFollowupWorker } from './bodyCompFollowup.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -134,7 +135,9 @@ function isValidEmail(email) {
 async function fulfillPaidProgram(email, programId) {
   if (!email || !programId) return { pdfReady: false };
   try {
-    return await fulfillDietDelivery(email, programId);
+    const result = await fulfillDietDelivery(email, programId);
+    scheduleBodyCompFollowupIfNeeded(email, programId);
+    return result;
   } catch (err) {
     console.error('Diet fulfillment error:', err.message);
     return { pdfReady: false, error: err.message };
@@ -689,6 +692,20 @@ app.get('/api/config', (_req, res) => {
   });
 });
 
+app.post('/api/cron/body-comp-followup', (req, res) => {
+  const secret = String(process.env.CRON_SECRET || '').trim();
+  if (secret && req.get('x-cron-secret') !== secret) {
+    res.status(401).json({ ok: false, message: 'Unauthorized.' });
+    return;
+  }
+  processDueBodyCompFollowups()
+    .then((result) => res.json({ ok: true, ...result }))
+    .catch((err) => {
+      console.error('Body comp follow-up cron:', err.message);
+      res.status(500).json({ ok: false, message: err.message || 'Cron failed.' });
+    });
+});
+
 app.get('/', (_req, res) => {
   res.redirect('/createyourfoodplan/');
 });
@@ -711,4 +728,5 @@ app.use(express.static(root, {
 
 app.listen(port, () => {
   console.log(`Program creator listening on port ${port}`);
+  startBodyCompFollowupWorker();
 });
