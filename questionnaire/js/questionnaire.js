@@ -64,22 +64,22 @@ const EXERCISE_FIELD_META = {
   age: {
     question: 'How young are you?',
     guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
-    example: 'Example: 45',
+    sub: 'Example: 45',
   },
   sag: {
     question: 'How many hours per week of stop & go activity?',
-    guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Stop & go activity: weight training, CrossFit, racquet sports, intervals — work bursts with rest. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
-    example: 'Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none. Use decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min.',
+    guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
+    sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none. Use decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min.',
   },
   cardio: {
     question: 'How many hours per week in your cardio training range?',
-    guide: 'Sustained cardio where your heart rate stays in your cardio training range. Running, cycling hard, rowing, stair climbing — not a casual walk. Use the cardio training range (BPM) shown below as a guideline.',
-    example: 'Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
+    guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
+    sub: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
   moderate: {
     question: 'How many hours per week in your fat burning training range?',
-    guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Activity where your heart rate stays in your fat burning training range — below cardio training. Brisk walking, easy bike, active housework and yard work. Use the fat burning training range (BPM) shown below as a guideline.',
-    example: '3 hrs/week is a common starting point — lower it if that is not realistic for you. Enter 0 if none.',
+    guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
+    sub: 'Brisk walking, easy bike, active housework and yard work. 3 hrs/week is a common starting point — lower it if that is not realistic for you. Enter 0 if none.',
   },
 };
 
@@ -943,10 +943,10 @@ function initExerciseFieldCopy() {
     if (!item || !meta) return;
     const label = item.querySelector('[data-ex-label]');
     const guide = item.querySelector('[data-ex-guide]');
-    const example = item.querySelector('[data-ex-example]');
+    const sub = item.querySelector('[data-ex-sub]');
     if (label) label.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
-    if (example) example.textContent = meta.example;
+    if (sub) sub.textContent = meta.sub || '';
   });
 }
 
