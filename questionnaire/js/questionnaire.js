@@ -78,7 +78,7 @@ const EXERCISE_FIELD_META = {
   },
   moderate: {
     question: 'How many hours per week in your fat burning training range?',
-    guide: 'Activity where your heart rate stays in your fat burning training range — below cardio training. Brisk walking, easy bike, active housework and yard work. Use the fat burning training range (BPM) shown below as a guideline.',
+    guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Activity where your heart rate stays in your fat burning training range — below cardio training. Brisk walking, easy bike, active housework and yard work. Use the fat burning training range (BPM) shown below as a guideline.',
     example: '3 hrs/week is a common starting point — lower it if that is not realistic for you. Enter 0 if none.',
   },
 };
