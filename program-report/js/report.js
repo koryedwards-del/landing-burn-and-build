@@ -73,7 +73,7 @@ const PREVIEW_FORM = {
   age: 28,
   weightText: '184',
   fatPercentText: '38.22',
-  fatSource: 'recent',
+  fatSource: 'skinfolds',
   workPhysical: 'sitting',
   workStress: 'comfortable',
   weightTrainingHours: 3,
