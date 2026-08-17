@@ -271,13 +271,19 @@ body.q-app--workroom,
   margin: 0.5rem 0 0;
 }
 
-.intake-form__nav {
+.intake-form__nav,
+.q-step-nav {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-top: 1rem;
-  padding-top: 0.875rem;
+  margin-top: 0;
+  padding: 0.875rem 1rem;
   border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+.intake-form__nav {
+  margin-top: 1rem;
 }
 
 .intake-nav-btn {

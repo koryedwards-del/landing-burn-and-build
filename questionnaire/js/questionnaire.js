@@ -80,11 +80,11 @@ const INFO_FIELD_META = {
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
 const reviewEl = document.getElementById('q-review');
-const continueBtn = document.getElementById('q-continue');
+const stepBackBtn = document.querySelector('[data-q-step-back]');
+const stepNextBtn = document.querySelector('[data-q-step-next]');
+const stepNav = document.getElementById('q-step-nav');
 const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
-const infoBackBtn = document.querySelector('[data-info-back]');
-const infoForwardBtn = document.querySelector('[data-info-forward]');
 
 let step = 0;
 let infoFieldIndex = 0;
@@ -292,13 +292,20 @@ function renderInfoAccordionState() {
 
     if (!isOpen) setInfoFieldError(item, '');
   });
-
-  updateInfoStepNav();
 }
 
-function updateInfoStepNav() {
-  if (!infoBackBtn || !infoForwardBtn) return;
-  infoBackBtn.disabled = infoFieldIndex === 0;
+function updateStepNav() {
+  if (!stepNav) return;
+  if (isDietCreationGated() && step === 0) {
+    stepNav.hidden = true;
+    return;
+  }
+  stepNav.hidden = false;
+  if (stepBackBtn) stepBackBtn.disabled = step === 0;
+  if (stepNextBtn) {
+    stepNextBtn.textContent = step === panels.length - 1 ? 'Complete purchase →' : 'Next';
+    stepNextBtn.disabled = step < panels.length - 1 && !canProceed(step);
+  }
 }
 
 function initInfoFieldCopy() {
@@ -318,11 +325,7 @@ function initInfoFieldCopy() {
   });
 }
 
-function retreatInfoField() {
-  if (infoFieldIndex > 0) openInfoField(infoFieldIndex - 1);
-}
-
-function advanceInfoFieldOrStep() {
+function advanceInfoField() {
   const fieldId = INFO_FIELDS[infoFieldIndex];
   const values = readForm();
   const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
@@ -337,12 +340,11 @@ function advanceInfoFieldOrStep() {
 
   if (infoFieldIndex < INFO_FIELDS.length - 1) {
     openInfoField(infoFieldIndex + 1);
-  } else if (infoSectionComplete(values)) {
-    showStep(2);
   } else {
     renderInfoAccordionState();
   }
 
+  updateStepNav();
   return true;
 }
 
@@ -373,9 +375,6 @@ function bindInfoAccordion() {
     openInfoField(index);
   });
 
-  infoBackBtn?.addEventListener('click', () => retreatInfoField());
-  infoForwardBtn?.addEventListener('click', () => advanceInfoFieldOrStep());
-
   infoAccordion.addEventListener('input', () => {
     syncPreferredName();
     syncAgeField();
@@ -394,7 +393,7 @@ function bindInfoAccordion() {
     if (!(target instanceof HTMLInputElement)) return;
     if (target.type === 'radio') return;
     event.preventDefault();
-    advanceInfoFieldOrStep();
+    advanceInfoField();
   });
 
   renderInfoAccordionState();
@@ -514,6 +513,7 @@ function showStep(index) {
   renderNav();
   if (step === 6) renderReview();
   if (step === 1) renderInfoAccordionState();
+  updateStepNav();
 
   const base = `${location.pathname}${location.search}`;
   if (step === 0) {
@@ -554,66 +554,76 @@ function bindEvents() {
   form.addEventListener('input', () => {
     syncPreferredName();
     syncAgeField();
+    updateStepNav();
   });
 
   form.addEventListener('change', () => {
     syncPreferredName();
     syncAgeField();
+    updateStepNav();
   });
 
-  document.querySelectorAll('[data-q-next]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (step < panels.length - 1 && !canProceed(step)) return;
-      showStep(step + 1);
-    });
+  stepBackBtn?.addEventListener('click', () => {
+    if (step > 0) showStep(step - 1);
+  });
+
+  stepNextBtn?.addEventListener('click', () => {
+    if (step === panels.length - 1) {
+      submitCheckout(stepNextBtn);
+      return;
+    }
+    if (!canProceed(step)) return;
+    showStep(step + 1);
   });
 
   window.addEventListener('hashchange', () => {
     if (location.hash === '#welcome' && step !== 0) showStep(0);
   });
+}
 
-  continueBtn?.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const values = readForm();
-    if (!canProceed(5)) return;
+async function submitCheckout(triggerBtn) {
+  const values = readForm();
+  if (!canProceed(5)) return;
 
-    const email = String(values.email || '').trim();
-    if (!isValidEmail(email)) {
-      window.alert('Enter a valid email address before continuing.');
-      showStep(1);
+  const email = String(values.email || '').trim();
+  if (!isValidEmail(email)) {
+    window.alert('Enter a valid email address before continuing.');
+    showStep(1);
+    return;
+  }
+
+  if (!triggerBtn) return;
+  triggerBtn.disabled = true;
+  const prevLabel = triggerBtn.textContent;
+  triggerBtn.textContent = 'Opening checkout…';
+
+  try {
+    const program = buildProgramFromValues(values);
+    persistAppEmail(email);
+    persistProgramBridge(program);
+    sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
+
+    const saved = await saveProgramToServer(email, program);
+    if (!saved.ok) {
+      window.alert(saved.message || 'Could not save your plan. Check your connection and try again.');
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = prevLabel;
+      updateStepNav();
       return;
     }
-
-    continueBtn.disabled = true;
-    const prevLabel = continueBtn.textContent;
-    continueBtn.textContent = 'Opening checkout…';
-
-    try {
-      const program = buildProgramFromValues(values);
-      persistAppEmail(email);
+    if (saved.programId && program.program) {
+      program.program.id = saved.programId;
       persistProgramBridge(program);
-      sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
-
-      const saved = await saveProgramToServer(email, program);
-      if (!saved.ok) {
-        window.alert(saved.message || 'Could not save your plan. Check your connection and try again.');
-        continueBtn.disabled = false;
-        continueBtn.textContent = prevLabel;
-        return;
-      }
-      if (saved.programId && program.program) {
-        program.program.id = saved.programId;
-        persistProgramBridge(program);
-      }
-
-      window.location.href = withDietCreationTestParam(CREATOR_CHECKOUT_URL);
-    } catch (error) {
-      console.error(error);
-      window.alert('Could not build your program. Check your answers and try again.');
-      continueBtn.disabled = false;
-      continueBtn.textContent = prevLabel;
     }
-  });
+
+    window.location.href = withDietCreationTestParam(CREATOR_CHECKOUT_URL);
+  } catch (error) {
+    console.error(error);
+    window.alert('Could not build your program. Check your answers and try again.');
+    triggerBtn.disabled = false;
+    triggerBtn.textContent = prevLabel;
+    updateStepNav();
+  }
 }
 
 function restoreWelcomePanel() {
@@ -642,7 +652,6 @@ function restoreWelcomePanel() {
     </div>
     <p class="q-hint">Every question affects your servings and projections. When in doubt, choose the conservative answer — you can build a new program later with updated numbers.</p>
     <div class="q-intro-actions">
-      <button type="button" class="q-btn q-btn--primary" data-q-next>Create your diet</button>
       <a class="q-btn q-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">Preview sample PDF</a>
     </div>
     <p class="q-intro-price">$149 one-time purchase · own your program forever</p>

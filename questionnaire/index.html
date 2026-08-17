@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=2" />
+  <link rel="stylesheet" href="css/intake-form.css?v=3" />
 </head>
 <body>
   <div class="q-app">
@@ -239,11 +239,6 @@
                   </div>
                 </div>
               </div>
-
-              <footer class="intake-form__nav" id="info-step-nav">
-                <button type="button" class="intake-nav-btn" data-info-back disabled>Back</button>
-                <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-info-forward>Forward</button>
-              </footer>
             </div>
           </section>
 
@@ -407,13 +402,17 @@
               </div>
             </div>
             <dl class="q-review" id="q-review"></dl>
-            <button type="button" class="q-btn q-btn--primary" id="q-continue">Complete purchase →</button>
           </section>
         </form>
+
+        <footer class="q-step-nav" id="q-step-nav" hidden>
+          <button type="button" class="intake-nav-btn" data-q-step-back disabled>Back</button>
+          <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-q-step-next>Next</button>
+        </footer>
       </main>
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=93"></script>
+  <script type="module" src="js/questionnaire.js?v=94"></script>
 </body>
 </html>
