@@ -1197,6 +1197,64 @@ function initDefaults() {
   }
 }
 
+function closeIntakeGuidancePopovers() {
+  document.querySelectorAll('.intake-info-popover').forEach((popover) => {
+    popover.hidden = true;
+  });
+  document.querySelectorAll('.intake-info-btn').forEach((btn) => {
+    btn.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function setupIntakeGuidancePopovers(root) {
+  if (!root) return;
+  root.querySelectorAll('.intake-acc__panel').forEach((panel) => {
+    const howto = panel.querySelector('.intake-acc__howto');
+    const choiceSub = panel.querySelector('.intake-choice__sub');
+    if (!howto && !choiceSub) return;
+    if (panel.querySelector('.intake-acc__guidance')) return;
+
+    const guidance = document.createElement('div');
+    guidance.className = 'intake-acc__guidance';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'intake-info-btn';
+    btn.setAttribute('aria-label', 'More guidance');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<span class="intake-info-btn__icon" aria-hidden="true">i</span><span class="intake-info-btn__label">Guidance</span>';
+
+    const popover = document.createElement('div');
+    popover.className = 'intake-info-popover';
+    popover.hidden = true;
+
+    if (howto) {
+      while (howto.firstChild) popover.appendChild(howto.firstChild);
+      howto.remove();
+    }
+    if (choiceSub) {
+      popover.appendChild(choiceSub);
+    }
+
+    guidance.append(btn, popover);
+    panel.insertBefore(guidance, panel.firstChild);
+
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const opening = popover.hidden;
+      closeIntakeGuidancePopovers();
+      if (opening) {
+        popover.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    popover.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+  });
+}
+
 function bindEvents() {
   if (!form || !navList) {
     throw new Error('Questionnaire markup is missing required elements.');
