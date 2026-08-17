@@ -63,7 +63,7 @@ const EXERCISE_FIELDS = [
 const EXERCISE_FIELD_META = {
   age: {
     question: 'How young are you?',
-    guide: 'Your age is used to calculate your high cardio heart rate and your fat burning heart rate. Enter your age in whole years — not birthdate.',
+    guide: 'Your age is used to calculate your high cardio heart rate and your fat burning heart rate. Enter your age in whole years.',
     example: 'Example: 45',
   },
   sag: {
