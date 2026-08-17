@@ -63,7 +63,7 @@ const EXERCISE_FIELDS = [
 const EXERCISE_FIELD_META = {
   age: {
     question: 'How young are you?',
-    guide: 'Your age is used to calculate your high cardio heart rate and your fat burning heart rate. Enter your age in whole years.',
+    guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
     example: 'Example: 45',
   },
   sag: {
@@ -72,13 +72,13 @@ const EXERCISE_FIELD_META = {
     example: 'Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none. Use decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min.',
   },
   cardio: {
-    question: 'How many hours per week at high cardio heart rate?',
-    guide: 'Sustained cardio where your heart rate stays in your high cardio range. Running, cycling hard, rowing, stair climbing — not a casual walk. Use the heart rate range shown below as a guideline.',
+    question: 'How many hours per week in your cardio training range?',
+    guide: 'Sustained cardio where your heart rate stays in your cardio training range. Running, cycling hard, rowing, stair climbing — not a casual walk. Use the cardio training range (BPM) shown below as a guideline.',
     example: 'Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
   moderate: {
-    question: 'How many hours per week at fat burning heart rate?',
-    guide: 'Activity where your heart rate stays in your fat burning range — below high cardio. Brisk walking, easy bike, active housework and yard work. Use the heart rate range shown below as a guideline.',
+    question: 'How many hours per week in your fat burning training range?',
+    guide: 'Activity where your heart rate stays in your fat burning training range — below cardio training. Brisk walking, easy bike, active housework and yard work. Use the fat burning training range (BPM) shown below as a guideline.',
     example: '3 hrs/week is a common starting point — lower it if that is not realistic for you. Enter 0 if none.',
   },
 };
@@ -1049,13 +1049,13 @@ function syncHeartRateHints(age) {
   const cardio = document.querySelector('[data-hr-cardio]');
   const fat = document.querySelector('[data-hr-fat]');
   if (!age) {
-    if (cardio) cardio.textContent = 'High cardio heart rate — BPM (enter age above)';
-    if (fat) fat.textContent = 'Fat burning heart rate — BPM (enter age above)';
+    if (cardio) cardio.textContent = 'Cardio training range (BPM) — enter age above';
+    if (fat) fat.textContent = 'Fat burning training range (BPM) — enter age above';
     return;
   }
   const hr = heartRates(age);
-  if (cardio) cardio.textContent = `High cardio heart rate: ${hr.cardioLow}–${hr.cardioHigh} BPM`;
-  if (fat) fat.textContent = `Fat burning heart rate: ${hr.fatBurnLow}–${hr.fatBurnHigh} BPM`;
+  if (cardio) cardio.textContent = `Cardio training range (BPM): ${hr.cardioLow}–${hr.cardioHigh}`;
+  if (fat) fat.textContent = `Fat burning training range (BPM): ${hr.fatBurnLow}–${hr.fatBurnHigh}`;
 }
 
 function heightLabel(values) {
@@ -1124,8 +1124,8 @@ function renderReview() {
     ['Job activity', workPhysicalLabel(values.workPhysical)],
     ['Day drain', workStressLabel(values.workStress)],
     ['SAG hours / week', values.weightTrainingHours || '—'],
-    ['High cardio hours / week', values.cardioHours || '—'],
-    ['Fat burning hours / week', values.fatBurningHours || '—'],
+    ['Cardio training hours / week', values.cardioHours || '—'],
+    ['Fat burning training hours / week', values.fatBurningHours || '—'],
     ['Waiver signed', values.signature || '—'],
   ];
 
