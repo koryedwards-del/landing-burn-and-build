@@ -37,7 +37,6 @@ const INFO_FIELD_META = {
     question: 'What is your first name?',
     guide: 'Use the name that should appear on your program printout.',
     example: 'Example: Kory',
-    help: 'Enter your legal first name. If you go by a nickname, still use your legal name here — it should match what you type on the agreement step.',
   },
   lastName: {
     question: 'What is your last name?',
@@ -317,11 +316,9 @@ function initInfoFieldCopy() {
     const question = item.querySelector('[data-info-question]');
     const guide = item.querySelector('[data-info-guide]');
     const example = item.querySelector('[data-info-example]');
-    const help = item.querySelector('[data-info-help]');
     if (question) question.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
     if (example) example.textContent = meta.example;
-    if (help) help.textContent = meta.help;
   });
 }
 

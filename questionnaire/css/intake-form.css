@@ -232,45 +232,6 @@ body.q-app--workroom,
   color: var(--muted);
 }
 
-.intake-acc__more {
-  margin: 0 0 0.75rem;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--muted);
-}
-
-.intake-acc__more summary {
-  cursor: pointer;
-  list-style: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.intake-acc__more summary::-webkit-details-marker {
-  display: none;
-}
-
-.intake-acc__info-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1;
-}
-
-.intake-acc__help {
-  margin: 0.5rem 0 0;
-}
-
 .intake-form__nav,
 .q-step-nav {
   display: flex;
