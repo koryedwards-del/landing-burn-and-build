@@ -80,7 +80,7 @@ const OCCUPATION_FIELD_META = {
   workPhysical: {
     question: 'How physically active is your job?',
     guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day.',
-    example: 'Pick what describes most workdays, not your hardest day.',
+    example: 'Sitting — accountant or software developer. Moving — teacher or nurse. Lifting — warehouse worker or construction laborer.',
   },
   workStress: {
     question: 'How draining is a typical workday?',
