@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=5" />
+  <link rel="stylesheet" href="css/intake-form.css?v=6" />
 </head>
 <body>
   <div class="q-app">
@@ -88,29 +88,9 @@
                   </div>
                 </div>
 
-                <div class="intake-acc__item" data-info-field="age">
-                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">2</span>
-                    <span class="intake-acc__label">Age</span>
-                    <span class="intake-acc__summary" hidden></span>
-                  </button>
-                  <div class="intake-acc__panel">
-                    <p class="intake-acc__question" data-info-question></p>
-                    <div class="intake-acc__howto">
-                      <p class="intake-acc__guide" data-info-guide></p>
-                      <p class="intake-acc__example" data-info-example></p>
-                    </div>
-                    <label class="intake-acc__field">
-                      <span class="sr-only">Age</span>
-                      <input class="intake-input intake-input--short" name="age" type="number" inputmode="numeric" min="16" max="99" required />
-                    </label>
-                    <p class="intake-acc__error" hidden></p>
-                  </div>
-                </div>
-
                 <div class="intake-acc__item" data-info-field="sex">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">3</span>
+                    <span class="intake-acc__num">2</span>
                     <span class="intake-acc__label">Gender</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -130,7 +110,7 @@
 
                 <div class="intake-acc__item" data-info-field="email">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__num">3</span>
                     <span class="intake-acc__label">Email address</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -150,7 +130,7 @@
 
                 <div class="intake-acc__item" data-info-field="emailConfirm">
                   <button type="button" class="intake-acc__trigger" aria-expanded="false">
-                    <span class="intake-acc__num">5</span>
+                    <span class="intake-acc__num">4</span>
                     <span class="intake-acc__label">Confirm email</span>
                     <span class="intake-acc__summary" hidden></span>
                   </button>
@@ -229,52 +209,91 @@
             </div>
           </section>
 
-          <section class="q-panel" data-step="3" hidden>
-            <div class="q-panel__head">
-              <p class="q-eyebrow">Step 4</p>
-              <h2 class="q-panel__title">Weekly exercise — next 8 weeks</h2>
-              <p class="q-panel__lead">Be realistic about the exercise you will commit to for the next 8 weeks. Conservative is better.</p>
-            </div>
-            <div class="q-callout">
-              <span class="q-callout__icon" aria-hidden="true">!</span>
-              <div class="q-callout__body">
-                <strong>Plan for what you will actually do — not what you wish you would do.</strong>
-                <ul>
-                <li>All three categories can be <strong>0</strong> if you are not doing that type of activity.</li>
-                <li>Enter hours in decimals: <strong>0.25</strong> = 15 min, <strong>0.5</strong> = 30 min, <strong>0.75</strong> = 45 min, <strong>1.25</strong> = 1 hr 15 min.</li>
-                <li>Only count time <strong>moving or under load</strong> — not rest between sets, scrolling on the treadmill, or driving to the gym.</li>
-                <li>Heart-rate zones below update after you enter your age on the info step.</li>
-              </ul>
+          <section class="q-panel q-panel--intake" data-step="3" hidden>
+            <div class="intake-form" id="exercise-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Exercise</h2>
+              </header>
+
+              <div class="intake-acc" id="exercise-accordion">
+                <div class="intake-acc__item is-open" data-ex-field="age">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num">1</span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                      <p class="intake-acc__example" data-ex-example></p>
+                    </div>
+                    <label class="intake-acc__field">
+                      <span class="sr-only">Age</span>
+                      <input class="intake-input intake-input--short" name="age" type="number" inputmode="numeric" min="16" max="99" required />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="sag">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">2</span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                      <p class="intake-acc__example" data-ex-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" aria-label="Stop and go hours per week" />
+                      <span class="intake-unit">hrs / week</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="cardio">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">3</span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                      <p class="intake-acc__example" data-ex-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="cardioHours" inputmode="decimal" placeholder="0" aria-label="Vigorous activity hours per week" />
+                      <span class="intake-unit">hrs / week</span>
+                    </div>
+                    <p class="intake-acc__meta" data-hr-cardio>Target zone — BPM (enter age above)</p>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="moderate">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num">4</span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                      <p class="intake-acc__example" data-ex-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" aria-label="Moderate activity hours per week" />
+                      <span class="intake-unit">hrs / week</span>
+                    </div>
+                    <p class="intake-acc__meta" data-hr-fat>Target zone — BPM (enter age above)</p>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <p class="q-hint">Enter hours per week down to the quarter hour (15 minutes). Overstating exercise lowers your fat servings and makes the plan harder to follow.</p>
-            <div class="q-activity-list">
-              <label class="q-activity">
-                <span class="q-activity__label">SAG — stop &amp; go</span>
-                <span class="q-activity__desc"><strong>S</strong>top-&amp;-<strong>G</strong>o activity: weight training, CrossFit, racquet sports, intervals — work bursts with rest. Count only time under load or actively moving (e.g. three 1-hour sessions with ~45 min of actual lifting = about <strong>2.25</strong> hrs, not 3).</span>
-                <div class="q-inline">
-                  <input class="q-input q-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" />
-                  <span class="q-unit">hrs / week</span>
-                </div>
-              </label>
-              <label class="q-activity">
-                <span class="q-activity__label">Vigorous activity</span>
-                <span class="q-activity__desc">Sustained cardio where your heart rate stays in the vigorous zone (roughly 70–85% of max). Running, cycling hard, rowing, stair climbing — not a casual walk.</span>
-                <div class="q-inline">
-                  <input class="q-input q-input--short" name="cardioHours" inputmode="decimal" placeholder="0" />
-                  <span class="q-unit">hrs / week</span>
-                </div>
-                <span class="q-activity__meta" data-hr-cardio>Target zone — BPM (enter age on info step)</span>
-              </label>
-              <label class="q-activity">
-                <span class="q-activity__label">Moderate activity</span>
-                <span class="q-activity__desc">Fat-burning pace: heart rate below vigorous cardio. Brisk walking, easy bike, active housework and yard work. The default <strong>3</strong> hrs/week is a common starting point — lower it if that is not realistic for you.</span>
-                <div class="q-inline">
-                  <input class="q-input q-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" />
-                  <span class="q-unit">hrs / week</span>
-                </div>
-                <span class="q-activity__meta" data-hr-fat>Target zone — BPM (enter age on info step)</span>
-              </label>
             </div>
           </section>
 
@@ -424,6 +443,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=108"></script>
+  <script type="module" src="js/questionnaire.js?v=110"></script>
 </body>
 </html>

@@ -25,7 +25,6 @@ const STEPS = [
 
 const INFO_FIELDS = [
   'fullName',
-  'age',
   'sex',
   'email',
   'emailConfirm',
@@ -36,11 +35,6 @@ const INFO_FIELD_META = {
     question: 'What is your full name?',
     guide: 'First and last name as it should appear on your program printout.',
     example: 'Example: Kory Edwards',
-  },
-  age: {
-    question: 'How old are you today?',
-    guide: 'Enter your age in whole years — not birthdate.',
-    example: 'Example: 45',
   },
   sex: {
     question: 'What is your gender?',
@@ -56,6 +50,36 @@ const INFO_FIELD_META = {
     question: 'Confirm your email address',
     guide: 'Type the same address again. We cannot fix a typo after checkout.',
     example: 'Must match the email you just entered.',
+  },
+};
+
+const EXERCISE_FIELDS = [
+  'age',
+  'sag',
+  'cardio',
+  'moderate',
+];
+
+const EXERCISE_FIELD_META = {
+  age: {
+    question: 'How old are you today?',
+    guide: 'Enter your age in whole years — not birthdate. Your age sets the heart-rate target zones on the cardio fields below.',
+    example: 'Example: 45',
+  },
+  sag: {
+    question: 'How many hours per week of stop & go activity?',
+    guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Stop & go activity: weight training, CrossFit, racquet sports, intervals — work bursts with rest. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
+    example: 'Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none. Use decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min.',
+  },
+  cardio: {
+    question: 'How many hours per week of vigorous activity?',
+    guide: 'Sustained cardio where your heart rate stays in the vigorous zone (roughly 70–85% of max). Running, cycling hard, rowing, stair climbing — not a casual walk.',
+    example: 'Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
+  },
+  moderate: {
+    question: 'How many hours per week of moderate activity?',
+    guide: 'Fat-burning pace: heart rate below vigorous cardio. Brisk walking, easy bike, active housework and yard work.',
+    example: '3 hrs/week is a common starting point — lower it if that is not realistic for you. Enter 0 if none.',
   },
 };
 
@@ -97,13 +121,13 @@ const OCCUPATION_FIELDS = [
 const OCCUPATION_FIELD_META = {
   workPhysical: {
     question: 'How physically active is your job?',
-    guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day.',
-    example: 'Sitting — accountant or software developer. Moving — teacher or nurse. Lifting — warehouse worker or construction laborer.',
+    guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.',
+    example: 'Sitting — desk, computer, driving, reception: accountant, software developer, office clerk, administrative assistant, data entry clerk, graphic designer, attorney, call center agent, receptionist, long-haul driver. Moving — on your feet most of the shift: nurse, teacher, retail associate, server, bartender, chef, pharmacist, hairdresser, security guard, bank teller. Lifting — regular carrying, loading, or trades work: warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.',
   },
   workStress: {
     question: 'How draining is a typical workday?',
-    guide: 'Physical work is only part of it. Mental pressure and pace add another level of drain — even at a desk job.',
-    example: 'Comfortable = relaxed pace. Busy = steady demands. Stressful = high pressure, you come home drained.',
+    guide: 'Physical work is only part of it. Mental pressure and pace add another level of drain — even at a desk job. A sitting job can still be stressful; a physical job can still feel comfortable.',
+    example: 'Comfortable — relaxed pace, manageable workload, time to think, you leave work at work. Busy — steady demands, meetings and tasks back-to-back, tired by end of day but manageable. Stressful — high pressure, tight deadlines, conflict or crisis, constant interruptions, you come home drained even when the work is mostly sitting.',
   },
 };
 
@@ -117,11 +141,13 @@ const panels = [...document.querySelectorAll('.q-panel')];
 const infoAccordion = document.getElementById('info-accordion');
 const occupationAccordion = document.getElementById('occupation-accordion');
 const bodyAccordion = document.getElementById('body-accordion');
+const exerciseAccordion = document.getElementById('exercise-accordion');
 
 let step = 0;
 let infoFieldIndex = 0;
 let occupationFieldIndex = 0;
 let bodyFieldIndex = 0;
+let exerciseFieldIndex = 0;
 
 function collapsePersonalInfoIfComplete() {
   if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
@@ -211,8 +237,6 @@ function infoFieldSummary(fieldId, values) {
   switch (fieldId) {
     case 'fullName':
       return values.preferredName || '';
-    case 'age':
-      return values.age != null ? String(values.age) : '';
     case 'sex':
       if (values.sex === 'female') return 'Female';
       if (values.sex === 'male') return 'Male';
@@ -233,12 +257,6 @@ function validateInfoField(fieldId, values) {
     case 'fullName':
       if (!values.preferredName) return 'Enter your full name.';
       return '';
-    case 'age': {
-      const age = values.age;
-      if (age == null || !Number.isFinite(age)) return 'Enter your age in years.';
-      if (age < 16 || age > 99) return 'Enter an age between 16 and 99.';
-      return '';
-    }
     case 'sex':
       if (!values.sex) return 'Select female or male.';
       return '';
@@ -346,7 +364,6 @@ function advanceInfoField() {
   }
 
   setInfoFieldError(item, '');
-  syncAgeField();
 
   if (infoFieldIndex < INFO_FIELDS.length - 1) {
     openInfoField(infoFieldIndex + 1);
@@ -386,13 +403,11 @@ function bindInfoAccordion() {
   });
 
   infoAccordion.addEventListener('input', () => {
-    syncAgeField();
     renderInfoAccordionState();
     collapsePersonalInfoIfComplete();
   });
 
   infoAccordion.addEventListener('change', () => {
-    syncAgeField();
     renderInfoAccordionState();
     collapsePersonalInfoIfComplete();
   });
@@ -781,6 +796,210 @@ function bindBodyAccordion() {
   renderBodyAccordionState();
 }
 
+function exerciseHoursValue(fieldId, values) {
+  switch (fieldId) {
+    case 'sag':
+      return values.weightTrainingHours;
+    case 'cardio':
+      return values.cardioHours;
+    case 'moderate':
+      return values.fatBurningHours;
+    default:
+      return '';
+  }
+}
+
+function exerciseFieldSummary(fieldId, values) {
+  switch (fieldId) {
+    case 'age':
+      return values.age != null ? String(values.age) : '';
+    case 'sag':
+    case 'cardio':
+    case 'moderate': {
+      const hours = exerciseHoursValue(fieldId, values);
+      return hours !== '' && hours != null ? `${hours} hrs` : '';
+    }
+    default:
+      return '';
+  }
+}
+
+function validateExerciseField(fieldId, values) {
+  switch (fieldId) {
+    case 'age': {
+      const age = values.age;
+      if (age == null || !Number.isFinite(age)) return 'Enter your age in years.';
+      if (age < 16 || age > 99) return 'Enter an age between 16 and 99.';
+      return '';
+    }
+    case 'sag':
+    case 'cardio':
+    case 'moderate': {
+      const hoursRaw = exerciseHoursValue(fieldId, values);
+      if (hoursRaw === '' || hoursRaw == null) return 'Enter hours per week (0 if none).';
+      const hours = Number(hoursRaw);
+      if (!Number.isFinite(hours) || hours < 0) return 'Enter a valid number of hours (0 or more).';
+      return '';
+    }
+    default:
+      return '';
+  }
+}
+
+function exerciseFieldIsValid(fieldId, values) {
+  return !validateExerciseField(fieldId, values);
+}
+
+function exerciseSectionComplete(values) {
+  return EXERCISE_FIELDS.every((fieldId) => exerciseFieldIsValid(fieldId, values));
+}
+
+function setExerciseFieldError(item, message) {
+  const errorEl = item?.querySelector('.intake-acc__error');
+  if (!errorEl) return;
+  if (message) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+  } else {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+}
+
+function renderExerciseAccordionState() {
+  if (!exerciseAccordion) return;
+  const values = readForm();
+
+  EXERCISE_FIELDS.forEach((fieldId, index) => {
+    const item = exerciseAccordion.querySelector(`[data-ex-field="${fieldId}"]`);
+    if (!item) return;
+
+    const summary = item.querySelector('.intake-acc__summary');
+    const trigger = item.querySelector('.intake-acc__trigger');
+    const isOpen = exerciseFieldIndex >= 0 && index === exerciseFieldIndex;
+    const isDone = exerciseFieldIsValid(fieldId, values);
+
+    item.classList.toggle('is-open', isOpen);
+    item.classList.toggle('is-done', isDone && !isOpen);
+
+    if (summary) {
+      const text = exerciseFieldSummary(fieldId, values);
+      summary.textContent = text;
+      summary.hidden = !text;
+    }
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      trigger.tabIndex = 0;
+    }
+
+    if (!isOpen) setExerciseFieldError(item, '');
+  });
+}
+
+function initExerciseFieldCopy() {
+  if (!exerciseAccordion) return;
+  EXERCISE_FIELDS.forEach((fieldId) => {
+    const item = exerciseAccordion.querySelector(`[data-ex-field="${fieldId}"]`);
+    const meta = EXERCISE_FIELD_META[fieldId];
+    if (!item || !meta) return;
+    const label = item.querySelector('[data-ex-label]');
+    const guide = item.querySelector('[data-ex-guide]');
+    const example = item.querySelector('[data-ex-example]');
+    if (label) label.textContent = meta.question;
+    if (guide) guide.textContent = meta.guide;
+    if (example) example.textContent = meta.example;
+  });
+}
+
+function collapseExerciseIfComplete() {
+  if (exerciseFieldIndex < 0 || EXERCISE_FIELDS[exerciseFieldIndex] !== 'moderate') return false;
+  const values = readForm();
+  if (!exerciseSectionComplete(values)) return false;
+  exerciseFieldIndex = -1;
+  renderExerciseAccordionState();
+  updateStepNav();
+  return true;
+}
+
+function advanceExerciseField() {
+  const fieldId = EXERCISE_FIELDS[exerciseFieldIndex];
+  const values = readForm();
+  const item = exerciseAccordion?.querySelector(`[data-ex-field="${fieldId}"]`);
+  const error = validateExerciseField(fieldId, values);
+  if (error) {
+    setExerciseFieldError(item, error);
+    return false;
+  }
+
+  setExerciseFieldError(item, '');
+
+  if (fieldId === 'age') {
+    syncAgeField();
+  }
+
+  if (exerciseFieldIndex < EXERCISE_FIELDS.length - 1) {
+    openExerciseField(exerciseFieldIndex + 1);
+  } else {
+    collapseExerciseIfComplete() || renderExerciseAccordionState();
+  }
+
+  updateStepNav();
+  return true;
+}
+
+function openExerciseField(index) {
+  exerciseFieldIndex = Math.max(0, Math.min(index, EXERCISE_FIELDS.length - 1));
+  renderExerciseAccordionState();
+  const fieldId = EXERCISE_FIELDS[exerciseFieldIndex];
+  const item = exerciseAccordion?.querySelector(`[data-ex-field="${fieldId}"]`);
+  const focusTarget = item?.querySelector(
+    'input:not([type="hidden"]):not([type="radio"]), select, textarea',
+  ) || item?.querySelector('input[type="radio"]');
+  focusTarget?.focus();
+}
+
+function bindExerciseAccordion() {
+  if (!exerciseAccordion) return;
+
+  initExerciseFieldCopy();
+
+  exerciseAccordion.addEventListener('click', (event) => {
+    const trigger = event.target.closest('.intake-acc__trigger');
+    if (!trigger) return;
+    const item = trigger.closest('[data-ex-field]');
+    if (!item) return;
+    const fieldId = item.dataset.exField;
+    const index = EXERCISE_FIELDS.indexOf(fieldId);
+    if (index === -1) return;
+    openExerciseField(index);
+  });
+
+  exerciseAccordion.addEventListener('input', () => {
+    syncAgeField();
+    renderExerciseAccordionState();
+    collapseExerciseIfComplete();
+    updateStepNav();
+  });
+
+  exerciseAccordion.addEventListener('change', () => {
+    syncAgeField();
+    renderExerciseAccordionState();
+    collapseExerciseIfComplete();
+    updateStepNav();
+  });
+
+  exerciseAccordion.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target.type === 'radio') return;
+    event.preventDefault();
+    advanceExerciseField();
+  });
+
+  renderExerciseAccordionState();
+}
+
 function syncAgeField() {
   const ageInput = form.elements.age;
   const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
@@ -813,9 +1032,7 @@ function canProceed(stepIndex) {
     case 2:
       return occupationSectionComplete(values);
     case 3:
-      return values.weightTrainingHours !== ''
-        && values.cardioHours !== ''
-        && values.fatBurningHours !== '';
+      return exerciseSectionComplete(values);
     case 4:
       return bodySectionComplete(values);
     case 5:
@@ -907,6 +1124,13 @@ function showStep(index) {
     }
     renderBodyAccordionState();
   }
+  if (step === 3) {
+    if (exerciseFieldIndex < 0 && !exerciseSectionComplete(readForm())) {
+      exerciseFieldIndex = 0;
+    }
+    renderExerciseAccordionState();
+    syncAgeField();
+  }
   updateStepNav();
 
   const base = `${location.pathname}${location.search}`;
@@ -938,6 +1162,7 @@ function bindEvents() {
   bindInfoAccordion();
   bindOccupationAccordion();
   bindBodyAccordion();
+  bindExerciseAccordion();
 
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
