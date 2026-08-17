@@ -65,7 +65,7 @@ const INFO_FIELD_META = {
   },
   emailConfirm: {
     question: 'Confirm your email address',
-    guide: 'Type the same address again — do not paste. We cannot fix a typo after checkout.',
+    guide: 'Type the same address again. We cannot fix a typo after checkout.',
     example: 'Must match the email you just entered.',
   },
 };
@@ -104,7 +104,7 @@ function readForm() {
   return {
     preferredName: String(data.get('preferredName') || '').trim(),
     email: String(data.get('email') || '').trim(),
-    emailConfirm: String(data.get('emailConfirm') || '').trim(),
+    emailRetype: String(data.get('emailRetype') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
     heightFeet: data.get('heightFeet'),
@@ -172,9 +172,9 @@ function infoFieldSummary(fieldId, values) {
     case 'email':
       return values.email || '';
     case 'emailConfirm':
-      if (!values.emailConfirm) return '';
-      if (values.email && values.emailConfirm === values.email) return 'Matches';
-      return values.emailConfirm;
+      if (!values.emailRetype) return '';
+      if (values.email && values.emailRetype === values.email) return 'Matches';
+      return values.emailRetype;
     default:
       return '';
   }
@@ -218,9 +218,9 @@ function validateInfoField(fieldId, values) {
       if (!isValidEmail(values.email)) return 'Enter a valid email address.';
       return '';
     case 'emailConfirm':
-      if (!values.emailConfirm) return 'Confirm your email address.';
-      if (!isValidEmail(values.emailConfirm)) return 'Enter a valid email address.';
-      if (values.email !== values.emailConfirm) return 'Email addresses do not match. Type it again — do not paste.';
+      if (!values.emailRetype) return 'Type your email address again.';
+      if (!isValidEmail(values.emailRetype)) return 'Enter a valid email address.';
+      if (values.email !== values.emailRetype) return 'Email addresses do not match. Type it again.';
       return '';
     default:
       return '';
@@ -340,15 +340,24 @@ function openInfoField(index) {
   focusTarget?.focus();
 }
 
-function bindNoPasteInputs() {
-  if (!infoAccordion) return;
-  infoAccordion.querySelectorAll('[data-no-paste]').forEach((input) => {
-    input.addEventListener('paste', (event) => {
-      event.preventDefault();
-    });
-    input.addEventListener('drop', (event) => {
-      event.preventDefault();
-    });
+function bindEmailRetypeInput() {
+  const input = form?.elements.emailRetype;
+  if (!input) return;
+
+  input.setAttribute('readonly', 'readonly');
+  input.setAttribute('autocomplete', 'off');
+
+  const unlock = () => {
+    input.removeAttribute('readonly');
+  };
+  input.addEventListener('focus', unlock, { once: true });
+  input.addEventListener('click', unlock, { once: true });
+
+  input.addEventListener('paste', (event) => {
+    event.preventDefault();
+  });
+  input.addEventListener('drop', (event) => {
+    event.preventDefault();
   });
 }
 
@@ -356,7 +365,7 @@ function bindInfoAccordion() {
   if (!infoAccordion) return;
 
   initInfoFieldCopy();
-  bindNoPasteInputs();
+  bindEmailRetypeInput();
 
   infoAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
