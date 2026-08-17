@@ -383,6 +383,15 @@ body.q-app--workroom,
   color: var(--muted);
 }
 
+.intake-fat-source-other {
+  margin-top: 0.75rem;
+}
+
+.intake-fat-source-other .intake-input {
+  width: 100%;
+  max-width: 28rem;
+}
+
 .intake-radios {
   display: flex;
   flex-direction: column;

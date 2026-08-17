@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=12" />
+  <link rel="stylesheet" href="css/intake-form.css?v=13" />
 </head>
 <body>
   <div class="q-app">
@@ -437,7 +437,12 @@
                       <label class="intake-radio"><input type="radio" name="fatSource" value="guess" required /> I'm estimating</label>
                       <label class="intake-radio"><input type="radio" name="fatSource" value="recent" /> Calipers, ultrasound, or BodPod</label>
                       <label class="intake-radio"><input type="radio" name="fatSource" value="dexa" /> DEXA scan</label>
+                      <label class="intake-radio"><input type="radio" name="fatSource" value="other" /> Other</label>
                     </div>
+                    <label class="intake-acc__field intake-fat-source-other" data-fat-source-other hidden>
+                      <span class="sr-only">Describe how you know</span>
+                      <input class="intake-input" name="fatSourceOther" autocomplete="off" disabled />
+                    </label>
                     <p class="intake-acc__error" hidden></p>
                   </div>
                 </div>
@@ -503,6 +508,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=126"></script>
+  <script type="module" src="js/questionnaire.js?v=127"></script>
 </body>
 </html>

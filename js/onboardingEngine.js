@@ -155,5 +155,7 @@ export function profileFromForm(form) {
     cardioHours: parseActivityHours(form.cardioHours, 15) ?? 0,
     fatBurningHours: parseActivityHours(form.fatBurningHours, 20) ?? 0,
     wakeTime: form.wakeTime,
+    fatSource: form.fatSource || null,
+    fatSourceOther: form.fatSource === 'other' ? String(form.fatSourceOther || '').trim() : '',
   };
 }

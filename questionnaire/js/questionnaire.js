@@ -197,10 +197,11 @@ function workStressLabel(id) {
   return WORK_STRESS.find((item) => item.id === id)?.label || id || '—';
 }
 
-function fatSourceLabel(value) {
+function fatSourceLabel(value, otherText = '') {
   if (value === 'dexa') return 'DEXA scan';
   if (value === 'recent') return 'Calipers / ultrasound / BodPod';
   if (value === 'guess') return 'Estimating';
+  if (value === 'other') return otherText || 'Other';
   return '—';
 }
 
@@ -220,6 +221,7 @@ function readForm() {
     age,
     weight: data.get('weight'),
     fatSource: data.get('fatSource'),
+    fatSourceOther: String(data.get('fatSourceOther') || '').trim(),
     fatPercent: data.get('fatPercent'),
     workPhysical: data.get('workPhysical'),
     workStress: data.get('workStress'),
@@ -246,6 +248,7 @@ function toOnboardingForm(values) {
     weightText: String(values.weight || ''),
     fatPercentText: String(values.fatPercent || ''),
     fatSource: values.fatSource,
+    fatSourceOther: values.fatSource === 'other' ? values.fatSourceOther : '',
     workPhysical: values.workPhysical,
     workStress: values.workStress,
     weightTrainingHours: values.weightTrainingHours,
@@ -638,7 +641,7 @@ function bodyFieldSummary(fieldId, values) {
     case 'weight':
       return values.weight ? `${values.weight} lbs` : '';
     case 'fatSource':
-      return values.fatSource ? fatSourceLabel(values.fatSource) : '';
+      return values.fatSource ? fatSourceLabel(values.fatSource, values.fatSourceOther) : '';
     case 'fatPercent':
       return values.fatPercent ? `${values.fatPercent}%` : '';
     default:
@@ -669,6 +672,7 @@ function validateBodyField(fieldId, values) {
     }
     case 'fatSource':
       if (!values.fatSource) return 'Select how you know.';
+      if (values.fatSource === 'other' && !values.fatSourceOther) return 'Enter how you know.';
       return '';
     case 'fatPercent': {
       const fat = Number(values.fatPercent);
@@ -757,7 +761,7 @@ function initBodyFieldCopy() {
 }
 
 function collapseBodyIfComplete() {
-  if (bodyFieldIndex < 0 || BODY_FIELDS[bodyFieldIndex] !== 'fatPercent') return false;
+  if (bodyFieldIndex < 0 || BODY_FIELDS[bodyFieldIndex] !== 'fatSource') return false;
   const values = readForm();
   if (!bodySectionComplete(values)) return false;
   bodyFieldIndex = -1;
@@ -799,10 +803,20 @@ function openBodyField(index) {
   focusTarget?.focus();
 }
 
+function syncFatSourceOtherField() {
+  const wrap = bodyAccordion?.querySelector('[data-fat-source-other]');
+  const input = form.elements.fatSourceOther;
+  if (!wrap || !input) return;
+  const isOther = readForm().fatSource === 'other';
+  wrap.hidden = !isOther;
+  input.disabled = !isOther;
+}
+
 function bindBodyAccordion() {
   if (!bodyAccordion) return;
 
   initBodyFieldCopy();
+  syncFatSourceOtherField();
 
   bodyAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
@@ -821,7 +835,11 @@ function bindBodyAccordion() {
     updateStepNav();
   });
 
-  bodyAccordion.addEventListener('change', () => {
+  bodyAccordion.addEventListener('change', (event) => {
+    syncFatSourceOtherField();
+    if (event.target instanceof HTMLInputElement && event.target.name === 'fatSource' && event.target.value === 'other') {
+      form.elements.fatSourceOther?.focus();
+    }
     renderBodyAccordionState();
     collapseBodyIfComplete();
     updateStepNav();
@@ -1123,7 +1141,7 @@ function renderReview() {
     ['Gender', values.sex || '—'],
     ['Age', values.age != null ? String(values.age) : '—'],
     ['Weight', values.weight ? `${values.weight} lbs` : '—'],
-    ['Body composition', values.fatPercent ? `${values.fatPercent}% (${fatSourceLabel(values.fatSource)})` : '—'],
+    ['Body composition', values.fatPercent ? `${values.fatPercent}% (${fatSourceLabel(values.fatSource, values.fatSourceOther)})` : '—'],
     ['Job activity', workPhysicalLabel(values.workPhysical)],
     ['Day drain', workStressLabel(values.workStress)],
     ['SAG hours / week', values.weightTrainingHours || '—'],
@@ -1168,6 +1186,7 @@ function showStep(index) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
       bodyFieldIndex = 0;
     }
+    syncFatSourceOtherField();
     renderBodyAccordionState();
   }
   if (step === 2) {
