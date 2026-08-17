@@ -744,9 +744,18 @@ function initBodyFieldCopy() {
     const label = item.querySelector('[data-body-label]');
     const guide = item.querySelector('[data-body-guide]');
     const example = item.querySelector('[data-body-example]');
+    const alert = item.querySelector('[data-body-alert]');
     if (label) label.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
     if (example) example.textContent = meta.example;
+    if (alert) {
+      if (meta.alert) {
+        alert.textContent = meta.alert;
+        alert.hidden = false;
+      } else {
+        alert.hidden = true;
+      }
+    }
   });
 }
 
