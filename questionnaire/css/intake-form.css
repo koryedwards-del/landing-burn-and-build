@@ -473,6 +473,12 @@ body.q-app--workroom,
   box-shadow: none;
 }
 
+.intake-waiver__input::placeholder {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
 .intake-radios {
   display: flex;
   flex-direction: column;
