@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=6" />
+  <link rel="stylesheet" href="css/intake-form.css?v=7" />
 </head>
 <body>
   <div class="q-app">
@@ -175,12 +175,29 @@
                   <div class="intake-acc__panel">
                     <div class="intake-acc__howto">
                       <p class="intake-acc__guide" data-occ-guide></p>
-                      <p class="intake-acc__example" data-occ-example></p>
                     </div>
                     <div class="intake-radios intake-acc__field">
-                      <label class="intake-radio"><input type="radio" name="workPhysical" value="sitting" required /> Sitting</label>
-                      <label class="intake-radio"><input type="radio" name="workPhysical" value="feet" /> Moving</label>
-                      <label class="intake-radio"><input type="radio" name="workPhysical" value="carrying" /> Lifting</label>
+                      <label class="intake-radio" data-occ-choice="sitting">
+                        <input type="radio" name="workPhysical" value="sitting" required />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="feet">
+                        <input type="radio" name="workPhysical" value="feet" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="carrying">
+                        <input type="radio" name="workPhysical" value="carrying" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -195,12 +212,29 @@
                   <div class="intake-acc__panel">
                     <div class="intake-acc__howto">
                       <p class="intake-acc__guide" data-occ-guide></p>
-                      <p class="intake-acc__example" data-occ-example></p>
                     </div>
                     <div class="intake-radios intake-acc__field">
-                      <label class="intake-radio"><input type="radio" name="workStress" value="comfortable" required /> Comfortable</label>
-                      <label class="intake-radio"><input type="radio" name="workStress" value="busy" /> Busy</label>
-                      <label class="intake-radio"><input type="radio" name="workStress" value="stressful" /> Stressful</label>
+                      <label class="intake-radio" data-occ-choice="comfortable">
+                        <input type="radio" name="workStress" value="comfortable" required />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="busy">
+                        <input type="radio" name="workStress" value="busy" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="stressful">
+                        <input type="radio" name="workStress" value="stressful" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -443,6 +477,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=110"></script>
+  <script type="module" src="js/questionnaire.js?v=111"></script>
 </body>
 </html>

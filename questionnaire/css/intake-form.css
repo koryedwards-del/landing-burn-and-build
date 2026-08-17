@@ -319,7 +319,7 @@ body.q-app--workroom,
 .intake-radios {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
   margin-bottom: 0.75rem;
 }
 
@@ -329,11 +329,43 @@ body.q-app--workroom,
   gap: 0.5rem;
   font-size: 0.9375rem;
   cursor: pointer;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.intake-radio:has(input:checked) {
+  border-color: var(--text);
+  background: #fafafa;
 }
 
 .intake-radio input {
   margin-top: 0.2rem;
   flex-shrink: 0;
+}
+
+.intake-radio__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.intake-radio__label {
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.intake-radio__sub {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.intake-acc__meta {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--muted);
 }
 
 .intake-acc__error {

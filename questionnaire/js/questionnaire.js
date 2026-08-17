@@ -122,12 +122,41 @@ const OCCUPATION_FIELD_META = {
   workPhysical: {
     question: 'How physically active is your job?',
     guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.',
-    example: 'Sitting — desk, computer, driving, reception: accountant, software developer, office clerk, administrative assistant, data entry clerk, graphic designer, attorney, call center agent, receptionist, long-haul driver. Moving — on your feet most of the shift: nurse, teacher, retail associate, server, bartender, chef, pharmacist, hairdresser, security guard, bank teller. Lifting — regular carrying, loading, or trades work: warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.',
   },
   workStress: {
     question: 'How draining is a typical workday?',
     guide: 'Physical work is only part of it. Mental pressure and pace add another level of drain — even at a desk job. A sitting job can still be stressful; a physical job can still feel comfortable.',
-    example: 'Comfortable — relaxed pace, manageable workload, time to think, you leave work at work. Busy — steady demands, meetings and tasks back-to-back, tired by end of day but manageable. Stressful — high pressure, tight deadlines, conflict or crisis, constant interruptions, you come home drained even when the work is mostly sitting.',
+  },
+};
+
+const OCCUPATION_CHOICE_COPY = {
+  workPhysical: {
+    sitting: {
+      label: 'Sitting',
+      sub: 'Desk, computer, driving, reception — accountant, software developer, office clerk, administrative assistant, data entry clerk, graphic designer, attorney, call center agent, receptionist, long-haul driver.',
+    },
+    feet: {
+      label: 'Moving',
+      sub: 'On your feet most of the shift — nurse, teacher, retail associate, server, bartender, chef, pharmacist, hairdresser, security guard, bank teller.',
+    },
+    carrying: {
+      label: 'Lifting',
+      sub: 'Regular carrying, loading, or trades work — warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.',
+    },
+  },
+  workStress: {
+    comfortable: {
+      label: 'Comfortable',
+      sub: 'Relaxed pace, manageable workload, time to think, you leave work at work.',
+    },
+    busy: {
+      label: 'Busy',
+      sub: 'Steady demands, meetings and tasks back-to-back, tired by end of day but manageable.',
+    },
+    stressful: {
+      label: 'Stressful',
+      sub: 'High pressure, tight deadlines, conflict or crisis, constant interruptions, you come home drained even when the work is mostly sitting.',
+    },
   },
 };
 
@@ -506,10 +535,20 @@ function initOccupationFieldCopy() {
     if (!item || !meta) return;
     const label = item.querySelector('[data-occ-label]');
     const guide = item.querySelector('[data-occ-guide]');
-    const example = item.querySelector('[data-occ-example]');
     if (label) label.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
-    if (example) example.textContent = meta.example;
+
+    const choices = OCCUPATION_CHOICE_COPY[fieldId];
+    if (!choices) return;
+    item.querySelectorAll('[data-occ-choice]').forEach((choiceEl) => {
+      const choiceId = choiceEl.dataset.occChoice;
+      const copy = choices[choiceId];
+      if (!copy) return;
+      const choiceLabel = choiceEl.querySelector('.intake-radio__label');
+      const choiceSub = choiceEl.querySelector('.intake-radio__sub');
+      if (choiceLabel) choiceLabel.textContent = copy.label;
+      if (choiceSub) choiceSub.textContent = copy.sub;
+    });
   });
 }
 
