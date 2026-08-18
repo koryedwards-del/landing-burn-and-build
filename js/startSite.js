@@ -213,7 +213,6 @@ function renderPaidDirections() {
               <div class="unlock-step__marker" aria-hidden="true">2</div>
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Download your Burn &amp; Build Diet</p>
-                ${store.dietDownloadBusy ? '<p class="unlock-step__detail">Your download is starting…</p>' : ''}
                 <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
                   ${downloadLabel}
                 </button>
