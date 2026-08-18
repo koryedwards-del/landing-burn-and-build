@@ -249,8 +249,8 @@ function renderPaidDirections() {
             <li class="unlock-step unlock-step--${emailStep.status}${store.dietEmailSent ? ' unlock-step--complete' : ''}">
               ${emailMarker}
               <div class="unlock-step__content">
-                <p class="unlock-step__title">Check your email</p>
-                <p class="unlock-step__detail">${emailStep.detail}</p>
+                <p class="unlock-step__title">${emailTitle}</p>
+                ${emailDetail ? `<p class="unlock-step__detail">${emailDetail}</p>` : ''}
               </div>
             </li>
           </ol>
@@ -262,8 +262,8 @@ function emailStepState(email) {
 
   if (store.dietEmailSent) {
     return {
-      status: 'done',
-      detail: `We emailed a copy to <strong>${safeEmail}</strong>.`,
+      status: 'complete',
+      detail: '',
     };
   }
 
