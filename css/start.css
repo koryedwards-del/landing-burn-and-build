@@ -156,7 +156,7 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
-.unlock-step--warn .unlock-step__marker {
+.unlock-step--warn .unlock-step__marker:not(.unlock-step__marker--check) {
   border-color: var(--flame);
   color: var(--flame);
 }
@@ -179,7 +179,7 @@
   align-self: center;
 }
 
-.unlock-step--done .unlock-step__marker {
+.unlock-step--done .unlock-step__marker:not(.unlock-step__marker--check) {
   border-color: var(--flame);
   background: var(--flame);
   color: var(--btn-on-flame);
@@ -193,7 +193,7 @@
   font-weight: 800;
 }
 
-.unlock-step--current .unlock-step__marker {
+.unlock-step--current .unlock-step__marker:not(.unlock-step__marker--check) {
   border-color: var(--flame);
   color: var(--flame);
 }
