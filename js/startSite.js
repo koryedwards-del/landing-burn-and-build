@@ -201,8 +201,12 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
-function stepCheckMarker() {
-  return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true"></div>';
+function stepMarker(num, { complete = false, busy = false } = {}) {
+  if (complete) {
+    return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>';
+  }
+  const label = busy ? '…' : String(num);
+  return `<div class="unlock-step__marker" aria-hidden="true">${label}</div>`;
 }
 
 function renderPaidDirections() {

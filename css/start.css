@@ -187,11 +187,10 @@
 
 .unlock-step__marker--check {
   border: none;
-  background: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect x='1.5' y='7.5' width='21' height='21' rx='4' stroke='%236ecf8a' stroke-width='3' fill='%23ffffff'/%3E%3Cpath d='M7 19.5 L13 25.5 L28.5 7' stroke='%236ecf8a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
+  background: var(--green);
+  color: #0a0a0a;
+  font-size: 1.125rem;
+  font-weight: 800;
 }
 
 .unlock-step--current .unlock-step__marker {
