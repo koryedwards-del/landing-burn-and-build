@@ -210,7 +210,6 @@ function renderPaidDirections() {
                 <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
                   ${downloadLabel}
                 </button>
-                <p class="unlock-step__detail">Save the PDF — it is your full personalized Burn &amp; Build Diet.</p>
               </div>
             </li>
             <li class="unlock-step">
