@@ -18,7 +18,7 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, programId }) {
+export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, programId, forceResend = false }) {
   const apiKey = String(process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) {
     console.warn('[diet-email] RESEND_API_KEY not set — skipping email.');
@@ -33,7 +33,7 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
     'Content-Type': 'application/json',
   };
   const id = String(programId || '').trim();
-  if (id) {
+  if (id && !forceResend) {
     headers['Idempotency-Key'] = `diet-pdf/${id}`;
   }
 

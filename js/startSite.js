@@ -12,6 +12,7 @@ import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js'
 import { QUESTIONNAIRE_WELCOME_URL, CREATOR_CHECKOUT_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
+const DIET_EMAIL_FORCE_KEY = 'bnb_diet_email_force_attempted';
 
 const store = {
   builtPackage: null,
@@ -199,8 +200,17 @@ async function refreshProgramPaymentStatus() {
   if (store.programPaid) {
     persistPaidProgramId(programId);
   }
-  if (result.ok && result.dietEmailSent) {
-    store.dietEmailSent = true;
+}
+
+function shouldForceDietEmailSend() {
+  return store.checkoutVerified && !sessionStorage.getItem(DIET_EMAIL_FORCE_KEY);
+}
+
+function markDietEmailForceAttempted() {
+  try {
+    sessionStorage.setItem(DIET_EMAIL_FORCE_KEY, '1');
+  } catch {
+    /* ignore */
   }
 }
 
@@ -367,7 +377,9 @@ async function triggerDietDownload() {
 }
 
 function applyFulfillmentResult(result) {
-  store.dietEmailSent = !!result?.emailSent || !!result?.emailAlreadySent;
+  if (result?.emailSent) {
+    store.dietEmailSent = true;
+  }
   store.dietPreparing = !result?.pdfReady;
   if (result?.emailError && isNonRetryableEmailError(result.emailError)) {
     store.dietEmailAvailable = false;
@@ -394,11 +406,17 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (store.dietEmailSent) break;
 
-    const result = await resendDietEmail(email, programId);
-    if (result.ok && (result.emailSent || result.emailAlreadySent)) {
+    const force = shouldForceDietEmailSend() || attempt > 0;
+    const result = await resendDietEmail(email, programId, { force });
+    if (result.ok && result.emailSent) {
+      if (force) markDietEmailForceAttempted();
       store.dietEmailSent = true;
       store.dietEmailError = '';
       render();
+      break;
+    }
+
+    if (result.emailAlreadySent && !force) {
       break;
     }
 

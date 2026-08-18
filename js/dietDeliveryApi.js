@@ -64,7 +64,7 @@ export async function downloadDietPdfWithRetry(email, programId, { pkg, attempts
   return { ok: false, message: lastMessage };
 }
 
-export async function resendDietEmail(email, programId) {
+export async function resendDietEmail(email, programId, { force = false } = {}) {
   try {
     const { res, data } = await fetchJson(apiUrl('/api/programs/resend-diet-email'), {
       method: 'POST',
@@ -72,6 +72,7 @@ export async function resendDietEmail(email, programId) {
       body: JSON.stringify({
         email: normalizeEmail(email),
         programId: programId || undefined,
+        force,
       }),
     });
     if (!res.ok) return { ok: false, message: data.message || 'Could not resend your diet email.' };
