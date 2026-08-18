@@ -121,8 +121,8 @@
 .unlock-step {
   display: grid;
   grid-template-columns: 2rem 1fr;
-  gap: 12px;
-  align-items: start;
+  gap: 14px;
+  align-items: center;
   padding: 14px 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -168,6 +168,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .unlock-step--done .unlock-step__marker {
@@ -178,16 +180,11 @@
 
 .unlock-step__marker--check {
   border: none;
-  background: var(--green);
-  color: #0a0a0a;
-  font-size: 1.125rem;
-  font-weight: 800;
-}
-
-.unlock-step__marker--lg {
-  width: 2.75rem;
-  height: 2.75rem;
-  font-size: 1.5rem;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect x='1.5' y='7.5' width='21' height='21' rx='4' stroke='%236ecf8a' stroke-width='3' fill='%23ffffff'/%3E%3Cpath d='M7 19.5 L13 25.5 L28.5 7' stroke='%236ecf8a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .unlock-step--current .unlock-step__marker {

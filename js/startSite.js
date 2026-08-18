@@ -201,6 +201,10 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
+function stepCheckMarker() {
+  return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true"></div>';
+}
+
 function renderPaidDirections() {
   const email = ensurePlanReadyEmail();
   const emailStep = emailStepState(email);
@@ -210,17 +214,17 @@ function renderPaidDirections() {
     : 'Download your Burn & Build Diet';
 
   const downloadMarker = store.dietDownloaded
-    ? '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>'
+    ? stepCheckMarker()
     : `<div class="unlock-step__marker" aria-hidden="true">${store.dietDownloadBusy ? '…' : '2'}</div>`;
 
   const emailMarker = store.dietEmailSent
-    ? '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>'
+    ? stepCheckMarker()
     : `<div class="unlock-step__marker" aria-hidden="true">3</div>`;
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
             <li class="unlock-step unlock-step--complete">
-              <div class="unlock-step__marker unlock-step__marker--check unlock-step__marker--lg" aria-hidden="true">✓</div>
+              ${stepCheckMarker()}
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Payment complete</p>
               </div>
