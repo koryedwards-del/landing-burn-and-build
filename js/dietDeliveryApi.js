@@ -31,7 +31,11 @@ function filenameFromDisposition(headerValue) {
   return match?.[1] || null;
 }
 
-export async function downloadDietPdf(email, programId) {
+function resolveDownloadFilename(headerValue, pkg) {
+  return filenameFromDisposition(headerValue) || dietPdfFilename({ pkg });
+}
+
+export async function downloadDietPdf(email, programId, { pkg } = {}) {
   try {
     const res = await fetch(dietPdfDownloadUrl(email, programId));
     if (!res.ok) {
@@ -39,7 +43,7 @@ export async function downloadDietPdf(email, programId) {
       return { ok: false, message: data.message || 'Could not download your diet PDF.' };
     }
     const blob = await res.blob();
-    const filename = filenameFromDisposition(res.headers.get('Content-Disposition'));
+    const filename = resolveDownloadFilename(res.headers.get('Content-Disposition'), pkg);
     triggerBrowserDownload(blob, filename);
     return { ok: true, filename };
   } catch {
@@ -47,10 +51,10 @@ export async function downloadDietPdf(email, programId) {
   }
 }
 
-export async function downloadDietPdfWithRetry(email, programId, { attempts = 10, delayMs = 1500 } = {}) {
+export async function downloadDietPdfWithRetry(email, programId, { pkg, attempts = 10, delayMs = 1500 } = {}) {
   let lastMessage = 'Could not download your diet PDF.';
   for (let attempt = 0; attempt < attempts; attempt += 1) {
-    const result = await downloadDietPdf(email, programId);
+    const result = await downloadDietPdf(email, programId, { pkg });
     if (result.ok) return result;
     lastMessage = result.message || lastMessage;
     if (attempt < attempts - 1) {

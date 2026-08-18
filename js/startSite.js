@@ -353,7 +353,7 @@ async function triggerDietDownload() {
   store.dietFulfillmentError = '';
   render();
 
-  const result = await downloadDietPdfWithRetry(email, programId);
+  const result = await downloadDietPdfWithRetry(email, programId, { pkg: store.builtPackage });
   store.dietDownloadBusy = false;
   if (!result.ok) {
     store.dietFulfillmentError = result.message;

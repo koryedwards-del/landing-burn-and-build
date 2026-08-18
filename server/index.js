@@ -77,6 +77,7 @@ app.use((req, res, next) => {
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Contacts-Admin-Key');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
   }
   if (req.method === 'OPTIONS') {
     res.sendStatus(204);
