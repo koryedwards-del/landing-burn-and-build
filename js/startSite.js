@@ -204,129 +204,22 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
-function stepMarker(num, { complete = false, busy = false } = {}) {
-  if (complete) {
-    return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>';
-  }
-  const label = busy ? '…' : String(num);
-  return `<div class="unlock-step__marker" aria-hidden="true">${label}</div>`;
-}
-
-function actionMarker({ complete = false, busy = false } = {}) {
-  if (complete) {
-    return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>';
-  }
-  if (busy) {
-    return '<div class="unlock-step__marker unlock-step__marker--busy" aria-hidden="true">…</div>';
-  }
-  return '<div class="unlock-action__marker" aria-hidden="true"></div>';
-}
-
 function renderPaidDirections() {
-  const email = ensurePlanReadyEmail();
-  const emailStep = emailStepState(email);
-  const safeEmail = escapeHtml(email);
+  const downloadLabel = store.dietDownloadBusy
+    ? 'PREPARING YOUR PDF…'
+    : 'DOWNLOAD YOUR PRINTOUT';
 
-  const actionsBoxClass = store.dietDownloaded && store.dietEmailSent
-    ? 'unlock-step--complete'
-    : (store.dietEmailError ? 'unlock-step--warn' : '');
-
-  const downloadMarker = actionMarker({
-    complete: store.dietDownloaded,
-    busy: store.dietDownloadBusy,
-  });
-
-  const downloadRow = store.dietDownloaded
-    ? `<div class="unlock-action unlock-action--complete">
-                <div class="unlock-action__content">
-                  <p class="unlock-action__title">DOWNLOAD IMMEDIATELY</p>
-                  <p class="unlock-action__detail">Check your Downloads folder.</p>
-                </div>
-                ${downloadMarker}
-              </div>`
-    : `<div class="unlock-action">
-                <div class="unlock-action__content">
-                  <button type="button" class="unlock-action__btn" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
-                    ${store.dietDownloadBusy ? 'PREPARING YOUR PDF…' : 'DOWNLOAD IMMEDIATELY'}
-                  </button>
-                </div>
-                ${downloadMarker}
-              </div>`;
-
-  const emailMarker = actionMarker({
-    complete: store.dietEmailSent,
-    busy: store.dietEmailBusy,
-  });
-  const emailExtra = !store.dietEmailSent && store.dietEmailError
-    ? '<p class="unlock-action__detail">Didn&rsquo;t get it? Check spam.</p>'
-    : (!store.dietEmailSent && store.dietEmailBusy
-      ? '<p class="unlock-action__detail">Sending — no action needed.</p>'
-      : (!store.dietEmailSent && !store.dietEmailAvailable
-        ? '<p class="unlock-action__detail">Sending — no action needed.</p>'
-        : ''));
-  const emailDetail = `<p class="unlock-action__detail">${safeEmail}</p>${emailExtra}`;
-
-  const emailRow = `<div class="unlock-action${store.dietEmailSent ? ' unlock-action--complete' : ''}">
-                <div class="unlock-action__content">
-                  <p class="unlock-action__title">CHECK YOUR</p>
-                  ${emailDetail}
-                </div>
-                ${emailMarker}
-              </div>`;
+  const downloadLine = store.dietDownloaded
+    ? `<p class="unlock-receipt__download unlock-receipt__download--done">${downloadLabel}</p>`
+    : `<button type="button" class="unlock-receipt__download" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
 
   return `
-          <ol class="unlock-steps" aria-label="Next steps">
-            <li class="unlock-step unlock-step--complete">
-              ${stepMarker(1, { complete: true })}
-              <div class="unlock-step__content">
-                <p class="unlock-step__title">PAYMENT SUCCESS</p>
-              </div>
-            </li>
-            <li class="unlock-step unlock-step--group ${actionsBoxClass}">
-              <div class="unlock-step__content unlock-step__content--stack">
-                ${downloadRow}
-                ${emailRow}
-              </div>
-            </li>
-          </ol>
+          <div class="unlock-receipt">
+            <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
+            ${downloadLine}
+            <p class="unlock-receipt__note">a copy has also been sent to your email</p>
+          </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
-}
-
-function emailStepState(email) {
-  const safeEmail = escapeHtml(email);
-
-  if (store.dietEmailSent) {
-    return {
-      status: 'complete',
-      detail: '',
-    };
-  }
-
-  if (store.dietEmailBusy) {
-    return {
-      status: 'current',
-      detail: `Sending to <strong>${safeEmail}</strong> — no action needed.`,
-    };
-  }
-
-  if (!store.dietEmailAvailable) {
-    return {
-      status: 'pending',
-      detail: `A copy is also sent to <strong>${safeEmail}</strong>.`,
-    };
-  }
-
-  if (store.dietEmailError) {
-    return {
-      status: 'warn',
-      detail: `Didn&rsquo;t get it? Check spam for <strong>${safeEmail}</strong>.`,
-    };
-  }
-
-  return {
-    status: 'current',
-    detail: `Sending to <strong>${safeEmail}</strong> — no action needed.`,
-  };
 }
 
 function isNonRetryableEmailError(message) {
