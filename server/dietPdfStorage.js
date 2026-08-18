@@ -1,6 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { dietPdfDocumentLabel, dietPdfFilename } from '../js/dietPdfNaming.js';
 import { prepareDatabasePath, resolveDatabasePath } from './dbPath.js';
+
+export { dietPdfDocumentLabel, dietPdfFilename };
 
 function dietPdfDirectory() {
   const dbPath = resolveDatabasePath();
@@ -30,14 +33,4 @@ export function writeStoredDietPdf(programId, pdfBuffer) {
   const filePath = dietPdfFilePath(programId);
   fs.writeFileSync(filePath, pdfBuffer);
   return filePath;
-}
-
-export function dietPdfFilename(preferredName) {
-  const base = String(preferredName || 'Burn-Build')
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .slice(0, 60) || 'Burn-Build';
-  return `${base}-Burn-Build-Diet.pdf`;
 }

@@ -10,14 +10,14 @@ function emailFrom() {
   return process.env.DIET_EMAIL_FROM || 'Burn & Build <orders@burnandbuilddiet.com>';
 }
 
-export async function sendDietPdfEmail({ to, preferredName, pdfBuffer }) {
+export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer }) {
   const apiKey = String(process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) {
     console.warn('[diet-email] RESEND_API_KEY not set — skipping email.');
     return { ok: false, skipped: true };
   }
 
-  const filename = dietPdfFilename(preferredName);
+  const filename = dietPdfFilename({ preferredName, pkg });
   const firstName = String(preferredName || '').trim().split(/\s+/)[0] || 'there';
 
   const res = await fetch(RESEND_API, {

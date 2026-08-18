@@ -2,6 +2,7 @@
 
 import { apiUrl } from './apiConfig.js';
 import { fetchJson } from './apiFetch.js';
+import { dietPdfFilename } from './dietPdfNaming.js';
 import { normalizeEmail } from './programApi.js';
 
 export function dietPdfDownloadUrl(email, programId) {
@@ -16,7 +17,7 @@ function triggerBrowserDownload(blob, filename) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = filename || 'Burn-Build-Diet.pdf';
+  anchor.download = filename || dietPdfFilename();
   anchor.rel = 'noopener';
   document.body.appendChild(anchor);
   anchor.click();

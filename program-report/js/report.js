@@ -20,6 +20,7 @@ import { getActiveProgramId, setActiveProgramId } from '../../js/programActive.j
 import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/programLibrary.js';
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
+import { dietPdfFilename } from '../../js/dietPdfNaming.js';
 import { kwarnerPreviewPdfUrl, PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
@@ -587,7 +588,7 @@ async function downloadProgramReportPdfFile(existingBlob) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'Burn-and-Build-Program-Report.pdf';
+    link.download = dietPdfFilename({ pkg: programPackage });
     link.rel = 'noopener';
     document.body.appendChild(link);
     link.click();
