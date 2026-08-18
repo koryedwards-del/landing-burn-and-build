@@ -229,6 +229,7 @@ app.get('/api/checkout/status', (_req, res) => {
   res.json({
     ok: true,
     configured: stripeConfigured(),
+    dietEmail: dietEmailConfigured(),
     testBypass: !isProd || process.env.STRIPE_TEST_BYPASS === '1',
   });
 });

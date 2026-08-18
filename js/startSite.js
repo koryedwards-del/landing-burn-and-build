@@ -32,6 +32,7 @@ const store = {
   dietDownloaded: false,
   dietEmailSent: false,
   dietEmailBusy: false,
+  dietEmailAvailable: true,
   dietEmailError: '',
   dietFulfillmentError: '',
 };
@@ -193,13 +194,11 @@ function renderPaidDirections() {
       ? 'DOWNLOAD AGAIN'
       : 'DOWNLOAD YOUR BURN & BUILD DIET';
 
-  const emailDetail = store.dietEmailSent
-    ? `We emailed a copy to <strong>${escapeHtml(email)}</strong>.`
-    : store.dietEmailBusy
-      ? `Sending a copy to <strong>${escapeHtml(email)}</strong>…`
-      : store.dietEmailError
-        ? `${escapeHtml(store.dietEmailError)} Contact <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a> if it does not arrive.`
-        : `Sending a copy to <strong>${escapeHtml(email)}</strong>…`;
+  const downloadDetail = store.dietDownloaded
+    ? 'Check your Downloads folder.'
+    : '';
+
+  const emailStep = emailStepState(email);
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
@@ -216,18 +215,61 @@ function renderPaidDirections() {
                 <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
                   ${downloadLabel}
                 </button>
+                ${downloadDetail ? `<p class="unlock-step__detail unlock-step__detail--ok">${downloadDetail}</p>` : ''}
               </div>
             </li>
-            <li class="unlock-step ${store.dietEmailSent ? 'unlock-step--done' : store.dietEmailBusy ? 'unlock-step--current' : ''}">
+            <li class="unlock-step unlock-step--${emailStep.status}">
               <div class="unlock-step__marker" aria-hidden="true">3</div>
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Check your email</p>
-                <p class="unlock-step__detail">${emailDetail}</p>
+                <p class="unlock-step__detail">${emailStep.detail}</p>
               </div>
             </li>
           </ol>
           <p class="unlock-hint"><a href="/get-your-diet/">Download or resend later</a></p>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
+}
+
+function emailStepState(email) {
+  const safeEmail = escapeHtml(email);
+
+  if (store.dietEmailSent) {
+    return {
+      status: 'done',
+      detail: `We emailed a copy to <strong>${safeEmail}</strong>.`,
+    };
+  }
+
+  if (store.dietEmailBusy) {
+    return {
+      status: 'current',
+      detail: `Sending a copy to <strong>${safeEmail}</strong> — no action needed.`,
+    };
+  }
+
+  if (!store.dietEmailAvailable) {
+    return {
+      status: 'pending',
+      detail: `Download your PDF above for your full diet plan. Need it by email? Visit <a href="/get-your-diet/">get-your-diet</a>.`,
+    };
+  }
+
+  if (store.dietEmailError) {
+    return {
+      status: 'warn',
+      detail: `Download your PDF above. Didn&rsquo;t get the email? Check spam or visit <a href="/get-your-diet/">get-your-diet</a>.`,
+    };
+  }
+
+  return {
+    status: 'current',
+    detail: `A copy is being sent to <strong>${safeEmail}</strong> — no action needed.`,
+  };
+}
+
+function isNonRetryableEmailError(message) {
+  const msg = String(message || '').toLowerCase();
+  return msg.includes('not configured') || msg.includes('diet email');
 }
 
 function renderPlanReadyAppHandoff(unlocked) {
@@ -308,6 +350,7 @@ async function refreshCheckoutConfig() {
   const status = await fetchCheckoutStatus();
   store.apiReachable = status.reachable !== false;
   store.stripeConfigured = !!status.configured;
+  store.dietEmailAvailable = status.dietEmail !== false;
   store.checkoutTestBypass = isTestMode();
 }
 
@@ -375,12 +418,18 @@ async function triggerDietDownload() {
 function applyFulfillmentResult(result) {
   store.dietEmailSent = !!result?.emailSent || !!result?.emailAlreadySent;
   store.dietPreparing = !result?.pdfReady;
-  store.dietEmailError = result?.emailError || '';
+  if (result?.emailError && isNonRetryableEmailError(result.emailError)) {
+    store.dietEmailAvailable = false;
+  }
+  store.dietEmailError = result?.emailError && !isNonRetryableEmailError(result.emailError)
+    ? result.emailError
+    : '';
   store.dietFulfillmentError = result?.error || '';
 }
 
-async function ensureDietEmailDelivered({ attempts = 10, delayMs = 2000 } = {}) {
-  if (store.dietEmailSent) return;
+async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
+  if (store.dietEmailSent || store.dietEmailBusy) return;
+  if (!store.dietEmailAvailable) return;
 
   const email = ensurePlanReadyEmail();
   const programId = activeProgramId();
@@ -390,7 +439,7 @@ async function ensureDietEmailDelivered({ attempts = 10, delayMs = 2000 } = {}) 
   store.dietEmailError = '';
   render();
 
-  let lastError = '';
+  let hadRetryableError = false;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (store.dietEmailSent) break;
 
@@ -400,17 +449,26 @@ async function ensureDietEmailDelivered({ attempts = 10, delayMs = 2000 } = {}) 
       store.dietEmailError = '';
       break;
     }
-    lastError = result.message || lastError;
+
+    if (isNonRetryableEmailError(result.message)) {
+      store.dietEmailAvailable = false;
+      break;
+    }
+
+    hadRetryableError = true;
     if (attempt < attempts - 1) {
       await new Promise((resolve) => { setTimeout(resolve, delayMs); });
     }
   }
 
   store.dietEmailBusy = false;
-  if (!store.dietEmailSent && lastError) {
-    store.dietEmailError = lastError;
-  }
+  store.dietEmailError = hadRetryableError && !store.dietEmailSent ? 'retry-failed' : '';
   render();
+}
+
+function startPostPaymentEmail() {
+  if (!store.programPaid || store.dietEmailSent || !store.dietEmailAvailable) return;
+  void ensureDietEmailDelivered();
 }
 
 async function handleCheckoutReturn() {
@@ -457,8 +515,6 @@ async function handleCheckoutReturn() {
   store.checkoutVerified = true;
   store.programPaid = true;
   applyFulfillmentResult(result);
-
-  await ensureDietEmailDelivered();
 }
 
 async function retrySavePlan() {
@@ -516,8 +572,8 @@ async function completeTestCheckout() {
   store.checkoutVerified = true;
   store.programPaid = true;
   applyFulfillmentResult(result);
-  await ensureDietEmailDelivered();
   render();
+  startPostPaymentEmail();
 }
 
 async function preparePlanReadyState() {
@@ -525,9 +581,6 @@ async function preparePlanReadyState() {
   await refreshCheckoutConfig();
   await handleCheckoutReturn();
   await refreshProgramPaymentStatus();
-  if (store.programPaid && !store.dietEmailSent) {
-    void ensureDietEmailDelivered();
-  }
 }
 
 function render() {
@@ -597,4 +650,5 @@ bindGlobal();
   sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
   await preparePlanReadyState();
   render();
+  startPostPaymentEmail();
 })();
