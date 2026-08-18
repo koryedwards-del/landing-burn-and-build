@@ -289,6 +289,7 @@ function renderPlanReady() {
           ${renderPlanReadyAppHandoff(hasPaidAccess)}
           ${store.checkoutError ? `<div class="unlock-error">${store.checkoutError}</div>` : ''}
           ${store.saveError ? `<div class="unlock-error">${store.saveError}</div>` : ''}
+          ${hasPaidAccess ? '<p class="unlock-hint"><a href="/">← Back to website</a></p>' : ''}
         </div>
       </div>
     </div>`;
