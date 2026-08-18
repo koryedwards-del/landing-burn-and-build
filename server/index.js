@@ -12,7 +12,7 @@ import {
   setBurnAndBuild,
   upsertContact,
 } from './contacts.js';
-import { countPrograms, dbPathForHealth, deleteProgram, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, listPaidPrograms, markProgramPaid, normalizeEmail, saveProgram } from './db.js';
+import { countPrograms, dbPathForHealth, deleteProgram, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, listPaidPrograms, markProgramPaid, normalizeEmail, saveProgram, wasDietEmailSent } from './db.js';
 import { validateProgramPackage } from '../js/programPackage.js';
 import {
   constructStripeWebhookEvent,
@@ -493,6 +493,7 @@ app.get('/api/programs/payment-status', (req, res) => {
     email,
     programId,
     paid: isProgramPaid(email, programId),
+    dietEmailSent: wasDietEmailSent(email, programId),
   });
 });
 
@@ -546,7 +547,10 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
   }
 
   try {
-    const result = await fulfillDietDelivery(email, programId, { forceEmail: true });
+    let result = await fulfillDietDelivery(email, programId, { forceEmail: false });
+    if (!result.emailSent) {
+      result = await fulfillDietDelivery(email, programId, { forceEmail: true });
+    }
     if (!result.emailSent) {
       const message = result.emailError || 'Email could not be sent.';
       res.status(result.emailSkipped ? 503 : 500).json({ ok: false, message });
@@ -557,6 +561,7 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
       email,
       programId,
       emailSent: result.emailSent,
+      emailAlreadySent: result.emailAlreadySent,
       emailSkipped: result.emailSkipped,
     });
   } catch (err) {

@@ -199,6 +199,9 @@ async function refreshProgramPaymentStatus() {
   if (store.programPaid) {
     persistPaidProgramId(programId);
   }
+  if (result.ok && result.dietEmailSent) {
+    store.dietEmailSent = true;
+  }
 }
 
 function stepMarker(num, { complete = false, busy = false } = {}) {
@@ -225,7 +228,7 @@ function renderPaidDirections() {
   const emailMarker = stepMarker(3, { complete: store.dietEmailSent });
   const safeEmail = escapeHtml(email);
   const emailTitle = store.dietEmailSent
-    ? `Email sent to <strong>${safeEmail}</strong>`
+    ? `Burn &amp; Build sent a copy of your printout to <strong>${safeEmail}</strong>`
     : 'Check your email';
   const emailDetail = store.dietEmailSent ? '' : emailStep.detail;
 
@@ -471,9 +474,10 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
     if (store.dietEmailSent) break;
 
     const result = await resendDietEmail(email, programId);
-    if (result.ok && result.emailSent) {
+    if (result.ok && (result.emailSent || result.emailAlreadySent)) {
       store.dietEmailSent = true;
       store.dietEmailError = '';
+      render();
       break;
     }
 
@@ -542,6 +546,8 @@ async function handleCheckoutReturn() {
   store.checkoutVerified = true;
   store.programPaid = true;
   applyFulfillmentResult(result);
+  render();
+  startPostPaymentEmail();
 }
 
 async function retrySavePlan() {
