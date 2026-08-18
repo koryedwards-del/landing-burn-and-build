@@ -215,7 +215,7 @@ function renderPaidDirections() {
           <div class="unlock-receipt">
             <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
             ${downloadLine}
-            <p class="unlock-receipt__note">a copy has also been sent to your email</p>
+            <p class="unlock-receipt__note${store.dietEmailSent ? ' unlock-receipt__note--sent' : ''}">a copy has also been sent to your email</p>
           </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
