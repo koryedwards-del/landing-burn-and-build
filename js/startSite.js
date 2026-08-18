@@ -289,9 +289,6 @@ function renderPlanReady() {
           ${renderPlanReadyAppHandoff(hasPaidAccess)}
           ${store.checkoutError ? `<div class="unlock-error">${store.checkoutError}</div>` : ''}
           ${store.saveError ? `<div class="unlock-error">${store.saveError}</div>` : ''}
-          <p class="unlock-hint">${hasPaidAccess || isDietCreationGated()
-    ? '<a href="/">← Back to website</a>'
-    : `<a href="${QUESTIONNAIRE_WELCOME_URL}">← Back to questionnaire</a>`}</p>
         </div>
       </div>
     </div>`;
