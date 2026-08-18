@@ -227,10 +227,18 @@ function renderPaidDirections() {
 
   const emailMarker = stepMarker(3, { complete: store.dietEmailSent });
   const safeEmail = escapeHtml(email);
-  const emailTitle = store.dietEmailSent
-    ? `Burn &amp; Build sent a copy of your printout to <strong>${safeEmail}</strong>`
-    : 'Check your email';
-  const emailDetail = store.dietEmailSent ? '' : emailStep.detail;
+
+  const downloadContent = store.dietDownloaded
+    ? `<p class="unlock-step__title">Download your Burn &amp; Build Diet</p>
+                <p class="unlock-step__detail unlock-step__detail--ok">Check your Downloads folder.</p>`
+    : `<button type="button" class="unlock-step__action" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
+                  ${downloadActionLabel}
+                </button>`;
+
+  const emailTitle = 'Check your email';
+  const emailDetail = store.dietEmailSent
+    ? `<p class="unlock-step__detail unlock-step__detail--ok">${safeEmail}</p>`
+    : (emailStep.detail ? `<p class="unlock-step__detail">${emailStep.detail}</p>` : '');
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
@@ -243,17 +251,14 @@ function renderPaidDirections() {
             <li class="unlock-step ${store.dietDownloaded ? 'unlock-step--complete' : 'unlock-step--current'}">
               ${downloadMarker}
               <div class="unlock-step__content">
-                <button type="button" class="unlock-step__action" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
-                  ${downloadActionLabel}
-                </button>
-                ${store.dietDownloaded ? '<p class="unlock-step__detail unlock-step__detail--ok">Check your Downloads folder.</p>' : ''}
+                ${downloadContent}
               </div>
             </li>
             <li class="unlock-step unlock-step--${emailStep.status}${store.dietEmailSent ? ' unlock-step--complete' : ''}">
               ${emailMarker}
               <div class="unlock-step__content">
                 <p class="unlock-step__title">${emailTitle}</p>
-                ${emailDetail ? `<p class="unlock-step__detail">${emailDetail}</p>` : ''}
+                ${emailDetail}
               </div>
             </li>
           </ol>
@@ -273,27 +278,27 @@ function emailStepState(email) {
   if (store.dietEmailBusy) {
     return {
       status: 'current',
-      detail: `Sending a copy to <strong>${safeEmail}</strong> — no action needed.`,
+      detail: `Sending to <strong>${safeEmail}</strong> — no action needed.`,
     };
   }
 
   if (!store.dietEmailAvailable) {
     return {
       status: 'pending',
-      detail: `Download your PDF above for your full diet plan. A copy is also sent to <strong>${safeEmail}</strong>.`,
+      detail: `A copy is also sent to <strong>${safeEmail}</strong>.`,
     };
   }
 
   if (store.dietEmailError) {
     return {
       status: 'warn',
-      detail: `Download your PDF above. Didn&rsquo;t get the email? Check spam at <strong>${safeEmail}</strong>.`,
+      detail: `Didn&rsquo;t get it? Check spam for <strong>${safeEmail}</strong>.`,
     };
   }
 
   return {
     status: 'current',
-    detail: `A copy is being sent to <strong>${safeEmail}</strong> — no action needed.`,
+    detail: `Sending to <strong>${safeEmail}</strong> — no action needed.`,
   };
 }
 
