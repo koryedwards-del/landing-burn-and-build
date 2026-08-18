@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { dietPdfDocumentLabel, dietPdfFilename } from '../js/dietPdfNaming.js';
+import { dietPdfDocumentLabel, dietPdfFilename, dietPdfAttachmentFilename } from '../js/dietPdfNaming.js';
 import { prepareDatabasePath, resolveDatabasePath } from './dbPath.js';
 
-export { dietPdfDocumentLabel, dietPdfFilename };
+export { dietPdfDocumentLabel, dietPdfFilename, dietPdfAttachmentFilename };
 
 function dietPdfDirectory() {
   const dbPath = resolveDatabasePath();

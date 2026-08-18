@@ -32,7 +32,7 @@ import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramRepo
 import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
-import { dietPdfFilename } from './dietPdfStorage.js';
+import { dietPdfAttachmentFilename } from './dietPdfStorage.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
