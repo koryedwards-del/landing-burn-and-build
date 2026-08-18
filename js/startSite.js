@@ -183,7 +183,7 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
-function renderPaidDietDelivery() {
+function renderPaidDirections() {
   const email = ensurePlanReadyEmail();
   const downloadLabel = store.dietDownloadBusy
     ? 'PREPARING YOUR PDF…'
@@ -191,12 +191,36 @@ function renderPaidDietDelivery() {
       ? 'DOWNLOAD AGAIN'
       : 'DOWNLOAD YOUR BURN & BUILD DIET';
 
+  const emailDetail = store.dietEmailSent
+    ? `We also emailed a copy to <strong>${escapeHtml(email)}</strong>.`
+    : `Check your email for a copy at <strong>${escapeHtml(email)}</strong>.`;
+
   return `
-          <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
-            ${downloadLabel}
-          </button>
-          <p class="unlock-tagline">Save the PDF — it is your full personalized Burn &amp; Build Diet.</p>
-          ${store.dietEmailSent ? `<p class="unlock-hint">We also emailed a copy to <strong>${escapeHtml(email)}</strong>.</p>` : ''}
+          <ol class="unlock-steps" aria-label="Next steps">
+            <li class="unlock-step unlock-step--done">
+              <div class="unlock-step__marker" aria-hidden="true">1</div>
+              <div class="unlock-step__content">
+                <p class="unlock-step__title">Payment complete</p>
+              </div>
+            </li>
+            <li class="unlock-step unlock-step--current">
+              <div class="unlock-step__marker" aria-hidden="true">2</div>
+              <div class="unlock-step__content">
+                <p class="unlock-step__title">Download your Burn &amp; Build Diet</p>
+                <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
+                  ${downloadLabel}
+                </button>
+                <p class="unlock-step__detail">Save the PDF — it is your full personalized Burn &amp; Build Diet.</p>
+              </div>
+            </li>
+            <li class="unlock-step">
+              <div class="unlock-step__marker" aria-hidden="true">3</div>
+              <div class="unlock-step__content">
+                <p class="unlock-step__title">Check your email</p>
+                <p class="unlock-step__detail">${emailDetail}</p>
+              </div>
+            </li>
+          </ol>
           <p class="unlock-hint"><a href="/get-your-diet/">Download or resend later</a></p>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
@@ -205,7 +229,7 @@ function renderPlanReadyAppHandoff(unlocked) {
   if (!unlocked) {
     return '<p class="unlock-tagline">Complete purchase to download your personalized diet PDF.</p>';
   }
-  return renderPaidDietDelivery();
+  return renderPaidDirections();
 }
 
 function renderPlanReady() {
@@ -216,7 +240,7 @@ function renderPlanReady() {
   const showPaywall = !hasPaidAccess;
   let lead;
   if (hasPaidAccess) {
-    lead = 'Payment complete. Download your Burn &amp; Build Diet below — and check your email for a copy.';
+    lead = '';
   } else if (store.saveError) {
     lead = 'Your diet is ready on this device. Save it to your account, then complete checkout.';
   } else {
@@ -256,8 +280,8 @@ function renderPlanReady() {
           ${successLines}
         </div>
         <div class="unlock-panel">
-          <p class="unlock-lead">${lead}</p>
-          ${store.checkoutMessage ? `<div class="ob-info"><span class="ob-info-icon">ℹ️</span><p>${store.checkoutMessage}</p></div>` : ''}
+          ${lead ? `<p class="unlock-lead">${lead}</p>` : ''}
+          ${store.checkoutMessage && !hasPaidAccess ? `<div class="ob-info"><span class="ob-info-icon">ℹ️</span><p>${store.checkoutMessage}</p></div>` : ''}
           ${checkoutBlock}
           ${saveActions}
           ${renderPlanReadyAppHandoff(hasPaidAccess)}
