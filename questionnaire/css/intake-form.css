@@ -476,7 +476,8 @@ body.q-app--workroom,
 .intake-waiver__input::placeholder {
   color: var(--muted);
   font-size: 0.8125rem;
-  letter-spacing: 0.04em;
+  font-style: italic;
+  letter-spacing: normal;
 }
 
 .intake-review {
