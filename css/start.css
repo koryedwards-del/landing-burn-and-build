@@ -194,6 +194,17 @@
   font-weight: 800;
 }
 
+.unlock-step__marker--busy {
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+.unlock-action__marker {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
 .unlock-step--current .unlock-step__marker:not(.unlock-step__marker--check) {
   border-color: var(--flame);
   color: var(--flame);
@@ -247,8 +258,7 @@
 }
 
 .unlock-action__btn {
-  display: block;
-  width: 100%;
+  display: inline;
   margin: 0;
   padding: 0;
   border: none;
@@ -261,13 +271,11 @@
   letter-spacing: 0.02em;
   text-align: left;
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.45);
-  text-underline-offset: 4px;
+  text-decoration: none;
 }
 
 .unlock-action__btn:hover:not(:disabled) {
-  text-decoration-color: #fff;
+  color: var(--flame);
 }
 
 .unlock-action__btn:disabled {

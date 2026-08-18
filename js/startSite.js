@@ -212,6 +212,16 @@ function stepMarker(num, { complete = false, busy = false } = {}) {
   return `<div class="unlock-step__marker" aria-hidden="true">${label}</div>`;
 }
 
+function actionMarker({ complete = false, busy = false } = {}) {
+  if (complete) {
+    return '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>';
+  }
+  if (busy) {
+    return '<div class="unlock-step__marker unlock-step__marker--busy" aria-hidden="true">…</div>';
+  }
+  return '<div class="unlock-action__marker" aria-hidden="true"></div>';
+}
+
 function renderPaidDirections() {
   const email = ensurePlanReadyEmail();
   const emailStep = emailStepState(email);
@@ -219,9 +229,9 @@ function renderPaidDirections() {
 
   const actionsBoxClass = store.dietDownloaded && store.dietEmailSent
     ? 'unlock-step--complete'
-    : (store.dietEmailError ? 'unlock-step--warn' : 'unlock-step--current');
+    : (store.dietEmailError ? 'unlock-step--warn' : '');
 
-  const downloadMarker = stepMarker(1, {
+  const downloadMarker = actionMarker({
     complete: store.dietDownloaded,
     busy: store.dietDownloadBusy,
   });
@@ -234,7 +244,7 @@ function renderPaidDirections() {
                 </div>
                 ${downloadMarker}
               </div>`
-    : `<div class="unlock-action unlock-action--current">
+    : `<div class="unlock-action">
                 <div class="unlock-action__content">
                   <button type="button" class="unlock-action__btn" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
                     ${store.dietDownloadBusy ? 'PREPARING YOUR PDF…' : 'DOWNLOAD IMMEDIATELY'}
@@ -243,7 +253,10 @@ function renderPaidDirections() {
                 ${downloadMarker}
               </div>`;
 
-  const emailMarker = stepMarker(2, { complete: store.dietEmailSent });
+  const emailMarker = actionMarker({
+    complete: store.dietEmailSent,
+    busy: store.dietEmailBusy,
+  });
   const emailExtra = !store.dietEmailSent && store.dietEmailError
     ? '<p class="unlock-action__detail">Didn&rsquo;t get it? Check spam.</p>'
     : (!store.dietEmailSent && store.dietEmailBusy
@@ -253,7 +266,7 @@ function renderPaidDirections() {
         : ''));
   const emailDetail = `<p class="unlock-action__detail">${safeEmail}</p>${emailExtra}`;
 
-  const emailRow = `<div class="unlock-action unlock-action--${store.dietEmailSent ? 'complete' : emailStep.status}">
+  const emailRow = `<div class="unlock-action${store.dietEmailSent ? ' unlock-action--complete' : ''}">
                 <div class="unlock-action__content">
                   <p class="unlock-action__title">CHECK YOUR</p>
                   ${emailDetail}
