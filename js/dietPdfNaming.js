@@ -4,6 +4,8 @@ import { programClientName } from './programBridgeUi.js';
 import { localDateKey } from './programPackage.js';
 import { seminarPreparedDate } from './programReportPrintout.js';
 
+const DIET_PDF_PREFIX = 'Burn & Build Diet';
+
 function sanitizeNamePart(preferredName) {
   return String(preferredName || 'Client')
     .trim()
@@ -22,7 +24,7 @@ function formatCreationDate(isoOrDate) {
 export function dietPdfDocumentLabel({ preferredName, createdAt, pkg } = {}) {
   const name = sanitizeNamePart(preferredName || (pkg ? programClientName(pkg) : ''));
   const date = formatCreationDate(createdAt || (pkg ? seminarPreparedDate(pkg) : null));
-  return `B&B-${name}-${date}`;
+  return `${DIET_PDF_PREFIX}-${name}-${date}`;
 }
 
 export function dietPdfFilename(options = {}) {

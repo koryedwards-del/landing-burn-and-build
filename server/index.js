@@ -517,7 +517,7 @@ app.get('/api/programs/diet-pdf', async (req, res) => {
   try {
     const pdf = await ensureDietPdf(email, programId);
     const pkg = getProgramById(email, programId);
-    const filename = dietPdfFilename({ preferredName: pkg?.intake?.preferredName, pkg });
+    const filename = dietPdfAttachmentFilename({ preferredName: pkg?.intake?.preferredName, pkg });
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdf);
