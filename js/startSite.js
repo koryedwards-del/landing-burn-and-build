@@ -215,50 +215,64 @@ function stepMarker(num, { complete = false, busy = false } = {}) {
 function renderPaidDirections() {
   const email = ensurePlanReadyEmail();
   const emailStep = emailStepState(email);
+  const safeEmail = escapeHtml(email);
 
-  const downloadActionLabel = store.dietDownloadBusy
-    ? 'Preparing your PDF…'
-    : 'Download your Burn & Build Diet';
+  const actionsBoxClass = store.dietDownloaded && store.dietEmailSent
+    ? 'unlock-step--complete'
+    : (store.dietEmailError ? 'unlock-step--warn' : 'unlock-step--current');
 
-  const downloadMarker = stepMarker(2, {
+  const downloadMarker = stepMarker(1, {
     complete: store.dietDownloaded,
     busy: store.dietDownloadBusy,
   });
 
-  const emailMarker = stepMarker(3, { complete: store.dietEmailSent });
-  const safeEmail = escapeHtml(email);
+  const downloadRow = store.dietDownloaded
+    ? `<div class="unlock-action unlock-action--complete">
+                <div class="unlock-action__content">
+                  <p class="unlock-action__title">DOWNLOAD IMMEDIATELY</p>
+                  <p class="unlock-action__detail">Check your Downloads folder.</p>
+                </div>
+                ${downloadMarker}
+              </div>`
+    : `<div class="unlock-action unlock-action--current">
+                <div class="unlock-action__content">
+                  <button type="button" class="unlock-action__btn" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
+                    ${store.dietDownloadBusy ? 'PREPARING YOUR PDF…' : 'DOWNLOAD IMMEDIATELY'}
+                  </button>
+                </div>
+                ${downloadMarker}
+              </div>`;
 
-  const downloadContent = store.dietDownloaded
-    ? `<p class="unlock-step__title">Download your Burn &amp; Build Diet</p>
-                <p class="unlock-step__detail unlock-step__detail--ok">Check your Downloads folder.</p>`
-    : `<button type="button" class="unlock-step__action" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
-                  ${downloadActionLabel}
-                </button>`;
+  const emailMarker = stepMarker(2, { complete: store.dietEmailSent });
+  const emailExtra = !store.dietEmailSent && store.dietEmailError
+    ? '<p class="unlock-action__detail">Didn&rsquo;t get it? Check spam.</p>'
+    : (!store.dietEmailSent && store.dietEmailBusy
+      ? '<p class="unlock-action__detail">Sending — no action needed.</p>'
+      : (!store.dietEmailSent && !store.dietEmailAvailable
+        ? '<p class="unlock-action__detail">Sending — no action needed.</p>'
+        : ''));
+  const emailDetail = `<p class="unlock-action__detail">${safeEmail}</p>${emailExtra}`;
 
-  const emailTitle = 'Check your email';
-  const emailDetail = store.dietEmailSent
-    ? `<p class="unlock-step__detail unlock-step__detail--ok">${safeEmail}</p>`
-    : (emailStep.detail ? `<p class="unlock-step__detail">${emailStep.detail}</p>` : '');
+  const emailRow = `<div class="unlock-action unlock-action--${store.dietEmailSent ? 'complete' : emailStep.status}">
+                <div class="unlock-action__content">
+                  <p class="unlock-action__title">CHECK YOUR</p>
+                  ${emailDetail}
+                </div>
+                ${emailMarker}
+              </div>`;
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
             <li class="unlock-step unlock-step--complete">
               ${stepMarker(1, { complete: true })}
               <div class="unlock-step__content">
-                <p class="unlock-step__title">Payment complete</p>
+                <p class="unlock-step__title">PAYMENT SUCCESS</p>
               </div>
             </li>
-            <li class="unlock-step ${store.dietDownloaded ? 'unlock-step--complete' : 'unlock-step--current'}">
-              ${downloadMarker}
-              <div class="unlock-step__content">
-                ${downloadContent}
-              </div>
-            </li>
-            <li class="unlock-step unlock-step--${emailStep.status}${store.dietEmailSent ? ' unlock-step--complete' : ''}">
-              ${emailMarker}
-              <div class="unlock-step__content">
-                <p class="unlock-step__title">${emailTitle}</p>
-                ${emailDetail}
+            <li class="unlock-step unlock-step--group ${actionsBoxClass}">
+              <div class="unlock-step__content unlock-step__content--stack">
+                ${downloadRow}
+                ${emailRow}
               </div>
             </li>
           </ol>
