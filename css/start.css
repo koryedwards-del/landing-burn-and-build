@@ -109,6 +109,61 @@
   color: var(--cyan);
 }
 
+.unlock-receipt {
+  margin: 0 0 8px;
+  padding: 20px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+}
+
+.unlock-receipt__line {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.unlock-receipt__download {
+  display: block;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.unlock-receipt__download:hover:not(:disabled) {
+  color: var(--flame);
+}
+
+.unlock-receipt__download:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.unlock-receipt__download--done {
+  margin-bottom: 14px;
+}
+
+.unlock-receipt__note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .unlock-steps {
   list-style: none;
   margin: 0 0 8px;
