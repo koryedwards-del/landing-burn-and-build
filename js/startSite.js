@@ -346,7 +346,7 @@ function cleanCheckoutQuery() {
   history.replaceState({}, '', `${url.pathname}${url.search}`);
 }
 
-async function triggerDietDownload({ auto = false } = {}) {
+async function triggerDietDownload() {
   const email = ensurePlanReadyEmail();
   const programId = activeProgramId();
   if (!isValidEmail(email) || !programId) {
@@ -357,7 +357,7 @@ async function triggerDietDownload({ auto = false } = {}) {
 
   store.dietDownloadBusy = true;
   store.dietFulfillmentError = '';
-  if (!auto) render();
+  render();
 
   const result = await downloadDietPdfWithRetry(email, programId);
   store.dietDownloadBusy = false;
@@ -458,10 +458,7 @@ async function handleCheckoutReturn() {
   store.programPaid = true;
   applyFulfillmentResult(result);
 
-  await Promise.all([
-    triggerDietDownload({ auto: true }),
-    ensureDietEmailDelivered(),
-  ]);
+  await ensureDietEmailDelivered();
 }
 
 async function retrySavePlan() {
@@ -519,10 +516,7 @@ async function completeTestCheckout() {
   store.checkoutVerified = true;
   store.programPaid = true;
   applyFulfillmentResult(result);
-  await Promise.all([
-    triggerDietDownload({ auto: true }),
-    ensureDietEmailDelivered(),
-  ]);
+  await ensureDietEmailDelivered();
   render();
 }
 
@@ -531,6 +525,9 @@ async function preparePlanReadyState() {
   await refreshCheckoutConfig();
   await handleCheckoutReturn();
   await refreshProgramPaymentStatus();
+  if (store.programPaid && !store.dietEmailSent) {
+    void ensureDietEmailDelivered();
+  }
 }
 
 function render() {
