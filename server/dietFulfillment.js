@@ -33,8 +33,9 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
   if (!forceEmail && wasDietEmailSent(email, programId)) {
     return {
       pdfReady: true,
-      emailSent: false,
+      emailSent: true,
       emailSkipped: true,
+      emailAlreadySent: true,
       emailError: null,
       forced: false,
     };
