@@ -75,7 +75,13 @@ export async function resendDietEmail(email, programId, { force = false } = {}) 
         force,
       }),
     });
-    if (!res.ok) return { ok: false, message: data.message || 'Could not resend your diet email.' };
+    if (!res.ok) {
+      return {
+        ok: false,
+        message: data.message || 'Could not resend your diet email.',
+        emailAlreadySent: !!data.emailAlreadySent,
+      };
+    }
     return data;
   } catch {
     return { ok: false, message: 'Network error resending your diet email.' };

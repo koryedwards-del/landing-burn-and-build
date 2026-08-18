@@ -12,7 +12,7 @@ import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js'
 import { QUESTIONNAIRE_WELCOME_URL, CREATOR_CHECKOUT_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
-const DIET_EMAIL_FORCE_KEY = 'bnb_diet_email_force_attempted';
+const DIET_EMAIL_DISPATCHED_KEY = 'bnb_diet_email_dispatched';
 
 const store = {
   builtPackage: null,
@@ -202,13 +202,20 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
-function shouldForceDietEmailSend() {
-  return store.checkoutVerified && !sessionStorage.getItem(DIET_EMAIL_FORCE_KEY);
+function restoreDietEmailDispatched() {
+  try {
+    if (sessionStorage.getItem(DIET_EMAIL_DISPATCHED_KEY) === '1') {
+      store.dietEmailSent = true;
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
-function markDietEmailForceAttempted() {
+function markDietEmailSent() {
+  store.dietEmailSent = true;
   try {
-    sessionStorage.setItem(DIET_EMAIL_FORCE_KEY, '1');
+    sessionStorage.setItem(DIET_EMAIL_DISPATCHED_KEY, '1');
   } catch {
     /* ignore */
   }
@@ -225,7 +232,7 @@ function renderPaidDirections() {
           <div class="unlock-receipt">
             <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
             ${downloadLine}
-            <p class="unlock-receipt__note${store.dietEmailSent ? ' unlock-receipt__note--sent' : ''}">a copy has also been sent to your email</p>
+            <p class="unlock-receipt__note${store.dietEmailSent ? ' unlock-receipt__note--sent' : (store.dietEmailBusy ? ' unlock-receipt__note--sending' : '')}">a copy has also been sent to your email</p>
           </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
@@ -378,7 +385,7 @@ async function triggerDietDownload() {
 
 function applyFulfillmentResult(result) {
   if (result?.emailSent) {
-    store.dietEmailSent = true;
+    markDietEmailSent();
   }
   store.dietPreparing = !result?.pdfReady;
   if (result?.emailError && isNonRetryableEmailError(result.emailError)) {
@@ -403,22 +410,19 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   render();
 
   let hadRetryableError = false;
+  let lastMessage = '';
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (store.dietEmailSent) break;
 
-    const force = shouldForceDietEmailSend() || attempt > 0;
-    const result = await resendDietEmail(email, programId, { force });
+    const result = await resendDietEmail(email, programId, { force: true });
     if (result.ok && result.emailSent) {
-      if (force) markDietEmailForceAttempted();
-      store.dietEmailSent = true;
+      markDietEmailSent();
       store.dietEmailError = '';
       render();
       break;
     }
 
-    if (result.emailAlreadySent && !force) {
-      break;
-    }
+    lastMessage = result.message || lastMessage;
 
     if (isNonRetryableEmailError(result.message)) {
       store.dietEmailAvailable = false;
@@ -433,6 +437,9 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
 
   store.dietEmailBusy = false;
   store.dietEmailError = hadRetryableError && !store.dietEmailSent ? 'retry-failed' : '';
+  if (!store.dietEmailSent && lastMessage) {
+    store.dietFulfillmentError = lastMessage;
+  }
   render();
 }
 
@@ -589,6 +596,7 @@ bindGlobal();
 (async () => {
   restorePaidProgramId();
   restoreBuiltPackage();
+  restoreDietEmailDispatched();
   store.email = getAppEmail() || store.builtPackage?.intake?.email || '';
 
   const checkoutParams = new URLSearchParams(location.search);

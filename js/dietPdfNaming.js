@@ -4,7 +4,7 @@ import { programClientName } from './programBridgeUi.js';
 import { localDateKey } from './programPackage.js';
 import { seminarPreparedDate } from './programReportPrintout.js';
 
-const DIET_PDF_PREFIX = 'Burn & Build Diet';
+const DIET_PDF_PREFIX = 'Burn&Build';
 
 function sanitizeNamePart(preferredName) {
   return String(preferredName || 'Client')

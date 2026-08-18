@@ -172,6 +172,11 @@
   color: var(--green);
 }
 
+.unlock-receipt__note--sending {
+  color: var(--muted);
+  font-style: italic;
+}
+
 .unlock-steps {
   list-style: none;
   margin: 0 0 8px;

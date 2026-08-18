@@ -92,6 +92,15 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
 
   if (emailResult.ok) {
     markDietEmailSent(email, programId);
+    console.info('[diet-email] Delivery complete', { email, programId, resendId: emailResult.id, forced: forceEmail });
+  } else {
+    console.error('[diet-email] Delivery failed', {
+      email,
+      programId,
+      forced: forceEmail,
+      skipped: !!emailResult.skipped,
+      message: emailResult.message,
+    });
   }
 
   const emailError = emailResult.ok
