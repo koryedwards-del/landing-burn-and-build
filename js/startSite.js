@@ -188,38 +188,39 @@ async function refreshProgramPaymentStatus() {
 
 function renderPaidDirections() {
   const email = ensurePlanReadyEmail();
-  const downloadLabel = store.dietDownloadBusy
-    ? 'PREPARING YOUR PDF…'
-    : store.dietDownloaded
-      ? 'DOWNLOAD AGAIN'
-      : 'DOWNLOAD YOUR BURN & BUILD DIET';
-
-  const downloadDetail = store.dietDownloaded
-    ? 'Check your Downloads folder.'
-    : '';
-
   const emailStep = emailStepState(email);
+
+  const downloadActionLabel = store.dietDownloadBusy
+    ? 'Preparing your PDF…'
+    : 'Download your Burn & Build Diet';
+
+  const downloadMarker = store.dietDownloaded
+    ? '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>'
+    : `<div class="unlock-step__marker" aria-hidden="true">${store.dietDownloadBusy ? '…' : '2'}</div>`;
+
+  const emailMarker = store.dietEmailSent
+    ? '<div class="unlock-step__marker unlock-step__marker--check" aria-hidden="true">✓</div>'
+    : `<div class="unlock-step__marker" aria-hidden="true">3</div>`;
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
-            <li class="unlock-step unlock-step--done">
-              <div class="unlock-step__marker" aria-hidden="true">1</div>
+            <li class="unlock-step unlock-step--complete">
+              <div class="unlock-step__marker unlock-step__marker--check unlock-step__marker--lg" aria-hidden="true">✓</div>
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Payment complete</p>
               </div>
             </li>
-            <li class="unlock-step ${store.dietDownloaded ? 'unlock-step--done' : 'unlock-step--current'}">
-              <div class="unlock-step__marker" aria-hidden="true">2</div>
+            <li class="unlock-step ${store.dietDownloaded ? 'unlock-step--complete' : 'unlock-step--current'}">
+              ${downloadMarker}
               <div class="unlock-step__content">
-                <p class="unlock-step__title">Download your Burn &amp; Build Diet</p>
-                <button type="button" class="btn-primary unlock-cta" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
-                  ${downloadLabel}
+                <button type="button" class="unlock-step__action" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>
+                  ${downloadActionLabel}
                 </button>
-                ${downloadDetail ? `<p class="unlock-step__detail unlock-step__detail--ok">${downloadDetail}</p>` : ''}
+                ${store.dietDownloaded ? '<p class="unlock-step__detail unlock-step__detail--ok">Check your Downloads folder.</p>' : ''}
               </div>
             </li>
-            <li class="unlock-step unlock-step--${emailStep.status}">
-              <div class="unlock-step__marker" aria-hidden="true">3</div>
+            <li class="unlock-step unlock-step--${emailStep.status}${store.dietEmailSent ? ' unlock-step--complete' : ''}">
+              ${emailMarker}
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Check your email</p>
                 <p class="unlock-step__detail">${emailStep.detail}</p>
