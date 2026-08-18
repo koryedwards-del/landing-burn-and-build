@@ -223,6 +223,11 @@ function renderPaidDirections() {
   });
 
   const emailMarker = stepMarker(3, { complete: store.dietEmailSent });
+  const safeEmail = escapeHtml(email);
+  const emailTitle = store.dietEmailSent
+    ? `Email sent to <strong>${safeEmail}</strong>`
+    : 'Check your email';
+  const emailDetail = store.dietEmailSent ? '' : emailStep.detail;
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
