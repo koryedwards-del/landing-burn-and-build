@@ -120,13 +120,18 @@
 
 .unlock-step {
   display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 1fr 2rem;
   gap: 14px;
   align-items: center;
   padding: 14px 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
+}
+
+.unlock-step__content {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .unlock-step--done {
@@ -157,6 +162,8 @@
 }
 
 .unlock-step__marker {
+  grid-column: 2;
+  grid-row: 1;
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
