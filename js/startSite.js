@@ -12,7 +12,6 @@ import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js'
 import { QUESTIONNAIRE_WELCOME_URL, CREATOR_CHECKOUT_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
-const DIET_EMAIL_DISPATCHED_KEY = 'bnb_diet_email_dispatched';
 
 const store = {
   builtPackage: null,
@@ -33,6 +32,7 @@ const store = {
   dietDownloaded: false,
   dietEmailSent: false,
   dietEmailBusy: false,
+  dietEmailAttemptedThisVisit: false,
   dietEmailAvailable: true,
   dietEmailError: '',
   dietFulfillmentError: '',
@@ -202,23 +202,8 @@ async function refreshProgramPaymentStatus() {
   }
 }
 
-function restoreDietEmailDispatched() {
-  try {
-    if (sessionStorage.getItem(DIET_EMAIL_DISPATCHED_KEY) === '1') {
-      store.dietEmailSent = true;
-    }
-  } catch {
-    /* ignore */
-  }
-}
-
 function markDietEmailSent() {
   store.dietEmailSent = true;
-  try {
-    sessionStorage.setItem(DIET_EMAIL_DISPATCHED_KEY, '1');
-  } catch {
-    /* ignore */
-  }
 }
 
 function renderPaidDirections() {
@@ -398,7 +383,7 @@ function applyFulfillmentResult(result) {
 }
 
 async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
-  if (store.dietEmailSent || store.dietEmailBusy) return;
+  if (store.dietEmailSent || store.dietEmailBusy || store.dietEmailAttemptedThisVisit) return;
   if (!store.dietEmailAvailable) return;
 
   const email = ensurePlanReadyEmail();
@@ -406,6 +391,7 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   if (!isValidEmail(email) || !programId) return;
 
   store.dietEmailBusy = true;
+  store.dietEmailAttemptedThisVisit = true;
   store.dietEmailError = '';
   render();
 
@@ -596,7 +582,6 @@ bindGlobal();
 (async () => {
   restorePaidProgramId();
   restoreBuiltPackage();
-  restoreDietEmailDispatched();
   store.email = getAppEmail() || store.builtPackage?.intake?.email || '';
 
   const checkoutParams = new URLSearchParams(location.search);
