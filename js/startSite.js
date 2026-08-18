@@ -209,9 +209,7 @@ function renderPaidDirections() {
     ? 'PREPARING YOUR PDF…'
     : 'DOWNLOAD YOUR PRINTOUT';
 
-  const downloadLine = store.dietDownloaded
-    ? `<p class="unlock-receipt__download unlock-receipt__download--done">${downloadLabel}</p>`
-    : `<button type="button" class="unlock-receipt__download" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
+  const downloadLine = `<button type="button" class="unlock-receipt__download${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
 
   return `
           <div class="unlock-receipt">
