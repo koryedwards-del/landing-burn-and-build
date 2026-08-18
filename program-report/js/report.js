@@ -480,7 +480,7 @@ function renderMissingProgram() {
     ? 'New programs are not open yet'
     : 'Create your personalized program';
   const lead = DIET_CREATION_COMING_SOON
-    ? 'We&rsquo;re finishing the launch. Already purchased? Go to <strong>Get your diet</strong> and enter your checkout email to download your PDF.'
+    ? 'We&rsquo;re finishing the launch. Already purchased? Return to <strong>checkout</strong> to download your PDF, or check the email you used at checkout.'
     : `Answer a short intake questionnaire — your body composition, workday, and exercise plan for the next 8 weeks.
         Burn &amp; Build calculates your servings and builds your program report.`;
   const steps = DIET_CREATION_COMING_SOON
@@ -673,7 +673,7 @@ function launchApp() {
 
 async function init() {
   if (!wantsPreviewFromUrl()) {
-    location.replace('/get-your-diet/');
+    location.replace('/createyourfoodplan/');
     return;
   }
 

@@ -3,7 +3,7 @@
 export const MARKETING_ORIGIN = 'https://burnandbuilddiet.com';
 export const CREATOR_HOST_ORIGIN = MARKETING_ORIGIN;
 
-/** When true, hide questionnaire/checkout entry points; existing users use get-your-diet. */
+/** When true, hide questionnaire/checkout entry points; paid users use createyourfoodplan. */
 export const DIET_CREATION_COMING_SOON = true;
 
 /** URL param + session flag for internal testing while Coming Soon is on (?create=1). */
@@ -48,9 +48,6 @@ export function withDietCreationTestParam(url) {
   parsed.searchParams.set(DIET_CREATION_TEST_PARAM, '1');
   return `${parsed.pathname}${parsed.search}${parsed.hash}`;
 }
-
-/** Return visit — download or resend purchased diet PDF */
-export const GET_YOUR_DIET_URL = `${CREATOR_HOST_ORIGIN}/get-your-diet/`;
 
 /** Landing CTAs — questionnaire welcome only */
 export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}/questionnaire/#welcome`;

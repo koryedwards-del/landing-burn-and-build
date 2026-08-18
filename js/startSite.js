@@ -1,6 +1,6 @@
 /** Checkout paywall — questionnaire builds the program; Stripe unlocks PDF delivery. */
 
-import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramFromServer, fetchProgramPaymentStatus, fetchProgramByIdFromServer } from './programApi.js';
+import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramFromServer, fetchProgramPaymentStatus, fetchProgramByIdFromServer, fetchProgramResumeCheckout } from './programApi.js';
 import { persistProgramBridge, loadProgramBridge } from './programBridgeHandoff.js';
 import {
   completeCheckoutForTest,
@@ -9,7 +9,7 @@ import {
   verifyCheckoutSession,
 } from './checkoutApi.js';
 import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
-import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
+import { QUESTIONNAIRE_WELCOME_URL, CREATOR_CHECKOUT_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
 
@@ -83,7 +83,7 @@ function renderComingSoon() {
         </div>
         <div class="unlock-panel">
           <p class="unlock-lead">New Burn &amp; Build programs are not open yet. We&rsquo;re finishing the launch so no one starts a diet that isn&rsquo;t ready.</p>
-          <p class="unlock-hint">Already purchased? <a href="/get-your-diet/">Download your diet PDF</a></p>
+          <p class="unlock-hint">Already purchased? <a href="${CREATOR_CHECKOUT_URL}">Return to checkout</a> to download your PDF or check your email.</p>
           <p class="unlock-hint"><a href="/">← Back to website</a></p>
         </div>
       </div>
@@ -92,6 +92,21 @@ function renderComingSoon() {
 
 function redirectToQuestionnaire() {
   window.location.replace(QUESTIONNAIRE_WELCOME_URL);
+}
+
+async function tryRestorePaidSession() {
+  const email = ensurePlanReadyEmail();
+  if (!isValidEmail(email)) return false;
+
+  const resume = await fetchProgramResumeCheckout(email);
+  if (!resume.ok || !resume.programPaid || !resume.package) return false;
+
+  store.builtPackage = resume.package;
+  store.email = persistAppEmail(email);
+  persistPaidProgramId(resume.programId);
+  persistProgramBridge(resume.package);
+  store.programPaid = true;
+  return true;
 }
 
 async function restoreBuiltPackageFromServer(email, { force = false, programId } = {}) {
@@ -227,7 +242,6 @@ function renderPaidDirections() {
               </div>
             </li>
           </ol>
-          <p class="unlock-hint"><a href="/get-your-diet/">Download or resend later</a></p>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
 
@@ -251,14 +265,14 @@ function emailStepState(email) {
   if (!store.dietEmailAvailable) {
     return {
       status: 'pending',
-      detail: `Download your PDF above for your full diet plan. Need it by email? Visit <a href="/get-your-diet/">get-your-diet</a>.`,
+      detail: `Download your PDF above for your full diet plan. A copy is also sent to <strong>${safeEmail}</strong>.`,
     };
   }
 
   if (store.dietEmailError) {
     return {
       status: 'warn',
-      detail: `Download your PDF above. Didn&rsquo;t get the email? Check spam or visit <a href="/get-your-diet/">get-your-diet</a>.`,
+      detail: `Download your PDF above. Didn&rsquo;t get the email? Check spam at <strong>${safeEmail}</strong>.`,
     };
   }
 
@@ -625,11 +639,22 @@ bindGlobal();
 
   if (!store.builtPackage && !returningFromStripe) {
     if (isDietCreationGated()) {
+      const restored = await tryRestorePaidSession();
+      if (restored) {
+        sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
+        await preparePlanReadyState();
+        render();
+        startPostPaymentEmail();
+        return;
+      }
       renderComingSoon();
       return;
     }
-    redirectToQuestionnaire();
-    return;
+    const restored = await tryRestorePaidSession();
+    if (!restored) {
+      redirectToQuestionnaire();
+      return;
+    }
   }
 
   if (!store.builtPackage && returningFromStripe) {
