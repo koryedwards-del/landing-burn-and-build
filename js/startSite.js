@@ -8,7 +8,7 @@ import {
   fetchCheckoutStatus,
   verifyCheckoutSession,
 } from './checkoutApi.js';
-import { downloadDietPdfWithRetry } from './dietDeliveryApi.js';
+import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
 import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
@@ -31,6 +31,8 @@ const store = {
   dietDownloadBusy: false,
   dietDownloaded: false,
   dietEmailSent: false,
+  dietEmailBusy: false,
+  dietEmailError: '',
   dietFulfillmentError: '',
 };
 
@@ -192,8 +194,18 @@ function renderPaidDirections() {
       : 'DOWNLOAD YOUR BURN & BUILD DIET';
 
   const emailDetail = store.dietEmailSent
-    ? `We also emailed a copy to <strong>${escapeHtml(email)}</strong>.`
-    : `Check your email for a copy at <strong>${escapeHtml(email)}</strong>.`;
+    ? `We emailed a copy to <strong>${escapeHtml(email)}</strong>.`
+    : store.dietEmailBusy
+      ? `Sending a copy to <strong>${escapeHtml(email)}</strong>…`
+      : store.dietEmailError
+        ? `${escapeHtml(store.dietEmailError)}`
+        : `A copy will be sent to <strong>${escapeHtml(email)}</strong>.`;
+
+  const emailAction = !store.dietEmailSent
+    ? `<button type="button" class="btn-secondary unlock-cta-secondary" data-resend-diet-email ${store.dietEmailBusy ? 'disabled' : ''}>
+            ${store.dietEmailBusy ? 'SENDING EMAIL…' : 'EMAIL ME A COPY'}
+          </button>`
+    : '';
 
   return `
           <ol class="unlock-steps" aria-label="Next steps">
@@ -217,6 +229,7 @@ function renderPaidDirections() {
               <div class="unlock-step__content">
                 <p class="unlock-step__title">Check your email</p>
                 <p class="unlock-step__detail">${emailDetail}</p>
+                ${emailAction}
               </div>
             </li>
           </ol>
@@ -364,12 +377,41 @@ async function triggerDietDownload({ auto = false } = {}) {
   store.dietDownloaded = true;
   store.dietFulfillmentError = '';
   render();
+
+  if (!store.dietEmailSent) {
+    await attemptDietEmailDelivery();
+  }
 }
 
 function applyFulfillmentResult(result) {
   store.dietEmailSent = !!result?.emailSent;
   store.dietPreparing = !result?.pdfReady;
-  store.dietFulfillmentError = result?.error || result?.emailError || '';
+  store.dietEmailError = result?.emailError || '';
+  store.dietFulfillmentError = result?.error || '';
+}
+
+async function attemptDietEmailDelivery() {
+  if (store.dietEmailSent || store.dietEmailBusy) return;
+
+  const email = ensurePlanReadyEmail();
+  const programId = activeProgramId();
+  if (!isValidEmail(email) || !programId) return;
+
+  store.dietEmailBusy = true;
+  store.dietEmailError = '';
+  render();
+
+  const result = await resendDietEmail(email, programId);
+  store.dietEmailBusy = false;
+
+  if (result.ok && result.emailSent) {
+    store.dietEmailSent = true;
+    store.dietEmailError = '';
+  } else {
+    store.dietEmailError = result.message || 'Email could not be sent.';
+  }
+
+  render();
 }
 
 async function handleCheckoutReturn() {
@@ -418,6 +460,9 @@ async function handleCheckoutReturn() {
   applyFulfillmentResult(result);
 
   await triggerDietDownload({ auto: true });
+  if (!store.dietEmailSent) {
+    await attemptDietEmailDelivery();
+  }
 }
 
 async function retrySavePlan() {
@@ -476,6 +521,9 @@ async function completeTestCheckout() {
   store.programPaid = true;
   applyFulfillmentResult(result);
   await triggerDietDownload({ auto: true });
+  if (!store.dietEmailSent) {
+    await attemptDietEmailDelivery();
+  }
   render();
 }
 
@@ -507,6 +555,10 @@ function bindGlobal() {
     }
     if (e.target.closest('[data-download-diet]')) {
       triggerDietDownload().catch((err) => console.error(err));
+      return;
+    }
+    if (e.target.closest('[data-resend-diet-email]')) {
+      attemptDietEmailDelivery().catch((err) => console.error(err));
       return;
     }
     if (e.target.closest('[data-test-checkout]')) {

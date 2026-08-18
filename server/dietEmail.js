@@ -10,22 +10,28 @@ function emailFrom() {
   return process.env.DIET_EMAIL_FROM || 'Burn & Build <orders@burnandbuilddiet.com>';
 }
 
-export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer }) {
+export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, programId }) {
   const apiKey = String(process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) {
     console.warn('[diet-email] RESEND_API_KEY not set — skipping email.');
-    return { ok: false, skipped: true };
+    return { ok: false, skipped: true, message: 'Diet email is not configured on the server.' };
   }
 
   const filename = dietPdfFilename({ preferredName, pkg });
   const firstName = String(preferredName || '').trim().split(/\s+/)[0] || 'there';
 
+  const headers = {
+    Authorization: `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+  };
+  const id = String(programId || '').trim();
+  if (id) {
+    headers['Idempotency-Key'] = `diet-pdf/${id}`;
+  }
+
   const res = await fetch(RESEND_API, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       from: emailFrom(),
       to: [to],
@@ -50,5 +56,6 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer }) {
     return { ok: false, message: data?.message || 'Email could not be sent.' };
   }
 
+  console.info('[diet-email] Sent diet PDF', { to, programId: id || null, id: data.id });
   return { ok: true, id: data.id };
 }

@@ -45,17 +45,22 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
     preferredName,
     pkg,
     pdfBuffer: pdf,
+    programId,
   });
 
   if (emailResult.ok) {
     markDietEmailSent(email, programId);
   }
 
+  const emailError = emailResult.ok
+    ? null
+    : (emailResult.message || (emailResult.skipped ? 'Diet email is not configured on the server.' : 'Email could not be sent.'));
+
   return {
     pdfReady: true,
     emailSent: !!emailResult.ok,
     emailSkipped: !!emailResult.skipped,
-    emailError: emailResult.ok ? null : (emailResult.message || 'Email failed'),
+    emailError,
     forced: forceEmail,
   };
 }

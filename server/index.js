@@ -31,6 +31,7 @@ import {
 import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
 import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
 import { ensureDietPdf, fulfillDietDelivery } from './dietFulfillment.js';
+import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -167,6 +168,7 @@ app.get('/health', (_req, res) => {
     env: isProd ? 'production' : 'development',
     database: dbPathForHealth(),
     stripe: stripeConfigured(),
+    dietEmail: dietEmailConfigured(),
     pdf: true,
     commit: process.env.RENDER_GIT_COMMIT || null,
   });
@@ -537,8 +539,9 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
 
   try {
     const result = await fulfillDietDelivery(email, programId, { forceEmail: true });
-    if (!result.emailSent && result.emailError) {
-      res.status(500).json({ ok: false, message: result.emailError });
+    if (!result.emailSent) {
+      const message = result.emailError || 'Email could not be sent.';
+      res.status(result.emailSkipped ? 503 : 500).json({ ok: false, message });
       return;
     }
     res.json({
