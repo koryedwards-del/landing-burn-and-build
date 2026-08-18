@@ -69,7 +69,8 @@ Verify: `curl https://program-creator-3tzd.onrender.com/health` should return `"
 - [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
 - [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
 - [x] End-to-end flow verified: questionnaire → payment → download printout
-- [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `DATABASE_PATH`, etc.
+- [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `RESEND_API_KEY`, `DIET_EMAIL_FROM`, `DATABASE_PATH`, etc.
+- [ ] `curl https://program-creator-3tzd.onrender.com/health` shows `"dietEmail":true` (requires `RESEND_API_KEY` + verified domain in [Resend](https://resend.com/domains))
 
 ### Before deleting `pwa-burn-and-build`
 

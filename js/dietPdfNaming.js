@@ -28,3 +28,8 @@ export function dietPdfDocumentLabel({ preferredName, createdAt, pkg } = {}) {
 export function dietPdfFilename(options = {}) {
   return `${dietPdfDocumentLabel(options)}.pdf`;
 }
+
+/** Email attachments — ASCII-safe filename (no & in MIME headers). */
+export function dietPdfAttachmentFilename(options = {}) {
+  return dietPdfFilename(options).replace(/&/g, 'and');
+}

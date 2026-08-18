@@ -30,7 +30,7 @@ import {
 } from './pdf/index.js';
 import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
 import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
-import { ensureDietPdf, fulfillDietDelivery } from './dietFulfillment.js';
+import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
 
@@ -135,9 +135,16 @@ function isValidEmail(email) {
 async function fulfillPaidProgram(email, programId) {
   if (!email || !programId) return { pdfReady: false };
   try {
-    return await fulfillDietDelivery(email, programId);
+    const result = await fulfillDietDelivery(email, programId);
+    if (!result.emailSent && dietEmailConfigured()) {
+      scheduleDietEmailRetries(email, programId);
+    }
+    return result;
   } catch (err) {
     console.error('Diet fulfillment error:', err.message);
+    if (dietEmailConfigured()) {
+      scheduleDietEmailRetries(email, programId);
+    }
     return { pdfReady: false, error: err.message };
   }
 }

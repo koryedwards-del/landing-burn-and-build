@@ -1,4 +1,4 @@
-import { dietPdfFilename } from './dietPdfStorage.js';
+import { dietPdfAttachmentFilename } from '../js/dietPdfNaming.js';
 
 const RESEND_API = 'https://api.resend.com/emails';
 
@@ -10,6 +10,14 @@ function emailFrom() {
   return process.env.DIET_EMAIL_FROM || 'Burn & Build <orders@burnandbuilddiet.com>';
 }
 
+function escapeHtml(text) {
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, programId }) {
   const apiKey = String(process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) {
@@ -17,8 +25,8 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
     return { ok: false, skipped: true, message: 'Diet email is not configured on the server.' };
   }
 
-  const filename = dietPdfFilename({ preferredName, pkg });
-  const firstName = String(preferredName || '').trim().split(/\s+/)[0] || 'there';
+  const filename = dietPdfAttachmentFilename({ preferredName, pkg });
+  const firstName = escapeHtml(String(preferredName || '').trim().split(/\s+/)[0] || 'there');
 
   const headers = {
     Authorization: `Bearer ${apiKey}`,
@@ -52,7 +60,7 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    console.error('[diet-email] Resend error:', data);
+    console.error('[diet-email] Resend error:', { status: res.status, data, to, from: emailFrom(), filename });
     return { ok: false, message: data?.message || 'Email could not be sent.' };
   }
 

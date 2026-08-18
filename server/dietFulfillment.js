@@ -3,7 +3,47 @@ import { buildKwarnerLockedPayloadFromPackage } from '../js/kwarnerLockedPayload
 import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
 import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent } from './db.js';
 import { readStoredDietPdf, writeStoredDietPdf } from './dietPdfStorage.js';
-import { sendDietPdfEmail } from './dietEmail.js';
+import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
+
+const emailRetryTimers = new Map();
+
+/** Background retries after checkout — PDF generation or Resend can lag the first attempt. */
+export function scheduleDietEmailRetries(email, programId, { attempts = 6, delayMs = 5000 } = {}) {
+  if (!dietEmailConfigured()) return;
+  const key = `${normalizeRetryKey(email)}:${String(programId || '').trim()}`;
+  if (wasDietEmailSent(email, programId)) return;
+  if (emailRetryTimers.has(key)) return;
+
+  let attempt = 0;
+  const run = async () => {
+    if (wasDietEmailSent(email, programId)) {
+      emailRetryTimers.delete(key);
+      return;
+    }
+    if (attempt >= attempts) {
+      emailRetryTimers.delete(key);
+      return;
+    }
+    attempt += 1;
+    try {
+      const result = await fulfillDietDelivery(email, programId);
+      if (result.emailSent) {
+        emailRetryTimers.delete(key);
+        return;
+      }
+    } catch (err) {
+      console.error(`[diet-email] retry ${attempt}/${attempts} failed:`, err.message);
+    }
+    setTimeout(run, delayMs);
+  };
+
+  emailRetryTimers.set(key, true);
+  setTimeout(run, delayMs);
+}
+
+function normalizeRetryKey(email) {
+  return String(email || '').trim().toLowerCase();
+}
 
 /** Generate (if needed), store, and return the personalized diet PDF buffer. */
 export async function ensureDietPdf(email, programId) {
