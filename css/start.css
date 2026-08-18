@@ -185,3 +185,7 @@
 .unlock-step__detail strong {
   color: #fff;
 }
+
+.unlock-step__detail a {
+  color: var(--cyan);
+}
