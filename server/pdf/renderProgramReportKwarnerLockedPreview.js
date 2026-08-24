@@ -673,31 +673,52 @@ function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = 
 
 function drawWelcomePage(doc, payload) {
   let page = startLockedPage(doc, payload, 'Welcome', { fullHeader: true });
+  const guide = {
+    bodySize: 9.5,
+    titleSize: 10.5,
+    lineGap: 2,
+    paragraphGap: 6,
+    headerGap: 4,
+    sectionGap: 6,
+  };
 
   page = drawBodyParagraphs(doc, payload, page, payload.welcome.intro, {
     fullHeader: true,
     pageTitle: 'Welcome',
   });
-  page = { ...page, y: page.y + LAYOUT.sectionGap };
+  page = { ...page, y: page.y + guide.sectionGap };
 
   const sections = [
+    ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
     ['Projections', payload.welcome.projections],
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
-    page = ensureLockedSpace(
-      doc,
-      payload,
-      page,
-      LAYOUT.subsectionSize + LAYOUT.headerGap + measureParagraph(doc, body, page.width),
-      { fullHeader: true },
-    );
-    page = { ...page, y: drawSectionTitle(doc, title, page.x, page.y, page.width) };
-    page = drawBodyParagraphs(doc, payload, page, [body], { fullHeader: true, pageTitle: 'Welcome' });
+    doc.font(SEMINAR_FONTS.bold).fontSize(guide.titleSize);
+    const blockH = guide.titleSize + guide.headerGap
+      + doc.heightOfString(String(body), { width: page.width, lineGap: guide.lineGap })
+      + guide.paragraphGap;
+    page = ensureLockedSpace(doc, payload, page, blockH, { fullHeader: true });
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(guide.titleSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(title), page.x, page.y, { width: page.width, lineGap: 0 });
+    page = { ...page, y: doc.y + guide.headerGap };
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(guide.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(body), page.x, page.y, {
+        width: page.width,
+        lineGap: guide.lineGap,
+        align: 'left',
+      });
+    page = { ...page, y: doc.y + guide.paragraphGap };
     if (index < sections.length - 1) {
-      page = { ...page, y: page.y + LAYOUT.sectionGap };
+      page = { ...page, y: page.y + guide.sectionGap };
     }
   });
 

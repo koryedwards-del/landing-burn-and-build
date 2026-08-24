@@ -54,14 +54,8 @@ export function aceHeaderLabels(gender) {
   });
 }
 
-export function aceRiskMessage(gender, bodyFatPercent) {
-  const category = aceCategoryForBodyFat(gender, bodyFatPercent);
-  if (category.label === 'At Risk') {
-    return 'According to the American Council on Exercise you are at risk based on your current fat percentage.';
-  }
-  if (category.label === 'Borderline') {
-    return 'According to the American Council on Exercise you are borderline based on your current fat percentage.';
-  }
+/** @deprecated ACE attribution removed — returns empty until new category copy is wired. */
+export function aceRiskMessage() {
   return '';
 }
 

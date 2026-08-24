@@ -28,6 +28,19 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 | Food list gram scaling | `js/stapleServingPrintout.js` — see `.cursor/rules/burn-engine-servings.mdc` |
 | Render script | `scripts/render-kwarner-locked-preview.mjs` |
 | Build metadata | `js/kwarnerPreviewBuild.js` (auto-generated) |
+| 1982 reference PDF | `docs/archive/kwarner-1982-original.pdf` |
+
+## Page map (9 pages — locked where noted)
+
+| Page | Title | Notes |
+|------|-------|-------|
+| 1 | Welcome | Report overview + section guide |
+| 2 | Lean Body Analysis | 1982 page 2 content |
+| 3–4 | Projections | Input grid + fat-loss timeline |
+| **5** | **Food Plan** | **Locked** |
+| **6** | **Servings** | **Locked** |
+| **7–8** | **Food List** | **Locked** — protein/grains, then veg/fruit |
+| 9 | Seasonings and Splashes | Flavor kits, splashes, pantry |
 
 ## Mandatory after every PDF change
 

@@ -7,7 +7,6 @@ import {
 } from './onboardingEngine.js';
 import {
   aceCategoryForBodyFat,
-  aceRiskMessage,
   formatSexLabel,
   lbmStatusMessage,
 } from './lbaPrintout.js';
@@ -181,7 +180,6 @@ export function buildBodyTodayNarrative(pkg, { today, gender }) {
     leanBodyMass: intake.leanBodyMass,
   });
   const ace = aceCategoryForBodyFat(gender, intake.fatPercent);
-  const riskLine = aceRiskMessage(gender, intake.fatPercent);
   const sex = formatSexLabel(intake.sex);
 
   return {
@@ -211,7 +209,7 @@ export function buildBodyTodayNarrative(pkg, { today, gender }) {
       {
         title: 'Where you stand',
         paragraphs: [
-          riskLine || `Your body fat falls in the ${ace.label.toLowerCase()} range on standard reference charts.`,
+          `Your body fat percentage falls in the ${ace.label} range.`,
           'How much fat is right for you is a personal choice. How you look in the mirror is the best judge of whether you want to lose fat.',
           lbmCopy.lead,
           lbmCopy.congrats

@@ -4,7 +4,6 @@ import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
   aceCategories,
   aceHeaderLabels,
-  aceRiskMessage,
   formatMm,
   formatSexLabel,
   lbmStatusMessage,
@@ -278,7 +277,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       today,
       aceHeaders: aceHeaderLabels(gender),
       aceCategories: aceCategories(gender),
-      riskMessage: aceRiskMessage(gender, intake.fatPercent),
+      riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
       lbmLead: lbmCopy.lead,

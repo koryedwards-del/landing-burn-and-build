@@ -70,15 +70,22 @@ function auditCarbSlot(pdfGrams, usda, slotKey) {
   const slot = BURN_ENGINE_SLOT_TARGETS[slotKey];
   const expectedG = gramsForCarbServing(usda.c, slotKey);
   const atPdf = macrosAt(pdfGrams, usda);
-  const pass = Math.abs(atPdf.carbs - slot.carbsG) <= CARB_TOL
-    && atPdf.fat <= slot.fatLimitG + FAT_TOL;
-  return { expectedG, atPdf, pass };
+  const carbsPass = Math.abs(atPdf.carbs - slot.carbsG) <= CARB_TOL;
+  const fatPass = atPdf.fat <= slot.fatLimitG + FAT_TOL;
+  return {
+    expectedG,
+    atPdf,
+    pass: carbsPass && fatPass,
+    fatOverage: carbsPass && pdfGrams === expectedG && !fatPass,
+  };
 }
 
 const issues = [];
+const warnings = [];
 let passCount = 0;
 
 function check(row) {
+  if (row.fatOverage) warnings.push(row);
   if (row.pass) passCount += 1;
   else issues.push(row);
 }
@@ -138,6 +145,7 @@ for (const map of GRAINS_STARCHES_MAP) {
     continue;
   }
   const audit = auditCarbSlot(pdfGrams, usda, map.slot);
+  const gramsOk = pdfGrams === audit.expectedG && pdfGrams === catalogFood.gramWeight;
   check({
     section: map.slot,
     name: map.pdf,
@@ -145,8 +153,9 @@ for (const map of GRAINS_STARCHES_MAP) {
     catalogGrams: catalogFood.gramWeight,
     expectedG: audit.expectedG,
     macros: audit.atPdf,
-    pass: audit.pass && pdfGrams === audit.expectedG && pdfGrams === catalogFood.gramWeight,
-    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass ? `fat ${audit.atPdf.fat}g over limit` : undefined,
+    pass: gramsOk && (audit.pass || audit.fatOverage),
+    fatOverage: audit.fatOverage,
+    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass && !audit.fatOverage ? `fat ${audit.atPdf.fat}g over limit` : undefined,
   });
 }
 
@@ -167,8 +176,9 @@ for (const row of CUTTING_STAPLES_VEGETABLES) {
     pdfGrams,
     catalogGrams: catalogFood.gramWeight,
     expectedG: audit.expectedG,
-    pass: audit.pass && pdfGrams === audit.expectedG,
-    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass ? 'macro fail' : undefined,
+    pass: pdfGrams === audit.expectedG && (audit.pass || audit.fatOverage),
+    fatOverage: audit.fatOverage,
+    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass && !audit.fatOverage ? 'macro fail' : undefined,
   });
 }
 
@@ -189,16 +199,27 @@ for (const row of CUTTING_STAPLES_FRUIT) {
     pdfGrams,
     catalogGrams: catalogFood.gramWeight,
     expectedG: audit.expectedG,
-    pass: audit.pass && pdfGrams === audit.expectedG,
-    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass ? `fat ${audit.atPdf.fat}g` : undefined,
+    macros: audit.atPdf,
+    pass: pdfGrams === audit.expectedG && (audit.pass || audit.fatOverage),
+    fatOverage: audit.fatOverage,
+    reason: pdfGrams !== audit.expectedG ? `want ${audit.expectedG}g` : !audit.pass && !audit.fatOverage ? `fat ${audit.atPdf.fat}g` : undefined,
   });
 }
 
 console.log(`PASS: ${passCount}`);
+console.log(`WARNINGS (accepted fat overage at full USDA serving): ${warnings.length}`);
 console.log(`ISSUES: ${issues.length}\n`);
 
+if (warnings.length) {
+  console.log('--- ACCEPTED FAT OVERAGE ---');
+  for (const row of warnings) {
+    console.log(`  [${row.section}] ${row.name}: ${row.reason || `fat ${row.macros?.fat}g at ${row.pdfGrams}g`}`);
+  }
+  console.log('');
+}
+
 if (issues.length) {
-  console.log('--- REVIEW (macro edge cases or sync drift) ---');
+  console.log('--- ISSUES (sync drift or macro fail) ---');
   for (const row of issues) {
     console.log(`  [${row.section}] ${row.name}: ${row.reason || `PDF ${row.pdfGrams}g catalog ${row.catalogGrams}g expected ${row.expectedG}g`}`);
   }
