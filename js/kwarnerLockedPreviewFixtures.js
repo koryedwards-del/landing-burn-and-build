@@ -7,33 +7,31 @@ import { buildKwarnerLockedPayloadFromPackage } from './kwarnerLockedPayload.js'
 export const KWARNER_WELCOME_COPY = {
   intro: [
     'Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is the most individualized program available for losing fat. This diet will not work effectively for anyone else because it has been created just for you, using your lean body mass (LBM), your job, your day to day, and your weekly plan for weight training (WT), high heart rate aerobic activity (HHT), and low heart rate aerobic activity (LHR).',
-    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, day to day, and exercise hours. With this information, the computer generated this report. Page two is your Lean Body Analysis, including your projected progress; the pages that follow are your custom-designed diet and food list.',
+    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, day to day, and exercise hours. With this information, Burn & Build generated this report. Page two is your Lean Body Analysis, including your projected progress; the pages that follow are your custom-designed diet and food list.',
   ],
   leanBodyAnalysis:
-    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. LBM (lean body mass) is used by the computer to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.',
+    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. Burn & Build uses your LBM (lean body mass) to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.',
   foodPlan:
-    'Page three is your custom-designed food plan. It explains why servings — not app macros — are your path, what each food group does for your body, and how the Burn Engine built your prescription from your lean body mass, job, and exercise. The servings on page four follow directly from this page.',
+    'Page three is your custom-designed food plan. It explains why servings go a step farther than macros, what each food group does for your body, and how Burn & Build built your prescription from your lean body mass, job, and exercise. The servings on page four follow directly from this page.',
   servings:
-    'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
+    'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
     'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep, not theory. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals only from these approved foods.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure what to eat.',
-  'Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods.',
-  'For the best results you need a plan that goes a step farther than macros.',
+  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods.',
+  'For the best results you need a plan thats goes a step farther than macros.',
 ];
 
 export const KWARNER_FOOD_PLAN_SERVINGS_TITLE = 'Your daily servings';
 
 export const KWARNER_FOOD_PLAN_STEP4 = [
-  'The computer already did the work. Your daily totals are servings of protein, grains, vegetables, fruits, and fats — spread across breakfast, lunch, dinner, and snacks.',
-  'You do not convert these to grams, calories, or macro percentages. That is the old habit. Your job is to hit your serving totals from the approved food list — nothing more.',
+  'Burn & Build already converted your plan into daily servings of protein, grains, vegetables, fruits, and fats — spread across breakfast, lunch, dinner, and snacks. You do not convert these to grams, calories, or macro percentages; hit your serving totals from the approved food list.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO =
-  'Protein, carbohydrates, and fat are not trends — each one has a job in your body. The table below is not a macro chart. It shows what happens when any food group is too high or too low while you follow your servings.';
+  'Protein, carbohydrates, and fat each have a job in your body. The table below is not a macro chart — it shows what happens when any food group is too high or too low while you follow your servings.';
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',
