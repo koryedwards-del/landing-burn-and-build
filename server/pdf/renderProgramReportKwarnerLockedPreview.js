@@ -1798,7 +1798,17 @@ const LBA_SNAPSHOT = Object.freeze({
   todayRowPad: 6,
   sectionGap: 8,
   ruleInset: 10,
+  todayLabelColW: 50,
+  todayPctColW: 58,
+  todayLbsColW: 76,
 });
+
+function lbaTodayTableLayout(cardX, cardWidth) {
+  const { todayLabelColW, todayPctColW, todayLbsColW } = LBA_SNAPSHOT;
+  const tableWidth = todayLabelColW + todayPctColW + todayLbsColW;
+  const tableX = cardX + (cardWidth - tableWidth) / 2;
+  return { tableX, labelColW: todayLabelColW, pctColW: todayPctColW, lbsColW: todayLbsColW, tableWidth };
+}
 
 function measureLbaProfileSection(doc, profileStats, width) {
   const pad = LBA_SNAPSHOT.pad;
@@ -1846,9 +1856,7 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   const totalH = measureLbaSnapshotCard(doc, profileStats, todayRows, width);
   const colCount = Math.max(profileStats?.length || 1, 1);
   const colW = width / colCount;
-  const labelColW = width * 0.2;
-  const pctColW = width * 0.28;
-  const lbsColW = width - labelColW - pctColW;
+  const { tableX, labelColW, pctColW, lbsColW, tableWidth } = lbaTodayTableLayout(x, width);
   const blue = '#2F6FA8';
   let cy = y;
 
@@ -1899,7 +1907,6 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
 
   const drawTodayCell = (text, cellX, cellY, cellW, { font, fontSize, align = 'center', color = SEMINAR_COLORS.body }) => {
     doc.font(font).fontSize(fontSize).fillColor(color);
-    const innerW = cellW - pad;
     const textX = align === 'right'
       ? cellX + cellW - pad - doc.widthOfString(String(text))
       : align === 'left'
@@ -1908,46 +1915,58 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
     doc.text(String(text), textX, cellY + LBA_SNAPSHOT.todayRowPad, { lineBreak: false });
   };
 
-  drawTodayCell('%', x + labelColW, cy, pctColW, {
+  drawTodayCell('%', tableX + labelColW, cy, pctColW, {
     font: SEMINAR_FONTS.bold,
     fontSize: LBA_SNAPSHOT.todayHeadSize,
     color: SEMINAR_COLORS.muted,
   });
-  drawTodayCell('lbs.', x + labelColW + pctColW, cy, lbsColW, {
+  drawTodayCell('lbs.', tableX + labelColW + pctColW, cy, lbsColW, {
     font: SEMINAR_FONTS.bold,
     fontSize: LBA_SNAPSHOT.todayHeadSize,
     color: SEMINAR_COLORS.muted,
-    align: 'right',
+    align: 'center',
   });
   cy += LBA_SNAPSHOT.todayHeadSize + LBA_SNAPSHOT.todayRowPad * 2;
 
   todayRows.forEach((row, index) => {
-    drawTodayCell(row.label, x, cy, labelColW, {
+    drawTodayCell(row.label, tableX, cy, labelColW, {
       font: SEMINAR_FONTS.bold,
       fontSize: LBA_SNAPSHOT.todayBodySize,
       align: 'left',
     });
-    drawTodayCell(row.pct, x + labelColW, cy, pctColW, {
+    drawTodayCell(row.pct, tableX + labelColW, cy, pctColW, {
       font: SEMINAR_FONTS.regular,
       fontSize: LBA_SNAPSHOT.todayBodySize,
     });
-    drawTodayCell(row.lbs, x + labelColW + pctColW, cy, lbsColW, {
+    drawTodayCell(row.lbs, tableX + labelColW + pctColW, cy, lbsColW, {
       font: SEMINAR_FONTS.regular,
       fontSize: LBA_SNAPSHOT.todayBodySize,
-      align: 'right',
+      align: 'center',
     });
     cy += LBA_SNAPSHOT.todayBodySize + LBA_SNAPSHOT.todayRowPad * 2;
     if (index < todayRows.length - 1) {
       doc
         .strokeColor(TABLE_CONTAINER.stroke)
         .lineWidth(0.35)
-        .moveTo(x + LBA_SNAPSHOT.ruleInset, cy - LBA_SNAPSHOT.todayRowPad)
-        .lineTo(x + width - LBA_SNAPSHOT.ruleInset, cy - LBA_SNAPSHOT.todayRowPad)
+        .moveTo(tableX, cy - LBA_SNAPSHOT.todayRowPad)
+        .lineTo(tableX + tableWidth, cy - LBA_SNAPSHOT.todayRowPad)
         .stroke();
     }
   });
 
   return y + totalH;
+}
+
+function measureLeanBodyAnalysisPageContent(doc, lba, width) {
+  const profileStats = lba.profileStats || [];
+  const todayRows = lba.todayRows || [];
+  let height = 0;
+  if (profileStats.length && todayRows.length) {
+    height += measureLbaSnapshotCard(doc, profileStats, todayRows, width) + LAYOUT.sectionGap;
+  }
+  const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
+  height += measureBodyFatProgressBar(doc, width, fatBarFooter, lba.leannessFatBar);
+  return height;
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
@@ -1956,19 +1975,16 @@ function drawLeanBodyAnalysisPage(doc, payload) {
 
   const profileStats = lba.profileStats || [];
   const todayRows = lba.todayRows || [];
+  const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
+  const totalContentH = measureLeanBodyAnalysisPageContent(doc, lba, page.width);
+  const availableH = page.bottom - page.y;
+  let cy = page.y + Math.max(0, (availableH - totalContentH) / 2);
+
   if (profileStats.length && todayRows.length) {
-    const snapshotH = measureLbaSnapshotCard(doc, profileStats, todayRows, page.width);
-    page = ensureLockedSpace(doc, payload, page, snapshotH + LAYOUT.sectionGap);
-    page = {
-      ...page,
-      y: drawLbaSnapshotCard(doc, page.x, page.y, page.width, profileStats, todayRows) + LAYOUT.sectionGap,
-    };
+    cy = drawLbaSnapshotCard(doc, page.x, cy, page.width, profileStats, todayRows) + LAYOUT.sectionGap;
   }
 
-  const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
-  const fatBarH = measureBodyFatProgressBar(doc, page.width, fatBarFooter, lba.leannessFatBar);
-  page = ensureLockedSpace(doc, payload, page, fatBarH);
-  page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar, fatBarFooter) };
+  drawBodyFatProgressBar(doc, { ...page, y: cy }, lba.leannessFatBar, fatBarFooter);
 
   finishLockedPage(doc, page.box, payload);
 }
