@@ -913,7 +913,7 @@ const MACRO_SIGNAL_TABLE_KEYS = ['macro', 'tooMuch', 'tooLittle'];
 
 function buildMacroSignalLayoutRows(macroRows = []) {
   return [
-    { macro: 'THE MACROS', tooMuch: 'TOO MUCH', tooLittle: 'TOO LITTLE' },
+    { macro: 'FOOD GROUPS', tooMuch: 'TOO MUCH', tooLittle: 'TOO LITTLE' },
     ...macroRows.map((row) => ({
       macro: row.label,
       tooMuch: row.tooMuch,

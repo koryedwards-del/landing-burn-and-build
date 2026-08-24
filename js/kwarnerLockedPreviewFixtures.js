@@ -16,12 +16,17 @@ export const KWARNER_WELCOME_COPY = {
   servings:
     'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
-    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples we have used since 1982 — foods that work in real prep, not theory. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals only from these approved foods.',
+    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep, not theory. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals only from these approved foods.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'We have been converting macros since 1982.',
-  'The challenge with macros is slippage.',
+  'Warner 1982 asked how much food you need for what you do. Burn & Build 2026 answers the same question — as servings built for your lean body mass, your job, and your exercise.',
+  'We do not put macro totals in your hands. Today it is easy to compare numbers against apps and advice that were never built for you. That is slippage — and it breaks the plan.',
+];
+
+export const KWARNER_FOOD_PLAN_STEP4 = [
+  'The computer calculated what you need for your body and your activity, then converted it into servings — protein, grains, vegetables, fruits, and fats.',
+  'You follow servings, not calories and not macro totals from the internet. The math is already done. Your job is to pick foods from the approved food list and hit your daily totals.',
 ];
 
 export const KRISTI_KWARNER_FORM = {
