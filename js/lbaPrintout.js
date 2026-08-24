@@ -48,25 +48,21 @@ export function aceHeaderLabels(gender) {
   return leannessTable(gender).map((row) => formatCapHeader(row.cap));
 }
 
-/** Stage columns with Men / Women rows (stages left to right, thresholds gender-specific). */
-export function leannessStagesTable() {
-  const male = leannessTable('male');
-  const female = leannessTable('female');
+/** Stage columns for the client's gender (stages left to right). */
+export function leannessStagesTable(gender) {
+  const rows = leannessTable(gender);
   return {
     stageLabels: LEANNESS_LABELS,
-    male: male.map((row) => formatCapHeader(row.cap)),
-    female: female.map((row) => formatCapHeader(row.cap)),
+    values: rows.map((row) => formatCapHeader(row.cap)),
   };
 }
 
-/** Stage columns with Men / Women target-weight rows for the client's LBM. */
-export function leannessWeightGoalsTable(lbm) {
-  const male = leannessTable('male');
-  const female = leannessTable('female');
+/** Stage columns with target weights for the client's gender and LBM. */
+export function leannessWeightGoalsTable(gender, lbm) {
+  const rows = leannessTable(gender);
   return {
     stageLabels: LEANNESS_LABELS,
-    male: male.map((row) => weightGoalRangeLabel(lbm, row)),
-    female: female.map((row) => weightGoalRangeLabel(lbm, row)),
+    values: rows.map((row) => weightGoalRangeLabel(lbm, row)),
   };
 }
 

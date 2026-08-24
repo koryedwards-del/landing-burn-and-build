@@ -1380,37 +1380,26 @@ function drawLeannessFatBar(doc, page, bar) {
   return barY + barH + LEANNESS_FAT_BAR.labelGap + LEANNESS_FAT_BAR.labelSize + LAYOUT.paragraphGap;
 }
 
-function leannessGenderTableOpts(page, table, compact = {}) {
+function leannessStageTableOpts(page, table, compact = {}) {
   const stageCount = table.stageLabels.length;
-  const stageWidth = 0.86 / stageCount;
-  const columns = [
-    { key: 'gender', width: 0.14 },
-    ...table.stageLabels.map((_, index) => ({
-      key: `s${index}`,
-      width: stageWidth,
-      align: 'center',
-    })),
-  ];
-  const headerRow = Object.fromEntries([
-    ['gender', ''],
-    ...table.stageLabels.map((label, index) => [`s${index}`, label]),
-  ]);
-  const maleRow = Object.fromEntries([
-    ['gender', 'Men'],
-    ...table.male.map((value, index) => [`s${index}`, value]),
-  ]);
-  const femaleRow = Object.fromEntries([
-    ['gender', 'Women'],
-    ...table.female.map((value, index) => [`s${index}`, value]),
-  ]);
+  const columns = table.stageLabels.map((_, index) => ({
+    key: `s${index}`,
+    width: 1 / stageCount,
+    align: 'center',
+  }));
+  const labelRow = Object.fromEntries(
+    table.stageLabels.map((label, index) => [`s${index}`, label]),
+  );
+  const valueRow = Object.fromEntries(
+    table.values.map((value, index) => [`s${index}`, value]),
+  );
   return {
     x: page.x,
     y: page.y,
     width: page.width,
     columns,
-    rows: [headerRow, maleRow, femaleRow],
+    rows: [labelRow, valueRow],
     headerRows: 1,
-    boldColumnKeys: ['gender'],
     ...compact,
   };
 }
@@ -1448,7 +1437,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
 
   const lbaTableCompact = { tableRowPad: 4, bodyFontSize: 9, headFontSize: 9 };
 
-  const aceTableOpts = leannessGenderTableOpts(page, lba.leannessStages, lbaTableCompact);
+  const aceTableOpts = leannessStageTableOpts(page, lba.leannessStages, lbaTableCompact);
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts));
   aceTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap };
@@ -1467,7 +1456,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
   }
 
-  const weightTableOpts = leannessGenderTableOpts(page, lba.leannessWeightGoals, lbaTableCompact);
+  const weightTableOpts = leannessStageTableOpts(page, lba.leannessWeightGoals, lbaTableCompact);
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts));
   weightTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, weightTableOpts) + LAYOUT.paragraphGap };
