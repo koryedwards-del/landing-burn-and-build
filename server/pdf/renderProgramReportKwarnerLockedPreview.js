@@ -1284,16 +1284,14 @@ function drawProjectionsPage(doc, payload) {
 const BODY_FAT_PROGRESS_BAR = Object.freeze({
   titleSize: 11,
   subtitleSize: 8,
-  barHeight: 30,
+  barHeight: 36,
   barRadius: 6,
   segmentGreys: ['#8a8a8a', '#767676', '#626262', '#4e4e4e'],
   capLabelSize: 8,
+  categorySize: 6,
+  cellLineGap: 2,
   markerLabelSize: 10,
   markerH: 5,
-  categorySize: 7,
-  iconSize: 11,
-  iconGap: 3,
-  braceSize: 10,
   footerSize: 9,
   footerPad: 10,
   sectionGap: 10,
@@ -1302,6 +1300,24 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
 function bfToBarX(x, width, bf, scaleMax) {
   const clamped = Math.max(0, Math.min(Number(bf), scaleMax));
   return x + (clamped / scaleMax) * width;
+}
+
+function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, isGold) {
+  const textColor = isGold ? '#333333' : '#ffffff';
+  const stageName = zone.label.toUpperCase();
+  const isActive = zone.label === activeStage;
+  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+  const capH = zone.capLabel ? BODY_FAT_PROGRESS_BAR.capLabelSize : 0;
+  const gap = zone.capLabel ? BODY_FAT_PROGRESS_BAR.cellLineGap : 0;
+  const blockH = capH + gap + BODY_FAT_PROGRESS_BAR.categorySize;
+  let ty = barY + (barH - blockH) / 2;
+  if (zone.capLabel) {
+    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.capLabelSize).fillColor(textColor);
+    doc.text(zone.capLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+    ty += capH + gap;
+  }
+  doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.categorySize).fillColor(textColor);
+  doc.text(stageName, x0, ty, { width: segW, align: 'center', lineGap: 0 });
 }
 
 function measureBodyFatProgressBar(doc, width) {
@@ -1314,13 +1330,6 @@ function measureBodyFatProgressBar(doc, width) {
     width: width - BODY_FAT_PROGRESS_BAR.footerPad * 2,
     align: 'center',
   });
-  const categoryH = (
-    BODY_FAT_PROGRESS_BAR.braceSize
-    + BODY_FAT_PROGRESS_BAR.iconGap
-    + BODY_FAT_PROGRESS_BAR.iconSize
-    + BODY_FAT_PROGRESS_BAR.iconGap
-    + BODY_FAT_PROGRESS_BAR.categorySize
-  );
   return (
     titleH
     + 4
@@ -1329,45 +1338,11 @@ function measureBodyFatProgressBar(doc, width) {
     + BODY_FAT_PROGRESS_BAR.markerLabelSize
     + 4
     + BODY_FAT_PROGRESS_BAR.barHeight
-    + 6
-    + categoryH
     + BODY_FAT_PROGRESS_BAR.sectionGap
     + footerH
     + BODY_FAT_PROGRESS_BAR.footerPad * 2
     + LAYOUT.paragraphGap
   );
-}
-
-function drawProgressBarIcon(doc, kind, cx, cy, size, color) {
-  const s = size / 2;
-  doc.save().strokeColor(color).fillColor(color).lineWidth(1);
-  switch (kind) {
-    case 'Competition':
-      doc.moveTo(cx - s, cy + s).lineTo(cx + s, cy - s).stroke();
-      doc.moveTo(cx - s, cy - s).lineTo(cx + s, cy + s).stroke();
-      break;
-    case 'Peaking':
-      doc.moveTo(cx - s, cy + s).lineTo(cx, cy - s).lineTo(cx + s, cy + s).closePath().stroke();
-      doc.circle(cx + s * 0.55, cy - s * 0.75, 1.6).fill();
-      break;
-    case 'Prepping':
-      doc.circle(cx - s * 0.85, cy, 1.8).fill();
-      doc.circle(cx + s * 0.85, cy, 1.8).fill();
-      doc.moveTo(cx - s * 0.55, cy).lineTo(cx + s * 0.55, cy).stroke();
-      break;
-    case 'Training':
-      doc.moveTo(cx - s, cy + s * 0.2).quadraticCurveTo(cx, cy - s, cx + s, cy + s * 0.35).stroke();
-      break;
-    default:
-      doc.circle(cx, cy, s * 0.55).stroke();
-      for (let i = 0; i < 8; i += 1) {
-        const a = (i / 8) * Math.PI * 2;
-        doc.moveTo(cx + Math.cos(a) * s * 0.65, cy + Math.sin(a) * s * 0.65)
-          .lineTo(cx + Math.cos(a) * s, cy + Math.sin(a) * s).stroke();
-      }
-      break;
-  }
-  doc.restore();
 }
 
 function drawBodyFatProgressBar(doc, page, bar) {
@@ -1417,17 +1392,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
         .rect(x0, barY, segW, barH)
         .fill();
     }
-    if (zone.capLabel) {
-      doc
-        .font(zone.label === activeStage ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular)
-        .fontSize(BODY_FAT_PROGRESS_BAR.capLabelSize)
-        .fillColor('#ffffff')
-        .text(zone.capLabel, x0, barY + (barH - BODY_FAT_PROGRESS_BAR.capLabelSize) / 2, {
-          width: segW,
-          align: 'center',
-          lineGap: 0,
-        });
-    }
+    drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, zone.label === 'Off-season');
   });
   doc.restore();
 
@@ -1471,39 +1436,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
       .stroke();
   }
 
-  cy = barY + barH + 6;
-  zones.forEach((zone) => {
-    const x0 = bfToBarX(x, width, zone.from, scaleMax);
-    const x1 = bfToBarX(x, width, zone.to, scaleMax);
-    const segW = Math.max(x1 - x0, 1);
-    const centerX = x0 + segW / 2;
-    const stageName = zone.label.toUpperCase();
-    doc
-      .font(SEMINAR_FONTS.regular)
-      .fontSize(BODY_FAT_PROGRESS_BAR.braceSize)
-      .fillColor(gold)
-      .text('{  }', x0, cy, { width: segW, align: 'center', lineBreak: false });
-    const iconY = cy + BODY_FAT_PROGRESS_BAR.braceSize + BODY_FAT_PROGRESS_BAR.iconGap;
-    drawProgressBarIcon(doc, zone.label, centerX, iconY + BODY_FAT_PROGRESS_BAR.iconSize / 2, BODY_FAT_PROGRESS_BAR.iconSize, gold);
-    doc
-      .font(SEMINAR_FONTS.bold)
-      .fontSize(BODY_FAT_PROGRESS_BAR.categorySize)
-      .fillColor(gold)
-      .text(stageName, x0, iconY + BODY_FAT_PROGRESS_BAR.iconSize + BODY_FAT_PROGRESS_BAR.iconGap, {
-        width: segW,
-        align: 'center',
-        lineGap: 0,
-      });
-  });
-
-  cy += (
-    BODY_FAT_PROGRESS_BAR.braceSize
-    + BODY_FAT_PROGRESS_BAR.iconGap
-    + BODY_FAT_PROGRESS_BAR.iconSize
-    + BODY_FAT_PROGRESS_BAR.iconGap
-    + BODY_FAT_PROGRESS_BAR.categorySize
-    + BODY_FAT_PROGRESS_BAR.sectionGap
-  );
+  cy = barY + barH + BODY_FAT_PROGRESS_BAR.sectionGap;
 
   doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerInnerW = width - BODY_FAT_PROGRESS_BAR.footerPad * 2;
