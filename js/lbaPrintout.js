@@ -245,7 +245,7 @@ function formatTimelineShort(timeline) {
   if (!value || value === 'Current') return 'Now';
   const match = value.match(/^(\d+(?:\.\d+)?)\s*weeks?$/i);
   if (match) return `${Math.round(Number(match[1]))}w`;
-  return value;
+  return value.replace(/\*+$/, '').trim();
 }
 
 /** Projected BF% markers from the burn-engine timeline table (future rows only). */
