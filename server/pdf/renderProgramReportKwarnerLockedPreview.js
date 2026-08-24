@@ -1275,6 +1275,111 @@ function drawProjectionsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const LEANNESS_FAT_BAR = Object.freeze({
+  height: 14,
+  radius: 3,
+  markerH: 7,
+  markerGap: 5,
+  labelSize: 8,
+  labelGap: 3,
+  currentLabelSize: 9,
+  zoneFills: ['#f0f0f0', '#e4e4e4', '#d8d8d8', '#cccccc', '#bdbdbd'],
+  activeFill: '#FFEB99',
+  markerColor: PDF_FRAME_COLORS.gold,
+});
+
+function measureLeannessFatBar(doc, width) {
+  doc.font(SEMINAR_FONTS.regular).fontSize(LEANNESS_FAT_BAR.labelSize);
+  const labelH = doc.heightOfString('Off-season', { width: width / 5, lineGap: 0 });
+  return (
+    LEANNESS_FAT_BAR.currentLabelSize
+    + LEANNESS_FAT_BAR.markerGap
+    + LEANNESS_FAT_BAR.markerH
+    + LEANNESS_FAT_BAR.height
+    + LEANNESS_FAT_BAR.labelGap
+    + labelH
+    + LAYOUT.paragraphGap
+  );
+}
+
+function bfToBarX(x, width, bf, scaleMax) {
+  const clamped = Math.max(0, Math.min(Number(bf), scaleMax));
+  return x + (clamped / scaleMax) * width;
+}
+
+function drawLeannessFatBar(doc, page, bar) {
+  const { x, y, width } = page;
+  const { currentBf, scaleMax, zones, activeStage } = bar;
+  if (!zones?.length || !scaleMax) return y;
+
+  const barY = y + LEANNESS_FAT_BAR.currentLabelSize + LEANNESS_FAT_BAR.markerGap + LEANNESS_FAT_BAR.markerH;
+  const barH = LEANNESS_FAT_BAR.height;
+
+  zones.forEach((zone, index) => {
+    const x0 = bfToBarX(x, width, zone.from, scaleMax);
+    const x1 = bfToBarX(x, width, zone.to, scaleMax);
+    const zoneW = Math.max(x1 - x0, 0.5);
+    const fill = zone.label === activeStage ? LEANNESS_FAT_BAR.activeFill : LEANNESS_FAT_BAR.zoneFills[index];
+    doc.save().fillColor(fill).rect(x0, barY, zoneW, barH).fill().restore();
+    if (index > 0) {
+      doc
+        .strokeColor(PDF_FRAME_COLORS.gold)
+        .lineWidth(0.75)
+        .moveTo(x0, barY)
+        .lineTo(x0, barY + barH)
+        .stroke();
+    }
+  });
+
+  doc
+    .strokeColor(PDF_FRAME_COLORS.gold)
+    .lineWidth(1.25)
+    .roundedRect(x, barY, width, barH, LEANNESS_FAT_BAR.radius)
+    .stroke();
+
+  zones.forEach((zone, index) => {
+    const x0 = bfToBarX(x, width, zone.from, scaleMax);
+    const x1 = bfToBarX(x, width, zone.to, scaleMax);
+    const zoneW = x1 - x0;
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LEANNESS_FAT_BAR.labelSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(zone.label, x0, barY + barH + LEANNESS_FAT_BAR.labelGap, {
+        width: zoneW,
+        align: 'center',
+        lineGap: 0,
+      });
+  });
+
+  if (Number.isFinite(currentBf)) {
+    const markerX = bfToBarX(x, width, currentBf, scaleMax);
+    const markerTop = barY - LEANNESS_FAT_BAR.markerH;
+    const markerLabel = `${currentBf}%`;
+    doc.font(SEMINAR_FONTS.bold).fontSize(LEANNESS_FAT_BAR.currentLabelSize);
+    const labelW = doc.widthOfString(markerLabel) + 4;
+    const labelX = Math.max(x, Math.min(markerX - labelW / 2, x + width - labelW));
+    doc
+      .fillColor(SEMINAR_COLORS.body)
+      .text(markerLabel, labelX, y, { width: labelW, align: 'center', lineGap: 0 });
+    doc
+      .fillColor(LEANNESS_FAT_BAR.markerColor)
+      .moveTo(markerX, markerTop)
+      .lineTo(markerX - 4, barY - 1)
+      .lineTo(markerX + 4, barY - 1)
+      .closePath()
+      .fill();
+    doc
+      .strokeColor(LEANNESS_FAT_BAR.markerColor)
+      .lineWidth(1.5)
+      .moveTo(markerX, barY - 1)
+      .lineTo(markerX, barY + barH + 1)
+      .stroke();
+  }
+
+  return barY + barH + LEANNESS_FAT_BAR.labelGap + LEANNESS_FAT_BAR.labelSize + LAYOUT.paragraphGap;
+}
+
 function leannessGenderTableOpts(page, table, compact = {}) {
   const stageCount = table.stageLabels.length;
   const stageWidth = 0.86 / stageCount;
@@ -1347,6 +1452,10 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts));
   aceTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap };
+
+  const fatBarH = measureLeannessFatBar(doc, page.width);
+  page = ensureLockedSpace(doc, payload, page, fatBarH);
+  page = { ...page, y: drawLeannessFatBar(doc, page, lba.leannessFatBar) };
 
   const proseParagraphs = [
     lba.riskMessage,

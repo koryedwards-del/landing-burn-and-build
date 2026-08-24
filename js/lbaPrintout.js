@@ -70,6 +70,32 @@ export function leannessWeightGoalsTable(lbm) {
   };
 }
 
+/** Contiguous BF% zones and marker position for the LBA fat bar (client gender). */
+export function leannessFatBar(gender, bodyFatPercent) {
+  const table = leannessTable(gender);
+  const bf = Number(bodyFatPercent);
+  const zones = [];
+  let prev = 0;
+  for (const row of table) {
+    zones.push({ label: row.label, from: prev, to: row.cap });
+    prev = row.cap;
+  }
+  const trainingCap = table[table.length - 1].cap;
+  const scaleMax = Math.max(
+    40,
+    trainingCap + 10,
+    Number.isFinite(bf) ? Math.ceil(bf / 5) * 5 : 40,
+  );
+  zones.push({ label: 'Off-season', from: trainingCap, to: scaleMax });
+  const active = aceCategoryForBodyFat(gender, bf);
+  return {
+    currentBf: Number.isFinite(bf) ? round2(bf) : null,
+    scaleMax,
+    zones,
+    activeStage: active?.label ?? 'Off-season',
+  };
+}
+
 /** @deprecated ACE attribution removed — returns empty until new category copy is wired. */
 export function aceRiskMessage() {
   return '';
