@@ -8,6 +8,12 @@ import {
 } from '../js/bodyCompositionAnalysis.js';
 import { buildProgramPackage } from '../js/programPackage.js';
 import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
+import {
+  scaleStapleRows,
+  scaleStapleServingLabel,
+  stapleCategoryServings,
+} from '../js/stapleServingPrintout.js';
+import { CUTTING_STAPLES_PROTEIN_DAIRY } from '../data/cuttingStaplesPrintout.js';
 
 const rnd = (x) => Math.round(x);
 
@@ -241,9 +247,36 @@ function verifyKristiServingsGrid() {
   return true;
 }
 
+function verifyStapleServingScale() {
+  const errors = [];
+  const expect = (label, actual, expected) => {
+    if (actual !== expected) errors.push(`${label}: got ${actual}, want ${expected}`);
+  };
+
+  expect('scaleStapleServingLabel 3×26g', scaleStapleServingLabel('26g', 3), '78g');
+  expect('scaleStapleServingLabel 3×2 whites', scaleStapleServingLabel('2 whites', 3), '6 whites');
+
+  const plan = { protein: 9, grainsStarches: 9, vegetables: 1, fruits: 3 };
+  expect('protein meal servings', stapleCategoryServings(plan, 'protein'), 3);
+  const chicken = scaleStapleRows(
+    CUTTING_STAPLES_PROTEIN_DAIRY,
+    stapleCategoryServings(plan, 'protein'),
+  ).find((row) => row.name === 'Chicken breast');
+  expect('Kristi chicken food list', chicken?.serving, '78g');
+
+  if (errors.length) {
+    console.error('FAIL staple serving scale');
+    errors.forEach((e) => console.error(`  ${e}`));
+    return false;
+  }
+  console.log('OK staple serving scale');
+  return true;
+}
+
 const ok = [
   verifyKristiPackage(),
   verifyKristiServingsGrid(),
+  verifyStapleServingScale(),
   verifyCase('Kristi Warner', KRISTI_INTAKE, KRISTI_PDF),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,

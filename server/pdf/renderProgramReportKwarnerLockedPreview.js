@@ -30,6 +30,10 @@ import {
   GROCERY_STAPLES_PANTRY,
 } from '../../data/cuttingStaplesPrintout.js';
 import {
+  scaleStapleRows,
+  stapleCategoryServings,
+} from '../../js/stapleServingPrintout.js';
+import {
   COMMON_SPLASHES,
   FLAVOR_KIT_RULE,
   flavorKitList,
@@ -328,18 +332,26 @@ function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
   return drawStapleListItems(doc, items, col, y, bottomY).nextIndex;
 }
 
+function staplesForPayload(items, category, payload) {
+  const servings = stapleCategoryServings(payload.servings?.planServings, category);
+  return scaleStapleRows(items, servings);
+}
+
 function drawStaplesFoodListPage(doc, payload) {
+  const proteinItems = staplesForPayload(CUTTING_STAPLES_PROTEIN_DAIRY, 'protein', payload);
+  const grainItems = staplesForPayload(CUTTING_STAPLES_GRAINS_STARCHES, 'grains', payload);
+
   let page = startLockedPage(doc, payload, 'Food List');
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-  drawStaplesColumn(doc, 'Protein Staples', CUTTING_STAPLES_PROTEIN_DAIRY, columns[0], page.y, page.bottom);
+  drawStaplesColumn(doc, 'Protein Staples', proteinItems, columns[0], page.y, page.bottom);
 
   let gsTitleY = drawSectionTitle(doc, 'Grains & Starches', columns[1].x, page.y, columns[1].width);
   let gsIndex = 0;
   let result = drawStapleListItems(
     doc,
-    CUTTING_STAPLES_GRAINS_STARCHES,
+    grainItems,
     columns[1],
     gsTitleY,
     page.bottom,
@@ -347,13 +359,13 @@ function drawStaplesFoodListPage(doc, payload) {
   );
   gsIndex = result.nextIndex;
 
-  while (gsIndex < CUTTING_STAPLES_GRAINS_STARCHES.length) {
+  while (gsIndex < grainItems.length) {
     finishLockedPage(doc, page.box, payload);
     page = startLockedPage(doc, payload, null);
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
     result = drawStapleListItems(
       doc,
-      CUTTING_STAPLES_GRAINS_STARCHES,
+      grainItems,
       columns[1],
       page.y,
       page.bottom,
@@ -362,33 +374,36 @@ function drawStaplesFoodListPage(doc, payload) {
     gsIndex = result.nextIndex;
   }
 
-  if (gsIndex !== CUTTING_STAPLES_GRAINS_STARCHES.length) {
-    throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${CUTTING_STAPLES_GRAINS_STARCHES.length}`);
+  if (gsIndex !== grainItems.length) {
+    throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${grainItems.length}`);
   }
 
   finishLockedPage(doc, page.box, payload);
 }
 
 function drawVegFruitFoodListPage(doc, payload) {
+  const vegetableItems = staplesForPayload(CUTTING_STAPLES_VEGETABLES, 'vegetable', payload);
+  const fruitItems = staplesForPayload(CUTTING_STAPLES_FRUIT, 'fruit', payload);
+
   let vegIndex = 0;
   let fruitIndex = 0;
   let firstPage = true;
 
-  while (vegIndex < CUTTING_STAPLES_VEGETABLES.length || fruitIndex < CUTTING_STAPLES_FRUIT.length) {
+  while (vegIndex < vegetableItems.length || fruitIndex < fruitItems.length) {
     const page = startLockedPage(doc, payload, firstPage ? 'Food List' : null);
     firstPage = false;
     const columns = staplesColumnLayout(page);
     const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
 
-    if (vegIndex < CUTTING_STAPLES_VEGETABLES.length) {
+    if (vegIndex < vegetableItems.length) {
       let y = page.y;
       if (vegIndex === 0) {
         y = drawSectionTitle(doc, 'Vegetables', columns[0].x, y, columns[0].width);
       }
       vegIndex = drawStapleListItems(
         doc,
-        CUTTING_STAPLES_VEGETABLES,
+        vegetableItems,
         columns[0],
         y,
         page.bottom,
@@ -396,14 +411,14 @@ function drawVegFruitFoodListPage(doc, payload) {
       ).nextIndex;
     }
 
-    if (fruitIndex < CUTTING_STAPLES_FRUIT.length) {
+    if (fruitIndex < fruitItems.length) {
       let y = page.y;
       if (fruitIndex === 0) {
         y = drawSectionTitle(doc, 'Fruit', columns[1].x, y, columns[1].width);
       }
       fruitIndex = drawStapleListItems(
         doc,
-        CUTTING_STAPLES_FRUIT,
+        fruitItems,
         columns[1],
         y,
         page.bottom,
@@ -414,11 +429,11 @@ function drawVegFruitFoodListPage(doc, payload) {
     finishLockedPage(doc, page.box, payload);
   }
 
-  if (vegIndex !== CUTTING_STAPLES_VEGETABLES.length) {
-    throw new Error(`Vegetable list truncated: drew ${vegIndex} of ${CUTTING_STAPLES_VEGETABLES.length}`);
+  if (vegIndex !== vegetableItems.length) {
+    throw new Error(`Vegetable list truncated: drew ${vegIndex} of ${vegetableItems.length}`);
   }
-  if (fruitIndex !== CUTTING_STAPLES_FRUIT.length) {
-    throw new Error(`Fruit list truncated: drew ${fruitIndex} of ${CUTTING_STAPLES_FRUIT.length}`);
+  if (fruitIndex !== fruitItems.length) {
+    throw new Error(`Fruit list truncated: drew ${fruitIndex} of ${fruitItems.length}`);
   }
 }
 

@@ -329,6 +329,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       note: SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
+      planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
   };
 }
