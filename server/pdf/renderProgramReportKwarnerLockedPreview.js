@@ -1276,27 +1276,31 @@ function drawProjectionsPage(doc, payload) {
 }
 
 const LEANNESS_FAT_BAR = Object.freeze({
-  height: 26,
-  radius: 4,
+  lineWidth: 5,
   markerH: 7,
   markerGap: 5,
   labelSize: 8,
   capLabelSize: 8,
-  labelGap: 4,
+  capLabelGap: 3,
+  labelGap: 6,
   currentLabelSize: 9,
-  zoneFills: ['#f0f0f0', '#e4e4e4', '#d8d8d8', '#cccccc', '#bdbdbd'],
-  activeFill: '#FFEB99',
   markerColor: PDF_FRAME_COLORS.gold,
 });
 
 function measureLeannessFatBar(doc, width) {
   doc.font(SEMINAR_FONTS.regular).fontSize(LEANNESS_FAT_BAR.labelSize);
   const labelH = doc.heightOfString('Off-season', { width: width / 5, lineGap: 0 });
-  return (
+  const capRowH = LEANNESS_FAT_BAR.capLabelSize + 2;
+  const topBlockH = (
     LEANNESS_FAT_BAR.currentLabelSize
     + LEANNESS_FAT_BAR.markerGap
     + LEANNESS_FAT_BAR.markerH
-    + LEANNESS_FAT_BAR.height
+    + capRowH
+    + LEANNESS_FAT_BAR.capLabelGap
+  );
+  return (
+    topBlockH
+    + LEANNESS_FAT_BAR.lineWidth
     + LEANNESS_FAT_BAR.labelGap
     + labelH
     + LAYOUT.paragraphGap
@@ -1313,52 +1317,46 @@ function drawLeannessFatBar(doc, page, bar) {
   const { currentBf, scaleMax, zones, activeStage } = bar;
   if (!zones?.length || !scaleMax) return y;
 
-  const barY = y + LEANNESS_FAT_BAR.currentLabelSize + LEANNESS_FAT_BAR.markerGap + LEANNESS_FAT_BAR.markerH;
-  const barH = LEANNESS_FAT_BAR.height;
-
-  zones.forEach((zone, index) => {
-    const x0 = bfToBarX(x, width, zone.from, scaleMax);
-    const x1 = bfToBarX(x, width, zone.to, scaleMax);
-    const zoneW = Math.max(x1 - x0, 0.5);
-    const fill = zone.label === activeStage ? LEANNESS_FAT_BAR.activeFill : LEANNESS_FAT_BAR.zoneFills[index];
-    doc.save().fillColor(fill).rect(x0, barY, zoneW, barH).fill().restore();
-    if (index > 0) {
-      doc
-        .strokeColor(PDF_FRAME_COLORS.gold)
-        .lineWidth(0.75)
-        .moveTo(x0, barY)
-        .lineTo(x0, barY + barH)
-        .stroke();
-    }
-  });
+  const capRowH = LEANNESS_FAT_BAR.capLabelSize + 2;
+  const markerTop = y + LEANNESS_FAT_BAR.currentLabelSize + LEANNESS_FAT_BAR.markerGap;
+  const capY = markerTop + LEANNESS_FAT_BAR.markerH;
+  const lineY = capY + capRowH + LEANNESS_FAT_BAR.capLabelGap + LEANNESS_FAT_BAR.lineWidth / 2;
 
   doc
     .strokeColor(PDF_FRAME_COLORS.gold)
-    .lineWidth(1.25)
-    .roundedRect(x, barY, width, barH, LEANNESS_FAT_BAR.radius)
+    .lineWidth(LEANNESS_FAT_BAR.lineWidth)
+    .lineCap('butt')
+    .moveTo(x, lineY)
+    .lineTo(x + width, lineY)
     .stroke();
 
-  zones.forEach((zone, index) => {
+  zones.forEach((zone) => {
+    if (!zone.capLabel) return;
+    const x0 = bfToBarX(x, width, zone.from, scaleMax);
+    const x1 = bfToBarX(x, width, zone.to, scaleMax);
+    const zoneW = Math.max(x1 - x0, 0.5);
+    const capFont = zone.label === activeStage ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    doc.font(capFont).fontSize(LEANNESS_FAT_BAR.capLabelSize);
+    const labelW = Math.max(zoneW, doc.widthOfString(zone.capLabel) + 2);
+    const labelX = Math.max(x, x1 - labelW);
+    doc
+      .fillColor(SEMINAR_COLORS.body)
+      .text(zone.capLabel, labelX, capY, {
+        width: labelW,
+        align: 'right',
+        lineGap: 0,
+      });
+  });
+
+  zones.forEach((zone) => {
     const x0 = bfToBarX(x, width, zone.from, scaleMax);
     const x1 = bfToBarX(x, width, zone.to, scaleMax);
     const zoneW = x1 - x0;
-    if (zone.capLabel && zoneW >= 28) {
-      const capFont = zone.label === activeStage ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-      doc.font(capFont).fontSize(LEANNESS_FAT_BAR.capLabelSize);
-      const capH = doc.heightOfString(zone.capLabel, { width: zoneW, lineGap: 0 });
-      doc
-        .fillColor(SEMINAR_COLORS.body)
-        .text(zone.capLabel, x0, barY + (barH - capH) / 2, {
-          width: zoneW,
-          align: 'center',
-          lineGap: 0,
-        });
-    }
     doc
       .font(SEMINAR_FONTS.regular)
       .fontSize(LEANNESS_FAT_BAR.labelSize)
       .fillColor(SEMINAR_COLORS.body)
-      .text(zone.label, x0, barY + barH + LEANNESS_FAT_BAR.labelGap, {
+      .text(zone.label, x0, lineY + LEANNESS_FAT_BAR.lineWidth / 2 + LEANNESS_FAT_BAR.labelGap, {
         width: zoneW,
         align: 'center',
         lineGap: 0,
@@ -1367,7 +1365,6 @@ function drawLeannessFatBar(doc, page, bar) {
 
   if (Number.isFinite(currentBf)) {
     const markerX = bfToBarX(x, width, currentBf, scaleMax);
-    const markerTop = barY - LEANNESS_FAT_BAR.markerH;
     const markerLabel = `${currentBf}%`;
     doc.font(SEMINAR_FONTS.bold).fontSize(LEANNESS_FAT_BAR.currentLabelSize);
     const labelW = doc.widthOfString(markerLabel) + 4;
@@ -1378,19 +1375,25 @@ function drawLeannessFatBar(doc, page, bar) {
     doc
       .fillColor(LEANNESS_FAT_BAR.markerColor)
       .moveTo(markerX, markerTop)
-      .lineTo(markerX - 4, barY - 1)
-      .lineTo(markerX + 4, barY - 1)
+      .lineTo(markerX - 4, lineY - LEANNESS_FAT_BAR.lineWidth / 2 - 1)
+      .lineTo(markerX + 4, lineY - LEANNESS_FAT_BAR.lineWidth / 2 - 1)
       .closePath()
       .fill();
     doc
       .strokeColor(LEANNESS_FAT_BAR.markerColor)
       .lineWidth(1.5)
-      .moveTo(markerX, barY - 1)
-      .lineTo(markerX, barY + barH + 1)
+      .moveTo(markerX, lineY - LEANNESS_FAT_BAR.lineWidth / 2 - 1)
+      .lineTo(markerX, lineY + LEANNESS_FAT_BAR.lineWidth / 2 + 1)
       .stroke();
   }
 
-  return barY + barH + LEANNESS_FAT_BAR.labelGap + LEANNESS_FAT_BAR.labelSize + LAYOUT.paragraphGap;
+  return (
+    lineY
+    + LEANNESS_FAT_BAR.lineWidth / 2
+    + LEANNESS_FAT_BAR.labelGap
+    + LEANNESS_FAT_BAR.labelSize
+    + LAYOUT.paragraphGap
+  );
 }
 
 function leannessStageTableOpts(page, table, compact = {}) {
