@@ -160,12 +160,13 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
   const active = aceCategoryForBodyFat(gender, bf);
   const activeStage = active?.label ?? 'Off-season';
   const lean = Number(lbm);
-  const lbmLabel = lean > 0 ? `${round2(lean)} lbs` : null;
-  const competitionZone = zones.find((zone) => zone.label === 'Competition');
-  if (competitionZone && lbmLabel) competitionZone.lbmLabel = lbmLabel;
+  const lbmCell = lean > 0
+    ? { label: 'LBM', value: `${round2(lean)} lbs` }
+    : null;
   return {
     currentBf: Number.isFinite(bf) ? round2(bf) : null,
-    currentLbm: lbmLabel ? round2(lean) : null,
+    currentLbm: lbmCell ? round2(lean) : null,
+    lbmCell,
     scaleMax,
     zones,
     activeStage,
