@@ -1,7 +1,7 @@
 # Knowledge base backlog — save for later
 
 Working notes from product exploration. Not user-facing copy yet.  
-**Source of truth for foods:** 1982 PDF food list (tested portions). Trim `foods.json` to match; update gram weights from PDF (USDA 2026 only where explicitly chosen).
+**Source of truth for food macro density:** USDA FoodData Central (per 100g in `data/cuttingStaplesAuditMap.js`). **Serving criteria:** Burn Engine. Historical 1982 seminar test weights are archival only.
 
 ---
 

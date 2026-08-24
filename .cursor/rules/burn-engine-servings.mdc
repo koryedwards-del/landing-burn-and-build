@@ -7,7 +7,17 @@ alwaysApply: true
 
 Complete agent reference for Burn & Build serving math.
 
-**Source of truth:** `js/burnEngine.js` (`computeServingsPhase` loops). Macro-gram targets for scripts and audits: `js/burnEngineServingTargets.js`. Agents use **this doc** for semantics — do not re-derive serving criteria from scratch.
+**Source of truth (two layers):**
+
+| Layer | Source | What it defines |
+|-------|--------|-----------------|
+| **Serving criteria** | `js/burnEngine.js` | Daily serving counts, slot targets (8g pro, 14g carb, etc.) |
+| **Macro density** | **USDA FoodData Central** | Protein, carbs, fat per 100g — **the source all other references use** |
+| **Derived targets** | `js/burnEngineServingTargets.js` | Slot targets computed from the engine (for scripts) |
+
+**USDA FoodData Central** is the macro reference for every gram weight, audit script, and food-list row. Seminar sheets, audit scripts, and `data/cuttingStaplesAuditMap.js` all pull per-100g values from FDC (stored in code; not a live API). **Burn Engine** sets *how much* macro per serving; **USDA** sets *how many grams* of each food deliver that macro.
+
+Agents use **this doc** for semantics — do not re-derive serving criteria or macro densities from scratch.
 
 **This system does not use calories.** Users follow **servings** and weigh food to **gram portions** on the approved list. Never size portions, label PDFs, or explain the diet using calories.
 
@@ -22,14 +32,14 @@ Complete agent reference for Burn & Build serving math.
 | Calorie targets per serving | **8g protein**, **14g carbs**, **10g carbs**, etc. |
 | “Energy” or kcal for fruit portions | **18g carbs** per fruit serving |
 | Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
-| 1982 seminar gram weights on the 2026 list | **Current USDA (2026)** × Burn Engine slot formulas |
+| 1982 seminar gram weights as live portions | **USDA FDC** × Burn Engine slot formulas |
 
-## 2026 food-list gram weights
+## Food-list gram weights (USDA × Burn Engine)
 
-The cutting diet food list uses **current USDA macros** (FoodData Central, 2026 reference in audit scripts) — not 1982 seminar test weights.
+Per-100g macros come from **USDA FoodData Central** (`data/cuttingStaplesAuditMap.js`). Gram weights = engine slot target ÷ USDA density.
 
-| Slot | Gram formula (2026 USDA) |
-|------|--------------------------|
+| Slot | Gram formula |
+|------|----------------|
 | P1 protein | `800 ÷ protein_per_100g` (step down if fat > 2g) |
 | D1 milk | fit 8g pro + 12g carb + fat ceiling |
 | D1 cultured dairy | P1-style (8g pro + fat ceiling) — cottage/yogurt/ricotta |
@@ -40,6 +50,8 @@ The cutting diet food list uses **current USDA macros** (FoodData Central, 2026 
 Sync: `npm run sync:cutting-servings` · Audit: `npm run verify:cutting-servings`
 
 Foods that exceed the fat ceiling at the full carb serving are flagged for review (may need roster trim).
+
+Historical 1982 seminar test weights are archival context only — not used to size the 2026 list.
 
 ---
 
@@ -92,7 +104,7 @@ Use these to size **base** one-serving `gramWeight` in `data/foods.json` and `da
 |--------|-------|
 | Screening rule | **8/2** (“eight-two”) |
 | Gram formula | `800 ÷ protein_per_100g`, verify fat ≤ 2g at that weight |
-| Seminar override | **1982 tested weights override USDA** when they differ |
+| Macro source | USDA FDC per 100g (`cuttingStaplesAuditMap.js`) |
 | Meal split | Daily total ÷ 3 → breakfast, lunch, dinner |
 | Prep | Usually **cooked** (measure after cooking) |
 | Audit | `scripts/protein-82-audit.mjs`, `scripts/protein-82-bodybuilder-audit.mjs` |

@@ -1,6 +1,10 @@
 /**
- * Cutting diet food-list audit map — PDF row → catalog + Burn Engine slot + USDA macros (2026).
- * Used by scripts/cutting-food-list-audit.mjs and scripts/sync-cutting-servings.mjs.
+ * Cutting diet food-list map — PDF row → catalog + Burn Engine slot + USDA FDC macros.
+ *
+ * USDA FoodData Central is the source of all per-100g macro references in this repo.
+ * Values are stored here (not fetched live). Audits and sync scripts import from this file.
+ *
+ * Used by: scripts/cutting-food-list-audit.mjs, scripts/sync-cutting-servings.mjs
  */
 
 /** @typedef {{ p?: number, c?: number, f: number }} UsdaMacros */
@@ -73,7 +77,7 @@ export const GRAINS_STARCHES_MAP = Object.freeze([
   { pdf: 'Whole wheat roll', catalog: 'Hard roll', slot: 'G1', usdaKey: 'hard roll' },
 ]);
 
-/** USDA c=carbs, f=fat, p=protein per 100g — merged from category audit scripts. */
+/** USDA FoodData Central — c=carbs, f=fat, p=protein per 100g. Source of all macro density references. */
 export const USDA = Object.freeze({
   bagel: { c: 50.9, f: 1.7 },
   'black beans': { c: 23.7, f: 0.5 },
