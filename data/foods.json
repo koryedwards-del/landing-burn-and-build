@@ -139,7 +139,7 @@
     "name": "Cottage cheese, 1% fat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 64,
+    "gramWeight": 73,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -147,7 +147,7 @@
     "name": "Cottage cheese, 2% fat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 68,
+    "gramWeight": 73,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -155,7 +155,7 @@
     "name": "Cottage cheese, nonfat",
     "category": "dairy",
     "servingDescription": "as-is",
-    "gramWeight": 73,
+    "gramWeight": 78,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -172,6 +172,30 @@
     "category": "dairy",
     "servingDescription": "as-is",
     "gramWeight": 78,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Milk, 1% lowfat",
+    "category": "dairy",
+    "servingDescription": "liquid",
+    "gramWeight": 235,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Milk, lactose-free skim",
+    "category": "dairy",
+    "servingDescription": "liquid",
+    "gramWeight": 235,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Ricotta, nonfat",
+    "category": "dairy",
+    "servingDescription": "as-is",
+    "gramWeight": 70,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -699,7 +723,7 @@
     "name": "Prunes, dried, pitted",
     "category": "fruit",
     "servingDescription": "dry",
-    "gramWeight": 29,
+    "gramWeight": 28,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -755,7 +779,7 @@
     "name": "Bagel, plain",
     "category": "grain",
     "servingDescription": "as-is",
-    "gramWeight": 26,
+    "gramWeight": 28,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -779,7 +803,15 @@
     "name": "Bread, French/Italian",
     "category": "grain",
     "servingDescription": "as-is",
-    "gramWeight": 25,
+    "gramWeight": 27,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Bread, multigrain",
+    "category": "grain",
+    "servingDescription": "as-is",
+    "gramWeight": 32,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -835,7 +867,7 @@
     "name": "Bread, whole wheat",
     "category": "grain",
     "servingDescription": "as-is",
-    "gramWeight": 32,
+    "gramWeight": 34,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -872,6 +904,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Cereal, Cheerios",
+    "category": "grain",
+    "servingDescription": "dry",
+    "gramWeight": 19,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
     "name": "Couscous",
     "category": "grain",
     "servingDescription": "cooked",
@@ -891,7 +931,7 @@
     "name": "Cream of Wheat",
     "category": "grain",
     "servingDescription": "dry",
-    "gramWeight": 19,
+    "gramWeight": 18,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -899,7 +939,7 @@
     "name": "English muffin",
     "category": "grain",
     "servingDescription": "as-is",
-    "gramWeight": 31,
+    "gramWeight": 32,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -907,7 +947,7 @@
     "name": "Farina",
     "category": "grain",
     "servingDescription": "dry",
-    "gramWeight": 19,
+    "gramWeight": 18,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -939,7 +979,7 @@
     "name": "Hard roll",
     "category": "grain",
     "servingDescription": "as-is",
-    "gramWeight": 24,
+    "gramWeight": 27,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -992,6 +1032,14 @@
     "fatBracket": 0
   },
   {
+    "name": "Quinoa",
+    "category": "grain",
+    "servingDescription": "cooked",
+    "gramWeight": 66,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
     "name": "Rice cakes, plain",
     "category": "grain",
     "servingDescription": "as-is",
@@ -1027,7 +1075,7 @@
     "name": "Rice, brown",
     "category": "grain",
     "servingDescription": "cooked",
-    "gramWeight": 55,
+    "gramWeight": 60,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1043,7 +1091,7 @@
     "name": "Rice, white",
     "category": "grain",
     "servingDescription": "cooked",
-    "gramWeight": 49,
+    "gramWeight": 50,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1091,7 +1139,7 @@
     "name": "Beef, eye of round",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 25,
+    "gramWeight": 27,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1107,7 +1155,7 @@
     "name": "Beef, top sirloin",
     "category": "protein",
     "servingDescription": "cooked",
-    "gramWeight": 28,
+    "gramWeight": 27,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1331,7 +1379,7 @@
     "name": "Corn, sweet",
     "category": "starch",
     "servingDescription": "cooked",
-    "gramWeight": 74,
+    "gramWeight": 65,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1355,7 +1403,7 @@
     "name": "Mixed peas and carrots",
     "category": "starch",
     "servingDescription": "cooked",
-    "gramWeight": 127,
+    "gramWeight": 140,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1387,7 +1435,7 @@
     "name": "Peas, split",
     "category": "starch",
     "servingDescription": "cooked",
-    "gramWeight": 66,
+    "gramWeight": 68,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1452,6 +1500,30 @@
     "category": "starch",
     "servingDescription": "cooked",
     "gramWeight": 68,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Squash, summer (yellow)",
+    "category": "starch",
+    "servingDescription": "raw",
+    "gramWeight": 412,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Squash, winter (hubbard)",
+    "category": "starch",
+    "servingDescription": "raw",
+    "gramWeight": 161,
+    "unitsPerServing": 0,
+    "fatBracket": 0
+  },
+  {
+    "name": "Squash, zucchini",
+    "category": "starch",
+    "servingDescription": "raw",
+    "gramWeight": 452,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1619,7 +1691,7 @@
     "name": "Asparagus, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
-    "gramWeight": 244,
+    "gramWeight": 256,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1859,7 +1931,7 @@
     "name": "Green beans, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
-    "gramWeight": 141,
+    "gramWeight": 143,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -1867,7 +1939,7 @@
     "name": "Green beans, raw",
     "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 141,
+    "gramWeight": 143,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -2067,7 +2139,7 @@
     "name": "Peppers, orange bell, raw",
     "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 117,
+    "gramWeight": 167,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -2075,7 +2147,7 @@
     "name": "Peppers, orange bell, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
-    "gramWeight": 118,
+    "gramWeight": 149,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -2083,7 +2155,7 @@
     "name": "Peppers, red bell, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
-    "gramWeight": 159,
+    "gramWeight": 149,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -2099,7 +2171,7 @@
     "name": "Peppers, yellow bell, raw",
     "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 159,
+    "gramWeight": 167,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
@@ -2107,7 +2179,7 @@
     "name": "Peppers, yellow bell, cooked",
     "category": "vegetable",
     "servingDescription": "cooked",
-    "gramWeight": 159,
+    "gramWeight": 149,
     "unitsPerServing": 0,
     "fatBracket": 0
   },

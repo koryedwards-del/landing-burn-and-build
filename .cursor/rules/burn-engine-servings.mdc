@@ -22,6 +22,24 @@ Complete agent reference for Burn & Build serving math.
 | Calorie targets per serving | **8g protein**, **14g carbs**, **10g carbs**, etc. |
 | “Energy” or kcal for fruit portions | **18g carbs** per fruit serving |
 | Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
+| 1982 seminar gram weights on the 2026 list | **Current USDA (2026)** × Burn Engine slot formulas |
+
+## 2026 food-list gram weights
+
+The cutting diet food list uses **current USDA macros** (FoodData Central, 2026 reference in audit scripts) — not 1982 seminar test weights.
+
+| Slot | Gram formula (2026 USDA) |
+|------|--------------------------|
+| P1 protein | `800 ÷ protein_per_100g` (step down if fat > 2g) |
+| D1 milk | fit 8g pro + 12g carb + fat ceiling |
+| D1 cultured dairy | P1-style (8g pro + fat ceiling) — cottage/yogurt/ricotta |
+| G1 / S2 | `1400 ÷ carbs_per_100g` |
+| VE | `1000 ÷ carbs_per_100g` |
+| FQ | `1800 ÷ carbs_per_100g` |
+
+Sync: `npm run sync:cutting-servings` · Audit: `npm run verify:cutting-servings`
+
+Foods that exceed the fat ceiling at the full carb serving are flagged for review (may need roster trim).
 
 ---
 
@@ -307,8 +325,11 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 | **Derived macro targets (scripts)** | `js/burnEngineServingTargets.js` |
 | **This doc (portions & PDFs)** | `.cursor/rules/burn-engine-servings.mdc` |
 | Engine calorie loops (implementation only) | `docs/burn-engine-internal-calorie-loops.md` |
-| Base catalog gram weights | `data/foods.json` |
+| Base catalog gram weights | `data/foods.json` — sized from **2026 USDA** × Burn Engine slot formulas |
 | Cutting staples (base servings) | `data/cuttingStaplesPrintout.js` |
+| USDA + PDF row map | `data/cuttingStaplesAuditMap.js` |
+| Sync servings from USDA | `node scripts/sync-cutting-servings.mjs` |
+| Audit single servings | `node scripts/cutting-food-list-audit.mjs` |
 | Food-list PDF scaling | `js/stapleServingPrintout.js` |
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
@@ -316,7 +337,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 | Meal plan / grocery scaling | `menuplanner/js/plannerPrintPayload.js`, `plannerState.js` |
 | KWarner render workflow | `.cursor/rules/kwarner-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
-| Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs` |
+| Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
 | Deep backlog | `docs/knowledge-base-backlog.md` |
 
 ---
