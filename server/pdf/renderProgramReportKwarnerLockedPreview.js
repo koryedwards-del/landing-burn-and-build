@@ -44,6 +44,9 @@ import {
   BODY_FAT_PROGRESS_BAR_FOOTER,
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
+  DESIRABLE_LBM_BAR_FOOTER,
+  DESIRABLE_LBM_BAR_SUBTITLE,
+  DESIRABLE_LBM_BAR_TITLE,
 } from '../../js/lbaPrintout.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 8;
@@ -1482,6 +1485,189 @@ function drawBodyFatProgressBar(doc, page, bar) {
   return cy + footerBoxH + LAYOUT.paragraphGap;
 }
 
+const DESIRABLE_LBM_BAR = Object.freeze({
+  titleSize: 11,
+  subtitleSize: 8,
+  barHeight: 40,
+  barRadius: 6,
+  segmentStyles: Object.freeze({
+    'Below desirable': { fill: '#C4681A', text: '#ffffff' },
+    'At or above': { fill: '#0B6E78', text: '#ffffff' },
+  }),
+  capLabelSize: 8,
+  categorySize: 6,
+  cellLineGap: 2,
+  markerLabelSize: 10,
+  markerH: 5,
+  footerSize: 9,
+  footerPad: 10,
+  sectionGap: 10,
+});
+
+function lbmSegmentStyle(zoneLabel) {
+  return DESIRABLE_LBM_BAR.segmentStyles[zoneLabel]
+    || DESIRABLE_LBM_BAR.segmentStyles['At or above'];
+}
+
+function lbmToBarX(x, width, lbm, scaleMax) {
+  const clamped = Math.max(0, Math.min(Number(lbm), scaleMax));
+  return x + (clamped / scaleMax) * width;
+}
+
+function drawLbmSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, textColor) {
+  const stageName = zone.label.toUpperCase();
+  const isActive = zone.label === activeStage;
+  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+  const gap = DESIRABLE_LBM_BAR.cellLineGap;
+  const capH = zone.capLabel ? DESIRABLE_LBM_BAR.capLabelSize : 0;
+  const catH = DESIRABLE_LBM_BAR.categorySize;
+  const blockH = capH + (zone.capLabel ? gap : 0) + catH;
+  let ty = barY + (barH - blockH) / 2;
+  if (zone.capLabel) {
+    doc.font(font).fontSize(DESIRABLE_LBM_BAR.capLabelSize).fillColor(textColor);
+    doc.text(zone.capLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+    ty += capH + gap;
+  }
+  doc.font(font).fontSize(DESIRABLE_LBM_BAR.categorySize).fillColor(textColor);
+  doc.text(stageName, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+}
+
+function measureDesirableLbmBar(doc, width) {
+  doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
+  const titleH = doc.heightOfString(DESIRABLE_LBM_BAR_TITLE, { width, align: 'center' });
+  doc.font(SEMINAR_FONTS.regular).fontSize(DESIRABLE_LBM_BAR.subtitleSize);
+  const subtitleH = doc.heightOfString(DESIRABLE_LBM_BAR_SUBTITLE, { width, align: 'center' });
+  doc.font(PDF_FRAME_FONTS.italic).fontSize(DESIRABLE_LBM_BAR.footerSize);
+  const footerH = doc.heightOfString(DESIRABLE_LBM_BAR_FOOTER, {
+    width: width - DESIRABLE_LBM_BAR.footerPad * 2,
+    align: 'center',
+  });
+  return (
+    titleH
+    + 4
+    + subtitleH
+    + DESIRABLE_LBM_BAR.sectionGap
+    + DESIRABLE_LBM_BAR.markerLabelSize
+    + 4
+    + DESIRABLE_LBM_BAR.barHeight
+    + DESIRABLE_LBM_BAR.sectionGap
+    + footerH
+    + DESIRABLE_LBM_BAR.footerPad * 2
+    + LAYOUT.paragraphGap
+  );
+}
+
+function drawDesirableLbmBar(doc, page, bar) {
+  const { x, y, width } = page;
+  const { currentLbm, scaleMax, zones, activeStage } = bar || {};
+  if (!zones?.length || !scaleMax) return y;
+
+  let cy = y;
+  const gold = PDF_FRAME_COLORS.gold;
+
+  doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
+  const titleParts = DESIRABLE_LBM_BAR_TITLE.split(' ');
+  const titleSilver = titleParts.slice(0, 2).join(' ');
+  const titleGold = titleParts.slice(2).join(' ');
+  const titleSilverW = doc.widthOfString(`${titleSilver} `);
+  const titleTotalW = doc.widthOfString(DESIRABLE_LBM_BAR_TITLE);
+  const titleX = x + (width - titleTotalW) / 2;
+  doc.fillColor('#888888').text(titleSilver, titleX, cy, { lineBreak: false });
+  doc.fillColor(gold).text(titleGold, titleX + titleSilverW, cy, { lineBreak: false });
+  cy += DESIRABLE_LBM_BAR.titleSize + 4;
+
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(DESIRABLE_LBM_BAR.subtitleSize)
+    .fillColor('#2F6FA8')
+    .text(DESIRABLE_LBM_BAR_SUBTITLE, x, cy, { width, align: 'center', lineGap: 0 });
+  cy += DESIRABLE_LBM_BAR.subtitleSize + DESIRABLE_LBM_BAR.sectionGap;
+
+  const barY = cy + DESIRABLE_LBM_BAR.markerLabelSize + 4;
+  const barH = DESIRABLE_LBM_BAR.barHeight;
+  const barR = DESIRABLE_LBM_BAR.barRadius;
+
+  doc.save();
+  doc.roundedRect(x, barY, width, barH, barR).clip();
+  zones.forEach((zone) => {
+    const x0 = lbmToBarX(x, width, zone.from, scaleMax);
+    const x1 = lbmToBarX(x, width, zone.to, scaleMax);
+    const segW = Math.max(x1 - x0, 1);
+    const style = lbmSegmentStyle(zone.label);
+    doc.fillColor(style.fill).rect(x0, barY, segW, barH).fill();
+    drawLbmSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, style.text);
+  });
+  doc.restore();
+
+  doc
+    .strokeColor(gold)
+    .lineWidth(1.25)
+    .roundedRect(x, barY, width, barH, DESIRABLE_LBM_BAR.barRadius)
+    .stroke();
+
+  zones.forEach((zone, index) => {
+    if (index === 0) return;
+    const boundaryX = lbmToBarX(x, width, zone.from, scaleMax);
+    doc
+      .strokeColor('#ffffff')
+      .lineWidth(0.75)
+      .moveTo(boundaryX, barY + 2)
+      .lineTo(boundaryX, barY + barH - 2)
+      .stroke();
+  });
+
+  if (Number.isFinite(currentLbm)) {
+    const markerX = lbmToBarX(x, width, currentLbm, scaleMax);
+    const markerLabel = `${currentLbm} lbs`;
+    doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.markerLabelSize);
+    const labelW = doc.widthOfString(markerLabel);
+    const labelX = Math.max(x, Math.min(markerX - labelW / 2, x + width - labelW));
+    doc.fillColor(SEMINAR_COLORS.body).text(markerLabel, labelX, cy, { lineBreak: false });
+    const triY = barY - 2;
+    doc
+      .fillColor(gold)
+      .moveTo(markerX, triY)
+      .lineTo(markerX - 4, triY - DESIRABLE_LBM_BAR.markerH)
+      .lineTo(markerX + 4, triY - DESIRABLE_LBM_BAR.markerH)
+      .closePath()
+      .fill();
+    doc
+      .strokeColor(gold)
+      .lineWidth(1.5)
+      .moveTo(markerX, barY)
+      .lineTo(markerX, barY + barH)
+      .stroke();
+  }
+
+  cy = barY + barH + DESIRABLE_LBM_BAR.sectionGap;
+
+  doc.font(PDF_FRAME_FONTS.italic).fontSize(DESIRABLE_LBM_BAR.footerSize);
+  const footerInnerW = width - DESIRABLE_LBM_BAR.footerPad * 2;
+  const footerTextH = doc.heightOfString(DESIRABLE_LBM_BAR_FOOTER, {
+    width: footerInnerW,
+    align: 'center',
+  });
+  const footerBoxH = footerTextH + DESIRABLE_LBM_BAR.footerPad * 2;
+  doc
+    .fillColor('#FFF9E0')
+    .roundedRect(x, cy, width, footerBoxH, 4)
+    .fill();
+  doc
+    .strokeColor(gold)
+    .lineWidth(1)
+    .roundedRect(x, cy, width, footerBoxH, 4)
+    .stroke();
+  doc
+    .fillColor('#8B6914')
+    .text(DESIRABLE_LBM_BAR_FOOTER, x + DESIRABLE_LBM_BAR.footerPad, cy + DESIRABLE_LBM_BAR.footerPad, {
+      width: footerInnerW,
+      align: 'center',
+      lineGap: 2,
+    });
+
+  return cy + footerBoxH + LAYOUT.paragraphGap;
+}
+
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
@@ -1516,6 +1702,12 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   const fatBarH = measureBodyFatProgressBar(doc, page.width);
   page = ensureLockedSpace(doc, payload, page, fatBarH);
   page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar) };
+
+  if (lba.desirableLbmBar) {
+    const lbmBarH = measureDesirableLbmBar(doc, page.width);
+    page = ensureLockedSpace(doc, payload, page, lbmBarH);
+    page = { ...page, y: drawDesirableLbmBar(doc, page, lba.desirableLbmBar) };
+  }
 
   const proseParagraphs = [
     lba.riskMessage,

@@ -1,7 +1,7 @@
 /** Lean Body Analysis — leanness stages and weight-goal tables (seminar printout). */
 
 import { PROJECTION_BF_FLOOR } from './burnEngine.js';
-import { analyzeLeanBodyMass } from './bodyCompositionAnalysis.js';
+import { analyzeLeanBodyMass, desirableLeanBodyMassLbs } from './bodyCompositionAnalysis.js';
 
 const LEANNESS_LABELS = Object.freeze(['Competition', 'Peaking', 'Prepping', 'Training']);
 const LEANNESS_STEP = 5;
@@ -9,6 +9,10 @@ const LEANNESS_STEP = 5;
 export const BODY_FAT_PROGRESS_BAR_TITLE = 'BODY FAT PROGRESS BAR';
 export const BODY_FAT_PROGRESS_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
 export const BODY_FAT_PROGRESS_BAR_FOOTER = 'How much fat is right for you is a personal choice. How you look in the mirror is the only true judge of whether you\'re where you want to be.';
+
+export const DESIRABLE_LBM_BAR_TITLE = 'LEAN BODY MASS BAR';
+export const DESIRABLE_LBM_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
+export const DESIRABLE_LBM_BAR_FOOTER = 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. Burn & Build is built to reduce fat while protecting that lean tissue.';
 
 function round2(x) {
   return Math.round(Number(x) * 100) / 100;
@@ -58,6 +62,42 @@ export function leannessWeightGoalsTable(gender, lbm) {
   return {
     stageLabels: LEANNESS_LABELS,
     values: rows.map((row) => weightGoalRangeLabel(lbm, row)),
+  };
+}
+
+/** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
+export function desirableLbmBar(gender, heightInches, leanBodyMass) {
+  const desirable = desirableLeanBodyMassLbs(gender, heightInches);
+  const lbm = Number(leanBodyMass);
+  if (!desirable || !Number.isFinite(lbm) || lbm <= 0) return null;
+
+  const desirableRounded = Math.round(desirable);
+  const thresholdLabel = `${desirableRounded} lbs`;
+  const scaleMax = Math.max(
+    Math.ceil((desirable * 1.2) / 5) * 5,
+    Math.ceil(lbm / 5) * 5 + 5,
+    desirable + 15,
+  );
+  const atOrAbove = lbm >= desirable;
+  return {
+    currentLbm: round2(lbm),
+    desirableLbm: round2(desirable),
+    scaleMax,
+    zones: [
+      {
+        label: 'Below desirable',
+        from: 0,
+        to: desirable,
+        capLabel: `<${thresholdLabel}`,
+      },
+      {
+        label: 'At or above',
+        from: desirable,
+        to: scaleMax,
+        capLabel: `≥${thresholdLabel}`,
+      },
+    ],
+    activeStage: atOrAbove ? 'At or above' : 'Below desirable',
   };
 }
 
