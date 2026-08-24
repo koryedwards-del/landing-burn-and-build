@@ -14,6 +14,33 @@ export const DESIRABLE_LBM_BAR_TITLE = 'LEAN BODY MASS BAR';
 export const DESIRABLE_LBM_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
 export const DESIRABLE_LBM_BAR_FOOTER = 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. Burn & Build is built to reduce fat while protecting that lean tissue.';
 
+/** Body composition source — least to most involved (questionnaire fatSource options). */
+const FAT_SOURCE_OPTIONS = Object.freeze([
+  { value: 'guess', label: "I'm estimating" },
+  { value: 'smart_scales', label: 'Smart scales' },
+  { value: 'tape', label: 'Tape measurements' },
+  { value: 'bia', label: 'InBody/BIA' },
+  { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
+  { value: 'skinfolds', label: 'Skinfolds' },
+  { value: 'bodpod', label: 'Bod Pod' },
+  { value: 'dexa', label: 'DEXA' },
+  { value: 'hydrostatic', label: 'Hydrostatic weighing' },
+  { value: 'other', label: 'Other' },
+]);
+
+export function formatFatSourceLabel(value, otherText = '') {
+  if (value === 'other') return otherText || 'Other';
+  const match = FAT_SOURCE_OPTIONS.find((option) => option.value === value);
+  if (match) return match.label;
+  if (value === 'recent') return 'Calipers / ultrasound / BodPod';
+  return '—';
+}
+
+export function lbaProfileLine({ heightInches, sex, age, fatSource, fatSourceOther }) {
+  const bodyComp = formatFatSourceLabel(fatSource, fatSourceOther);
+  return `Height: ${heightInches} inches  Sex: ${sex}  Body comp: ${bodyComp}  Age: ${age} years of experience`;
+}
+
 function round2(x) {
   return Math.round(Number(x) * 100) / 100;
 }
@@ -94,7 +121,7 @@ export function desirableLbmBar(gender, heightInches, leanBodyMass) {
         label: 'At or above',
         from: desirable,
         to: scaleMax,
-        capLabel: `≥${thresholdLabel}`,
+        capLabel: `>=${thresholdLabel}`,
       },
     ],
     activeStage: atOrAbove ? 'At or above' : 'Below desirable',

@@ -9,6 +9,7 @@ import {
   formatSexLabel,
   desirableLbmBar,
   leannessFatBar,
+  lbaProfileLine,
   lbmStatusMessage,
 } from './lbaPrintout.js';
 import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
@@ -273,9 +274,14 @@ export function buildProgramReportPayload(pkg, options = {}) {
     leanBodyAnalysis: {
       heightInches: intake.heightInches,
       sex: formatSexLabel(intake.sex),
-      thigh: formatMm(intake.thighMm),
-      waist: formatMm(intake.waistMm),
       age: intake.age,
+      profileLine: lbaProfileLine({
+        heightInches: intake.heightInches,
+        sex: formatSexLabel(intake.sex),
+        age: intake.age,
+        fatSource: intake.fatSource,
+        fatSourceOther: intake.fatSourceOther,
+      }),
       today,
       leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
       desirableLbmBar: desirableLbmBar(gender, intake.heightInches, intake.leanBodyMass),

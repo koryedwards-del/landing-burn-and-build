@@ -126,6 +126,22 @@ function measureParagraph(doc, paragraph, width) {
   }) + LAYOUT.paragraphGap;
 }
 
+function drawCenteredBodyParagraph(doc, payload, page, text) {
+  if (!text) return page;
+  const blockH = measureParagraph(doc, text, page.width);
+  let current = ensureLockedSpace(doc, payload, page, blockH);
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(LAYOUT.bodySize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), current.x, current.y, {
+      width: current.width,
+      lineGap: LAYOUT.lineGap,
+      align: 'center',
+    });
+  return { ...current, y: doc.y + LAYOUT.paragraphGap };
+}
+
 function drawBodyParagraphs(doc, payload, page, paragraphs, { fullHeader = false, pageTitle = null } = {}) {
   let current = page;
   (paragraphs || []).forEach((paragraph) => {
@@ -1672,8 +1688,8 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
 
-  const profileLine = `Height: ${lba.heightInches} inches  Sex: ${lba.sex}  Thigh: ${lba.thigh}  Waist: ${lba.waist}  Age: ${lba.age} years of experience`;
-  page = drawBodyParagraphs(doc, payload, page, [profileLine]);
+  const profileLine = lba.profileLine;
+  page = drawCenteredBodyParagraph(doc, payload, page, profileLine);
   page = { ...page, y: page.y + LAYOUT.sectionGap };
 
   page = ensureLockedSpace(doc, payload, page, LAYOUT.subsectionSize + LAYOUT.headerGap + 60);
