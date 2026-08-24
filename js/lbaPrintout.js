@@ -94,7 +94,7 @@ export function leannessWeightGoalsTable(gender, lbm) {
 
 export function desirableLbmBarFooter(lead) {
   const parts = [lead, DESIRABLE_LBM_BAR_FOOTER].filter(Boolean);
-  return parts.join('\n\n');
+  return parts.join(' ');
 }
 
 /** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
