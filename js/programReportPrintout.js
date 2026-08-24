@@ -2,10 +2,13 @@
 
 import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
+  BODY_FAT_PROGRESS_BAR_FOOTER,
+  BODY_FAT_PROGRESS_BAR_SUBTITLE,
+  BODY_FAT_PROGRESS_BAR_TITLE,
   formatMm,
   formatSexLabel,
-  leannessWeightGoalsTable,
   leannessFatBar,
+  leannessWeightGoalsTable,
   lbmStatusMessage,
 } from './lbaPrintout.js';
 import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
@@ -144,7 +147,7 @@ export function welcomeCoverHtml(pkg) {
   `;
 }
 
-export const LBA_FOOTER_COPY = 'How much fat is right for each individual is a personal choice. How you look in the mirror is the only true judge of whether you have fat to lose. If you see more fat than you personally want, then exercise and follow your this plan until you reach your desired goals.';
+export const LBA_FOOTER_COPY = BODY_FAT_PROGRESS_BAR_FOOTER;
 
 export const LBA_MONITOR_COPY = 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.';
 

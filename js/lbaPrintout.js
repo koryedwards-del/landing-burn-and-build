@@ -6,6 +6,10 @@ import { analyzeLeanBodyMass } from './bodyCompositionAnalysis.js';
 const LEANNESS_LABELS = Object.freeze(['Competition', 'Peaking', 'Prepping', 'Training']);
 const LEANNESS_STEP = 5;
 
+export const BODY_FAT_PROGRESS_BAR_TITLE = 'BODY FAT PROGRESS BAR';
+export const BODY_FAT_PROGRESS_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
+export const BODY_FAT_PROGRESS_BAR_FOOTER = 'How much fat is right for you is a personal choice. How you look in the mirror is the only true judge of whether you\'re where you want to be.';
+
 function round2(x) {
   return Math.round(Number(x) * 100) / 100;
 }
