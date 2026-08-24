@@ -12,7 +12,7 @@ export const KWARNER_WELCOME_COPY = {
   leanBodyAnalysis:
     'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. LBM (lean body mass) is used by the computer to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.',
   foodPlan:
-    'Page three is your custom-designed food plan. We use your body composition information to determine your LBM (lean body mass), then factor in your job, your day to day, and how many hours per week you spend on weight training (WT), high heart rate aerobic work (HHT) such as running or hard cardio, and low heart rate aerobic work (LHR) such as walking or easy cycling. The page shows how much fat you can lose in eight weeks, compares your body today with your eight-week goal, and explains what happens when protein, carbohydrates, or fat are too high or too low — so the servings on the next page make sense without counting grams.',
+    'Page three is your custom-designed food plan. It explains why servings — not app macros — are your path, what each food group does for your body, and how the Burn Engine built your prescription from your lean body mass, job, and exercise. The servings on page four follow directly from this page.',
   servings:
     'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
@@ -20,14 +20,20 @@ export const KWARNER_WELCOME_COPY = {
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Warner 1982 asked how much food you need for what you do. Burn & Build 2026 answers the same question — as servings built for your lean body mass, your job, and your exercise.',
-  'We do not put macro totals in your hands. Today it is easy to compare numbers against apps and advice that were never built for you. That is slippage — and it breaks the plan.',
+  'Most diets hand you numbers from somewhere else — calories from a formula, protein from a blog, macros from an app. Those tools are built on averages. They do not know your lean body mass, your job, or how many hours you spend on weight training (WT), high heart rate aerobic activity (HHT), or low heart rate aerobic activity (LHR). Comparing your plan to them will never line up — because they were never answering your question.',
+  'Warner 1982 asked the question that actually matters: how much food do you need for what you do? Burn & Build 2026 still starts there. The Burn Engine calculated your answer from your body composition test and your questionnaire — then converted it into servings so you can eat without running someone else\'s math.',
+  'Let the apps go. Your servings on the next page are not a dumbed-down version of a macro chart. They are your prescription — built once, for you alone. Follow them, pick from your food list, and judge progress in the mirror and on the scale over weeks — not against a number on a screen that knows nothing about you.',
 ];
 
+export const KWARNER_FOOD_PLAN_SERVINGS_TITLE = 'Your daily servings';
+
 export const KWARNER_FOOD_PLAN_STEP4 = [
-  'The computer calculated what you need for your body and your activity, then converted it into servings — protein, grains, vegetables, fruits, and fats.',
-  'You follow servings, not calories and not macro totals from the internet. The math is already done. Your job is to pick foods from the approved food list and hit your daily totals.',
+  'The computer already did the work. Your daily totals are servings of protein, grains, vegetables, fruits, and fats — spread across breakfast, lunch, dinner, and snacks.',
+  'You do not convert these to grams, calories, or macro percentages. That is the old habit. Your job is to hit your serving totals from the approved food list — nothing more.',
 ];
+
+export const KWARNER_FOOD_GROUPS_INTRO =
+  'Protein, carbohydrates, and fat are not trends — each one has a job in your body. The table below is not a macro chart. It shows what happens when any food group is too high or too low while you follow your servings.';
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',

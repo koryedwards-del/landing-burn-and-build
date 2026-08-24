@@ -2045,6 +2045,11 @@ function foodPlanNarrativeBlock(payload, title) {
   return payload.foodPlanNarrative?.blocks?.find((block) => block.title === title);
 }
 
+function foodPlanServingsBlock(payload) {
+  const blocks = payload.foodPlanNarrative?.blocks || [];
+  return blocks.find((block) => /servings/i.test(String(block.title || '')));
+}
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
@@ -2054,7 +2059,7 @@ function drawFoodPlanPage(doc, payload) {
     page = drawBodyParagraphs(doc, payload, page, lead);
   }
 
-  const servingsBlock = foodPlanNarrativeBlock(payload, 'Step 4 — Turn targets into servings');
+  const servingsBlock = foodPlanServingsBlock(payload);
   if (servingsBlock?.paragraphs?.length) {
     page = ensureLockedSpace(
       doc,
@@ -2069,6 +2074,10 @@ function drawFoodPlanPage(doc, payload) {
       page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
     }
     page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
+  }
+
+  if (fp.macroSignalIntro) {
+    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
   }
 
   const macroRows = fp.macroSignalRows || [];
