@@ -7,17 +7,29 @@ alwaysApply: true
 
 Complete agent reference for Burn & Build serving math.
 
-**Source of truth (two layers):**
+## Three sources of truth — nothing overrides these
 
-| Layer | Source | What it defines |
-|-------|--------|-----------------|
-| **Serving criteria** | `js/burnEngine.js` | Daily serving counts, slot targets (8g pro, 14g carb, etc.) |
-| **Macro density** | **USDA FoodData Central** | Protein, carbs, fat per 100g — **the source all other references use** |
-| **Derived targets** | `js/burnEngineServingTargets.js` | Slot targets computed from the engine (for scripts) |
+| # | Source | Role | Question it answers |
+|---|--------|------|---------------------|
+| **1** | **Burn Engine** (`js/burnEngine.js`) | **Serving criteria** | What does one serving of this *category* deliver? (8g protein, 14g carbs, etc.) |
+| **2** | **USDA FoodData Central** | **Serving size** | How many *grams* of this food deliver that serving? (protein/carbs/fat per 100g) |
+| **3** | **Cutting foods list** (`data/cuttingStaplesPrintout.js`) | **Approved roster** | Which foods are on the diet, how labeled, which prep (raw/cooked/dry)? |
 
-**USDA FoodData Central** is the macro reference for every gram weight, audit script, and food-list row. Seminar sheets, audit scripts, and `data/cuttingStaplesAuditMap.js` all pull per-100g values from FDC (stored in code; not a live API). **Burn Engine** sets *how much* macro per serving; **USDA** sets *how many grams* of each food deliver that macro.
+```
+Cutting list  →  WHAT foods
+Burn Engine   →  WHAT one serving must deliver (per category)
+USDA          →  HOW MANY grams = that serving
+```
 
-Agents use **this doc** for semantics — do not re-derive serving criteria or macro densities from scratch.
+**Nothing else overrides these three** — not seminar archives, not grocery staple lists, not audit scripts, not agent inference. Scripts and `data/cuttingStaplesAuditMap.js` exist to *implement* this chain, not replace it.
+
+| Layer | Path |
+|-------|------|
+| Serving criteria (engine) | `js/burnEngine.js`, `js/burnEngineServingTargets.js` |
+| Serving size (USDA per 100g) | `data/cuttingStaplesAuditMap.js` → `data/foods.json` `gramWeight` |
+| Cutting roster | `CUTTING_STAPLES_*` in `data/cuttingStaplesPrintout.js` |
+
+Agents use **this doc** for semantics. Do not re-derive criteria, gram weights, or roster entries from scratch.
 
 **This system does not use calories.** Users follow **servings** and weigh food to **gram portions** on the approved list. Never size portions, label PDFs, or explain the diet using calories.
 
@@ -25,18 +37,18 @@ Agents use **this doc** for semantics — do not re-derive serving criteria or m
 
 ## Core principle
 
-**A serving is defined by grams of the target macro, with a fat ceiling in grams.**
+**A serving is defined by Burn Engine macro criteria, sized in grams from USDA per-100g data, for foods on the cutting list only.**
 
 | Wrong | Right |
 |-------|-------|
-| Calorie targets per serving | **8g protein**, **14g carbs**, **10g carbs**, etc. |
-| “Energy” or kcal for fruit portions | **18g carbs** per fruit serving |
+| Calorie targets per serving | **Burn Engine** macro grams per category |
+| Guessed or ad-hoc gram weights | **USDA FDC** × Burn Engine formula |
+| Foods not on the cutting list | **`CUTTING_STAPLES_*`** roster only |
 | Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
-| 1982 seminar gram weights as live portions | **USDA FDC** × Burn Engine slot formulas |
 
-## Food-list gram weights (USDA × Burn Engine)
+## Gram weights (USDA serving size × Burn Engine criteria)
 
-Per-100g macros come from **USDA FoodData Central** (`data/cuttingStaplesAuditMap.js`). Gram weights = engine slot target ÷ USDA density.
+Per-100g macros from **USDA FoodData Central** (stored in `data/cuttingStaplesAuditMap.js`). One-serving grams = engine target ÷ USDA density. Only for foods on the **cutting list**.
 
 | Slot | Gram formula |
 |------|----------------|
@@ -49,9 +61,7 @@ Per-100g macros come from **USDA FoodData Central** (`data/cuttingStaplesAuditMa
 
 Sync: `npm run sync:cutting-servings` · Audit: `npm run verify:cutting-servings`
 
-Foods that exceed the fat ceiling at the full carb serving are flagged for review (may need roster trim).
-
-Historical 1982 seminar test weights are archival context only — not used to size the 2026 list.
+Foods on the cutting list that fail fat ceiling at full serving are flagged — resolve by roster or portion decision, not by overriding engine or USDA.
 
 ---
 
@@ -86,9 +96,9 @@ Historical 1982 seminar test weights are archival context only — not used to s
 
 ---
 
-## All food categories — portion criteria
+## All food categories — Burn Engine serving criteria
 
-Use these to size **base** one-serving `gramWeight` in `data/foods.json` and `data/cuttingStaplesPrintout.js`. PDF food-list pages scale these by the user’s plan (see [PDF scaling](#pdf--printout-system)).
+Burn Engine defines **what** one serving delivers. USDA sizes **how many grams**. Only foods on **`CUTTING_STAPLES_*`** get portions. PDF food-list pages scale base grams by the user’s plan (see [PDF scaling](#pdf--printout-system)).
 
 ### 1. Non-dairy protein (`P1`)
 
@@ -103,8 +113,9 @@ Use these to size **base** one-serving `gramWeight` in `data/foods.json` and `da
 | Detail | Value |
 |--------|-------|
 | Screening rule | **8/2** (“eight-two”) |
-| Gram formula | `800 ÷ protein_per_100g`, verify fat ≤ 2g at that weight |
-| Macro source | USDA FDC per 100g (`cuttingStaplesAuditMap.js`) |
+| Gram formula | `800 ÷ protein_per_100g` (USDA), verify fat ≤ 2g |
+| Serving size source | USDA FDC per 100g |
+| Roster | `CUTTING_STAPLES_PROTEIN_DAIRY` |
 | Meal split | Daily total ÷ 3 → breakfast, lunch, dinner |
 | Prep | Usually **cooked** (measure after cooking) |
 | Audit | `scripts/protein-82-audit.mjs`, `scripts/protein-82-bodybuilder-audit.mjs` |
@@ -333,15 +344,13 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
 | Piece | Path |
 |-------|------|
-| **Source of truth (engine)** | `js/burnEngine.js` |
-| **Derived macro targets (scripts)** | `js/burnEngineServingTargets.js` |
-| **This doc (portions & PDFs)** | `.cursor/rules/burn-engine-servings.mdc` |
+| **1 — Serving criteria** | `js/burnEngine.js`, `js/burnEngineServingTargets.js` |
+| **2 — Serving size (USDA)** | `data/cuttingStaplesAuditMap.js` → `data/foods.json` |
+| **3 — Cutting roster** | `data/cuttingStaplesPrintout.js` (`CUTTING_STAPLES_*`) |
+| **This doc** | `.cursor/rules/burn-engine-servings.mdc` |
 | Engine calorie loops (implementation only) | `docs/burn-engine-internal-calorie-loops.md` |
-| Base catalog gram weights | `data/foods.json` — sized from **2026 USDA** × Burn Engine slot formulas |
-| Cutting staples (base servings) | `data/cuttingStaplesPrintout.js` |
-| USDA + PDF row map | `data/cuttingStaplesAuditMap.js` |
-| Sync servings from USDA | `node scripts/sync-cutting-servings.mjs` |
-| Audit single servings | `node scripts/cutting-food-list-audit.mjs` |
+| Sync USDA → catalog grams | `npm run sync:cutting-servings` |
+| Audit single servings | `npm run verify:cutting-servings` |
 | Food-list PDF scaling | `js/stapleServingPrintout.js` |
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
@@ -356,13 +365,13 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
 ## Agent checklist
 
-1. Identify **engine slot** (P1, D1, G1, S2, VE, FQ, FT) and **user-facing field**.
-2. Size **base** `gramWeight` from **macro grams + fat limit in grams** — never calories.
-3. Confirm **prep state** (dry / cooked / raw / as-is).
-4. Use correct **grain vs starch** fat ceiling when auditing carb portions.
-5. **Servings PDF** = counts; **food list PDF** = scaled grams; **meal plan** = assigned × grams.
+1. **Cutting list** — is this food on `CUTTING_STAPLES_*`? If not, stop.
+2. **Burn Engine** — which slot (P1, D1, G1, S2, VE, FQ, FT)? What macro + fat limit?
+3. **USDA** — per-100g macros → base `gramWeight` via slot formula. Never override with guesses.
+4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
+5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams; **meal plan** = assigned × grams.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
-7. Run category audit script; KWarner PDF changes → `npm run render:kwarner-preview` per `kwarner-preview-pdf.mdc`.
+7. KWarner PDF changes → `npm run render:kwarner-preview` per `kwarner-preview-pdf.mdc`.
 
 ## Errata — do not repeat these mistakes
 
@@ -371,4 +380,4 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 | Fruit **≤4g fat** | **18g carbs** per serving; fat limit **≤0.44g** (not 4g) |
 | Fruit sized by **72 cal** / `7200 ÷ kcal` | Size by **18g carbs** / `1800 ÷ carbs_per_100g` |
 
-The **≤4g fat** rule appeared in `scripts/veg-fruit-audit.mjs` and `data/cuttingStaplesPrintout.js` comments — likely a misread of the engine’s `(S2+FQ)×4` **fat-calorie** term (~0.44g fat), not a 4-gram fat ceiling. It is **not** from the 1982 seminar sheet.
+The **≤4g fat** rule appeared in old audit scripts — a misread of the engine’s `(S2+FQ)×4` fat-calorie term (~0.44g fat), not a gram ceiling. Do not use it.
