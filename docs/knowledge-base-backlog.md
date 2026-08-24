@@ -25,11 +25,44 @@ The organizing question sits **above** all of them. Those searches are pieces of
 
 **Use this question to structure the knowledge base.** Each article, FAQ entry, handbook tip, and printout Q&A should connect back to: *for this body and this activity level, how much food — and of what kind — do you need?*
 
+### Two-fold approach (content + conversion)
+
+Tie each Google search fragment to **two things**:
+
+| Fold | What they get | Product role |
+|------|---------------|--------------|
+| **1. The diet as the answer** | Burn & Build — the system, the why, the 1982 principle | Educate: this is what you've been looking for |
+| **2. The food plan as the path** | Their custom servings, built for their body and activity | Convert: this is how you get there |
+
+Someone searching *"how many calories should I eat?"* isn't really looking for a generic calorie calculator. They're looking for **an answer** (a diet built for recomp — lose fat, keep muscle) and **a path** (a food plan calculated for their lean body mass, job, and exercise).
+
+Every KB article / landing touchpoint follows the same arc:
+
+1. **Meet them at the Google question** — use their exact search wording as the headline
+2. **Answer with the diet** — Burn & Build explains *why* and *how much in principle*
+3. **Point to the food plan** — questionnaire → Burn Engine → personalized servings is *their* answer
+
+```
+Google fragment  →  Diet (the answer)  →  Food plan (the path)
+     ↓                    ↓                        ↓
+"How much protein?"   Burn & Build system    Your custom servings
+```
+
+**Site flow already matches this:**
+
+| Step | Path | Fold |
+|------|------|------|
+| Educate | KB article / landing section | Diet = the answer |
+| Intake | `/questionnaire/` | Path begins — body + activity |
+| Purchase | `/createyourfoodplan/` | Food plan unlocked |
+| Deliver | `/program-report/` → menu planner | Food plan in hand |
+
 | Layer | Role |
 |-------|------|
 | **Organizing question** | How much food do I need to eat for what I do? |
 | **Search fragments** | Calories, protein, fat loss, muscle retention, recomp, muscle gain |
-| **Burn & Build answer** | Burn Engine → personalized macros → servings across five food groups |
+| **Fold 1 — Diet (answer)** | Burn & Build system — recomp, lean mass, right food/right amount/right time |
+| **Fold 2 — Food plan (path)** | Burn Engine → personalized macros → servings across five food groups |
 
 ---
 
