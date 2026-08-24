@@ -10,6 +10,7 @@ import {
   leannessFatBar,
   leannessFatBarFooter,
   lbaProfileLine,
+  lbmCopyAfterFirstSentence,
   lbmStatusMessage,
 } from './lbaPrintout.js';
 import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
@@ -284,12 +285,12 @@ export function buildProgramReportPayload(pkg, options = {}) {
       }),
       today,
       leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
-      leannessFatBarFooter: leannessFatBarFooter(lbmCopy.lead),
+      leannessFatBarFooter: leannessFatBarFooter(lbmCopy.lead, lbmCopy.congrats),
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
       lbmLead: lbmCopy.lead,
-      lbmCongrats: lbmCopy.congrats,
+      lbmCongrats: lbmCopyAfterFirstSentence(lbmCopy.congrats),
     },
     projections: buildProjectionsPrintoutSection(pkg),
     history: {

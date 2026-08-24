@@ -106,9 +106,25 @@ export function desirableLbmBarFooter(lead) {
   return parts.join(' ');
 }
 
-export function leannessFatBarFooter(lead) {
+function lbmCopyFirstSentence(text) {
+  if (!text) return '';
+  const end = text.indexOf('. ');
+  return end >= 0 ? text.slice(0, end + 1) : text;
+}
+
+export function lbmCopyAfterFirstSentence(text) {
+  if (!text) return '';
+  const end = text.indexOf('. ');
+  return end >= 0 ? text.slice(end + 2) : '';
+}
+
+export function leannessFatBarFooter(lead, congrats) {
   const lbmPart = desirableLbmBarFooter(lead);
-  return [lbmPart, BODY_FAT_PROGRESS_BAR_FOOTER].filter(Boolean).join(' ');
+  return [
+    lbmCopyFirstSentence(congrats),
+    lbmPart,
+    BODY_FAT_PROGRESS_BAR_FOOTER,
+  ].filter(Boolean).join(' ');
 }
 
 /** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
