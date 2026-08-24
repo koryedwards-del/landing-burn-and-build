@@ -1284,7 +1284,7 @@ function drawProjectionsPage(doc, payload) {
 const BODY_FAT_PROGRESS_BAR = Object.freeze({
   titleSize: 11,
   subtitleSize: 8,
-  barHeight: 46,
+  barHeight: 52,
   barRadius: 6,
   segmentStyles: Object.freeze({
     Competition: { fill: '#0B6E78', text: '#ffffff' },
@@ -1295,7 +1295,7 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   }),
   capLabelSize: 8,
   categorySize: 6,
-  weightLabelSize: 6,
+  weightLabelSize: 9,
   cellLineGap: 2,
   markerLabelSize: 10,
   markerH: 5,
