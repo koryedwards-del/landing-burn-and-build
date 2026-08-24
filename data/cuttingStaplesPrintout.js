@@ -122,7 +122,7 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Yogurt, plain, nonfat', serving: '140g' },
 ]);
 
-/** PDF page 5 — grains & starches, 33 items, A–Z. */
+/** PDF page 5 — grains & starches, 30 items, A–Z. */
 export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
   { name: 'Bagel', serving: '28g' },
   { name: 'Beans (any on list)', serving: '59g' },
@@ -149,9 +149,6 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
   { name: 'Rice, brown (cooked)', serving: '60g' },
   { name: 'Rice, white (cooked)', serving: '50g' },
   { name: 'Rye bread', serving: '29g' },
-  { name: 'Squash, summer (yellow)', serving: '412g' },
-  { name: 'Squash, winter (hubbard)', serving: '161g' },
-  { name: 'Squash, zucchini', serving: '452g' },
   { name: 'Sweet potato', serving: '68g' },
   { name: 'Tortilla, corn (6-inch)', serving: '31g' },
   { name: 'Tortilla, whole wheat', serving: '31g' },
@@ -196,6 +193,9 @@ const VEGETABLE_CATALOG = [
   ['Green beans', ['Green beans, cooked', 'Green beans, raw']],
   ['Mushrooms, white', ['Mushrooms, white, cooked', 'Mushrooms, white, raw']],
   ['Spinach', ['Spinach, cooked', 'Spinach, raw']],
+  ['Squash, summer (yellow)', ['Squash, summer (yellow)']],
+  ['Squash, winter (hubbard)', ['Squash, winter (hubbard)']],
+  ['Squash, zucchini', ['Squash, zucchini']],
   ['Tomatoes', ['Tomato, cooked', 'Tomato, raw']],
 ];
 

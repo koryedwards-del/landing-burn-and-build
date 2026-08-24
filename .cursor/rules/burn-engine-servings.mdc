@@ -44,7 +44,7 @@ Agents use **this doc** for semantics. Do not re-derive criteria, gram weights, 
 | Calorie targets per serving | **Burn Engine** macro grams per category |
 | Guessed or ad-hoc gram weights | **USDA FDC** × Burn Engine formula |
 | Foods not on the cutting list | **`CUTTING_STAPLES_*`** roster only |
-| Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
+| Shrinking gram portions to satisfy fat ceiling | **Full USDA formula** serving; accept fat overage if needed |
 
 ## Gram weights (USDA serving size × Burn Engine criteria)
 
@@ -52,7 +52,7 @@ Per-100g macros from **USDA FoodData Central** (stored in `data/cuttingStaplesAu
 
 | Slot | Gram formula |
 |------|----------------|
-| P1 protein | `800 ÷ protein_per_100g` (step down if fat > 2g) |
+| P1 protein | `800 ÷ protein_per_100g` |
 | D1 milk | fit 8g pro + 12g carb + fat ceiling |
 | D1 cultured dairy | P1-style (8g pro + fat ceiling) — cottage/yogurt/ricotta |
 | G1 / S2 | `1400 ÷ carbs_per_100g` |
@@ -61,7 +61,11 @@ Per-100g macros from **USDA FoodData Central** (stored in `data/cuttingStaplesAu
 
 Sync: `npm run sync:cutting-servings` · Audit: `npm run verify:cutting-servings`
 
-Foods on the cutting list that fail fat ceiling at full serving are flagged — resolve by roster or portion decision, not by overriding engine or USDA.
+### Fat overage at full serving — accepted
+
+**Never reduce gram portions** below the USDA × Burn Engine formula serving to satisfy a fat ceiling. Size to the full macro target every time.
+
+Some roster foods deliver the correct carb (or protein) grams at the formula weight but **slightly exceed** the slot fat limit (e.g. whole wheat bread at 34g). That is an **accepted edge case** — live with the fat overage. Do not trim grams, do not shrink servings, and do not override USDA or engine formulas to “fix” it.
 
 ---
 
@@ -169,7 +173,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 
 ### 4. Starches (`S2`)
 
-**Foods:** Beans, potatoes, sweet potatoes, corn, peas, squash, lentils. Category `starch` in `foods.json`.  
+**Foods:** Beans, potatoes, sweet potatoes, corn, peas, lentils. Category `starch` in `foods.json`. (Summer squash, hubbard, and zucchini are on the cutting list as **vegetables** — VE slot, not starches.)
 **Counts toward:** `servings.grainsStarches` (with grains).
 
 | Macro | Per one serving |
@@ -181,7 +185,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 |--------|-------|
 | Gram formula | `1400 ÷ carbs_per_100g` |
 | Meal split | Daily total ÷ 3 → breakfast, lunch, dinner |
-| Prep | Mostly **cooked**; some squash entries use **raw** weights in catalog |
+| Prep | Mostly **cooked** |
 | Audit | `scripts/starches-14-0-audit.mjs`, `scripts/starches-82-audit.mjs` |
 | Note | Beans/rice count here as **starches/grains**, not protein (`data/grainsStarchesTipsPrintout.js`) |
 
@@ -367,7 +371,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
 1. **Cutting list** — is this food on `CUTTING_STAPLES_*`? If not, stop.
 2. **Burn Engine** — which slot (P1, D1, G1, S2, VE, FQ, FT)? What macro + fat limit?
-3. **USDA** — per-100g macros → base `gramWeight` via slot formula. Never override with guesses.
+3. **USDA** — per-100g macros → base `gramWeight` via slot formula. **Full formula serving only** — never reduce grams to meet fat ceiling; fat overage at full serving is OK.
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
 5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams; **meal plan** = assigned × grams.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.

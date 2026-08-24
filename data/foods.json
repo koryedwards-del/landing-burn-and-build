@@ -1505,25 +1505,25 @@
   },
   {
     "name": "Squash, summer (yellow)",
-    "category": "starch",
+    "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 412,
+    "gramWeight": 294,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
   {
     "name": "Squash, winter (hubbard)",
-    "category": "starch",
+    "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 161,
+    "gramWeight": 115,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
   {
     "name": "Squash, zucchini",
-    "category": "starch",
+    "category": "vegetable",
     "servingDescription": "raw",
-    "gramWeight": 452,
+    "gramWeight": 323,
     "unitsPerServing": 0,
     "fatBracket": 0
   },
