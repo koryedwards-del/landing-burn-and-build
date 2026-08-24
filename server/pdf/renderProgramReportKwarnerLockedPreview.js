@@ -1403,7 +1403,7 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
 
   markers.forEach((marker) => {
     const markerX = bfToBarX(layout.bfX, layout.bfW, marker.bodyFat, scaleMax);
-    const timelineLabel = marker.badge ? `${marker.timelineLabel}*` : marker.timelineLabel;
+    const timelineLabel = marker.timelineLabel;
 
     doc
       .fillColor(color)
