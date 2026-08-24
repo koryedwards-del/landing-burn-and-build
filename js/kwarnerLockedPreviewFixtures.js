@@ -14,9 +14,9 @@ export const KWARNER_WELCOME_COPY = {
   foodPlan:
     'Page three is your custom-designed food plan. It explains why servings go a step farther than macros, what each food group does for your body, and how Burn & Build built your prescription from your lean body mass, job, and exercise. The servings on page four follow directly from this page.',
   servings:
-    'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
+    'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
-    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep, not theory. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals only from these approved foods.',
+    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
@@ -26,11 +26,11 @@ export const KWARNER_FOOD_PLAN_LEAD = [
 export const KWARNER_FOOD_PLAN_SERVINGS_TITLE = 'Your daily servings';
 
 export const KWARNER_FOOD_PLAN_STEP4 = [
-  'Burn & Build already converted your plan into daily servings of protein, grains, vegetables, fruits, and fats — spread across breakfast, lunch, dinner, and snacks. You do not convert these to grams, calories, or macro percentages; hit your serving totals from the approved food list.',
+  'Burn & Build converted your plan into daily servings of protein, grains, vegetables, fruits, and fats across breakfast, lunch, dinner, and snacks. Page four has your daily totals; build every meal from your approved food list.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO =
-  'Protein, carbohydrates, and fat each have a job in your body. The table below is not a macro chart — it shows what happens when any food group is too high or too low while you follow your servings.';
+  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how each food group works in your plan as you follow your servings.';
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',
