@@ -36,7 +36,7 @@ Five print documents, **two header templates**:
 
 **User-authored copy is fixed everywhere** — see `.cursor/rules/user-authored-copy.mdc`. Never reauthor or ad lib; use source text as written unless the user supplies exact replacement words.
 
-**Serving sizes & food-list gram weights** — macro-gram portions (8g protein, 14g carbs, prep state, dry vs cooked). See `.cursor/rules/burn-engine-servings.mdc`. Do not size food-list portions from calories.
+**Serving sizes & food-list gram weights** — macro-gram portions (8g protein, 14g carbs, prep state, dry vs cooked). See `.cursor/rules/burn-engine-servings.mdc`. **No calories** in portions or UI; engine calorie loops are in `docs/burn-engine-internal-calorie-loops.md` only.
 
 **Generic doc content is fixed** — do not ad lib or refactor copy/layout unless explicitly requested. Source data:
 
