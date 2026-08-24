@@ -21,7 +21,6 @@ import {
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
-import { drawCalloutRow } from './drawProgramReportNarrative.js';
 import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_GRAINS_STARCHES,
@@ -41,7 +40,7 @@ import {
 } from '../../menuplanner/data/flavorKits.js';
 import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngine.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 7;
+export const KWARNER_LOCKED_MIN_PAGES = 8;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -1264,17 +1263,25 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   page = ensureLockedSpace(doc, payload, page, LAYOUT.subsectionSize + LAYOUT.headerGap + 60);
   page = { ...page, y: drawSectionTitle(doc, '--TODAY--', page.x, page.y, page.width) };
 
-  page = { ...page, y: drawCalloutRow(
-    doc,
-    [
-      { label: 'Lean weight', value: `${lba.today.leanLbs} lbs`, detail: `${lba.today.leanPct}% of you` },
-      { label: 'Fat weight', value: `${lba.today.fatLbs} lbs`, detail: `${lba.today.fatPct}% of you` },
-      { label: 'Total weight', value: `${lba.today.totalLbs} lbs`, detail: 'on the scale today' },
+  const todayTableOpts = {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns: [
+      { key: 'label', width: 0.18 },
+      { key: 'pct', width: 0.32, align: 'center' },
+      { key: 'lbs', width: 0.5, align: 'right' },
     ],
-    page.x,
-    page.y,
-    page.width,
-  ) };
+    rows: [
+      { label: 'LEAN', pct: `${lba.today.leanPct} %`, lbs: `${lba.today.leanLbs} lbs.` },
+      { label: 'FAT', pct: `${lba.today.fatPct} %`, lbs: `${lba.today.fatLbs} lbs.` },
+      { label: 'TOTAL', pct: `${lba.today.totalPct} %`, lbs: `${lba.today.totalLbs} lbs.` },
+    ],
+    headerRows: 0,
+  };
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, todayTableOpts));
+  todayTableOpts.y = page.y;
+  page = { ...page, y: drawLayoutTable(doc, todayTableOpts) + LAYOUT.paragraphGap };
 
   const aceTableOpts = {
     x: page.x,
@@ -1467,6 +1474,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   }
 
   drawWelcomePage(doc, payload);
+  drawLeanBodyAnalysisPage(doc, payload);
   drawProjectionsPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
