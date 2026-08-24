@@ -13,6 +13,7 @@ import {
   pinnedContentBottomY,
   stampPinnedProgramFooters,
   PDF_FRAME_COLORS,
+  PDF_FRAME_FONTS,
 } from './drawFrame.js';
 import { drawPersonalizationHeader } from './drawSeminar.js';
 import {
@@ -1308,7 +1309,7 @@ function measureBodyFatProgressBar(doc, width) {
   const titleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_TITLE, { width, align: 'center' });
   doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize);
   const subtitleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_SUBTITLE, { width, align: 'center' });
-  doc.font(SEMINAR_FONTS.italic || SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
+  doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_FOOTER, {
     width: width - BODY_FAT_PROGRESS_BAR.footerPad * 2,
     align: 'center',
@@ -1397,7 +1398,10 @@ function drawBodyFatProgressBar(doc, page, bar) {
 
   const barY = cy + BODY_FAT_PROGRESS_BAR.markerLabelSize + 4;
   const barH = BODY_FAT_PROGRESS_BAR.barHeight;
+  const barR = BODY_FAT_PROGRESS_BAR.barRadius;
 
+  doc.save();
+  doc.roundedRect(x, barY, width, barH, barR).clip();
   zones.forEach((zone, index) => {
     const x0 = bfToBarX(x, width, zone.from, scaleMax);
     const x1 = bfToBarX(x, width, zone.to, scaleMax);
@@ -1425,6 +1429,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
         });
     }
   });
+  doc.restore();
 
   doc
     .strokeColor(gold)
@@ -1477,8 +1482,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
       .font(SEMINAR_FONTS.regular)
       .fontSize(BODY_FAT_PROGRESS_BAR.braceSize)
       .fillColor(gold)
-      .text('{', centerX - segW * 0.42, cy, { width: segW * 0.2, align: 'center', lineBreak: false });
-    doc.text('}', centerX + segW * 0.22, cy, { width: segW * 0.2, align: 'center', lineBreak: false });
+      .text('{  }', x0, cy, { width: segW, align: 'center', lineBreak: false });
     const iconY = cy + BODY_FAT_PROGRESS_BAR.braceSize + BODY_FAT_PROGRESS_BAR.iconGap;
     drawProgressBarIcon(doc, zone.label, centerX, iconY + BODY_FAT_PROGRESS_BAR.iconSize / 2, BODY_FAT_PROGRESS_BAR.iconSize, gold);
     doc
@@ -1501,7 +1505,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
     + BODY_FAT_PROGRESS_BAR.sectionGap
   );
 
-  doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
+  doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerInnerW = width - BODY_FAT_PROGRESS_BAR.footerPad * 2;
   const footerTextH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_FOOTER, {
     width: footerInnerW,
