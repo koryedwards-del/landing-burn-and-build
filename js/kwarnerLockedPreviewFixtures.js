@@ -15,6 +15,8 @@ export const KWARNER_WELCOME_COPY = {
     'Page three is your custom-designed food plan. We use your body composition information to determine your LBM (lean body mass), then factor in your job, your day to day, and how many hours per week you spend on weight training (WT), high heart rate aerobic work (HHT) such as running or hard cardio, and low heart rate aerobic work (LHR) such as walking or easy cycling. The page shows how much fat you can lose in eight weeks, compares your body today with your eight-week goal, and explains what happens when protein, carbohydrates, or fat are too high or too low — so the servings on the next page make sense without counting grams.',
   servings:
     'Page four is the servings page. No need to count calories or macronutrients (protein, carbohydrates, and fat) yourself. The computer turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks — so you have maximum strength and energy while losing fat as fast as this plan allows.',
+  foodList:
+    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples we have used since 1982 — foods that work in real prep, not theory. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals only from these approved foods.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [

@@ -716,6 +716,7 @@ function drawWelcomePage(doc, payload) {
     ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
+    ['Food List', payload.welcome.foodList],
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
