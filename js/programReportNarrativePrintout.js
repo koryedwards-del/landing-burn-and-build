@@ -181,6 +181,9 @@ export function buildBodyTodayNarrative(pkg, { today, gender }) {
   });
   const ace = aceCategoryForBodyFat(gender, intake.fatPercent);
   const sex = formatSexLabel(intake.sex);
+  const stageLine = ace
+    ? `Your body fat percentage falls in the ${ace.label} stage.`
+    : 'Your body fat percentage is above the Training stage.';
 
   return {
     pageTitle: 'Your Body Today',
@@ -209,7 +212,7 @@ export function buildBodyTodayNarrative(pkg, { today, gender }) {
       {
         title: 'Where you stand',
         paragraphs: [
-          `Your body fat percentage falls in the ${ace.label} range.`,
+          stageLine,
           'How much fat is right for you is a personal choice. How you look in the mirror is the best judge of whether you want to lose fat.',
           lbmCopy.lead,
           lbmCopy.congrats
