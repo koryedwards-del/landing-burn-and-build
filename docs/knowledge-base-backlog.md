@@ -5,6 +5,34 @@ Working notes from product exploration. Not user-facing copy yet.
 
 ---
 
+## Organizing question (Burn & Build)
+
+**Top question:** *How much food do I need to eat for what I do?*
+
+That was the original question in 1982. Burn & Build is essentially the modern way of answering the same question.
+
+This is **not** the same as claiming it is the most searched wording on Google. People probably break that question into searches like:
+
+- How many calories should I eat?
+- How much protein do I need?
+- How much should I eat to lose fat?
+- Can I lose fat without losing muscle?
+- What should I eat to build muscle?
+
+Those six search topics share a common root: people may Google calories, protein, lose fat without losing muscle, or body recomposition, but underneath they're often trying to figure out how much they should eat for their particular body and activity.
+
+The organizing question sits **above** all of them. Those searches are pieces of the larger question Burn & Build has been answering since 1982.
+
+**Use this question to structure the knowledge base.** Each article, FAQ entry, handbook tip, and printout Q&A should connect back to: *for this body and this activity level, how much food — and of what kind — do you need?*
+
+| Layer | Role |
+|-------|------|
+| **Organizing question** | How much food do I need to eat for what I do? |
+| **Search fragments** | Calories, protein, fat loss, muscle retention, recomp, muscle gain |
+| **Burn & Build answer** | Burn Engine → personalized macros → servings across five food groups |
+
+---
+
 ## 1982 PDF protein sheet (authoritative)
 
 Tested gram weights from seminar printout. Dairy is a **separate column** (not below).
@@ -149,6 +177,7 @@ Already in `data/proteinTipsPrintout.js`: *"Stick to the lean fish on this list.
 
 ## Marketing / product philosophy (context)
 
+- **Organizing question:** *How much food do I need to eat for what I do?* — see section above. Distinct from the landing-page tagline (*Lose the Fat. Keep the Muscle.*); the tagline is marketing shorthand, the organizing question is product truth.
 - Referral-led, not cold sell. Dave/Paul = proof; website = leave-behind.
 - Don't dumb down engine for masses; 1982 closed list is non-compressible.
 - Right food, right amount, right time — coupled system.
