@@ -29,6 +29,10 @@ USDA          →  HOW MANY grams = that serving
 | Serving size (USDA per 100g) | `data/cuttingStaplesAuditMap.js` → `data/foods.json` `gramWeight` |
 | Cutting roster | `CUTTING_STAPLES_*` in `data/cuttingStaplesPrintout.js` |
 
+### Cutting food list — approved
+
+The cutting food list (`CUTTING_STAPLES_PROTEIN_DAIRY`, `CUTTING_STAPLES_GRAINS_STARCHES`, `CUTTING_STAPLES_VEGETABLES`, `CUTTING_STAPLES_FRUIT` in `data/cuttingStaplesPrintout.js`) is **approved as it stands on August 24, 2026**. Gram weights, roster entries, and prep labels are locked unless the user explicitly requests a change.
+
 Agents use **this doc** for semantics. Do not re-derive criteria, gram weights, or roster entries from scratch.
 
 **This system does not use calories.** Users follow **servings** and weigh food to **gram portions** on the approved list. Never size portions, label PDFs, or explain the diet using calories.
