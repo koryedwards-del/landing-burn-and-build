@@ -46,7 +46,7 @@ import {
   BODY_FAT_PROGRESS_BAR_TITLE,
 } from '../../js/lbaPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 8;
+export const KWARNER_LOCKED_MIN_PAGES = 7;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -714,7 +714,6 @@ function drawWelcomePage(doc, payload) {
 
   const sections = [
     ['Lean Body Analysis', payload.welcome.leanBodyAnalysis],
-    ['Projections', payload.welcome.projections],
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
   ].filter(([, body]) => body);
@@ -1468,9 +1467,10 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
 
   doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
   const titleParts = BODY_FAT_PROGRESS_BAR_TITLE.split(' ');
-  const titleSilver = titleParts.slice(0, 2).join(' ');
-  const titleGold = titleParts.slice(2).join(' ');
-  const titleSilverW = doc.widthOfString(`${titleSilver} `);
+  const titleSplitAt = titleParts.length <= 2 ? 1 : 2;
+  const titleSilver = titleParts.slice(0, titleSplitAt).join(' ');
+  const titleGold = titleParts.slice(titleSplitAt).join(' ');
+  const titleSilverW = doc.widthOfString(titleGold ? `${titleSilver} ` : titleSilver);
   const titleTotalW = doc.widthOfString(BODY_FAT_PROGRESS_BAR_TITLE);
   const titleX = x + (width - titleTotalW) / 2;
   doc.fillColor('#888888').text(titleSilver, titleX, cy, { lineBreak: false });
@@ -1964,7 +1964,6 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
 
   drawWelcomePage(doc, payload);
   drawLeanBodyAnalysisPage(doc, payload);
-  drawProjectionsPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);
