@@ -2,6 +2,24 @@
  * Rounding: round1/round2 at printout boundaries; full precision between steps. */
 
 export const FAT_SERVING_CALORIES = 45;
+
+/** Per-serving calorie weights in computeServingsPhase loops — source of truth for portion criteria. */
+export const SERVING_PROTEIN_CAL = 32;
+/** Grain/starch calorie weight in the T9 protein loop (not a fat slot). */
+export const SERVING_PROTEIN_LOOP_GRAIN_CAL = 3;
+export const SERVING_CARB_CAL = Object.freeze({
+  dairy: 48,
+  grainStarch: 56,
+  vegetable: 40,
+  fruit: 72,
+});
+export const SERVING_FAT_CAL = Object.freeze({
+  protein: 18,
+  dairy: 22,
+  grain: 9,
+  starchFruit: 4,
+  vegetable: 3,
+});
 /** PHP seminar report: eight-week goal uses 60 days (two months). */
 export const PROJECTION_CYCLE_DAYS = 60;
 export const PROJECTION_CYCLE_WEEKS = 8;
@@ -188,14 +206,14 @@ function computeServingsPhase(r, intensity = 1.0) {
   const C7 = r.C1;
   const T8 = r.T7;
 
-  let P1 = nf1((((QG * 0.21 / 32) * 2) + 0.5) / 2);
-  let D1 = nf1((((QG * 0.25 / 32) * 2) + 0.5) / 2);
-  let G1 = nf1((((C7 * 0.23 / 56) * 2) + 0.5) / 2);
-  let S2 = nf1((((C7 * 0.18 / 56) * 2) + 0.5) / 2);
-  let VE = nf1((((C7 * 0.18 / 40) * 2) + 0.5) / 2);
-  let FQ = nf1((((C7 * 0.21 / 72) * 2) + 0.5) / 2);
+  let P1 = nf1((((QG * 0.21 / SERVING_PROTEIN_CAL) * 2) + 0.5) / 2);
+  let D1 = nf1((((QG * 0.25 / SERVING_PROTEIN_CAL) * 2) + 0.5) / 2);
+  let G1 = nf1((((C7 * 0.23 / SERVING_CARB_CAL.grainStarch) * 2) + 0.5) / 2);
+  let S2 = nf1((((C7 * 0.18 / SERVING_CARB_CAL.grainStarch) * 2) + 0.5) / 2);
+  let VE = nf1((((C7 * 0.18 / SERVING_CARB_CAL.vegetable) * 2) + 0.5) / 2);
+  let FQ = nf1((((C7 * 0.21 / SERVING_CARB_CAL.fruit) * 2) + 0.5) / 2);
 
-  if (VE > 1) G1 = G1 + nf1(((VE - 2) * 40 / 56 * 2 + 0.5) / 2);
+  if (VE > 1) G1 = G1 + nf1(((VE - 2) * SERVING_CARB_CAL.vegetable / SERVING_CARB_CAL.grainStarch * 2 + 0.5) / 2);
   if (VE > 1) VE = 1;
 
   let T9 = 0;
@@ -203,28 +221,35 @@ function computeServingsPhase(r, intensity = 1.0) {
 
   while (true) {
     while (true) {
-      T9 = (P1 + D1) * 32 + (G1 + S2) * 3;
-      if (Math.abs(T9 - QG) < 32) break;
-      if (QG - T9 > 32) P1 = P1 + spf0((((QG - T9) / 32) * 2 + 0.5) / 2);
-      if (T9 - QG > 32) D1 = D1 - nf1((((T9 - QG) / 32) * 2 + 0.5) / 2);
+      T9 = (P1 + D1) * SERVING_PROTEIN_CAL + (G1 + S2) * SERVING_PROTEIN_LOOP_GRAIN_CAL;
+      if (Math.abs(T9 - QG) < SERVING_PROTEIN_CAL) break;
+      if (QG - T9 > SERVING_PROTEIN_CAL) P1 = P1 + spf0((((QG - T9) / SERVING_PROTEIN_CAL) * 2 + 0.5) / 2);
+      if (T9 - QG > SERVING_PROTEIN_CAL) D1 = D1 - nf1((((T9 - QG) / SERVING_PROTEIN_CAL) * 2 + 0.5) / 2);
     }
 
-    TC = D1 * 48 + (G1 + S2) * 56 + VE * 40 + FQ * 72;
-    if (Math.abs(TC - C7) < 56) break;
-    if (C7 - TC >= 56) S2 = S2 + nf1((((C7 - TC) / 56) * 2 + 0.5) / 2);
-    if (TC - C7 >= 56) G1 = G1 - nf1((((TC - C7) / 56) * 2 + 0.5) / 2);
+    TC = D1 * SERVING_CARB_CAL.dairy
+      + (G1 + S2) * SERVING_CARB_CAL.grainStarch
+      + VE * SERVING_CARB_CAL.vegetable
+      + FQ * SERVING_CARB_CAL.fruit;
+    if (Math.abs(TC - C7) < SERVING_CARB_CAL.grainStarch) break;
+    if (C7 - TC >= SERVING_CARB_CAL.grainStarch) S2 = S2 + nf1((((C7 - TC) / SERVING_CARB_CAL.grainStarch) * 2 + 0.5) / 2);
+    if (TC - C7 >= SERVING_CARB_CAL.grainStarch) G1 = G1 - nf1((((TC - C7) / SERVING_CARB_CAL.grainStarch) * 2 + 0.5) / 2);
   }
 
-  const TF = P1 * 18 + D1 * 22 + G1 * 9 + (S2 + FQ) * 4 + VE * 3;
+  const TF = P1 * SERVING_FAT_CAL.protein
+    + D1 * SERVING_FAT_CAL.dairy
+    + G1 * SERVING_FAT_CAL.grain
+    + (S2 + FQ) * SERVING_FAT_CAL.starchFruit
+    + VE * SERVING_FAT_CAL.vegetable;
   let FT = 0;
-  if (FC - TF >= 45) FT = nf1((((FC - TF) / 45) * 2 + 0.5) / 2);
-  else if (TF - FC < 45) FT = 0;
+  if (FC - TF >= FAT_SERVING_CALORIES) FT = nf1((((FC - TF) / FAT_SERVING_CALORIES) * 2 + 0.5) / 2);
+  else if (TF - FC < FAT_SERVING_CALORIES) FT = 0;
 
-  const TT = T9 + TC + TF + FT * 45;
+  const TT = T9 + TC + TF + FT * FAT_SERVING_CALORIES;
 
-  if (Math.abs(TT - T8) < 45) {
+  if (Math.abs(TT - T8) < FAT_SERVING_CALORIES) {
     if (T8 - TT > 22) FQ = FQ + ((((T8 - TT) / 44) * 2 + 0.5) / 2);
-    if (TT - T8 > 45) FT = FT - nf1((((TT - T8) / 45) * 2 + 0.5) / 2);
+    if (TT - T8 > FAT_SERVING_CALORIES) FT = FT - nf1((((TT - T8) / FAT_SERVING_CALORIES) * 2 + 0.5) / 2);
     if (FT < 0) FT = 0;
   }
   if (FQ < 3) FQ = 3;

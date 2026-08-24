@@ -5,7 +5,9 @@ alwaysApply: true
 
 # Burn Engine servings & food-list gram weights
 
-Complete agent reference for Burn & Build serving math. **Do not re-read `js/burnEngine.js` for basics** — use this doc.
+Complete agent reference for Burn & Build serving math.
+
+**Source of truth:** `js/burnEngine.js` (`computeServingsPhase` loops). Macro-gram targets for scripts and audits: `js/burnEngineServingTargets.js`. Agents use **this doc** for semantics — do not re-derive serving criteria from scratch.
 
 **This system does not use calories.** Users follow **servings** and weigh food to **gram portions** on the approved list. Never size portions, label PDFs, or explain the diet using calories.
 
@@ -18,7 +20,7 @@ Complete agent reference for Burn & Build serving math. **Do not re-read `js/bur
 | Wrong | Right |
 |-------|-------|
 | Calorie targets per serving | **8g protein**, **14g carbs**, **10g carbs**, etc. |
-| “Energy” or kcal for fruit portions | Fruit **serving** + gram weight + **≤4g fat** |
+| “Energy” or kcal for fruit portions | **18g carbs** per fruit serving |
 | Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
 
 ---
@@ -174,15 +176,18 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 
 | Macro | Per one serving |
 |-------|-----------------|
-| **Fat** | **≤4g** at the portion |
+| **Carbs** | **18g** |
+| **Fat** | **≤0.44g** (same baked-in fat slot as starches in engine) |
 
 | Detail | Value |
 |--------|-------|
-| Gram formula | **Curated per fruit** in `data/foods.json` — sized to the fruit serving slot with fat ≤ 4g |
+| Gram formula | `1800 ÷ carbs_per_100g` |
 | Meal split | Daily total ÷ 3 → morning snack, afternoon snack, evening snack |
 | Prep | Usually **raw** |
 | Audit | `scripts/veg-fruit-audit.mjs` |
-| User rule | User follows **fruit serving counts** only — never expose macro or energy math in UI |
+| User rule | User follows **fruit serving counts** only — never expose macro math in UI |
+
+**Do not use ≤4g fat for fruit.** That limit was a codebase error (see note below).
 
 ---
 
@@ -216,7 +221,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Grains | `G1` | `grainsStarches` | — | **14g** | **≤1.0g** | `1400 ÷ carb/100g` |
 | Starches | `S2` | `grainsStarches` | — | **14g** | **≤0.44g** | `1400 ÷ carb/100g` |
 | Vegetables | `VE` | `vegetables` (=1) | — | **10g** | **≤3g** | `1000 ÷ carb/100g` |
-| Fruits | `FQ` | `fruits` (≥3) | — | — | **≤4g** | Curated per item |
+| Fruits | `FQ` | `fruits` (≥3) | — | **18g** | **≤0.44g** | `1800 ÷ carb/100g` |
 | Extra fat/sugar/alcohol | `FT` | `fatMaintain` | — | — | **~5g**/point | Curated per item |
 
 ---
@@ -298,9 +303,10 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
 | Piece | Path |
 |-------|------|
+| **Source of truth (engine)** | `js/burnEngine.js` |
+| **Derived macro targets (scripts)** | `js/burnEngineServingTargets.js` |
 | **This doc (portions & PDFs)** | `.cursor/rules/burn-engine-servings.mdc` |
-| Engine code (implementation only) | `js/burnEngine.js` |
-| Engine calorie loops (do not use for portions) | `docs/burn-engine-internal-calorie-loops.md` |
+| Engine calorie loops (implementation only) | `docs/burn-engine-internal-calorie-loops.md` |
 | Base catalog gram weights | `data/foods.json` |
 | Cutting staples (base servings) | `data/cuttingStaplesPrintout.js` |
 | Food-list PDF scaling | `js/stapleServingPrintout.js` |
@@ -324,3 +330,12 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 5. **Servings PDF** = counts; **food list PDF** = scaled grams; **meal plan** = assigned × grams.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
 7. Run category audit script; KWarner PDF changes → `npm run render:kwarner-preview` per `kwarner-preview-pdf.mdc`.
+
+## Errata — do not repeat these mistakes
+
+| Wrong (old codebase) | Correct |
+|----------------------|---------|
+| Fruit **≤4g fat** | **18g carbs** per serving; fat limit **≤0.44g** (not 4g) |
+| Fruit sized by **72 cal** / `7200 ÷ kcal` | Size by **18g carbs** / `1800 ÷ carbs_per_100g` |
+
+The **≤4g fat** rule appeared in `scripts/veg-fruit-audit.mjs` and `data/cuttingStaplesPrintout.js` comments — likely a misread of the engine’s `(S2+FQ)×4` **fat-calorie** term (~0.44g fat), not a 4-gram fat ceiling. It is **not** from the 1982 seminar sheet.

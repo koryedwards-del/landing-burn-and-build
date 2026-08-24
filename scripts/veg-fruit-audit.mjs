@@ -1,5 +1,6 @@
 /**
- * Vegetables × 10g carb (40 cal) × fruits × 72 cal — Burn Engine VE/FQ slots.
+ * Vegetables × Burn Engine VE slot × fruits × FQ slot.
+ * Targets imported from js/burnEngineServingTargets.js (derived from burnEngine.js).
  * Also compares raw vs cooked catalog portions for page-6 vegetables.
  * Run: node scripts/veg-fruit-audit.mjs
  */
@@ -9,6 +10,10 @@ import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
+import { BURN_ENGINE_SLOT_TARGETS } from '../js/burnEngineServingTargets.js';
+
+const { carbsG: VEG_CARB_TARGET, fatLimitG: VEG_FAT_LIMIT } = BURN_ENGINE_SLOT_TARGETS.VE;
+const { carbsG: FRUIT_CARB_TARGET, fatLimitG: FRUIT_FAT_LIMIT } = BURN_ENGINE_SLOT_TARGETS.FQ;
 
 /** @type {ReadonlyArray<[string, string, string?]>} label, selected catalog, optional raw catalog */
 const VEG_RAW_COOKED = [
@@ -25,11 +30,6 @@ const VEG_RAW_COOKED = [
   ['Spinach', 'Spinach, cooked', 'Spinach, raw'],
   ['Tomatoes', 'Tomato, raw', 'Tomato, cooked'],
 ];
-
-const VEG_CARB_TARGET = 10;
-const VEG_FAT_LIMIT = 3;
-const FRUIT_CAL_TARGET = 72;
-const FRUIT_FAT_LIMIT = 4;
 
 /** @param {string} name */
 function foodRow(name) {
@@ -82,7 +82,7 @@ for (const row of CUTTING_STAPLES_VEGETABLES) {
   console.log(`  ${row.name.padEnd(36)} ${row.serving}`);
 }
 
-console.log('\nFRUITS (~72 cal, ≤4g fat):');
+console.log(`\nFRUITS (${FRUIT_CARB_TARGET}g carb, ≤${FRUIT_FAT_LIMIT}g fat):`);
 for (const row of CUTTING_STAPLES_FRUIT) {
   console.log(`  ${row.name.padEnd(32)} ${row.serving}`);
 }

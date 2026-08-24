@@ -3,7 +3,7 @@
 **Not used for portions, food-list gram weights, PDF labels, or user-facing copy.**  
 Agents sizing food or writing printouts: use `.cursor/rules/burn-engine-servings.mdc` only.
 
-`js/burnEngine.js` `computeServingsPhase` balances daily totals using calorie-weighted loops. Constants below map to **macro-gram serving targets** in the servings rule doc.
+`js/burnEngine.js` `computeServingsPhase` balances daily totals using calorie-weighted loops. Constants are exported as `SERVING_*_CAL` from `burnEngine.js`; macro-gram targets are in `js/burnEngineServingTargets.js`. Agents sizing food: use `.cursor/rules/burn-engine-servings.mdc`.
 
 ## Balancing loops
 
@@ -22,7 +22,7 @@ Agents sizing food or writing printouts: use `.cursor/rules/burn-engine-servings
 | 48 | 12g carbs (dairy) |
 | 56 | 14g carbs (grain/starch) |
 | 40 | 10g carbs (vegetable) |
-| 72 | Fruit slot (portion sized per catalog; see servings rule doc) |
+| 72 | Fruit slot (= **18g carbs**) |
 | 18 | 2g fat (protein) |
 | 22 | ~2.4g fat (dairy) |
 | 9 | 1g fat (grain) |
