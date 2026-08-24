@@ -129,7 +129,7 @@ export function leannessFatBarFooterParts(lead, congrats) {
   return {
     congratsLead,
     body,
-    full: [congratsLead, body].filter(Boolean).join(' '),
+    full: [congratsLead, body].filter(Boolean).join('\n\n'),
   };
 }
 

@@ -287,8 +287,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
       today,
       leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
       leannessFatBarFooter: fatBarFooterParts.full,
-      leannessFatBarFooterLead: fatBarFooterParts.congratsLead,
-      leannessFatBarFooterBody: fatBarFooterParts.body,
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
