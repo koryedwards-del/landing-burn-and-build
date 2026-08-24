@@ -1765,15 +1765,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   page = ensureLockedSpace(doc, payload, page, fatBarH);
   page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar, fatBarFooter) };
 
-  const proseParagraphs = [
-    lba.riskMessage,
-    lba.lbmCongrats,
-  ].filter(Boolean);
-  if (proseParagraphs.length) {
-    page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
-  }
-
-  page = drawBodyParagraphs(doc, payload, page, [lba.monitorCopy]);
   finishLockedPage(doc, page.box, payload);
 }
 
