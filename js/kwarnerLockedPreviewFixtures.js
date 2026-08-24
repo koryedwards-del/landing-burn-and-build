@@ -20,9 +20,9 @@ export const KWARNER_WELCOME_COPY = {
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Most diets hand you numbers from somewhere else — calories from a formula, protein from a blog, macros from an app. Those tools are built on averages. They do not know your lean body mass, your job, or how many hours you spend on weight training (WT), high heart rate aerobic activity (HHT), or low heart rate aerobic activity (LHR). Comparing your plan to them will never line up — because they were never answering your question.',
-  'Warner 1982 asked the question that actually matters: how much food do you need for what you do? Burn & Build 2026 still starts there. The Burn Engine calculated your answer from your body composition test and your questionnaire — then converted it into servings so you can eat without running someone else\'s math.',
-  'Let the apps go. Your servings on the next page are not a dumbed-down version of a macro chart. They are your prescription — built once, for you alone. Follow them, pick from your food list, and judge progress in the mirror and on the scale over weeks — not against a number on a screen that knows nothing about you.',
+  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure what to eat.',
+  'Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods.',
+  'For the best results you need a plan that goes a step farther than macros.',
 ];
 
 export const KWARNER_FOOD_PLAN_SERVINGS_TITLE = 'Your daily servings';
