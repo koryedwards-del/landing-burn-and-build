@@ -92,14 +92,17 @@ export function leannessWeightGoalsTable(gender, lbm) {
   };
 }
 
+export function desirableLbmBarFooter(lead) {
+  const parts = [lead, DESIRABLE_LBM_BAR_FOOTER].filter(Boolean);
+  return parts.join('\n\n');
+}
+
 /** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
 export function desirableLbmBar(gender, heightInches, leanBodyMass) {
   const desirable = desirableLeanBodyMassLbs(gender, heightInches);
   const lbm = Number(leanBodyMass);
   if (!desirable || !Number.isFinite(lbm) || lbm <= 0) return null;
 
-  const desirableRounded = Math.round(desirable);
-  const thresholdLabel = `${desirableRounded} lbs`;
   const scaleMax = Math.max(
     Math.ceil((desirable * 1.2) / 5) * 5,
     Math.ceil(lbm / 5) * 5 + 5,
@@ -115,13 +118,11 @@ export function desirableLbmBar(gender, heightInches, leanBodyMass) {
         label: 'Below desirable',
         from: 0,
         to: desirable,
-        capLabel: `<${thresholdLabel}`,
       },
       {
         label: 'At or above',
         from: desirable,
         to: scaleMax,
-        capLabel: `>=${thresholdLabel}`,
       },
     ],
     activeStage: atOrAbove ? 'At or above' : 'Below desirable',

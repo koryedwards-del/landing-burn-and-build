@@ -47,6 +47,7 @@ import {
   DESIRABLE_LBM_BAR_FOOTER,
   DESIRABLE_LBM_BAR_SUBTITLE,
   DESIRABLE_LBM_BAR_TITLE,
+  desirableLbmBarFooter,
 } from '../../js/lbaPrintout.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 8;
@@ -1548,13 +1549,13 @@ function drawLbmSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, 
   doc.text(stageName, x0, ty, { width: segW, align: 'center', lineGap: 0 });
 }
 
-function measureDesirableLbmBar(doc, width) {
+function measureDesirableLbmBar(doc, width, footerText) {
   doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
   const titleH = doc.heightOfString(DESIRABLE_LBM_BAR_TITLE, { width, align: 'center' });
   doc.font(SEMINAR_FONTS.regular).fontSize(DESIRABLE_LBM_BAR.subtitleSize);
   const subtitleH = doc.heightOfString(DESIRABLE_LBM_BAR_SUBTITLE, { width, align: 'center' });
   doc.font(PDF_FRAME_FONTS.italic).fontSize(DESIRABLE_LBM_BAR.footerSize);
-  const footerH = doc.heightOfString(DESIRABLE_LBM_BAR_FOOTER, {
+  const footerH = doc.heightOfString(footerText || DESIRABLE_LBM_BAR_FOOTER, {
     width: width - DESIRABLE_LBM_BAR.footerPad * 2,
     align: 'center',
   });
@@ -1573,11 +1574,12 @@ function measureDesirableLbmBar(doc, width) {
   );
 }
 
-function drawDesirableLbmBar(doc, page, bar) {
+function drawDesirableLbmBar(doc, page, bar, footerText) {
   const { x, y, width } = page;
   const { currentLbm, scaleMax, zones, activeStage } = bar || {};
   if (!zones?.length || !scaleMax) return y;
 
+  const footerCopy = footerText || DESIRABLE_LBM_BAR_FOOTER;
   let cy = y;
   const gold = PDF_FRAME_COLORS.gold;
 
@@ -1659,7 +1661,7 @@ function drawDesirableLbmBar(doc, page, bar) {
 
   doc.font(PDF_FRAME_FONTS.italic).fontSize(DESIRABLE_LBM_BAR.footerSize);
   const footerInnerW = width - DESIRABLE_LBM_BAR.footerPad * 2;
-  const footerTextH = doc.heightOfString(DESIRABLE_LBM_BAR_FOOTER, {
+  const footerTextH = doc.heightOfString(footerCopy, {
     width: footerInnerW,
     align: 'center',
   });
@@ -1675,7 +1677,7 @@ function drawDesirableLbmBar(doc, page, bar) {
     .stroke();
   doc
     .fillColor('#8B6914')
-    .text(DESIRABLE_LBM_BAR_FOOTER, x + DESIRABLE_LBM_BAR.footerPad, cy + DESIRABLE_LBM_BAR.footerPad, {
+    .text(footerCopy, x + DESIRABLE_LBM_BAR.footerPad, cy + DESIRABLE_LBM_BAR.footerPad, {
       width: footerInnerW,
       align: 'center',
       lineGap: 2,
@@ -1720,14 +1722,14 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar) };
 
   if (lba.desirableLbmBar) {
-    const lbmBarH = measureDesirableLbmBar(doc, page.width);
+    const lbmFooter = desirableLbmBarFooter(lba.lbmLead);
+    const lbmBarH = measureDesirableLbmBar(doc, page.width, lbmFooter);
     page = ensureLockedSpace(doc, payload, page, lbmBarH);
-    page = { ...page, y: drawDesirableLbmBar(doc, page, lba.desirableLbmBar) };
+    page = { ...page, y: drawDesirableLbmBar(doc, page, lba.desirableLbmBar, lbmFooter) };
   }
 
   const proseParagraphs = [
     lba.riskMessage,
-    lba.lbmLead,
     lba.lbmCongrats,
   ].filter(Boolean);
   if (proseParagraphs.length) {
