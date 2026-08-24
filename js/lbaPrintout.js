@@ -176,7 +176,7 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
   const lean = Number(lbm);
   const lbmCell = lean > 0
     ? {
-      fatLabel: formatBarCurrentFatHeader(bf),
+      fatLabel: '0.00% FAT',
       label: 'LBM',
       poundsLabel: `${round2(lean)} lbs.`,
     }
