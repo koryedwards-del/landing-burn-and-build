@@ -2059,21 +2059,25 @@ function drawFoodPlanPage(doc, payload) {
     page = drawBodyParagraphs(doc, payload, page, lead);
   }
 
-  const servingsBlock = foodPlanServingsBlock(payload);
-  if (servingsBlock?.paragraphs?.length) {
-    page = ensureLockedSpace(
-      doc,
-      payload,
-      page,
-      LAYOUT.subsectionSize + LAYOUT.headerGap + servingsBlock.paragraphs.reduce(
-        (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
-        0,
-      ),
-    );
-    if (servingsBlock?.title) {
-      page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
+  if (fp.howToParagraphs?.length) {
+    page = drawBodyParagraphs(doc, payload, page, fp.howToParagraphs);
+  } else {
+    const servingsBlock = foodPlanServingsBlock(payload);
+    if (servingsBlock?.paragraphs?.length) {
+      page = ensureLockedSpace(
+        doc,
+        payload,
+        page,
+        LAYOUT.subsectionSize + LAYOUT.headerGap + servingsBlock.paragraphs.reduce(
+          (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
+          0,
+        ),
+      );
+      if (servingsBlock?.title) {
+        page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
+      }
+      page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
     }
-    page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
   }
 
   if (fp.macroSignalIntro) {

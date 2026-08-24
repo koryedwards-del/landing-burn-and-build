@@ -3,9 +3,8 @@
 import { buildProgramReportPayload } from './programReportPrintout.js';
 import {
   KWARNER_FOOD_GROUPS_INTRO,
+  KWARNER_FOOD_PLAN_HOWTO,
   KWARNER_FOOD_PLAN_LEAD,
-  KWARNER_FOOD_PLAN_SERVINGS_TITLE,
-  KWARNER_FOOD_PLAN_STEP4,
   KWARNER_WELCOME_COPY,
 } from './kwarnerLockedPreviewFixtures.js';
 
@@ -14,14 +13,8 @@ export function buildKwarnerLockedPayloadFromPackage(pkg) {
   payload.welcome = KWARNER_WELCOME_COPY;
   if (payload.foodPlan) {
     payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
+    payload.foodPlan.howToParagraphs = [...KWARNER_FOOD_PLAN_HOWTO];
     payload.foodPlan.macroSignalIntro = KWARNER_FOOD_GROUPS_INTRO;
-  }
-  const step4 = payload.foodPlanNarrative?.blocks?.find(
-    (block) => block.title === 'Step 4 — Turn targets into servings',
-  );
-  if (step4) {
-    step4.title = KWARNER_FOOD_PLAN_SERVINGS_TITLE;
-    step4.paragraphs = [...KWARNER_FOOD_PLAN_STEP4];
   }
   delete payload.gettingStarted;
   delete payload.stepsToSuccess;

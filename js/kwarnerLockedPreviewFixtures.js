@@ -23,10 +23,13 @@ export const KWARNER_FOOD_PLAN_LEAD = [
   'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods. For the best results you need a plan thats goes a step farther than macros.',
 ];
 
-export const KWARNER_FOOD_PLAN_SERVINGS_TITLE = 'Your daily servings';
-
-export const KWARNER_FOOD_PLAN_STEP4 = [
-  'Burn & Build converted your plan into daily servings of protein, grains, vegetables, fruits, and fats across breakfast, lunch, dinner, and snacks. Page four has your daily totals; build every meal from your approved food list.',
+export const KWARNER_FOOD_PLAN_HOWTO = [
+  'Burn & Build converted the proteins, carbohydrates into servings from protein, dairy, grains, starches, veggies and fruits. All whole clean food choices. Each food on the list is sized to fit your needs. This program is customized to you and wont work for anyone else. And although it\'s not easy it is simple.',
+  'Step 1 Pull out your kitchen scale. Get now for about $50 on amazon.',
+  'Step 2 Chose the protein food you want to eat. Put that amount on your plate. The plan uses gram because they are accurate down to the weight of a paper clip.',
+  'Step 3 Chose the grain or starch you want. Add the serving amount to your plate.',
+  'Step 4 Season as desired. No added fat, sugar or alcohol.',
+  'Step 5 Eat all the food you put on the plate.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO =
