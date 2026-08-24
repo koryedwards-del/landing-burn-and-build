@@ -1276,12 +1276,13 @@ function drawProjectionsPage(doc, payload) {
 }
 
 const LEANNESS_FAT_BAR = Object.freeze({
-  height: 14,
-  radius: 3,
+  height: 26,
+  radius: 4,
   markerH: 7,
   markerGap: 5,
   labelSize: 8,
-  labelGap: 3,
+  capLabelSize: 8,
+  labelGap: 4,
   currentLabelSize: 9,
   zoneFills: ['#f0f0f0', '#e4e4e4', '#d8d8d8', '#cccccc', '#bdbdbd'],
   activeFill: '#FFEB99',
@@ -1341,6 +1342,18 @@ function drawLeannessFatBar(doc, page, bar) {
     const x0 = bfToBarX(x, width, zone.from, scaleMax);
     const x1 = bfToBarX(x, width, zone.to, scaleMax);
     const zoneW = x1 - x0;
+    if (zone.capLabel && zoneW >= 28) {
+      const capFont = zone.label === activeStage ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+      doc.font(capFont).fontSize(LEANNESS_FAT_BAR.capLabelSize);
+      const capH = doc.heightOfString(zone.capLabel, { width: zoneW, lineGap: 0 });
+      doc
+        .fillColor(SEMINAR_COLORS.body)
+        .text(zone.capLabel, x0, barY + (barH - capH) / 2, {
+          width: zoneW,
+          align: 'center',
+          lineGap: 0,
+        });
+    }
     doc
       .font(SEMINAR_FONTS.regular)
       .fontSize(LEANNESS_FAT_BAR.labelSize)
@@ -1435,13 +1448,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   todayTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, todayTableOpts) + LAYOUT.paragraphGap };
 
-  const lbaTableCompact = { tableRowPad: 4, bodyFontSize: 9, headFontSize: 9 };
-
-  const aceTableOpts = leannessStageTableOpts(page, lba.leannessStages, lbaTableCompact);
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts));
-  aceTableOpts.y = page.y;
-  page = { ...page, y: drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap };
-
   const fatBarH = measureLeannessFatBar(doc, page.width);
   page = ensureLockedSpace(doc, payload, page, fatBarH);
   page = { ...page, y: drawLeannessFatBar(doc, page, lba.leannessFatBar) };
@@ -1455,6 +1461,8 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   if (proseParagraphs.length) {
     page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
   }
+
+  const lbaTableCompact = { tableRowPad: 4, bodyFontSize: 9, headFontSize: 9 };
 
   const weightTableOpts = leannessStageTableOpts(page, lba.leannessWeightGoals, lbaTableCompact);
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts));

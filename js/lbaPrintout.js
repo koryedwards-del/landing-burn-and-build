@@ -48,15 +48,6 @@ export function aceHeaderLabels(gender) {
   return leannessTable(gender).map((row) => formatCapHeader(row.cap));
 }
 
-/** Stage columns for the client's gender (stages left to right). */
-export function leannessStagesTable(gender) {
-  const rows = leannessTable(gender);
-  return {
-    stageLabels: LEANNESS_LABELS,
-    values: rows.map((row) => formatCapHeader(row.cap)),
-  };
-}
-
 /** Stage columns with target weights for the client's gender and LBM. */
 export function leannessWeightGoalsTable(gender, lbm) {
   const rows = leannessTable(gender);
@@ -73,7 +64,12 @@ export function leannessFatBar(gender, bodyFatPercent) {
   const zones = [];
   let prev = 0;
   for (const row of table) {
-    zones.push({ label: row.label, from: prev, to: row.cap });
+    zones.push({
+      label: row.label,
+      from: prev,
+      to: row.cap,
+      capLabel: formatCapHeader(row.cap),
+    });
     prev = row.cap;
   }
   const trainingCap = table[table.length - 1].cap;
