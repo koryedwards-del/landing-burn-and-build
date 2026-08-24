@@ -1384,14 +1384,22 @@ function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, tex
   }, x0, barY, segW, barH, textColor, isActive);
 }
 
-function measureBodyFatProgressBar(doc, width, footerText) {
+function measureBodyFatProgressBar(doc, width, footer) {
+  const footerLead = typeof footer === 'object' ? footer?.lead : '';
+  const footerBody = typeof footer === 'object' ? footer?.body : (footer || BODY_FAT_PROGRESS_BAR_FOOTER);
   doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
   const titleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_TITLE, { width, align: 'center' });
   doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize);
   const subtitleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_SUBTITLE, { width, align: 'center' });
+  const footerInnerW = width - BODY_FAT_PROGRESS_BAR.footerPad * 2;
+  let footerH = 0;
+  if (footerLead) {
+    doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
+    footerH += doc.heightOfString(footerLead, { width: footerInnerW, align: 'center' }) + 4;
+  }
   doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
-  const footerH = doc.heightOfString(footerText || BODY_FAT_PROGRESS_BAR_FOOTER, {
-    width: width - BODY_FAT_PROGRESS_BAR.footerPad * 2,
+  footerH += doc.heightOfString(footerBody || BODY_FAT_PROGRESS_BAR_FOOTER, {
+    width: footerInnerW,
     align: 'center',
   });
   return (
@@ -1409,12 +1417,15 @@ function measureBodyFatProgressBar(doc, width, footerText) {
   );
 }
 
-function drawBodyFatProgressBar(doc, page, bar, footerText) {
+function drawBodyFatProgressBar(doc, page, bar, footer) {
   const { x, y, width } = page;
   const { currentBf, scaleMax, zones, activeStage, lbmCell } = bar;
   if (!zones?.length || !scaleMax) return y;
 
-  const footerCopy = footerText || BODY_FAT_PROGRESS_BAR_FOOTER;
+  const footerLead = typeof footer === 'object' ? footer?.lead : '';
+  const footerBody = typeof footer === 'object'
+    ? footer?.body
+    : (footer || BODY_FAT_PROGRESS_BAR_FOOTER);
   const layout = fatBarLayout(x, width, lbmCell);
   let cy = y;
   const gold = PDF_FRAME_COLORS.gold;
@@ -1515,9 +1526,14 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
 
   cy = barY + barH + BODY_FAT_PROGRESS_BAR.sectionGap;
 
-  doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerInnerW = width - BODY_FAT_PROGRESS_BAR.footerPad * 2;
-  const footerTextH = doc.heightOfString(footerCopy, {
+  let footerTextH = 0;
+  if (footerLead) {
+    doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
+    footerTextH += doc.heightOfString(footerLead, { width: footerInnerW, align: 'center' }) + 4;
+  }
+  doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
+  footerTextH += doc.heightOfString(footerBody || BODY_FAT_PROGRESS_BAR_FOOTER, {
     width: footerInnerW,
     align: 'center',
   });
@@ -1531,9 +1547,23 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
     .lineWidth(1)
     .roundedRect(x, cy, width, footerBoxH, 4)
     .stroke();
+  let footerY = cy + BODY_FAT_PROGRESS_BAR.footerPad;
+  if (footerLead) {
+    doc
+      .font(SEMINAR_FONTS.bold)
+      .fontSize(BODY_FAT_PROGRESS_BAR.footerSize)
+      .fillColor('#8B6914')
+      .text(footerLead, x + BODY_FAT_PROGRESS_BAR.footerPad, footerY, {
+        width: footerInnerW,
+        align: 'center',
+        lineGap: 2,
+      });
+    footerY = doc.y + 4;
+  }
   doc
+    .font(PDF_FRAME_FONTS.italic)
     .fillColor('#8B6914')
-    .text(footerCopy, x + BODY_FAT_PROGRESS_BAR.footerPad, cy + BODY_FAT_PROGRESS_BAR.footerPad, {
+    .text(footerBody || BODY_FAT_PROGRESS_BAR_FOOTER, x + BODY_FAT_PROGRESS_BAR.footerPad, footerY, {
       width: footerInnerW,
       align: 'center',
       lineGap: 2,
@@ -1757,7 +1787,10 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   todayTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, todayTableOpts) + LAYOUT.paragraphGap };
 
-  const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
+  const fatBarFooter = {
+    lead: lba.leannessFatBarFooterLead || '',
+    body: lba.leannessFatBarFooterBody || lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER,
+  };
   const fatBarH = measureBodyFatProgressBar(doc, page.width, fatBarFooter);
   page = ensureLockedSpace(doc, payload, page, fatBarH);
   page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar, fatBarFooter) };

@@ -8,7 +8,7 @@ import {
   formatMm,
   formatSexLabel,
   leannessFatBar,
-  leannessFatBarFooter,
+  leannessFatBarFooterParts,
   lbaProfileLine,
   lbmCopyAfterFirstSentence,
   lbmStatusMessage,
@@ -240,6 +240,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
     heightInches: intake.heightInches,
     leanBodyMass: intake.leanBodyMass,
   });
+  const fatBarFooterParts = leannessFatBarFooterParts(lbmCopy.lead, lbmCopy.congrats);
 
   const sampleHistory = options.sampleHistory ?? resolveSampleHistory(pkg);
   const historyRows = buildCompositionHistoryRows(pkg, {
@@ -285,7 +286,9 @@ export function buildProgramReportPayload(pkg, options = {}) {
       }),
       today,
       leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
-      leannessFatBarFooter: leannessFatBarFooter(lbmCopy.lead, lbmCopy.congrats),
+      leannessFatBarFooter: fatBarFooterParts.full,
+      leannessFatBarFooterLead: fatBarFooterParts.congratsLead,
+      leannessFatBarFooterBody: fatBarFooterParts.body,
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
