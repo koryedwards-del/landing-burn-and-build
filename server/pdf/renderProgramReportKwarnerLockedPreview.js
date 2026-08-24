@@ -2059,6 +2059,23 @@ function drawFoodPlanPage(doc, payload) {
     page = drawBodyParagraphs(doc, payload, page, lead);
   }
 
+  if (fp.macroSignalIntro) {
+    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
+  }
+
+  const macroRows = fp.macroSignalRows || [];
+  if (macroRows.length) {
+    const macroTableH = measureMacroSignalLayoutTable(doc, page.width, macroRows);
+    page = ensureLockedSpace(doc, payload, page, macroTableH + LAYOUT.sectionGap);
+    const tableBottomY = drawMacroSignalLayoutTable(doc, {
+      x: page.x,
+      y: page.y,
+      width: page.width,
+      rows: macroRows,
+    });
+    page = { ...page, y: tableBottomY + LAYOUT.sectionGap };
+  }
+
   if (fp.howToParagraphs?.length) {
     page = drawBodyParagraphs(doc, payload, page, fp.howToParagraphs);
   } else {
@@ -2078,22 +2095,6 @@ function drawFoodPlanPage(doc, payload) {
       }
       page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
     }
-  }
-
-  if (fp.macroSignalIntro) {
-    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
-  }
-
-  const macroRows = fp.macroSignalRows || [];
-  if (macroRows.length) {
-    const macroTableH = measureMacroSignalLayoutTable(doc, page.width, macroRows);
-    page = ensureLockedSpace(doc, payload, page, macroTableH + LAYOUT.sectionGap);
-    drawMacroSignalLayoutTable(doc, {
-      x: page.x,
-      y: page.y,
-      width: page.width,
-      rows: macroRows,
-    });
   }
 
   finishLockedPage(doc, page.box, payload);
