@@ -36,7 +36,7 @@ From `computeServingsPhase` in `js/burnEngine.js`:
 
 ## One serving — macro targets (make the cut)
 
-Use these when sizing `gramWeight` in `data/foods.json`, cutting-staples PDF rows, and audits.
+Use these when sizing **base** `gramWeight` in `data/foods.json`, `CUTTING_STAPLES_*` rows, and audits. These are **one-serving** reference weights before any PDF scaling.
 
 ### Non-dairy protein (`P1`)
 
@@ -80,7 +80,7 @@ Gram weight ≈ `1000 / carbs_per_100g`. **Raw and cooked are separate catalog e
 
 ### Fruits (`FQ`)
 
-Engine fruit slot uses **72 calories** per serving in balancing loops (differs from carb-gram categories above). Food-list audit: **≤4g fat** at the portion; gram weight from calorie density (`7200 / kcal_per_100g` in comments). Do not swap fruit portion math to calorie counting in the UI — user still follows **servings**, not calories.
+Engine fruit slot uses **72 calories** per serving in balancing loops (differs from carb-gram categories above). Food-list audit: **≤4g fat** at the portion; gram weight from calorie density (`7200 / kcal_per_100g` in comments). User still follows **servings**, not calories.
 
 ### Extra fat (`FT`)
 
@@ -88,7 +88,7 @@ Engine fruit slot uses **72 calories** per serving in balancing loops (differs f
 
 ## Why prep state matters
 
-Gram weight on the food list only works if the user knows **how that food is measured**:
+Gram weight only works if the user knows **how that food is measured**:
 
 | Prep | Examples | Rule |
 |------|----------|------|
@@ -100,27 +100,85 @@ Cooking changes water content → **carbs/protein per 100g change** → **differ
 
 Tips source: `data/*TipsPrintout.js` — “Measure serving sizes after cooking” where applicable.
 
-## Three printout layers (do not mix them up)
+---
 
-| Layer | Shows | Example (chicken, 3 lunch protein servings) |
-|-------|-------|-----------------------------------------------|
-| **Servings page** | Serving **counts** only (3, 4.3, 9…) | `3` at lunch — no grams |
-| **Food list** | **One serving** gram weight + prep label | `26g` cooked (8g protein reference) |
-| **Meal plan / grocery list** | **Math done** — servings × gram weight | `78g` |
+## PDF & printout system (three layers)
 
-Menu planner: `gramWeightLabel()` in `menuplanner/js/plannerState.js`. Food list PDF staples: `data/cuttingStaplesPrintout.js` + `catalogStapleRow()` from `data/foods.json`.
+The user does **not** do serving × gram math themselves. Three surfaces split the job:
 
-**Do not** put daily-total or meal-scaled grams on the reference food-list pages unless the user explicitly requests it. Food list = **one serving** lookup; meal plan = **scaled** totals.
+| Layer | What it shows | Example (chicken, 3 protein servings at lunch) |
+|-------|---------------|--------------------------------------------------|
+| **1 — Servings page** | Serving **counts** only (`3`, `4.3`, `9`…) | `3` at lunch — **no grams** |
+| **2 — Food list (program report PDF)** | **Math done** — plan slot servings × one-serving gram weight | `78g` (3 × 26g) |
+| **3 — Meal plan / grocery list (Print Shop)** | **Math done** — assigned servings × gram weight | `78g` for that meal slot |
+
+**Layer 1** = counts to follow. **Layers 2 & 3** = gram totals so the user weighs food, not multiplies.
+
+### KWarner program report PDF (locked preview)
+
+Work in the **KWarner locked preview pipeline** for program-report printout changes — see `.cursor/rules/kwarner-preview-pdf.mdc`.
+
+| Page | Content | Grams? |
+|------|---------|--------|
+| Welcome | Intro copy | No |
+| Projections | LBM, timeline | No |
+| Food Plan | Macro signal, inputs | No |
+| **Servings** | Daily + meal/snack grid (`servingsGridRows`) | **Counts only** |
+| **Food list** | Protein, grains, vegetables, fruit staples | **Scaled grams** |
+| Flavor kits | Shop checklist (no gram servings) | No |
+
+Renderer: `server/pdf/renderProgramReportKwarnerLockedPreview.js`.  
+Payload: `js/programReportPrintout.js` → `payload.servings.planServings` + `payload.servings.gridRows`.
+
+### Food list scaling (layer 2)
+
+At PDF render time, staple rows are scaled from the user’s plan via `js/stapleServingPrintout.js`:
+
+```
+displayed grams = plan slot servings × one-serving gram weight
+```
+
+| Food-list section | Multiplier (`stapleCategoryServings`) |
+|-------------------|---------------------------------------|
+| Protein + dairy | `planServings.protein / 3` (per meal) |
+| Grains & starches | `planServings.grainsStarches / 3` (per meal) |
+| Vegetables | `planServings.vegetables` (daily) |
+| Fruit | `planServings.fruits / 3` (per snack) |
+
+- **Base** one-serving weights: `data/cuttingStaplesPrintout.js` (`CUTTING_STAPLES_*`) and `catalogStapleRow()` from `data/foods.json`.
+- **Scaled** labels: `scaleStapleRows()` → `drawStapleListRow()` in the KWarner renderer.
+- Count-based labels (e.g. `2 whites`) scale the same way: 3 protein servings → `6 whites`.
+
+Kristi example: 9 protein daily → 3 per meal → chicken `26g` base → **`78g`** on food list PDF.
+
+### Print Shop — meal plan & grocery (layer 3)
+
+From menu planner when the user has assigned foods:
+
+| Document | Path | Scaling |
+|----------|------|---------|
+| Weekly meal plan | `server/pdf/renderWeekPlan.js` | `gramWeightLabel()` via `plannerPrintPayload.js` |
+| Grocery list | `server/pdf/renderShoppingList.js` | `foodAmountLabel()` — weekly totals |
+
+Client: `menuplanner/js/plannerPrintPayload.js` → `printFoodAmount()` → `gramWeightLabel()` in `plannerState.js`.
+
+Generic Print Shop food list (`renderFoodList.js`, view `foodlist`) is a **separate** static catalog (names + tips, no personalized grams). Personalized gram math lives on the **program report food-list pages** and **menu planner** printouts above.
+
+---
 
 ## Source files
 
 | Piece | Path |
 |-------|------|
 | Burn Engine plan math | `js/burnEngine.js` |
-| Food catalog gram weights | `data/foods.json` |
-| KWarner / program-report food list rows | `data/cuttingStaplesPrintout.js` |
+| Base food catalog gram weights | `data/foods.json` |
+| Cutting staples rows (base servings) | `data/cuttingStaplesPrintout.js` |
+| **Food list PDF scaling** | `js/stapleServingPrintout.js` |
 | Servings grid (counts) | `js/servingsPrintout.js` |
-| Scale meal-plan print amounts | `menuplanner/js/plannerPrintPayload.js` |
+| Program report payload | `js/programReportPrintout.js` (`servings.planServings`) |
+| KWarner PDF renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
+| Meal plan / grocery scaling | `menuplanner/js/plannerPrintPayload.js`, `plannerState.js` |
+| KWarner render workflow | `.cursor/rules/kwarner-preview-pdf.mdc` |
 | Protein audit | `scripts/protein-82-audit.mjs` |
 | Grains audit | `scripts/grains-14-1-audit.mjs` |
 | Starches audit | `scripts/starches-14-0-audit.mjs` |
@@ -133,6 +191,6 @@ Before changing food-list gram weights, PDF staple columns, or `foods.json`:
 
 1. Identify **category** (P1, D1, G1, S2, VE, FQ) and use the **macro-gram target**, not calories.
 2. Confirm **prep state** (dry / cooked / raw) matches how the user measures that line item.
-3. Verify **fat at portion** against the category limit.
-4. Keep **Servings page = counts**; **food list = one-serving grams**; **meal plan = scaled grams**.
-5. Run relevant audit script; for KWarner PDF changes also `npm run render:kwarner-preview`.
+3. Verify **fat at portion** against the category limit — that sets the **base** one-serving `gramWeight`.
+4. **Servings PDF** = counts only; **program report food list** = `stapleCategoryServings` × base weight; **meal plan / grocery** = assigned servings × `gramWeight`.
+5. Run relevant audit script; for KWarner PDF changes also `npm run render:kwarner-preview` and push per `.cursor/rules/kwarner-preview-pdf.mdc`.
