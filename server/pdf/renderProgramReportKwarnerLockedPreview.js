@@ -1286,7 +1286,13 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   subtitleSize: 8,
   barHeight: 36,
   barRadius: 6,
-  segmentGreys: ['#8a8a8a', '#767676', '#626262', '#4e4e4e'],
+  segmentStyles: Object.freeze({
+    Competition: { fill: '#0B6E78', text: '#ffffff' },
+    Peaking: { fill: '#2F6FA8', text: '#ffffff' },
+    Prepping: { fill: '#7B4F9E', text: '#ffffff' },
+    Training: { fill: '#C4681A', text: '#ffffff' },
+    'Off-season': { gradient: ['#D4A800', '#FFEB66'], text: '#333333' },
+  }),
   capLabelSize: 8,
   categorySize: 6,
   cellLineGap: 2,
@@ -1297,13 +1303,17 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   sectionGap: 10,
 });
 
+function segmentStyle(zoneLabel) {
+  return BODY_FAT_PROGRESS_BAR.segmentStyles[zoneLabel]
+    || BODY_FAT_PROGRESS_BAR.segmentStyles.Training;
+}
+
 function bfToBarX(x, width, bf, scaleMax) {
   const clamped = Math.max(0, Math.min(Number(bf), scaleMax));
   return x + (clamped / scaleMax) * width;
 }
 
-function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, isGold) {
-  const textColor = isGold ? '#333333' : '#ffffff';
+function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, textColor) {
   const stageName = zone.label.toUpperCase();
   const isActive = zone.label === activeStage;
   const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
@@ -1367,7 +1377,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
   doc
     .font(SEMINAR_FONTS.regular)
     .fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize)
-    .fillColor(SEMINAR_COLORS.muted)
+    .fillColor('#2F6FA8')
     .text(BODY_FAT_PROGRESS_BAR_SUBTITLE, x, cy, { width, align: 'center', lineGap: 0 });
   cy += BODY_FAT_PROGRESS_BAR.subtitleSize + BODY_FAT_PROGRESS_BAR.sectionGap;
 
@@ -1377,22 +1387,20 @@ function drawBodyFatProgressBar(doc, page, bar) {
 
   doc.save();
   doc.roundedRect(x, barY, width, barH, barR).clip();
-  zones.forEach((zone, index) => {
+  zones.forEach((zone) => {
     const x0 = bfToBarX(x, width, zone.from, scaleMax);
     const x1 = bfToBarX(x, width, zone.to, scaleMax);
     const segW = Math.max(x1 - x0, 1);
-    if (zone.label === 'Off-season') {
+    const style = segmentStyle(zone.label);
+    if (style.gradient) {
       const grad = doc.linearGradient(x0, barY, x1, barY);
-      grad.stop(0, '#D4A800');
-      grad.stop(1, '#FFEB66');
+      grad.stop(0, style.gradient[0]);
+      grad.stop(1, style.gradient[1]);
       doc.fillColor(grad).rect(x0, barY, segW, barH).fill();
     } else {
-      doc
-        .fillColor(BODY_FAT_PROGRESS_BAR.segmentGreys[index] || '#8a8a8a')
-        .rect(x0, barY, segW, barH)
-        .fill();
+      doc.fillColor(style.fill).rect(x0, barY, segW, barH).fill();
     }
-    drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, zone.label === 'Off-season');
+    drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, style.text);
   });
   doc.restore();
 
@@ -1446,12 +1454,16 @@ function drawBodyFatProgressBar(doc, page, bar) {
   });
   const footerBoxH = footerTextH + BODY_FAT_PROGRESS_BAR.footerPad * 2;
   doc
+    .fillColor('#FFF9E0')
+    .roundedRect(x, cy, width, footerBoxH, 4)
+    .fill();
+  doc
     .strokeColor(gold)
     .lineWidth(1)
     .roundedRect(x, cy, width, footerBoxH, 4)
     .stroke();
   doc
-    .fillColor(gold)
+    .fillColor('#8B6914')
     .text(BODY_FAT_PROGRESS_BAR_FOOTER, x + BODY_FAT_PROGRESS_BAR.footerPad, cy + BODY_FAT_PROGRESS_BAR.footerPad, {
       width: footerInnerW,
       align: 'center',
