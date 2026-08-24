@@ -1320,9 +1320,11 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   footerLineGap: 6,
   footerPad: 10,
   sectionGap: 10,
-  timelineLabelSize: 6,
-  timelineBfSize: 7,
-  timelineSectionH: 26,
+  timelineLabelSize: 9,
+  timelineBfSize: 11,
+  timelineSectionH: 39,
+  timelineMarkerH: 8,
+  timelineTriHalfW: 5,
 });
 
 function segmentStyle(zoneLabel) {
@@ -1393,7 +1395,8 @@ function fatBarTimelineSectionHeight(bar) {
 
 function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, pageX, pageWidth) {
   if (!markers?.length) return;
-  const triH = BODY_FAT_PROGRESS_BAR.markerH;
+  const triH = BODY_FAT_PROGRESS_BAR.timelineMarkerH;
+  const triHalfW = BODY_FAT_PROGRESS_BAR.timelineTriHalfW;
   const markerTop = barY + barH + 3;
   const labelY = markerTop + triH + 2;
   const color = '#2F6FA8';
@@ -1405,8 +1408,8 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
     doc
       .fillColor(color)
       .moveTo(markerX, markerTop + triH)
-      .lineTo(markerX - 3, markerTop)
-      .lineTo(markerX + 3, markerTop)
+      .lineTo(markerX - triHalfW, markerTop)
+      .lineTo(markerX + triHalfW, markerTop)
       .closePath()
       .fill();
     doc
@@ -1424,7 +1427,7 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
     doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.timelineBfSize);
     const bfW = doc.widthOfString(marker.bfLabel);
     const bfX = Math.max(pageX, Math.min(markerX - bfW / 2, pageX + pageWidth - bfW));
-    doc.text(marker.bfLabel, bfX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 1, { lineBreak: false });
+    doc.text(marker.bfLabel, bfX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 2, { lineBreak: false });
   });
 }
 
