@@ -7,6 +7,7 @@ import {
   BODY_FAT_PROGRESS_BAR_TITLE,
   formatMm,
   formatSexLabel,
+  fatBarTimelineMarkers,
   leannessFatBar,
   leannessFatBarFooterParts,
   lbaProfileLine,
@@ -18,6 +19,7 @@ import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
   buildProjectionsPrintoutSection,
+  projectionTimelineFromPackage,
   MACRO_SIGNAL_INTRO,
   MACRO_SIGNAL_ROWS,
   workdayActivityLabel,
@@ -241,6 +243,9 @@ export function buildProgramReportPayload(pkg, options = {}) {
     leanBodyMass: intake.leanBodyMass,
   });
   const fatBarFooterParts = leannessFatBarFooterParts(lbmCopy.lead, lbmCopy.congrats);
+  const fatBar = leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass);
+  const timelineMarkers = fatBarTimelineMarkers(projectionTimelineFromPackage(pkg));
+  if (timelineMarkers.length) fatBar.timelineMarkers = timelineMarkers;
 
   const sampleHistory = options.sampleHistory ?? resolveSampleHistory(pkg);
   const historyRows = buildCompositionHistoryRows(pkg, {
@@ -285,7 +290,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
         fatSourceOther: intake.fatSourceOther,
       }),
       today,
-      leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
+      leannessFatBar: fatBar,
       leannessFatBarFooter: fatBarFooterParts.full,
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,

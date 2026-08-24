@@ -1321,6 +1321,9 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   footerLineGap: 6,
   footerPad: 10,
   sectionGap: 10,
+  timelineLabelSize: 6,
+  timelineBfSize: 7,
+  timelineSectionH: 26,
 });
 
 function segmentStyle(zoneLabel) {
@@ -1385,7 +1388,48 @@ function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, tex
   }, x0, barY, segW, barH, textColor, isActive);
 }
 
-function measureBodyFatProgressBar(doc, width, footerText) {
+function fatBarTimelineSectionHeight(bar) {
+  return bar?.timelineMarkers?.length ? BODY_FAT_PROGRESS_BAR.timelineSectionH : 0;
+}
+
+function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, pageX, pageWidth) {
+  if (!markers?.length) return;
+  const triH = BODY_FAT_PROGRESS_BAR.markerH;
+  const markerTop = barY + barH + 3;
+  const labelY = markerTop + triH + 2;
+  const color = '#2F6FA8';
+
+  markers.forEach((marker) => {
+    const markerX = bfToBarX(layout.bfX, layout.bfW, marker.bodyFat, scaleMax);
+    const timelineLabel = marker.badge ? `${marker.timelineLabel}*` : marker.timelineLabel;
+
+    doc
+      .fillColor(color)
+      .moveTo(markerX, markerTop + triH)
+      .lineTo(markerX - 3, markerTop)
+      .lineTo(markerX + 3, markerTop)
+      .closePath()
+      .fill();
+    doc
+      .strokeColor(color)
+      .lineWidth(0.75)
+      .moveTo(markerX, barY + barH)
+      .lineTo(markerX, markerTop)
+      .stroke();
+
+    doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.timelineLabelSize).fillColor(color);
+    const labelW = doc.widthOfString(timelineLabel);
+    const labelX = Math.max(pageX, Math.min(markerX - labelW / 2, pageX + pageWidth - labelW));
+    doc.text(timelineLabel, labelX, labelY, { lineBreak: false });
+
+    doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.timelineBfSize);
+    const bfW = doc.widthOfString(marker.bfLabel);
+    const bfX = Math.max(pageX, Math.min(markerX - bfW / 2, pageX + pageWidth - bfW));
+    doc.text(marker.bfLabel, bfX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 1, { lineBreak: false });
+  });
+}
+
+function measureBodyFatProgressBar(doc, width, footerText, bar) {
   doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
   const titleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_TITLE, { width, align: 'center' });
   doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize);
@@ -1404,6 +1448,7 @@ function measureBodyFatProgressBar(doc, width, footerText) {
     + BODY_FAT_PROGRESS_BAR.markerLabelSize
     + 4
     + BODY_FAT_PROGRESS_BAR.barHeight
+    + fatBarTimelineSectionHeight(bar)
     + BODY_FAT_PROGRESS_BAR.sectionGap
     + footerH
     + BODY_FAT_PROGRESS_BAR.footerPad * 2
@@ -1413,7 +1458,7 @@ function measureBodyFatProgressBar(doc, width, footerText) {
 
 function drawBodyFatProgressBar(doc, page, bar, footerText) {
   const { x, y, width } = page;
-  const { currentBf, scaleMax, zones, activeStage, lbmCell } = bar;
+  const { currentBf, scaleMax, zones, activeStage, lbmCell, timelineMarkers } = bar;
   if (!zones?.length || !scaleMax) return y;
 
   const footerCopy = footerText || BODY_FAT_PROGRESS_BAR_FOOTER;
@@ -1515,7 +1560,18 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
       .stroke();
   }
 
-  cy = barY + barH + BODY_FAT_PROGRESS_BAR.sectionGap;
+  drawFatBarTimelineMarkers(
+    doc,
+    layout,
+    barY,
+    barH,
+    scaleMax,
+    timelineMarkers,
+    x,
+    width,
+  );
+
+  cy = barY + barH + fatBarTimelineSectionHeight(bar) + BODY_FAT_PROGRESS_BAR.sectionGap;
 
   doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerInnerW = width - BODY_FAT_PROGRESS_BAR.footerPad * 2;
@@ -1761,7 +1817,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   page = { ...page, y: drawLayoutTable(doc, todayTableOpts) + LAYOUT.paragraphGap };
 
   const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
-  const fatBarH = measureBodyFatProgressBar(doc, page.width, fatBarFooter);
+  const fatBarH = measureBodyFatProgressBar(doc, page.width, fatBarFooter, lba.leannessFatBar);
   page = ensureLockedSpace(doc, payload, page, fatBarH);
   page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar, fatBarFooter) };
 
