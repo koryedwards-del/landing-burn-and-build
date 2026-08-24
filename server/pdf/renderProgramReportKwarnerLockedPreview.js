@@ -1427,7 +1427,7 @@ function drawBodyFatProgressBar(doc, page, bar) {
     doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.markerLabelSize);
     const labelW = doc.widthOfString(markerLabel);
     const labelX = Math.max(x, Math.min(markerX - labelW / 2, x + width - labelW));
-    doc.fillColor(gold).text(markerLabel, labelX, cy, { lineBreak: false });
+    doc.fillColor(SEMINAR_COLORS.body).text(markerLabel, labelX, cy, { lineBreak: false });
     const triY = barY - 2;
     doc
       .fillColor(gold)
