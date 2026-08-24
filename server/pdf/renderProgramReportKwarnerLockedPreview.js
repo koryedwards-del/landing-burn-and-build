@@ -1302,7 +1302,7 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   subtitleSize: 8,
   barHeight: 52,
   barRadius: 6,
-  lbmCellWidthRatio: 0.13,
+  lbmCellWidthRatio: 0.15,
   lbmCellStyle: { fill: '#4A6B7C', text: '#ffffff' },
   segmentStyles: Object.freeze({
     Competition: { fill: '#0B6E78', text: '#ffffff' },
@@ -1328,7 +1328,7 @@ function segmentStyle(zoneLabel) {
 }
 
 function fatBarLayout(x, width, lbmCell) {
-  const lbmW = lbmCell ? Math.max(Math.round(width * BODY_FAT_PROGRESS_BAR.lbmCellWidthRatio), 56) : 0;
+  const lbmW = lbmCell ? Math.max(Math.round(width * BODY_FAT_PROGRESS_BAR.lbmCellWidthRatio), 64) : 0;
   return {
     lbmX: x,
     lbmW,
