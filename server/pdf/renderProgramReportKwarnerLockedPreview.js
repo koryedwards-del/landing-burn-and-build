@@ -1345,41 +1345,43 @@ function bfToBarX(bfX, bfW, bf, scaleMax) {
 function drawLbmCell(doc, lbmCell, x0, barY, segW, barH) {
   const style = BODY_FAT_PROGRESS_BAR.lbmCellStyle;
   doc.fillColor(style.fill).rect(x0, barY, segW, barH).fill();
+  drawStackedBarCell(doc, {
+    fatLabel: lbmCell.fatLabel,
+    categoryLabel: lbmCell.label.toUpperCase(),
+    poundsLabel: lbmCell.poundsLabel,
+  }, x0, barY, segW, barH, style.text, true);
+}
+
+function drawStackedBarCell(doc, { fatLabel, categoryLabel, poundsLabel }, x0, barY, segW, barH, textColor, isActive) {
+  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
   const gap = BODY_FAT_PROGRESS_BAR.cellLineGap;
+  const fatH = fatLabel ? BODY_FAT_PROGRESS_BAR.capLabelSize : 0;
   const catH = BODY_FAT_PROGRESS_BAR.categorySize;
-  const valueH = BODY_FAT_PROGRESS_BAR.weightLabelSize;
-  const blockH = catH + gap + valueH;
+  const poundsH = poundsLabel ? BODY_FAT_PROGRESS_BAR.weightLabelSize : 0;
+  const blockH = fatH + (fatLabel ? gap : 0) + catH + (poundsLabel ? gap : 0) + poundsH;
   let ty = barY + (barH - blockH) / 2;
-  doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.categorySize).fillColor(style.text);
-  doc.text(lbmCell.label.toUpperCase(), x0, ty, { width: segW, align: 'center', lineGap: 0 });
-  ty += catH + gap;
-  doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.weightLabelSize).fillColor(style.text);
-  doc.text(lbmCell.value, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+  if (fatLabel) {
+    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.capLabelSize).fillColor(textColor);
+    doc.text(fatLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+    ty += fatH + gap;
+  }
+  doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.categorySize).fillColor(textColor);
+  doc.text(categoryLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+  ty += catH;
+  if (poundsLabel) {
+    ty += gap;
+    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.weightLabelSize).fillColor(textColor);
+    doc.text(poundsLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+  }
 }
 
 function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, textColor) {
-  const stageName = zone.label.toUpperCase();
   const isActive = zone.label === activeStage;
-  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
-  const gap = BODY_FAT_PROGRESS_BAR.cellLineGap;
-  const capH = zone.capLabel ? BODY_FAT_PROGRESS_BAR.capLabelSize : 0;
-  const catH = BODY_FAT_PROGRESS_BAR.categorySize;
-  const weightH = zone.weightLabel ? BODY_FAT_PROGRESS_BAR.weightLabelSize : 0;
-  const blockH = capH + (zone.capLabel ? gap : 0) + catH + (zone.weightLabel ? gap : 0) + weightH;
-  let ty = barY + (barH - blockH) / 2;
-  if (zone.capLabel) {
-    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.capLabelSize).fillColor(textColor);
-    doc.text(zone.capLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
-    ty += capH + gap;
-  }
-  doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.categorySize).fillColor(textColor);
-  doc.text(stageName, x0, ty, { width: segW, align: 'center', lineGap: 0 });
-  ty += catH;
-  if (zone.weightLabel) {
-    ty += gap;
-    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.weightLabelSize).fillColor(textColor);
-    doc.text(zone.weightLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
-  }
+  drawStackedBarCell(doc, {
+    fatLabel: zone.capLabel,
+    categoryLabel: zone.label.toUpperCase(),
+    poundsLabel: zone.weightLabel,
+  }, x0, barY, segW, barH, textColor, isActive);
 }
 
 function measureBodyFatProgressBar(doc, width, footerText) {

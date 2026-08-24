@@ -61,6 +61,15 @@ function formatCapHeader(cap) {
   return `<${cap}%`;
 }
 
+function formatBarFatHeader(cap) {
+  return `<${cap}% FAT`;
+}
+
+function formatBarCurrentFatHeader(bf) {
+  const value = round2(bf);
+  return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
+}
+
 export function aceCategories(gender) {
   return leannessTable(gender).map((row) => ({
     ...row,
@@ -145,7 +154,7 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
       label: row.label,
       from: prev,
       to: row.cap,
-      capLabel: formatCapHeader(row.cap),
+      capLabel: formatBarFatHeader(row.cap),
       weightLabel: weightGoalRangeLabel(lbm, row),
     });
     prev = row.cap;
@@ -156,12 +165,21 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
     trainingCap + 10,
     Number.isFinite(bf) ? Math.ceil(bf / 5) * 5 : 40,
   );
-  zones.push({ label: 'Off-season', from: trainingCap, to: scaleMax });
+  zones.push({
+    label: 'Off-season',
+    from: trainingCap,
+    to: scaleMax,
+    capLabel: formatBarCurrentFatHeader(bf),
+  });
   const active = aceCategoryForBodyFat(gender, bf);
   const activeStage = active?.label ?? 'Off-season';
   const lean = Number(lbm);
   const lbmCell = lean > 0
-    ? { label: 'LBM', value: `${round2(lean)} lbs` }
+    ? {
+      fatLabel: formatBarCurrentFatHeader(bf),
+      label: 'LBM',
+      poundsLabel: `${round2(lean)} lbs.`,
+    }
     : null;
   return {
     currentBf: Number.isFinite(bf) ? round2(bf) : null,
