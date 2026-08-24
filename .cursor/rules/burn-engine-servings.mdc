@@ -1,0 +1,138 @@
+---
+description: Burn Engine serving math — macro-gram portions, prep state, food-list gram weights, and printout layers
+alwaysApply: true
+---
+
+# Burn Engine servings & food-list gram weights
+
+This system is **not** straight calorie/macro counting. The Burn Engine builds a plan once; the user follows **servings** and weighs food to **gram portions** on the approved list. Agents must keep food-list weights, prep labels, PDF printouts, and `data/foods.json` aligned with these rules.
+
+## Core principle
+
+**A serving is defined by grams of the target macro, with a fat ceiling in grams — not by calories.**
+
+| Wrong | Right |
+|-------|-------|
+| “32 calories of protein per serving” | **8g protein** per serving, **≤2g fat** |
+| “56 calories of carbs per grain serving” | **14g carbs** per serving |
+| “40 calories of vegetables” | **10g carbs** per serving |
+| Weigh food without knowing prep state | Gram weight only valid for the **labeled prep** (dry / cooked / raw) |
+
+The engine’s internal loops use calorie weights (32, 56, 40, 72…) to balance the plan in `js/burnEngine.js`. **User-facing portions and food-list gram weights use macro grams + fat limits.**
+
+## Daily servings (what the user follows)
+
+From `computeServingsPhase` in `js/burnEngine.js`:
+
+| User-facing group | Engine slots | Notes |
+|-------------------|--------------|-------|
+| **Protein** | `P1` + `D1` | One number on Servings page; includes dairy |
+| **Grains & starches** | `G1` + `S2` | One number on Servings page |
+| **Vegetables** | `VE` | Always **1** daily |
+| **Fruits** | `FQ` | Minimum **3** daily |
+| **Extra fat** | `FT` | `fatMaintain` / `fatReduce` on Servings page |
+
+`P1` = non-dairy protein (meat, fish, egg whites). `D1` = dairy. `G1` = grains. `S2` = starches. Engine keeps grains vs starches separate for **fat limits** even though the user sees one combined count.
+
+## One serving — macro targets (make the cut)
+
+Use these when sizing `gramWeight` in `data/foods.json`, cutting-staples PDF rows, and audits.
+
+### Non-dairy protein (`P1`)
+
+| Macro | Per serving |
+|-------|-------------|
+| Protein | **8g** |
+| Fat | **≤2g** |
+
+Gram weight ≈ `800 / protein_per_100g`, then verify fat ≤ 2g at that weight. **1982 seminar tested weights override USDA** where they differ (`scripts/protein-82-audit.mjs`, `docs/knowledge-base-backlog.md`).
+
+### Dairy (`D1`)
+
+Counts toward **protein** servings on the Servings page. Engine also assigns **12g carbs** and ~2.4g fat per dairy serving in internal loops. Portion weights on the food list are **curated per item** (milk, yogurt, cottage cheese) — do not assume the same gram formula as meat/fish.
+
+### Grains (`G1`)
+
+| Macro | Per serving |
+|-------|-------------|
+| Carbs | **14g** |
+| Fat | **≤1.0g** (“14/1”) |
+
+Gram weight ≈ `1400 / carbs_per_100g`. **Dry** for oats, grits, farina, cream of wheat — user adds water (`servingDescription: "dry"`). **Cooked** for rice, pasta, quinoa. Audit: `scripts/grains-14-1-audit.mjs`.
+
+### Starches (`S2`)
+
+| Macro | Per serving |
+|-------|-------------|
+| Carbs | **14g** |
+| Fat | **≤0.44g** (“14/0.44”) |
+
+Same carb target as grains; **stricter fat cap**. Beans, potatoes, corn, peas, squash. Audit: `scripts/starches-14-0-audit.mjs`.
+
+### Vegetables (`VE`)
+
+| Macro | Per serving |
+|-------|-------------|
+| Carbs | **10g** |
+| Fat | **≤3g** |
+
+Gram weight ≈ `1000 / carbs_per_100g`. **Raw and cooked are separate catalog entries** when both exist — different gram weights. Audit: `scripts/veg-fruit-audit.mjs`.
+
+### Fruits (`FQ`)
+
+Engine fruit slot uses **72 calories** per serving in balancing loops (differs from carb-gram categories above). Food-list audit: **≤4g fat** at the portion; gram weight from calorie density (`7200 / kcal_per_100g` in comments). Do not swap fruit portion math to calorie counting in the UI — user still follows **servings**, not calories.
+
+### Extra fat (`FT`)
+
+**45 calories** per point (`FAT_SERVING_CALORIES` in `js/burnEngine.js`). Separate from food-list staple rows.
+
+## Why prep state matters
+
+Gram weight on the food list only works if the user knows **how that food is measured**:
+
+| Prep | Examples | Rule |
+|------|----------|------|
+| **dry** | Oatmeal, grits, farina | Weigh **dry**; user adds water |
+| **cooked** | Rice, pasta, mushrooms, broccoli | Weigh **after cooking** — what goes on the plate |
+| **raw** | Cucumber, some salads | Eaten as-is |
+
+Cooking changes water content → **carbs/protein per 100g change** → **different gram weights** for the same macro serving. Raw vs cooked gaps can be large (e.g. mushrooms). **Never interchange raw and cooked gram weights.**
+
+Tips source: `data/*TipsPrintout.js` — “Measure serving sizes after cooking” where applicable.
+
+## Three printout layers (do not mix them up)
+
+| Layer | Shows | Example (chicken, 3 lunch protein servings) |
+|-------|-------|-----------------------------------------------|
+| **Servings page** | Serving **counts** only (3, 4.3, 9…) | `3` at lunch — no grams |
+| **Food list** | **One serving** gram weight + prep label | `26g` cooked (8g protein reference) |
+| **Meal plan / grocery list** | **Math done** — servings × gram weight | `78g` |
+
+Menu planner: `gramWeightLabel()` in `menuplanner/js/plannerState.js`. Food list PDF staples: `data/cuttingStaplesPrintout.js` + `catalogStapleRow()` from `data/foods.json`.
+
+**Do not** put daily-total or meal-scaled grams on the reference food-list pages unless the user explicitly requests it. Food list = **one serving** lookup; meal plan = **scaled** totals.
+
+## Source files
+
+| Piece | Path |
+|-------|------|
+| Burn Engine plan math | `js/burnEngine.js` |
+| Food catalog gram weights | `data/foods.json` |
+| KWarner / program-report food list rows | `data/cuttingStaplesPrintout.js` |
+| Servings grid (counts) | `js/servingsPrintout.js` |
+| Scale meal-plan print amounts | `menuplanner/js/plannerPrintPayload.js` |
+| Protein audit | `scripts/protein-82-audit.mjs` |
+| Grains audit | `scripts/grains-14-1-audit.mjs` |
+| Starches audit | `scripts/starches-14-0-audit.mjs` |
+| Veg/fruit audit | `scripts/veg-fruit-audit.mjs` |
+| Deep reference | `docs/knowledge-base-backlog.md` |
+
+## Agent checklist
+
+Before changing food-list gram weights, PDF staple columns, or `foods.json`:
+
+1. Identify **category** (P1, D1, G1, S2, VE, FQ) and use the **macro-gram target**, not calories.
+2. Confirm **prep state** (dry / cooked / raw) matches how the user measures that line item.
+3. Verify **fat at portion** against the category limit.
+4. Keep **Servings page = counts**; **food list = one-serving grams**; **meal plan = scaled grams**.
+5. Run relevant audit script; for KWarner PDF changes also `npm run render:kwarner-preview`.
