@@ -64,6 +64,19 @@ Google fragment  →  Diet (the answer)  →  Food plan (the path)
 | **Fold 1 — Diet (answer)** | Burn & Build system — recomp, lean mass, right food/right amount/right time |
 | **Fold 2 — Food plan (path)** | Burn Engine → personalized macros → servings across five food groups |
 
+### Pricing frame ($149)
+
+Either fold alone is worth $149:
+
+| Fold | Standalone value |
+|------|------------------|
+| **Diet (answer)** | A proven recomp system — 40+ years, Burn Engine logic, curated food philosophy, handbook/FAQ |
+| **Food plan (path)** | Personalized servings for *your* body and activity — macros, five food groups, menu planner, printouts |
+
+Combined at $149, it's a bargain in the industry. Competitors charge separately for "the program" and "your custom plan," or lock you into subscriptions. Burn & Build delivers both in one purchase.
+
+**Messaging implication:** KB articles and landing copy can lead with either fold depending on the search fragment — some people need the system first, others need the plan first — but checkout always sells both.
+
 ---
 
 ## 1982 PDF protein sheet (authoritative)
@@ -211,6 +224,7 @@ Already in `data/proteinTipsPrintout.js`: *"Stick to the lean fish on this list.
 ## Marketing / product philosophy (context)
 
 - **Organizing question:** *How much food do I need to eat for what I do?* — see section above. Distinct from the landing-page tagline (*Lose the Fat. Keep the Muscle.*); the tagline is marketing shorthand, the organizing question is product truth.
+- **Two-fold value @ $149:** Either fold (diet or food plan) alone is worth $149; combined, a bargain vs. industry norms. Lead with whichever fold matches the search fragment.
 - Referral-led, not cold sell. Dave/Paul = proof; website = leave-behind.
 - Don't dumb down engine for masses; 1982 closed list is non-compressible.
 - Right food, right amount, right time — coupled system.
