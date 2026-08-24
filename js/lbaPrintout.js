@@ -41,6 +41,33 @@ export function lbaProfileLine({ heightInches, sex, age, fatSource, fatSourceOth
   return `Height: ${heightInches} inches  Sex: ${sex}  Body comp: ${bodyComp}  Age: ${age} years of experience`;
 }
 
+/** Structured profile stats for LBA snapshot card (PDF). */
+export function lbaProfileStats({ heightInches, sex, age, fatSource, fatSourceOther }) {
+  const bodyComp = formatFatSourceLabel(fatSource, fatSourceOther);
+  return [
+    { label: 'HEIGHT', value: `${heightInches} in.` },
+    { label: 'SEX', value: sex },
+    { label: 'BODY COMP', value: bodyComp },
+    { label: 'AGE', value: `${age} years of experience` },
+  ];
+}
+
+function formatTodayPct(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return '—';
+  return raw.endsWith('%') ? raw : `${raw}%`;
+}
+
+/** Today composition rows for LBA snapshot card (PDF). */
+export function lbaTodayTableRows(today) {
+  if (!today) return [];
+  return [
+    { label: 'LEAN', pct: formatTodayPct(today.leanPct), lbs: `${today.leanLbs} lbs.` },
+    { label: 'FAT', pct: formatTodayPct(today.fatPct), lbs: `${today.fatLbs} lbs.` },
+    { label: 'TOTAL', pct: formatTodayPct(today.totalPct), lbs: `${today.totalLbs} lbs.` },
+  ];
+}
+
 function round2(x) {
   return Math.round(Number(x) * 100) / 100;
 }
