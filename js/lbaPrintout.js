@@ -97,6 +97,11 @@ export function desirableLbmBarFooter(lead) {
   return parts.join(' ');
 }
 
+export function leannessFatBarFooter(lead) {
+  const lbmPart = desirableLbmBarFooter(lead);
+  return [lbmPart, BODY_FAT_PROGRESS_BAR_FOOTER].filter(Boolean).join(' ');
+}
+
 /** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
 export function desirableLbmBar(gender, heightInches, leanBodyMass) {
   const desirable = desirableLeanBodyMassLbs(gender, heightInches);
@@ -153,11 +158,17 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
   );
   zones.push({ label: 'Off-season', from: trainingCap, to: scaleMax });
   const active = aceCategoryForBodyFat(gender, bf);
+  const activeStage = active?.label ?? 'Off-season';
+  const lean = Number(lbm);
+  const lbmLabel = lean > 0 ? `${round2(lean)} lbs` : null;
+  const competitionZone = zones.find((zone) => zone.label === 'Competition');
+  if (competitionZone && lbmLabel) competitionZone.lbmLabel = lbmLabel;
   return {
     currentBf: Number.isFinite(bf) ? round2(bf) : null,
+    currentLbm: lbmLabel ? round2(lean) : null,
     scaleMax,
     zones,
-    activeStage: active?.label ?? 'Off-season',
+    activeStage,
   };
 }
 

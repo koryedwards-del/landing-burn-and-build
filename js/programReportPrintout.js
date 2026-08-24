@@ -7,8 +7,8 @@ import {
   BODY_FAT_PROGRESS_BAR_TITLE,
   formatMm,
   formatSexLabel,
-  desirableLbmBar,
   leannessFatBar,
+  leannessFatBarFooter,
   lbaProfileLine,
   lbmStatusMessage,
 } from './lbaPrintout.js';
@@ -284,7 +284,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       }),
       today,
       leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
-      desirableLbmBar: desirableLbmBar(gender, intake.heightInches, intake.leanBodyMass),
+      leannessFatBarFooter: leannessFatBarFooter(lbmCopy.lead),
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
