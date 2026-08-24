@@ -2,12 +2,11 @@
 
 import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
-  aceCategories,
-  aceHeaderLabels,
   formatMm,
   formatSexLabel,
+  leannessStagesTable,
+  leannessWeightGoalsTable,
   lbmStatusMessage,
-  weightGoalRanges,
 } from './lbaPrintout.js';
 import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
 import {
@@ -275,14 +274,13 @@ export function buildProgramReportPayload(pkg, options = {}) {
       waist: formatMm(intake.waistMm),
       age: intake.age,
       today,
-      aceHeaders: aceHeaderLabels(gender),
-      aceCategories: aceCategories(gender),
+      leannessStages: leannessStagesTable(),
+      leannessWeightGoals: leannessWeightGoalsTable(intake.leanBodyMass),
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,
       lbmLead: lbmCopy.lead,
       lbmCongrats: lbmCopy.congrats,
-      weightGoalRanges: weightGoalRanges(gender, intake.leanBodyMass),
     },
     projections: buildProjectionsPrintoutSection(pkg),
     history: {

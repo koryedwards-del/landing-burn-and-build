@@ -205,10 +205,11 @@ function layoutTableRowHeights(doc, opts) {
   const tableW = opts.width;
   const colWidths = columns.map((col) => col.width * tableW);
   const headerRows = opts.headerRows ?? 1;
+  const rowPad = opts.tableRowPad ?? LAYOUT.tableRowPad;
 
   return opts.rows.map((row, rowIndex) => {
     const isHeader = rowIndex < headerRows;
-    let maxH = (opts.bodyFontSize ?? LAYOUT.tableBodySize) + LAYOUT.tableRowPad * 2;
+    let maxH = (opts.bodyFontSize ?? LAYOUT.tableBodySize) + rowPad * 2;
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
       const cell = row[col.key] ?? '';
@@ -217,7 +218,7 @@ function layoutTableRowHeights(doc, opts) {
         width: tableCellWidth(colWidths, columns, row, index) - TABLE_CONTAINER.cellPad * 2,
         lineGap: 0,
       });
-      maxH = Math.max(maxH, h + LAYOUT.tableRowPad * 2);
+      maxH = Math.max(maxH, h + rowPad * 2);
     });
     return maxH;
   });
@@ -593,6 +594,7 @@ function drawFlavorKitsPage(doc, payload) {
 function drawLayoutTable(doc, opts) {
   const columns = opts.columns;
   const headerRows = opts.headerRows ?? 1;
+  const rowPad = opts.tableRowPad ?? LAYOUT.tableRowPad;
   const tableX = opts.x;
   const tableY = opts.y;
   const tableW = opts.width;
@@ -619,7 +621,7 @@ function drawLayoutTable(doc, opts) {
         .font(font)
         .fontSize(fontSize)
         .fillColor(SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), cx + pad, cy + LAYOUT.tableRowPad, {
+        .text(String(row[col.key] ?? ''), cx + pad, cy + rowPad, {
           width: w - pad * 2,
           lineGap: 0,
           align: col.align || 'left',
@@ -1273,6 +1275,41 @@ function drawProjectionsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+function leannessGenderTableOpts(page, table, compact = {}) {
+  const stageCount = table.stageLabels.length;
+  const stageWidth = 0.86 / stageCount;
+  const columns = [
+    { key: 'gender', width: 0.14 },
+    ...table.stageLabels.map((_, index) => ({
+      key: `s${index}`,
+      width: stageWidth,
+      align: 'center',
+    })),
+  ];
+  const headerRow = Object.fromEntries([
+    ['gender', ''],
+    ...table.stageLabels.map((label, index) => [`s${index}`, label]),
+  ]);
+  const maleRow = Object.fromEntries([
+    ['gender', 'Men'],
+    ...table.male.map((value, index) => [`s${index}`, value]),
+  ]);
+  const femaleRow = Object.fromEntries([
+    ['gender', 'Women'],
+    ...table.female.map((value, index) => [`s${index}`, value]),
+  ]);
+  return {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns,
+    rows: [headerRow, maleRow, femaleRow],
+    headerRows: 1,
+    boldColumnKeys: ['gender'],
+    ...compact,
+  };
+}
+
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
@@ -1304,21 +1341,9 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   todayTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, todayTableOpts) + LAYOUT.paragraphGap };
 
-  const aceTableOpts = {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: lba.aceHeaders.map((_, index) => ({
-      key: `c${index}`,
-      width: 1 / lba.aceHeaders.length,
-      align: 'center',
-    })),
-    rows: [
-      Object.fromEntries(lba.aceCategories.map((cat, index) => [`c${index}`, cat.label])),
-      Object.fromEntries(lba.aceHeaders.map((label, index) => [`c${index}`, label])),
-    ],
-    headerRows: 1,
-  };
+  const lbaTableCompact = { tableRowPad: 4, bodyFontSize: 9, headFontSize: 9 };
+
+  const aceTableOpts = leannessGenderTableOpts(page, lba.leannessStages, lbaTableCompact);
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, aceTableOpts));
   aceTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, aceTableOpts) + LAYOUT.paragraphGap };
@@ -1333,21 +1358,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
   }
 
-  const weightTableOpts = {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: lba.weightGoalRanges.map((_, index) => ({
-      key: `c${index}`,
-      width: 1 / lba.weightGoalRanges.length,
-      align: 'center',
-    })),
-    rows: [
-      Object.fromEntries(lba.weightGoalRanges.map((row, index) => [`c${index}`, row.label])),
-      Object.fromEntries(lba.weightGoalRanges.map((row, index) => [`c${index}`, row.range])),
-    ],
-    headerRows: 1,
-  };
+  const weightTableOpts = leannessGenderTableOpts(page, lba.leannessWeightGoals, lbaTableCompact);
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts));
   weightTableOpts.y = page.y;
   page = { ...page, y: drawLayoutTable(doc, weightTableOpts) + LAYOUT.paragraphGap };
