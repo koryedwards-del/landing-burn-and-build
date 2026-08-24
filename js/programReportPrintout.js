@@ -8,7 +8,6 @@ import {
   formatMm,
   formatSexLabel,
   leannessFatBar,
-  leannessWeightGoalsTable,
   lbmStatusMessage,
 } from './lbaPrintout.js';
 import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
@@ -277,8 +276,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       waist: formatMm(intake.waistMm),
       age: intake.age,
       today,
-      leannessFatBar: leannessFatBar(gender, intake.fatPercent),
-      leannessWeightGoals: leannessWeightGoalsTable(gender, intake.leanBodyMass),
+      leannessFatBar: leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass),
       riskMessage: '',
       footerCopy: LBA_FOOTER_COPY,
       monitorCopy: LBA_MONITOR_COPY,

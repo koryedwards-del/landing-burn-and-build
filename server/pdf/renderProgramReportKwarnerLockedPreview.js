@@ -1284,7 +1284,7 @@ function drawProjectionsPage(doc, payload) {
 const BODY_FAT_PROGRESS_BAR = Object.freeze({
   titleSize: 11,
   subtitleSize: 8,
-  barHeight: 36,
+  barHeight: 46,
   barRadius: 6,
   segmentStyles: Object.freeze({
     Competition: { fill: '#0B6E78', text: '#ffffff' },
@@ -1295,6 +1295,7 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   }),
   capLabelSize: 8,
   categorySize: 6,
+  weightLabelSize: 6,
   cellLineGap: 2,
   markerLabelSize: 10,
   markerH: 5,
@@ -1317,9 +1318,11 @@ function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, tex
   const stageName = zone.label.toUpperCase();
   const isActive = zone.label === activeStage;
   const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+  const gap = BODY_FAT_PROGRESS_BAR.cellLineGap;
   const capH = zone.capLabel ? BODY_FAT_PROGRESS_BAR.capLabelSize : 0;
-  const gap = zone.capLabel ? BODY_FAT_PROGRESS_BAR.cellLineGap : 0;
-  const blockH = capH + gap + BODY_FAT_PROGRESS_BAR.categorySize;
+  const catH = BODY_FAT_PROGRESS_BAR.categorySize;
+  const weightH = zone.weightLabel ? BODY_FAT_PROGRESS_BAR.weightLabelSize : 0;
+  const blockH = capH + (zone.capLabel ? gap : 0) + catH + (zone.weightLabel ? gap : 0) + weightH;
   let ty = barY + (barH - blockH) / 2;
   if (zone.capLabel) {
     doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.capLabelSize).fillColor(textColor);
@@ -1328,6 +1331,12 @@ function drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, tex
   }
   doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.categorySize).fillColor(textColor);
   doc.text(stageName, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+  ty += catH;
+  if (zone.weightLabel) {
+    ty += gap;
+    doc.font(font).fontSize(BODY_FAT_PROGRESS_BAR.weightLabelSize).fillColor(textColor);
+    doc.text(zone.weightLabel, x0, ty, { width: segW, align: 'center', lineGap: 0 });
+  }
 }
 
 function measureBodyFatProgressBar(doc, width) {
@@ -1473,30 +1482,6 @@ function drawBodyFatProgressBar(doc, page, bar) {
   return cy + footerBoxH + LAYOUT.paragraphGap;
 }
 
-function leannessStageTableOpts(page, table, compact = {}) {
-  const stageCount = table.stageLabels.length;
-  const columns = table.stageLabels.map((_, index) => ({
-    key: `s${index}`,
-    width: 1 / stageCount,
-    align: 'center',
-  }));
-  const labelRow = Object.fromEntries(
-    table.stageLabels.map((label, index) => [`s${index}`, label]),
-  );
-  const valueRow = Object.fromEntries(
-    table.values.map((value, index) => [`s${index}`, value]),
-  );
-  return {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns,
-    rows: [labelRow, valueRow],
-    headerRows: 1,
-    ...compact,
-  };
-}
-
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
@@ -1540,13 +1525,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   if (proseParagraphs.length) {
     page = drawBodyParagraphs(doc, payload, page, proseParagraphs);
   }
-
-  const lbaTableCompact = { tableRowPad: 4, bodyFontSize: 9, headFontSize: 9 };
-
-  const weightTableOpts = leannessStageTableOpts(page, lba.leannessWeightGoals, lbaTableCompact);
-  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, weightTableOpts));
-  weightTableOpts.y = page.y;
-  page = { ...page, y: drawLayoutTable(doc, weightTableOpts) + LAYOUT.paragraphGap };
 
   page = drawBodyParagraphs(doc, payload, page, [lba.monitorCopy]);
   finishLockedPage(doc, page.box, payload);

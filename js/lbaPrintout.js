@@ -61,8 +61,8 @@ export function leannessWeightGoalsTable(gender, lbm) {
   };
 }
 
-/** Contiguous BF% zones and marker position for the LBA fat bar (client gender). */
-export function leannessFatBar(gender, bodyFatPercent) {
+/** Contiguous BF% zones, caps, and target weights for the LBA fat bar (client gender). */
+export function leannessFatBar(gender, bodyFatPercent, lbm) {
   const table = leannessTable(gender);
   const bf = Number(bodyFatPercent);
   const zones = [];
@@ -73,6 +73,7 @@ export function leannessFatBar(gender, bodyFatPercent) {
       from: prev,
       to: row.cap,
       capLabel: formatCapHeader(row.cap),
+      weightLabel: weightGoalRangeLabel(lbm, row),
     });
     prev = row.cap;
   }
