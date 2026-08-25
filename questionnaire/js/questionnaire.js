@@ -287,13 +287,41 @@ function bindAccordionTabFlow({
 }
 
 function collapsePersonalInfoIfComplete() {
-  if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== 'emailConfirm') return false;
+  const lastField = INFO_FIELDS[INFO_FIELDS.length - 1];
+  if (infoFieldIndex < 0 || INFO_FIELDS[infoFieldIndex] !== lastField) return false;
   const values = readForm();
   if (!infoSectionComplete(values)) return false;
   infoFieldIndex = -1;
   renderInfoAccordionState();
   updateStepNav();
   return true;
+}
+
+function maybeAdvanceInfoField(values = readForm()) {
+  if (infoFieldIndex < 0) return;
+  const fieldId = INFO_FIELDS[infoFieldIndex];
+  if (!infoFieldIsValid(fieldId, values)) return;
+
+  if (fieldId === 'sex' && infoFieldIndex < INFO_FIELDS.length - 1) {
+    openInfoField(infoFieldIndex + 1);
+    return;
+  }
+
+  if (fieldId === 'emailConfirm' && infoFieldIndex < INFO_FIELDS.length - 1) {
+    openInfoField(infoFieldIndex + 1);
+  }
+}
+
+let infoAccordionRenderQueued = false;
+function scheduleInfoAccordionRender(advanceAfter = false) {
+  if (infoAccordionRenderQueued) return;
+  infoAccordionRenderQueued = true;
+  requestAnimationFrame(() => {
+    infoAccordionRenderQueued = false;
+    const values = readForm();
+    renderInfoAccordionState();
+    if (advanceAfter) maybeAdvanceInfoField(values);
+  });
 }
 
 function workPhysicalLabel(id) {
@@ -575,13 +603,13 @@ function bindInfoAccordion() {
   });
 
   infoAccordion.addEventListener('input', () => {
-    renderInfoAccordionState();
-    collapsePersonalInfoIfComplete();
+    scheduleInfoAccordionRender(true);
   });
 
   infoAccordion.addEventListener('change', () => {
     renderInfoAccordionState();
-    collapsePersonalInfoIfComplete();
+    maybeAdvanceInfoField();
+    updateStepNav();
   });
 
   infoAccordion.addEventListener('keydown', (event) => {
