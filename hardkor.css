@@ -43,6 +43,7 @@
   --nav-height:     64px;
   --section-v:      100px;
   --section-h:      40px;
+  --divider-gap:    56px;
   --page-max:       1100px;
   --page-max-narrow: 760px;
   --card-pad:       48px 36px;
@@ -74,6 +75,7 @@ a { color: var(--yellow); text-decoration: none; }
    ------------------------------------------------------------ */
 .divider {
   height: 3px;
+  margin: var(--divider-gap) 0;
   background: linear-gradient(90deg, transparent, var(--yellow), transparent);
 }
 

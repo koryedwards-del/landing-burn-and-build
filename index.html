@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="hardkor.css" />
   <style>
-    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 40px 48px; position: relative; overflow: hidden; }
+    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 40px 0; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,204,0,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,204,0,0.03) 60px, rgba(255,204,0,0.03) 61px); pointer-events: none; }
 
     .hero-logo { width: min(240px, 60vw); height: auto; margin-bottom: 8px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards; }
@@ -74,7 +74,7 @@
 
     .sample-intro {
       text-align: center;
-      padding: 64px 40px 32px;
+      padding: 0 40px;
       background: var(--black);
     }
 
@@ -105,7 +105,7 @@
     .testi-author { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow); }
     .testi-photo { display: block; width: 88px; height: 88px; object-fit: cover; object-position: center 12%; border-radius: 50%; margin: 0 0 20px; border: 2px solid var(--yellow); position: relative; z-index: 1; }
 
-    .pricing { padding: 100px 40px; background: var(--black); text-align: center; }
+    .pricing { padding: 0 40px 80px; background: var(--black); text-align: center; }
     .pricing-inner { max-width: 560px; margin: 0 auto; }
     .price-box { border: 2px solid var(--yellow); padding: 64px 48px 48px; margin: 48px 0; overflow: hidden; }
     .price-amount { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 6rem; color: var(--yellow); line-height: 1; margin-bottom: 8px; }
@@ -129,7 +129,7 @@
       text-decoration: none;
     }
 
-    .who { padding: 100px 40px; background: var(--black); }
+    .who { padding: 0 40px; background: var(--black); }
     .who-inner { max-width: 1100px; margin: 0 auto; }
     .who-header { text-align: center; margin-bottom: 72px; }
     .who-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -146,7 +146,7 @@
       text-align: center;
     }
 
-    .filter { padding: 56px 40px; background: var(--dark); text-align: center; }
+    .filter { padding: 0 40px; background: var(--dark); text-align: center; }
     .filter-inner { max-width: 720px; margin: 0 auto; }
     .filter p {
       font-family: 'Barlow', sans-serif;
@@ -164,7 +164,7 @@
       color: var(--yellow);
     }
 
-    .search-faq { padding: 56px 40px 80px; background: var(--black); }
+    .search-faq { padding: 0 40px; background: var(--black); }
     .search-faq-inner { max-width: 760px; margin: 0 auto; }
     .accordion { display: flex; flex-direction: column; gap: 3px; }
     .accordion-item { background: var(--gray); border-left: 3px solid transparent; }
@@ -206,7 +206,7 @@
       gap: 3px;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 0 40px 80px;
+      padding: 0 40px;
     }
     .sample-panel { background: var(--gray); padding: 40px 36px; }
     .sample-label {
@@ -324,9 +324,8 @@
       .guide-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .hero { padding: 100px 20px 48px; }
-      .filter, .search-faq, .sample-intro { padding-left: 20px; padding-right: 20px; }
-      .sample-split { padding: 0 20px 64px; }
+      .hero { padding: 100px 20px 0; }
+      .filter, .search-faq, .sample-split, .who, .pricing { padding-left: 20px; padding-right: 20px; }
       .who-card { padding: 40px 28px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
