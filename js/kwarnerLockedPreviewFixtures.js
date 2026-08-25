@@ -20,7 +20,7 @@ export const KWARNER_WELCOME_COPY = {
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure out what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods. For the best results you need a plan that goes a step farther than macros.',
+  'Macros are considered to be the end all, be all, in the nutrition world. But knowing your macros still means you need to figure out what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods. For the best results you need a plan that goes a step farther than macros.',
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
