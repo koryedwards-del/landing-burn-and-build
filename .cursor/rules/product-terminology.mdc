@@ -66,7 +66,7 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 
 | Surface | Wrong | Right |
 |---------|-------|-------|
-| Questionnaire step label | Build Your **Diet Plan** | Build Your **Program** or start-your-**diet** wording — never *diet plan* |
+| Questionnaire step label | Build Your **Diet Plan** | **Personal information**, **Occupation**, **Exercise**, etc. — section nouns, not commands like *Build Your Program* |
 | Questionnaire page title | **Intake form** | **Program Questionnaire** (or **Questionnaire** in short nav copy) |
 | Questionnaire intro | Burn Engine builds your **diet** | builds your **program** (report + planner) |
 | Download button | Download **diet plan** | Download **program report** or **your diet** (product) |
