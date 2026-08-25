@@ -21,7 +21,7 @@ import { bootProgramBridgeAside, remountProgramLibraryNav } from '../../js/progr
 import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/programAccess.js';
 import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
 import { dietPdfFilename } from '../../js/dietPdfNaming.js';
-import { kwarnerPreviewPdfUrl, PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
+import { BURN_AND_BUILD_DIET_PDF_NAME, PREVIEW_PROGRAM_REPORT_PDF, programReportSamplePdfUrl, welcomeCoverHtml } from '../../js/programReportPrintout.js';
 import { kwarnerWelcomePrintHtml } from '../../js/kwarnerWelcomePrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
@@ -218,11 +218,11 @@ function renderWelcome(pkg) {
 
       <footer class="r-actions r-actions--split">
         ${wantsPreviewFromUrl() ? `
-          <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" target="_blank" rel="noopener">View KWarner preview PDF</a>
-          <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>
-          <a class="r-btn r-btn--ghost" href="/api/preview/kwarner-locked-pdf" target="_blank" rel="noopener">Live preview PDF (API)</a>
+          <a class="r-btn r-btn--ghost" href="${programReportSamplePdfUrl()}" target="_blank" rel="noopener">View sample Burn &amp; Build Diet PDF</a>
+          <a class="r-btn r-btn--ghost" href="${programReportSamplePdfUrl()}" download="Kristi-Warner-Burn-and-Build-Diet.pdf">Download sample Burn &amp; Build Diet PDF</a>
+          <a class="r-btn r-btn--ghost" href="/api/preview/burn-and-build-diet-pdf" target="_blank" rel="noopener">Live sample PDF (API)</a>
         ` : ''}
-        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download program report</button>
+        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download Burn &amp; Build Diet</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -504,7 +504,7 @@ function renderMissingProgram() {
       <div class="r-empty__actions">
         ${renderCreateDietCta({ primary: true })}
         <button type="button" class="r-btn r-btn--ghost" data-report-preview>Preview sample report</button>
-        <a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Program-Report.pdf">Download sample PDF</a>
+        <a class="r-btn r-btn--ghost" href="${PREVIEW_PROGRAM_REPORT_PDF}" download="Kristi-Warner-Burn-and-Build-Diet.pdf">Download sample Burn &amp; Build Diet PDF</a>
       </div>
       <p class="r-note r-empty__hint">Preview uses Kristi Warner&rsquo;s seminar sample before you build yours.</p>
     </div>

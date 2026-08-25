@@ -34,6 +34,19 @@ import { localDateKey } from './programPackage.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
 import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
+import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
+
+export { BURN_AND_BUILD_DIET_PDF_NAME };
+
+/** Static Kristi sample — same layout as production PDF. */
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/burn-and-build-diet-kristi-latest.pdf';
+
+export {
+  PROGRAM_REPORT_SAMPLE_PDF,
+  programReportSamplePdfUrl,
+  PROGRAM_REPORT_PREVIEW_BUILD,
+  PROGRAM_REPORT_PREVIEW_MD5,
+} from './programReportPreviewBuild.js';
 
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
@@ -100,11 +113,6 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
   foodPlan: '',
   servings: '',
 });
-
-/** Static Kristi sample — 2026 KWarner locked program report (same layout as production PDF). */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kwarner-locked-preview-kristi-latest.pdf';
-
-export { KWARNER_LOCKED_PREVIEW_PDF, kwarnerPreviewPdfUrl, KWARNER_PREVIEW_BUILD, KWARNER_PREVIEW_MD5 } from './kwarnerPreviewBuild.js';
 
 export function welcomeCoverHtml(pkg) {
   const copy = STEPS_TO_SUCCESS_COPY;
@@ -364,5 +372,5 @@ export function buildProgramReportPayload(pkg, options = {}) {
 }
 
 export function programReportDocumentTitle(pkg) {
-  return `Program Report - ${programClientName(pkg)}`;
+  return `${BURN_AND_BUILD_DIET_PDF_NAME} - ${programClientName(pkg)}`;
 }

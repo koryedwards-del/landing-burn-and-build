@@ -43,9 +43,12 @@ import {
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
 } from '../../js/lbaPrintout.js';
+import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 6;
+export const PROGRAM_REPORT_MIN_PAGES = 6;
+/** @deprecated Use PROGRAM_REPORT_MIN_PAGES */
+export const KWARNER_LOCKED_MIN_PAGES = PROGRAM_REPORT_MIN_PAGES;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -2103,13 +2106,13 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   validatePrintPayload('programreport', payload);
 
   const creator = createPrintPdf({
-    title: title || payload.title || 'Program Report',
+    title: title || payload.title || BURN_AND_BUILD_DIET_PDF_NAME,
     author: 'Burn & Build Diet',
   });
 
   const doc = creator.doc;
   if (buildLabel) {
-    doc.info.Subject = `KWarner locked preview ${buildLabel}`;
+    doc.info.Subject = `${BURN_AND_BUILD_DIET_PDF_NAME} sample ${buildLabel}`;
   }
 
   drawWelcomePage(doc, payload);
@@ -2123,8 +2126,8 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages < KWARNER_LOCKED_MIN_PAGES) {
-    throw new Error(`Preview PDF expected at least ${KWARNER_LOCKED_MIN_PAGES} pages, got ${pages}`);
+  if (pages < PROGRAM_REPORT_MIN_PAGES) {
+    throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
   }
   return buffer;
 }

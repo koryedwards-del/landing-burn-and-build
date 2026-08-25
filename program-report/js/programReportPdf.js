@@ -1,4 +1,4 @@
-/** Program report PDF — client fetch for the 2026 KWarner locked 6-page document. */
+/** Program report PDF — client fetch for the Burn & Build Diet (6-page document). */
 
 import { apiUrl } from '../../js/apiConfig.js';
 import {

@@ -215,17 +215,31 @@ app.post('/api/print/pdf', async (req, res) => {
   await handlePrintPdfRequest(req, res, { view, title, payload: body });
 });
 
+async function sendBurnAndBuildDietSamplePdf(res) {
+  const payload = buildKristiKwarnerPreviewPayload();
+  const pdf = await renderProgramReportKwarnerLockedPreview(payload);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'inline; filename="burn-and-build-diet-sample.pdf"');
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(pdf);
+}
+
+app.get('/api/preview/burn-and-build-diet-pdf', async (_req, res) => {
+  try {
+    await sendBurnAndBuildDietSamplePdf(res);
+  } catch (err) {
+    console.error('Burn & Build Diet sample PDF error:', err);
+    res.status(500).json({ ok: false, message: err.message || 'Sample PDF failed.' });
+  }
+});
+
+/** @deprecated Use /api/preview/burn-and-build-diet-pdf */
 app.get('/api/preview/kwarner-locked-pdf', async (_req, res) => {
   try {
-    const payload = buildKristiKwarnerPreviewPayload();
-    const pdf = await renderProgramReportKwarnerLockedPreview(payload);
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline; filename="kwarner-preview-latest.pdf"');
-    res.setHeader('Cache-Control', 'no-store');
-    res.send(pdf);
+    await sendBurnAndBuildDietSamplePdf(res);
   } catch (err) {
-    console.error('KWarner preview PDF error:', err);
-    res.status(500).json({ ok: false, message: err.message || 'Preview PDF failed.' });
+    console.error('Burn & Build Diet sample PDF error:', err);
+    res.status(500).json({ ok: false, message: err.message || 'Sample PDF failed.' });
   }
 });
 

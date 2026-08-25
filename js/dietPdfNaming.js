@@ -6,6 +6,9 @@ import { seminarPreparedDate } from './programReportPrintout.js';
 
 const DIET_PDF_PREFIX = 'Burn&Build';
 
+/** Product name for the full personalized PDF deliverable. */
+export const BURN_AND_BUILD_DIET_PDF_NAME = 'Burn & Build Diet';
+
 function sanitizeNamePart(preferredName) {
   return String(preferredName || 'Client')
     .trim()

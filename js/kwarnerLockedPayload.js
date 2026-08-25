@@ -1,4 +1,4 @@
-/** KWarner locked-frame PDF payload from a saved program package. */
+/** Burn & Build Diet program-report PDF payload from a saved program package. */
 
 import { buildProgramReportPayload } from './programReportPrintout.js';
 import {
@@ -9,7 +9,7 @@ import {
   KWARNER_WELCOME_COPY,
 } from './kwarnerLockedCopy.js';
 
-/** Apply 2026 KWarner locked program-report copy and layout fields to a print payload. */
+/** Apply Burn & Build Diet program-report copy and layout fields to a print payload. */
 export function applyKwarnerLockedPayload(payload) {
   payload.welcome = KWARNER_WELCOME_COPY;
   if (payload.foodPlan) {
