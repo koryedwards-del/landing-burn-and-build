@@ -117,7 +117,9 @@ body.q-app--workroom,
 }
 
 .intake-form__intro {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .intake-form__lede {
@@ -125,6 +127,26 @@ body.q-app--workroom,
   font-size: 0.9375rem;
   line-height: 1.55;
   color: var(--text);
+}
+
+.intake-form__pricing {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.intake-form__price {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.intake-form__checkout {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--muted);
 }
 
 .intake-form__ready-title {
