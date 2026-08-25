@@ -224,16 +224,16 @@
 
     .pdf-preview { display: block; text-decoration: none; color: inherit; }
     .pdf-preview-frame {
-      min-height: 380px;
+      width: 100%;
+      aspect-ratio: 8.5 / 11;
       border: 2px solid var(--yellow);
       background: var(--black);
       overflow: hidden;
-      margin-bottom: 16px;
     }
     .pdf-preview-frame embed {
       display: block;
       width: 100%;
-      min-height: 380px;
+      height: 100%;
       border: 0;
     }
 
@@ -386,7 +386,7 @@
       <div class="sample-panel">
         <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">
           <div class="pdf-preview-frame">
-            <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#view=FitH&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
+            <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#page=1&amp;view=Fit&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
           </div>
         </a>
       </div>
