@@ -184,6 +184,8 @@
 
     .philosophy { background: var(--black); padding: 100px 40px; text-align: center; }
 
+    .how-header { text-align: center; margin-bottom: 72px; }
+
     .guide { padding: 60px 40px 40px; background: var(--black); }
     .guide-inner { max-width: 1100px; margin: 0 auto; }
     .guide-row {
@@ -242,10 +244,6 @@
     .guide-wordmark--burn { color: var(--yellow); }
     .guide-wordmark--build { color: var(--gray-heading); }
 
-    .how { padding: 100px 40px; background: var(--black); }
-    .how-inner { max-width: 1100px; margin: 0 auto; }
-    .how-header { text-align: center; margin-bottom: 72px; }
-
     .testimonials { padding: 100px 40px; background: var(--black); }
     .testimonials-inner { max-width: 1000px; margin: 0 auto; }
     .testimonials-header { text-align: center; margin-bottom: 64px; }
@@ -265,16 +263,6 @@
     .price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 40px; }
     .price-includes { list-style: none; margin-bottom: 8px; display: flex; flex-direction: column; gap: 12px; }
     .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 10px 0; border-bottom: 1px solid var(--gray-mid); }
-
-    .deliver-hero { background: var(--dark); border-left: 4px solid var(--yellow); padding: 48px 40px; margin-bottom: 3px; }
-    .deliver-hero-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
-    .deliver-hero-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.6rem); text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 16px; }
-    .deliver-hero-body { color: #D4D4D4; font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 24px; }
-    .deliver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-    .deliver-card { background: var(--gray); padding: 36px 32px; border-left: 3px solid transparent; transition: border-color 0.2s; }
-    .deliver-card:hover { border-left-color: var(--yellow); }
-    .deliver-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; }
-    .deliver-body { color: #8A8A8A; font-size: 0.92rem; line-height: 1.6; }
 
     .who { padding: 100px 40px; background: var(--black); }
     .who-inner { max-width: 1100px; margin: 0 auto; }
@@ -495,7 +483,6 @@
       .hero-cta { justify-content: center; }
       .hero-blend-visual { max-width: 480px; margin: 0 auto; }
       .sample-split { grid-template-columns: 1fr; }
-      .deliver-grid { grid-template-columns: 1fr 1fr; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
     }
@@ -503,10 +490,7 @@
       .hero { padding: 100px 20px 48px; }
       .filter, .search-faq, .mechanism, .puzzled { padding-left: 20px; padding-right: 20px; }
       .sample-split { padding: 0 20px 64px; }
-      .deliver-grid { grid-template-columns: 1fr; }
-      .deliver-hero { padding: 36px 24px; }
       .who-card { padding: 40px 28px; }
-      .sample-split { padding: 0 20px 64px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
@@ -518,7 +502,7 @@
     <ul class="nav-links">
       <li><a href="#questions">Questions</a></li>
       <li><a href="#puzzled">Puzzled?</a></li>
-      <li><a href="#how">What You Get</a></li>
+      <li><a href="#sample">What You Get</a></li>
       <li><a href="#sample">Sample Plan</a></li>
       <li><a href="#who">Who It's For</a></li>
     </ul>
@@ -529,7 +513,7 @@
   <div class="mobile-nav" id="mobile-nav">
     <a href="#questions">Questions</a>
     <a href="#puzzled">Puzzled?</a>
-    <a href="#how">What You Get</a>
+    <a href="#sample">What You Get</a>
     <a href="#sample">Sample Plan</a>
     <a href="#who">Who It's For</a>
     <a href="#pricing">Pricing</a>
@@ -688,46 +672,6 @@
     <p class="section-body">Most diets promise fast weight loss — and deliver it by destroying your muscle in the process. When the muscle goes, the metabolism goes with it. You hit a plateau, you stall, and you're back where you started. Burn &amp; Build is different. It's true body recomp — lose the fat, keep the muscle — and this system has been producing real results since 1982. The principle is simple: keep your lean body mass, and your body burns fat around the clock. Lose the lean, and you lose everything.</p>
   </section>
 
-  <div class="divider"></div>
-
-  <section class="how" id="how">
-    <div class="how-inner">
-      <div class="how-header">
-        <h2 class="section-title">How <span>Burn &amp; Build</span> Gets It Right</h2>
-      </div>
-      <div class="deliver-hero">
-        <div class="deliver-hero-label">The Engine</div>
-        <h3 class="deliver-hero-title">Your Custom Diet</h3>
-        <p class="deliver-hero-body">Enter your lean body mass, your job, your lifestyle, and your activities. The Burn Engine computes your exact daily macros — then converts them into simple servings across five food groups. No calorie counting. No guesswork. The same system that's produced results since 1982.</p>
-      </div>
-      <div class="deliver-grid">
-        <div class="deliver-card">
-          <div class="deliver-title">278 Curated Foods</div>
-          <p class="deliver-body">Every food chosen for body recomp. 278 pulled from 350,000 in the USDA database — selected to burn fat and protect muscle.</p>
-        </div>
-        <div class="deliver-card">
-          <div class="deliver-title">Tap to Build Your Meals</div>
-          <p class="deliver-body">Select your foods with a tap. Your daily plan builds itself. Your grocery list builds itself. No thinking required.</p>
-        </div>
-        <div class="deliver-card">
-          <div class="deliver-title">Grocery List</div>
-          <p class="deliver-body">Every food you tap goes straight to your weekly shopping list. Organized by category. Walk in, buy it, done.</p>
-        </div>
-        <div class="deliver-card">
-          <div class="deliver-title">When-to-Eat Reminders</div>
-          <p class="deliver-body">When you eat matters as much as what you eat. Your plan includes optimized meal timing with reminders to keep you on track all day.</p>
-        </div>
-        <div class="deliver-card">
-          <div class="deliver-title">Body Recomp Analysis</div>
-          <p class="deliver-body">Your muscle. Your fat. Your roadmap to your goal composition.</p>
-        </div>
-        <div class="deliver-card">
-          <div class="deliver-title">Printable 7-Day Menu &amp; Grocery List</div>
-          <p class="deliver-body">Your full week at a glance — meals, servings, and a shopping list ready to print or save. Shop once, stay on plan all week.</p>
-        </div>
-      </div>
-    </div>
-  </section>
   <div class="divider"></div>
 
   <section class="sample" id="sample">
