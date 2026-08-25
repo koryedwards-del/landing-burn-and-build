@@ -31,6 +31,14 @@ export const KWARNER_MEAL_BUILD_STEPS = [
   'Step 2. Zero your scale again. Find the carbohydrate yiuo want from the grain & starch food list. Locate the gam weight in the right hand column. Add that exactly amount to your plate.',
   'Step 3 Veggies are optional. They are good for you but take up vaualble space in your stomach. Remember this is an eating plan not a not-eating plan. Zero your scale. Add the exactly amount of veggies to your plate (if desired).',
   'Your plate will be piled high with the right amount of protein and carbs to fuel your life for the next couple of hours.',
+  'Repeat this process for breakfast, lunch and dinner.',
+  'Do the same process for fruit snack. Convenience tip: eat the same fruit for all three fruit snacks. It\'s easier to clean three fruits snacks worth of fruit at one time than three difereent fruits every day.',
+  'For maximum results do three things every day',
+  '1 eat all the servings recommended. Eating less will cause muscle lose and slow the fat burning.',
+  '2. Alternate protein/carb meals with fruit snacks',
+  '3. Eat every three hours or sooner. Set a timer to help you get in the groove.',
+  'Most people quit in the first three days. By day four they in the groove and by 7-10 they are feeling the changes.',
+  'Summed up. The key to success is fill your plate-empty or plate.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO = [
