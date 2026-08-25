@@ -445,6 +445,109 @@
       color: var(--text-dim);
     }
 
+    .search-faq {
+      padding: 72px 40px 80px;
+      background: var(--black);
+    }
+
+    .search-faq-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .search-faq-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .search-faq-eyebrow {
+      font-family: var(--explore-sans);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .search-faq-title {
+      font-family: var(--explore-display);
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      letter-spacing: 0.03em;
+      color: var(--gray-light);
+      line-height: 1.15;
+    }
+
+    .search-faq-lead {
+      margin-top: 14px;
+      font-family: var(--explore-sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .accordion-item {
+      background: var(--explore-panel);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--explore-radius-sm);
+      overflow: hidden;
+    }
+
+    .accordion-item[open] {
+      border-color: rgba(255, 204, 0, 0.35);
+    }
+
+    .accordion-trigger {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      cursor: pointer;
+      font-family: var(--explore-sans);
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: var(--gray-light);
+      user-select: none;
+    }
+
+    .accordion-trigger::-webkit-details-marker { display: none; }
+
+    .accordion-trigger::after {
+      content: '+';
+      flex-shrink: 0;
+      font-family: var(--explore-display);
+      font-size: 1.35rem;
+      color: var(--yellow);
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+
+    .accordion-item[open] .accordion-trigger::after {
+      content: '−';
+    }
+
+    .accordion-body {
+      padding: 0 20px 20px;
+      font-family: var(--explore-sans);
+      font-size: 0.98rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+
+    .accordion-body p + p {
+      margin-top: 12px;
+    }
+
     @media (max-width: 900px) {
       .hero-split { grid-template-columns: 1fr; padding-top: 100px; min-height: 0; }
       .hero-visual { max-width: 520px; margin: 0 auto; }
@@ -452,7 +555,7 @@
     }
 
     @media (max-width: 600px) {
-      .hero-split, .filter, .mechanism, .close { padding-left: 20px; padding-right: 20px; }
+      .hero-split, .filter, .mechanism, .close, .search-faq { padding-left: 20px; padding-right: 20px; }
       .split-panel { padding: 36px 24px; }
       .mechanism-chip { letter-spacing: 0.1em; padding: 10px 14px; }
       .close-trio { flex-direction: column; gap: 12px; }
@@ -495,6 +598,62 @@
     <div class="filter-inner">
       <p>If you're happy with your progress, you don't need Burn &amp; Build.</p>
       <p>But if you think you're missing something…</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="search-faq" id="questions">
+    <div class="search-faq-inner">
+      <header class="search-faq-header">
+        <p class="search-faq-eyebrow">Sound familiar?</p>
+        <h2 class="search-faq-title">Questions people search on Google</h2>
+        <p class="search-faq-lead">Different wording — same question underneath.</p>
+      </header>
+
+      <div class="accordion" id="search-accordion">
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How do I lose fat without losing muscle?</summary>
+          <div class="accordion-body">
+            <p>Most diets produce weight loss by sacrificing muscle. When muscle goes, metabolism goes down with it. Burn &amp; Build protects lean body mass so your body can keep burning fat.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">Can I build muscle while losing fat?</summary>
+          <div class="accordion-body">
+            <p>That's body recomposition — losing fat without losing muscle. It depends on eating enough of the right foods for your activity level, not eating less and hoping exercise picks up the slack.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">What should I eat to lose fat and build muscle?</summary>
+          <div class="accordion-body">
+            <p>Your plan uses servings — not calorie counting — across protein, dairy, grains, starches, vegetables, and fruit. You select foods from the approved list and follow your serving totals for each meal and snack.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How much protein do I need to preserve muscle while losing weight?</summary>
+          <div class="accordion-body">
+            <p>Protein servings should be spread fairly even across the day, with a minimum of three protein feedings. At least one-third of daily protein should come from dairy. Your exact totals come from your lean body mass and what you do — not a generic gram target.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How many calories should I eat to lose fat without losing muscle?</summary>
+          <div class="accordion-body">
+            <p>You don't count calories on Burn &amp; Build. The Burn Engine calculates your daily servings from your lean body mass, job activity, training, and lifestyle — sized so you eat enough to protect muscle while losing fat.</p>
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">What is body recomposition?</summary>
+          <div class="accordion-body">
+            <p>Body recomposition means losing fat without losing muscle. Burn &amp; Build is a precision body-recomposition program built from your body composition, job activity, workouts, and daily lifestyle — not a one-size-fits-all template.</p>
+          </div>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -576,6 +735,22 @@
     </ul>
     <p class="footer-copy">&copy; 2026 Burn &amp; Build. Mockup for exploration.</p>
   </footer>
+
+  <script>
+    (function () {
+      var root = document.getElementById('search-accordion');
+      if (!root) return;
+      var items = root.querySelectorAll('.accordion-item');
+      items.forEach(function (item) {
+        item.addEventListener('toggle', function () {
+          if (!item.open) return;
+          items.forEach(function (other) {
+            if (other !== item) other.open = false;
+          });
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
