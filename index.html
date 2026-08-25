@@ -284,7 +284,7 @@
       line-height: 1.6;
       color: var(--gray-light);
     }
-    .filter p + p {
+    .filter p + p.filter-hook {
       margin-top: 12px;
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
@@ -292,6 +292,16 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--yellow);
+    }
+
+    .filter-note {
+      margin-top: 20px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 400;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--text-dim);
     }
 
     .search-faq { padding: 80px 40px; background: var(--black); }
@@ -536,7 +546,8 @@
   <section class="filter">
     <div class="filter-inner">
       <p>If you're happy with your progress, you don't need Burn &amp; Build.</p>
-      <p>But if you think you're missing something…</p>
+      <p class="filter-hook">But if you think you're missing something…</p>
+      <p class="filter-note">Not recommended for GLP-1 users.</p>
     </div>
   </section>
 
@@ -762,7 +773,7 @@
       </div>
       <p class="section-label">Get Started</p>
       <h2 class="section-title">One-Time Purchase.<br />You Own It.<br /><span>Forever.</span></h2>
-      <p style="color:#D4D4D4;font-size:0.95rem;margin-bottom:32px;">This is a difficult program. It is not for everyone.<br />One-time purchase — if you commit, it works.</p>
+      <p style="color:#D4D4D4;font-size:0.95rem;margin-bottom:32px;">This is a difficult program. It is not for everyone.<br />Not recommended for GLP-1 users.<br />One-time purchase — if you commit, it works.</p>
       <div class="price-box">
         <div class="price-amount">$149</div>
         <div class="price-period">The Burn &amp; Build Diet</div>
