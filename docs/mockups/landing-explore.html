@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Burn &amp; Build — Landing Exploration Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/tokens.css" />
+  <link rel="stylesheet" href="../../hardkor.css" />
+  <style>
+    .mockup-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: #331111;
+      border-bottom: 1px solid #662222;
+      color: #ffaaaa;
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 8px 16px;
+    }
+
+    body { padding-top: 34px; }
+    nav { top: 34px; }
+
+    .nav-since {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .hero-split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: center;
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 120px 40px 80px;
+      min-height: calc(100vh - 98px);
+    }
+
+    .hero-kicker {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      line-height: 1.02;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      margin-bottom: 28px;
+    }
+
+    .hero-kicker em {
+      font-style: normal;
+      color: var(--yellow);
+      display: block;
+    }
+
+    .hero-lines {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .hero-lines li {
+      font-family: var(--font-body);
+      font-size: clamp(1.05rem, 2vw, 1.2rem);
+      color: var(--gray-light);
+      line-height: 1.5;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .hero-lines li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--yellow);
+    }
+
+    .hero-lines li strong {
+      color: var(--gray-light);
+      font-weight: 600;
+    }
+
+    .hero-reframe {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+      line-height: 1.45;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      border-left: 4px solid var(--yellow);
+      padding-left: 20px;
+      max-width: 34ch;
+    }
+
+    .hero-reframe span { color: var(--yellow); }
+
+    .hero-visual {
+      position: relative;
+      border: 2px solid var(--gray-mid);
+      background: var(--dark);
+      overflow: hidden;
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .hero-visual-cap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 14px 18px;
+      background: linear-gradient(transparent, rgba(10, 10, 10, 0.92));
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    .filter {
+      padding: 56px 40px;
+      background: var(--dark);
+      border-top: 1px solid var(--gray-mid);
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .filter-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .filter p {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      line-height: 1.55;
+      letter-spacing: 0.04em;
+      color: var(--gray-light);
+    }
+
+    .filter p + p {
+      margin-top: 12px;
+      color: var(--yellow);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mechanism {
+      padding: 88px 40px;
+      background: var(--black);
+      text-align: center;
+    }
+
+    .mechanism-inner { max-width: 920px; margin: 0 auto; }
+
+    .mechanism-q {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: clamp(1.35rem, 3.2vw, 2rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      margin-bottom: 48px;
+      line-height: 1.2;
+    }
+
+    .mechanism-q span { color: var(--yellow); }
+
+    .mechanism-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px 12px;
+      margin-bottom: 20px;
+    }
+
+    .mechanism-chip {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--yellow);
+      padding: 12px 18px;
+    }
+
+    .mechanism-arrow {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+
+    .mechanism-down {
+      font-size: 2rem;
+      color: var(--yellow);
+      margin: 8px 0 20px;
+      line-height: 1;
+    }
+
+    .mechanism-out {
+      display: inline-block;
+      border: 2px solid var(--yellow);
+      padding: 18px 28px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 0 40px 88px;
+    }
+
+    .split-panel {
+      background: var(--gray);
+      padding: 48px 40px;
+    }
+
+    .split-label {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 24px;
+    }
+
+    .split-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .split-list li {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      padding-left: 22px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .split-list li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--yellow);
+      font-size: 0.65rem;
+    }
+
+    .plan-preview {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .plan-preview img {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--gray-mid);
+      margin-bottom: 20px;
+    }
+
+    .plan-preview-tag {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      line-height: 1.45;
+    }
+
+    .plan-preview-tag span { display: block; color: var(--yellow); }
+
+    .servings-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 24px;
+    }
+
+    .serving-cell {
+      background: var(--black);
+      border: 1px solid var(--gray-mid);
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .serving-cell dt {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .serving-cell dd {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--yellow);
+      letter-spacing: 0.04em;
+    }
+
+    .close {
+      padding: 88px 40px 100px;
+      background: var(--black);
+      text-align: center;
+    }
+
+    .close-trio {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 40px;
+      margin-bottom: 40px;
+    }
+
+    .close-trio span {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+    }
+
+    .close-trio span:nth-child(2) { color: var(--yellow); }
+
+    .btn-cta {
+      display: inline-block;
+      padding: 18px 36px;
+      border: 2px solid var(--yellow);
+      background: var(--yellow);
+      color: var(--black);
+      font-family: var(--font-display);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .btn-cta:hover { opacity: 0.85; }
+
+    .heritage {
+      margin-top: 28px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 900px) {
+      .hero-split { grid-template-columns: 1fr; padding-top: 100px; min-height: 0; }
+      .hero-visual { max-width: 520px; margin: 0 auto; }
+      .split { grid-template-columns: 1fr; padding: 0 20px 64px; }
+    }
+
+    @media (max-width: 600px) {
+      .hero-split, .filter, .mechanism, .close { padding-left: 20px; padding-right: 20px; }
+      .split-panel { padding: 36px 24px; }
+      .mechanism-chip { letter-spacing: 0.1em; padding: 10px 14px; }
+      .close-trio { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mockup-banner">Exploration mockup — not the live landing page</div>
+
+  <nav>
+    <a href="../../index.html" class="nav-logo">Burn &amp; Build</a>
+    <span class="nav-since">Since 1982</span>
+  </nav>
+
+  <section class="hero-split">
+    <div class="hero-copy">
+      <h1 class="hero-kicker">
+        Puzzled why your
+        <em>exercise isn't working?</em>
+      </h1>
+      <ul class="hero-lines">
+        <li>You train hard.</li>
+        <li>You eat clean.</li>
+        <li>You're paying a coach every month — and you're still not recomping.</li>
+      </ul>
+      <p class="hero-reframe">
+        A lean, strong, energetic body is about <span>eating</span> — not starving.
+      </p>
+    </div>
+    <div class="hero-visual">
+      <img src="../../images/homeview-2.png" alt="Burn &amp; Build menu planner preview" width="640" height="480" />
+      <div class="hero-visual-cap">Your body. Your activity. Your food plan.</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="filter">
+    <div class="filter-inner">
+      <p>If you're happy with your progress, you don't need Burn &amp; Build.</p>
+      <p>But if you think you're missing something…</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="mechanism" id="how">
+    <div class="mechanism-inner">
+      <h2 class="mechanism-q">
+        How much food do I need to eat<br />
+        <span>for what I do?</span>
+      </h2>
+      <div class="mechanism-flow" aria-hidden="true">
+        <span class="mechanism-chip">Body</span>
+        <span class="mechanism-arrow">+</span>
+        <span class="mechanism-chip">Work</span>
+        <span class="mechanism-arrow">+</span>
+        <span class="mechanism-chip">Activity</span>
+        <span class="mechanism-arrow">+</span>
+        <span class="mechanism-chip">Training</span>
+      </div>
+      <div class="mechanism-down" aria-hidden="true">↓</div>
+      <div class="mechanism-out">Your Burn &amp; Build Plan</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="split">
+    <div class="split-panel">
+      <div class="split-label">What You Get</div>
+      <ul class="split-list">
+        <li>Personalized food amounts</li>
+        <li>Foods you choose</li>
+        <li>Built around what you do</li>
+        <li>8-week fat-loss target</li>
+      </ul>
+    </div>
+    <div class="split-panel plan-preview">
+      <div class="split-label">Your Plan</div>
+      <img src="../../images/customfoodplan.png" alt="Sample personalized Burn &amp; Build food plan" width="480" height="320" />
+      <p class="plan-preview-tag">
+        Your body. Your activity.
+        <span>Your food plan.</span>
+      </p>
+      <dl class="servings-row">
+        <div class="serving-cell">
+          <dt>Protein</dt>
+          <dd>10</dd>
+        </div>
+        <div class="serving-cell">
+          <dt>Grains &amp; starches</dt>
+          <dd>8</dd>
+        </div>
+        <div class="serving-cell">
+          <dt>Fruit</dt>
+          <dd>4</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="close" id="start">
+    <div class="close-trio">
+      <span>Eat enough.</span>
+      <span>Lose fat.</span>
+      <span>Stay strong.</span>
+    </div>
+    <a class="btn-cta" href="../../questionnaire/?create=1">Create my Burn &amp; Build plan</a>
+    <p class="heritage">Eat to Lose Fat &bull; 1982 &rarr; 2026</p>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Burn &amp; Build</div>
+    <ul class="footer-links">
+      <li><a href="../../index.html">Current landing</a></li>
+      <li><a href="../../privacypolicy">Privacy Policy</a></li>
+      <li><a href="../../support">Support</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 Burn &amp; Build. Mockup for exploration.</p>
+  </footer>
+
+</body>
+</html>
