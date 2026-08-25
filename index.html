@@ -16,154 +16,28 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="hardkor.css" />
   <style>
-    :root { --nav-height: 64px; }
+    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 40px 48px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,204,0,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,204,0,0.03) 60px, rgba(255,204,0,0.03) 61px); pointer-events: none; }
 
-    .intro {
-      position: relative;
-      background: var(--black);
-      padding: 88px 40px 64px;
-    }
+    .hero-logo { width: min(240px, 60vw); height: auto; margin-bottom: 8px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards; }
 
-    .puzzled {
-      max-width: 680px;
-      margin: 0 auto;
-      text-align: left;
-    }
+    .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.275rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 16px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; }
 
-    .puzzled-hook {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: clamp(1.25rem, 2.8vw, 1.65rem);
-      line-height: 1.15;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: var(--gray-heading);
-      margin-bottom: 16px;
-    }
+    .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: var(--gray-heading); }
+    .hero-headline .hero-line-accent { color: var(--yellow); }
 
-    .puzzled-hook span { color: var(--yellow); }
-
-    .puzzled-lines {
-      list-style: none;
+    .hero-cta {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .puzzled-lines li {
-      font-family: 'Barlow', sans-serif;
-      font-size: 1rem;
-      line-height: 1.55;
-      color: var(--text-dim);
-    }
-
-    .puzzled-more {
-      margin-top: 4px;
-    }
-
-    .puzzled .accordion {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .puzzled .accordion-item {
-      background: none;
-      border: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .puzzled .accordion-item[open] {
-      border-top-color: rgba(255, 204, 0, 0.2);
-    }
-
-    .puzzled .accordion-trigger {
-      list-style: none;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 16px;
-      padding: 10px 0;
-      cursor: pointer;
-      font-family: 'Barlow', sans-serif;
-      font-weight: 400;
-      font-size: 1rem;
-      line-height: 1.55;
-      letter-spacing: 0;
-      text-transform: none;
-      color: var(--text-dim);
-    }
-
-    .puzzled .accordion-item[open] .accordion-trigger {
-      color: var(--gray-light);
-    }
-
-    .puzzled .accordion-trigger::-webkit-details-marker { display: none; }
-
-    .puzzled .accordion-trigger::after {
-      content: '+';
-      flex-shrink: 0;
-      margin-top: 2px;
-      font-family: 'Barlow', sans-serif;
-      font-weight: 500;
-      color: var(--text-dim);
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .puzzled .accordion-item[open] .accordion-trigger::after {
-      content: '−';
-      color: var(--yellow);
-    }
-
-    .puzzled .accordion-body {
-      padding: 0 0 14px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.97rem;
-      line-height: 1.65;
-      color: var(--text-dim);
-    }
-
-    .nav--landing {
-      min-height: var(--nav-height);
-      height: auto;
-      padding: 0 40px;
-      gap: 24px;
-    }
-
-    .nav-headline {
-      flex: 1;
-      margin: 0;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: clamp(0.82rem, 1.8vw, 1.05rem);
-      line-height: 1.1;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-align: center;
-      color: var(--gray-light);
-    }
-
-    .nav-headline-accent { color: var(--yellow); }
-
-    .nav-end {
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 24px;
-      flex-shrink: 0;
+      margin-top: 24px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.85s forwards;
     }
 
-    .nav--landing .nav-logo {
-      flex-shrink: 0;
-      font-size: 1.05rem;
-    }
-
-    .nav--landing .nav-links a {
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-    }
+    .hero-cta .btn-cta { margin-top: 0; }
 
     .nav-cta {
       display: inline-flex;
@@ -176,6 +50,7 @@
       letter-spacing: 0.08em !important;
     }
     .nav-cta:hover { opacity: 0.85; color: var(--black) !important; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
     .btn-cta {
       display: inline-block;
@@ -327,24 +202,51 @@
       color: var(--text-dim);
     }
 
+    .search-faq { padding: 80px 40px; background: var(--black); }
+    .search-faq-inner { max-width: 760px; margin: 0 auto; }
+    .search-faq-header { text-align: center; margin-bottom: 36px; }
+    .accordion { display: flex; flex-direction: column; gap: 3px; }
+    .accordion-item { background: var(--gray); border-left: 3px solid transparent; }
+    .accordion-item[open] { border-left-color: var(--yellow); }
+    .accordion-trigger {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      color: var(--gray-light);
+    }
+    .accordion-trigger::-webkit-details-marker { display: none; }
+    .accordion-trigger::after {
+      content: '+';
+      font-family: Impact, 'Arial Narrow', sans-serif;
+      color: var(--yellow);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .accordion-item[open] .accordion-trigger::after { content: '−'; }
+    .accordion-body {
+      padding: 0 24px 20px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.97rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+
     .sample-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3px;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 0 40px 72px;
+      padding: 0 40px 80px;
     }
-    .sample-intro {
-      text-align: center;
-      padding: 64px 40px 24px;
-      background: var(--black);
-    }
-    .sample-intro .section-title {
-      font-size: clamp(1.35rem, 3vw, 1.75rem);
-      margin-bottom: 0;
-    }
-    .sample { background: var(--black); position: relative; z-index: 1; }
     .sample-panel { background: var(--gray); padding: 40px 36px; }
     .sample-label {
       font-family: 'Barlow Condensed', sans-serif;
@@ -443,19 +345,10 @@
       .sample-split { grid-template-columns: 1fr; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
-      .nav--landing { padding: 0 20px; gap: 12px; }
-      .nav-headline { font-size: 0.72rem; }
     }
     @media (max-width: 600px) {
-      .intro { padding: 80px 20px 48px; }
-      .nav--landing { padding: 0 16px; gap: 8px; }
-      .nav-headline {
-        font-size: 0.58rem;
-        letter-spacing: 0.02em;
-      }
-      :root { --nav-height: 64px; }
-      .sample-intro { padding-left: 20px; padding-right: 20px; }
-      .filter { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 100px 20px 48px; }
+      .filter, .search-faq { padding-left: 20px; padding-right: 20px; }
       .sample-split { padding: 0 20px 64px; }
       .who-card { padding: 40px 28px; }
     }
@@ -464,110 +357,37 @@
 </head>
 <body>
 
-  <nav class="nav--landing">
+  <nav>
     <a href="/" class="nav-logo">Burn &amp; Build</a>
-    <h1 class="nav-headline"><span class="nav-headline-accent">Lose the Fat.</span> Keep the Muscle.</h1>
-    <div class="nav-end">
-      <ul class="nav-links">
-        <li><a href="#questions">Questions</a></li>
-        <li><a href="#sample">Preview Printout</a></li>
-        <li><a href="#who">Who It's For</a></li>
-      </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <ul class="nav-links">
+      <li><a href="#questions">Questions</a></li>
+      <li><a href="#sample">What You Get</a></li>
+      <li><a href="#sample">Sample Plan</a></li>
+      <li><a href="#who">Who It's For</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
-    <a href="#puzzled">Puzzled?</a>
     <a href="#questions">Questions</a>
-    <a href="#sample">Preview Printout</a>
+    <a href="#sample">What You Get</a>
+    <a href="#sample">Sample Plan</a>
     <a href="#who">Who It's For</a>
     <a href="#pricing">Pricing</a>
     <a href="/privacypolicy">Privacy Policy</a>
     <a href="/support">Support</a>
   </div>
 
-  <section class="intro">
-    <div class="puzzled" id="puzzled">
-      <h2 class="puzzled-hook">Puzzled why your <span>workouts aren't working?</span></h2>
-      <ul class="puzzled-lines">
-        <li>You train hard.</li>
-        <li>You eat clean.</li>
-        <li>You're paying a coach every month — and you're still not recomping.</li>
-      </ul>
-      <div class="puzzled-more" id="questions">
-        <div class="accordion" id="search-accordion">
-          <details class="accordion-item">
-            <summary class="accordion-trigger">How do I lose fat without losing muscle?</summary>
-            <div class="accordion-body">
-              <p>Most diets produce weight loss by sacrificing muscle. When muscle goes, metabolism goes down with it. Burn &amp; Build protects lean body mass so your body can keep burning fat.</p>
-            </div>
-          </details>
-          <details class="accordion-item">
-            <summary class="accordion-trigger">Can I build muscle while losing fat?</summary>
-            <div class="accordion-body">
-              <p>That's body recomposition — losing fat without losing muscle. It depends on eating enough of the right foods for your activity level, not eating less and hoping exercise picks up the slack.</p>
-            </div>
-          </details>
-          <details class="accordion-item">
-            <summary class="accordion-trigger">What should I eat to lose fat and build muscle?</summary>
-            <div class="accordion-body">
-              <p>Your plan uses servings — not calorie counting — across protein, dairy, grains, starches, vegetables, and fruit. You select foods from the approved list and follow your serving totals for each meal and snack.</p>
-            </div>
-          </details>
-          <details class="accordion-item">
-            <summary class="accordion-trigger">How much protein do I need to preserve muscle while losing weight?</summary>
-            <div class="accordion-body">
-              <p>Protein servings should be spread fairly even across the day, with a minimum of three protein feedings. At least one-third of daily protein should come from dairy. Your exact totals come from your lean body mass and what you do — not a generic gram target.</p>
-            </div>
-          </details>
-          <details class="accordion-item">
-            <summary class="accordion-trigger">How many calories should I eat to lose fat without losing muscle?</summary>
-            <div class="accordion-body">
-              <p>You don't count calories on Burn &amp; Build. The Burn Engine calculates your daily servings from your lean body mass, job activity, training, and lifestyle — sized so you eat enough to protect muscle while losing fat.</p>
-            </div>
-          </details>
-          <details class="accordion-item">
-            <summary class="accordion-trigger">What is body recomposition?</summary>
-            <div class="accordion-body">
-              <p>Body recomposition means losing fat without losing muscle. Burn &amp; Build is a precision body-recomposition program built from your body composition, job activity, workouts, and daily lifestyle — not a one-size-fits-all template.</p>
-            </div>
-          </details>
-        </div>
-      </div>
+  <section class="hero">
+    <p class="hero-eyebrow">The Premier Body Recomp Diet · Since 1982</p>
+    <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
+    <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
+    <div class="hero-cta">
+      <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
+      <a class="btn-cta btn-cta--ghost" href="#sample">Preview sample PDF</a>
     </div>
   </section>
-
-  <section class="sample" id="sample">
-      <div class="sample-intro">
-        <p class="section-label">See a Real Plan</p>
-        <h2 class="section-title">Preview a <span>Burn &amp; Build Diet</span> Printout</h2>
-      </div>
-      <div class="sample-split sample-split--printout">
-        <div class="sample-panel">
-          <div class="sample-label">What You Get</div>
-          <ul class="sample-list">
-            <li>Personalized food amounts</li>
-            <li>Foods you choose</li>
-            <li>Built around what you do</li>
-            <li>8-week fat-loss target</li>
-          </ul>
-        </div>
-        <div class="sample-panel">
-          <div class="sample-label">Burn &amp; Build Diet Printout</div>
-          <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">
-            <div class="pdf-preview-frame">
-              <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#view=FitH&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build Diet printout PDF" />
-            </div>
-            <div class="pdf-preview-label">
-              <span class="pdf-preview-title">Your body. Your activity. Your food plan.</span>
-              <span class="pdf-preview-cta">Preview Burn &amp; Build Diet Printout &rarr;</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
 
   <div class="divider"></div>
 
@@ -576,6 +396,65 @@
       <p>If you're happy with your progress, you don't need Burn &amp; Build.</p>
       <p class="filter-hook">But if you think you're missing something…</p>
       <p class="filter-note">Not recommended for GLP-1 users.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="search-faq" id="questions">
+    <div class="search-faq-inner">
+      <div class="search-faq-header">
+        <p class="section-label">Sound familiar?</p>
+        <h2 class="section-title">Questions people search on <span>Google</span></h2>
+        <p class="section-body" style="margin-top:12px;">Different wording — same question underneath.</p>
+      </div>
+      <div class="accordion" id="search-accordion">
+        <details class="accordion-item">
+          <summary class="accordion-trigger">Why aren't my workouts working?</summary>
+          <div class="accordion-body">
+            <p>You train hard.</p>
+            <p>You eat clean.</p>
+            <p>You're paying a coach every month — and you're still not recomping.</p>
+            <p>A lean, strong, energetic body is about eating — not starving.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How do I lose fat without losing muscle?</summary>
+          <div class="accordion-body">
+            <p>Most diets produce weight loss by sacrificing muscle. When muscle goes, metabolism goes down with it. Burn &amp; Build protects lean body mass so your body can keep burning fat.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">Can I build muscle while losing fat?</summary>
+          <div class="accordion-body">
+            <p>That's body recomposition — losing fat without losing muscle. It depends on eating enough of the right foods for your activity level, not eating less and hoping exercise picks up the slack.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">What should I eat to lose fat and build muscle?</summary>
+          <div class="accordion-body">
+            <p>Your plan uses servings — not calorie counting — across protein, dairy, grains, starches, vegetables, and fruit. You select foods from the approved list and follow your serving totals for each meal and snack.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How much protein do I need to preserve muscle while losing weight?</summary>
+          <div class="accordion-body">
+            <p>Protein servings should be spread fairly even across the day, with a minimum of three protein feedings. At least one-third of daily protein should come from dairy. Your exact totals come from your lean body mass and what you do — not a generic gram target.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">How many calories should I eat to lose fat without losing muscle?</summary>
+          <div class="accordion-body">
+            <p>You don't count calories on Burn &amp; Build. The Burn Engine calculates your daily servings from your lean body mass, job activity, training, and lifestyle — sized so you eat enough to protect muscle while losing fat.</p>
+          </div>
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-trigger">What is body recomposition?</summary>
+          <div class="accordion-body">
+            <p>Body recomposition means losing fat without losing muscle. Burn &amp; Build is a precision body-recomposition program built from your body composition, job activity, workouts, and daily lifestyle — not a one-size-fits-all template.</p>
+          </div>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -598,6 +477,7 @@
           <div class="guide-cta-price">$149</div>
           <p class="guide-cta-period">One-Time Purchase</p>
           <p class="guide-cta-body">A precision body recomp diet built for your body — lose fat, keep muscle, no guesswork.</p>
+          <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
         </div>
         <div class="testi">
           <div class="guide-photo-label">
@@ -617,6 +497,37 @@
     <p class="section-body">Most diets promise fast weight loss — and deliver it by destroying your muscle in the process. When the muscle goes, the metabolism goes with it. You hit a plateau, you stall, and you're back where you started. Burn &amp; Build is different. It's true body recomp — lose the fat, keep the muscle — and this system has been producing real results since 1982. The principle is simple: keep your lean body mass, and your body burns fat around the clock. Lose the lean, and you lose everything.</p>
   </section>
 
+  <div class="divider"></div>
+
+  <section class="sample" id="sample">
+    <div class="how-header" style="text-align:center;padding:80px 40px 48px;background:var(--black);">
+      <p class="section-label">See a Real Plan</p>
+      <h2 class="section-title">Preview a <span>Sample</span> Program Report</h2>
+    </div>
+    <div class="sample-split">
+      <div class="sample-panel">
+        <div class="sample-label">What You Get</div>
+        <ul class="sample-list">
+          <li>Personalized food amounts</li>
+          <li>Foods you choose</li>
+          <li>Built around what you do</li>
+          <li>8-week fat-loss target</li>
+        </ul>
+      </div>
+      <div class="sample-panel">
+        <div class="sample-label">Sample Program Report</div>
+        <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">
+          <div class="pdf-preview-frame">
+            <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#view=FitH&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
+          </div>
+          <div class="pdf-preview-label">
+            <span class="pdf-preview-title">Your body. Your activity. Your food plan.</span>
+            <span class="pdf-preview-cta">Preview sample PDF &rarr;</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
   <div class="divider"></div>
 
   <section class="who" id="who">
@@ -689,6 +600,7 @@
           <li>Body Recomp Analysis</li>
           <li>Printable 7-Day Menu &amp; Grocery List</li>
         </ul>
+        <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
       </div>
       <p class="heritage">Eat to Lose Fat &bull; 1982 &rarr; 2026</p>
     </div>
