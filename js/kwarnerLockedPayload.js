@@ -19,7 +19,8 @@ export function buildKwarnerLockedPayloadFromPackage(pkg) {
     payload.foodPlan.macroSignalIntro = [...KWARNER_FOOD_GROUPS_INTRO];
   }
   if (payload.servings) {
-    payload.servings.intro = [...KWARNER_SERVINGS_INTRO, ...KWARNER_MEAL_BUILD_STEPS];
+    payload.servings.intro = [...KWARNER_SERVINGS_INTRO];
+    payload.servings.mealBuildSteps = [...KWARNER_MEAL_BUILD_STEPS];
   }
   delete payload.gettingStarted;
   delete payload.stepsToSuccess;

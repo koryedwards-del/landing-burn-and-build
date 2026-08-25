@@ -1973,6 +1973,8 @@ function drawFoodPlanPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
+
 function drawServingsPage(doc, payload) {
   const servings = payload.servings;
   let page = startLockedPage(doc, payload, 'Servings');
@@ -1985,6 +1987,10 @@ function drawServingsPage(doc, payload) {
 
   const gridRows = servings.gridRows.map((row) => ({ ...row }));
   page = drawServingsTable(doc, payload, page, gridRows, servings.extraFats || []);
+
+  if (servings.mealBuildSteps?.length) {
+    page = drawBodyParagraphs(doc, payload, page, servings.mealBuildSteps, SERVINGS_STEPS_TYPO);
+  }
 
   finishLockedPage(doc, page.box, payload);
 }
