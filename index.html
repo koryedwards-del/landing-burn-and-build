@@ -271,6 +271,13 @@
     }
 
     .pdf-preview { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+    .pdf-preview-lead {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .pdf-preview-lead--align {
+      visibility: hidden;
+    }
     .pdf-preview-frame {
       width: 100%;
       aspect-ratio: 8.5 / 11;
@@ -286,13 +293,19 @@
       pointer-events: none;
     }
     .pdf-preview-hint {
-      margin-bottom: 16px;
+      margin-bottom: 8px;
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
       font-size: 0.85rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       text-align: center;
+      color: var(--yellow);
+    }
+    .pdf-preview-arrow {
+      display: block;
+      font-size: 1.5rem;
+      line-height: 1;
       color: var(--yellow);
     }
     .pdf-preview:hover .pdf-preview-hint { opacity: 0.8; }
@@ -325,6 +338,7 @@
 
     @media (max-width: 900px) {
       .sample-split { grid-template-columns: 1fr; }
+      .pdf-preview-lead--align { display: none; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
     }
@@ -445,9 +459,12 @@
       <p class="section-label">See the Diet</p>
     </div>
     <div class="sample-split-wrap">
-      <p class="pdf-preview-hint">Tap the preview to open the full PDF &rarr;</p>
       <div class="sample-split">
         <div class="sample-panel">
+          <div class="pdf-preview-lead">
+            <p class="pdf-preview-hint">Tap the preview to open the full PDF</p>
+            <span class="pdf-preview-arrow" aria-hidden="true">↓</span>
+          </div>
           <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener" aria-label="Tap the preview to open the full sample PDF">
             <div class="pdf-preview-frame">
               <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#page=1&amp;view=Fit&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
@@ -455,6 +472,10 @@
           </a>
         </div>
         <div class="sample-panel">
+          <div class="pdf-preview-lead pdf-preview-lead--align" aria-hidden="true">
+            <p class="pdf-preview-hint">Tap the preview to open the full PDF</p>
+            <span class="pdf-preview-arrow">↓</span>
+          </div>
           <div class="sample-sections">
             <section>
               <h3 class="sample-section-title">Lean Body Analysis</h3>
