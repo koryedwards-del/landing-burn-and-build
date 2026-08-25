@@ -124,7 +124,6 @@
 
     .who { padding: 0 40px; background: var(--black); }
     .who-inner { max-width: 1100px; margin: 0 auto; }
-    .who-header { text-align: center; margin-bottom: 72px; }
     .who-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     .who-card { background: var(--gray); padding: 56px 48px; }
     .who-card-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
@@ -204,14 +203,11 @@
       margin: 0 auto;
       padding: 0 40px;
     }
-    .sample-header {
+    .sample .section-head {
       max-width: 1100px;
-      margin: 0 auto;
+      margin-left: auto;
+      margin-right: auto;
       padding: 0 40px;
-      text-align: center;
-    }
-    .sample-header .section-label {
-      margin-bottom: 24px;
     }
     .sample-panel { background: var(--gray); padding: 40px 36px; }
     .sample-label {
@@ -331,8 +327,7 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 0; }
-      .filter, .search-faq, .sample-split, .who, .pricing { padding-left: 20px; padding-right: 20px; }
-      .sample-header { padding-left: 20px; padding-right: 20px; }
+      .filter, .search-faq, .sample-split, .sample .section-head, .who, .pricing { padding-left: 20px; padding-right: 20px; }
       .who-card { padding: 40px 28px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
@@ -381,6 +376,9 @@
 
   <section class="search-faq" id="questions">
     <div class="search-faq-inner">
+      <div class="section-head">
+        <p class="section-label">Questions</p>
+      </div>
       <div class="accordion" id="search-accordion">
         <details class="accordion-item" open>
           <summary class="accordion-trigger">Why aren't my workouts working?</summary>
@@ -440,7 +438,7 @@
   <div class="divider"></div>
 
   <section class="sample" id="sample">
-    <div class="sample-header">
+    <div class="section-head">
       <p class="section-label">See the Diet</p>
     </div>
     <div class="sample-split">
@@ -478,7 +476,7 @@
 
   <section class="who" id="who">
     <div class="who-inner">
-      <div class="who-header">
+      <div class="section-head section-head--statement">
         <p class="section-label">Who It's For</p>
         <h2 class="section-title">Built for <span>Everyone</span> Who's Serious</h2>
       </div>
@@ -532,8 +530,10 @@
 
   <section class="pricing" id="pricing">
     <div class="pricing-inner">
-      <p class="section-label">Get Started</p>
-      <h2 class="section-title">One-Time Purchase.<br />You Own It.<br /><span>Forever.</span></h2>
+      <div class="section-head section-head--statement">
+        <p class="section-label">Get Started</p>
+        <h2 class="section-title">One-Time Purchase.<br />You Own It.<br /><span>Forever.</span></h2>
+      </div>
       <p style="color:#D4D4D4;font-size:0.95rem;margin-bottom:32px;">This is a difficult diet. It is not for everyone.<br />Not recommended for GLP-1 users.<br />One-time purchase — if you commit, it works.</p>
       <div class="price-box">
         <div class="price-amount">$149</div>
