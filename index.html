@@ -195,13 +195,16 @@
       margin-top: 1em;
     }
 
+    .sample-split-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
     .sample-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3px;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 40px;
+      align-items: start;
     }
     .sample .section-head {
       max-width: 1100px;
@@ -327,7 +330,7 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 0; }
-      .filter, .search-faq, .sample-split, .sample .section-head, .who, .pricing { padding-left: 20px; padding-right: 20px; }
+      .filter, .search-faq, .sample-split-wrap, .sample .section-head, .who, .pricing { padding-left: 20px; padding-right: 20px; }
       .who-card { padding: 40px 28px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
@@ -441,33 +444,35 @@
     <div class="section-head">
       <p class="section-label">See the Diet</p>
     </div>
-    <div class="sample-split">
-      <div class="sample-panel">
-        <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener" aria-label="Tap the preview to open the full sample PDF">
-          <p class="pdf-preview-hint">Tap the preview to open the full PDF &rarr;</p>
-          <div class="pdf-preview-frame">
-            <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#page=1&amp;view=Fit&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
+    <div class="sample-split-wrap">
+      <p class="pdf-preview-hint">Tap the preview to open the full PDF &rarr;</p>
+      <div class="sample-split">
+        <div class="sample-panel">
+          <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener" aria-label="Tap the preview to open the full sample PDF">
+            <div class="pdf-preview-frame">
+              <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#page=1&amp;view=Fit&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
+            </div>
+          </a>
+        </div>
+        <div class="sample-panel">
+          <div class="sample-sections">
+            <section>
+              <h3 class="sample-section-title">Lean Body Analysis</h3>
+              <p class="sample-section-body">Page two is the results of your body composition test.</p>
+            </section>
+            <section>
+              <h3 class="sample-section-title">Food Plan</h3>
+              <p class="sample-section-body">Page three is your custom-designed food plan.</p>
+            </section>
+            <section>
+              <h3 class="sample-section-title">Servings</h3>
+              <p class="sample-section-body">Page four is the servings page.</p>
+            </section>
+            <section>
+              <h3 class="sample-section-title">Food List</h3>
+              <p class="sample-section-body">Pages five through seven are your food list.</p>
+            </section>
           </div>
-        </a>
-      </div>
-      <div class="sample-panel">
-        <div class="sample-sections">
-          <section>
-            <h3 class="sample-section-title">Lean Body Analysis</h3>
-            <p class="sample-section-body">Page two is the results of your body composition test.</p>
-          </section>
-          <section>
-            <h3 class="sample-section-title">Food Plan</h3>
-            <p class="sample-section-body">Page three is your custom-designed food plan.</p>
-          </section>
-          <section>
-            <h3 class="sample-section-title">Servings</h3>
-            <p class="sample-section-body">Page four is the servings page.</p>
-          </section>
-          <section>
-            <h3 class="sample-section-title">Food List</h3>
-            <p class="sample-section-body">Pages five through seven are your food list.</p>
-          </section>
         </div>
       </div>
     </div>
