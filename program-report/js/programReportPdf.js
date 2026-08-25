@@ -1,4 +1,4 @@
-/** Program report PDF — client fetch for the five-page seminar document. */
+/** Program report PDF — client fetch for the 2026 KWarner locked 6-page document. */
 
 import { apiUrl } from '../../js/apiConfig.js';
 import {
@@ -59,9 +59,6 @@ export async function fetchProgramReportPdf(programPackage, options = {}) {
   const header = await blob.slice(0, 5).text();
   if (!header.startsWith('%PDF-')) {
     throw new Error('Could not load program report PDF.');
-  }
-  if (blob.size < 40_000) {
-    return fetchPreviewProgramReportPdf();
   }
   return blob;
 }

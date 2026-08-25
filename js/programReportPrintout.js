@@ -101,10 +101,9 @@ export const LEGACY_WELCOME_COPY = Object.freeze({
   servings: '',
 });
 
-/** Static Kristi sample — committed under docs/samples for direct download. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kristi-program-report-preview.pdf?v=6';
+/** Static Kristi sample — 2026 KWarner locked program report (same layout as production PDF). */
+export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/kwarner-locked-preview-kristi-latest.pdf';
 
-/** KWarner 1982 locked-frame preview — separate file, not production sample. */
 export { KWARNER_LOCKED_PREVIEW_PDF, kwarnerPreviewPdfUrl, KWARNER_PREVIEW_BUILD, KWARNER_PREVIEW_MD5 } from './kwarnerPreviewBuild.js';
 
 export function welcomeCoverHtml(pkg) {

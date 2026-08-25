@@ -9,8 +9,8 @@ import {
   KWARNER_WELCOME_COPY,
 } from './kwarnerLockedCopy.js';
 
-export function buildKwarnerLockedPayloadFromPackage(pkg) {
-  const payload = buildProgramReportPayload(pkg);
+/** Apply 2026 KWarner locked program-report copy and layout fields to a print payload. */
+export function applyKwarnerLockedPayload(payload) {
   payload.welcome = KWARNER_WELCOME_COPY;
   if (payload.foodPlan) {
     payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
@@ -23,4 +23,8 @@ export function buildKwarnerLockedPayloadFromPackage(pkg) {
   delete payload.gettingStarted;
   delete payload.stepsToSuccess;
   return payload;
+}
+
+export function buildKwarnerLockedPayloadFromPackage(pkg, options = {}) {
+  return applyKwarnerLockedPayload(buildProgramReportPayload(pkg, options));
 }

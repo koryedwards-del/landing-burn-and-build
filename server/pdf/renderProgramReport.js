@@ -1,24 +1,10 @@
-import { createPrintPdf } from './creator.js';
-import {
-  drawGuidedLesson,
-  drawServingsLesson,
-} from './drawProgramReportNarrative.js';
-import { drawWelcomeNarrative } from './drawSeminar.js';
+import { applyKwarnerLockedPayload } from '../../js/kwarnerLockedPayload.js';
 import { validatePrintPayload } from './validate.js';
+import { renderProgramReportKwarnerLockedPreview } from './renderProgramReportKwarnerLockedPreview.js';
 
+/** Production program report — 2026 KWarner locked 6-page PDF. */
 export async function renderProgramReportPdf(payload, { title } = {}) {
-  validatePrintPayload('programreport', payload);
-
-  const creator = createPrintPdf({
-    title: title || payload.title || 'Program Report',
-    author: 'Burn & Build Diet',
-  });
-
-  drawWelcomeNarrative(creator.doc, payload);
-  drawGuidedLesson(creator.doc, payload, payload.bodyTodayNarrative);
-  drawGuidedLesson(creator.doc, payload, payload.progressNarrative);
-  drawGuidedLesson(creator.doc, payload, payload.foodPlanNarrative);
-  drawServingsLesson(creator.doc, payload, payload.servingsNarrative);
-
-  return creator.finish();
+  const locked = applyKwarnerLockedPayload({ ...payload });
+  validatePrintPayload('programreport', locked);
+  return renderProgramReportKwarnerLockedPreview(locked, { title: title || locked.title });
 }

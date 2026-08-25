@@ -1,6 +1,6 @@
 /**
- * Preview-only: KWarner 5-page seminar content + locked personalized frame.
- * Not wired to production API — run scripts/render-kwarner-locked-preview.mjs
+ * 2026 KWarner locked 6-page program report (Welcome → LBA → Food Plan → Servings → Food List).
+ * Production: renderProgramReport.js · Preview samples: scripts/render-kwarner-locked-preview.mjs
  */
 import path from 'path';
 import { fileURLToPath } from 'url';

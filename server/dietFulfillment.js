@@ -1,6 +1,6 @@
 import { dietPdfDocumentLabel } from '../js/dietPdfNaming.js';
-import { buildKwarnerLockedPayloadFromPackage } from '../js/kwarnerLockedPayload.js';
-import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
+import { buildProgramReportPayload } from '../js/programReportPrintout.js';
+import { renderProgramReportPdf } from './pdf/renderProgramReport.js';
 import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent } from './db.js';
 import { readStoredDietPdf, writeStoredDietPdf } from './dietPdfStorage.js';
 import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
@@ -57,9 +57,9 @@ export async function ensureDietPdf(email, programId) {
   const pkg = getProgramById(email, id);
   if (!pkg) throw new Error('Program not found for this email.');
 
-  const payload = buildKwarnerLockedPayloadFromPackage(pkg);
+  const payload = buildProgramReportPayload(pkg);
   const title = dietPdfDocumentLabel({ preferredName: pkg?.intake?.preferredName, pkg });
-  const pdf = await renderProgramReportKwarnerLockedPreview(payload, { title });
+  const pdf = await renderProgramReportPdf(payload, { title });
   writeStoredDietPdf(id, pdf);
   return pdf;
 }
