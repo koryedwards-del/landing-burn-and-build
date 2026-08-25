@@ -75,7 +75,7 @@ a { color: var(--yellow); text-decoration: none; }
    ------------------------------------------------------------ */
 .divider {
   height: 3px;
-  margin: 0;
+  margin: var(--divider-gap) 0;
   background: linear-gradient(90deg, transparent, var(--yellow), transparent);
 }
 
