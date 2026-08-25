@@ -25,6 +25,17 @@ export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
   titleBottomGap: 20,
 });
 
+/** Welcome page (PDF page 1) — intro + section guide blocks. */
+export const PRINT_TEMPLATE_WELCOME = Object.freeze({
+  introBody: 10.5,
+  sectionTitle: 10.5,
+  sectionBody: 9.5,
+  lineGap: 2,
+  paragraphGap: 6,
+  headerGap: 4,
+  sectionGap: 6,
+});
+
 /** Legacy seminar header lines (older letterhead pages). */
 export const PRINT_TEMPLATE_SEMINAR_HEADER = Object.freeze({
   contact: 8,

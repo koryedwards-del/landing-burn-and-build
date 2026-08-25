@@ -2,6 +2,18 @@
  * Locked personalized print template — unified typography.
  * Source of truth for sizes: js/printTemplateTypography.js (points).
  * Apply .print-template on document shells that should match program-report PDFs.
+ *
+ * Welcome page (PDF page 1) markup:
+ *   <article class="print-template print-template--welcome">
+ *     <header class="print-template__frame-header">…logo + personalization…</header>
+ *     <hr class="print-template__gold-rule" />
+ *     <h1 class="print-template__page-title">Welcome</h1>
+ *     <div class="print-welcome__intro">…intro paragraphs…</div>
+ *     <section class="print-welcome__section">
+ *       <h2 class="print-welcome__section-title">Lean Body Analysis</h2>
+ *       <p class="print-welcome__section-body">…</p>
+ *     </section>
+ *   </article>
  */
 
 .print-template {
@@ -14,34 +26,79 @@
   --print-section-title: 12pt;
   --print-table-head: 9pt;
   --print-table-body: 9.5pt;
+  --print-welcome-intro: 10.5pt;
+  --print-welcome-section-title: 10.5pt;
+  --print-welcome-section-body: 9.5pt;
+  --print-welcome-line-gap: 2pt;
+  --print-welcome-paragraph-gap: 6pt;
+  --print-welcome-header-gap: 4pt;
+  --print-welcome-section-gap: 6pt;
   --print-line-height: 1.45;
+  --print-welcome-line-height: 1.35;
   --print-paragraph-gap: 12pt;
   --print-section-gap: 14pt;
   --print-header-gap: 8pt;
   --print-title-top-gap: 28pt;
   --print-title-bottom-gap: 20pt;
+  --print-gold: #ffcc00;
+  --print-body-color: #111111;
+  --print-muted-color: #444444;
 
   font-family: "Times New Roman", Times, serif;
   font-size: var(--print-body);
   line-height: var(--print-line-height);
-  color: #111111;
+  color: var(--print-body-color);
 }
 
 .print-template__contact {
   font-size: var(--print-contact);
-  color: #444444;
+  color: var(--print-muted-color);
 }
 
 .print-template__personalization {
   font-size: var(--print-personalization);
   font-weight: 700;
+  line-height: 1.2;
+}
+
+.print-template__frame-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16pt;
+  margin-bottom: 0;
+}
+
+.print-template__logo {
+  display: block;
+  width: 68pt;
+  height: auto;
+}
+
+.print-template__personalization-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16pt;
+  width: 100%;
+  font-size: var(--print-personalization);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.print-template__gold-rule {
+  border: 0;
+  border-top: 1.5pt solid var(--print-gold);
+  margin: 12pt 0 0;
 }
 
 .print-template__page-title {
+  font-family: "Times New Roman", Times, serif;
   font-size: var(--print-page-title);
   font-weight: 700;
   line-height: 1.2;
   margin: var(--print-title-top-gap) 0 var(--print-title-bottom-gap);
+  color: var(--print-body-color);
 }
 
 .print-template__subsection {
@@ -52,7 +109,62 @@
 
 .print-template__page-number {
   font-size: var(--print-page-number);
-  color: #444444;
+  color: var(--print-muted-color);
+  text-align: center;
+}
+
+/* Welcome page — PDF page 1 */
+.print-template--welcome {
+  background: #ffffff;
+}
+
+.print-welcome__intro {
+  font-size: var(--print-welcome-intro);
+  line-height: var(--print-welcome-line-height);
+}
+
+.print-welcome__intro p {
+  margin: 0 0 var(--print-welcome-paragraph-gap);
+}
+
+.print-welcome__intro p:last-child {
+  margin-bottom: var(--print-welcome-section-gap);
+}
+
+.print-welcome__section + .print-welcome__section {
+  margin-top: var(--print-welcome-section-gap);
+}
+
+.print-welcome__section-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: var(--print-welcome-section-title);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 var(--print-welcome-header-gap);
+  color: var(--print-body-color);
+}
+
+.print-welcome__section-body {
+  font-size: var(--print-welcome-section-body);
+  line-height: var(--print-welcome-line-height);
+  margin: 0;
+  color: var(--print-body-color);
+}
+
+.print-template__footer {
+  margin-top: auto;
+  padding-top: 12pt;
+  border-top: 1pt solid var(--print-gold);
+  font-size: var(--print-contact);
+  color: var(--print-muted-color);
+  text-align: center;
+}
+
+.print-template__footer-page {
+  display: block;
+  margin-top: 6pt;
+  font-size: var(--print-page-number);
+  color: var(--print-muted-color);
   text-align: center;
 }
 
@@ -61,6 +173,7 @@
   font-family: "Times New Roman", Times, serif;
   font-size: var(--print-body);
   line-height: var(--print-line-height);
+  color: var(--print-body-color);
 }
 
 .r-doc.print-template .pb-panel__title,
@@ -183,6 +296,11 @@
 }
 
 @media print {
+  .print-template--welcome {
+    background: #ffffff;
+    color: var(--print-body-color);
+  }
+
   .r-doc.print-template {
     background: #ffffff;
     color: #111111;
