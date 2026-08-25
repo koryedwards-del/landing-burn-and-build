@@ -1974,6 +1974,17 @@ function drawFoodPlanPage(doc, payload) {
 }
 
 const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
+const SERVINGS_RULES_BREAK_GAP = 10;
+
+function drawMealBuildSteps(doc, payload, page, steps) {
+  const splitAt = steps.findIndex((paragraph) => /^1\. Eat/.test(String(paragraph)));
+  if (splitAt <= 0) {
+    return drawBodyParagraphs(doc, payload, page, steps, SERVINGS_STEPS_TYPO);
+  }
+  page = drawBodyParagraphs(doc, payload, page, steps.slice(0, splitAt), SERVINGS_STEPS_TYPO);
+  page = { ...page, y: page.y + SERVINGS_RULES_BREAK_GAP };
+  return drawBodyParagraphs(doc, payload, page, steps.slice(splitAt), SERVINGS_STEPS_TYPO);
+}
 
 function drawServingsPage(doc, payload) {
   const servings = payload.servings;
@@ -1989,7 +2000,7 @@ function drawServingsPage(doc, payload) {
   page = drawServingsTable(doc, payload, page, gridRows, servings.extraFats || []);
 
   if (servings.mealBuildSteps?.length) {
-    page = drawBodyParagraphs(doc, payload, page, servings.mealBuildSteps, SERVINGS_STEPS_TYPO);
+    page = drawMealBuildSteps(doc, payload, page, servings.mealBuildSteps);
   }
 
   finishLockedPage(doc, page.box, payload);
