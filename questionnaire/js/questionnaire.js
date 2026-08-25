@@ -1534,6 +1534,7 @@ function showBootError(message) {
 
 function boot() {
   try {
+    syncIntakeQuestionNumbers();
     if (isDietCreationGated()) {
       showStep(0);
       return;
