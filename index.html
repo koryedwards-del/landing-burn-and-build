@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="hardkor.css" />
   <style>
-    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 40px 48px; position: relative; overflow: hidden; }
+    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 40px 48px; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,204,0,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,204,0,0.03) 60px, rgba(255,204,0,0.03) 61px); pointer-events: none; }
 
     .hero-logo { width: min(240px, 60vw); height: auto; margin-bottom: 8px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards; }
@@ -124,12 +124,21 @@
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
-      margin-top: 8px;
+      margin-top: 24px;
       opacity: 0;
       animation: fadeUp 0.7s 0.85s forwards;
     }
+
+    .puzzled { padding: 100px 40px; background: var(--black); }
+    .puzzled-inner { max-width: 1100px; margin: 0 auto; }
+    .puzzled-header { text-align: center; margin-bottom: 48px; }
+    .puzzled .hero-blend { margin-top: 0; text-align: left; }
+    .puzzled .hero-hook,
+    .puzzled .hero-lines,
+    .puzzled .hero-reframe,
+    .puzzled .hero-blend-visual { opacity: 1; animation: none; }
     .hero-cta .btn-cta { margin-top: 0; }
 
     .nav-cta {
@@ -256,36 +265,6 @@
     .price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 40px; }
     .price-includes { list-style: none; margin-bottom: 8px; display: flex; flex-direction: column; gap: 12px; }
     .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 10px 0; border-bottom: 1px solid var(--gray-mid); }
-
-    .calculator { padding: 100px 40px 80px; background: var(--black); }
-    .calc-header { text-align: center; margin-bottom: 12px; }
-    .calc-inner { max-width: 680px; margin: 0 auto; }
-    .calc-intro { color: #D4D4D4; font-size: 1rem; line-height: 1.65; margin-bottom: 36px; }
-    .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; align-items: end; }
-    .calc-col { display: flex; flex-direction: column; }
-    .calc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
-    .gender-tabs { display: flex; height: 50px; border: 1.5px solid var(--gray-mid); box-sizing: border-box; }
-    .gender-tab { flex: 1; padding: 0; height: 100%; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: color 0.15s; background: var(--black); color: var(--text-dim); }
-    .gender-tab:first-child { border-right: 1px solid var(--gray-mid); }
-    .gender-tab.active { color: var(--yellow); background: var(--black); }
-    .calc-input { display: block; width: 100%; height: 50px; background: var(--black); border: 1.5px solid var(--gray-mid); color: var(--text); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.1rem; padding: 0 16px; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
-    #calc-gender { display: none; }
-    .calc-input::placeholder { color: var(--text-dim); font-weight: 400; }
-    .calc-input:focus { border-color: var(--yellow); }
-    .calc-input::-webkit-outer-spin-button, .calc-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    .calc-input[type=number] { -moz-appearance: textfield; }
-    .calc-btn { display: block; width: 100%; background: none; color: var(--yellow); border: none; font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px 0; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; }
-    .calc-btn:hover { opacity: 0.75; }
-    .calc-results { display: none; margin-top: 40px; border-top: 1px solid var(--gray-mid); padding-top: 32px; }
-    .calc-results.visible { display: block; }
-    .calc-narrative { font-size: 1.05rem; color: #D4D4D4; line-height: 1.7; margin-bottom: 32px; }
-    .calc-narrative strong { color: #D4D4D4; font-weight: 700; }
-    .calc-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-    .calc-table th { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); padding: 0 0 12px; text-align: left; border-bottom: 1px solid var(--gray-mid); }
-    .calc-table td { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.97rem; color: var(--text); vertical-align: middle; }
-    .calc-table tr.row-current td { font-weight: 700; color: #8A8A8A; }
-    .ace-badge { display: inline-block; background: transparent; color: var(--yellow); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px; margin-left: 8px; vertical-align: middle; }
-    .calc-disclaimer { font-size: 0.78rem; color: #D4D4D4; line-height: 1.6; margin-top: 24px; }
 
     .deliver-hero { background: var(--dark); border-left: 4px solid var(--yellow); padding: 48px 40px; margin-bottom: 3px; }
     .deliver-hero-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
@@ -521,13 +500,12 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 48px; }
-      .filter, .search-faq, .mechanism { padding-left: 20px; padding-right: 20px; }
+      .filter, .search-faq, .mechanism, .puzzled { padding-left: 20px; padding-right: 20px; }
       .sample-split { padding: 0 20px 64px; }
       .deliver-grid { grid-template-columns: 1fr; }
       .deliver-hero { padding: 36px 24px; }
       .who-card { padding: 40px 28px; }
-      .calc-row { grid-template-columns: 1fr; gap: 16px; }
-      .gender-tabs { max-width: 200px; }
+      .sample-split { padding: 0 20px 64px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
@@ -538,7 +516,7 @@
     <a href="/" class="nav-logo">Burn &amp; Build</a>
     <ul class="nav-links">
       <li><a href="#questions">Questions</a></li>
-      <li><a href="#calculator">What's Possible</a></li>
+      <li><a href="#puzzled">Puzzled?</a></li>
       <li><a href="#how">What You Get</a></li>
       <li><a href="#sample">Sample Plan</a></li>
       <li><a href="#who">Who It's For</a></li>
@@ -549,7 +527,7 @@
   </nav>
   <div class="mobile-nav" id="mobile-nav">
     <a href="#questions">Questions</a>
-    <a href="#calculator">What's Possible</a>
+    <a href="#puzzled">Puzzled?</a>
     <a href="#how">What You Get</a>
     <a href="#sample">Sample Plan</a>
     <a href="#who">Who It's For</a>
@@ -561,25 +539,10 @@
   <section class="hero">
     <p class="hero-eyebrow">The Premier Body Recomp Diet · Since 1982</p>
     <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
-    <div class="hero-blend">
-      <div class="hero-blend-copy">
-        <h1 class="hero-hook">Puzzled why your <span>workouts aren't working?</span></h1>
-        <ul class="hero-lines">
-          <li>You train hard.</li>
-          <li>You eat clean.</li>
-          <li>You're paying a coach every month — and you're still not recomping.</li>
-        </ul>
-        <p class="hero-reframe">A lean, strong, energetic body is about <span>eating</span> — not starving.</p>
-        <p class="hero-tagline"><span class="hero-line-accent">Lose the Fat.</span> Keep the Muscle.</p>
-        <div class="hero-cta">
-          <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
-          <a class="btn-cta btn-cta--ghost" href="#sample">Preview sample PDF</a>
-        </div>
-      </div>
-      <div class="hero-blend-visual">
-        <img src="images/fat-can-3lb.png" alt="Three pounds of body fat — visual size comparison" width="640" height="480" />
-        <div class="hero-visual-cap">Fat takes up space. Body recomp is the target.</div>
-      </div>
+    <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
+    <div class="hero-cta">
+      <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
+      <a class="btn-cta btn-cta--ghost" href="#sample">Preview sample PDF</a>
     </div>
   </section>
 
@@ -695,48 +658,25 @@
   </section>
   <div class="divider"></div>
 
-  <section class="calculator" id="calculator">
-    <div class="calc-inner">
-      <div class="calc-header">
-        <p class="section-label">What's Possible</p>
-        <h2 class="section-title">What Can <span>Burn &amp; Build</span> Do for You?</h2>
+  <section class="puzzled" id="puzzled">
+    <div class="puzzled-inner">
+      <div class="puzzled-header">
+        <p class="section-label">Sound familiar?</p>
+        <h2 class="section-title">Puzzled why your <span>workouts aren't working?</span></h2>
       </div>
-      <p class="calc-intro">Body recomp means losing fat without losing muscle. Burn &amp; Build is built for exactly that. Based on thousands of clients over 40 years, the average person on the program loses approximately 3% body fat per month — while increasing strength and energy.</p>
-
-      <div class="calc-row">
-        <div class="calc-col">
-          <div class="calc-label">Gender</div>
-          <div class="gender-tabs">
-            <button type="button" class="gender-tab active" id="tab-male">Male</button>
-            <button type="button" class="gender-tab" id="tab-female">Female</button>
-          </div>
-          <input type="hidden" id="calc-gender" value="male" />
+      <div class="hero-blend">
+        <div class="hero-blend-copy">
+          <ul class="hero-lines">
+            <li>You train hard.</li>
+            <li>You eat clean.</li>
+            <li>You're paying a coach every month — and you're still not recomping.</li>
+          </ul>
+          <p class="hero-reframe">A lean, strong, energetic body is about <span>eating</span> — not starving.</p>
         </div>
-        <div class="calc-col">
-          <div class="calc-label">Current Bodyweight (lbs)</div>
-          <input class="calc-input" id="calc-weight" type="number" min="1" placeholder="Enter weight" />
+        <div class="hero-blend-visual">
+          <img src="images/fat-can-3lb.png" alt="Three pounds of body fat — visual size comparison" width="640" height="480" />
+          <div class="hero-visual-cap">Fat takes up space. Body recomp is the target.</div>
         </div>
-        <div class="calc-col">
-          <div class="calc-label">Current Body Fat %</div>
-          <input class="calc-input" id="calc-bf" type="number" min="1" max="70" placeholder="Enter body fat %" />
-        </div>
-      </div>
-
-      <button type="button" class="calc-btn" id="calc-btn">Show Me What's Possible &rarr;</button>
-
-      <div class="calc-results" id="calc-results">
-        <p class="calc-narrative" id="calc-narrative"></p>
-        <table class="calc-table">
-          <thead>
-            <tr>
-              <th>Timeline</th>
-              <th>Body Fat %</th>
-              <th>Bodyweight</th>
-            </tr>
-          </thead>
-          <tbody id="calc-tbody"></tbody>
-        </table>
-        <p class="calc-disclaimer">Results may vary. This tool is for informational purposes only and does not constitute medical or nutritional advice. Individual results depend on starting body composition, program adherence, diet, exercise, and other factors. Consult a qualified healthcare professional before beginning any diet or exercise program.</p>
       </div>
     </div>
   </section>
@@ -923,91 +863,6 @@
         });
       });
     })();
-  </script>
-  <script>
-    document.getElementById('tab-male').addEventListener('click', function() {
-      document.getElementById('calc-gender').value = 'male';
-      document.getElementById('tab-male').classList.add('active');
-      document.getElementById('tab-female').classList.remove('active');
-    });
-    document.getElementById('tab-female').addEventListener('click', function() {
-      document.getElementById('calc-gender').value = 'female';
-      document.getElementById('tab-female').classList.add('active');
-      document.getElementById('tab-male').classList.remove('active');
-    });
-
-    function aceBadge(bf, gender, isFloor) {
-      if (isFloor) return { label: 'Showtime', cls: '' };
-      if (gender === 'male') {
-        if (bf <= 24 && bf > 13) return { label: 'Average', cls: '' };
-      } else {
-        if (bf <= 31 && bf > 20) return { label: 'Average', cls: '' };
-      }
-      return null;
-    }
-
-    document.getElementById('calc-btn').addEventListener('click', function () {
-      var gender = document.getElementById('calc-gender').value;
-      var weight = parseFloat(document.getElementById('calc-weight').value);
-      var bf = parseFloat(document.getElementById('calc-bf').value);
-      var targetBf = gender === 'male' ? 4.68 : 8.95;
-      var dropPerCycle = 6;
-
-      if (!weight || weight <= 0 || !bf || bf <= targetBf || bf > 70) return;
-
-      var lbm = weight * (1 - bf / 100);
-      var finalWeight = lbm / (1 - targetBf / 100);
-
-      var fullCycles = Math.floor((bf - targetBf) / dropPerCycle);
-      var remainder = (bf - targetBf) % dropPerCycle;
-      var partialWeeks = remainder > 0 ? (remainder / dropPerCycle) * 8 : 0;
-      var totalWeeks = fullCycles * 8 + partialWeeks;
-      var wholeWeeks = Math.round(totalWeeks);
-      var timeStr = wholeWeeks + ' weeks';
-
-      document.getElementById('calc-narrative').innerHTML =
-        '<strong>Pro Tip:</strong> Body recomp comes down to muscle and body fat — the shape underneath and how much is covering it. Based on your current weight and body fat, Burn &amp; Build can take you from <strong>' +
-        weight.toFixed(0) + ' lbs at ' + bf.toFixed(0) + '%</strong> to <strong>' +
-        finalWeight.toFixed(1) + ' lbs at ' + targetBf + '%</strong> in <strong>' + timeStr +
-        '</strong> — while increasing your strength and energy. If the projected body weight at your desired body fat seems too low, it means you need more muscle. Participate in weight training and follow your Burn &amp; Build program for fastest results.';
-
-      var tbody = '';
-      var curBf = bf;
-      var shownBadges = {};
-
-      tbody += '<tr class="row-current"><td>Current</td><td>' + bf.toFixed(0) + '%</td><td>' + weight.toFixed(0) + ' lbs</td></tr>';
-
-      var cycleWeeks = 0;
-      while (curBf > targetBf) {
-        var newBf = curBf - dropPerCycle;
-        var isFloor = false;
-        var isPartial = false;
-        if (newBf <= targetBf) { newBf = targetBf; isFloor = true; }
-        if (isFloor && remainder > 0) { isPartial = true; }
-        var newWeight = lbm / (1 - newBf / 100);
-
-        var badge = aceBadge(newBf, gender, isFloor);
-        var bHtml = '';
-        if (badge && !shownBadges[badge.label]) {
-          shownBadges[badge.label] = true;
-          bHtml = '<span class="ace-badge ' + badge.cls + '">' + badge.label + '</span>';
-        }
-
-        if (isPartial) {
-          cycleWeeks += partialWeeks;
-          var pWholeWeeks = Math.round(cycleWeeks);
-          tbody += '<tr><td>' + pWholeWeeks + ' weeks</td><td>' + targetBf + '%' + bHtml + '</td><td>' + newWeight.toFixed(1) + ' lbs</td></tr>';
-        } else {
-          cycleWeeks += 8;
-          tbody += '<tr><td>' + cycleWeeks + ' weeks</td><td>' + newBf.toFixed(0) + '%' + bHtml + '</td><td>' + newWeight.toFixed(1) + ' lbs</td></tr>';
-        }
-
-        curBf = newBf;
-      }
-
-      document.getElementById('calc-tbody').innerHTML = tbody;
-      document.getElementById('calc-results').classList.add('visible');
-    });
   </script>
   <script>
     var ham = document.getElementById('hamburger');
