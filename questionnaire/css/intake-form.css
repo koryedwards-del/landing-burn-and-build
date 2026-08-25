@@ -110,10 +110,8 @@ body.q-app--workroom,
   max-width: 40rem;
 }
 
-.intake-form__intro {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border);
+.intake-form__head + .intake-form__intro {
+  margin-top: 0;
 }
 
 .intake-form__lede {
