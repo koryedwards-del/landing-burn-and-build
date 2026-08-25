@@ -222,8 +222,7 @@ async function syncDietEmailSentFromServer() {
 }
 
 function renderDietEmailSpamHint() {
-  if (!store.dietEmailAvailable || store.dietEmailBusy) return '';
-  if (!store.dietEmailSent && !store.dietEmailError) return '';
+  if (!store.dietEmailAvailable) return '';
   return '<p class="unlock-receipt__hint">Check your spam or junk folder if you do not see it within a few minutes.</p>';
 }
 
@@ -232,13 +231,13 @@ function renderDietEmailNote() {
     return '<p class="unlock-receipt__note">Save your PDF below — email delivery is not available right now.</p>';
   }
   if (store.dietEmailSent) {
-    return `<p class="unlock-receipt__note unlock-receipt__note--sent">a copy has also been sent to your email</p>${renderDietEmailSpamHint()}`;
+    return '<p class="unlock-receipt__note unlock-receipt__note--sent">a copy has also been sent to your email</p>';
   }
   if (store.dietEmailBusy) {
     return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
   }
   if (store.dietEmailError) {
-    return `<p class="unlock-receipt__note">We couldn\'t confirm email delivery yet — use the download button, or check your inbox in a few minutes.</p>${renderDietEmailSpamHint()}`;
+    return '<p class="unlock-receipt__note">We couldn\'t confirm email delivery yet — use the download button, or check your inbox in a few minutes.</p>';
   }
   return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
 }
@@ -255,6 +254,7 @@ function renderPaidDirections() {
             <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
             ${downloadLine}
             ${renderDietEmailNote()}
+            ${renderDietEmailSpamHint()}
           </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }

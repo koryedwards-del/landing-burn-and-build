@@ -47,6 +47,7 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
       html: `
         <p>Hi ${firstName},</p>
         <p>Payment confirmed — your personalized <strong>Burn &amp; Build Diet</strong> is attached.</p>
+        <p>If you do not see this message in your inbox within a few minutes, check your spam or junk folder.</p>
         <p>Save this PDF somewhere you will see it every day. It is your Burn &amp; Build Diet — your full program report.</p>
         <p>Need it again later? Return to <a href="https://burnandbuilddiet.com/createyourfoodplan/">burnandbuilddiet.com/createyourfoodplan</a> after checkout, or check this inbox for your PDF.</p>
         <p>— Burn &amp; Build<br>support@burnandbuilddiet.com</p>
