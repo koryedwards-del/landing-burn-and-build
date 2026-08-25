@@ -1274,9 +1274,9 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
     doc.text(timelineLabel, labelX, labelY, { lineBreak: false });
 
     doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.timelineBfSize);
-    const bfW = doc.widthOfString(marker.bfLabel);
-    const bfX = Math.max(pageX, Math.min(markerX - bfW / 2, pageX + pageWidth - bfW));
-    doc.text(marker.bfLabel, bfX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 2, { lineBreak: false });
+    const weightW = doc.widthOfString(marker.weightLabel);
+    const weightX = Math.max(pageX, Math.min(markerX - weightW / 2, pageX + pageWidth - weightW));
+    doc.text(marker.weightLabel, weightX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 2, { lineBreak: false });
   });
 }
 

@@ -251,19 +251,16 @@ function formatTimelineShort(timeline) {
   return value.replace(/\*+$/, '').trim();
 }
 
-/** Projected BF% markers from the burn-engine timeline table (future rows only). */
-export function fatBarTimelineMarkers(timeline, gender = 'female') {
+/** Projected weight markers from the burn-engine timeline (future rows only). */
+export function fatBarTimelineMarkers(timeline) {
   if (!timeline?.valid || !Array.isArray(timeline.rows)) return [];
-  const showtimeLabel = gender === 'female' ? '< 9%' : '< 5%';
   return timeline.rows
     .filter((row) => !row.isCurrent && Number.isFinite(Number(row.bodyFat)))
     .map((row) => ({
       timeline: row.timeline,
       timelineLabel: formatTimelineShort(row.timeline),
       bodyFat: round2(row.bodyFat),
-      bfLabel: row.isShowtime
-        ? showtimeLabel
-        : (row.bodyFatDisplay || `${round2(row.bodyFat)}%`),
+      weightLabel: row.weightDisplay || `${Math.round(Number(row.weight))} lbs`,
       badge: row.badge || null,
     }));
 }
