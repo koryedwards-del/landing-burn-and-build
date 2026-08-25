@@ -3,10 +3,10 @@
 export const KWARNER_WELCOME_COPY = {
   intro: [
     'Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is the most individualized program available for losing fat. This diet will not work effectively for anyone else because it has been created just for you, using your lean body mass (LBM), your job, your day to day, and your weekly plan for weight training (WT), high heart rate aerobic activity (HHT), and low heart rate aerobic activity (LHR).',
-    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, day to day, and exercise hours. With this information, Burn & Build generated this report. Page two is your Lean Body Analysis, including ACE body fat categories and the scale weights those categories represent at your lean body mass; the pages that follow are your food plan, servings, and food list.',
+    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, day to day, and exercise hours. With this information, Burn & Build generated this report. Page two is your Lean Body Analysis, including body fat ranges and the scale weights those ranges represent at your lean body mass; the pages that follow are your food plan, servings, and food list.',
   ],
   leanBodyAnalysis:
-    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and ACE body fat categories with the scale weights each category represents at your lean body mass.',
+    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and body fat ranges with the scale weights each range represents at your lean body mass.',
   foodPlan:
     'Page three is your custom-designed food plan. It explains why servings go a step farther than macros and how tracking macros can lead you astray. The servings on page four follow directly from this page.',
   servings:
