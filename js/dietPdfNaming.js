@@ -1,4 +1,4 @@
-/** Diet plan PDF document label + download filename. */
+/** Program report PDF document label + download filename. */
 
 import { programClientName } from './programBridgeUi.js';
 import { localDateKey } from './programPackage.js';

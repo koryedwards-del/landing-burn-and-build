@@ -2,11 +2,11 @@
 const FOR_BEST_RESULTS_ITEMS = [
   {
     q: 'What is the Burn & Build Diet?',
-    a: 'Burn & Build is a precision body-recomposition program designed to maximize fat loss while preserving lean body mass. Your custom plan is built from your body composition, job activity, workouts, and daily lifestyle — not a one-size-fits-all template.',
+    a: 'Burn & Build is a precision body-recomposition diet designed to maximize fat loss while preserving lean body mass. Your program is built from your body composition, job activity, workouts, and daily lifestyle — not a one-size-fits-all template.',
   },
   {
-    q: 'How is this program different from other diets?',
-    a: 'Most diets produce weight loss by sacrificing muscle. When muscle goes down, metabolism goes down with it. Burn & Build protects lean body mass so your body can keep burning fat. The program uses servings — not calorie counting — across curated food groups.',
+    q: 'How is this diet different from other diets?',
+    a: 'Most diets produce weight loss by sacrificing muscle. When muscle goes down, metabolism goes down with it. Burn & Build protects lean body mass so your body can keep burning fat. The diet uses servings — not calorie counting — across curated food groups.',
   },
   {
     q: 'Do I need to count calories or track macros?',
@@ -14,7 +14,7 @@ const FOR_BEST_RESULTS_ITEMS = [
   },
   {
     q: 'How was my diet calculated?',
-    a: 'Your plan starts with lean body mass, then adjusts for work intensity, training, cardio, and fat-burn activity. The result is a daily serving prescription divided across breakfast, lunch, dinner, and snacks.',
+    a: 'Your food plan starts with lean body mass, then adjusts for work intensity, training, cardio, and fat-burn activity. The result is a daily serving prescription divided across breakfast, lunch, dinner, and snacks.',
   },
   {
     q: 'What is lean body mass and why does it matter?',
@@ -22,7 +22,7 @@ const FOR_BEST_RESULTS_ITEMS = [
   },
   {
     q: 'What are servings and how do I use them?',
-    a: 'A serving is a measured amount of food from the Burn & Build food list. Each food has a standard serving size. Your plan tells you how many servings to eat from each group each day.',
+    a: 'A serving is a measured amount of food from the Burn & Build food list. Each food has a standard serving size. Your food plan tells you how many servings to eat from each group each day.',
   },
   {
     q: 'How many times a day should I eat protein?',

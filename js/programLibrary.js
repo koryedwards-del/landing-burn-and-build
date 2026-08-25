@@ -1,4 +1,4 @@
-/** Sidebar — purchased diet plans; switch active program. */
+/** Sidebar — purchased programs; switch active program. */
 
 import {
   fetchProgramByIdFromServer,
@@ -125,7 +125,7 @@ function libraryGroupHtml(programRowsHtml = '') {
           class="pb-nav__btn pb-nav__btn--group-head"
           data-diet-plans-toggle
           aria-expanded="false"
-        >Your diet plans</button>
+        >Your programs</button>
         <ul class="pb-nav__group-list pb-nav__group-list--diet-plans">
           ${programRowsHtml}
         </ul>
@@ -176,7 +176,7 @@ function renderLibraryRows(rows, activeId) {
   mountLibraryGroup(rows, activeId);
 }
 
-/** Re-append diet plans after the main nav list is rebuilt. */
+/** Re-append programs after the main nav list is rebuilt. */
 export function remountProgramLibraryNav() {
   if (!libraryReady) return;
   lastRenderedSignature = '';

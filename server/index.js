@@ -427,7 +427,7 @@ app.post('/api/programs', (req, res) => {
     const contact = enrollContactFromProgramCreation(email, pkg?.intake?.preferredName);
     res.json({ ok: true, email, programId, programCount: countPrograms(email), contact });
   } catch (err) {
-    res.status(403).json({ ok: false, message: err.message || 'Could not save your plan.' });
+    res.status(403).json({ ok: false, message: err.message || 'Could not save your program.' });
   }
 });
 
@@ -523,7 +523,7 @@ app.get('/api/programs/diet-pdf', async (req, res) => {
     res.send(pdf);
   } catch (err) {
     console.error('Diet PDF download error:', err.message);
-    res.status(500).json({ ok: false, message: err.message || 'Could not prepare your diet PDF.' });
+    res.status(500).json({ ok: false, message: err.message || 'Could not prepare your Burn & Build Diet PDF.' });
   }
 });
 

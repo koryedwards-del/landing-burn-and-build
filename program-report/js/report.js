@@ -222,7 +222,7 @@ function renderWelcome(pkg) {
           <a class="r-btn r-btn--ghost" href="${kwarnerPreviewPdfUrl()}" download="Kristi-Warner-KWarner-Locked-Preview.pdf">Download KWarner preview PDF</a>
           <a class="r-btn r-btn--ghost" href="/api/preview/kwarner-locked-pdf" target="_blank" rel="noopener">Live preview PDF (API)</a>
         ` : ''}
-        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download diet plan</button>
+        <button type="button" class="r-btn r-btn--primary" data-report-download-pdf>Download program report</button>
         <button type="button" class="r-btn r-btn--primary" data-report-next>Projections →</button>
       </footer>
     </section>
@@ -329,8 +329,8 @@ function renderFoodPlan(pkg) {
 
         <h3>Projections</h3>
         <p>
-          The following food program contains a sophisticated calculation that is based on your individual lean
-          body mass (LBM), and on your activities. This is the most individualized food program available for
+          The following program contains a sophisticated calculation that is based on your individual lean
+          body mass (LBM), and on your activities. This is the most individualized program available for
           losing fat and building muscle. In eight weeks, you could safely lose ${fatLost} pounds of fat. In your
           questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.
           ${hours.wt} hour(s) of weight training, ${hours.cardio} hour(s) of cardiovascular activities,
@@ -402,7 +402,7 @@ function renderFoodPlan(pkg) {
 
       <footer class="r-actions">
         <button type="button" class="r-btn r-btn--ghost" data-report-back>← Welcome</button>
-        <button type="button" class="r-btn r-btn--primary" data-report-next-servings>Plan/Servings →</button>
+        <button type="button" class="r-btn r-btn--primary" data-report-next-servings>Food Plan &amp; Servings →</button>
       </footer>
     </section>
   `;
@@ -437,7 +437,7 @@ function renderServings(pkg) {
     <section class="r-panel">
       <div class="pb-page-head">
         <p class="pb-eyebrow">Page 3</p>
-        <h2 class="pb-panel__title">Plan/Servings</h2>
+        <h2 class="pb-panel__title">Food Plan &amp; Servings</h2>
       </div>
 
       <article class="r-doc print-template">

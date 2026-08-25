@@ -128,9 +128,9 @@ export function buildWelcomeNarrative(pkg) {
   return {
     pageTitle: 'Welcome',
     intro: [
-      'Congratulations. You have in your hands a food plan built only for you.',
+      'Congratulations. You have in your hands a program built only for you.',
       'You answered questions about your body, your job, and the exercise you plan to do over the next eight weeks. The pages ahead show what we asked, why we asked it, and what we built from your answers.',
-      'Every number in this report came from information you provided. That is why this plan will not work the same for anyone else.',
+      'Every number in this report came from information you provided. That is why this program will not work the same for anyone else.',
     ],
     blocks: [
       {
@@ -149,17 +149,17 @@ export function buildWelcomeNarrative(pkg) {
         title: 'Your job',
         asked: `You said your work is ${workdayPhrase(intake)}.`,
         why: 'A desk job burns less fuel than being on your feet or lifting. Your workday changes how much food you need.',
-        seeIt: 'How Your Plan Was Built — your job is part of the calculation.',
+        seeIt: 'How Your Food Plan Was Built — your job is part of the calculation.',
       },
       {
         title: 'Your exercise — next 8 weeks',
         asked: `You plan ${exercise} per week.`,
         why: 'We only count exercise you will actually do. More movement raises what you need to eat to lose fat without losing energy.',
-        seeIt: 'How Your Plan Was Built — your exercise hours are listed there.',
+        seeIt: 'How Your Food Plan Was Built — your exercise hours are listed there.',
       },
     ],
     closing: [
-      'The next pages walk through your body numbers, your progress over time, how your plan was calculated, and your daily servings.',
+      'The next pages walk through your body numbers, your progress over time, how your food plan was calculated, and your daily servings.',
       'Your food list and menu planner are online in Print Shop.',
     ],
     startHereLabel: 'START HERE',
@@ -269,7 +269,7 @@ export function buildFoodPlanNarrative(pkg, { today, projection, hours, gender }
   const endWeight = projection ? projection.endWeight.toFixed(1) : '—';
 
   return {
-    pageTitle: 'How Your Plan Was Built',
+    pageTitle: 'How Your Food Plan Was Built',
     intro: [
       'Your food plan is not a generic diet. It is a calculation that starts with your lean body mass, then adds what you told us about your job and your exercise.',
     ],
@@ -321,7 +321,7 @@ export function buildServingsNarrative(pkg) {
   return {
     pageTitle: 'Your Daily Servings',
     intro: [
-      'This is the page to print and use every day. These numbers are your plan — built from everything you told us on the questionnaire.',
+      'This is the page to print and use every day. These numbers are your food plan — built from everything you told us on the questionnaire.',
     ],
     blocks: [
       {
@@ -333,7 +333,7 @@ export function buildServingsNarrative(pkg) {
       {
         title: 'Your daily totals',
         paragraphs: [
-          `Your plan: ${summary}. Extra fats are listed separately on the grid below.`,
+          `Your food plan: ${summary}. Extra fats are listed separately on the grid below.`,
           'Spread protein through breakfast, lunch, and dinner. Eat vegetables at dinner. Eat fruit at snack times.',
         ],
       },

@@ -87,8 +87,8 @@ export function buildProjectionsPrintoutSection(pkg) {
   if (!summary?.maintainTotalCals || !summary?.reduceTotalCals) return null;
 
   const intro = [
-    'The following food program contains a sophisticated calculation that is based on your individual lean',
-    'body mass (LBM), and on your activities. This is the most individualized food program available for',
+    'The following program contains a sophisticated calculation that is based on your individual lean',
+    'body mass (LBM), and on your activities. This is the most individualized program available for',
     'losing fat and building muscle.',
     `In your questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
     `${hours.wt} hour(s) of weight training, ${hours.cardio} hour(s) of cardiovascular activities,`,

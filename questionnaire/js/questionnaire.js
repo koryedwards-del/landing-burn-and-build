@@ -12,7 +12,7 @@ import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGate
 captureDietCreationTestBypass();
 
 const STEPS = [
-  { id: 'start', label: 'Build Your Diet Plan' },
+  { id: 'start', label: 'Build Your Program' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
@@ -40,7 +40,7 @@ const INFO_FIELD_META = {
   },
   email: {
     question: 'What is your email address?',
-    guide: 'We deliver your program here and use it to unlock your plan after purchase.',
+    guide: 'We deliver your program here and use it to unlock your program after purchase.',
     example: 'Example: you@email.com',
   },
   emailConfirm: {
@@ -103,7 +103,7 @@ const BODY_FIELD_META = {
   },
   fatSource: {
     question: 'How do you know?',
-    guide: 'Your plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
+    guide: 'Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
     example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · skinfolds · Bod Pod · DEXA · hydrostatic weighing.',
   },
   fatPercent: {
@@ -1443,7 +1443,7 @@ async function submitCheckout(triggerBtn) {
 
     const saved = await saveProgramToServer(email, program);
     if (!saved.ok) {
-      window.alert(saved.message || 'Could not save your plan. Check your connection and try again.');
+      window.alert(saved.message || 'Could not save your program. Check your connection and try again.');
       triggerBtn.disabled = false;
       triggerBtn.textContent = prevLabel;
       updateStepNav();

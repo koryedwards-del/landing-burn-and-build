@@ -229,7 +229,7 @@ function isNonRetryableEmailError(message) {
 
 function renderPlanReadyAppHandoff(unlocked) {
   if (!unlocked) {
-    return '<p class="unlock-tagline">Complete purchase to download your personalized diet PDF.</p>';
+    return '<p class="unlock-tagline">Complete purchase to download your Burn &amp; Build Diet PDF.</p>';
   }
   return renderPaidDirections();
 }
@@ -244,9 +244,9 @@ function renderPlanReady() {
   if (hasPaidAccess) {
     lead = '';
   } else if (store.saveError) {
-    lead = 'Your diet is ready on this device. Save it to your account, then complete checkout.';
+    lead = 'Your program is ready on this device. Save it to your account, then complete checkout.';
   } else {
-    lead = 'Your personalized diet is saved. Complete checkout to download your Burn &amp; Build Diet PDF.';
+    lead = 'Your program is saved. Complete checkout to download your Burn &amp; Build Diet PDF.';
   }
 
   const checkoutBlock = showPaywall
@@ -315,7 +315,7 @@ async function savePlanToServer() {
   }
   restoreBuiltPackage();
   if (!store.builtPackage) {
-    store.saveError = 'No diet to save.';
+    store.saveError = 'No program to save.';
     return false;
   }
   store.saveBusy = true;
@@ -323,7 +323,7 @@ async function savePlanToServer() {
   const saved = await saveProgramToServer(email, store.builtPackage);
   store.saveBusy = false;
   if (!saved.ok) {
-    store.saveError = saved.message || 'Could not save your plan.';
+    store.saveError = saved.message || 'Could not save your program.';
     return false;
   }
   if (saved.programId && store.builtPackage?.program) {
@@ -442,7 +442,7 @@ async function handleCheckoutReturn() {
   sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
 
   if (checkoutState === 'cancel') {
-    store.checkoutMessage = 'Checkout was canceled. Your plan is still saved — complete purchase when you are ready.';
+    store.checkoutMessage = 'Checkout was canceled. Your program is still saved — complete purchase when you are ready.';
     cleanCheckoutQuery();
     return;
   }

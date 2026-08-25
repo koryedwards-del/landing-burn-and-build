@@ -22,7 +22,7 @@ export function renderSidebarProgramCard(row, { isActive = false, isOpening = fa
         type="button"
         class="pb-nav__btn pb-nav__btn--nested pb-nav__btn--diet-row${isOpening ? ' is-opening' : ''}${isActive ? ' is-active' : ''}"
         data-switch-program="${row.id}"
-        aria-label="Switch to diet from ${row.testDateDisplay}${isActive ? ' (active)' : ''}"${aria}
+        aria-label="Switch to program from ${row.testDateDisplay}${isActive ? ' (active)' : ''}"${aria}
         ${isActive ? ' disabled' : ''}
       >
         <span class="pb-nav__btn-line">${row.testDateDisplay}</span>

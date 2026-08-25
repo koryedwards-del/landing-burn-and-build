@@ -53,7 +53,7 @@ export async function saveProgramToServer(email, pkg) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: normalizeEmail(email), package: pkg }),
     });
-    if (!res.ok) return apiFailure(res, data, 'Could not save your plan.');
+    if (!res.ok) return apiFailure(res, data, 'Could not save your program.');
     return data;
   } catch {
     return { ok: false, message: 'Network error saving your plan.' };
