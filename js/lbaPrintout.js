@@ -101,27 +101,42 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
-/** Body fat range bands — 1982 LBA table layout (female/male BF% columns). */
+/** Body fat range bands — fat-to-lean continuum (female/male BF% columns, lean → fat left to right). */
+const LBA_BF_RANGE_LABELS = Object.freeze([
+  'Lean Dominant',
+  'Lean Forward',
+  'Midrange',
+  'Fat Forward',
+  'Fat Dominant',
+]);
+
 const LBA_BF_RANGE_CATEGORIES = Object.freeze({
   female: [
-    { label: 'Minimum', bfMin: 9, bfMax: 13.99, bfRangeLabel: '9% – 13.99%' },
-    { label: 'Athletic', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20.99%' },
-    { label: 'Fitness', bfMin: 21, bfMax: 25.99, bfRangeLabel: '21% – 25.99%' },
-    { label: 'Moderate', bfMin: 26, bfMax: 31.99, bfRangeLabel: '26% – 31.99%' },
-    { label: 'Higher', bfMin: 32, bfMax: null, bfRangeLabel: 'Over 32%' },
+    { bfMin: 9, bfMax: 13.99, bfRangeLabel: '9% – 13.99%' },
+    { bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20.99%' },
+    { bfMin: 21, bfMax: 25.99, bfRangeLabel: '21% – 25.99%' },
+    { bfMin: 26, bfMax: 31.99, bfRangeLabel: '26% – 31.99%' },
+    { bfMin: 32, bfMax: null, bfRangeLabel: 'Over 32%' },
   ],
   male: [
-    { label: 'Minimum', bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5.99%' },
-    { label: 'Athletic', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13.99%' },
-    { label: 'Fitness', bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17.99%' },
-    { label: 'Moderate', bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24.99%' },
-    { label: 'Higher', bfMin: 25, bfMax: null, bfRangeLabel: 'Over 25%' },
+    { bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5.99%' },
+    { bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13.99%' },
+    { bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17.99%' },
+    { bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24.99%' },
+    { bfMin: 25, bfMax: null, bfRangeLabel: 'Over 25%' },
   ],
 });
 
-export function lbaBodyFatRangeCategories(gender) {
+function lbaBodyFatRangeRows(gender) {
   const key = gender === 'female' ? 'female' : 'male';
-  return LBA_BF_RANGE_CATEGORIES[key].map((row) => ({ ...row }));
+  return LBA_BF_RANGE_CATEGORIES[key].map((row, index) => ({
+    label: LBA_BF_RANGE_LABELS[index],
+    ...row,
+  }));
+}
+
+export function lbaBodyFatRangeCategories(gender) {
+  return lbaBodyFatRangeRows(gender).map((row) => ({ ...row }));
 }
 
 /** @deprecated Use lbaBodyFatRangeCategories */
@@ -374,8 +389,8 @@ export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {
   }
   const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
   const congrats = analysis.atOrAbove
-    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
-    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights for different health categories based on your current Lean Body Mass.';
+    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each point from lean dominant to fat dominant based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
+    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights from lean dominant to fat dominant based on your current Lean Body Mass.';
   return { lead, congrats, analysis };
 }
 
