@@ -187,23 +187,54 @@ function currentProgramId() {
 async function refreshProgramPaymentStatus() {
   if (store.checkoutVerified) {
     store.programPaid = true;
-    return;
+  } else {
+    const email = ensurePlanReadyEmail();
+    const programId = activeProgramId();
+    if (!isValidEmail(email) || !programId) {
+      store.programPaid = false;
+      return;
+    }
+    const result = await fetchProgramPaymentStatus(email, programId);
+    store.programPaid = !!(result.ok && result.paid);
+    if (store.programPaid) {
+      persistPaidProgramId(programId);
+    }
   }
-  const email = ensurePlanReadyEmail();
-  const programId = activeProgramId();
-  if (!isValidEmail(email) || !programId) {
-    store.programPaid = false;
-    return;
-  }
-  const result = await fetchProgramPaymentStatus(email, programId);
-  store.programPaid = !!(result.ok && result.paid);
-  if (store.programPaid) {
-    persistPaidProgramId(programId);
-  }
+
+  await syncDietEmailSentFromServer();
 }
 
 function markDietEmailSent() {
   store.dietEmailSent = true;
+}
+
+async function syncDietEmailSentFromServer() {
+  if (store.dietEmailSent) return true;
+  const email = ensurePlanReadyEmail();
+  const programId = activeProgramId();
+  if (!isValidEmail(email) || !programId) return false;
+  const result = await fetchProgramPaymentStatus(email, programId);
+  if (result.ok && result.dietEmailSent) {
+    markDietEmailSent();
+    return true;
+  }
+  return false;
+}
+
+function renderDietEmailNote() {
+  if (!store.dietEmailAvailable) {
+    return '<p class="unlock-receipt__note">Save your PDF below — email delivery is not available right now.</p>';
+  }
+  if (store.dietEmailSent) {
+    return '<p class="unlock-receipt__note unlock-receipt__note--sent">a copy has also been sent to your email</p>';
+  }
+  if (store.dietEmailBusy) {
+    return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
+  }
+  if (store.dietEmailError) {
+    return '<p class="unlock-receipt__note">We couldn\'t confirm email delivery yet — use the download button, or check your inbox in a few minutes.</p>';
+  }
+  return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
 }
 
 function renderPaidDirections() {
@@ -217,7 +248,7 @@ function renderPaidDirections() {
           <div class="unlock-receipt">
             <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
             ${downloadLine}
-            <p class="unlock-receipt__note${store.dietEmailSent ? ' unlock-receipt__note--sent' : (store.dietEmailBusy ? ' unlock-receipt__note--sending' : '')}">a copy has also been sent to your email</p>
+            ${renderDietEmailNote()}
           </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
@@ -369,7 +400,7 @@ async function triggerDietDownload() {
 }
 
 function applyFulfillmentResult(result) {
-  if (result?.emailSent) {
+  if (result?.emailSent || result?.emailAlreadySent) {
     markDietEmailSent();
   }
   store.dietPreparing = !result?.pdfReady;
@@ -380,6 +411,10 @@ function applyFulfillmentResult(result) {
     ? result.emailError
     : '';
   store.dietFulfillmentError = result?.error || '';
+}
+
+function isDietEmailDeliverySuccess(result) {
+  return !!(result?.emailSent || result?.emailAlreadySent);
 }
 
 async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
@@ -400,8 +435,8 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (store.dietEmailSent) break;
 
-    const result = await resendDietEmail(email, programId, { force: true });
-    if (result.ok && result.emailSent) {
+    const result = await resendDietEmail(email, programId, { force: attempt > 0 });
+    if (result.ok && isDietEmailDeliverySuccess(result)) {
       markDietEmailSent();
       store.dietEmailError = '';
       render();
@@ -419,6 +454,10 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
     if (attempt < attempts - 1) {
       await new Promise((resolve) => { setTimeout(resolve, delayMs); });
     }
+  }
+
+  if (!store.dietEmailSent) {
+    await syncDietEmailSentFromServer();
   }
 
   store.dietEmailBusy = false;

@@ -137,7 +137,7 @@ async function fulfillPaidProgram(email, programId) {
   if (!email || !programId) return { pdfReady: false };
   try {
     const result = await fulfillDietDelivery(email, programId);
-    if (!result.emailSent && dietEmailConfigured()) {
+    if (!result.emailSent && !result.emailAlreadySent && dietEmailConfigured()) {
       scheduleDietEmailRetries(email, programId);
     }
     return result;
@@ -564,11 +564,20 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
   try {
     const forceEmail = req.body?.force === true;
     const result = await fulfillDietDelivery(email, programId, { forceEmail });
+    if (!result.emailSent && result.emailAlreadySent && !forceEmail) {
+      res.json({
+        ok: true,
+        email,
+        programId,
+        emailSent: false,
+        emailAlreadySent: true,
+        emailSkipped: result.emailSkipped,
+      });
+      return;
+    }
     if (!result.emailSent) {
-      const message = result.emailAlreadySent
-        ? 'A copy was already sent for this program. Use force resend if you did not receive it.'
-        : (result.emailError || 'Email could not be sent.');
-      const status = result.emailAlreadySent ? 409 : (result.emailSkipped ? 503 : 500);
+      const message = result.emailError || 'Email could not be sent.';
+      const status = result.emailSkipped ? 503 : 500;
       res.status(status).json({
         ok: false,
         message,

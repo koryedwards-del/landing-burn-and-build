@@ -26,8 +26,8 @@ export function scheduleDietEmailRetries(email, programId, { attempts = 6, delay
     }
     attempt += 1;
     try {
-      const result = await fulfillDietDelivery(email, programId);
-      if (result.emailSent) {
+      const result = await fulfillDietDelivery(email, programId, { forceEmail: attempt > 1 });
+      if (result.emailSent || result.emailAlreadySent) {
         emailRetryTimers.delete(key);
         return;
       }
