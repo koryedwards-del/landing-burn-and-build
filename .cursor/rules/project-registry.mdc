@@ -16,7 +16,7 @@ Push to `main` deploys static site via GitHub Pages.
 | Path | Role |
 |------|------|
 | `/` (index.html) | Marketing landing |
-| `questionnaire/` | Intake → Burn Engine → checkout handoff |
+| `questionnaire/` | Program questionnaire → Burn Engine → checkout handoff |
 | `createyourfoodplan/` | Stripe checkout paywall |
 | `program-report/` | Unified program shell (Welcome → Menu planner) |
 | `menuplanner/` | Redirect → program-report page 4 |

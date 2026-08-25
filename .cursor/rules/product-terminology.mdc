@@ -7,6 +7,19 @@ alwaysApply: true
 
 Burn & Build uses **three terms for three layers**. Do not swap them for the same concept.
 
+## Questionnaire vs intake (locked decision)
+
+The multi-step flow that collects body, activity, and lifestyle answers before checkout has **one product name** and **one internal data name**. Do not use them interchangeably in user-facing copy.
+
+| Context | Term | Examples |
+|---------|------|----------|
+| **User-facing process / page** | **Questionnaire** (or **program questionnaire**) | Nav, docs, support copy, “go back to the questionnaire”, waiver (“results of this questionnaire”) |
+| **URL / folder** | **`/questionnaire/`** | Locked path — do not rename to `/intake/` |
+| **Code / data model** | **`intake`** | `pkg.intake`, `intake-form` CSS classes, `intakeDate` — internal only, not a user-facing label |
+| **Avoid as primary label** | **Intake form** | Do not use as the page title or marketing name unless the user explicitly requests a rebrand |
+
+**Rule:** Say **questionnaire** to users and in agent/docs copy; say **`intake`** only in code when referring to the saved answers object or form markup.
+
 ## One-sentence rule
 
 > **Burn & Build Diet** is the product; **your program** is what we generate; **your food plan** is what you eat.
@@ -17,7 +30,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 |------|--------|---------------------|---------|
 | **Diet** | Product | What do they buy? | *The Burn & Build Diet*, *Get the Diet*, heritage (*Since 1982*), pricing ($149), checkout (*Download your Burn & Build Diet*), brand positioning |
 | **Food plan** | Eating rules | What do they follow daily? | PDF page 3, servings prescription, meal-building steps, handbook/FAQ about portions and adherence |
-| **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **program report** PDF + menu planner; saved account artifact; *your program will be created* before Stripe |
+| **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **program report** PDF; saved account artifact; *your program will be created* before Stripe |
 
 ## Avoid
 
@@ -27,10 +40,12 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 | **Diet plan** | Merges product (*diet*) with eating rules (*food plan*) — use **diet** or **food plan** or **program** by layer |
 | **Diet program** | Same merge — pick **diet** or **program** |
 | Using **diet**, **food plan**, and **program** interchangeably for the same thing | Each layer has one primary term |
+| **Intake form** as the user-facing name for `/questionnaire/` | Use **questionnaire** / **program questionnaire** — **intake** is code-only |
 
 ## Correct examples
 
 - Landing CTA: **Get the Diet** → `/questionnaire/?create=1`
+- Questionnaire page title: **Program Questionnaire** (tag: *Burn & Build program questionnaire*)
 - Pricing product name: **The Burn & Build Diet** — $149 one-time purchase
 - Before checkout: *When you have answered these questions… your **program** will be created*
 - Sample / Welcome section title: **Food Plan** (PDF page 3 — eating rules, not the product name)
@@ -42,6 +57,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 | Surface | Wrong | Right |
 |---------|-------|-------|
 | Questionnaire step label | Build Your **Diet Plan** | Build Your **Program** or start-your-**diet** wording — never *diet plan* |
+| Questionnaire page title | **Intake form** | **Program Questionnaire** (or **Questionnaire** in short nav copy) |
 | Questionnaire intro | Burn Engine builds your **diet** | builds your **program** (report + planner) |
 | Download button | Download **diet plan** | Download **program report** or **your diet** (product) |
 | Pricing disclaimer | difficult **program** | difficult **diet** (product) |
@@ -52,7 +68,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 ## Gray areas (usually OK)
 
 - **Program report** — document name for the full PDF; not the product name, not page 3 alone
-- **Program questionnaire** — intake that builds the program
+- **`intake` in code** — saved answers object (`pkg.intake`); not a user-facing synonym for questionnaire
 - Colloquial **plan** when context is clearly servings or adherence (*your plan uses servings*) — not the product name
 - Waiver / everyday English (*changes to my diet*) — eating habits, not product naming
 - **Cutting-diet staples** — historical bodybuilding term in food-list copy
@@ -62,5 +78,6 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 
 1. Which layer is this copy about — **product**, **eating rules**, or **generated package**?
 2. Pick **diet**, **food plan**, or **program** accordingly — one primary term per layer
-3. Never introduce **food program** or **diet plan**
-4. When fixing drift, change **only** what the user explicitly asks for — one surface at a time
+3. For the pre-checkout wizard: user-facing **questionnaire**; code **`intake`** only
+4. Never introduce **food program** or **diet plan**
+5. When fixing drift, change **only** what the user explicitly asks for — one surface at a time

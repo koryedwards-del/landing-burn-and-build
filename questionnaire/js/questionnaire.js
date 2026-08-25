@@ -1514,7 +1514,7 @@ function restoreQuestionnaireChrome() {
   document.querySelector('.q-app')?.classList.add('q-app--workroom');
   const title = document.querySelector('.q-title');
   const tag = document.querySelector('.q-tag');
-  if (title) title.textContent = 'Intake form';
+  if (title) title.textContent = 'Program Questionnaire';
   if (tag) tag.textContent = 'Burn & Build program questionnaire';
   tag?.classList.remove('q-tag--gold');
   syncIntakeQuestionNumbers();
