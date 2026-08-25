@@ -161,7 +161,7 @@
     .who-list li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; padding-left: 20px; position: relative; color: var(--yellow); }
     .who-list li::before { content: '▶'; position: absolute; left: 0; color: var(--yellow); font-size: 0.6rem; top: 3px; }
 
-    .filter { padding: 56px 40px 32px; background: var(--dark); text-align: center; }
+    .filter { padding: 56px 40px; background: var(--dark); text-align: center; }
     .filter-inner { max-width: 720px; margin: 0 auto; }
     .filter p {
       font-family: 'Barlow', sans-serif;
@@ -179,7 +179,7 @@
       color: var(--yellow);
     }
 
-    .search-faq { padding: 0 40px 80px; background: var(--black); }
+    .search-faq { padding: 56px 40px 80px; background: var(--black); }
     .search-faq-inner { max-width: 760px; margin: 0 auto; }
     .accordion { display: flex; flex-direction: column; gap: 3px; }
     .accordion-item { background: var(--gray); border-left: 3px solid transparent; }
@@ -369,6 +369,8 @@
       <p class="filter-hook">But if you think you're missing something like…</p>
     </div>
   </section>
+
+  <div class="divider"></div>
 
   <section class="search-faq" id="questions">
     <div class="search-faq-inner">
