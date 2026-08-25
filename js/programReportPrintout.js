@@ -86,8 +86,8 @@ export const STEPS_TO_SUCCESS_COPY = Object.freeze({
       body: 'Follow the daily serving totals on your Servings page. No calorie or macro counting — the computer already did that work. Stay within the approved food groups.',
     },
     {
-      title: 'Plan your week',
-      body: 'Use the menu planner online to assign foods to each meal, track servings, and build your grocery list. Print your week at a glance from Print Shop before you shop.',
+      title: 'Plan your meals',
+      body: 'Use the food list on pages five and six of your Burn & Build Diet PDF. Weigh each portion to your servings and build breakfast, lunch, dinner, and fruit snacks from the approved foods.',
     },
     {
       title: 'Eat on schedule',
@@ -102,7 +102,7 @@ export const STEPS_TO_SUCCESS_COPY = Object.freeze({
       body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
     },
   ],
-  footer: 'For detailed guidance, open Print Shop from the menu planner — For Best Results, the food list, and Frequently Asked Questions.',
+  footer: 'Your full Burn & Build Diet PDF includes your food plan, servings, food list, and meal-building steps — everything you need on paper.',
 });
 
 /** Kept in payload until production API deploys — old Render build requires welcome. */
