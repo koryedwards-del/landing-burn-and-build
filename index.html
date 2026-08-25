@@ -72,7 +72,6 @@
     .how-header { text-align: center; margin-bottom: 72px; }
 
     .guide { padding: 60px 40px 40px; background: var(--black); }
-    .guide-inner { max-width: 1100px; margin: 0 auto; }
     .guide-row {
       display: grid;
       grid-template-columns: 1fr 1.15fr 1fr;
@@ -156,6 +155,15 @@
     .who-list { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .who-list li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; padding-left: 20px; position: relative; color: var(--yellow); }
     .who-list li::before { content: '▶'; position: absolute; left: 0; color: var(--yellow); font-size: 0.6rem; top: 3px; }
+
+    .who-proof {
+      margin-top: 72px;
+      text-align: center;
+    }
+
+    .who .guide-row {
+      margin-top: 48px;
+    }
 
     .filter { padding: 56px 40px; background: var(--dark); text-align: center; }
     .filter-inner { max-width: 720px; margin: 0 auto; }
@@ -490,13 +498,7 @@
           </ul>
         </div>
       </div>
-    </div>
-  </section>
-  <div class="divider"></div>
-
-  <section class="guide" id="guide">
-    <div class="guide-inner">
-      <p class="section-label" style="text-align:center;">Real People. Real Results.</p>
+      <p class="section-label who-proof">Real People. Real Results.</p>
       <div class="guide-row">
         <div class="testi">
           <div class="guide-photo-label">
