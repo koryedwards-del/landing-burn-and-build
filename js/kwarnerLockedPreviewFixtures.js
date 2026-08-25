@@ -10,9 +10,9 @@ export const KWARNER_WELCOME_COPY = {
     'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, day to day, and exercise hours. With this information, Burn & Build generated this report. Page two is your Lean Body Analysis, including your projected progress; the pages that follow are your custom-designed diet and food list.',
   ],
   leanBodyAnalysis:
-    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. Burn & Build uses your LBM (lean body mass) to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.',
+    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. Burn & Build uses your LBM (lean body mass) to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.',
   foodPlan:
-    'Page three is your custom-designed food plan. It explains why servings go a step farther than macros, what each food group does for your body, and how Burn & Build built your prescription from your lean body mass, job, and exercise. The servings on page four follow directly from this page.',
+    'Page three is your custom-designed food plan. It explains why servings go a step farther than macros, how tracking macros can lead you astray, and the five steps for building each meal from your food list. The servings on page four follow directly from this page.',
   servings:
     'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
@@ -32,8 +32,15 @@ export const KWARNER_FOOD_PLAN_HOWTO = [
   'Step 5 Eat all the food you put on the plate.',
 ];
 
-export const KWARNER_FOOD_GROUPS_INTRO =
-  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercise isn\'t working? Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.';
+export const KWARNER_FOOD_GROUPS_INTRO = [
+  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss.',
+  'The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercising isn\'t working?',
+  'Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.',
+];
+
+export const KWARNER_SERVINGS_INTRO = [
+  'Page three showed you how to build each meal — weigh your protein and grain or starch in grams, season without added fat, sugar, or alcohol, and eat everything on your plate. This page is your daily prescription: how many servings of each food group you need across breakfast, lunch, dinner, and snacks.',
+];
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',

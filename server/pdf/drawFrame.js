@@ -90,11 +90,20 @@ export function frameContentContainer(box, topGoldY) {
   };
 }
 
+const TITLE_CASE_SMALL_WORDS = new Set([
+  'a', 'an', 'and', 'as', 'at', 'but', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'vs', 'via',
+]);
+
 function titleCaseWords(text) {
-  return String(text || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  return words
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (index > 0 && index < words.length - 1 && TITLE_CASE_SMALL_WORDS.has(lower)) {
+        return lower;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
     .join(' ');
 }
 
@@ -261,11 +270,7 @@ export function framePageTitleStartY(topGoldY) {
 }
 
 export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } = {}) {
-  const display = String(title || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+  const display = titleCaseWords(title);
 
   doc
     .font(PDF_FRAME_FONTS.bold)

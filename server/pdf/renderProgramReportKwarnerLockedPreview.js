@@ -45,6 +45,7 @@ import {
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
 } from '../../js/lbaPrintout.js';
+import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
 export const KWARNER_LOCKED_MIN_PAGES = 7;
 
@@ -2011,7 +2012,19 @@ const SERVINGS_TABLE_COLUMNS = Object.freeze([
   { key: 'snack3', width: 0.1, align: 'center' },
 ]);
 
-function buildServingsTableRows(gridRows) {
+function buildServingsTableRows(gridRows, extraFats = []) {
+  const extraRows = extraFats.map((line, index) => ({
+    label: index === 0 ? EXTRA_FATS_LABEL : '',
+    daily: line.value,
+    breakfast: line.note,
+    snack1: '',
+    lunch: '',
+    snack2: '',
+    dinner: '',
+    snack3: '',
+    _colSpan: { from: 'breakfast', to: 'snack3' },
+  }));
+
   return [
     {
       label: '',
@@ -2024,16 +2037,17 @@ function buildServingsTableRows(gridRows) {
       snack3: 'Snack',
     },
     ...gridRows,
+    ...extraRows,
   ];
 }
 
-function drawServingsTable(doc, payload, page, gridRows) {
+function drawServingsTable(doc, payload, page, gridRows, extraFats = []) {
   const servingsTableOpts = {
     x: page.x,
     y: page.y,
     width: page.width,
     columns: SERVINGS_TABLE_COLUMNS,
-    rows: buildServingsTableRows(gridRows),
+    rows: buildServingsTableRows(gridRows, extraFats),
     headerRows: 1,
   };
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
@@ -2060,7 +2074,10 @@ function drawFoodPlanPage(doc, payload) {
   }
 
   if (fp.macroSignalIntro) {
-    page = drawBodyParagraphs(doc, payload, page, [fp.macroSignalIntro]);
+    const introParagraphs = Array.isArray(fp.macroSignalIntro)
+      ? fp.macroSignalIntro
+      : [fp.macroSignalIntro];
+    page = drawBodyParagraphs(doc, payload, page, introParagraphs);
   }
 
   const macroRows = fp.macroSignalRows || [];
@@ -2104,10 +2121,14 @@ function drawServingsPage(doc, payload) {
   const servings = payload.servings;
   let page = startLockedPage(doc, payload, 'Servings');
 
+  if (servings.intro?.length) {
+    page = drawBodyParagraphs(doc, payload, page, servings.intro);
+  }
+
   page = drawBodyParagraphs(doc, payload, page, [servings.note]);
 
   const gridRows = servings.gridRows.map((row) => ({ ...row }));
-  page = drawServingsTable(doc, payload, page, gridRows);
+  page = drawServingsTable(doc, payload, page, gridRows, servings.extraFats || []);
 
   finishLockedPage(doc, page.box, payload);
 }

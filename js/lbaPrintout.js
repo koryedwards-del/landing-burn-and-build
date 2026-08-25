@@ -38,7 +38,7 @@ export function formatFatSourceLabel(value, otherText = '') {
 
 export function lbaProfileLine({ heightInches, sex, age, fatSource, fatSourceOther }) {
   const bodyComp = formatFatSourceLabel(fatSource, fatSourceOther);
-  return `Height: ${heightInches} inches  Sex: ${sex}  Body comp: ${bodyComp}  Age: ${age} years of experience`;
+  return `Height: ${heightInches} inches  Sex: ${sex}  Body comp: ${bodyComp}  Age: ${age} years`;
 }
 
 /** Structured profile stats for LBA snapshot card (PDF). */
@@ -48,7 +48,7 @@ export function lbaProfileStats({ heightInches, sex, age, fatSource, fatSourceOt
     { label: 'HEIGHT', value: `${heightInches} in.` },
     { label: 'SEX', value: sex },
     { label: 'BODY COMP', value: bodyComp },
-    { label: 'AGE', value: `${age} years of experience` },
+    { label: 'AGE', value: `${age} years` },
   ];
 }
 
@@ -225,7 +225,6 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
   const lean = Number(lbm);
   const lbmCell = lean > 0
     ? {
-      fatLabel: '<0.00% FAT',
       label: 'LBM',
       poundsLabel: `${round2(lean)} lbs.`,
     }
