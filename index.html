@@ -341,50 +341,6 @@
       color: var(--text-dim);
     }
 
-    .mechanism { padding: 80px 40px; background: var(--black); text-align: center; }
-    .mechanism-inner { max-width: 920px; margin: 0 auto; }
-    .mechanism-q {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--gray-heading);
-      margin-bottom: 40px;
-      line-height: 1.15;
-    }
-    .mechanism-q span { color: var(--yellow); }
-    .mechanism-flow {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 8px 12px;
-      margin-bottom: 16px;
-    }
-    .mechanism-chip {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 0.95rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--black);
-      background: var(--yellow);
-      padding: 10px 16px;
-    }
-    .mechanism-arrow { color: var(--yellow); font-size: 1.25rem; }
-    .mechanism-down { color: var(--yellow); font-size: 1.75rem; margin: 8px 0 16px; }
-    .mechanism-out {
-      display: inline-block;
-      border: 2px solid var(--yellow);
-      padding: 14px 24px;
-      font-family: Impact, 'Arial Narrow', sans-serif;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--yellow);
-    }
-
     .sample-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -498,7 +454,7 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 48px; }
-      .filter, .search-faq, .mechanism, .puzzled { padding-left: 20px; padding-right: 20px; }
+      .filter, .search-faq, .puzzled { padding-left: 20px; padding-right: 20px; }
       .sample-split { padding: 0 20px 64px; }
       .who-card { padding: 40px 28px; }
     }
@@ -631,25 +587,6 @@
           <div class="testi-author">Dave McAferty — Client Since 1990</div>
         </div>
       </div>
-    </div>
-  </section>
-  <div class="divider"></div>
-
-  <section class="mechanism" id="plan">
-    <div class="mechanism-inner">
-      <p class="section-label">The Missing Piece</p>
-      <h2 class="mechanism-q">How much food do I need to eat<br /><span>for what I do?</span></h2>
-      <div class="mechanism-flow" aria-hidden="true">
-        <span class="mechanism-chip">Body</span>
-        <span class="mechanism-arrow">+</span>
-        <span class="mechanism-chip">Work</span>
-        <span class="mechanism-arrow">+</span>
-        <span class="mechanism-chip">Activity</span>
-        <span class="mechanism-arrow">+</span>
-        <span class="mechanism-chip">Training</span>
-      </div>
-      <div class="mechanism-down" aria-hidden="true">↓</div>
-      <div class="mechanism-out">Your Burn &amp; Build Plan</div>
     </div>
   </section>
   <div class="divider"></div>
