@@ -1513,9 +1513,7 @@ function restoreQuestionnaireChrome() {
   document.body.classList.add('q-app--workroom');
   document.querySelector('.q-app')?.classList.add('q-app--workroom');
   const title = document.querySelector('.q-title');
-  const tag = document.querySelector('.q-tag');
   if (title) title.textContent = 'Program Questionnaire';
-  tag?.classList.remove('q-tag--gold');
   syncIntakeQuestionNumbers();
   activateIntakeMode();
 }

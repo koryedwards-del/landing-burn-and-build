@@ -42,14 +42,6 @@ body.q-app--workroom,
   text-shadow: none;
 }
 
-.q-app--workroom .q-tag {
-  display: none;
-}
-
-.q-app--workroom .q-tag--gold {
-  color: var(--muted);
-}
-
 .q-app--workroom .q-nav {
   border-bottom: 1px solid var(--border);
 }
