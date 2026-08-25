@@ -21,7 +21,12 @@ import {
   SEMINAR_FONTS,
 } from './drawSeminar.js';
 import { validatePrintPayload } from './validate.js';
-import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypography.js';
+import {
+  PRINT_TEMPLATE_LBA_SNAPSHOT,
+  PRINT_TEMPLATE_PROGRESS_BAR,
+  PRINT_TEMPLATE_TYPOGRAPHY as PT,
+  PRINT_TEMPLATE_WELCOME,
+} from '../../js/printTemplateTypography.js';
 import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_GRAINS_STARCHES,
@@ -115,13 +120,22 @@ const LAYOUT = {
   contentPad: PT.contentPad,
 };
 
-function measureParagraph(doc, paragraph, width) {
+function resolveBodyTypography(options = {}) {
+  return {
+    bodySize: options.bodySize ?? LAYOUT.bodySize,
+    lineGap: options.lineGap ?? LAYOUT.lineGap,
+    paragraphGap: options.paragraphGap ?? LAYOUT.paragraphGap,
+  };
+}
+
+function measureParagraph(doc, paragraph, width, typography = {}) {
   if (!paragraph) return 0;
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  const { bodySize, lineGap, paragraphGap } = resolveBodyTypography(typography);
+  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
   return doc.heightOfString(String(paragraph), {
     width,
-    lineGap: LAYOUT.lineGap,
-  }) + LAYOUT.paragraphGap;
+    lineGap,
+  }) + paragraphGap;
 }
 
 function drawCenteredBodyParagraph(doc, payload, page, text) {
@@ -140,22 +154,29 @@ function drawCenteredBodyParagraph(doc, payload, page, text) {
   return { ...current, y: doc.y + LAYOUT.paragraphGap };
 }
 
-function drawBodyParagraphs(doc, payload, page, paragraphs, { fullHeader = false, pageTitle = null } = {}) {
+function drawBodyParagraphs(doc, payload, page, paragraphs, {
+  fullHeader = false,
+  pageTitle = null,
+  bodySize,
+  lineGap,
+  paragraphGap,
+} = {}) {
+  const typography = resolveBodyTypography({ bodySize, lineGap, paragraphGap });
   let current = page;
   (paragraphs || []).forEach((paragraph) => {
     if (!paragraph) return;
-    const blockH = measureParagraph(doc, paragraph, current.width);
+    const blockH = measureParagraph(doc, paragraph, current.width, typography);
     current = ensureLockedSpace(doc, payload, current, blockH, { fullHeader });
     doc
       .font(SEMINAR_FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
+      .fontSize(typography.bodySize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(paragraph), current.x, current.y, {
         width: current.width,
-        lineGap: LAYOUT.lineGap,
+        lineGap: typography.lineGap,
         align: 'left',
       });
-    current = { ...current, y: doc.y + LAYOUT.paragraphGap };
+    current = { ...current, y: doc.y + typography.paragraphGap };
   });
   return current;
 }
@@ -542,14 +563,14 @@ function drawFlavorKitsColumn(doc, kits, x, y, width, bottomY) {
 function drawPanelNote(doc, text, x, y, width) {
   doc
     .font(SEMINAR_FONTS.regular)
-    .fontSize(LAYOUT.bodySize - 0.5)
+    .fontSize(PT.footnote)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(text), x, y, { width, lineGap: LAYOUT.lineGap });
   return doc.y + LAYOUT.paragraphGap;
 }
 
 function measurePanelNote(doc, text, width) {
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize - 0.5);
+  doc.font(SEMINAR_FONTS.regular).fontSize(PT.footnote);
   return doc.heightOfString(String(text), { width, lineGap: LAYOUT.lineGap });
 }
 
@@ -698,18 +719,14 @@ function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = 
 
 function drawWelcomePage(doc, payload) {
   let page = startLockedPage(doc, payload, 'Welcome', { fullHeader: true });
-  const guide = {
-    bodySize: 9.5,
-    titleSize: 10.5,
-    lineGap: 2,
-    paragraphGap: 6,
-    headerGap: 4,
-    sectionGap: 6,
-  };
+  const guide = PRINT_TEMPLATE_WELCOME;
 
   page = drawBodyParagraphs(doc, payload, page, payload.welcome.intro, {
     fullHeader: true,
     pageTitle: 'Welcome',
+    bodySize: guide.introBody,
+    lineGap: guide.lineGap,
+    paragraphGap: guide.paragraphGap,
   });
   page = { ...page, y: page.y + guide.sectionGap };
 
@@ -721,20 +738,20 @@ function drawWelcomePage(doc, payload) {
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
-    doc.font(SEMINAR_FONTS.bold).fontSize(guide.titleSize);
-    const blockH = guide.titleSize + guide.headerGap
+    doc.font(SEMINAR_FONTS.bold).fontSize(guide.sectionTitle);
+    const blockH = guide.sectionTitle + guide.headerGap
       + doc.heightOfString(String(body), { width: page.width, lineGap: guide.lineGap })
       + guide.paragraphGap;
     page = ensureLockedSpace(doc, payload, page, blockH, { fullHeader: true });
     doc
       .font(SEMINAR_FONTS.bold)
-      .fontSize(guide.titleSize)
+      .fontSize(guide.sectionTitle)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(title), page.x, page.y, { width: page.width, lineGap: 0 });
     page = { ...page, y: doc.y + guide.headerGap };
     doc
       .font(SEMINAR_FONTS.regular)
-      .fontSize(guide.bodySize)
+      .fontSize(guide.sectionBody)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(body), page.x, page.y, {
         width: page.width,
@@ -754,7 +771,7 @@ function measureLayoutTable(doc, opts) {
   return layoutTableRowHeights(doc, opts).reduce((sum, h) => sum + h, 0);
 }
 
-const PROJECTION_TABLE_HEAD_SIZE = PT.body * 1.5 * 0.75;
+const PROJECTION_TABLE_HEAD_SIZE = PT.macroTableHead;
 
 function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
   if (isHeader) {
@@ -1299,8 +1316,8 @@ function drawProjectionsPage(doc, payload) {
 }
 
 const BODY_FAT_PROGRESS_BAR = Object.freeze({
-  titleSize: 11,
-  subtitleSize: 8,
+  titleSize: PRINT_TEMPLATE_PROGRESS_BAR.title,
+  subtitleSize: PRINT_TEMPLATE_PROGRESS_BAR.subtitle,
   barHeight: 52,
   barRadius: 6,
   lbmCellWidthRatio: 0.15,
@@ -1312,18 +1329,18 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
     Training: { fill: '#C4681A', text: '#ffffff' },
     'Off-season': { gradient: ['#D4A800', '#FFEB66'], text: '#333333' },
   }),
-  capLabelSize: 8,
-  categorySize: 6,
-  weightLabelSize: 9,
+  capLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.capLabel,
+  categorySize: PRINT_TEMPLATE_PROGRESS_BAR.category,
+  weightLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.weightLabel,
   cellLineGap: 2,
-  markerLabelSize: 10,
+  markerLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.markerLabel,
   markerH: 5,
-  footerSize: 9,
+  footerSize: PRINT_TEMPLATE_PROGRESS_BAR.footer,
   footerLineGap: 6,
   footerPad: 10,
   sectionGap: 10,
-  timelineLabelSize: 9,
-  timelineBfSize: 11,
+  timelineLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.timelineLabel,
+  timelineBfSize: PRINT_TEMPLATE_PROGRESS_BAR.timelineBf,
   timelineSectionH: 39,
   timelineMarkerH: 8,
   timelineTriHalfW: 5,
@@ -1792,11 +1809,11 @@ function drawDesirableLbmBar(doc, page, bar, footerText) {
 
 const LBA_SNAPSHOT = Object.freeze({
   pad: 10,
-  profileLabelSize: 7,
-  profileValueSize: 9,
-  todayTitleSize: 8,
-  todayHeadSize: 7.5,
-  todayBodySize: 9.5,
+  profileLabelSize: PRINT_TEMPLATE_LBA_SNAPSHOT.profileLabel,
+  profileValueSize: PRINT_TEMPLATE_LBA_SNAPSHOT.profileValue,
+  todayTitleSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayTitle,
+  todayHeadSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayHead,
+  todayBodySize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayBody,
   todayRowPad: 6,
   sectionGap: 8,
   ruleInset: 10,
