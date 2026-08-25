@@ -382,7 +382,7 @@ function drawStaplesFoodListPage(doc, payload) {
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-  drawStaplesColumn(doc, 'Protein Staples', proteinItems, columns[0], page.y, page.bottom);
+  drawStaplesColumn(doc, 'Protein & Dairy', proteinItems, columns[0], page.y, page.bottom);
 
   let gsTitleY = drawSectionTitle(doc, 'Grains & Starches', columns[1].x, page.y, columns[1].width);
   let gsIndex = 0;
