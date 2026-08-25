@@ -33,7 +33,7 @@ export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
 export const PRINT_TEMPLATE_WELCOME = Object.freeze({
   introBody: 10.5,
   sectionTitle: 10.5,
-  sectionBody: 9.5,
+  sectionBody: 10.5,
   lineGap: 2,
   paragraphGap: 6,
   headerGap: 4,
