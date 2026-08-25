@@ -181,6 +181,43 @@ export function lbaBodyFatRangeWeightRanges(gender, lbm) {
   }));
 }
 
+/** Fat-to-lean continuum line — scale, ticks, and current position for LBA PDF. */
+export function lbaFatLeanContinuum(gender, bodyFatPercent) {
+  const categories = lbaBodyFatRangeCategories(gender);
+  if (!categories.length) return null;
+
+  const currentBf = round2(Number(bodyFatPercent));
+  if (!Number.isFinite(currentBf)) return null;
+
+  const scaleMin = categories[0].bfMin;
+  const lastBand = categories[categories.length - 1];
+  const scaleMax = Math.ceil(Math.max(
+    currentBf + 2,
+    lastBand.bfMin + 6,
+    scaleMin + 20,
+  ));
+
+  const ticks = categories.map((cat) => {
+    const isOpenEnd = cat.bfMin === lastBand.bfMin && lastBand.bfMax == null;
+    return {
+      bf: cat.bfMin,
+      label: isOpenEnd ? `${Math.round(cat.bfMin)}%+` : `${Math.round(cat.bfMin)}%`,
+    };
+  });
+
+  const active = lbaBodyFatRangeForPercent(gender, currentBf);
+
+  return {
+    scaleMin,
+    scaleMax,
+    currentBf,
+    currentLabel: active?.label || '',
+    leanAnchor: LBA_BF_RANGE_LABELS[0],
+    fatAnchor: LBA_BF_RANGE_LABELS[LBA_BF_RANGE_LABELS.length - 1],
+    ticks,
+  };
+}
+
 /** @deprecated Use lbaBodyFatRangeWeightRanges */
 export function aceHealthWeightRanges(gender, lbm) {
   return lbaBodyFatRangeWeightRanges(gender, lbm);
