@@ -12,7 +12,7 @@ export const KWARNER_WELCOME_COPY = {
   servings:
     'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
-    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven lists tips and suggestions for using your food list. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.',
+    'Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven lists the tips columns from your food list sheets — Protein Tips, Grains & Starches Tips, Vegetable Tips, and Fruit Tips. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [

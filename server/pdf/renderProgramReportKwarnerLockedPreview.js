@@ -500,11 +500,11 @@ function drawFoodSheetTipsSections(doc, sections, col, yStart, bottomY) {
   return y;
 }
 
-/** PDF page 7 — assembled food-list tips (Print Shop food sheet columns). */
+/** PDF page 7 — all food-sheet tip columns (Print Shop food list, right-hand Q&A). */
 function drawFoodSheetTipsPage(doc, payload) {
   const sections = foodSheetTipsSections();
   const columnSections = [sections.slice(0, 2), sections.slice(2)];
-  const page = startLockedPage(doc, payload, 'Tips and Suggestions');
+  const page = startLockedPage(doc, payload, 'Food List');
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
