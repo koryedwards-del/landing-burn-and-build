@@ -91,9 +91,24 @@ function formatCapHeader(cap) {
 function formatBarFatHeader(cap, gender) {
   const floor = gender === 'female' ? PROJECTION_BF_FLOOR.female : PROJECTION_BF_FLOOR.male;
   if (Math.abs(Number(cap) - floor) < 0.5) {
-    return gender === 'female' ? '< 9% FAT' : '< 5% FAT';
+    return `< ${floor.toFixed(2)}% FAT`;
   }
   return `< ${Math.round(Number(cap))}% FAT`;
+}
+
+function lbaBfFloor(gender) {
+  return gender === 'female' ? PROJECTION_BF_FLOOR.female : PROJECTION_BF_FLOOR.male;
+}
+
+function lbaStageReadyCategory(gender) {
+  const floor = lbaBfFloor(gender);
+  return {
+    label: gender === 'female' ? 'Stage-ready' : 'Stage-ready (extremely lean)',
+    bfMin: floor,
+    bfMax: floor,
+    bfRangeLabel: `${floor.toFixed(2)}%`,
+    isUltrasoundFloor: true,
+  };
 }
 
 function formatBarCurrentFatHeader(bf) {
@@ -101,16 +116,14 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
-/** Body-fat appearance ranges — labels and % bands (gender-specific). */
-const LBA_BF_RANGE_CATEGORIES = Object.freeze({
+/** Body-fat appearance ranges — Stage-ready uses PROJECTION_BF_FLOOR (ultrasound). */
+const LBA_BF_RANGE_REST = Object.freeze({
   female: [
-    { label: 'Stage-ready', bfMin: 8, bfMax: 9.99, bfRangeLabel: '8–9%' },
     { label: 'Athletic', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14–20%' },
     { label: 'Visible abs', bfMin: 15, bfMax: 17.99, bfRangeLabel: '15–17%' },
     { label: 'Average', bfMin: 21, bfMax: 30.99, bfRangeLabel: '21–30%' },
   ],
   male: [
-    { label: 'Stage-ready (extremely lean)', bfMin: 3, bfMax: 5.99, bfRangeLabel: '3–5%' },
     { label: 'Athletic', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6–13%' },
     { label: 'Visible six-pack', bfMin: 8, bfMax: 11.99, bfRangeLabel: '8–11%' },
     { label: 'Average', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14–20%' },
@@ -119,7 +132,7 @@ const LBA_BF_RANGE_CATEGORIES = Object.freeze({
 
 function lbaBodyFatRangeRows(gender) {
   const key = gender === 'female' ? 'female' : 'male';
-  return LBA_BF_RANGE_CATEGORIES[key].map((row) => ({ ...row }));
+  return [lbaStageReadyCategory(key), ...LBA_BF_RANGE_REST[key].map((row) => ({ ...row }))];
 }
 
 function lbaBodyFatRangeSpan(category) {
@@ -148,8 +161,12 @@ export function lbaBodyFatRangeForPercent(gender, bodyFatPercent) {
   const bf = Number(bodyFatPercent);
   if (!Number.isFinite(bf)) return null;
   const categories = lbaBodyFatRangeCategories(gender);
-  if (bf < categories[0].bfMin) return categories[0];
-  const matches = categories.filter((category) => lbaBodyFatRangeMatches(bf, category));
+  const [stageReady, ...rest] = categories;
+  const nextMin = rest[0]?.bfMin;
+  if (stageReady && (bf <= stageReady.bfMin || (nextMin != null && bf < nextMin))) {
+    return stageReady;
+  }
+  const matches = rest.filter((category) => lbaBodyFatRangeMatches(bf, category));
   if (matches.length) {
     return matches.reduce((best, category) => (
       lbaBodyFatRangeSpan(category) < lbaBodyFatRangeSpan(best) ? category : best
@@ -166,6 +183,9 @@ export function aceHealthCategoryForBodyFat(gender, bodyFatPercent) {
 function formatAceWeightRange(lbm, category) {
   const lean = Number(lbm);
   if (!lean || lean <= 0 || !category) return '—';
+  if (category.isUltrasoundFloor || category.bfMin === category.bfMax) {
+    return `${Math.round(weightAtBfPercent(lean, category.bfMin))} lbs.`;
+  }
   if (category.bfMax == null) {
     const atMin = Math.round(weightAtBfPercent(lean, category.bfMin));
     return `${atMin} lbs. or more`;

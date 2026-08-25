@@ -23,7 +23,7 @@ export const SERVING_FAT_CAL = Object.freeze({
 /** PHP seminar report: eight-week goal uses 60 days (two months). */
 export const PROJECTION_CYCLE_DAYS = 60;
 export const PROJECTION_CYCLE_WEEKS = 8;
-/** Showtime guardrail — female 8.95%, male 4.68%. */
+/** Ultrasound floor (3 mm thigh + waist) — leanest reading; skin thickness sets the limit. */
 export const PROJECTION_BF_FLOOR = { male: 4.68, female: 8.95 };
 /** PHP weekly line: abs(Y9) / 8.6, not / 8. */
 export const PROJECTION_WEEKLY_DIVISOR = 8.6;
