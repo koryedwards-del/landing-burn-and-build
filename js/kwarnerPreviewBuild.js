@@ -1,11 +1,11 @@
 /** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
-export const KWARNER_PREVIEW_BUILD = "2026-08-25T22-16-50-236Z";
-export const KWARNER_PREVIEW_MD5 = "c42eb670d2655fca3ae12b6472b4df06";
-export const KWARNER_LOCKED_PREVIEW_FILE = "kwarner-locked-preview-kristi-204.pdf";
-export const KWARNER_VEG_FRUIT_FILE = "kwarner-preview-kristi-veg-fruit-v208.pdf";
-export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/' + "kwarner-locked-preview-kristi-204.pdf";
+export const KWARNER_PREVIEW_BUILD = "2026-08-25T22-17-01-849Z";
+export const KWARNER_PREVIEW_MD5 = "4eac394e9f460762ea161fba716ab7eb";
+export const KWARNER_LOCKED_PREVIEW_FILE = "kwarner-locked-preview-kristi-205.pdf";
+export const KWARNER_VEG_FRUIT_FILE = "kwarner-preview-kristi-veg-fruit-v209.pdf";
+export const KWARNER_LOCKED_PREVIEW_PDF = '../docs/samples/' + "kwarner-locked-preview-kristi-205.pdf";
 export const KWARNER_LOCKED_PREVIEW_LATEST_FILE = "kwarner-locked-preview-kristi-latest.pdf";
-export const KWARNER_LOCKED_PREVIEW_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/' + "kwarner-locked-preview-kristi-204.pdf";
+export const KWARNER_LOCKED_PREVIEW_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/' + "kwarner-locked-preview-kristi-205.pdf";
 export const KWARNER_LOCKED_PREVIEW_LATEST_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-locked-preview-kristi-latest.pdf';
 
 export function kwarnerPreviewPdfUrl() {
