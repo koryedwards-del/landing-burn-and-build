@@ -1646,9 +1646,44 @@ const LBA_SNAPSHOT = Object.freeze({
   todayHeadSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayHead,
   todayBodySize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayBody,
   todayRowPad: 6,
+  todayColGap: 22,
   sectionGap: 8,
   ruleInset: 10,
 });
+
+const LBA_TODAY_TITLE = '--TODAY--';
+
+function lbaToday1982PctDisplay(pct) {
+  const raw = String(pct ?? '').trim().replace(/%$/, '');
+  return raw ? `${raw} %` : '—';
+}
+
+/** Compact three-column block widths — centered like 1982 Lean Body Analysis. */
+function lbaTodayBlockLayout(doc, todayRows) {
+  const bodySize = LBA_SNAPSHOT.todayBodySize;
+  doc.font(SEMINAR_FONTS.bold).fontSize(bodySize);
+  const labelColW = todayRows.reduce(
+    (max, row) => Math.max(max, doc.widthOfString(String(row.label || ''))),
+    doc.widthOfString('TOTAL'),
+  );
+  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
+  const pctColW = todayRows.reduce(
+    (max, row) => Math.max(max, doc.widthOfString(lbaToday1982PctDisplay(row.pct))),
+    doc.widthOfString('100.00 %'),
+  );
+  const lbsColW = todayRows.reduce(
+    (max, row) => Math.max(max, doc.widthOfString(String(row.lbs || ''))),
+    doc.widthOfString('184.0 lbs.'),
+  );
+  const gap = LBA_SNAPSHOT.todayColGap;
+  return {
+    labelColW,
+    pctColW,
+    lbsColW,
+    blockW: labelColW + gap + pctColW + gap + lbsColW,
+    rowH: bodySize + LBA_SNAPSHOT.todayRowPad * 2,
+  };
+}
 
 function measureLbaProfileSection(doc, profileStats, width) {
   const pad = LBA_SNAPSHOT.pad;
@@ -1668,27 +1703,25 @@ function measureLbaProfileSection(doc, profileStats, width) {
   return pad + profileLabelH + 3 + profileValueH + pad;
 }
 
-function measureLbaTodaySection(doc, todayRows, width) {
+function measureLbaTodaySection(doc, todayRows) {
+  const { rowH } = lbaTodayBlockLayout(doc, todayRows);
   const todayTitleH = LBA_SNAPSHOT.todayTitleSize;
-  const todayHeadH = LBA_SNAPSHOT.todayHeadSize + LBA_SNAPSHOT.todayRowPad * 2;
-  doc.font(SEMINAR_FONTS.regular).fontSize(LBA_SNAPSHOT.todayBodySize);
-  const todayBodyRowH = Math.max(
-    LBA_SNAPSHOT.todayBodySize + LBA_SNAPSHOT.todayRowPad * 2,
-    todayRows.reduce(
-      (max, row) => Math.max(
-        max,
-        doc.heightOfString(String(row.pct || ''), { width: width * 0.3 }) + LBA_SNAPSHOT.todayRowPad * 2,
-      ),
-      0,
-    ),
-  );
-  return LBA_SNAPSHOT.sectionGap + todayTitleH + 4 + todayHeadH + todayBodyRowH * todayRows.length + LBA_SNAPSHOT.pad;
+  return LBA_SNAPSHOT.sectionGap + todayTitleH + 4 + rowH * todayRows.length + LBA_SNAPSHOT.pad;
 }
 
 function measureLbaSnapshotCard(doc, profileStats, todayRows, width) {
   return measureLbaProfileSection(doc, profileStats, width)
     + 1
-    + measureLbaTodaySection(doc, todayRows, width);
+    + measureLbaTodaySection(doc, todayRows);
+}
+
+function drawLbaToday1982Cell(doc, text, cellX, cellY, cellW, { font, fontSize, align = 'left' }) {
+  doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  const textW = doc.widthOfString(String(text));
+  let textX = cellX;
+  if (align === 'right') textX = cellX + cellW - textW;
+  else if (align === 'center') textX = cellX + (cellW - textW) / 2;
+  doc.text(String(text), textX, cellY + LBA_SNAPSHOT.todayRowPad, { lineBreak: false });
 }
 
 function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
@@ -1696,9 +1729,6 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   const totalH = measureLbaSnapshotCard(doc, profileStats, todayRows, width);
   const colCount = Math.max(profileStats?.length || 1, 1);
   const colW = width / colCount;
-  const labelColW = width * 0.2;
-  const pctColW = width * 0.28;
-  const lbsColW = width - labelColW - pctColW;
   const blue = '#2F6FA8';
   let cy = y;
 
@@ -1744,56 +1774,33 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
     .font(SEMINAR_FONTS.bold)
     .fontSize(LBA_SNAPSHOT.todayTitleSize)
     .fillColor(blue)
-    .text('TODAY', x, cy, { width, align: 'center', lineGap: 0 });
+    .text(LBA_TODAY_TITLE, x, cy, { width, align: 'center', lineGap: 0 });
   cy += LBA_SNAPSHOT.todayTitleSize + 4;
 
-  const drawTodayCell = (text, cellX, cellY, cellW, { font, fontSize, align = 'center', color = SEMINAR_COLORS.body }) => {
-    doc.font(font).fontSize(fontSize).fillColor(color);
-    const textX = align === 'right'
-      ? cellX + cellW - pad - doc.widthOfString(String(text))
-      : align === 'left'
-        ? cellX + pad
-        : cellX + (cellW - doc.widthOfString(String(text))) / 2;
-    doc.text(String(text), textX, cellY + LBA_SNAPSHOT.todayRowPad, { lineBreak: false });
-  };
+  const { labelColW, pctColW, lbsColW, blockW, rowH } = lbaTodayBlockLayout(doc, todayRows);
+  const gap = LBA_SNAPSHOT.todayColGap;
+  const blockX = x + (width - blockW) / 2;
+  const pctX = blockX + labelColW + gap;
+  const lbsX = pctX + pctColW + gap;
+  const bodySize = LBA_SNAPSHOT.todayBodySize;
 
-  drawTodayCell('%', x + labelColW, cy, pctColW, {
-    font: SEMINAR_FONTS.bold,
-    fontSize: LBA_SNAPSHOT.todayHeadSize,
-    color: SEMINAR_COLORS.muted,
-  });
-  drawTodayCell('lbs.', x + labelColW + pctColW, cy, lbsColW, {
-    font: SEMINAR_FONTS.bold,
-    fontSize: LBA_SNAPSHOT.todayHeadSize,
-    color: SEMINAR_COLORS.muted,
-    align: 'right',
-  });
-  cy += LBA_SNAPSHOT.todayHeadSize + LBA_SNAPSHOT.todayRowPad * 2;
-
-  todayRows.forEach((row, index) => {
-    drawTodayCell(row.label, x, cy, labelColW, {
+  todayRows.forEach((row) => {
+    drawLbaToday1982Cell(doc, row.label, blockX, cy, labelColW, {
       font: SEMINAR_FONTS.bold,
-      fontSize: LBA_SNAPSHOT.todayBodySize,
+      fontSize: bodySize,
       align: 'left',
     });
-    drawTodayCell(row.pct, x + labelColW, cy, pctColW, {
+    drawLbaToday1982Cell(doc, lbaToday1982PctDisplay(row.pct), pctX, cy, pctColW, {
       font: SEMINAR_FONTS.regular,
-      fontSize: LBA_SNAPSHOT.todayBodySize,
-    });
-    drawTodayCell(row.lbs, x + labelColW + pctColW, cy, lbsColW, {
-      font: SEMINAR_FONTS.regular,
-      fontSize: LBA_SNAPSHOT.todayBodySize,
+      fontSize: bodySize,
       align: 'right',
     });
-    cy += LBA_SNAPSHOT.todayBodySize + LBA_SNAPSHOT.todayRowPad * 2;
-    if (index < todayRows.length - 1) {
-      doc
-        .strokeColor(TABLE_CONTAINER.stroke)
-        .lineWidth(0.35)
-        .moveTo(x + LBA_SNAPSHOT.ruleInset, cy - LBA_SNAPSHOT.todayRowPad)
-        .lineTo(x + width - LBA_SNAPSHOT.ruleInset, cy - LBA_SNAPSHOT.todayRowPad)
-        .stroke();
-    }
+    drawLbaToday1982Cell(doc, row.lbs, lbsX, cy, lbsColW, {
+      font: SEMINAR_FONTS.regular,
+      fontSize: bodySize,
+      align: 'right',
+    });
+    cy += rowH;
   });
 
   return y + totalH;
