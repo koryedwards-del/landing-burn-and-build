@@ -161,5 +161,7 @@ export function profileFromForm(form) {
     wakeTime: form.wakeTime,
     fatSource: form.fatSource || null,
     fatSourceOther: form.fatSource === 'other' ? String(form.fatSourceOther || '').trim() : '',
+    waiverSignature: String(form.waiverSignature || form.signature || '').trim(),
+    waiverSignedDate: String(form.waiverSignedDate || form.signatureDate || '').trim(),
   };
 }

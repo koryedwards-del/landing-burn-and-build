@@ -3,8 +3,10 @@ import {
   WORK_PHYSICAL,
   WORK_STRESS,
   QUESTIONNAIRE_JOB_OPTIONS,
+  heightFromParts,
 } from '../../js/onboardingEngine.js';
 import { buildProgramPackage } from '../../js/programPackage.js';
+import { buildQuestionnaireConfirmationRows } from '../../js/questionnaireConfirmationPrintout.js';
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
@@ -329,21 +331,6 @@ function workPhysicalLabel(id) {
     || WORK_PHYSICAL.find((item) => item.id === id)?.label || id || '—';
 }
 
-function formatReviewDate(isoDate) {
-  if (!isoDate) return '';
-  const parts = String(isoDate).split('-');
-  if (parts.length !== 3) return isoDate;
-  const [year, month, day] = parts;
-  return `${month} / ${day} / ${year}`;
-}
-
-function waiverSignedLabel(signature, signatureDate) {
-  const name = String(signature || '').trim();
-  if (!name) return '—';
-  const date = formatReviewDate(signatureDate);
-  return date ? `${name} — ${date}` : name;
-}
-
 function workStressLabel(id) {
   return WORK_STRESS.find((item) => item.id === id)?.label || id || '—';
 }
@@ -419,6 +406,8 @@ function toOnboardingForm(values) {
     cardioHours: values.cardioHours,
     fatBurningHours: values.fatBurningHours,
     wakeTime: '06:00',
+    waiverSignature: values.signature,
+    waiverSignedDate: values.signatureDate,
   };
 }
 
@@ -1326,27 +1315,33 @@ function renderNav() {
   }).join('');
 }
 
+function reviewIntakeFromValues(values) {
+  return {
+    preferredName: values.preferredName,
+    email: values.email,
+    referrerName: values.referrerName,
+    heightInches: heightFromParts(values.heightFeet, values.heightInchesPart),
+    sex: values.sex,
+    age: values.age,
+    totalWeight: Number(values.weight) || 0,
+    fatPercent: Number(values.fatPercent) || 0,
+    fatSource: values.fatSource,
+    fatSourceOther: values.fatSourceOther,
+    workPhysical: values.workPhysical,
+    workStress: values.workStress,
+    weightTrainingHours: values.weightTrainingHours,
+    cardioHours: values.cardioHours,
+    fatBurningHours: values.fatBurningHours,
+    waiverSignature: values.signature,
+    waiverSignedDate: values.signatureDate,
+  };
+}
+
 function renderReview() {
   const values = readForm();
+  const rows = buildQuestionnaireConfirmationRows(reviewIntakeFromValues(values));
 
-  const rows = [
-    ['Name', values.preferredName || '—'],
-    ['Email', values.email || '—'],
-    ['Who we thank', values.referrerName || '—'],
-    ['Height', heightLabel(values)],
-    ['Gender', values.sex || '—'],
-    ['Age', values.age != null ? String(values.age) : '—'],
-    ['Weight', values.weight ? `${values.weight} lbs` : '—'],
-    ['Body composition', values.fatPercent ? `${values.fatPercent}% (${fatSourceLabel(values.fatSource, values.fatSourceOther)})` : '—'],
-    ['Job activity', workPhysicalLabel(values.workPhysical)],
-    ['My Weeks', workStressLabel(values.workStress)],
-    ['SAG hours / week', values.weightTrainingHours || '—'],
-    ['Cardio training hours / week', values.cardioHours || '—'],
-    ['Fat burning training hours / week', values.fatBurningHours || '—'],
-    ['Waiver signed', waiverSignedLabel(values.signature, values.signatureDate)],
-  ];
-
-  reviewEl.innerHTML = rows.map(([label, value]) => `
+  reviewEl.innerHTML = rows.map(({ label, value }) => `
     <div><dt>${label}</dt><dd>${value}</dd></div>
   `).join('');
 }

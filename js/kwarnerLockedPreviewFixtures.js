@@ -27,6 +27,8 @@ export const KRISTI_KWARNER_FORM = {
   cardioHours: 0,
   fatBurningHours: 3,
   wakeTime: '06:00',
+  waiverSignature: 'Kristi Warner',
+  waiverSignedDate: '2024-01-15',
 };
 
 export function buildKristiKwarnerPreviewPackage() {
@@ -38,6 +40,8 @@ export function buildKristiKwarnerPreviewPackage() {
   pkg.intake.workIntensity = 1.5;
   pkg.intake.thighMm = 25;
   pkg.intake.waistMm = 25;
+  pkg.intake.waiverSignature = KRISTI_KWARNER_FORM.waiverSignature;
+  pkg.intake.waiverSignedDate = KRISTI_KWARNER_FORM.waiverSignedDate;
   pkg.program.foodPlanCreatedDate = '2024-01-15';
   pkg.program.issuedAt = '2024-01-15T12:00:00.000Z';
 

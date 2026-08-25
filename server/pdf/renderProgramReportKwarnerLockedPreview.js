@@ -1,5 +1,5 @@
 /**
- * 2026 KWarner locked 6-page program report (Welcome → LBA → Food Plan → Servings → Food List).
+ * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → Confirmation).
  * Production: renderProgramReport.js · Preview samples: scripts/render-kwarner-locked-preview.mjs
  */
 import path from 'path';
@@ -46,7 +46,7 @@ import {
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
-export const PROGRAM_REPORT_MIN_PAGES = 6;
+export const PROGRAM_REPORT_MIN_PAGES = 7;
 /** @deprecated Use PROGRAM_REPORT_MIN_PAGES */
 export const KWARNER_LOCKED_MIN_PAGES = PROGRAM_REPORT_MIN_PAGES;
 
@@ -2102,6 +2102,41 @@ function drawServingsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
+  { key: 'label', width: 0.34 },
+  { key: 'value', width: 0.66 },
+]);
+
+function drawQuestionnaireConfirmationPage(doc, payload) {
+  const confirmation = payload.questionnaireConfirmation;
+  if (!confirmation?.rows?.length) return;
+
+  let page = startLockedPage(doc, payload, 'Questionnaire confirmation');
+
+  if (confirmation.intro) {
+    page = drawBodyParagraphs(doc, payload, page, [confirmation.intro]);
+  }
+
+  const tableOpts = {
+    x: page.x,
+    y: page.y,
+    width: page.width,
+    columns: CONFIRMATION_TABLE_COLUMNS,
+    rows: confirmation.rows.map((row) => ({
+      label: row.label,
+      value: row.value,
+    })),
+    headerRows: 0,
+    tableRowPad: LAYOUT.tableRowPad + 1,
+  };
+
+  page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, tableOpts));
+  tableOpts.y = page.y;
+  page = { ...page, y: drawLayoutTable(doc, tableOpts) + LAYOUT.sectionGap };
+
+  finishLockedPage(doc, page.box, payload);
+}
+
 export async function renderProgramReportKwarnerLockedPreview(payload, { title, buildLabel } = {}) {
   validatePrintPayload('programreport', payload);
 
@@ -2121,6 +2156,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);
   drawVegFruitFoodListPage(doc, payload);
+  drawQuestionnaireConfirmationPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 

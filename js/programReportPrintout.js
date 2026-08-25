@@ -35,6 +35,10 @@ import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
 import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
 import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
+import {
+  QUESTIONNAIRE_CONFIRMATION_INTRO,
+  buildQuestionnaireConfirmationRows,
+} from './questionnaireConfirmationPrintout.js';
 
 export { BURN_AND_BUILD_DIET_PDF_NAME };
 
@@ -367,6 +371,10 @@ export function buildProgramReportPayload(pkg, options = {}) {
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
+    },
+    questionnaireConfirmation: {
+      intro: QUESTIONNAIRE_CONFIRMATION_INTRO,
+      rows: buildQuestionnaireConfirmationRows(pkg),
     },
   };
 }
