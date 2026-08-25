@@ -49,4 +49,19 @@ export function tipsForColumn(qaKey) {
   return TIPS_BY_KEY[qaKey] || [];
 }
 
+/** Food-list tip columns — same titles/order as Print Shop food sheets. */
+export const FOOD_SHEET_TIPS_SECTIONS = [
+  { title: 'Protein Tips', qaKey: 'protein' },
+  { title: 'Grains & Starches Tips', qaKey: 'grainsStarches' },
+  { title: 'Vegetable Tips', qaKey: 'vegetable' },
+  { title: 'Fruit Tips', qaKey: 'fruit' },
+];
+
+export function foodSheetTipsSections() {
+  return FOOD_SHEET_TIPS_SECTIONS.map(({ title, qaKey }) => ({
+    title,
+    items: tipsForColumn(qaKey),
+  }));
+}
+
 export { FOOD_LIST_PRINT_PAGES, foodListLabel };
