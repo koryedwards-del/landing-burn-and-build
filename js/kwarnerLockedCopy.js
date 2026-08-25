@@ -6,7 +6,7 @@ export const KWARNER_WELCOME_COPY = {
     'How we did it. We used the information you provided on the program questionnaire — your body composition, job, lifestyle, and exercise hours — and Burn & Build generated this report.',
   ],
   leanBodyAnalysis:
-    'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and body fat ranges with the scale weights each range represents at your lean body mass.',
+    'Page two is the results of your body composition test or estimate you provided. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and body fat ranges with the scale weights each range represents at your lean body mass.',
   foodPlan:
     'Page three is your custom-designed food plan. It explains why servings go a step farther than macros and how tracking macros can lead you astray. The servings on page four follow directly from this page.',
   servings:
