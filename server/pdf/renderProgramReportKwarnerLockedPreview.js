@@ -1160,14 +1160,9 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   barHeight: 52,
   barRadius: 6,
   lbmCellWidthRatio: 0.15,
-  lbmCellStyle: { fill: '#4A6B7C', text: '#ffffff' },
-  segmentStyles: Object.freeze({
-    Competition: { fill: '#0B6E78', text: '#ffffff' },
-    Peaking: { fill: '#2F6FA8', text: '#ffffff' },
-    Prepping: { fill: '#7B4F9E', text: '#ffffff' },
-    Training: { fill: '#C4681A', text: '#ffffff' },
-    'Off-season': { gradient: ['#D4A800', '#FFEB66'], text: '#333333' },
-  }),
+  barFill: '#EFEFEF',
+  barDivider: '#C8C8C8',
+  barText: SEMINAR_COLORS.body,
   capLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.capLabel,
   categorySize: PRINT_TEMPLATE_PROGRESS_BAR.category,
   weightLabelSize: PRINT_TEMPLATE_PROGRESS_BAR.weightLabel,
@@ -1185,11 +1180,6 @@ const BODY_FAT_PROGRESS_BAR = Object.freeze({
   timelineTriHalfW: 5,
 });
 
-function segmentStyle(zoneLabel) {
-  return BODY_FAT_PROGRESS_BAR.segmentStyles[zoneLabel]
-    || BODY_FAT_PROGRESS_BAR.segmentStyles.Training;
-}
-
 function fatBarLayout(x, width, lbmCell) {
   const lbmW = lbmCell ? Math.max(Math.round(width * BODY_FAT_PROGRESS_BAR.lbmCellWidthRatio), 64) : 0;
   return {
@@ -1206,13 +1196,12 @@ function bfToBarX(bfX, bfW, bf, scaleMax) {
 }
 
 function drawLbmCell(doc, lbmCell, x0, barY, segW, barH) {
-  const style = BODY_FAT_PROGRESS_BAR.lbmCellStyle;
-  doc.fillColor(style.fill).rect(x0, barY, segW, barH).fill();
+  doc.fillColor(BODY_FAT_PROGRESS_BAR.barFill).rect(x0, barY, segW, barH).fill();
   drawStackedBarCell(doc, {
     fatLabel: lbmCell.fatLabel,
     categoryLabel: lbmCell.label.toUpperCase(),
     poundsLabel: lbmCell.poundsLabel,
-  }, x0, barY, segW, barH, style.text, true);
+  }, x0, barY, segW, barH, BODY_FAT_PROGRESS_BAR.barText, true);
 }
 
 function drawStackedBarCell(doc, { fatLabel, categoryLabel, poundsLabel }, x0, barY, segW, barH, textColor, isActive) {
@@ -1259,7 +1248,7 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
   const triHalfW = BODY_FAT_PROGRESS_BAR.timelineTriHalfW;
   const markerTop = barY + barH + 3;
   const labelY = markerTop + triH + 2;
-  const color = '#2F6FA8';
+  const color = BODY_FAT_PROGRESS_BAR.barText;
 
   markers.forEach((marker) => {
     const markerX = bfToBarX(layout.bfX, layout.bfW, marker.bodyFat, scaleMax);
@@ -1356,20 +1345,21 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
   if (lbmCell && layout.lbmW > 0) {
     drawLbmCell(doc, lbmCell, layout.lbmX, barY, layout.lbmW, barH);
   }
+  doc.fillColor(BODY_FAT_PROGRESS_BAR.barFill).rect(layout.bfX, barY, layout.bfW, barH).fill();
   zones.forEach((zone) => {
     const x0 = bfToBarX(layout.bfX, layout.bfW, zone.from, scaleMax);
     const x1 = bfToBarX(layout.bfX, layout.bfW, zone.to, scaleMax);
     const segW = Math.max(x1 - x0, 1);
-    const style = segmentStyle(zone.label);
-    if (style.gradient) {
-      const grad = doc.linearGradient(x0, barY, x1, barY);
-      grad.stop(0, style.gradient[0]);
-      grad.stop(1, style.gradient[1]);
-      doc.fillColor(grad).rect(x0, barY, segW, barH).fill();
-    } else {
-      doc.fillColor(style.fill).rect(x0, barY, segW, barH).fill();
-    }
-    drawSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, style.text);
+    drawSegmentCellLabels(
+      doc,
+      zone,
+      x0,
+      barY,
+      segW,
+      barH,
+      activeStage,
+      BODY_FAT_PROGRESS_BAR.barText,
+    );
   });
   doc.restore();
 
@@ -1383,7 +1373,7 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
     if (index === 0) return;
     const boundaryX = bfToBarX(layout.bfX, layout.bfW, zone.from, scaleMax);
     doc
-      .strokeColor('#ffffff')
+      .strokeColor(BODY_FAT_PROGRESS_BAR.barDivider)
       .lineWidth(0.75)
       .moveTo(boundaryX, barY + 2)
       .lineTo(boundaryX, barY + barH - 2)
@@ -1393,7 +1383,7 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
   if (lbmCell && layout.lbmW > 0) {
     const lbmDividerX = layout.bfX;
     doc
-      .strokeColor('#ffffff')
+      .strokeColor(BODY_FAT_PROGRESS_BAR.barDivider)
       .lineWidth(0.75)
       .moveTo(lbmDividerX, barY + 2)
       .lineTo(lbmDividerX, barY + barH - 2)
