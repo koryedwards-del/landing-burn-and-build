@@ -39,6 +39,7 @@ import {
   stapleCategoryServings,
 } from '../../js/stapleServingPrintout.js';
 import { foodSheetTipsSections } from './foodListData.js';
+import { GETTING_STARTED_PRINT } from '../../data/gettingStartedPrintout.js';
 import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngine.js';
 import {
   BODY_FAT_PROGRESS_BAR_FOOTER,
@@ -47,7 +48,7 @@ import {
 } from '../../js/lbaPrintout.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
-export const KWARNER_LOCKED_MIN_PAGES = 7;
+export const KWARNER_LOCKED_MIN_PAGES = 8;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -509,6 +510,73 @@ function drawFoodSheetTipsPage(doc, payload) {
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
   drawFoodSheetTipsSections(doc, columnSections[0], columns[0], page.y, page.bottom);
   drawFoodSheetTipsSections(doc, columnSections[1], columns[1], page.y, page.bottom);
+  finishLockedPage(doc, page.box, payload);
+}
+
+const GETTING_STARTED_BULLET = { indent: 14, gap: 4 };
+
+function gettingStartedColumnLayout(page) {
+  const gap = STAPLES_LIST.columnGap;
+  const leftWidth = (page.width - gap) * 0.62;
+  return [
+    { x: page.x, width: leftWidth },
+    { x: page.x + leftWidth + gap, width: page.width - leftWidth - gap },
+  ];
+}
+
+function drawGettingStartedBullets(doc, items, x, y, width, bottomY) {
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize).fillColor(SEMINAR_COLORS.body);
+  for (const item of items) {
+    const line = `\u25b6 ${item}`;
+    const blockH = Math.max(
+      LAYOUT.bodySize + GETTING_STARTED_BULLET.gap,
+      doc.heightOfString(line, { width, lineGap: LAYOUT.lineGap }) + GETTING_STARTED_BULLET.gap,
+    );
+    if (y + blockH > bottomY) {
+      throw new Error(`Getting Started list truncated near "${item}"`);
+    }
+    doc.text(line, x, y, { width, lineGap: LAYOUT.lineGap });
+    y = doc.y + GETTING_STARTED_BULLET.gap;
+  }
+  return y;
+}
+
+function drawGettingStartedSection(doc, section, col, yStart, bottomY) {
+  let y = drawSectionTitle(doc, section.title, col.x, yStart, col.width);
+  (section.paragraphs || []).forEach((paragraph) => {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(paragraph), col.x, y, {
+        width: col.width,
+        lineGap: LAYOUT.lineGap,
+        align: 'left',
+      });
+    y = doc.y + LAYOUT.paragraphGap;
+  });
+  if (section.bullets?.length) {
+    y = drawGettingStartedBullets(doc, section.bullets, col.x, y, col.width, bottomY);
+  }
+  return y + LAYOUT.sectionGap;
+}
+
+function drawGettingStartedColumn(doc, sections, col, yStart, bottomY) {
+  let y = yStart;
+  sections.forEach((section) => {
+    y = drawGettingStartedSection(doc, section, col, y, bottomY);
+  });
+  return y;
+}
+
+/** PDF page 8 — Getting Started (1982-style guidance; assembly draft). */
+function drawGettingStartedPage(doc, payload) {
+  const page = startLockedPage(doc, payload, GETTING_STARTED_PRINT.pageTitle);
+  const columns = gettingStartedColumnLayout(page);
+  const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
+  drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+  drawGettingStartedColumn(doc, GETTING_STARTED_PRINT.left, columns[0], page.y, page.bottom);
+  drawGettingStartedColumn(doc, GETTING_STARTED_PRINT.right, columns[1], page.y, page.bottom);
   finishLockedPage(doc, page.box, payload);
 }
 
@@ -2047,6 +2115,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawStaplesFoodListPage(doc, payload);
   drawVegFruitFoodListPage(doc, payload);
   drawFoodSheetTipsPage(doc, payload);
+  drawGettingStartedPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 
