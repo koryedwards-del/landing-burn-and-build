@@ -1826,25 +1826,33 @@ function lbaBfRangeRowFromCategories(categories, valueKey) {
   );
 }
 
-function measureLbaBfRangeTable(doc, categories, width, valueKey) {
+function measureLbaBfRangeTable(doc, categories, width, { headerKey, valueKey }) {
   return measureLayoutTable(doc, {
     columns: lbaBfRangeTableColumns(),
-    rows: [lbaBfRangeRowFromCategories(categories, valueKey)],
-    headerRows: 0,
+    rows: [
+      lbaBfRangeRowFromCategories(categories, headerKey),
+      lbaBfRangeRowFromCategories(categories, valueKey),
+    ],
+    headerRows: 1,
+    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
     bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
     tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
     width,
   });
 }
 
-function drawLbaBfRangeTable(doc, x, y, width, categories, valueKey) {
+function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey }) {
   return drawLayoutTable(doc, {
     x,
     y,
     width,
     columns: lbaBfRangeTableColumns(),
-    rows: [lbaBfRangeRowFromCategories(categories, valueKey)],
-    headerRows: 0,
+    rows: [
+      lbaBfRangeRowFromCategories(categories, headerKey),
+      lbaBfRangeRowFromCategories(categories, valueKey),
+    ],
+    headerRows: 1,
+    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
     bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
     tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
   });
@@ -1855,11 +1863,17 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
   const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
-  let tableH = measureLbaBfRangeTable(doc, categories, page.width, 'bfRangeLabel');
+  let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
+    headerKey: 'label',
+    valueKey: 'bfRangeLabel',
+  });
   page = ensureLockedSpace(doc, payload, page, tableH + LAYOUT.sectionGap);
   page = {
     ...page,
-    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, categories, 'bfRangeLabel') + LAYOUT.sectionGap,
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, categories, {
+      headerKey: 'label',
+      valueKey: 'bfRangeLabel',
+    }) + LAYOUT.sectionGap,
   };
 
   const paragraphs = [
@@ -1871,11 +1885,17 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
     page = { ...page, y: page.y + LAYOUT.sectionGap };
   }
 
-  tableH = measureLbaBfRangeTable(doc, weightRanges, page.width, 'weightRangeLabel');
+  tableH = measureLbaBfRangeTable(doc, weightRanges, page.width, {
+    headerKey: 'label',
+    valueKey: 'weightRangeLabel',
+  });
   page = ensureLockedSpace(doc, payload, page, tableH);
   return {
     ...page,
-    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, weightRanges, 'weightRangeLabel'),
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, weightRanges, {
+      headerKey: 'label',
+      valueKey: 'weightRangeLabel',
+    }),
   };
 }
 

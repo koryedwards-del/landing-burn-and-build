@@ -101,7 +101,15 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
-/** Body fat range bands — 1982 LBA table layout (female/male BF% columns). */
+/** Body fat range bands — lean → fat left to right (female/male BF% columns). */
+const LBA_BF_RANGE_LABELS = Object.freeze([
+  'Lean Dominant',
+  'Lean Forward',
+  'Midrange',
+  'Fat Forward',
+  'Fat Dominant',
+]);
+
 const LBA_BF_RANGE_CATEGORIES = Object.freeze({
   female: [
     { bfMin: 9, bfMax: 13.99, bfRangeLabel: '9% – 13.99%' },
@@ -121,7 +129,10 @@ const LBA_BF_RANGE_CATEGORIES = Object.freeze({
 
 function lbaBodyFatRangeRows(gender) {
   const key = gender === 'female' ? 'female' : 'male';
-  return LBA_BF_RANGE_CATEGORIES[key].map((row) => ({ ...row }));
+  return LBA_BF_RANGE_CATEGORIES[key].map((row, index) => ({
+    label: LBA_BF_RANGE_LABELS[index],
+    ...row,
+  }));
 }
 
 export function lbaBodyFatRangeCategories(gender) {
@@ -164,6 +175,7 @@ function formatAceWeightRange(lbm, category) {
 
 export function lbaBodyFatRangeWeightRanges(gender, lbm) {
   return lbaBodyFatRangeCategories(gender).map((category) => ({
+    label: category.label,
     bfRangeLabel: category.bfRangeLabel,
     weightRangeLabel: formatAceWeightRange(lbm, category),
   }));
@@ -377,8 +389,8 @@ export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {
   }
   const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
   const congrats = analysis.atOrAbove
-    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each body fat range based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
-    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each body fat range based on your current Lean Body Mass.';
+    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each point from lean dominant to fat dominant based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
+    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights from lean dominant to fat dominant based on your current Lean Body Mass.';
   return { lead, congrats, analysis };
 }
 
