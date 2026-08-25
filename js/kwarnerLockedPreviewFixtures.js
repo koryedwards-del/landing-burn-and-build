@@ -20,20 +20,20 @@ export const KWARNER_WELCOME_COPY = {
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods. For the best results you need a plan thats goes a step farther than macros.',
+  'Macros are considered the be all end all to nutrition knowledge. But knowing your macros still means you need to figure out what to eat. Since 1982 Burn & Build has been converting macros to servings using proven fat burning muscle building foods. For the best results you need a plan that goes a step farther than macros.',
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
-  'Burn & Build converted the proteins, carbohydrates into servings from protein, dairy, grains, starches, veggies and fruits. All whole clean food choices. Each food on the list is sized to fit your needs. This program is customized to you and wont work for anyone else. And although it\'s not easy it is simple.',
-  'Step 1 Pull out your kitchen scale. Get now for about $50 on amazon.',
-  'Step 2 Chose the protein food you want to eat. Put that amount on your plate. The plan uses gram because they are accurate down to the weight of a paper clip.',
-  'Step 3 Chose the grain or starch you want. Add the serving amount to your plate.',
+  'Burn & Build converted the proteins and carbohydrates into servings from protein, dairy, grains, starches, veggies and fruits. All whole clean food choices. Each food on the list is sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy it is simple.',
+  'Step 1 Pull out your kitchen scale. Get one now for about $50 on Amazon.',
+  'Step 2 Choose the protein food you want to eat. Put that amount on your plate. The plan uses grams because they are accurate down to the weight of a paper clip.',
+  'Step 3 Choose the grain or starch you want. Add the serving amount to your plate.',
   'Step 4 Season as desired. No added fat, sugar or alcohol.',
   'Step 5 Eat all the food you put on the plate.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO =
-  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how each food group works in your plan as you follow your servings.';
+  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how each food group works in your plan as you follow your servings. Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.';
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',
