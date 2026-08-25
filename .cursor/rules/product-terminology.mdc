@@ -7,16 +7,26 @@ alwaysApply: true
 
 Burn & Build uses **three terms for three layers**. Do not swap them for the same concept.
 
-## Questionnaire vs intake (locked decision)
+## Questionnaire vs intake (locked — launch conformity)
 
-The multi-step flow that collects body, activity, and lifestyle answers before checkout has **one product name** and **one internal data name**. Do not use them interchangeably in user-facing copy.
+**User-facing name:** **Questionnaire** (full: **program questionnaire**).  
+**Code-only name:** **`intake`** (`pkg.intake`, `intake-form` CSS, `intake-acc` markup).  
+**Locked URL:** `/questionnaire/` — never rename the path.
+
+| Say this (users, docs, support, agents) | Not this |
+|----------------------------------------|----------|
+| questionnaire / program questionnaire | intake form, intake wizard, intake questionnaire |
+| “go back to the questionnaire” | “return to the intake form” |
+| **Program Questionnaire** (page title) | Intake form |
+
+CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 
 | Context | Term | Examples |
 |---------|------|----------|
 | **User-facing process / page** | **Questionnaire** (or **program questionnaire**) | Nav, docs, support copy, “go back to the questionnaire”, waiver (“results of this questionnaire”) |
 | **URL / folder** | **`/questionnaire/`** | Locked path — do not rename to `/intake/` |
 | **Code / data model** | **`intake`** | `pkg.intake`, `intake-form` CSS classes, `intakeDate` — internal only, not a user-facing label |
-| **Avoid as primary label** | **Intake form** | Do not use as the page title or marketing name unless the user explicitly requests a rebrand |
+| **Avoid as primary label** | **Intake form**, **intake wizard** | Do not use in UI, docs, or agent replies unless the user explicitly requests a rebrand |
 
 **Rule:** Say **questionnaire** to users and in agent/docs copy; say **`intake`** only in code when referring to the saved answers object or form markup.
 
@@ -40,7 +50,7 @@ The multi-step flow that collects body, activity, and lifestyle answers before c
 | **Diet plan** | Merges product (*diet*) with eating rules (*food plan*) — use **diet** or **food plan** or **program** by layer |
 | **Diet program** | Same merge — pick **diet** or **program** |
 | Using **diet**, **food plan**, and **program** interchangeably for the same thing | Each layer has one primary term |
-| **Intake form** as the user-facing name for `/questionnaire/` | Use **questionnaire** / **program questionnaire** — **intake** is code-only |
+| **Intake form**, **intake wizard**, or **intake questionnaire** as user-facing names | Use **questionnaire** / **program questionnaire** — **`intake`** is code-only |
 
 ## Correct examples
 

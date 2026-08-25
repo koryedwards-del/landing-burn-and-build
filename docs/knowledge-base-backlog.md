@@ -53,7 +53,7 @@ Google fragment  →  Diet (the answer)  →  Food plan (the path)
 | Step | Path | Fold |
 |------|------|------|
 | Educate | KB article / landing section | Diet = the answer |
-| Intake | `/questionnaire/` | Path begins — body + activity |
+| Questionnaire | `/questionnaire/` | Path begins — body + activity |
 | Purchase | `/createyourfoodplan/` | Food plan unlocked |
 | Deliver | `/program-report/` → menu planner | Food plan in hand |
 

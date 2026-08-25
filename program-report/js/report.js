@@ -486,12 +486,12 @@ function renderMissingProgram() {
     : 'Create your personalized program';
   const lead = DIET_CREATION_COMING_SOON
     ? 'We&rsquo;re finishing the launch. Already purchased? Return to <strong>checkout</strong> to download your PDF, or check the email you used at checkout.'
-    : `Answer a short intake questionnaire — your body composition, workday, and exercise plan for the next 8 weeks.
+    : `Answer the program questionnaire — your body composition, workday, and exercise plan for the next 8 weeks.
         Burn &amp; Build calculates your servings and builds your program report.`;
   const steps = DIET_CREATION_COMING_SOON
     ? ''
     : `<ol class="r-empty__steps">
-        <li><strong>Intake</strong> — personal info, body fat, work &amp; exercise</li>
+        <li><strong>Questionnaire</strong> — personal info, body fat, work &amp; exercise</li>
         <li><strong>Your program</strong> — welcome, projections, plan/servings, and menu planner</li>
         <li><strong>Menu planner</strong> — build your week and grocery list</li>
       </ol>`;

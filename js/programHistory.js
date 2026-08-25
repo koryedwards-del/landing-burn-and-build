@@ -61,7 +61,7 @@ function historyField(label, value, options = {}) {
   return { label, value: String(value), accent: !!options.accent };
 }
 
-/** Intake field rows for history cards — grouped layout; omits name, email, meal reminders. */
+/** Questionnaire field rows for history cards — grouped layout; omits name, email, meal reminders. */
 export function programHistoryFieldRows(pkg) {
   const intake = pkg?.intake || {};
   const weight = Number(intake.totalWeight) || 0;

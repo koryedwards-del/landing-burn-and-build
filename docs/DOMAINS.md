@@ -21,7 +21,7 @@ Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
 | Path | Purpose |
 |------|---------|
 | `/` | Marketing landing |
-| `/questionnaire/` | Intake wizard → Burn Engine builds program |
+| `/questionnaire/` | Program questionnaire → Burn Engine builds program |
 | `/createyourfoodplan/` | Stripe checkout paywall |
 | `/program-report/` | Welcome, projections, servings, menu planner |
 | `/menuplanner/` | Redirect → program-report page 4 |
