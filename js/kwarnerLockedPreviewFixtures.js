@@ -33,7 +33,7 @@ export const KWARNER_FOOD_PLAN_HOWTO = [
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO =
-  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how macros work. Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.';
+  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercise isn\'t working? Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.';
 
 export const KRISTI_KWARNER_FORM = {
   preferredName: 'Kristi Warner',
