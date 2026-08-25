@@ -141,7 +141,10 @@ export function profileFromForm(form) {
   const intensity = computeWorkIntensity(form.workPhysical, form.workStress);
   return {
     preferredName: form.preferredName.trim().replace(/\b\w/g, (c) => c.toUpperCase()),
-    referrerName: String(form.referrerName || '').trim().replace(/\b\w/g, (c) => c.toUpperCase()),
+    referrerName: (() => {
+      const raw = String(form.referrerName || '').trim();
+      return raw ? raw.replace(/\b\w/g, (c) => c.toUpperCase()) : '';
+    })(),
     email: String(form.email || '').trim().toLowerCase(),
     sex: form.sex,
     age: Number(form.age),
