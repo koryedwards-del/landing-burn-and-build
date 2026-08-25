@@ -51,7 +51,7 @@ const INFO_FIELD_META = {
   },
   referrerName: {
     question: 'Who referred you to Burn & Build?',
-    guide: 'If someone referred you, enter their full name so we can credit them. Leave blank if you found us on your own.',
+    guide: 'If someone referred you, enter their full name so we can thank them. Leave blank if you found us on your own.',
     example: 'Example: Jane Smith',
   },
 };
