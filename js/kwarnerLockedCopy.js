@@ -24,11 +24,13 @@ export const KWARNER_FOOD_PLAN_HOWTO = [
 ];
 
 export const KWARNER_MEAL_BUILD_STEPS = [
-  'Step 1 Pull out your kitchen scale. Get one now for about $50 on Amazon.',
-  'Step 2 Choose the protein food you want to eat. Put that amount on your plate. The plan uses grams because they are accurate down to the weight of a paper clip.',
-  'Step 3 Choose the grain or starch you want. Add the serving amount to your plate.',
-  'Step 4 Season as desired. No added fat, sugar or alcohol.',
-  'Step 5 Eat all the food you put on the plate.',
+  'pull out your kitchen scale. Dont have one. Order one on Amazon. About $50',
+  'set the scale to grams, not ounces. Grams are more accurate measurement down to the weight of a paper clip. We dont guesstimate.',
+  'Put your plate on the scale and zero the weight. Now we can build our meal.',
+  'Step 1 Choose your protein from the protein & dairy list. Find the serving size for that food in the right hand column. Add that exactly amount to your plate.',
+  'Step 2. Zero your scale again. Find the carbohydrate yiuo want from the grain & starch food list. Locate the gam weight in the right hand column. Add that exactly amount to your plate.',
+  'Step 3 Veggies are optional. They are good for you but take up vaualble space in your stomach. Remember this is an eating plan not a not-eating plan. Zero your scale. Add the exactly amount of veggies to your plate (if desired).',
+  'Your plate will be piled high with the right amount of protein and carbs to fuel your life for the next couple of hours.',
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO = [
