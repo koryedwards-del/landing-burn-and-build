@@ -43,11 +43,7 @@ body.q-app--workroom,
 }
 
 .q-app--workroom .q-tag {
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--muted);
+  display: none;
 }
 
 .q-app--workroom .q-tag--gold {
