@@ -1812,10 +1812,12 @@ const LBA_BF_RANGE_TABLE = Object.freeze({
   rowPad: 7,
 });
 
-function lbaBfRangeTableColumns() {
-  return ['c0', 'c1', 'c2', 'c3', 'c4'].map((key) => ({
-    key,
-    width: 0.2,
+function lbaBfRangeTableColumns(count) {
+  const columnCount = Math.max(1, Number(count) || 1);
+  const width = 1 / columnCount;
+  return Array.from({ length: columnCount }, (_, index) => ({
+    key: `c${index}`,
+    width,
     align: 'center',
   }));
 }
@@ -1828,7 +1830,7 @@ function lbaBfRangeRowFromCategories(categories, valueKey) {
 
 function measureLbaBfRangeTable(doc, categories, width, { headerKey, valueKey }) {
   return measureLayoutTable(doc, {
-    columns: lbaBfRangeTableColumns(),
+    columns: lbaBfRangeTableColumns(categories.length),
     rows: [
       lbaBfRangeRowFromCategories(categories, headerKey),
       lbaBfRangeRowFromCategories(categories, valueKey),
@@ -1846,7 +1848,7 @@ function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey
     x,
     y,
     width,
-    columns: lbaBfRangeTableColumns(),
+    columns: lbaBfRangeTableColumns(categories.length),
     rows: [
       lbaBfRangeRowFromCategories(categories, headerKey),
       lbaBfRangeRowFromCategories(categories, valueKey),
@@ -1858,36 +1860,11 @@ function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey
   });
 }
 
-function drawLbaAppearanceGuide(doc, payload, page, guideLines) {
-  const lines = (guideLines || []).map((entry) => entry?.line || entry).filter(Boolean);
-  if (!lines.length) return page;
-
-  const bodySize = 9;
-  const lineGap = 2;
-  const bullets = lines.map((line) => `• ${line}`);
-
-  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
-  const bulletsH = bullets.reduce(
-    (total, bullet) => total + doc.heightOfString(bullet, { width: page.width, lineGap }) + lineGap,
-    0,
-  );
-
-  page = ensureLockedSpace(doc, payload, page, bulletsH + LAYOUT.sectionGap);
-  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize).fillColor(SEMINAR_COLORS.body);
-  let y = page.y;
-  bullets.forEach((bullet) => {
-    doc.text(bullet, page.x, y, { width: page.width, lineGap });
-    y = doc.y + lineGap;
-  });
-  return { ...page, y: y + LAYOUT.sectionGap };
-}
-
 function drawLbaBfRangeSection(doc, payload, page, lba) {
   const categories = lba.bfRangeCategories || [];
   const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
-  page = drawLbaAppearanceGuide(doc, payload, page, lba.bfAppearanceGuide);
   let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
     headerKey: 'label',
     valueKey: 'bfRangeLabel',

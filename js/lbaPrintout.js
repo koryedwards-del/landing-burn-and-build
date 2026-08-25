@@ -101,37 +101,19 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
-/** ACE % ranges (Fit Commit) — appearance labels (lean → higher body fat). */
+/** Body-fat appearance ranges — labels and % bands (gender-specific). */
 const LBA_BF_RANGE_CATEGORIES = Object.freeze({
   female: [
-    { label: 'Stage-ready', bfMin: 10, bfMax: 13.99, bfRangeLabel: '10% – 13%' },
-    { label: 'Athletic', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20%' },
-    { label: 'Average', bfMin: 21, bfMax: 24.99, bfRangeLabel: '21% – 24%' },
-    { label: 'Above average', bfMin: 25, bfMax: 31.99, bfRangeLabel: '25% – 31%' },
-    { label: 'Well above', bfMin: 32, bfMax: null, bfRangeLabel: '32%+' },
+    { label: 'Stage-ready', bfMin: 8, bfMax: 9.99, bfRangeLabel: '8–9%' },
+    { label: 'Athletic', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14–20%' },
+    { label: 'Visible abs', bfMin: 15, bfMax: 17.99, bfRangeLabel: '15–17%' },
+    { label: 'Average', bfMin: 21, bfMax: 30.99, bfRangeLabel: '21–30%' },
   ],
   male: [
-    { label: 'Stage-ready', bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5%' },
-    { label: 'Athletic', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13%' },
-    { label: 'Average', bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17%' },
-    { label: 'Above average', bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24%' },
-    { label: 'Well above', bfMin: 25, bfMax: null, bfRangeLabel: '25%+' },
-  ],
-});
-
-/** Gender-specific appearance guide — milestone ranges (reference copy on LBA page). */
-const LBA_BF_APPEARANCE_GUIDE = Object.freeze({
-  male: [
-    '3–5%: Stage-ready (extremely lean)',
-    '6–13%: Athletic',
-    '8–11%: Visible six-pack',
-    '14–20%: Average',
-  ],
-  female: [
-    '8–9%: Stage-ready',
-    '14–20%: Athletic',
-    '15–17%: Visible abs',
-    '21–30%: Average',
+    { label: 'Stage-ready (extremely lean)', bfMin: 3, bfMax: 5.99, bfRangeLabel: '3–5%' },
+    { label: 'Athletic', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6–13%' },
+    { label: 'Visible six-pack', bfMin: 8, bfMax: 11.99, bfRangeLabel: '8–11%' },
+    { label: 'Average', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14–20%' },
   ],
 });
 
@@ -140,9 +122,17 @@ function lbaBodyFatRangeRows(gender) {
   return LBA_BF_RANGE_CATEGORIES[key].map((row) => ({ ...row }));
 }
 
-export function lbaBodyFatAppearanceGuide(gender) {
-  const key = gender === 'female' ? 'female' : 'male';
-  return LBA_BF_APPEARANCE_GUIDE[key].map((line) => ({ line }));
+function lbaBodyFatRangeSpan(category) {
+  if (!category) return Infinity;
+  if (category.bfMax == null) return Infinity;
+  return category.bfMax - category.bfMin;
+}
+
+function lbaBodyFatRangeMatches(bf, category) {
+  if (!category || !Number.isFinite(bf)) return false;
+  if (bf < category.bfMin) return false;
+  if (category.bfMax == null) return bf >= category.bfMin;
+  return bf <= category.bfMax;
 }
 
 export function lbaBodyFatRangeCategories(gender) {
@@ -159,9 +149,11 @@ export function lbaBodyFatRangeForPercent(gender, bodyFatPercent) {
   if (!Number.isFinite(bf)) return null;
   const categories = lbaBodyFatRangeCategories(gender);
   if (bf < categories[0].bfMin) return categories[0];
-  for (const category of categories) {
-    if (category.bfMax == null && bf >= category.bfMin) return category;
-    if (category.bfMax != null && bf >= category.bfMin && bf <= category.bfMax) return category;
+  const matches = categories.filter((category) => lbaBodyFatRangeMatches(bf, category));
+  if (matches.length) {
+    return matches.reduce((best, category) => (
+      lbaBodyFatRangeSpan(category) < lbaBodyFatRangeSpan(best) ? category : best
+    ));
   }
   return categories[categories.length - 1];
 }
@@ -399,8 +391,8 @@ export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {
   }
   const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
   const congrats = analysis.atOrAbove
-    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each body fat range from Stage-ready to Well above based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
-    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each body fat range from Stage-ready to Well above based on your current Lean Body Mass.';
+    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each body fat range from Stage-ready to Average based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
+    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each body fat range from Stage-ready to Average based on your current Lean Body Mass.';
   return { lead, congrats, analysis };
 }
 
