@@ -1826,160 +1826,28 @@ function lbaBfRangeRowFromCategories(categories, valueKey) {
   );
 }
 
-function measureLbaBfRangeTable(doc, categories, width, { headerKey, valueKey }) {
+function measureLbaBfRangeTable(doc, categories, width, valueKey) {
   return measureLayoutTable(doc, {
     columns: lbaBfRangeTableColumns(),
-    rows: [
-      lbaBfRangeRowFromCategories(categories, headerKey),
-      lbaBfRangeRowFromCategories(categories, valueKey),
-    ],
-    headerRows: 1,
-    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
+    rows: [lbaBfRangeRowFromCategories(categories, valueKey)],
+    headerRows: 0,
     bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
     tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
     width,
   });
 }
 
-function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey }) {
+function drawLbaBfRangeTable(doc, x, y, width, categories, valueKey) {
   return drawLayoutTable(doc, {
     x,
     y,
     width,
     columns: lbaBfRangeTableColumns(),
-    rows: [
-      lbaBfRangeRowFromCategories(categories, headerKey),
-      lbaBfRangeRowFromCategories(categories, valueKey),
-    ],
-    headerRows: 1,
-    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
+    rows: [lbaBfRangeRowFromCategories(categories, valueKey)],
+    headerRows: 0,
     bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
     tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
   });
-}
-
-const LBA_CONTINUUM = Object.freeze({
-  anchorSize: 9,
-  tickSize: 8,
-  markerTitleSize: 8.5,
-  markerBfSize: 10,
-  markerLabelSize: 8.5,
-  lineInset: 14,
-  lineWeight: 1.25,
-  tickHeight: 5,
-  markerHeight: 7,
-  anchorGap: 6,
-  tickGap: 4,
-  markerBlockH: 40,
-  blockPad: 10,
-});
-
-function lbaContinuumX(lineX, lineW, bf, scaleMin, scaleMax) {
-  const span = scaleMax - scaleMin;
-  if (span <= 0) return lineX;
-  const t = Math.max(0, Math.min(1, (Number(bf) - scaleMin) / span));
-  return lineX + t * lineW;
-}
-
-function measureLbaFatLeanContinuum(doc, width, continuum) {
-  if (!continuum) return 0;
-  return LBA_CONTINUUM.blockPad * 2
-    + LBA_CONTINUUM.anchorSize
-    + LBA_CONTINUUM.anchorGap
-    + LBA_CONTINUUM.markerBlockH
-    + LBA_CONTINUUM.tickHeight
-    + LBA_CONTINUUM.tickGap
-    + LBA_CONTINUUM.tickSize;
-}
-
-function drawLbaFatLeanContinuum(doc, x, y, width, continuum) {
-  if (!continuum) return y;
-
-  const gold = PDF_FRAME_COLORS.gold;
-  const lineX = x + LBA_CONTINUUM.lineInset;
-  const lineW = width - LBA_CONTINUUM.lineInset * 2;
-  const { scaleMin, scaleMax, currentBf, currentLabel, leanAnchor, fatAnchor, ticks } = continuum;
-  const lineY = y
-    + LBA_CONTINUUM.blockPad
-    + LBA_CONTINUUM.anchorSize
-    + LBA_CONTINUUM.anchorGap
-    + LBA_CONTINUUM.markerBlockH;
-
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(LBA_CONTINUUM.anchorSize)
-    .fillColor('#2F6FA8')
-    .text(leanAnchor, lineX, y + LBA_CONTINUUM.blockPad, { width: lineW / 2, align: 'left', lineBreak: false });
-  doc
-    .font(SEMINAR_FONTS.bold)
-    .fontSize(LBA_CONTINUUM.anchorSize)
-    .fillColor('#2F6FA8')
-    .text(fatAnchor, lineX, y + LBA_CONTINUUM.blockPad, { width: lineW, align: 'right', lineBreak: false });
-
-  if (Number.isFinite(currentBf)) {
-    const markerX = lbaContinuumX(lineX, lineW, currentBf, scaleMin, scaleMax);
-    const markerTitle = 'You are here';
-    const markerBf = `${currentBf}%`;
-    doc.font(SEMINAR_FONTS.bold).fontSize(LBA_CONTINUUM.markerTitleSize).fillColor(SEMINAR_COLORS.body);
-    const titleW = doc.widthOfString(markerTitle);
-    doc.font(SEMINAR_FONTS.bold).fontSize(LBA_CONTINUUM.markerBfSize);
-    const bfW = doc.widthOfString(markerBf);
-    const labelGap = 6;
-    const totalLabelW = currentLabel
-      ? titleW + labelGap + bfW
-      : titleW + labelGap + bfW;
-    let labelX = markerX - totalLabelW / 2;
-    labelX = Math.max(lineX, Math.min(labelX, lineX + lineW - totalLabelW));
-    const labelY = lineY - LBA_CONTINUUM.markerBlockH + 2;
-    doc.font(SEMINAR_FONTS.bold).fontSize(LBA_CONTINUUM.markerTitleSize).fillColor(SEMINAR_COLORS.body);
-    doc.text(markerTitle, labelX, labelY, { lineBreak: false });
-    doc.font(SEMINAR_FONTS.bold).fontSize(LBA_CONTINUUM.markerBfSize).fillColor(gold);
-    doc.text(markerBf, labelX + titleW + labelGap, labelY - 1, { lineBreak: false });
-    if (currentLabel) {
-      doc.font(SEMINAR_FONTS.regular).fontSize(LBA_CONTINUUM.markerLabelSize).fillColor('#2F6FA8');
-      const categoryW = doc.widthOfString(currentLabel);
-      const categoryX = Math.max(lineX, Math.min(markerX - categoryW / 2, lineX + lineW - categoryW));
-      doc.text(currentLabel, categoryX, labelY + LBA_CONTINUUM.markerTitleSize + 3, { lineBreak: false });
-    }
-    const triTop = lineY - 3;
-    doc
-      .fillColor(gold)
-      .moveTo(markerX, triTop)
-      .lineTo(markerX - 4, triTop - LBA_CONTINUUM.markerHeight)
-      .lineTo(markerX + 4, triTop - LBA_CONTINUUM.markerHeight)
-      .closePath()
-      .fill();
-    doc
-      .strokeColor(gold)
-      .lineWidth(1.25)
-      .moveTo(markerX, lineY)
-      .lineTo(markerX, lineY + 2)
-      .stroke();
-  }
-
-  doc
-    .strokeColor(gold)
-    .lineWidth(LBA_CONTINUUM.lineWeight)
-    .moveTo(lineX, lineY)
-    .lineTo(lineX + lineW, lineY)
-    .stroke();
-
-  ticks.forEach((tick) => {
-    const tickX = lbaContinuumX(lineX, lineW, tick.bf, scaleMin, scaleMax);
-    doc
-      .strokeColor(gold)
-      .lineWidth(0.75)
-      .moveTo(tickX, lineY)
-      .lineTo(tickX, lineY + LBA_CONTINUUM.tickHeight)
-      .stroke();
-    doc.font(SEMINAR_FONTS.regular).fontSize(LBA_CONTINUUM.tickSize).fillColor(SEMINAR_COLORS.muted);
-    const tickLabelW = doc.widthOfString(tick.label);
-    doc.text(tick.label, tickX - tickLabelW / 2, lineY + LBA_CONTINUUM.tickHeight + LBA_CONTINUUM.tickGap, {
-      lineBreak: false,
-    });
-  });
-
-  return y + measureLbaFatLeanContinuum(doc, width, continuum);
 }
 
 function drawLbaBfRangeSection(doc, payload, page, lba) {
@@ -1987,27 +1855,12 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
   const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
-  let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
-    headerKey: 'label',
-    valueKey: 'bfRangeLabel',
-  });
+  let tableH = measureLbaBfRangeTable(doc, categories, page.width, 'bfRangeLabel');
   page = ensureLockedSpace(doc, payload, page, tableH + LAYOUT.sectionGap);
   page = {
     ...page,
-    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, categories, {
-      headerKey: 'label',
-      valueKey: 'bfRangeLabel',
-    }) + LAYOUT.sectionGap,
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, categories, 'bfRangeLabel') + LAYOUT.sectionGap,
   };
-
-  if (lba.bfContinuum) {
-    const continuumH = measureLbaFatLeanContinuum(doc, page.width, lba.bfContinuum);
-    page = ensureLockedSpace(doc, payload, page, continuumH + LAYOUT.sectionGap * 2);
-    page = {
-      ...page,
-      y: drawLbaFatLeanContinuum(doc, page.x, page.y, page.width, lba.bfContinuum) + LAYOUT.sectionGap * 2,
-    };
-  }
 
   const paragraphs = [
     lba.bfRangeLead,
@@ -2018,17 +1871,11 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
     page = { ...page, y: page.y + LAYOUT.sectionGap };
   }
 
-  tableH = measureLbaBfRangeTable(doc, weightRanges, page.width, {
-    headerKey: 'label',
-    valueKey: 'weightRangeLabel',
-  });
+  tableH = measureLbaBfRangeTable(doc, weightRanges, page.width, 'weightRangeLabel');
   page = ensureLockedSpace(doc, payload, page, tableH);
   return {
     ...page,
-    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, weightRanges, {
-      headerKey: 'label',
-      valueKey: 'weightRangeLabel',
-    }),
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, weightRanges, 'weightRangeLabel'),
   };
 }
 
