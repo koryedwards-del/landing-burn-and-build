@@ -253,6 +253,16 @@
       gap: 20px;
     }
 
+    .sample-sections-intro {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 20px;
+    }
+
     .sample-section-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
@@ -274,9 +284,6 @@
     .pdf-preview-lead {
       text-align: center;
       margin-bottom: 12px;
-    }
-    .pdf-preview-lead--align {
-      visibility: hidden;
     }
     .pdf-preview-frame {
       width: 100%;
@@ -338,7 +345,6 @@
 
     @media (max-width: 900px) {
       .sample-split { grid-template-columns: 1fr; }
-      .pdf-preview-lead--align { display: none; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
     }
@@ -472,10 +478,7 @@
           </a>
         </div>
         <div class="sample-panel">
-          <div class="pdf-preview-lead pdf-preview-lead--align" aria-hidden="true">
-            <p class="pdf-preview-hint">Tap the preview to open the full PDF</p>
-            <span class="pdf-preview-arrow">↓</span>
-          </div>
+          <p class="sample-sections-intro">What you get</p>
           <div class="sample-sections">
             <section>
               <h3 class="sample-section-title">Lean Body Analysis</h3>
