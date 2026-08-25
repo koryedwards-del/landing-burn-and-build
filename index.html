@@ -215,8 +215,10 @@
     }
 
     .sample-split {
-      display: block;
-      max-width: 760px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 40px 80px;
     }
@@ -278,21 +280,40 @@
       color: var(--text-dim);
     }
 
-    .sample-pdf-link {
-      display: inline-flex;
+    .pdf-preview { display: block; text-decoration: none; color: inherit; }
+    .pdf-preview-frame {
+      min-height: 380px;
+      border: 2px solid var(--yellow);
+      background: var(--black);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .pdf-preview-frame embed {
+      display: block;
+      width: 100%;
+      min-height: 380px;
+      border: 0;
+    }
+    .pdf-preview-label {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 28px;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pdf-preview-title {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.97rem;
+      color: var(--gray-light);
+    }
+    .pdf-preview-cta {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--yellow);
-      text-decoration: none;
     }
-
-    .sample-pdf-link:hover { opacity: 0.75; }
 
     .close-trio {
       display: flex;
@@ -320,6 +341,7 @@
     }
 
     @media (max-width: 900px) {
+      .sample-split { grid-template-columns: 1fr; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
     }
@@ -460,7 +482,18 @@
             <p class="sample-section-body">Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.</p>
           </section>
         </div>
-        <a class="sample-pdf-link" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">Preview sample PDF &rarr;</a>
+      </div>
+      <div class="sample-panel">
+        <div class="sample-label">Sample Program Report</div>
+        <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener">
+          <div class="pdf-preview-frame">
+            <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#view=FitH&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build sample program report PDF" />
+          </div>
+          <div class="pdf-preview-label">
+            <span class="pdf-preview-title">Your body. Your activity. Your food plan.</span>
+            <span class="pdf-preview-cta">Preview sample PDF &rarr;</span>
+          </div>
+        </a>
       </div>
     </div>
   </section>
