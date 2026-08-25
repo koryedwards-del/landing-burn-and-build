@@ -26,13 +26,65 @@
     .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: var(--gray-heading); }
     .hero-headline .hero-line-accent { color: var(--yellow); }
 
+    .hero-puzzled {
+      max-width: 640px;
+      margin: 8px auto 0;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.72s forwards;
+    }
+
+    .hero-puzzled-hook {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.35rem, 3.2vw, 2rem);
+      line-height: 1.1;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--gray-heading);
+      margin-bottom: 20px;
+    }
+
+    .hero-puzzled-hook span { color: var(--yellow); }
+
+    .hero-lines {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .hero-lines li {
+      font-family: 'Barlow', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.08rem);
+      line-height: 1.55;
+      color: var(--gray-light);
+    }
+
+    .hero-reframe {
+      font-family: 'Barlow', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.08rem);
+      line-height: 1.6;
+      color: var(--gray-light);
+      background: rgba(26, 26, 26, 0.85);
+      border-left: 3px solid var(--yellow);
+      padding: 16px 18px;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+
+    .hero-reframe span { color: var(--yellow); font-weight: 600; }
+
     .hero-cta {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       justify-content: center;
       align-items: center;
-      margin-top: 24px;
+      margin-top: 28px;
       opacity: 0;
       animation: fadeUp 0.7s 0.85s forwards;
     }
@@ -348,6 +400,7 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 48px; }
+      .hero-reframe { text-align: center; border-left: none; border-top: 3px solid var(--yellow); }
       .filter, .search-faq { padding-left: 20px; padding-right: 20px; }
       .sample-split { padding: 0 20px 64px; }
       .who-card { padding: 40px 28px; }
@@ -360,6 +413,7 @@
   <nav>
     <a href="/" class="nav-logo">Burn &amp; Build</a>
     <ul class="nav-links">
+      <li><a href="#puzzled">Puzzled?</a></li>
       <li><a href="#questions">Questions</a></li>
       <li><a href="#sample">What You Get</a></li>
       <li><a href="#sample">Sample Plan</a></li>
@@ -383,6 +437,15 @@
     <p class="hero-eyebrow">The Premier Body Recomp Diet · Since 1982</p>
     <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
     <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
+    <div class="hero-puzzled" id="puzzled">
+      <p class="hero-puzzled-hook">Puzzled why your <span>workouts aren't working?</span></p>
+      <ul class="hero-lines">
+        <li>You train hard.</li>
+        <li>You eat clean.</li>
+        <li>You're paying a coach every month — and you're still not recomping.</li>
+      </ul>
+      <p class="hero-reframe">A lean, strong, energetic body is about <span>eating</span> — not starving.</p>
+    </div>
     <div class="hero-cta">
       <span class="btn-cta btn-cta--soon" aria-disabled="true">Coming Soon</span>
       <a class="btn-cta btn-cta--ghost" href="#sample">Preview sample PDF</a>
@@ -399,15 +462,6 @@
         <p class="section-body" style="margin-top:12px;">Different wording — same question underneath.</p>
       </div>
       <div class="accordion" id="search-accordion">
-        <details class="accordion-item">
-          <summary class="accordion-trigger">Why aren't my workouts working?</summary>
-          <div class="accordion-body">
-            <p>You train hard.</p>
-            <p>You eat clean.</p>
-            <p>You're paying a coach every month — and you're still not recomping.</p>
-            <p>A lean, strong, energetic body is about eating — not starving.</p>
-          </div>
-        </details>
         <details class="accordion-item">
           <summary class="accordion-trigger">How do I lose fat without losing muscle?</summary>
           <div class="accordion-body">
