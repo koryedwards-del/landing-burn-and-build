@@ -246,7 +246,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
   });
   const fatBarFooterParts = leannessFatBarFooterParts(lbmCopy.lead, lbmCopy.congrats);
   const fatBar = leannessFatBar(gender, intake.fatPercent, intake.leanBodyMass);
-  const timelineMarkers = fatBarTimelineMarkers(projectionTimelineFromPackage(pkg));
+  const timelineMarkers = fatBarTimelineMarkers(projectionTimelineFromPackage(pkg), gender);
   if (timelineMarkers.length) fatBar.timelineMarkers = timelineMarkers;
 
   const sampleHistory = options.sampleHistory ?? resolveSampleHistory(pkg);

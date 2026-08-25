@@ -88,8 +88,12 @@ function formatCapHeader(cap) {
   return `<${cap}%`;
 }
 
-function formatBarFatHeader(cap) {
-  return `<${cap}% FAT`;
+function formatBarFatHeader(cap, gender) {
+  const floor = gender === 'female' ? PROJECTION_BF_FLOOR.female : PROJECTION_BF_FLOOR.male;
+  if (Math.abs(Number(cap) - floor) < 0.5) {
+    return gender === 'female' ? '< 9% FAT' : '< 5% FAT';
+  }
+  return `< ${Math.round(Number(cap))}% FAT`;
 }
 
 function formatBarCurrentFatHeader(bf) {
@@ -203,7 +207,7 @@ export function leannessFatBar(gender, bodyFatPercent, lbm) {
       label: row.label,
       from: prev,
       to: row.cap,
-      capLabel: formatBarFatHeader(row.cap),
+      capLabel: formatBarFatHeader(row.cap, gender),
       weightLabel: weightGoalRangeLabel(lbm, row),
     });
     prev = row.cap;
@@ -248,15 +252,18 @@ function formatTimelineShort(timeline) {
 }
 
 /** Projected BF% markers from the burn-engine timeline table (future rows only). */
-export function fatBarTimelineMarkers(timeline) {
+export function fatBarTimelineMarkers(timeline, gender = 'female') {
   if (!timeline?.valid || !Array.isArray(timeline.rows)) return [];
+  const showtimeLabel = gender === 'female' ? '< 9%' : '< 5%';
   return timeline.rows
     .filter((row) => !row.isCurrent && Number.isFinite(Number(row.bodyFat)))
     .map((row) => ({
       timeline: row.timeline,
       timelineLabel: formatTimelineShort(row.timeline),
       bodyFat: round2(row.bodyFat),
-      bfLabel: row.bodyFatDisplay || `${round2(row.bodyFat)}%`,
+      bfLabel: row.isShowtime
+        ? showtimeLabel
+        : (row.bodyFatDisplay || `${round2(row.bodyFat)}%`),
       badge: row.badge || null,
     }));
 }
