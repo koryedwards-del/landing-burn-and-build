@@ -222,6 +222,29 @@
       top: 4px;
     }
 
+    .sample-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sample-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 8px;
+    }
+
+    .sample-section-body {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+
     .pdf-preview { display: block; text-decoration: none; color: inherit; cursor: pointer; }
     .pdf-preview-frame {
       width: 100%;
@@ -388,12 +411,24 @@
     <div class="sample-split">
       <div class="sample-panel">
         <div class="sample-label">What You Get</div>
-        <ul class="sample-list">
-          <li>Lean Body Analysis</li>
-          <li>Food Plan</li>
-          <li>Servings</li>
-          <li>Food List</li>
-        </ul>
+        <div class="sample-sections">
+          <section>
+            <h3 class="sample-section-title">Lean Body Analysis</h3>
+            <p class="sample-section-body">Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and a Projected Progress bar — where you are and where you are headed. Burn &amp; Build uses your LBM (lean body mass) to calculate your metabolic rate (RMR). The bar shows appropriate weight goals for each leanness stage and projected body fat over time, based on your current lean body mass.</p>
+          </section>
+          <section>
+            <h3 class="sample-section-title">Food Plan</h3>
+            <p class="sample-section-body">Page three is your custom-designed food plan. It explains why servings go a step farther than macros, how tracking macros can lead you astray, and the five steps for building each meal from your food list. The servings on page four follow directly from this page.</p>
+          </section>
+          <section>
+            <h3 class="sample-section-title">Servings</h3>
+            <p class="sample-section-body">Page four is the servings page. Burn &amp; Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks so you have maximum strength and energy while losing fat as fast as this plan allows.</p>
+          </section>
+          <section>
+            <h3 class="sample-section-title">Food List</h3>
+            <p class="sample-section-body">Pages five through seven are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. Page seven covers seasonings and splashes. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.</p>
+          </section>
+        </div>
       </div>
       <div class="sample-panel">
         <a class="pdf-preview" href="docs/samples/kwarner-locked-preview-kristi-latest.pdf" target="_blank" rel="noopener" aria-label="Tap the preview to open the full sample PDF">
