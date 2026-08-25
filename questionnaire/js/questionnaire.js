@@ -25,6 +25,7 @@ const INFO_FIELDS = [
   'sex',
   'email',
   'emailConfirm',
+  'referrerName',
 ];
 
 const INFO_FIELD_META = {
@@ -47,6 +48,11 @@ const INFO_FIELD_META = {
     question: 'Confirm your email address',
     guide: 'Type the same address again. We cannot fix a typo after checkout.',
     example: 'Must match the email you just entered.',
+  },
+  referrerName: {
+    question: 'Who referred you to Burn & Build?',
+    guide: 'If someone referred you, enter their full name so we can credit them. Leave blank if you found us on your own.',
+    example: 'Example: Jane Smith',
   },
 };
 
@@ -339,6 +345,7 @@ function readForm() {
   const age = ageRaw !== '' && ageRaw != null ? Number(ageRaw) : null;
   return {
     preferredName: String(data.get('preferredName') || '').trim(),
+    referrerName: String(data.get('referrerName') || '').trim(),
     email: String(data.get('email') || '').trim(),
     emailRetype: String(data.get('emailRetype') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
@@ -365,6 +372,7 @@ function readForm() {
 function toOnboardingForm(values) {
   return {
     preferredName: values.preferredName,
+    referrerName: values.referrerName,
     email: values.email,
     sex: values.sex,
     heightFeet: String(values.heightFeet || ''),
@@ -407,6 +415,8 @@ function infoFieldSummary(fieldId, values) {
       if (!values.emailRetype) return '';
       if (values.email && values.emailRetype === values.email) return 'Matches';
       return values.emailRetype;
+    case 'referrerName':
+      return values.referrerName || '';
     default:
       return '';
   }
@@ -428,6 +438,8 @@ function validateInfoField(fieldId, values) {
       if (!values.emailRetype) return 'Type your email address again.';
       if (!isValidEmail(values.emailRetype)) return 'Enter a valid email address.';
       if (values.email !== values.emailRetype) return 'Email addresses do not match. Type it again.';
+      return '';
+    case 'referrerName':
       return '';
     default:
       return '';
@@ -1292,6 +1304,7 @@ function renderReview() {
   const rows = [
     ['Name', values.preferredName || '—'],
     ['Email', values.email || '—'],
+    ['Referrer', values.referrerName || '—'],
     ['Height', heightLabel(values)],
     ['Gender', values.sex || '—'],
     ['Age', values.age != null ? String(values.age) : '—'],
