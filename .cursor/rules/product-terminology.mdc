@@ -1,0 +1,66 @@
+---
+description: Product terminology — diet, food plan, program (locked decision)
+alwaysApply: true
+---
+
+# Product terminology
+
+Burn & Build uses **three terms for three layers**. Do not swap them for the same concept.
+
+## One-sentence rule
+
+> **Burn & Build Diet** is the product; **your program** is what we generate; **your food plan** is what you eat.
+
+## Three layers
+
+| Term | Layer | Question it answers | Use for |
+|------|--------|---------------------|---------|
+| **Diet** | Product | What do they buy? | *The Burn & Build Diet*, *Get the Diet*, heritage (*Since 1982*), pricing ($149), checkout (*Download your Burn & Build Diet*), brand positioning |
+| **Food plan** | Eating rules | What do they follow daily? | PDF page 3, servings prescription, meal-building steps, handbook/FAQ about portions and adherence |
+| **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **program report** PDF + menu planner; saved account artifact; *your program will be created* before Stripe |
+
+## Avoid
+
+| Wrong | Why |
+|-------|-----|
+| **Food program** | Not a product term — drop entirely |
+| **Diet plan** | Merges product (*diet*) with eating rules (*food plan*) — use **diet** or **food plan** or **program** by layer |
+| **Diet program** | Same merge — pick **diet** or **program** |
+| Using **diet**, **food plan**, and **program** interchangeably for the same thing | Each layer has one primary term |
+
+## Correct examples
+
+- Landing CTA: **Get the Diet** → `/questionnaire/?create=1`
+- Pricing product name: **The Burn & Build Diet** — $149 one-time purchase
+- Before checkout: *When you have answered these questions… your **program** will be created*
+- Sample / Welcome section title: **Food Plan** (PDF page 3 — eating rules, not the product name)
+- Print Shop / PDF document: **Program Report** (full multi-page deliverable)
+- FAQ (all three in one sentence): *Bring your **food plan** and **program report** to your doctor before starting **the diet**.*
+
+## Common mistakes (fix when editing copy)
+
+| Surface | Wrong | Right |
+|---------|-------|-------|
+| Questionnaire step label | Build Your **Diet Plan** | Build Your **Program** or start-your-**diet** wording — never *diet plan* |
+| Questionnaire intro | Burn Engine builds your **diet** | builds your **program** (report + planner) |
+| Download button | Download **diet plan** | Download **program report** or **your diet** (product) |
+| Pricing disclaimer | difficult **program** | difficult **diet** (product) |
+| Program shell / library | Go to your **diet**; Your **diet plans** | **program** / **programs** |
+| Welcome (whole report) | a **food plan** built only for you | a **program** built only for you |
+| Projections intro | **food program** | **program** or **food plan** — never *food program* |
+
+## Gray areas (usually OK)
+
+- **Program report** — document name for the full PDF; not the product name, not page 3 alone
+- **Program questionnaire** — intake that builds the program
+- Colloquial **plan** when context is clearly servings or adherence (*your plan uses servings*) — not the product name
+- Waiver / everyday English (*changes to my diet*) — eating habits, not product naming
+- **Cutting-diet staples** — historical bodybuilding term in food-list copy
+- Locked KWarner user-authored lines — do not reauthor; flag only if user requests a terminology pass (see `.cursor/rules/user-authored-copy.mdc`)
+
+## Agent checklist
+
+1. Which layer is this copy about — **product**, **eating rules**, or **generated package**?
+2. Pick **diet**, **food plan**, or **program** accordingly — one primary term per layer
+3. Never introduce **food program** or **diet plan**
+4. When fixing drift, change **only** what the user explicitly asks for — one surface at a time
