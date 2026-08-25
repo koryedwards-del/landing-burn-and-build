@@ -21,9 +21,15 @@ body.q-app--workroom,
   padding-bottom: 12px;
 }
 
-.q-app--workroom .q-logo,
 .q-app--workroom .q-motto {
   display: none;
+}
+
+.q-app--workroom .q-logo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  filter: none;
 }
 
 .q-app--workroom .q-title {
