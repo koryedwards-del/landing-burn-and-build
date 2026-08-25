@@ -2,74 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Print Shop PDF</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: system-ui, sans-serif;
-      background: #121212;
-      color: #f5f5f5;
-    }
-    p { margin: 0; padding: 16px; text-align: center; max-width: 28rem; line-height: 1.5; }
-    .error { color: #ff8a80; }
-  </style>
+  <meta http-equiv="refresh" content="0; url=/createyourfoodplan/" />
+  <title>Burn &amp; Build — Download your diet</title>
+  <script>
+    (function () {
+      location.replace('/createyourfoodplan/');
+    })();
+  </script>
 </head>
 <body>
-  <p id="status">Opening PDF…</p>
-  <script type="module">
-    import { apiUrl } from '../js/apiConfig.js';
-    import { FOODS_CATALOG_VERSION, PDF_PRINT_REVISIONS } from '../js/assetVersion.js';
-    import { isPersonalizedPrintShopView, isPrintShopView } from '../js/printShopViews.js';
-
-    const statusEl = document.getElementById('status');
-
-    function showError(message) {
-      statusEl.textContent = message;
-      statusEl.className = 'error';
-    }
-
-    const view = new URLSearchParams(window.location.search).get('view') || 'faq';
-
-    if (!isPrintShopView(view)) {
-      showError(`Print Shop view not supported: ${view}`);
-    } else if (isPersonalizedPrintShopView(view)) {
-      showError('Open Print Shop from your menu planner to generate this document.');
-    } else {
-      try {
-        const rev = view === 'foodlist' ? FOODS_CATALOG_VERSION : (PDF_PRINT_REVISIONS[view] || '1');
-        const params = new URLSearchParams({ view, rev });
-        const title = new URLSearchParams(window.location.search).get('title');
-        if (title) params.set('title', title);
-
-        const res = await fetch(apiUrl(`/api/print/pdf?${params}`), { cache: 'no-store' });
-        if (!res.ok) {
-          let message = 'Could not generate PDF.';
-          try {
-            const body = await res.json();
-            if (body?.message) message = body.message;
-          } catch (_) { /* ignore */ }
-          showError(message);
-          throw new Error(message);
-        }
-
-        const blob = await res.blob();
-        const header = await blob.slice(0, 5).text();
-        if (!header.startsWith('%PDF-')) {
-          showError('Could not load PDF.');
-          throw new Error('Invalid PDF');
-        }
-
-        window.location.replace(URL.createObjectURL(blob));
-      } catch (err) {
-        if (!statusEl.classList.contains('error')) {
-          showError(err.message || 'Could not load PDF.');
-        }
-      }
-    }
-  </script>
+  <p><a href="/createyourfoodplan/">Download your Burn &amp; Build Diet</a></p>
 </body>
 </html>

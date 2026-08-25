@@ -1,7 +1,7 @@
-/** Session handoff — creator / questionnaire → unified program-report shell */
+/** Session handoff — questionnaire → checkout (Burn & Build Diet PDF download). */
 
 import { setActiveProgramId, activeProgramIdFromPackage } from './programActive.js';
-import { CREATOR_HOST_ORIGIN } from './siteUrls.js';
+import { CREATOR_CHECKOUT_URL } from './siteUrls.js';
 
 export const MENUPLANNER_PROGRAM_KEY = 'bnb_menuplanner_program';
 export const BUILT_PROGRAM_KEY = 'bnb_built_package';
@@ -32,9 +32,6 @@ export function loadProgramBridge() {
   return null;
 }
 
-export function programReportHref({ preview = false, page } = {}) {
-  const url = new URL('/program-report/', CREATOR_HOST_ORIGIN);
-  if (preview) url.searchParams.set('preview', '1');
-  if (page) url.searchParams.set('page', page);
-  return `${url.pathname}${url.search}`;
+export function programReportHref() {
+  return CREATOR_CHECKOUT_URL;
 }

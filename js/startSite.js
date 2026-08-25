@@ -209,7 +209,7 @@ function markDietEmailSent() {
 function renderPaidDirections() {
   const downloadLabel = store.dietDownloadBusy
     ? 'PREPARING YOUR PDF…'
-    : 'DOWNLOAD YOUR PRINTOUT';
+    : 'DOWNLOAD YOUR BURN & BUILD DIET';
 
   const downloadLine = `<button type="button" class="unlock-receipt__download${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
 
