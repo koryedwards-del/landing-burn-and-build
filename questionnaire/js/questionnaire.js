@@ -1515,7 +1515,7 @@ function restoreQuestionnaireChrome() {
   const title = document.querySelector('.q-title');
   const tag = document.querySelector('.q-tag');
   if (title) title.textContent = 'Program Questionnaire';
-  if (tag) tag.textContent = 'Burn & Build program questionnaire';
+  if (tag) tag.textContent = 'Build your personalized program';
   tag?.classList.remove('q-tag--gold');
   syncIntakeQuestionNumbers();
   activateIntakeMode();

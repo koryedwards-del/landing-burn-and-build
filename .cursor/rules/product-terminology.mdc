@@ -55,7 +55,7 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 ## Correct examples
 
 - Landing CTA: **Get the Diet** → `/questionnaire/?create=1`
-- Questionnaire page title: **Program Questionnaire** (tag: *Burn & Build program questionnaire*)
+- Questionnaire page title: **Program Questionnaire** (tag: *Build your personalized program* — do not repeat “questionnaire” in the tag)
 - Pricing product name: **The Burn & Build Diet** — $149 one-time purchase
 - Before checkout: *When you have answered these questions… your **program** will be created*
 - Sample / Welcome section title: **Food Plan** (PDF page 3 — eating rules, not the product name)
