@@ -1858,11 +1858,36 @@ function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey
   });
 }
 
+function drawLbaAppearanceGuide(doc, payload, page, guideLines) {
+  const lines = (guideLines || []).map((entry) => entry?.line || entry).filter(Boolean);
+  if (!lines.length) return page;
+
+  const bodySize = 9;
+  const lineGap = 2;
+  const bullets = lines.map((line) => `• ${line}`);
+
+  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
+  const bulletsH = bullets.reduce(
+    (total, bullet) => total + doc.heightOfString(bullet, { width: page.width, lineGap }) + lineGap,
+    0,
+  );
+
+  page = ensureLockedSpace(doc, payload, page, bulletsH + LAYOUT.sectionGap);
+  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize).fillColor(SEMINAR_COLORS.body);
+  let y = page.y;
+  bullets.forEach((bullet) => {
+    doc.text(bullet, page.x, y, { width: page.width, lineGap });
+    y = doc.y + lineGap;
+  });
+  return { ...page, y: y + LAYOUT.sectionGap };
+}
+
 function drawLbaBfRangeSection(doc, payload, page, lba) {
   const categories = lba.bfRangeCategories || [];
   const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
+  page = drawLbaAppearanceGuide(doc, payload, page, lba.bfAppearanceGuide);
   let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
     headerKey: 'label',
     valueKey: 'bfRangeLabel',

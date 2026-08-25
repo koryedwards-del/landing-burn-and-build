@@ -101,38 +101,48 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
-/** ACE % ranges (Fit Commit) — bodybuilding prep stage labels (lean → off-season). */
-const LBA_BF_RANGE_LABELS = Object.freeze([
-  'Competition',
-  'Peaking',
-  'Prepping',
-  'Training',
-  'Off-Season',
-]);
-
+/** ACE % ranges (Fit Commit) — appearance labels (lean → higher body fat). */
 const LBA_BF_RANGE_CATEGORIES = Object.freeze({
   female: [
-    { bfMin: 10, bfMax: 13.99, bfRangeLabel: '10% – 13%' },
-    { bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20%' },
-    { bfMin: 21, bfMax: 24.99, bfRangeLabel: '21% – 24%' },
-    { bfMin: 25, bfMax: 31.99, bfRangeLabel: '25% – 31%' },
-    { bfMin: 32, bfMax: null, bfRangeLabel: '32%+' },
+    { label: 'Stage-ready', bfMin: 10, bfMax: 13.99, bfRangeLabel: '10% – 13%' },
+    { label: 'Athletic', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20%' },
+    { label: 'Average', bfMin: 21, bfMax: 24.99, bfRangeLabel: '21% – 24%' },
+    { label: 'Above average', bfMin: 25, bfMax: 31.99, bfRangeLabel: '25% – 31%' },
+    { label: 'Well above', bfMin: 32, bfMax: null, bfRangeLabel: '32%+' },
   ],
   male: [
-    { bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5%' },
-    { bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13%' },
-    { bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17%' },
-    { bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24%' },
-    { bfMin: 25, bfMax: null, bfRangeLabel: '25%+' },
+    { label: 'Stage-ready', bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5%' },
+    { label: 'Athletic', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13%' },
+    { label: 'Average', bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17%' },
+    { label: 'Above average', bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24%' },
+    { label: 'Well above', bfMin: 25, bfMax: null, bfRangeLabel: '25%+' },
+  ],
+});
+
+/** Gender-specific appearance guide — milestone ranges (reference copy on LBA page). */
+const LBA_BF_APPEARANCE_GUIDE = Object.freeze({
+  male: [
+    '3–5%: Stage-ready (extremely lean)',
+    '6–13%: Athletic',
+    '8–11%: Visible six-pack',
+    '14–20%: Average',
+  ],
+  female: [
+    '8–9%: Stage-ready',
+    '14–20%: Athletic',
+    '15–17%: Visible abs',
+    '21–30%: Average',
   ],
 });
 
 function lbaBodyFatRangeRows(gender) {
   const key = gender === 'female' ? 'female' : 'male';
-  return LBA_BF_RANGE_CATEGORIES[key].map((row, index) => ({
-    label: LBA_BF_RANGE_LABELS[index],
-    ...row,
-  }));
+  return LBA_BF_RANGE_CATEGORIES[key].map((row) => ({ ...row }));
+}
+
+export function lbaBodyFatAppearanceGuide(gender) {
+  const key = gender === 'female' ? 'female' : 'male';
+  return LBA_BF_APPEARANCE_GUIDE[key].map((line) => ({ line }));
 }
 
 export function lbaBodyFatRangeCategories(gender) {
@@ -389,8 +399,8 @@ export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {
   }
   const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
   const congrats = analysis.atOrAbove
-    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each prep stage from Competition to Off-Season based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
-    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each prep stage from Competition to Off-Season based on your current Lean Body Mass.';
+    ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each body fat range from Stage-ready to Well above based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
+    : 'Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each body fat range from Stage-ready to Well above based on your current Lean Body Mass.';
   return { lead, congrats, analysis };
 }
 

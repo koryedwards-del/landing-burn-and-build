@@ -2,6 +2,7 @@
 
 import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
+  lbaBodyFatAppearanceGuide,
   lbaBodyFatRangeCategories,
   lbaBodyFatRangeLeadMessage,
   lbaBodyFatRangeWeightRanges,
@@ -305,6 +306,7 @@ export function buildProgramReportPayload(pkg, options = {}) {
       todayRows: lbaTodayTableRows(today),
       bfRangeCategories: lbaBodyFatRangeCategories(gender),
       bfRangeWeightRanges: lbaBodyFatRangeWeightRanges(gender, intake.leanBodyMass),
+      bfAppearanceGuide: lbaBodyFatAppearanceGuide(gender),
       bfRangeLead: lbaBodyFatRangeLeadMessage(),
       lbmParagraphs: [lbmCopy.lead, lbmCopy.congrats].filter(Boolean),
       leannessFatBar: fatBar,
