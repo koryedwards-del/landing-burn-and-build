@@ -50,8 +50,8 @@ const INFO_FIELD_META = {
     example: 'Must match the email you just entered.',
   },
   referrerName: {
-    question: 'Who referred you to Burn & Build?',
-    guide: 'If someone referred you, enter their full name so we can thank them. Leave blank if you found us on your own.',
+    question: 'Who do we thank?',
+    guide: 'If someone sent you here, enter their full name so we can thank them. Leave blank if you found us on your own.',
     example: 'Example: Jane Smith',
   },
 };
@@ -1304,7 +1304,7 @@ function renderReview() {
   const rows = [
     ['Name', values.preferredName || '—'],
     ['Email', values.email || '—'],
-    ['Referrer', values.referrerName || '—'],
+    ['Who we thank', values.referrerName || '—'],
     ['Height', heightLabel(values)],
     ['Gender', values.sex || '—'],
     ['Age', values.age != null ? String(values.age) : '—'],
