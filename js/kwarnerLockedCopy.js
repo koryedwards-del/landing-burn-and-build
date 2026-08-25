@@ -10,7 +10,7 @@ export const KWARNER_WELCOME_COPY = {
   foodPlan:
     'Page three is your custom-designed food plan. It explains why servings go a step farther than macros and how tracking macros can lead you astray. The servings on page four follow directly from this page.',
   servings:
-    'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and snacks so you have maximum strength and energy while losing fat as fast as this plan allows.',
+    'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and fruit so you have maximum strength and energy while losing fat as fast as this plan allows.',
   foodList:
     'Pages five and six are your food list. Page five lists protein, grains, and starches. Page six lists vegetables and fruit. These foods were chosen from the bodybuilder cutting-diet staples used in Warner 1982 — foods that work in real prep. Each item is matched to Burn Engine serving rules and sized with USDA nutrition data so one serving delivers the protein, carbohydrate, or produce your plan calls for. The gram weights on your list are scaled to your daily servings from page four. Weigh your portions, stay inside your servings, and build meals from these approved foods.',
 };
@@ -35,8 +35,4 @@ export const KWARNER_FOOD_GROUPS_INTRO = [
   'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss.',
   'The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercising isn\'t working?',
   'Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.',
-];
-
-export const KWARNER_SERVINGS_INTRO = [
-  'This page is your daily prescription: how many servings of each food group you need across breakfast, lunch, dinner, and snacks.',
 ];

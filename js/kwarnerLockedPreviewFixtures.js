@@ -9,7 +9,6 @@ export {
   KWARNER_FOOD_PLAN_LEAD,
   KWARNER_FOOD_PLAN_HOWTO,
   KWARNER_FOOD_GROUPS_INTRO,
-  KWARNER_SERVINGS_INTRO,
 } from './kwarnerLockedCopy.js';
 
 export const KRISTI_KWARNER_FORM = {
