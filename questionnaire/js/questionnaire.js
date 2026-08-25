@@ -132,6 +132,42 @@ const OCCUPATION_FIELDS = [
   'workStress',
 ];
 
+/** Accordion field order — single continuous question numbering across intake steps. */
+const INTAKE_QUESTION_SECTIONS = [
+  { accordionId: 'info-accordion', attr: 'data-info-field', fields: INFO_FIELDS },
+  { accordionId: 'occupation-accordion', attr: 'data-occ-field', fields: OCCUPATION_FIELDS },
+  { accordionId: 'exercise-accordion', attr: 'data-ex-field', fields: EXERCISE_FIELDS },
+  { accordionId: 'body-accordion', attr: 'data-body-field', fields: BODY_FIELDS },
+];
+
+const WAIVER_QUESTION_NUM_SELECTORS = [
+  '.intake-waiver__cell--signed .intake-acc__num',
+  '.intake-waiver__cell--date .intake-acc__num',
+];
+
+function syncIntakeQuestionNumbers() {
+  let n = 1;
+  INTAKE_QUESTION_SECTIONS.forEach(({ accordionId, attr, fields }) => {
+    const root = document.getElementById(accordionId);
+    if (!root) return;
+    fields.forEach((fieldId) => {
+      const item = root.querySelector(`[${attr}="${fieldId}"]`);
+      if (!item) return;
+      item.dataset.questionNumber = String(n);
+      const numEl = item.querySelector('.intake-acc__num');
+      if (numEl) numEl.textContent = String(n);
+      n += 1;
+    });
+  });
+  WAIVER_QUESTION_NUM_SELECTORS.forEach((selector) => {
+    const numEl = document.querySelector(selector);
+    if (!numEl) return;
+    numEl.textContent = String(n);
+    numEl.closest('.intake-waiver__cell')?.setAttribute('data-question-number', String(n));
+    n += 1;
+  });
+}
+
 const OCCUPATION_FIELD_META = {
   workPhysical: {
     question: 'How physically active is your job?',
@@ -1481,6 +1517,7 @@ function restoreQuestionnaireChrome() {
   if (title) title.textContent = 'Intake form';
   if (tag) tag.textContent = 'Burn & Build program questionnaire';
   tag?.classList.remove('q-tag--gold');
+  syncIntakeQuestionNumbers();
   activateIntakeMode();
 }
 
