@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="hardkor.css" />
   <style>
+    :root { --nav-height: 76px; }
+
     .intro {
       position: relative;
       overflow: hidden;
@@ -37,7 +39,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 140px 40px 32px;
+      padding: 112px 40px 32px;
       position: relative;
       z-index: 1;
     }
@@ -46,8 +48,39 @@
 
     .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.275rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 16px; opacity: 0; animation: fadeUp 0.7s 0.1s forwards; }
 
-    .hero-headline { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; max-width: 900px; margin: 24px 0 16px; opacity: 0; animation: fadeUp 0.7s 0.6s forwards; color: var(--gray-heading); }
     .hero-headline .hero-line-accent { color: var(--yellow); }
+
+    .nav--landing {
+      --nav-height: 76px;
+      min-height: var(--nav-height);
+      height: auto;
+      padding: 10px 40px;
+      gap: 20px;
+    }
+
+    .nav-headline {
+      flex: 1;
+      margin: 0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(0.95rem, 2.2vw, 1.35rem);
+      line-height: 1.05;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--gray-heading);
+    }
+
+    .nav-headline-accent { color: var(--yellow); }
+
+    .nav-end {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+
+    .nav--landing .nav-logo { flex-shrink: 0; }
 
     .hero-puzzled {
       max-width: 640px;
@@ -431,9 +464,21 @@
       .sample-split { grid-template-columns: 1fr; }
       .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
+      .nav--landing { padding: 10px 20px; gap: 12px; }
+      .nav-headline { font-size: clamp(0.78rem, 2.4vw, 1rem); }
     }
     @media (max-width: 600px) {
-      .hero { padding: 100px 20px 24px; }
+      .hero { padding: 96px 20px 24px; }
+      .nav--landing {
+        --nav-height: 68px;
+        padding: 8px 16px;
+        gap: 8px;
+      }
+      .nav-headline {
+        font-size: 0.62rem;
+        letter-spacing: 0.02em;
+        line-height: 1.08;
+      }
       .intro-bridge,
       .search-faq,
       .sample-intro { padding-left: 20px; padding-right: 20px; }
@@ -447,16 +492,19 @@
 </head>
 <body>
 
-  <nav>
+  <nav class="nav--landing">
     <a href="/" class="nav-logo">Burn &amp; Build</a>
-    <ul class="nav-links">
-      <li><a href="#questions">Questions</a></li>
-      <li><a href="#sample">Preview Printout</a></li>
-      <li><a href="#who">Who It's For</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <h1 class="nav-headline"><span class="nav-headline-accent">Lose the Fat.</span> Keep the Muscle.</h1>
+    <div class="nav-end">
+      <ul class="nav-links">
+        <li><a href="#questions">Questions</a></li>
+        <li><a href="#sample">Preview Printout</a></li>
+        <li><a href="#who">Who It's For</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
     <a href="#puzzled">Puzzled?</a>
@@ -472,7 +520,6 @@
     <div class="hero">
       <p class="hero-eyebrow">The Premier Body Recomp Diet · Since 1982</p>
       <img class="hero-logo" src="/img/brand/bblogo1.png" alt="Burn &amp; Build" />
-      <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
       <div class="hero-puzzled" id="puzzled">
         <p class="hero-puzzled-hook">Puzzled why your <span>workouts aren't working?</span></p>
         <ul class="hero-lines">
@@ -557,7 +604,7 @@
               <embed src="docs/samples/kwarner-locked-preview-kristi-latest.pdf#view=FitH&amp;toolbar=0&amp;navpanes=0" type="application/pdf" title="Burn &amp; Build Diet printout PDF" />
             </div>
             <div class="pdf-preview-label">
-              <span class="pdf-preview-title">Your body. Your activity. Your Burn &amp; Build Diet.</span>
+              <span class="pdf-preview-title">Your body. Your activity. Your food plan.</span>
               <span class="pdf-preview-cta">Preview Burn &amp; Build Diet Printout &rarr;</span>
             </div>
           </a>
