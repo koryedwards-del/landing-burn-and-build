@@ -942,6 +942,20 @@ a.r-nav__btn {
   padding: 0;
 }
 
+.r-panel--welcome .print-template--welcome {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 32px 24px;
+  max-width: 8.5in;
+  margin: 0 auto;
+}
+
+.r-panel--welcome .print-template--welcome.r-doc {
+  padding: 0;
+}
+
 .r-steps-success {
   background: #ffffff;
   color: #111111;

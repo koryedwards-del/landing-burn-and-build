@@ -203,6 +203,27 @@
   color: #111111;
 }
 
+.r-doc.print-template.print-template--welcome .print-welcome__intro p {
+  font-size: var(--print-welcome-intro);
+  line-height: var(--print-welcome-line-height);
+  margin-bottom: var(--print-welcome-paragraph-gap);
+}
+
+.r-doc.print-template.print-template--welcome .print-welcome__intro p:last-child {
+  margin-bottom: var(--print-welcome-section-gap);
+}
+
+.r-doc.print-template.print-template--welcome .print-welcome__section-body {
+  font-size: var(--print-welcome-section-body);
+  line-height: var(--print-welcome-line-height);
+  margin-bottom: 0;
+}
+
+.r-doc.print-template.print-template--welcome .print-welcome__section-title {
+  font-size: var(--print-welcome-section-title);
+  margin-bottom: var(--print-welcome-header-gap);
+}
+
 .r-doc.print-template .r-doc__meta {
   font-size: var(--print-personalization);
   color: #111111;

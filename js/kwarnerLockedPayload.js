@@ -7,7 +7,7 @@ import {
   KWARNER_FOOD_PLAN_LEAD,
   KWARNER_SERVINGS_INTRO,
   KWARNER_WELCOME_COPY,
-} from './kwarnerLockedPreviewFixtures.js';
+} from './kwarnerLockedCopy.js';
 
 export function buildKwarnerLockedPayloadFromPackage(pkg) {
   const payload = buildProgramReportPayload(pkg);

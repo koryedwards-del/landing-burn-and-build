@@ -22,6 +22,7 @@ import { bindProgramAccess, bootProgramAccess, openAccessGate } from '../../js/p
 import { QUESTIONNAIRE_WELCOME_URL, DIET_CREATION_COMING_SOON } from '../../js/siteUrls.js';
 import { dietPdfFilename } from '../../js/dietPdfNaming.js';
 import { kwarnerPreviewPdfUrl, PREVIEW_PROGRAM_REPORT_PDF, welcomeCoverHtml } from '../../js/programReportPrintout.js';
+import { kwarnerWelcomePrintHtml } from '../../js/kwarnerWelcomePrintout.js';
 
 const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v') || '1';
 
@@ -207,9 +208,13 @@ function renderNav() {
 }
 
 function renderWelcome(pkg) {
+  const coverHtml = wantsPreviewFromUrl()
+    ? kwarnerWelcomePrintHtml(pkg)
+    : welcomeCoverHtml(pkg);
+
   return `
     <section class="r-panel r-panel--welcome">
-      ${welcomeCoverHtml(pkg)}
+      ${coverHtml}
 
       <footer class="r-actions r-actions--split">
         ${wantsPreviewFromUrl() ? `
