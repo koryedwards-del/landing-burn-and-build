@@ -1806,13 +1806,13 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   return y + totalH;
 }
 
-const ACE_1982_TABLE = Object.freeze({
+const LBA_BF_RANGE_TABLE = Object.freeze({
   labelSize: 9.5,
   rangeSize: 9,
   rowPad: 7,
 });
 
-function ace1982TableColumns() {
+function lbaBfRangeTableColumns() {
   return ['c0', 'c1', 'c2', 'c3', 'c4'].map((key) => ({
     key,
     width: 0.2,
@@ -1820,64 +1820,64 @@ function ace1982TableColumns() {
   }));
 }
 
-function ace1982RowFromCategories(categories, valueKey) {
+function lbaBfRangeRowFromCategories(categories, valueKey) {
   return Object.fromEntries(
     categories.map((cat, index) => [`c${index}`, cat[valueKey] || '']),
   );
 }
 
-function measureAce1982Table(doc, categories, width, { headerKey, valueKey }) {
+function measureLbaBfRangeTable(doc, categories, width, { headerKey, valueKey }) {
   return measureLayoutTable(doc, {
-    columns: ace1982TableColumns(),
+    columns: lbaBfRangeTableColumns(),
     rows: [
-      ace1982RowFromCategories(categories, headerKey),
-      ace1982RowFromCategories(categories, valueKey),
+      lbaBfRangeRowFromCategories(categories, headerKey),
+      lbaBfRangeRowFromCategories(categories, valueKey),
     ],
     headerRows: 1,
-    headFontSize: ACE_1982_TABLE.labelSize,
-    bodyFontSize: ACE_1982_TABLE.rangeSize,
-    tableRowPad: ACE_1982_TABLE.rowPad,
+    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
+    bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
+    tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
     width,
   });
 }
 
-function drawAce1982Table(doc, x, y, width, categories, { headerKey, valueKey }) {
+function drawLbaBfRangeTable(doc, x, y, width, categories, { headerKey, valueKey }) {
   return drawLayoutTable(doc, {
     x,
     y,
     width,
-    columns: ace1982TableColumns(),
+    columns: lbaBfRangeTableColumns(),
     rows: [
-      ace1982RowFromCategories(categories, headerKey),
-      ace1982RowFromCategories(categories, valueKey),
+      lbaBfRangeRowFromCategories(categories, headerKey),
+      lbaBfRangeRowFromCategories(categories, valueKey),
     ],
     headerRows: 1,
-    headFontSize: ACE_1982_TABLE.labelSize,
-    bodyFontSize: ACE_1982_TABLE.rangeSize,
-    tableRowPad: ACE_1982_TABLE.rowPad,
+    headFontSize: LBA_BF_RANGE_TABLE.labelSize,
+    bodyFontSize: LBA_BF_RANGE_TABLE.rangeSize,
+    tableRowPad: LBA_BF_RANGE_TABLE.rowPad,
   });
 }
 
-function drawAce1982LeanBodySection(doc, payload, page, lba) {
-  const categories = lba.aceCategories || [];
-  const weightRanges = lba.aceWeightRanges || [];
+function drawLbaBfRangeSection(doc, payload, page, lba) {
+  const categories = lba.bfRangeCategories || [];
+  const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
-  let tableH = measureAce1982Table(doc, categories, page.width, {
+  let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
     headerKey: 'label',
     valueKey: 'bfRangeLabel',
   });
   page = ensureLockedSpace(doc, payload, page, tableH + LAYOUT.sectionGap);
   page = {
     ...page,
-    y: drawAce1982Table(doc, page.x, page.y, page.width, categories, {
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, categories, {
       headerKey: 'label',
       valueKey: 'bfRangeLabel',
     }) + LAYOUT.sectionGap,
   };
 
   const paragraphs = [
-    lba.aceAssessment,
+    lba.bfRangeLead,
     ...(lba.lbmParagraphs || []),
   ].filter(Boolean);
   if (paragraphs.length) {
@@ -1885,14 +1885,14 @@ function drawAce1982LeanBodySection(doc, payload, page, lba) {
     page = { ...page, y: page.y + LAYOUT.sectionGap };
   }
 
-  tableH = measureAce1982Table(doc, weightRanges, page.width, {
+  tableH = measureLbaBfRangeTable(doc, weightRanges, page.width, {
     headerKey: 'label',
     valueKey: 'weightRangeLabel',
   });
   page = ensureLockedSpace(doc, payload, page, tableH);
   return {
     ...page,
-    y: drawAce1982Table(doc, page.x, page.y, page.width, weightRanges, {
+    y: drawLbaBfRangeTable(doc, page.x, page.y, page.width, weightRanges, {
       headerKey: 'label',
       valueKey: 'weightRangeLabel',
     }),
@@ -1914,8 +1914,8 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     };
   }
 
-  if (lba.aceCategories?.length) {
-    page = drawAce1982LeanBodySection(doc, payload, page, lba);
+  if (lba.bfRangeCategories?.length) {
+    page = drawLbaBfRangeSection(doc, payload, page, lba);
   }
 
   finishLockedPage(doc, page.box, payload);
