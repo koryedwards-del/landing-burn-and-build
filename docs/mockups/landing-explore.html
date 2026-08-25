@@ -7,14 +7,14 @@
   <title>Burn &amp; Build — Landing Exploration Mockup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../css/tokens.css" />
   <link rel="stylesheet" href="../../hardkor.css" />
   <style>
-    /* Exploration — Impact punch + DM Sans warmth (inviting, not industrial) */
+    /* Exploration — Plus Jakarta Sans: clean, inviting; not Impact, not serif */
     :root {
-      --explore-display: Impact, 'Arial Narrow', sans-serif;
-      --explore-sans: 'DM Sans', system-ui, sans-serif;
+      --explore-head: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --explore-body: 'Plus Jakarta Sans', system-ui, sans-serif;
       --explore-radius: 12px;
       --explore-radius-sm: 8px;
       --explore-panel: #161616;
@@ -22,9 +22,10 @@
 
     body {
       padding-top: 34px;
-      font-family: var(--explore-sans);
-      font-size: 18px;
+      font-family: var(--explore-body);
+      font-size: 17px;
       line-height: 1.65;
+      font-weight: 400;
     }
 
     nav {
@@ -36,16 +37,16 @@
 
     nav .nav-logo,
     .footer-logo {
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: 1.4rem;
-      letter-spacing: 0.04em;
+      font-family: var(--explore-head);
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
       text-transform: none;
     }
 
     .footer-links a,
     .footer-copy {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       letter-spacing: 0.02em;
       text-transform: none;
     }
@@ -64,7 +65,7 @@
       background: #331111;
       border-bottom: 1px solid #662222;
       color: #ffaaaa;
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -73,7 +74,7 @@
     }
 
     .nav-since {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 500;
       font-size: 0.8rem;
       letter-spacing: 0.04em;
@@ -95,11 +96,11 @@
     }
 
     .hero-kicker {
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
-      line-height: 1.05;
-      letter-spacing: 0.02em;
+      font-family: var(--explore-head);
+      font-weight: 800;
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
       color: var(--gray-light);
       margin-bottom: 32px;
     }
@@ -120,7 +121,7 @@
     }
 
     .hero-lines li {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-size: clamp(1.05rem, 2vw, 1.125rem);
       font-weight: 400;
       color: var(--gray-light);
@@ -139,7 +140,7 @@
     }
 
     .hero-reframe {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 500;
       font-size: clamp(1.1rem, 2vw, 1.25rem);
       line-height: 1.6;
@@ -207,14 +208,14 @@
     }
 
     .pdf-preview-title {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 500;
       font-size: 1rem;
       color: var(--gray-light);
     }
 
     .pdf-preview-cta {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 600;
       font-size: 0.85rem;
       letter-spacing: 0.02em;
@@ -231,7 +232,7 @@
       bottom: 0;
       padding: 14px 18px;
       background: linear-gradient(transparent, rgba(10, 10, 10, 0.92));
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 500;
       font-size: 0.82rem;
       letter-spacing: 0.02em;
@@ -251,7 +252,7 @@
     }
 
     .filter p {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 400;
       font-size: clamp(1.1rem, 2.2vw, 1.3rem);
       line-height: 1.6;
@@ -260,11 +261,11 @@
 
     .filter p + p {
       margin-top: 14px;
-      font-family: var(--explore-display);
-      font-size: clamp(1.25rem, 2.8vw, 1.55rem);
-      letter-spacing: 0.03em;
+      font-family: var(--explore-head);
+      font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+      letter-spacing: -0.02em;
       color: var(--yellow);
-      font-weight: 400;
+      font-weight: 700;
       font-style: normal;
     }
 
@@ -277,7 +278,7 @@
     .mechanism-inner { max-width: 920px; margin: 0 auto; }
 
     .mechanism-q {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 600;
       font-size: clamp(1.4rem, 3.2vw, 2rem);
       letter-spacing: -0.01em;
@@ -298,7 +299,7 @@
     }
 
     .mechanism-chip {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 600;
       font-size: clamp(0.88rem, 2vw, 0.98rem);
       letter-spacing: 0.01em;
@@ -309,7 +310,7 @@
     }
 
     .mechanism-arrow {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-size: 1.25rem;
       font-weight: 500;
       color: var(--yellow);
@@ -327,10 +328,10 @@
       display: inline-block;
       border: 1px solid rgba(255, 204, 0, 0.5);
       padding: 14px 28px;
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
-      letter-spacing: 0.04em;
+      font-family: var(--explore-head);
+      font-weight: 700;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      letter-spacing: -0.01em;
       color: var(--yellow);
       border-radius: var(--explore-radius-sm);
       background: rgba(255, 204, 0, 0.06);
@@ -353,10 +354,10 @@
     }
 
     .split-label {
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: 1rem;
-      letter-spacing: 0.06em;
+      font-family: var(--explore-head);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
       text-transform: none;
       color: var(--yellow);
       margin-bottom: 24px;
@@ -370,7 +371,7 @@
     }
 
     .split-list li {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 400;
       font-size: 1.05rem;
       letter-spacing: 0;
@@ -406,10 +407,10 @@
     }
 
     .close-trio span {
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: clamp(1.35rem, 3.2vw, 1.85rem);
-      letter-spacing: 0.04em;
+      font-family: var(--explore-head);
+      font-weight: 700;
+      font-size: clamp(1.2rem, 3vw, 1.65rem);
+      letter-spacing: -0.02em;
       color: var(--gray-light);
     }
 
@@ -421,10 +422,10 @@
       border: none;
       background: var(--yellow);
       color: var(--black);
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: clamp(1rem, 2vw, 1.15rem);
-      letter-spacing: 0.06em;
+      font-family: var(--explore-head);
+      font-weight: 700;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      letter-spacing: -0.01em;
       text-decoration: none;
       border-radius: var(--explore-radius-sm);
       transition: transform 0.15s, opacity 0.15s;
@@ -438,7 +439,7 @@
 
     .heritage {
       margin-top: 28px;
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 400;
       font-size: 0.85rem;
       letter-spacing: 0.04em;
@@ -461,7 +462,7 @@
     }
 
     .search-faq-eyebrow {
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 600;
       font-size: 0.8rem;
       letter-spacing: 0.06em;
@@ -471,17 +472,17 @@
     }
 
     .search-faq-title {
-      font-family: var(--explore-display);
-      font-weight: 400;
-      font-size: clamp(1.5rem, 3.5vw, 2rem);
-      letter-spacing: 0.03em;
+      font-family: var(--explore-head);
+      font-weight: 800;
+      font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+      letter-spacing: -0.03em;
       color: var(--gray-light);
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .search-faq-lead {
       margin-top: 14px;
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-size: 1rem;
       line-height: 1.6;
       color: var(--text-dim);
@@ -512,7 +513,7 @@
       gap: 16px;
       padding: 18px 20px;
       cursor: pointer;
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-weight: 600;
       font-size: 1rem;
       line-height: 1.45;
@@ -525,8 +526,9 @@
     .accordion-trigger::after {
       content: '+';
       flex-shrink: 0;
-      font-family: var(--explore-display);
-      font-size: 1.35rem;
+      font-family: var(--explore-head);
+      font-weight: 600;
+      font-size: 1.2rem;
       color: var(--yellow);
       line-height: 1;
       transition: transform 0.2s;
@@ -538,7 +540,7 @@
 
     .accordion-body {
       padding: 0 20px 20px;
-      font-family: var(--explore-sans);
+      font-family: var(--explore-body);
       font-size: 0.98rem;
       line-height: 1.65;
       color: var(--text-dim);
