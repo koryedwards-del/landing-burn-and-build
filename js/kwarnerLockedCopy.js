@@ -30,7 +30,7 @@ export const KWARNER_MEAL_BUILD_STEPS = [
   'Your food list is on pages 5 and 6. Page 5 has protein, dairy, grains, and starches. Page 6 has vegetables and fruit.',
   'Step 1 Choose your protein from the protein & dairy list on page 5. Find the serving size for that food. Add that exact amount to your plate.',
   'Step 2 Zero your scale again. Find the carbohydrate you want from the grain & starch food list on page 5. Add that exact amount to your plate.',
-  'Step 3 Veggies are optional. They are good for you but take up valuable space in your stomach. Remember this is an eating plan, not a not-eating plan. Zero your scale. Add the exact amount of veggies from page 6 to your plate (if desired).',
+  'Step 3 Veggies are optional. Veggies don\'t have an assigned meal or snack. Enjoy them anytime during your day. They are good for you but take up valuable space in your stomach. Remember this is an eating plan, not a not-eating plan. Zero your scale. Add the exact amount of veggies from page 6 to your plate (if desired).',
   'Your plate will be piled high with the right amount of protein and carbs to fuel your life for the next couple of hours.',
   'Repeat this process for breakfast, lunch, and dinner.',
   'Do the same process for fruit on page 6. Convenience tip: eat the same fruit for all three fruit servings. It\'s easier to clean three fruit servings at one time than three different fruits every day.',
