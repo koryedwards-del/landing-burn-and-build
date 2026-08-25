@@ -101,6 +101,69 @@ function formatBarCurrentFatHeader(bf) {
   return Number.isFinite(value) ? `${value.toFixed(2)}% FAT` : null;
 }
 
+/** ACE health categories — 1982 Lean Body Analysis tables (female/male BF% bands). */
+const ACE_HEALTH_CATEGORIES = Object.freeze({
+  female: [
+    { label: 'Extreme', bfMin: 9, bfMax: 13.99, bfRangeLabel: '9% – 13.99%' },
+    { label: 'Healthy', bfMin: 14, bfMax: 20.99, bfRangeLabel: '14% – 20.99%' },
+    { label: 'Average', bfMin: 21, bfMax: 25.99, bfRangeLabel: '21% – 25.99%' },
+    { label: 'Borderline', bfMin: 26, bfMax: 31.99, bfRangeLabel: '26% – 31.99%' },
+    { label: 'At Risk', bfMin: 32, bfMax: null, bfRangeLabel: 'Over 32%' },
+  ],
+  male: [
+    { label: 'Extreme', bfMin: 2, bfMax: 5.99, bfRangeLabel: '2% – 5.99%' },
+    { label: 'Healthy', bfMin: 6, bfMax: 13.99, bfRangeLabel: '6% – 13.99%' },
+    { label: 'Average', bfMin: 14, bfMax: 17.99, bfRangeLabel: '14% – 17.99%' },
+    { label: 'Borderline', bfMin: 18, bfMax: 24.99, bfRangeLabel: '18% – 24.99%' },
+    { label: 'At Risk', bfMin: 25, bfMax: null, bfRangeLabel: 'Over 25%' },
+  ],
+});
+
+export function aceHealthCategories(gender) {
+  const key = gender === 'female' ? 'female' : 'male';
+  return ACE_HEALTH_CATEGORIES[key].map((row) => ({ ...row }));
+}
+
+export function aceHealthCategoryForBodyFat(gender, bodyFatPercent) {
+  const bf = Number(bodyFatPercent);
+  if (!Number.isFinite(bf)) return null;
+  const categories = aceHealthCategories(gender);
+  if (bf < categories[0].bfMin) return categories[0];
+  for (const category of categories) {
+    if (category.bfMax == null && bf >= category.bfMin) return category;
+    if (category.bfMax != null && bf >= category.bfMin && bf <= category.bfMax) return category;
+  }
+  return categories[categories.length - 1];
+}
+
+function formatAceWeightRange(lbm, category) {
+  const lean = Number(lbm);
+  if (!lean || lean <= 0 || !category) return '—';
+  if (category.bfMax == null) {
+    const atMin = Math.round(weightAtBfPercent(lean, category.bfMin));
+    return `${atMin} lbs. or more`;
+  }
+  const lighter = Math.round(weightAtBfPercent(lean, category.bfMin));
+  const heavier = Math.round(weightAtBfPercent(lean, category.bfMax));
+  return `${Math.min(lighter, heavier)} – ${Math.max(lighter, heavier)} lbs.`;
+}
+
+export function aceHealthWeightRanges(gender, lbm) {
+  return aceHealthCategories(gender).map((category) => ({
+    label: category.label,
+    bfRangeLabel: category.bfRangeLabel,
+    weightRangeLabel: formatAceWeightRange(lbm, category),
+  }));
+}
+
+export function aceHealthAssessmentMessage(gender, bodyFatPercent) {
+  const category = aceHealthCategoryForBodyFat(gender, bodyFatPercent);
+  const status = category?.label === 'At Risk'
+    ? 'at risk'
+    : `in the ${category?.label || 'At Risk'} range`;
+  return `According to results from tests published by The American Council on Exercise, you are ${status}. How much you need to lose is a personal choice. So is what body weight and how much fat you want to carry on your frame. And looking in the mirror is the only true judge of whether you want to still lose weight. So follow this exercise plan. You will reach your goals.`;
+}
+
 export function aceCategories(gender) {
   return leannessTable(gender).map((row) => ({
     ...row,

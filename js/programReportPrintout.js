@@ -2,6 +2,9 @@
 
 import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
+  aceHealthAssessmentMessage,
+  aceHealthCategories,
+  aceHealthWeightRanges,
   BODY_FAT_PROGRESS_BAR_FOOTER,
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
@@ -300,6 +303,10 @@ export function buildProgramReportPayload(pkg, options = {}) {
       }),
       today,
       todayRows: lbaTodayTableRows(today),
+      aceCategories: aceHealthCategories(gender),
+      aceWeightRanges: aceHealthWeightRanges(gender, intake.leanBodyMass),
+      aceAssessment: aceHealthAssessmentMessage(gender, intake.fatPercent),
+      lbmParagraphs: [lbmCopy.lead, lbmCopy.congrats].filter(Boolean),
       leannessFatBar: fatBar,
       leannessFatBarFooter: fatBarFooterParts.full,
       riskMessage: '',

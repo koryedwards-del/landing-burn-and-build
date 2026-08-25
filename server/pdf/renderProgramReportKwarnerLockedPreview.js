@@ -1799,6 +1799,99 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   return y + totalH;
 }
 
+const ACE_1982_TABLE = Object.freeze({
+  labelSize: 9.5,
+  rangeSize: 9,
+  rowPad: 7,
+});
+
+function ace1982TableColumns() {
+  return ['c0', 'c1', 'c2', 'c3', 'c4'].map((key) => ({
+    key,
+    width: 0.2,
+    align: 'center',
+  }));
+}
+
+function ace1982RowFromCategories(categories, valueKey) {
+  return Object.fromEntries(
+    categories.map((cat, index) => [`c${index}`, cat[valueKey] || '']),
+  );
+}
+
+function measureAce1982Table(doc, categories, width, { headerKey, valueKey }) {
+  return measureLayoutTable(doc, {
+    columns: ace1982TableColumns(),
+    rows: [
+      ace1982RowFromCategories(categories, headerKey),
+      ace1982RowFromCategories(categories, valueKey),
+    ],
+    headerRows: 1,
+    headFontSize: ACE_1982_TABLE.labelSize,
+    bodyFontSize: ACE_1982_TABLE.rangeSize,
+    tableRowPad: ACE_1982_TABLE.rowPad,
+    width,
+  });
+}
+
+function drawAce1982Table(doc, x, y, width, categories, { headerKey, valueKey }) {
+  return drawLayoutTable(doc, {
+    x,
+    y,
+    width,
+    columns: ace1982TableColumns(),
+    rows: [
+      ace1982RowFromCategories(categories, headerKey),
+      ace1982RowFromCategories(categories, valueKey),
+    ],
+    headerRows: 1,
+    headFontSize: ACE_1982_TABLE.labelSize,
+    bodyFontSize: ACE_1982_TABLE.rangeSize,
+    tableRowPad: ACE_1982_TABLE.rowPad,
+  });
+}
+
+function drawAce1982LeanBodySection(doc, payload, page, lba) {
+  const categories = lba.aceCategories || [];
+  const weightRanges = lba.aceWeightRanges || [];
+  if (!categories.length) return page;
+
+  let tableH = measureAce1982Table(doc, categories, page.width, {
+    headerKey: 'label',
+    valueKey: 'bfRangeLabel',
+  });
+  page = ensureLockedSpace(doc, payload, page, tableH + LAYOUT.sectionGap);
+  page = {
+    ...page,
+    y: drawAce1982Table(doc, page.x, page.y, page.width, categories, {
+      headerKey: 'label',
+      valueKey: 'bfRangeLabel',
+    }) + LAYOUT.sectionGap,
+  };
+
+  const paragraphs = [
+    lba.aceAssessment,
+    ...(lba.lbmParagraphs || []),
+  ].filter(Boolean);
+  if (paragraphs.length) {
+    page = drawBodyParagraphs(doc, payload, page, paragraphs);
+    page = { ...page, y: page.y + LAYOUT.sectionGap };
+  }
+
+  tableH = measureAce1982Table(doc, weightRanges, page.width, {
+    headerKey: 'label',
+    valueKey: 'weightRangeLabel',
+  });
+  page = ensureLockedSpace(doc, payload, page, tableH);
+  return {
+    ...page,
+    y: drawAce1982Table(doc, page.x, page.y, page.width, weightRanges, {
+      headerKey: 'label',
+      valueKey: 'weightRangeLabel',
+    }),
+  };
+}
+
 function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = startLockedPage(doc, payload, 'Lean Body Analysis');
@@ -1814,10 +1907,9 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     };
   }
 
-  const fatBarFooter = lba.leannessFatBarFooter || BODY_FAT_PROGRESS_BAR_FOOTER;
-  const fatBarH = measureBodyFatProgressBar(doc, page.width, fatBarFooter, lba.leannessFatBar);
-  page = ensureLockedSpace(doc, payload, page, fatBarH);
-  page = { ...page, y: drawBodyFatProgressBar(doc, page, lba.leannessFatBar, fatBarFooter) };
+  if (lba.aceCategories?.length) {
+    page = drawAce1982LeanBodySection(doc, payload, page, lba);
+  }
 
   finishLockedPage(doc, page.box, payload);
 }
