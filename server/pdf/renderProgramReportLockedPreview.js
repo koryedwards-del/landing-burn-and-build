@@ -26,7 +26,7 @@ import {
   PRINT_TEMPLATE_PROGRESS_BAR,
   PRINT_TEMPLATE_TYPOGRAPHY as PT,
   PRINT_TEMPLATE_WELCOME,
-} from '../../js/printTemplateTypography.js';
+} from '../../js/printTemplateTypographyData.js';
 import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_GRAINS_STARCHES,
@@ -37,7 +37,7 @@ import {
   scaleStapleRows,
   stapleCategoryServings,
 } from '../../js/stapleServingPrintout.js';
-import { JOB_ACTIVITY_OPTIONS, WORK_STRESS } from '../../js/profileEngine.js';
+import { JOB_ACTIVITY_OPTIONS, WORK_STRESS } from '../../js/profileDataEngine.js';
 import {
   BODY_FAT_PROGRESS_BAR_FOOTER,
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
@@ -47,7 +47,7 @@ import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintou
 import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
 import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
 import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
-import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
+import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNamingHelpers.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 

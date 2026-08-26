@@ -9,7 +9,7 @@ import {
   PROGRAM_REPORT_FOOD_PLAN_TO_USE,
   PROGRAM_REPORT_MEAL_BUILD_STEPS,
   PROGRAM_REPORT_WELCOME_COPY,
-} from './programReportCopy.js';
+} from './programReportCopyData.js';
 
 /** Apply Burn & Build Diet program-report copy and layout fields to a print payload. */
 export function applyProgramReportLockedCopy(payload) {

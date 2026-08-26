@@ -5,8 +5,8 @@ import {
   computeDietProjectionTimeline,
   computeTodayBodyComposition,
   desirableLeanBodyMassLbs,
-} from '../js/bodyCompositionAnalysis.js';
-import { buildProgramPackage } from '../js/programPackage.js';
+} from '../js/bodyCompositionData.js';
+import { buildProgramPackage } from '../js/programPackageData.js';
 import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
 import {
   KRISTI_PREVIEW_FORM,

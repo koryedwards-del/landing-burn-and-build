@@ -3,7 +3,7 @@
 import {
   computeDietEightWeekProjection,
   computeDietProjectionTimeline,
-} from './bodyCompositionAnalysis.js';
+} from './bodyCompositionData.js';
 
 
 function formatHours(n) {

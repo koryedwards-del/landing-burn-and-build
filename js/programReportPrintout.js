@@ -1,6 +1,6 @@
 /** Burn & Build Diet program report — shared payload for PDF generation. */
 
-import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
+import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import {
   lbaBodyFatRangeCategories,
   lbaBodyFatRangeLeadMessage,
@@ -19,7 +19,7 @@ import {
   lbmCopyAfterFirstSentence,
   lbmStatusMessage,
 } from './leanBodyAnalysisPrintout.js';
-import { formatProgramDateLong, programClientName } from './programClientHelpers.js';
+import { formatProgramDateLong, programClientName } from './programClientDataHelpers.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
@@ -29,10 +29,10 @@ import {
   MACRO_SIGNAL_ROWS,
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
-import { localDateKey } from './programPackage.js';
-import { WORK_PHYSICAL, WORK_STRESS } from './profileEngine.js';
+import { localDateKey } from './programPackageData.js';
+import { WORK_PHYSICAL, WORK_STRESS } from './profileDataEngine.js';
 import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
-import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
+import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNamingHelpers.js';
 import {
   ANSWERS_CONFIRMATION_INTRO,
   buildAnswersConfirmationRows,

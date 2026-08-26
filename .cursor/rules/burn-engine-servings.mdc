@@ -25,7 +25,7 @@ USDA          →  HOW MANY grams = that serving
 
 | Layer | Path |
 |-------|------|
-| Serving criteria (engine) | `js/burnEngine.js`, `js/burnEngineServingTargets.js` |
+| Serving criteria (engine) | `js/burnEngine.js`, `js/burnEngineServingTargetsData.js` |
 | Serving size (USDA per 100g) | `data/cuttingStaplesAuditMap.js` → `data/foods.json` `gramWeight` |
 | Cutting roster | `CUTTING_STAPLES_*` in `data/cuttingStaplesPrintout.js` |
 
@@ -343,7 +343,7 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 
 | Piece | Path |
 |-------|------|
-| **1 — Serving criteria** | `js/burnEngine.js`, `js/burnEngineServingTargets.js` |
+| **1 — Serving criteria** | `js/burnEngine.js`, `js/burnEngineServingTargetsData.js` |
 | **2 — Serving size (USDA)** | `data/cuttingStaplesAuditMap.js` → `data/foods.json` |
 | **3 — Cutting roster** | `data/cuttingStaplesPrintout.js` (`CUTTING_STAPLES_*`) |
 | **This doc** | `.cursor/rules/burn-engine-servings.mdc` |

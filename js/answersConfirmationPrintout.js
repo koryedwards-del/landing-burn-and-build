@@ -3,7 +3,7 @@
 import {
   JOB_ACTIVITY_OPTIONS,
   WORK_STRESS,
-} from './profileEngine.js';
+} from './profileDataEngine.js';
 import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
 
 export const ANSWERS_CONFIRMATION_INTRO =

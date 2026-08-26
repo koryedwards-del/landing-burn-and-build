@@ -8,23 +8,28 @@ Three standalone pieces:
 2. **Burn Engine** — serving math (`js/burnEngine.js`, foods data)
 3. **Burn & Build Diet PDF** — program report (`server/pdf/`, printout payload)
 
-Questionnaire, checkout, and API shell were removed. Reconnect landing → questionnaire → checkout when the new shell is built.
+## File naming
+
+`js/` files end with a role suffix: **Engine**, **Data**, **Helpers**, **Printout**, or **Fixtures**.
 
 ## Core paths
 
 | Path | Role |
 |------|------|
-| `/` (`index.html`) | **Landing page** — standalone marketing (CTAs point to `/questionnaire/` when rebuilt) |
+| `/` (`index.html`) | **Landing page** |
 | `js/burnEngine.js` | **Burn Engine** — serving math |
-| `js/profileEngine.js` | Customer profile fields (answers → engine + PDF) |
-| `js/programPackage.js` | Builds the program package object |
-| `js/*Printout.js` | PDF section payloads |
-| `js/answersConfirmationPrintout.js` | PDF page 12 — customer's submitted answers |
+| `js/burnEngineServingTargetsData.js` | Engine slot targets (derived constants) |
+| `js/profileDataEngine.js` | Customer answers → profile |
+| `js/programPackageData.js` | Program package object |
+| `js/bodyCompositionData.js` | Body composition calculations |
+| `js/programReportPrintout.js` | Full PDF payload |
+| `js/answersConfirmationPrintout.js` | PDF page 12 — submitted answers |
 | `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
-| `js/programClientHelpers.js` | Client name + date helpers for PDF |
-| `data/foods.json` + `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
-| `server/pdf/` | **PDF** — PDFKit renderer |
-| `scripts/render-program-report-preview.mjs` | Generate sample PDFs |
+| `js/programClientDataHelpers.js` | Client name + date helpers |
+| `js/programReportCopyData.js` | Locked user-authored PDF copy |
+| `js/printTemplateTypographyData.js` | PDF typography tokens |
+| `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
+| `server/pdf/` | PDFKit renderer |
 | `docs/samples/` | Kristi preview PDFs |
 
 ## Verify
@@ -36,15 +41,8 @@ npm run verify:pdf
 
 ## Sample PDF
 
-Latest: `docs/samples/burn-and-build-diet-kristi-latest.pdf`
-
-Raw download:
-`https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/burn-and-build-diet-kristi-latest.pdf`
+`docs/samples/burn-and-build-diet-kristi-latest.pdf`
 
 ## Site
 
-**burnandbuilddiet.com** — GitHub Pages. Landing page live; questionnaire/checkout to be reconnected.
-
-## Support email
-
-**support@burnandbuilddiet.com**
+**burnandbuilddiet.com** — GitHub Pages. Landing live; questionnaire/checkout to be reconnected.

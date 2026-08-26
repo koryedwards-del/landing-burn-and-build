@@ -22,20 +22,31 @@ Shell between them (questionnaire, checkout, API) was removed for a clean rebuil
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
 
-## File names (plain English)
+## File naming (role suffix)
+
+Every `js/` file name ends with its job:
+
+| Suffix | Meaning | Examples |
+|--------|---------|----------|
+| **Engine** | Math / computation | `burnEngine.js`, `profileDataEngine.js` |
+| **Data** | Structured objects, constants, copy strings | `programPackageData.js`, `programReportCopyData.js` |
+| **Helpers** | Small utility functions | `programClientDataHelpers.js`, `dietPdfNamingHelpers.js` |
+| **Printout** | One PDF section payload | `servingsPrintout.js`, `answersConfirmationPrintout.js` |
+| **Fixtures** | Test / preview sample inputs | `programReportPreviewFixtures.js` |
+
+## Key files
 
 | File | What it is |
 |------|------------|
 | `js/burnEngine.js` | Serving math |
-| `js/profileEngine.js` | Customer answers → profile (age, job, exercise, body) |
-| `js/programPackage.js` | Full program object (intake + plan) |
+| `js/profileDataEngine.js` | Customer answers → profile |
+| `js/programPackageData.js` | Full program object (`pkg.intake` + plan) |
 | `js/programReportPrintout.js` | Full PDF payload |
-| `js/answersConfirmationPrintout.js` | **PDF page 12** — answer list (not a separate PDF) |
+| `js/answersConfirmationPrintout.js` | PDF page 12 — answer list |
 | `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
-| `js/programClientHelpers.js` | Client name + date on PDF |
-| `js/servingsPrintout.js`, `foodPlanPrintout.js`, etc. | Other PDF sections |
+| `js/programClientDataHelpers.js` | Client name + date on PDF |
 
-**Not a file:** “questionnaire PDF” — the web form is rebuilt later; answers appear on page 12 of the one program report PDF.
+There is **no** separate questionnaire PDF — answers appear on page 12 of the one program report.
 
 ## Verify (engine + PDF)
 

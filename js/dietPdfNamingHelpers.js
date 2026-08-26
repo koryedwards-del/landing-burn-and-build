@@ -1,7 +1,7 @@
 /** Program report PDF document label + download filename. */
 
-import { programClientName } from './programClientHelpers.js';
-import { localDateKey } from './programPackage.js';
+import { programClientName } from './programClientDataHelpers.js';
+import { localDateKey } from './programPackageData.js';
 import { seminarPreparedDate } from './programReportPrintout.js';
 
 const DIET_PDF_PREFIX = 'Burn&Build';

@@ -174,7 +174,7 @@ function catalogStapleRow(label, catalogName) {
 }
 
 /**
- * PDF page 6 — Vegetables, A–Z. Burn Engine VE slot (see js/burnEngineServingTargets.js).
+ * PDF page 6 — Vegetables, A–Z. Burn Engine VE slot (see js/burnEngineServingTargetsData.js).
  * Both raw and cooked catalog entries where available (measure per prep).
  * Run: node scripts/veg-fruit-audit.mjs
  */
@@ -203,7 +203,7 @@ export const CUTTING_STAPLES_VEGETABLES = Object.freeze(
 );
 
 /**
- * PDF page 6 — Fruit, A–Z. Burn Engine FQ slot (see js/burnEngineServingTargets.js).
+ * PDF page 6 — Fruit, A–Z. Burn Engine FQ slot (see js/burnEngineServingTargetsData.js).
  * Gram weights from data/foods.json (BURN_ENGINE_SLOT_TARGETS.FQ.gramNumerator ÷ carbs_per_100g).
  */
 const FRUIT_CATALOG = [

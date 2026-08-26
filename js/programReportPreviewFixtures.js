@@ -1,8 +1,8 @@
 /** Kristi Warner sample fixtures for Burn & Build Diet preview PDF (script + verify). */
 
-import { buildProgramPackage } from './programPackage.js';
+import { buildProgramPackage } from './programPackageData.js';
 import { computePlan } from './burnEngine.js';
-import { buildProgramReportLockedPayload } from './programReportLockedPayload.js';
+import { buildProgramReportLockedPayload } from './programReportLockedPayloadData.js';
 
 export const KRISTI_PREVIEW_FORM = {
   preferredName: 'Kristi Warner',

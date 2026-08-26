@@ -1,7 +1,7 @@
 /** Lean Body Analysis — leanness stages and weight-goal tables (seminar printout). */
 
 import { PROJECTION_BF_FLOOR } from './burnEngine.js';
-import { analyzeLeanBodyMass, desirableLeanBodyMassLbs } from './bodyCompositionAnalysis.js';
+import { analyzeLeanBodyMass, desirableLeanBodyMassLbs } from './bodyCompositionData.js';
 
 const LEANNESS_LABELS = Object.freeze(['Competition', 'Peaking', 'Prepping', 'Training']);
 const LEANNESS_STEP = 5;

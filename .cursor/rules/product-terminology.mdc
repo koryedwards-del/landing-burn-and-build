@@ -37,7 +37,7 @@ The program report PDF is **one 12-page document**. Page 12 lists the customer's
 | Code | Role |
 |------|------|
 | `js/answersConfirmationPrintout.js` | Builds answer rows for PDF page 12 |
-| `js/profileEngine.js` | Profile math from answers (engine + PDF) |
+| `js/profileDataEngine.js` | Profile math from answers (engine + PDF) |
 
 There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questionnaire confirmation") — that is user-authored copy on the printout.
 

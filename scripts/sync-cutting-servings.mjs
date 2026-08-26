@@ -18,7 +18,7 @@ import {
   BURN_ENGINE_SLOT_TARGETS,
   gramsForCarbServing,
   gramsForProteinServing,
-} from '../js/burnEngineServingTargets.js';
+} from '../js/burnEngineServingTargetsData.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const foodsPath = join(root, 'data/foods.json');

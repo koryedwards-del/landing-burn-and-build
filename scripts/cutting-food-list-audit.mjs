@@ -23,7 +23,7 @@ import {
   BURN_ENGINE_SLOT_TARGETS,
   gramsForCarbServing,
   gramsForProteinServing,
-} from '../js/burnEngineServingTargets.js';
+} from '../js/burnEngineServingTargetsData.js';
 
 const PROTEIN_TOL = 0.6;
 const CARB_TOL = 1.5;

@@ -3,7 +3,7 @@
 **Not used for portions, food-list gram weights, PDF labels, or user-facing copy.**  
 Agents sizing food or writing printouts: use `.cursor/rules/burn-engine-servings.mdc` only.
 
-`js/burnEngine.js` `computeServingsPhase` balances daily totals using calorie-weighted loops. Constants are exported as `SERVING_*_CAL` from `burnEngine.js`; macro-gram targets are in `js/burnEngineServingTargets.js`. Agents sizing food: use `.cursor/rules/burn-engine-servings.mdc`.
+`js/burnEngine.js` `computeServingsPhase` balances daily totals using calorie-weighted loops. Constants are exported as `SERVING_*_CAL` from `burnEngine.js`; macro-gram targets are in `js/burnEngineServingTargetsData.js`. Agents sizing food: use `.cursor/rules/burn-engine-servings.mdc`.
 
 ## Balancing loops
 

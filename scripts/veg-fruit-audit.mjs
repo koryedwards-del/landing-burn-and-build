@@ -1,6 +1,6 @@
 /**
  * Vegetables × Burn Engine VE slot × fruits × FQ slot.
- * Targets imported from js/burnEngineServingTargets.js (derived from burnEngine.js).
+ * Targets imported from js/burnEngineServingTargetsData.js (derived from burnEngine.js).
  * Also compares raw vs cooked catalog portions for page-6 vegetables.
  * Run: node scripts/veg-fruit-audit.mjs
  */
@@ -10,7 +10,7 @@ import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
-import { BURN_ENGINE_SLOT_TARGETS } from '../js/burnEngineServingTargets.js';
+import { BURN_ENGINE_SLOT_TARGETS } from '../js/burnEngineServingTargetsData.js';
 
 const { carbsG: VEG_CARB_TARGET, fatLimitG: VEG_FAT_LIMIT } = BURN_ENGINE_SLOT_TARGETS.VE;
 const { carbsG: FRUIT_CARB_TARGET, fatLimitG: FRUIT_FAT_LIMIT } = BURN_ENGINE_SLOT_TARGETS.FQ;

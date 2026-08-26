@@ -26,7 +26,7 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 | Macro signal data | `js/foodPlanPrintout.js` |
 | Payload | `js/programReportPrintout.js` + `js/programReportPreviewFixtures.js` |
 | Answers page (PDF page 12) | `js/answersConfirmationPrintout.js` |
-| Locked copy | `js/programReportCopy.js` |
+| Locked copy | `js/programReportCopyData.js` |
 | Food list gram scaling | `js/stapleServingPrintout.js` — see `.cursor/rules/burn-engine-servings.mdc` |
 | Render script | `scripts/render-program-report-preview.mjs` |
 | 1982 reference PDF | `docs/archive/kwarner-1982-original.pdf` |

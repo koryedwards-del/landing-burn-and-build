@@ -1,4 +1,4 @@
-import { applyProgramReportLockedCopy } from '../../js/programReportLockedPayload.js';
+import { applyProgramReportLockedCopy } from '../../js/programReportLockedPayloadData.js';
 import { validatePrintPayload } from './validate.js';
 import { renderProgramReportLockedPreview } from './renderProgramReportLockedPreview.js';
 
