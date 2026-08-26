@@ -358,7 +358,6 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 | Preview render workflow | `.cursor/rules/program-report-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
-| Deep backlog | `docs/knowledge-base-backlog.md` |
 
 ---
 
