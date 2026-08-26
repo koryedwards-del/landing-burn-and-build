@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
-import { renderProgramReportLockedPreview } from '../server/pdf/renderProgramReportLockedPreview.js';
+import { renderSampleFemalePrintout } from '../server/pdf/renderSampleFemalePrintout.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -35,10 +35,9 @@ const sampleName = nextNumber(SAMPLE_RE, SAMPLE_BASENAME, SAMPLE_MIN);
 const archiveName = nextNumber(ARCHIVE_RE, ARCHIVE_BASENAME);
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildKristiPreviewPayload();
-const pdf = await renderProgramReportLockedPreview(payload, {
+const pdf = await renderSampleFemalePrintout(payload, {
   buildLabel,
   title: 'B&B Sample Female Printout',
-  fullHeaderEveryPage: true,
 });
 
 const samplePath = path.join(samplesDir, sampleName);

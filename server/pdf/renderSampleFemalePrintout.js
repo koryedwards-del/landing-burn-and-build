@@ -1,6 +1,7 @@
 /**
- * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → FAQ → Confirmation).
- * Production: renderProgramReport.js · Preview samples: scripts/render-program-report-preview.mjs
+ * B&B sample-female printout — 2026 program report content, full personalized header every page.
+ * Preview: scripts/render-five-page-preview.mjs
+ * Do not use for the purchased 2026 program report (see renderProgramReportLockedPreview.js).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -51,7 +52,7 @@ import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNamingHelpers.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 
-export const PROGRAM_REPORT_MIN_PAGES = 10;
+export const SAMPLE_FEMALE_MIN_PAGES = 10;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -643,7 +644,7 @@ function drawLayoutTable(doc, opts) {
   return tableY + totalH;
 }
 
-function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
+function beginLockedPage(doc, payload, pageTitle, { fullHeader = true } = {}) {
   const box = addFramePage(doc);
   const topGoldY = fullHeader
     ? drawPersonalizationHeader(doc, payload, box)
@@ -668,7 +669,7 @@ function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   return beginLockedPage(doc, payload, pageTitle, { fullHeader });
 }
 
-function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = {}) {
+function ensureLockedSpace(doc, payload, page, needed, { fullHeader = true } = {}) {
   if (page.y + needed <= page.bottom) return page;
   finishLockedPage(doc, page.box, payload);
   return startLockedPage(doc, payload, null, { fullHeader });
@@ -2460,17 +2461,17 @@ function drawAnswersConfirmationPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-export async function renderProgramReportLockedPreview(payload, { title, buildLabel } = {}) {
+export async function renderSampleFemalePrintout(payload, { title, buildLabel } = {}) {
   validatePrintPayload('programreport', payload);
 
   const creator = createPrintPdf({
-    title: title || payload.title || BURN_AND_BUILD_DIET_PDF_NAME,
+    title: title || payload.title || 'B&B Sample Female Printout',
     author: 'Burn & Build Diet',
   });
 
   const doc = creator.doc;
   if (buildLabel) {
-    doc.info.Subject = `${BURN_AND_BUILD_DIET_PDF_NAME} sample ${buildLabel}`;
+    doc.info.Subject = `B&B sample-female printout ${buildLabel}`;
   }
 
   drawWelcomePage(doc, payload);
@@ -2486,8 +2487,8 @@ export async function renderProgramReportLockedPreview(payload, { title, buildLa
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages < PROGRAM_REPORT_MIN_PAGES) {
-    throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
+  if (pages < SAMPLE_FEMALE_MIN_PAGES) {
+    throw new Error(`Sample-female printout expected at least ${SAMPLE_FEMALE_MIN_PAGES} pages, got ${pages}`);
   }
   return buffer;
 }
