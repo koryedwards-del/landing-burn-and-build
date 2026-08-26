@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-/** Preview: B&B sample-female printout — 2026 program report content, Montserrat, full header every page. */
+/** Preview: B&B sample-female printout — 2026 program report content, full header every page. */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
 import { renderProgramReportLockedPreview } from '../server/pdf/renderProgramReportLockedPreview.js';
-import { FIVE_PAGE_FONTS } from '../server/pdf/fivePageFonts.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -39,7 +38,6 @@ const payload = buildKristiPreviewPayload();
 const pdf = await renderProgramReportLockedPreview(payload, {
   buildLabel,
   title: 'B&B Sample Female Printout',
-  fonts: FIVE_PAGE_FONTS,
   fullHeaderEveryPage: true,
 });
 
