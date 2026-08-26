@@ -2152,6 +2152,8 @@ function drawFoodPlanPage(doc, payload) {
 
 const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
 const SERVINGS_RULES_BREAK_GAP = 6;
+const SERVINGS_DAILY_RULES_COUNT = 3;
+const SERVINGS_AFTER_DAILY_RULES_GAP = PT.body + PT.lineGap;
 
 function drawMealBuildSteps(doc, payload, page, steps) {
   const splitAt = steps.findIndex((paragraph) => /^1\. Eat/.test(String(paragraph)));
@@ -2160,7 +2162,15 @@ function drawMealBuildSteps(doc, payload, page, steps) {
   }
   page = drawBodyParagraphs(doc, payload, page, steps.slice(0, splitAt), SERVINGS_STEPS_TYPO);
   page = { ...page, y: page.y + SERVINGS_RULES_BREAK_GAP };
-  return drawBodyParagraphs(doc, payload, page, steps.slice(splitAt), SERVINGS_STEPS_TYPO);
+
+  const rulesEnd = splitAt + SERVINGS_DAILY_RULES_COUNT;
+  page = drawBodyParagraphs(doc, payload, page, steps.slice(splitAt, rulesEnd), SERVINGS_STEPS_TYPO);
+  page = { ...page, y: page.y + SERVINGS_AFTER_DAILY_RULES_GAP };
+
+  if (rulesEnd < steps.length) {
+    page = drawBodyParagraphs(doc, payload, page, steps.slice(rulesEnd), SERVINGS_STEPS_TYPO);
+  }
+  return page;
 }
 
 function drawServingsPage(doc, payload) {
