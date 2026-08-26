@@ -45,6 +45,7 @@ import {
 } from '../../js/lbaPrintout.js';
 import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintout.js';
 import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
+import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
@@ -420,8 +421,18 @@ function drawStaplesTipsUnderList(doc, payload, page, col, yStart, tips) {
   const columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-  drawStaplesTipsBlock(doc, columns[1], page.y, tips);
+  const spillCol = columns.find((column) => column.x === col.x) || col;
+  drawStaplesTipsBlock(doc, spillCol, page.y, tips);
   return page;
+}
+
+function drawStaplesTipsUnderListIfFits(doc, page, col, yStart, tips) {
+  const tipsH = measureStaplesTipsBlock(doc, col.width, tips);
+  if (yStart + tipsH > page.bottom) {
+    return false;
+  }
+  drawStaplesTipsBlock(doc, col, yStart, tips);
+  return true;
 }
 
 function staplesForPayload(items, category, payload) {
@@ -437,7 +448,28 @@ function drawStaplesFoodListPage(doc, payload) {
   let columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-  drawStaplesColumn(doc, 'Protein & Dairy', proteinItems, columns[0], page.y, page.bottom);
+
+  const proteinCol = columns[0];
+  let proteinY = drawSectionTitle(doc, 'Protein & Dairy', proteinCol.x, page.y, proteinCol.width);
+  const proteinResult = drawStapleListItems(
+    doc,
+    proteinItems,
+    proteinCol,
+    proteinY,
+    page.bottom,
+    0,
+  );
+  if (proteinResult.nextIndex !== proteinItems.length) {
+    throw new Error(`Protein list truncated: drew ${proteinResult.nextIndex} of ${proteinItems.length}`);
+  }
+  proteinY = proteinResult.y;
+  let proteinTipsDrawn = drawStaplesTipsUnderListIfFits(
+    doc,
+    page,
+    proteinCol,
+    proteinY,
+    PROTEIN_TIPS_PROSE,
+  );
 
   let gsCol = columns[1];
   let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, page.y, gsCol.width);
@@ -461,6 +493,10 @@ function drawStaplesFoodListPage(doc, payload) {
 
   if (gsIndex !== grainItems.length) {
     throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${grainItems.length}`);
+  }
+
+  if (!proteinTipsDrawn) {
+    page = drawStaplesTipsUnderList(doc, payload, page, proteinCol, page.y, PROTEIN_TIPS_PROSE);
   }
 
   page = drawStaplesTipsUnderList(doc, payload, page, gsCol, gsY, GRAINS_STARCHES_TIPS_PROSE);
