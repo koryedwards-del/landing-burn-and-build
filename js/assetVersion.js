@@ -4,6 +4,12 @@ export const ASSET_VERSION = '316';
 /** Bump when data/foods.json changes so browsers refetch the catalog. */
 export const FOODS_CATALOG_VERSION = '2026.08.26a';
 
+/**
+ * Bump when the purchased program-report PDF template changes (layout, pages, copy pipeline).
+ * Stored diet PDFs on Render are invalidated when this changes.
+ */
+export const DIET_PDF_GENERATION_VERSION = '2026.08.26.1';
+
 /** Bump when a static Print Shop PDF body changes — appended as ?rev= on API fetch. */
 export const PDF_PRINT_REVISIONS = {
   faq: '3',

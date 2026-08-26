@@ -529,11 +529,13 @@ app.get('/api/programs/diet-pdf', async (req, res) => {
   }
 
   try {
-    const pdf = await ensureDietPdf(email, programId);
+    const forceRegenerate = String(req.query.regenerate || '') === '1';
+    const pdf = await ensureDietPdf(email, programId, { forceRegenerate });
     const pkg = getProgramById(email, programId);
     const filename = dietPdfFilename({ preferredName: pkg?.intake?.preferredName, pkg });
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'no-store');
     res.send(pdf);
   } catch (err) {
     console.error('Diet PDF download error:', err.message);
