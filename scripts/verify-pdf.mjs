@@ -3,7 +3,7 @@
 
 import { buildProgramPackage } from '../js/programPackage.js';
 import { computePlan } from '../js/burnEngine.js';
-import { buildProgramReportPayload } from '../js/programReportPrintout.js';
+import { buildProgramReportLockedPayload } from '../js/programReportLockedPayload.js';
 import { renderPrintPdf } from '../server/pdf/index.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
@@ -66,7 +66,7 @@ function buildKristiPreviewPackage() {
 }
 
 function kristiProgramReportPayload() {
-  return buildProgramReportPayload(buildKristiPreviewPackage());
+  return buildProgramReportLockedPayload(buildKristiPreviewPackage());
 }
 
 function pageCount(pdf) {

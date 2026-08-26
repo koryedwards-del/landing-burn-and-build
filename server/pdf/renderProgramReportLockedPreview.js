@@ -2201,15 +2201,6 @@ function drawServingsTable(doc, payload, page, gridRows, extraFats = []) {
   return { ...page, y: drawLayoutTable(doc, servingsTableOpts) + LAYOUT.sectionGap };
 }
 
-function foodPlanNarrativeBlock(payload, title) {
-  return payload.foodPlanNarrative?.blocks?.find((block) => block.title === title);
-}
-
-function foodPlanServingsBlock(payload) {
-  const blocks = payload.foodPlanNarrative?.blocks || [];
-  return blocks.find((block) => /servings/i.test(String(block.title || '')));
-}
-
 function foodPlanPreambleParagraphs(fp) {
   const intro = fp?.macroSignalIntro
     ? (Array.isArray(fp.macroSignalIntro) ? fp.macroSignalIntro : [fp.macroSignalIntro])
@@ -2276,23 +2267,6 @@ function drawFoodPlanPage(doc, payload) {
 
   if (fp.howToParagraphs?.length) {
     page = drawBodyParagraphs(doc, payload, page, fp.howToParagraphs, typo);
-  } else {
-    const servingsBlock = foodPlanServingsBlock(payload);
-    if (servingsBlock?.paragraphs?.length) {
-      page = ensureLockedSpace(
-        doc,
-        payload,
-        page,
-        LAYOUT.subsectionSize + LAYOUT.headerGap + servingsBlock.paragraphs.reduce(
-          (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width),
-          0,
-        ),
-      );
-      if (servingsBlock?.title) {
-        page = { ...page, y: drawSectionTitle(doc, servingsBlock.title, page.x, page.y, page.width) };
-      }
-      page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
-    }
   }
 
   if (fp.measureTip) {

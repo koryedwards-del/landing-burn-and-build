@@ -53,7 +53,10 @@ export async function renderPrintPdf(view, { title, payload } = {}) {
   }
 
   if (PDF_PERSONALIZED_VIEWS.has(view)) {
-    validatePrintPayload(view, payload);
+    // programreport validates after applyProgramReportLockedCopy in renderProgramReportPdf.
+    if (view !== 'programreport') {
+      validatePrintPayload(view, payload);
+    }
     return render(payload, { title: title || payload.title });
   }
 

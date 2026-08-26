@@ -24,8 +24,6 @@ export function applyProgramReportLockedCopy(payload) {
   if (payload.servings) {
     payload.servings.mealBuildSteps = [...PROGRAM_REPORT_MEAL_BUILD_STEPS];
   }
-  delete payload.gettingStarted;
-  delete payload.stepsToSuccess;
   return payload;
 }
 

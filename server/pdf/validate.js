@@ -51,16 +51,11 @@ export function validatePrintPayload(view, payload) {
 
   if (view === 'programreport') {
     requireString(payload.preparedDate, 'preparedDate', { required: true });
-    if (!payload.stepsToSuccess && !payload.welcome) {
-      throw pdfError('stepsToSuccess or welcome is required.');
+    if (!payload.welcome || typeof payload.welcome !== 'object') {
+      throw pdfError('welcome is required.');
     }
-    if (payload.stepsToSuccess) {
-      if (typeof payload.stepsToSuccess !== 'object') {
-        throw pdfError('stepsToSuccess must be an object.');
-      }
-      if (!Array.isArray(payload.stepsToSuccess.steps) || !payload.stepsToSuccess.steps.length) {
-        throw pdfError('stepsToSuccess.steps is required.');
-      }
+    if (!Array.isArray(payload.welcome.intro) || !payload.welcome.intro.length) {
+      throw pdfError('welcome.intro is required.');
     }
     if (!payload.leanBodyAnalysis || typeof payload.leanBodyAnalysis !== 'object') {
       throw pdfError('leanBodyAnalysis is required.');

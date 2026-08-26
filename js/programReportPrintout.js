@@ -19,7 +19,7 @@ import {
   lbmCopyAfterFirstSentence,
   lbmStatusMessage,
 } from './lbaPrintout.js';
-import { formatProgramDateLong, programClientName, escapeHtml } from './programBridgeUi.js';
+import { formatProgramDateLong, programClientName } from './programBridgeUi.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
@@ -27,13 +27,11 @@ import {
   projectionTimelineFromPackage,
   MACRO_SIGNAL_INTRO,
   MACRO_SIGNAL_ROWS,
-  workdayActivityLabel,
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
 import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
-import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
 import {
   QUESTIONNAIRE_CONFIRMATION_INTRO,
@@ -57,115 +55,6 @@ export const SEMINAR_REPORT_HEADER = Object.freeze({
   website: 'www.burnandbuilddiet.com',
   email: 'support@burnandbuilddiet.com',
 });
-
-export const START_HERE_STEPS = Object.freeze([
-  'Read this guide once.',
-  'Print pages 5–6.',
-  'Put them somewhere you\'ll see every day.',
-  'Build meals using the food list.',
-  'Stay consistent for 8 weeks.',
-]);
-
-export const GETTING_STARTED_COPY = Object.freeze({
-  intro: [
-    'This program was created specifically for you.',
-    'Your daily food targets are based on the information you provided, including body composition, activity level, work demands, and exercise.',
-    'Follow the servings—not calories—to simplify your day and stay consistent.',
-  ],
-  startHereLabel: 'START HERE',
-  startHere: START_HERE_STEPS,
-});
-
-export const STEPS_TO_SUCCESS_COPY = Object.freeze({
-  intro: [
-    'Congratulations — you have the most individualized fat-loss program available, built from your lean body mass, workday, lifestyle, and exercise plan. These steps show you how to use it for maximum results.',
-  ],
-  steps: [
-    {
-      title: 'Know your numbers',
-      body: 'Review your Lean Body Analysis. Your LBM drives your metabolic rate and your daily food prescription. The mirror — not the scale alone — tells you whether you have fat to lose.',
-    },
-    {
-      title: 'Eat your servings',
-      body: 'Follow the daily serving totals on your Servings page. No calorie or macro counting — the computer already did that work. Stay within the approved food groups.',
-    },
-    {
-      title: 'Plan your meals',
-      body: 'Use the food list on pages five and six of your Burn & Build Diet PDF. Weigh each portion to your servings and build breakfast, lunch, dinner, and fruit snacks from the approved foods.',
-    },
-    {
-      title: 'Eat on schedule',
-      body: 'Spread protein through breakfast, lunch, and dinner. Eat vegetables at dinner and fruit at snack times. Regular feedings keep energy steady and protect lean mass.',
-    },
-    {
-      title: 'Stay consistent',
-      body: 'Keep your exercise and activity aligned with what you reported when this plan was built. Changing workouts without updating your program can slow fat loss.',
-    },
-    {
-      title: 'Check in regularly',
-      body: 'Re-test body composition every 6 to 8 weeks. You want to confirm you are losing fat — not lean. Adjust only after you know what the numbers say.',
-    },
-  ],
-  footer: 'Your full Burn & Build Diet PDF includes your food plan, servings, food list, and meal-building steps — everything you need on paper.',
-});
-
-/** Kept in payload until production API deploys — old Render build requires welcome. */
-export const LEGACY_WELCOME_COPY = Object.freeze({
-  intro: [''],
-  leanBodyAnalysis: '',
-  history: '',
-  foodPlan: '',
-  servings: '',
-});
-
-export function welcomeCoverHtml(pkg) {
-  const copy = STEPS_TO_SUCCESS_COPY;
-  const name = String(programClientName(pkg) || 'You').trim();
-  const date = formatProgramDateLong(
-    pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
-  );
-  const stepsHtml = copy.steps.map((step, index) => {
-    const startHere = Array.isArray(step.startHere) && step.startHere.length
-      ? `
-        <div class="r-steps-start">
-          <p class="r-steps-start__label">${escapeHtml(step.startHereLabel || 'Start here')}</p>
-          <ol class="r-steps-start__list">
-            ${step.startHere.map((line, i) => `
-              <li><span class="r-steps-start__num">${i + 1}.</span> ${escapeHtml(line)}</li>
-            `).join('')}
-          </ol>
-        </div>
-      `
-      : '';
-    return `
-      <li class="r-steps-success__item">
-        <span class="r-steps-success__num">${index + 1}</span>
-        <div class="r-steps-success__body">
-          <h3 class="r-steps-success__title">${escapeHtml(step.title || step.text || '')}</h3>
-          ${step.body ? `<p>${escapeHtml(step.body)}</p>` : ''}
-          ${startHere}
-        </div>
-      </li>
-    `;
-  }).join('');
-
-  return `
-    <article class="r-steps-success">
-      <header class="r-steps-success__head">
-        <img class="r-steps-success__logo" src="../img/brand/bblogo1.png" alt="" width="48" height="48" />
-        <div>
-          <p class="r-steps-success__brand">Burn &amp; Build Diet</p>
-          <p class="r-steps-success__meta">Prepared exclusively for ${escapeHtml(name)} · ${escapeHtml(date)}</p>
-        </div>
-      </header>
-      <h2 class="r-steps-success__heading">Steps to Success</h2>
-      ${copy.intro.map((paragraph) => `<p class="r-steps-success__intro">${escapeHtml(paragraph)}</p>`).join('')}
-      <ol class="r-steps-success__list">${stepsHtml}</ol>
-      <p class="r-steps-success__motto">${escapeHtml(copy.motto)}</p>
-      ${copy.footer ? `<p class="r-steps-success__footer">${escapeHtml(copy.footer)}</p>` : ''}
-    </article>
-  `;
-}
 
 export const LBA_FOOTER_COPY = BODY_FAT_PROGRESS_BAR_FOOTER;
 
@@ -269,14 +158,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
     sampleHistory,
   });
 
-  const narratives = buildProgramReportNarratives(pkg, {
-    today,
-    gender,
-    projection,
-    hours,
-    historyRows,
-  });
-
   return {
     view: 'programreport',
     title: programReportDocumentTitle(pkg),
@@ -287,13 +168,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
     header: { ...SEMINAR_REPORT_HEADER },
-    gettingStarted: narratives.welcome,
-    bodyTodayNarrative: narratives.bodyToday,
-    progressNarrative: narratives.progress,
-    foodPlanNarrative: narratives.foodPlan,
-    servingsNarrative: narratives.servings,
-    stepsToSuccess: { ...STEPS_TO_SUCCESS_COPY },
-    welcome: { ...LEGACY_WELCOME_COPY },
     leanBodyAnalysis: {
       heightInches: intake.heightInches,
       sex: formatSexLabel(intake.sex),
