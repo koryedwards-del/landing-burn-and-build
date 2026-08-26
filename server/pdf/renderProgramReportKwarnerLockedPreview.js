@@ -1940,8 +1940,7 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
   if (!categories.length) return page;
 
   if (lba.bfRangeLead) {
-    page = drawBodyParagraphs(doc, payload, page, [lba.bfRangeLead]);
-    page = { ...page, y: page.y + LAYOUT.sectionGap };
+    page = drawBodyParagraphs(doc, payload, page, [lba.bfRangeLead], { paragraphGap: 4 });
   }
 
   let tableH = measureLbaBfRangeTable(doc, categories, page.width, {

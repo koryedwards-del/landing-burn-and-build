@@ -1,11 +1,11 @@
 /** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
-export const PROGRAM_REPORT_PREVIEW_BUILD = "2026-08-26T00-18-05-963Z";
-export const PROGRAM_REPORT_PREVIEW_MD5 = "cd1b8f0cd004833ee2f975b665609b3a";
-export const PROGRAM_REPORT_SAMPLE_FILE = "burn-and-build-diet-kristi-21.pdf";
-export const PROGRAM_REPORT_ARCHIVE_FILE = "burn-and-build-diet-kristi-archive-v20.pdf";
-export const PROGRAM_REPORT_SAMPLE_PDF = '../docs/samples/' + "burn-and-build-diet-kristi-21.pdf";
+export const PROGRAM_REPORT_PREVIEW_BUILD = "2026-08-26T00-20-34-733Z";
+export const PROGRAM_REPORT_PREVIEW_MD5 = "b137834b161374dd49bfed4344a38a05";
+export const PROGRAM_REPORT_SAMPLE_FILE = "burn-and-build-diet-kristi-22.pdf";
+export const PROGRAM_REPORT_ARCHIVE_FILE = "burn-and-build-diet-kristi-archive-v21.pdf";
+export const PROGRAM_REPORT_SAMPLE_PDF = '../docs/samples/' + "burn-and-build-diet-kristi-22.pdf";
 export const PROGRAM_REPORT_SAMPLE_LATEST_FILE = "burn-and-build-diet-kristi-latest.pdf";
-export const PROGRAM_REPORT_SAMPLE_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/' + "burn-and-build-diet-kristi-21.pdf";
+export const PROGRAM_REPORT_SAMPLE_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/' + "burn-and-build-diet-kristi-22.pdf";
 export const PROGRAM_REPORT_SAMPLE_LATEST_DOWNLOAD_URL = 'https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/burn-and-build-diet-kristi-latest.pdf';
 
 export function programReportSamplePdfUrl() {
