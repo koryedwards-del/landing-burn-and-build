@@ -4,14 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Burn &amp; Build — Program Questionnaire</title>
-  <link rel="stylesheet" href="css/questionnaire.css?v=1" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=2" />
 </head>
 <body>
-  <div class="sheet">
-    <p class="sheet__title">Program Questionnaire</p>
-    <p class="sheet__step" id="step-label">Step 1 of 6 — Contact Information</p>
+  <header class="q-header">
+    <a class="q-header__brand" href="/" aria-label="Burn &amp; Build home">
+      <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="56" height="56" />
+    </a>
+    <p class="q-header__title">Program Questionnaire</p>
+  </header>
 
-    <form id="questionnaire-form" novalidate>
+  <nav class="q-stepnav" aria-label="Questionnaire sections">
+    <ol class="q-stepnav__list" id="step-nav-list"></ol>
+  </nav>
+
+  <main class="q-main">
+    <form class="q-form" id="questionnaire-form" novalidate>
       <!-- 1 Contact Information -->
       <section class="form-step" data-step="0">
         <h2 class="sheet__heading">Contact Information</h2>
@@ -22,6 +31,7 @@
           <p>When you have answered these questions to your satisfaction, your program will be created and you will complete the transaction through Stripe.</p>
         </div>
 
+        <div class="acc">
         <label class="field">
           <span class="field__label">What is your full name?</span>
           <span class="field__hint">First and last name as it should appear on your program printout.</span>
@@ -52,14 +62,17 @@
           <span class="field__hint">If someone sent you here, enter their full name so we can thank them. Leave blank if you found us on your own.</span>
           <input class="field__input" name="referrerName" autocomplete="off" />
         </label>
+        </div>
       </section>
 
       <!-- 2 Occupation -->
       <section class="form-step" data-step="1" hidden>
         <h2 class="sheet__heading">Occupation</h2>
 
-        <h3 class="sheet__subheading">How physically active is your job?</h3>
-        <p class="field__hint">Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.</p>
+        <div class="acc">
+          <div class="acc__group">
+            <h3 class="acc__group-title">How physically active is your job?</h3>
+            <p class="field__hint">Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.</p>
 
         <label class="choice">
           <input type="radio" name="workPhysical" value="sitting" required />
@@ -76,9 +89,11 @@
           <strong>Lifting</strong>
           <span class="choice__sub">Regular carrying, loading, or trades work — warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.</span>
         </label>
+          </div>
 
-        <h3 class="sheet__subheading">Your life outside work &amp; training hours</h3>
-        <p class="field__hint">Kids, soccer, errands, caregiving — the normal rhythm of your life when you're not at work and not exercising.</p>
+          <div class="acc__group">
+            <h3 class="acc__group-title">Your life outside work &amp; training hours</h3>
+            <p class="field__hint">Kids, soccer, errands, caregiving — the normal rhythm of your life when you're not at work and not exercising.</p>
 
         <label class="choice">
           <input type="radio" name="workStress" value="comfortable" required />
@@ -95,12 +110,15 @@
           <strong>Stressful</strong>
           <span class="choice__sub">High demand most weeks — caregiving, tight schedules, little margin when things pile up.</span>
         </label>
+          </div>
+        </div>
       </section>
 
       <!-- 3 Exercise -->
       <section class="form-step" data-step="2" hidden>
         <h2 class="sheet__heading">Exercise</h2>
 
+        <div class="acc">
         <label class="field">
           <span class="field__label">How young are you?</span>
           <span class="field__hint">Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.</span>
@@ -135,12 +153,14 @@
           </div>
           <p class="field__note" id="fat-burn-heart-rate">Fat burning training range (BPM) — enter age above</p>
         </label>
+        </div>
       </section>
 
       <!-- 4 Body composition -->
       <section class="form-step" data-step="3" hidden>
         <h2 class="sheet__heading">Body composition</h2>
 
+        <div class="acc">
         <div class="field">
           <span class="field__label">What is your height?</span>
           <span class="field__hint">Enter feet and inches in separate boxes.</span>
@@ -180,12 +200,14 @@
           <span class="field__label">Describe how you know</span>
           <input class="field__input" name="fatSourceOther" disabled />
         </label>
+        </div>
       </section>
 
       <!-- 5 Agreement -->
       <section class="form-step" data-step="4" hidden>
         <h2 class="sheet__heading">Waiver (please read and sign)</h2>
         <p class="waiver-text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
+        <div class="acc">
         <label class="field">
           <span class="field__label">Signed</span>
           <input class="field__input" name="signature" autocomplete="name" placeholder="type your full name" required />
@@ -194,6 +216,7 @@
           <span class="field__label">Date</span>
           <input class="field__input" name="signatureDate" type="date" required />
         </label>
+        </div>
       </section>
 
       <!-- 6 Review -->
@@ -211,8 +234,8 @@
       <button type="button" class="btn" id="btn-back" disabled>Back</button>
       <button type="button" class="btn btn--primary" id="btn-next">Next</button>
     </footer>
-  </div>
+  </main>
 
-  <script type="module" src="js/questionnaire.js?v=1"></script>
+  <script type="module" src="js/questionnaire.js?v=2"></script>
 </body>
 </html>

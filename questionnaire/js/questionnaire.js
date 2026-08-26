@@ -24,8 +24,17 @@ const FAT_SOURCE_OPTIONS = [
   { value: 'other', label: 'Other' },
 ];
 
+const STEP_NAV_LABELS = [
+  'Contact',
+  'Occupation',
+  'Exercise',
+  'Body',
+  'Agreement',
+  'Review',
+];
+
 const form = document.getElementById('questionnaire-form');
-const stepLabel = document.getElementById('step-label');
+const stepNavList = document.getElementById('step-nav-list');
 const panels = [...form.querySelectorAll('.form-step')];
 const btnBack = document.getElementById('btn-back');
 const btnNext = document.getElementById('btn-next');
@@ -196,10 +205,32 @@ function renderReview() {
   return pkg;
 }
 
+function stepIsComplete(index) {
+  return !validateStep(index);
+}
+
+function canReachStep(target) {
+  if (target <= step) return true;
+  for (let i = 0; i < target; i += 1) {
+    if (!stepIsComplete(i)) return false;
+  }
+  return true;
+}
+
+function renderStepNav() {
+  stepNavList.innerHTML = STEPS.map((label, index) => {
+    const classes = ['q-stepnav__item'];
+    if (index === step) classes.push('is-active');
+    if (index < step) classes.push('is-done');
+    const reachable = canReachStep(index);
+    return `<li><button type="button" class="${classes.join(' ')}" data-step="${index}"${reachable ? '' : ' disabled'}>${index + 1}. ${STEP_NAV_LABELS[index]}</button></li>`;
+  }).join('');
+}
+
 function showStep(index) {
   step = Math.max(0, Math.min(index, panels.length - 1));
   panels.forEach((panel, i) => { panel.hidden = i !== step; });
-  stepLabel.textContent = `Step ${step + 1} of ${STEPS.length} — ${STEPS[step]}`;
+  renderStepNav();
   btnBack.disabled = step === 0;
   btnNext.textContent = step === panels.length - 1 ? 'Build my program' : 'Next';
   showError('');
@@ -242,6 +273,13 @@ btnNext.addEventListener('click', () => {
 form.addEventListener('change', (event) => {
   if (event.target.name === 'fatSource') syncFatSourceOther();
   if (event.target.name === 'age') syncHeartRates();
+  renderStepNav();
+});
+
+stepNavList.addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-step]');
+  if (!btn || btn.disabled) return;
+  showStep(Number(btn.dataset.step));
 });
 
 renderFatSourceOptions();
