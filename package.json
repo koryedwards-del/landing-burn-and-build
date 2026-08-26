@@ -1,11 +1,14 @@
 {
-  "name": "burn-and-build",
+  "name": "burn-and-build-program-creator",
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
     "verify:pdf": "node scripts/verify-pdf.mjs",
     "verify:cutting-servings": "node scripts/cutting-food-list-audit.mjs",
     "sync:cutting-servings": "node scripts/sync-cutting-servings.mjs",
+    "verify:server": "node scripts/verify-server.mjs",
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "render:program-report-preview": "node scripts/render-program-report-preview.mjs"
   },
@@ -13,6 +16,10 @@
     "node": ">=20"
   },
   "dependencies": {
-    "pdfkit": "^0.17.1"
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pdfkit": "^0.17.1",
+    "stripe": "^17.7.0"
   }
 }

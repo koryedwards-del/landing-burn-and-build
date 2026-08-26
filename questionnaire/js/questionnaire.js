@@ -1,6 +1,7 @@
 import { heartRates } from '../../js/profileDataEngine.js';
 import { buildProgramPackage } from '../../js/programPackageData.js';
 import { buildAnswersConfirmationRows } from '../../js/answersConfirmationPrintout.js';
+import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
 const STEPS = [
   'Contact Information',
@@ -352,9 +353,10 @@ function showStep(index) {
 function buildProgram() {
   const pkg = renderReview();
   sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
+  persistProgramBridge(pkg);
   programBuilt = true;
   formSuccess.hidden = false;
-  formSuccess.innerHTML = `<strong>Your program was built.</strong> Protein servings: ${pkg.plan.servings.planServings.protein}. Checkout wiring comes next.`;
+  formSuccess.innerHTML = `<strong>Your program was built.</strong> Protein servings: ${pkg.plan.servings.planServings.protein}. <a href="/createyourfoodplan/">Continue to checkout</a> to download your Burn & Build Diet.`;
   btnNext.disabled = true;
 }
 
