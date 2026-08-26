@@ -105,7 +105,7 @@ const BODY_FIELD_META = {
     question: 'What is your weight?',
     guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
     example: 'Example: 168 lbs',
-    alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $149 for this program. The program will only be as beneficial as your answers are accurate.',
+    alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $279 for this program. The program will only be as beneficial as your answers are accurate.',
   },
   fatSource: {
     question: 'How do you know?',
