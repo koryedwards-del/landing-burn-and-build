@@ -1,4 +1,4 @@
-/** Shared Print Shop PDF settings — tune watermark opacity here. */
+/** Shared program report PDF settings. */
 export { PRINT_SHOP_VIEW_SET as PDF_VIEWS } from '../../js/printShopViews.js';
 export {
   PRINT_SHOP_PERSONALIZED_VIEW_SET as PDF_PERSONALIZED_VIEWS,
@@ -8,55 +8,13 @@ export {
   isStaticPrintShopBody as isStaticPdfBodyView,
 } from '../../js/printShopViews.js';
 
-export const PDF_WATERMARK_OPACITY = 0.08;
-
-/** Full-color logo, centered — matches Print Shop HTML target (240px ≈ 180pt). */
-export const PDF_WATERMARK_SIZE_PT = 180;
-
 /** Optimized for PDF embed (~40KB); full bblogo1.png is ~2MB and slows open/print. */
 export const PDF_LOGO_REL = 'img/brand/bblogo-pdf.jpg';
 
-/** Match Print Shop sheet padding (0.35in vertical, 0.44in horizontal). */
+/** Match program report sheet padding (0.35in vertical, 0.44in horizontal). */
 export const PDF_MARGIN = {
   top: 0.35 * 72,
   bottom: 0.35 * 72,
   left: 0.44 * 72,
   right: 0.44 * 72,
-};
-
-export const PDF_HEADER = {
-  logoWidth: 54,
-  brandSize: 8,
-  titleSize: 24,
-  metaSize: 9,
-  gap: 14,
-  ruleGap: 10,
-};
-
-/** Shared palette — generic Print Shop documents. */
-export const PDF_COLORS = {
-  question: '#111111',
-  body: '#333333',
-  brand: '#888888',
-  rule: '#e8e8e8',
-};
-
-/** Shared Q&A typography — FAQ, For Best Results, food-list tips. */
-export const PDF_QA = {
-  questionSize: 9.5,
-  answerSize: 8.5,
-  itemGap: 7,
-  lineGap: 2,
-  questionAnswerGap: 1.5,
-};
-
-export const PDF_FOOD_LIST = {
-  columnTitleSize: PDF_QA.questionSize,
-  columnTitleGap: 6,
-  foodSize: 7,
-  foodItemGap: 1,
-  foodLineHeight: 8,
-  columnGap: 16,
-  columnRuleWidth: 1,
-  tipsMinBlock: 24,
 };

@@ -20,13 +20,6 @@ import {
   stripeConfigured,
   verifyCheckoutSession,
 } from './stripe.js';
-import {
-  isPersonalizedPdfView,
-  renderPrintPdf,
-  sendPrintPdfError,
-  sendPrintPdfResponse,
-  validatePrintView,
-} from './pdf/index.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
@@ -177,39 +170,6 @@ app.get('/health', (_req, res) => {
     pdf: true,
     commit: process.env.RENDER_GIT_COMMIT || null,
   });
-});
-
-async function handlePrintPdfRequest(req, res, { view, title, payload }) {
-  try {
-    validatePrintView(view);
-    const pdf = await renderPrintPdf(view, {
-      title: title || undefined,
-      payload,
-    });
-    sendPrintPdfResponse(res, view, pdf, title);
-  } catch (err) {
-    sendPrintPdfError(res, err);
-  }
-}
-
-app.get('/api/print/pdf', async (req, res) => {
-  const view = String(req.query.view || '').trim();
-  const title = String(req.query.title || '').trim();
-  await handlePrintPdfRequest(req, res, { view, title });
-});
-
-app.post('/api/print/pdf', async (req, res) => {
-  const body = req.body && typeof req.body === 'object' ? req.body : {};
-  const view = String(body.view || req.query.view || '').trim();
-  const title = String(body.title || req.query.title || '').trim();
-  if (!isPersonalizedPdfView(view)) {
-    res.status(400).json({
-      ok: false,
-      message: 'POST print PDF requires a personalized view (programreport).',
-    });
-    return;
-  }
-  await handlePrintPdfRequest(req, res, { view, title, payload: body });
 });
 
 function creatorBaseUrl(req) {

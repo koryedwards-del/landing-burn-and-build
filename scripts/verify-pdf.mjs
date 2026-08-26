@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Print Shop PDF verification — run: npm run verify:pdf */
+/** Program report PDF verification — run: npm run verify:pdf */
 
 import { buildProgramPackage } from '../js/programPackage.js';
 import { computePlan } from '../js/burnEngine.js';
@@ -8,8 +8,6 @@ import { renderPrintPdf } from '../server/pdf/index.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
 import { validatePrintPayload, validatePrintView } from '../server/pdf/validate.js';
-
-const STATIC_VIEWS = ['faq', 'foodlist', 'bestresults'];
 
 const KRISTI_FORM = {
   preferredName: 'Kristi Warner',
@@ -104,17 +102,11 @@ assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { s
 assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
 assertThrows('validatePrintPayload rejects bad programreport', () => validatePrintPayload('programreport', {}), { status: 400 });
 
-const filename = sanitizePdfFilename('B&B - FAQ - Alex', 'faq');
+const filename = sanitizePdfFilename('Burn & Build Diet - Kristi Warner', 'programreport');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
   throw new Error(`sanitizePdfFilename failed: ${filename}`);
 }
 console.log(`ok  sanitizePdfFilename — ${filename}`);
-
-for (const view of STATIC_VIEWS) {
-  assertPdf(view, await renderPrintPdf(view), {
-    minPages: view === 'faq' ? 3 : view === 'foodlist' ? 4 : 2,
-  });
-}
 
 const kristiPayload = kristiProgramReportPayload();
 assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 10 });
@@ -133,4 +125,4 @@ if (kristiPayload.servings.gridRows[0].daily !== '9') {
 }
 console.log('ok  Kristi Warner program report payload');
 
-console.log('\nAll Print Shop PDF checks passed.');
+console.log('\nProgram report PDF checks passed.');

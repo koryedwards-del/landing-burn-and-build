@@ -54,9 +54,9 @@ Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodpla
 **Code:** `server/` in this repo  
 **Config:** `render.yaml`, `.env.example`
 
-Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
+Handles program save/load, Stripe checkout, webhooks, diet PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
 
-Print Shop API (`GET /api/print/pdf`): static FAQ, food list, and For Best Results PDFs. Purchased diet PDFs use `GET /api/programs/diet-pdf` (always fresh render).
+Purchased diet PDFs use `GET /api/programs/diet-pdf` (always fresh render).
 
 ### Render checklist
 

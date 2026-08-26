@@ -1,4 +1,3 @@
-import { isStaticPrintShopBody } from '../../js/printShopViews.js';
 import { PdfError } from './errors.js';
 
 export function sanitizePdfFilename(title, view) {
@@ -18,32 +17,4 @@ export function assertPdfBuffer(buffer) {
     throw new PdfError('PDF render produced invalid output.', 500);
   }
   return buffer;
-}
-
-export function sendPrintPdfResponse(res, view, pdf, title) {
-  const body = assertPdfBuffer(pdf);
-  const filename = sanitizePdfFilename(title, view);
-
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-  res.setHeader('X-Print-View', view);
-
-  if (isStaticPrintShopBody(view)) {
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-  } else {
-    res.setHeader('Cache-Control', 'no-store');
-  }
-
-  res.send(body);
-}
-
-export function sendPrintPdfError(res, err) {
-  const status = err?.status || 500;
-  if (status >= 500) {
-    console.error('PDF render error:', err);
-  }
-  res.status(status).json({
-    ok: false,
-    message: err?.message || 'Could not generate PDF.',
-  });
 }

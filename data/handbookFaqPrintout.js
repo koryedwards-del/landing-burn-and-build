@@ -39,9 +39,3 @@ const HANDBOOK_FAQ_ITEMS = [
 ];
 
 export { HANDBOOK_FAQ_ITEMS };
-
-export const HANDBOOK_FAQ_PRINT_PAGES = [
-  { page: 1, items: HANDBOOK_FAQ_ITEMS.slice(0, 13) },
-  { page: 2, items: HANDBOOK_FAQ_ITEMS.slice(13, 26) },
-  { page: 3, items: HANDBOOK_FAQ_ITEMS.slice(26) },
-];

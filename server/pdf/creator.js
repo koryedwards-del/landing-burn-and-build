@@ -1,16 +1,11 @@
 import {
-  addGenericSheet,
-  addPersonalizedSheet,
   collectPdfBuffer,
   createLandscapePdf,
   createPortraitPdf,
 } from './draw.js';
 import { stampAllPageNumbers } from './drawFrame.js';
 
-/**
- * Burn & Build Print Shop PDF creator.
- * Owns document lifecycle and sheet headers for all five documents.
- */
+/** Burn & Build Diet PDF creator — program report lifecycle. */
 export class PrintPdfCreator {
   #doc;
   #bufferPromise;
@@ -30,32 +25,6 @@ export class PrintPdfCreator {
 
   get layout() {
     return this.#layout;
-  }
-
-  addGenericSheet(headerTitle) {
-    return addGenericSheet(this.#doc, headerTitle);
-  }
-
-  addPersonalizedSheet({
-    headerTitle,
-    clientName,
-    preparedAt,
-    layout = this.#layout,
-  }) {
-    return addPersonalizedSheet(this.#doc, {
-      headerTitle,
-      clientName,
-      preparedAt,
-      layout,
-    });
-  }
-
-  drawEmptyMessage(box, y, message) {
-    this.#doc
-      .font('Helvetica')
-      .fontSize(10)
-      .fillColor('#666666')
-      .text(String(message || ''), box.x, y, { width: box.width, lineGap: 2 });
   }
 
   async finish({ stampPageNumbers = true } = {}) {

@@ -146,7 +146,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Detail | Value |
 |--------|-------|
 | Gram formula | **Curated per item** — do not use the meat `800/protein` formula blindly |
-| Product guidance | At least **one-third of daily protein from dairy** (`data/forBestResultsPrintout.js`) |
+| Product guidance | At least **one-third of daily protein from dairy** (`data/proteinTipsPrintout.js`) |
 | Meal split | Same as protein — daily protein ÷ 3 per meal |
 | PDF food-list scale | `planServings.protein / 3` (same multiplier as meat) |
 | Tips | `data/proteinTipsPrintout.js` |
@@ -338,13 +338,7 @@ displayed grams = stapleCategoryServings(planServings, category) × base one-ser
 
 Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
-### Print Shop (server PDF API)
-
-Static handbook PDFs via `GET /api/print/pdf` — FAQ, food list, For Best Results. No personalized grams on the generic food list view.
-
-Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program report with scaled food-list grams).
-
-Menu planner week/grocery PDFs were retired with the planner UI removal.
+Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program report with scaled food-list grams, FAQ, and confirmation pages).
 
 ---
 

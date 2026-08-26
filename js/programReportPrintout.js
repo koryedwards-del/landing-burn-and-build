@@ -40,12 +40,7 @@ import {
 
 export { BURN_AND_BUILD_DIET_PDF_NAME };
 
-/** Static Kristi sample — same layout as production PDF. */
-export const PREVIEW_PROGRAM_REPORT_PDF = '../docs/samples/burn-and-build-diet-kristi-latest.pdf';
-
 export {
-  PROGRAM_REPORT_SAMPLE_PDF,
-  programReportSamplePdfUrl,
   PROGRAM_REPORT_PREVIEW_BUILD,
   PROGRAM_REPORT_PREVIEW_MD5,
 } from './programReportPreviewBuild.js';

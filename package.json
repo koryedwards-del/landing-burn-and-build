@@ -12,7 +12,6 @@
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "verify:launch": "node scripts/verify-launch.mjs",
     "render:program-report-preview": "node scripts/render-program-report-preview.mjs",
-    "verify:meals": "node scripts/verify-meal-images.mjs",
     "render:connect": "node scripts/render-connect-repo.mjs"
   },
   "engines": {

@@ -1,48 +1,24 @@
-import { FOODS_CATALOG_VERSION } from '../../js/assetVersion.js';
-import {
-  isPersonalizedPdfView,
-  isPdfView,
-  isStaticPdfBodyView,
-  PDF_PERSONALIZED_VIEWS,
-} from './constants.js';
 import { createPrintPdf, PrintPdfCreator } from './creator.js';
 import { pdfError } from './errors.js';
-import { renderBestResultsPdf } from './renderBestResults.js';
-import { renderFaqPdf } from './renderFaq.js';
-import { renderFoodListPdf } from './renderFoodList.js';
 import { renderProgramReportPdf } from './renderProgramReport.js';
 import { validatePrintPayload, validatePrintView } from './validate.js';
 
 export { createPrintPdf, PrintPdfCreator } from './creator.js';
 export { PdfError, pdfError } from './errors.js';
-export { sendPrintPdfError, sendPrintPdfResponse } from './http.js';
+export { assertPdfBuffer, sanitizePdfFilename } from './http.js';
 export { validatePrintPayload, validatePrintView } from './validate.js';
 export {
-  isPersonalizedPdfView,
-  isPdfView,
-  isStaticPdfBodyView as isStaticPdfView,
-  PDF_PERSONALIZED_VIEWS,
-} from './constants.js';
+  isPersonalizedPrintShopView as isPersonalizedPdfView,
+  isPrintShopView as isPdfView,
+  isStaticPrintShopBody as isStaticPdfBodyView,
+  PRINT_SHOP_PERSONALIZED_VIEW_SET as PDF_PERSONALIZED_VIEWS,
+  PRINT_SHOP_STATIC_BODY_VIEW_SET as STATIC_PDF_BODY_VIEWS,
+  PRINT_SHOP_VIEW_SET as PDF_VIEWS,
+} from '../../js/printShopViews.js';
 
 const RENDERERS = Object.freeze({
-  faq: renderFaqPdf,
-  foodlist: renderFoodListPdf,
-  bestresults: renderBestResultsPdf,
   programreport: renderProgramReportPdf,
 });
-
-/** Bump when layout changes so Render cache cannot serve stale PDFs. */
-const STATIC_BODY_CACHE_KEYS = Object.freeze({
-  faq: 'faq:frame:v3',
-  bestresults: 'bestresults:v5',
-});
-
-const pdfBodyCache = new Map();
-
-function catalogAwareCacheKey(view) {
-  if (view === 'foodlist') return `${view}:${FOODS_CATALOG_VERSION}`;
-  return view;
-}
 
 export async function renderPrintPdf(view, { title, payload } = {}) {
   validatePrintView(view);
@@ -52,32 +28,5 @@ export async function renderPrintPdf(view, { title, payload } = {}) {
     throw pdfError(`PDF view not supported: ${view}`);
   }
 
-  if (PDF_PERSONALIZED_VIEWS.has(view)) {
-    // programreport validates after applyProgramReportLockedCopy in renderProgramReportPdf.
-    if (view !== 'programreport') {
-      validatePrintPayload(view, payload);
-    }
-    return render(payload, { title: title || payload.title });
-  }
-
-  if (isStaticPdfBodyView(view)) {
-    const cacheKey = STATIC_BODY_CACHE_KEYS[view] || view;
-    if (title) {
-      return render({ title });
-    }
-    let cached = pdfBodyCache.get(cacheKey);
-    if (!cached) {
-      cached = await render({});
-      pdfBodyCache.set(cacheKey, cached);
-    }
-    return cached;
-  }
-
-  const cacheKey = catalogAwareCacheKey(view);
-  let cached = pdfBodyCache.get(cacheKey);
-  if (!cached) {
-    cached = await render({ title: title || undefined });
-    pdfBodyCache.set(cacheKey, cached);
-  }
-  return cached;
+  return render(payload, { title: title || payload?.title });
 }

@@ -32,11 +32,9 @@ Purchasers → /createyourfoodplan/ → download Burn & Build Diet PDF
 New programs → coming soon (questionnaire with ?create=1 for internal testing only)
 ```
 
-## Print Shop (server PDF pipeline)
+## Program report PDF (server)
 
-Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Static views: FAQ, food list, For Best Results. Purchased diet PDF uses `/api/programs/diet-pdf`. Client menu planner UI was removed; `menuplanner/data/` remains for meal-image audits (`npm run verify:meals`).
-
-Four server PDF views — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
+The Burn & Build Diet PDF is generated on the server via `server/pdf/` (PDFKit). Production delivery: `GET /api/programs/diet-pdf`. Preview samples: `npm run render:program-report-preview`. Verify: `npm run verify:pdf`.
 
 ## Burn & Build Diet program report preview PDF
 
