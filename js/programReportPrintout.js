@@ -1,4 +1,4 @@
-/** Five-page seminar program report — shared payload for web + PDF. */
+/** Burn & Build Diet program report — shared payload for PDF generation. */
 
 import { computeTodayBodyComposition } from './bodyCompositionAnalysis.js';
 import {
@@ -40,17 +40,17 @@ import {
 
 export { BURN_AND_BUILD_DIET_PDF_NAME };
 
-export const SEMINAR_REPORT_HEADER = Object.freeze({
+const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
   website: 'www.burnandbuilddiet.com',
   email: 'support@burnandbuilddiet.com',
 });
 
-export const LBA_FOOTER_COPY = BODY_FAT_PROGRESS_BAR_FOOTER;
+const LBA_FOOTER_COPY = BODY_FAT_PROGRESS_BAR_FOOTER;
 
-export const LBA_MONITOR_COPY = 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.';
+const LBA_MONITOR_COPY = 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.';
 
-export const SERVINGS_NOTE = 'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
+const SERVINGS_NOTE = 'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
 export function seminarPreparedDate(pkg) {
   return localDateKey(
@@ -61,17 +61,17 @@ export function seminarPreparedDate(pkg) {
   ) || '';
 }
 
-export function seminarClientName(pkg) {
+function seminarClientName(pkg) {
   return String(programClientName(pkg) || 'You').trim().toUpperCase();
 }
 
-export function formatHistoryTestDate(isoDate) {
+function formatHistoryTestDate(isoDate) {
   const key = localDateKey(isoDate);
   if (!key) return '—';
   return key;
 }
 
-export function formatHistoryActivity(intake) {
+function formatHistoryActivity(intake) {
   if (!intake) return '—';
   const wt = Number(intake.weightTrainingHours) || 0;
   const cardio = Number(intake.cardioHours) || 0;
@@ -101,7 +101,7 @@ function historyRowFromProgram(pkg, testDate) {
   };
 }
 
-export function buildCompositionHistoryRows(pkg, { programRows = [], sampleHistory = null } = {}) {
+function buildCompositionHistoryRows(pkg, { programRows = [], sampleHistory = null } = {}) {
   if (Array.isArray(sampleHistory) && sampleHistory.length) {
     return sampleHistory.map((row) => ({ ...row }));
   }
@@ -243,6 +243,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
   };
 }
 
-export function programReportDocumentTitle(pkg) {
+function programReportDocumentTitle(pkg) {
   return `${BURN_AND_BUILD_DIET_PDF_NAME} - ${programClientName(pkg)}`;
 }

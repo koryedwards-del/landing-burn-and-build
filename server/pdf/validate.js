@@ -1,5 +1,6 @@
-import { isProgramReportView } from '../../js/programReportViews.js';
 import { pdfError } from './errors.js';
+
+const PROGRAM_REPORT_VIEW = 'programreport';
 
 function requireString(value, field, { required = false } = {}) {
   if (value == null || value === '') {
@@ -15,7 +16,7 @@ export function validatePrintView(view) {
   if (!view) {
     throw pdfError('Missing print view.');
   }
-  if (!isProgramReportView(view)) {
+  if (view !== PROGRAM_REPORT_VIEW) {
     throw pdfError(`PDF view not supported: ${view}`);
   }
   return view;
