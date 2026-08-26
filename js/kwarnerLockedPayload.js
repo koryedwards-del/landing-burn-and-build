@@ -5,6 +5,8 @@ import {
   KWARNER_FOOD_GROUPS_INTRO,
   KWARNER_FOOD_PLAN_HOWTO,
   KWARNER_FOOD_PLAN_LEAD,
+  KWARNER_FOOD_PLAN_MEASURE_TIP,
+  KWARNER_FOOD_PLAN_TO_USE,
   KWARNER_MEAL_BUILD_STEPS,
   KWARNER_WELCOME_COPY,
 } from './kwarnerLockedCopy.js';
@@ -15,6 +17,8 @@ export function applyKwarnerLockedPayload(payload) {
   if (payload.foodPlan) {
     payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
     payload.foodPlan.howToParagraphs = [...KWARNER_FOOD_PLAN_HOWTO];
+    payload.foodPlan.measureTip = KWARNER_FOOD_PLAN_MEASURE_TIP;
+    payload.foodPlan.toUseThisPlan = KWARNER_FOOD_PLAN_TO_USE;
     payload.foodPlan.macroSignalIntro = [...KWARNER_FOOD_GROUPS_INTRO];
   }
   if (payload.servings) {

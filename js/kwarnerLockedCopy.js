@@ -24,6 +24,17 @@ export const KWARNER_FOOD_PLAN_HOWTO = [
   'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your daily servings come from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else.',
 ];
 
+export const KWARNER_FOOD_PLAN_MEASURE_TIP =
+  'Measure the food after it is prepared the way you plan to eat it (cooked vs raw).';
+
+export const KWARNER_FOOD_PLAN_TO_USE = Object.freeze({
+  title: 'To Use This Plan',
+  paragraphs: [
+    'You need to know only the four numbers from this custom diet.',
+    'The four numbers on your printout are your personal servings of proteins, grains/starches, veggies, and fruits.',
+  ],
+});
+
 export const KWARNER_MEAL_BUILD_STEPS = [
   'Pull out your kitchen scale. Don\'t have one. Order one on Amazon. About $50.',
   'Set the scale to grams, not ounces. Grams are a more accurate measurement, down to the weight of a paper clip. We don\'t guesstimate.',

@@ -2165,6 +2165,32 @@ const FOOD_PLAN_PAGE_TYPO = Object.freeze({
   afterTableGap: 14,
 });
 
+function drawFoodPlanTitledProse(doc, payload, page, titled, typo) {
+  const titleH = measureParagraph(doc, titled.title, page.width, {
+    bodySize: LAYOUT.subsectionSize,
+    lineGap: typo.lineGap,
+    paragraphGap: 0,
+  });
+  const bodyH = (titled.paragraphs || []).reduce(
+    (sum, paragraph) => sum + measureParagraph(doc, paragraph, page.width, typo),
+    0,
+  );
+  page = ensureLockedSpace(
+    doc,
+    payload,
+    page,
+    LAYOUT.sectionGap + titleH + LAYOUT.headerGap + bodyH,
+  );
+  page = { ...page, y: page.y + LAYOUT.sectionGap };
+  doc
+    .font(SEMINAR_FONTS.boldItalic)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(titled.title, page.x, page.y, { width: page.width, lineGap: 0 });
+  page = { ...page, y: doc.y + LAYOUT.headerGap };
+  return drawBodyParagraphs(doc, payload, page, titled.paragraphs, typo);
+}
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
@@ -2208,6 +2234,13 @@ function drawFoodPlanPage(doc, payload) {
       }
       page = drawBodyParagraphs(doc, payload, page, servingsBlock.paragraphs);
     }
+  }
+
+  if (fp.measureTip) {
+    page = drawBodyParagraphs(doc, payload, page, [fp.measureTip], typo);
+  }
+  if (fp.toUseThisPlan?.paragraphs?.length) {
+    page = drawFoodPlanTitledProse(doc, payload, page, fp.toUseThisPlan, typo);
   }
 
   finishLockedPage(doc, page.box, payload);
