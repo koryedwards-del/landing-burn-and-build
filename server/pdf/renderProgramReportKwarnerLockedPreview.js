@@ -1763,15 +1763,19 @@ function drawDesirableLbmBar(doc, page, bar, footerText) {
 const LBA_SNAPSHOT = Object.freeze({
   pad: 10,
   profileLabelSize: PRINT_TEMPLATE_LBA_SNAPSHOT.profileLabel,
-  profileValueSize: PRINT_TEMPLATE_LBA_SNAPSHOT.profileValue,
+  profileValueSize: PRINT_TEMPLATE_LBA_SNAPSHOT.dataValue,
   todayTitleSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayTitle,
   todayHeadSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayHead,
-  todayBodySize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayBody,
+  todayLabelSize: PRINT_TEMPLATE_LBA_SNAPSHOT.todayBody,
+  todayDataSize: PRINT_TEMPLATE_LBA_SNAPSHOT.dataValue,
   todayRowPad: 6,
   todayColGap: 22,
   sectionGap: 8,
   ruleInset: 10,
 });
+
+/** Numeric/readout values on Lean Body Analysis only — labels stay smaller. */
+const LBA_DATA_FONT_SIZE = PRINT_TEMPLATE_LBA_SNAPSHOT.dataValue;
 
 const LBA_TODAY_TITLE = '--TODAY--';
 
@@ -1782,13 +1786,14 @@ function lbaToday1982PctDisplay(pct) {
 
 /** Compact three-column block widths — centered like 1982 Lean Body Analysis. */
 function lbaTodayBlockLayout(doc, todayRows) {
-  const bodySize = LBA_SNAPSHOT.todayBodySize;
-  doc.font(SEMINAR_FONTS.bold).fontSize(bodySize);
+  const labelSize = LBA_SNAPSHOT.todayLabelSize;
+  const dataSize = LBA_SNAPSHOT.todayDataSize;
+  doc.font(SEMINAR_FONTS.bold).fontSize(labelSize);
   const labelColW = todayRows.reduce(
     (max, row) => Math.max(max, doc.widthOfString(String(row.label || ''))),
     doc.widthOfString('TOTAL'),
   );
-  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
+  doc.font(SEMINAR_FONTS.regular).fontSize(dataSize);
   const pctColW = todayRows.reduce(
     (max, row) => Math.max(max, doc.widthOfString(lbaToday1982PctDisplay(row.pct))),
     doc.widthOfString('100.00 %'),
@@ -1803,7 +1808,7 @@ function lbaTodayBlockLayout(doc, todayRows) {
     pctColW,
     lbsColW,
     blockW: labelColW + gap + pctColW + gap + lbsColW,
-    rowH: bodySize + LBA_SNAPSHOT.todayRowPad * 2,
+    rowH: Math.max(labelSize, dataSize) + LBA_SNAPSHOT.todayRowPad * 2,
   };
 }
 
@@ -1904,12 +1909,12 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   const blockX = x + (width - blockW) / 2;
   const pctX = blockX + labelColW + gap;
   const lbsX = pctX + pctColW + gap;
-  const bodySize = LBA_SNAPSHOT.todayBodySize;
+  const bodySize = LBA_SNAPSHOT.todayDataSize;
 
   todayRows.forEach((row) => {
     drawLbaToday1982Cell(doc, row.label, blockX, cy, labelColW, {
       font: SEMINAR_FONTS.bold,
-      fontSize: bodySize,
+      fontSize: LBA_SNAPSHOT.todayLabelSize,
       align: 'left',
     });
     drawLbaToday1982Cell(doc, lbaToday1982PctDisplay(row.pct), pctX, cy, pctColW, {
@@ -1930,7 +1935,7 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
 
 const LBA_BF_RANGE_TABLE = Object.freeze({
   labelSize: 9.5,
-  rangeSize: 9,
+  rangeSize: LBA_DATA_FONT_SIZE,
   rowPad: 7,
 });
 

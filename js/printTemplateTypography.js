@@ -44,6 +44,8 @@ export const PRINT_TEMPLATE_WELCOME = Object.freeze({
 export const PRINT_TEMPLATE_LBA_SNAPSHOT = Object.freeze({
   profileLabel: 7,
   profileValue: 9,
+  /** Numeric readouts on LBA page only (profile values, today %/lbs, bf/weight ranges). */
+  dataValue: 10.5,
   todayTitle: 8,
   todayHead: 7.5,
   todayBody: 9.5,
