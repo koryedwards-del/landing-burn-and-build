@@ -1,0 +1,61 @@
+---
+description: 5-page sample-female preview PDF — render, push, then download link
+alwaysApply: true
+---
+
+# 5-page sample-female preview PDF
+
+Separate from the **2026 program report** (12-page `burn-and-build-diet-kristi-*.pdf`). This is the **4-page** bodybuilder sample: Welcome → Lean Body Analysis → Food Plan → Servings.
+
+When the user asks for **5-page**, **sample-female**, or **bb-five-page** PDF work, use this pipeline — not `render:program-report-preview`.
+
+## Pipeline
+
+| Piece | Path |
+|-------|------|
+| Renderer | `server/pdf/renderFivePagePrintout.js` |
+| Frame / header | `server/pdf/draw1982Frame.js` |
+| Payload | `js/fivePagePrintoutData.js` → `buildKristiFivePagePreviewPayload()` |
+| Copy | `js/fivePagePrintoutCopyData.js` |
+| Render script | `scripts/render-five-page-preview.mjs` |
+| Sample file (only) | `docs/samples/bb-five-page-sample-female-latest.pdf` |
+
+Run: `npm run render:five-page-preview`
+
+## Delivery order (critical — tell the user)
+
+The download link is a **raw GitHub URL**. It serves whatever is **committed on `main`**, not what was just rendered locally.
+
+**Required order every time:**
+
+1. Edit renderer / payload / copy
+2. `npm run render:five-page-preview`
+3. **Commit** `bb-five-page-sample-female-latest.pdf` (and code changes)
+4. **`git push origin main`**
+5. **Only then** paste the download link
+
+If you give the link **before push**, the user gets the **previous** PDF in Mac **Downloads** — wrong size, wrong page count, or missing fixes. Say explicitly: *“Pushed to main — tap this link; it will save to Downloads.”*
+
+## Give the user (one link only)
+
+```
+https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/bb-five-page-sample-female-latest.pdf
+```
+
+- **One** stable filename — do not also send versioned `bb-five-page-sample-female-N.pdf` or archive links for this product.
+- Saves to **Mac Downloads** as `bb-five-page-sample-female-latest.pdf`.
+- If Safari saves `…-latest-2.pdf`, an older copy is already in Downloads — delete old copies or choose Replace.
+
+## Do not
+
+| Wrong | Why |
+|-------|-----|
+| Link before push | GitHub still serves old bytes |
+| `render:program-report-preview` for sample-female | Wrong product (12+ pages) |
+| Multiple download links per change | Clutters Downloads; confuses which file is current |
+| Cursor artifacts panel | Broken download UX on Cursor Web |
+| `github.com/.../blob/...` | Opens browser; does not download |
+
+## Sanity check after render
+
+Current 5-page sample-female should be **4 pages**, ~50–55 KB (Times fonts, full header every page). If the file is ~180 KB or 13+ pages, the wrong renderer was used.

@@ -84,6 +84,10 @@ npm run verify:pdf
 
 Renderer: `server/pdf/` (PDFKit). Preview: `npm run render:program-report-preview`. See `.cursor/rules/program-report-preview-pdf.mdc`.
 
+## 5-page sample-female PDF (separate product)
+
+4-page sample printout for bodybuilders — **not** the purchased program report. Preview: `npm run render:five-page-preview` → push → one download link. See `.cursor/rules/five-page-sample-female-pdf.mdc`.
+
 ## Locked paths
 
 - Questionnaire: `/questionnaire/`

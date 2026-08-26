@@ -39,9 +39,11 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
    - **Archive:** `docs/samples/burn-and-build-diet-kristi-archive-vN.pdf`
    - **Latest (stable):** `docs/samples/burn-and-build-diet-kristi-latest.pdf` (overwritten each render)
 3. **Commit and push to `main`:** versioned PDF, latest PDF, and archive
-4. **Give the user the raw download link** (see below)
+4. **Give the user the raw download link** — **only after push** (see below)
 
 Optional: copy to `/opt/cursor/artifacts/` when that folder exists — never rely on it for delivery.
+
+**Push before link:** Raw GitHub URLs serve committed files on `main`. A link shared before `git push` downloads the **old** PDF to the user's Mac **Downloads** folder. Always push first, then paste the link and say it is live.
 
 ## Download delivery (locked — do not change)
 
