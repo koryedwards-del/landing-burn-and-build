@@ -8,7 +8,7 @@ export const KWARNER_WELCOME_COPY = {
   leanBodyAnalysis:
     'Page two is the results of your body composition test or estimate you provided. Although very few people want to know how fat they are, all of them want to know how to lose fat. Our Lean Body Analysis page includes your profile, a snapshot of where you are today, and body fat ranges with the scale weights each range represents at your lean body mass.',
   foodPlan:
-    'Page three is your custom-designed food plan. It explains what your body needs from protein, carbohydrates, and fat, and how Burn & Build turns that into your daily servings. The servings on page four follow directly from this page.',
+    'Page three is your custom-designed food plan. It explains how Burn & Build converts your protein and carbohydrates into servings and does the serving math for you. The servings on page four follow directly from this page.',
   servings:
     'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and fruit snacks so you have maximum strength and energy while losing fat fast.',
   foodList:
@@ -16,12 +16,11 @@ export const KWARNER_WELCOME_COPY = {
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
-  'Since 1982 Burn & Build has turned what your body needs into daily servings from proven fat-burning, muscle-building foods — not numbers you chase on a calculator while still wondering what to put on your plate. Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. When any one is out of balance, you can train hard and still not see the change you expect.',
-  'The table below shows what too much or too little does to each one.',
+  'Since 1982 Burn & Build has turned what your body needs into daily servings from proven fat-burning, muscle-building foods — not numbers you chase on a calculator while still wondering what to put on your plate. Burn & Build converts your protein and carbohydrates into servings and then does the serving math for you also.',
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
-  'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your plan turns that balance into servings from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy, it is simple.',
+  'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your daily servings come from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy, it is simple.',
 ];
 
 export const KWARNER_MEAL_BUILD_STEPS = [

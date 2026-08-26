@@ -16,6 +16,7 @@ export function applyKwarnerLockedPayload(payload) {
     payload.foodPlan.lead = KWARNER_FOOD_PLAN_LEAD;
     payload.foodPlan.howToParagraphs = [...KWARNER_FOOD_PLAN_HOWTO];
     payload.foodPlan.macroSignalIntro = [...KWARNER_FOOD_GROUPS_INTRO];
+    payload.foodPlan.macroSignalRows = [];
   }
   if (payload.servings) {
     payload.servings.mealBuildSteps = [...KWARNER_MEAL_BUILD_STEPS];
