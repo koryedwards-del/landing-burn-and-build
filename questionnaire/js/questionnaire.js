@@ -103,6 +103,10 @@ function resetAccordions(panel) {
   });
 }
 
+function isRadioField(el) {
+  return el?.matches?.('input[type="radio"]');
+}
+
 function handleAccordionTab(event) {
   if (event.key !== 'Tab') return;
   const panel = panels[step];
@@ -118,24 +122,20 @@ function handleAccordionTab(event) {
   const fields = focusablesIn(openItem);
   const active = document.activeElement;
   const idx = fields.indexOf(active);
+  const itemIdx = items.indexOf(openItem);
 
   if (event.shiftKey) {
-    if (idx <= 0) {
-      const itemIdx = items.indexOf(openItem);
-      if (itemIdx > 0) {
-        event.preventDefault();
-        openAccordionItem(acc, items[itemIdx - 1], 'last');
-      }
+    if (idx <= 0 && itemIdx > 0) {
+      event.preventDefault();
+      openAccordionItem(acc, items[itemIdx - 1], 'last');
     }
     return;
   }
 
-  if (idx === fields.length - 1) {
-    const itemIdx = items.indexOf(openItem);
-    if (itemIdx < items.length - 1) {
-      event.preventDefault();
-      openAccordionItem(acc, items[itemIdx + 1]);
-    }
+  const advance = (idx === fields.length - 1 || isRadioField(active)) && itemIdx < items.length - 1;
+  if (advance) {
+    event.preventDefault();
+    openAccordionItem(acc, items[itemIdx + 1]);
   }
 }
 
@@ -187,6 +187,20 @@ function clearFieldErrorForInput(input) {
     err.textContent = '';
     err.hidden = true;
   }
+}
+
+function showError(err) {
+  if (!err) {
+    clearStepErrors(panels[step]);
+    showFormError('');
+    return;
+  }
+  if (typeof err === 'object' && err.field) {
+    showFieldError(err.field, err.message);
+    return;
+  }
+  clearStepErrors(panels[step]);
+  showFormError(String(err));
 }
 
 function readForm() {
@@ -431,7 +445,12 @@ btnNext.addEventListener('click', () => {
 
 form.addEventListener('keydown', handleAccordionTab);
 
+form.addEventListener('input', (event) => {
+  if (event.target.name) clearFieldErrorForInput(event.target);
+});
+
 form.addEventListener('change', (event) => {
+  if (event.target.name) clearFieldErrorForInput(event.target);
   if (event.target.name === 'fatSource') syncFatSourceOther();
   if (event.target.name === 'age') syncHeartRates();
   renderStepNav();
