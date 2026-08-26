@@ -47,6 +47,28 @@ const fatSourceOtherWrap = document.getElementById('fat-source-other-wrap');
 let step = 0;
 let programBuilt = false;
 
+function initAccordions(root = form) {
+  root.querySelectorAll('[data-accordion]').forEach((acc) => {
+    acc.querySelectorAll('.acc-item__head').forEach((head) => {
+      head.addEventListener('click', () => {
+        const item = head.closest('.acc-item');
+        if (!item || item.hidden) return;
+        const open = item.classList.contains('is-open');
+        acc.querySelectorAll('.acc-item').forEach((el) => el.classList.remove('is-open'));
+        if (!open) item.classList.add('is-open');
+      });
+    });
+  });
+}
+
+function resetAccordions(panel) {
+  panel.querySelectorAll('[data-accordion]').forEach((acc) => {
+    const items = [...acc.querySelectorAll('.acc-item')].filter((el) => !el.hidden);
+    items.forEach((el) => el.classList.remove('is-open'));
+    if (items[0]) items[0].classList.add('is-open');
+  });
+}
+
 function showError(message) {
   formError.textContent = message;
   formError.hidden = !message;
@@ -192,6 +214,13 @@ function syncFatSourceOther() {
   const input = form.elements.fatSourceOther;
   input.disabled = !isOther;
   if (!isOther) input.value = '';
+  if (isOther) {
+    fatSourceOtherWrap.classList.add('is-open');
+    const acc = fatSourceOtherWrap.closest('[data-accordion]');
+    acc?.querySelectorAll('.acc-item').forEach((el) => {
+      if (el !== fatSourceOtherWrap) el.classList.remove('is-open');
+    });
+  }
 }
 
 function renderReview() {
@@ -229,7 +258,10 @@ function renderStepNav() {
 
 function showStep(index) {
   step = Math.max(0, Math.min(index, panels.length - 1));
-  panels.forEach((panel, i) => { panel.hidden = i !== step; });
+  panels.forEach((panel, i) => {
+    panel.hidden = i !== step;
+    if (i === step) resetAccordions(panel);
+  });
   renderStepNav();
   btnBack.disabled = step === 0;
   btnNext.textContent = step === panels.length - 1 ? 'Build my program' : 'Next';
@@ -283,6 +315,7 @@ stepNavList.addEventListener('click', (event) => {
 });
 
 renderFatSourceOptions();
+initAccordions();
 syncFatSourceOther();
 const today = new Date().toISOString().slice(0, 10);
 if (form.elements.signatureDate && !form.elements.signatureDate.value) {

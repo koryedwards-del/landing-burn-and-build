@@ -20,35 +20,35 @@ body {
   min-height: 100vh;
 }
 
-/* Header — logo top left */
+/* Header — logo top left, no black bar */
 .q-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1.25rem;
-  background: #0a0a0a;
-  border-bottom: 3px solid var(--focus);
+  padding: 0.875rem 1.25rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
 }
 
 .q-logo {
   display: block;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
 .q-header__title {
   font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #f5f5f5;
+  color: var(--text);
 }
 
 .q-header__brand { line-height: 0; }
 
-/* Step nav — across the bar */
+/* Step nav */
 .q-stepnav {
   background: #fff;
   border-bottom: 1px solid var(--border);
@@ -66,7 +66,6 @@ body {
 .q-stepnav__item {
   flex: 1 1 0;
   min-width: 5.5rem;
-  padding: 0;
   border: none;
   border-right: 1px solid var(--border);
   background: var(--panel);
@@ -87,13 +86,9 @@ body {
   box-shadow: inset 0 -3px 0 var(--focus);
 }
 
-.q-stepnav__item.is-done {
-  background: #fff;
-}
+.q-stepnav__item.is-done { background: #fff; }
 
-.q-stepnav__item:hover:not(:disabled):not(.is-active) {
-  background: #eee;
-}
+.q-stepnav__item:hover:not(:disabled):not(.is-active) { background: #eee; }
 
 .q-stepnav__item:disabled {
   opacity: 0.45;
@@ -122,98 +117,68 @@ body {
 
 .sheet__price { margin-top: 1rem; }
 
-/* Accordion field stacks */
+/* Accordion — one open at a time */
 .acc {
   border: 1px solid var(--border);
   background: #fff;
   margin-bottom: 1.25rem;
 }
 
-.acc__group {
-  padding: 0;
-}
-
-.acc__group + .acc__group {
+.acc-item {
   border-top: 1px solid var(--border);
 }
 
-.acc__group-title {
-  font-size: 0.95rem;
-  font-weight: 700;
+.acc-item:first-child { border-top: none; }
+
+.acc-item__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
   padding: 0.75rem 0.875rem;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  margin: 0;
-}
-
-.acc__group > .field__hint {
-  padding: 0.75rem 0.875rem 0;
-}
-
-.acc__group > .choice {
-  margin: 0.5rem 0.875rem;
-}
-
-.acc > .field,
-.acc > fieldset.field,
-.form-step > .field,
-.form-step > fieldset.field,
-.acc__group > .field {
-  display: block;
-  margin: 0;
   border: none;
-  border-top: 1px solid var(--border);
-}
-
-.acc > .field:first-child,
-.acc > fieldset.field:first-child,
-.form-step > .field:first-of-type,
-.form-step > fieldset.field:first-of-type {
-  border-top: none;
-}
-
-.field__label,
-fieldset.field > legend.field__label {
-  display: block;
-  font-weight: 700;
-  font-size: 0.95rem;
-  padding: 0.75rem 0.875rem;
   background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  margin: 0;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
 }
 
-.field__panel {
+.acc-item__head::after {
+  content: '+';
+  flex-shrink: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.acc-item.is-open > .acc-item__head {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.acc-item.is-open > .acc-item__head::after { content: '−'; }
+
+.acc-item__body {
+  display: none;
   padding: 0.875rem;
 }
 
-.field > .field__hint,
-fieldset.field > .field__hint,
-.field > .field__input,
-.field > .field__row,
-.field > .field__note,
-fieldset.field > .choice,
-fieldset.field > #fat-source-list,
-.field > .choice {
-  display: block;
-  margin-left: 0.875rem;
-  margin-right: 0.875rem;
-}
+.acc-item.is-open > .acc-item__body { display: block; }
 
-.field > .field__hint,
-fieldset.field > .field__hint {
-  margin-top: 0.875rem;
-  margin-bottom: 0.5rem;
-}
-
-.field > *:last-child,
-fieldset.field > *:last-child {
-  margin-bottom: 0.875rem;
+.acc-item__body > .field__hint:first-child {
+  margin-top: 0;
 }
 
 .field__hint {
   font-size: 0.9rem;
   color: #555;
+  margin-bottom: 0.5rem;
 }
 
 .field__optional { font-weight: 400; color: var(--muted); }
