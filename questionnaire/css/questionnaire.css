@@ -177,6 +177,8 @@ body {
 }
 
 .acc-item__label {
+  grid-column: 1;
+  grid-row: 1;
   display: block;
   width: 100%;
   text-align: left;
