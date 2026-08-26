@@ -75,7 +75,7 @@ function heightParts(totalInches) {
   };
 }
 
-function heightFromParts(feet, inches) {
+export function heightFromParts(feet, inches) {
   const f = feet === '' ? 0 : Math.max(0, Number(feet) || 0);
   const i = inches === '' ? 0 : Math.max(0, Math.min(11, Number(inches) || 0));
   return f * 12 + i;

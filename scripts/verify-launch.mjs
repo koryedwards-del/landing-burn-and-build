@@ -16,6 +16,11 @@ function localCommit() {
 execSync('npm run verify:server', { stdio: 'inherit' });
 execSync('npm run verify:pdf', { stdio: 'inherit' });
 
+const { heightFromParts } = await import('../js/onboardingEngine.js');
+if (heightFromParts(5, 10) !== 70) {
+  throw new Error('onboardingEngine.heightFromParts export missing or broken');
+}
+
 let health;
 try {
   const res = await fetch(API_HEALTH, { signal: AbortSignal.timeout(15000) });
