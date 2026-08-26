@@ -6,36 +6,34 @@ alwaysApply: true
 # Project context
 
 - Full map: `docs/DOMAINS.md`
-- This repo: **Burn & Build** — full desktop web product on **burnandbuilddiet.com**
-- API backend: `server/` → Render project **Burn & Build**, service `program-creator` (`program-creator-3tzd.onrender.com`)
+- This repo: **Burn & Build** — three standalone pieces on **burnandbuilddiet.com**
 
 Push to `main` deploys the static site via GitHub Pages.
 
-## Paths
+## Three pieces
 
-| Path | Role |
-|------|------|
-| `/` (index.html) | Marketing landing |
-| `/questionnaire/` | Program questionnaire → Burn Engine → checkout |
-| `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
-| `/get-your-diet/` | Redirect → `/questionnaire/#welcome` (new program) |
-| `/support`, `/privacypolicy` | Support & legal |
-| `/contacts/` | Admin contact list |
-| `server/` | Express API + SQLite (Render) |
+| Piece | Path | Role |
+|-------|------|------|
+| **Landing** | `/` (`index.html`, `hardkor.css`) | Marketing — standalone |
+| **Burn Engine** | `js/burnEngine.js`, `data/foods.json` | Serving math — standalone |
+| **PDF** | `server/pdf/`, `js/*Printout.js` | Burn & Build Diet program report — standalone |
+
+Shell between them (questionnaire, checkout, API) was removed for a clean rebuild. **Reconnect** landing → questionnaire → checkout when ready.
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
 
-## Active product flow
+## Verify (engine + PDF)
 
 ```
-Landing (/) → /questionnaire/ → /createyourfoodplan/ → Burn & Build Diet PDF
-Purchasers can restore at /createyourfoodplan/ by email
+npm run verify:printout-calcs
+npm run verify:pdf
 ```
 
-## Program report PDF (server)
+## Program report PDF
 
-The Burn & Build Diet PDF is generated on the server via `server/pdf/` (PDFKit). Production delivery: `GET /api/programs/diet-pdf`. Preview samples: `npm run render:program-report-preview`. Verify: `npm run verify:pdf`.
+Renderer: `server/pdf/` (PDFKit). Preview: `npm run render:program-report-preview`. See `.cursor/rules/program-report-preview-pdf.mdc`.
 
-## Burn & Build Diet program report preview PDF
+## Locked paths (when shell is rebuilt)
 
-See `.cursor/rules/program-report-preview-pdf.mdc`. After layout changes: `npm run render:program-report-preview` → commit samples → raw GitHub download links.
+- Questionnaire: `/questionnaire/`
+- Checkout: `/createyourfoodplan/`
