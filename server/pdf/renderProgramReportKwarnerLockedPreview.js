@@ -1815,6 +1815,73 @@ const LBA_BF_RANGE_TABLE = Object.freeze({
   rowPad: 7,
 });
 
+const LBA_STATUS_STYLES = Object.freeze({
+  'CONGRATULATIONS!': { color: '#1B7A3E' },
+  'ALERT!': { color: '#8B0000' },
+});
+
+function parseLbaStatusPrefix(text) {
+  const str = String(text || '');
+  for (const prefix of Object.keys(LBA_STATUS_STYLES)) {
+    if (str.startsWith(prefix)) {
+      return {
+        prefix,
+        rest: str.slice(prefix.length),
+        color: LBA_STATUS_STYLES[prefix].color,
+      };
+    }
+  }
+  return null;
+}
+
+function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { fullHeader = false } = {}) {
+  if (!paragraph) return page;
+  const status = parseLbaStatusPrefix(paragraph);
+  const blockH = measureParagraph(doc, paragraph, page.width, typography);
+  let current = ensureLockedSpace(doc, payload, page, blockH, { fullHeader });
+
+  if (!status) {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(typography.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(paragraph), current.x, current.y, {
+        width: current.width,
+        lineGap: typography.lineGap,
+        align: 'left',
+      });
+    return { ...current, y: doc.y + typography.paragraphGap };
+  }
+
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(typography.bodySize)
+    .fillColor(status.color)
+    .text(status.prefix, current.x, current.y, {
+      continued: true,
+      lineGap: typography.lineGap,
+    });
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(typography.bodySize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(status.rest, {
+      width: current.width,
+      lineGap: typography.lineGap,
+      align: 'left',
+    });
+  return { ...current, y: doc.y + typography.paragraphGap };
+}
+
+function drawLbaBodyParagraphs(doc, payload, page, paragraphs, options = {}) {
+  const typography = resolveBodyTypography(options);
+  let current = page;
+  (paragraphs || []).forEach((paragraph) => {
+    current = drawLbaStatusParagraph(doc, payload, current, paragraph, typography, options);
+  });
+  return current;
+}
+
 function lbaBfRangeTableColumns(count) {
   const columnCount = Math.max(1, Number(count) || 1);
   const width = 1 / columnCount;
@@ -1892,7 +1959,7 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
 
   const lbmParagraphs = (lba.lbmParagraphs || []).filter(Boolean);
   if (lbmParagraphs.length) {
-    page = drawBodyParagraphs(doc, payload, page, lbmParagraphs);
+    page = drawLbaBodyParagraphs(doc, payload, page, lbmParagraphs, { fullHeader: true });
     page = { ...page, y: page.y + LAYOUT.sectionGap };
   }
 
