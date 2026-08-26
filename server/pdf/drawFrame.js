@@ -67,11 +67,6 @@ export function frameFooterRuleY(box) {
   return box.bottom - FOOTER_BELOW_RULE;
 }
 
-/** @deprecated Use frameContentContainer with topGoldY */
-export function frameBodyBottom(box) {
-  return frameFooterRuleY(box) - PDF_FRAME.contentPad;
-}
-
 /** Content band between top and bottom gold dividers with equal padding. */
 export function frameContentContainer(box, topGoldY) {
   const bottomGoldY = frameFooterRuleY(box);

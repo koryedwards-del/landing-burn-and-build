@@ -9,6 +9,7 @@
   "verify:cutting-servings": "node scripts/cutting-food-list-audit.mjs",
   "sync:cutting-servings": "node scripts/sync-cutting-servings.mjs",
     "verify:server": "node scripts/verify-server.mjs",
+    "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "render:kwarner-preview": "node scripts/render-kwarner-locked-preview.mjs",
     "verify:meals": "node scripts/verify-meal-images.mjs",
     "render:connect": "node scripts/render-connect-repo.mjs"

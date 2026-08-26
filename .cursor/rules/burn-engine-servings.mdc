@@ -252,7 +252,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Detail | Value |
 |--------|-------|
 | Planner slot | Optional **fat** lane on breakfast/lunch/dinner meals (`TEMPLATE_SLOTS.meal`) |
-| Planner categories | `fat`, `sugar`, `alcohol` share one point pool (`plannerState.js` `SLOT_META.fat`) |
+| Planner categories | `fat`, `sugar`, `alcohol` share one point pool (`servings.fatMaintain`) |
 | Portion sizing | Per-food **curated** in `foods.json` — grams (e.g. butter 6g/tsp) or descriptive units (e.g. `12 fl. oz.` beer) when `gramWeight` is 0 |
 | Food-list PDF | **Not** on KWarner staple gram pages |
 | Unused points | Fewer points used → more fat loss (see engine projections in `js/burnEngine.js`) |

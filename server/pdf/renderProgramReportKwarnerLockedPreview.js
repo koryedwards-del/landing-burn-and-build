@@ -52,8 +52,6 @@ import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 
 export const PROGRAM_REPORT_MIN_PAGES = 10;
-/** @deprecated Use PROGRAM_REPORT_MIN_PAGES */
-export const KWARNER_LOCKED_MIN_PAGES = PROGRAM_REPORT_MIN_PAGES;
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');

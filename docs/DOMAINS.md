@@ -32,8 +32,8 @@ Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodpla
 | `/questionnaire/` | Program questionnaire → Burn Engine builds program (gated; redirects to checkout portal when closed) |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
 | `/get-your-diet/` | Redirect → `/createyourfoodplan/` |
-| `/program-report/` | Redirect → `/createyourfoodplan/` (shell code retained for relaunch) |
-| `/menuplanner/` | Redirect → `/createyourfoodplan/` (planner UI retained for relaunch) |
+| `/program-report/` | Redirect → `/createyourfoodplan/` |
+| `/menuplanner/` | Redirect → `/createyourfoodplan/` |
 | `/support`, `/privacypolicy` | Support & legal |
 | `/contacts/` | Admin contact list (key auth) |
 

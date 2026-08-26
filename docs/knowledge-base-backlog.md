@@ -55,7 +55,7 @@ Google fragment  →  Diet (the answer)  →  Food plan (the path)
 | Educate | KB article / landing section | Diet = the answer |
 | Questionnaire | `/questionnaire/` | Path begins — body + activity |
 | Purchase | `/createyourfoodplan/` | Food plan unlocked |
-| Deliver | `/program-report/` → menu planner | Food plan in hand |
+| Deliver | `/createyourfoodplan/` | Burn & Build Diet PDF download |
 
 | Layer | Role |
 |-------|------|

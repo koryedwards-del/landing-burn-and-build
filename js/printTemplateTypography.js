@@ -1,7 +1,6 @@
 /**
  * Locked personalized print template — single typography scale.
  * PDF (PDFKit): values are points.
- * Web preview: css/print-template.css mirrors these as --print-* custom properties.
  */
 
 /** Shared frame + body copy (pages 2–7 default). */

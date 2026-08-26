@@ -191,27 +191,6 @@ export function countPrograms(email) {
   return row?.n || 0;
 }
 
-export function listPrograms(email) {
-  const rows = db.prepare(`
-    SELECT id, label, package_json, created_at, paid_at FROM programs
-    WHERE email = ?
-    ORDER BY created_at DESC
-  `).all(normalizeEmail(email));
-
-  return rows.map(mapProgramRow).filter(Boolean);
-}
-
-/** Purchased or coupon-unlocked programs only — for diet history and sidebar. */
-export function listPaidPrograms(email) {
-  const rows = db.prepare(`
-    SELECT id, label, package_json, created_at, paid_at FROM programs
-    WHERE email = ? AND paid_at IS NOT NULL
-    ORDER BY created_at DESC
-  `).all(normalizeEmail(email));
-
-  return rows.map(mapProgramRow).filter(Boolean);
-}
-
 export function getProgramById(email, programId) {
   const row = db.prepare(`
     SELECT package_json FROM programs

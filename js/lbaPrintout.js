@@ -152,11 +152,6 @@ export function lbaBodyFatRangeCategories(gender) {
   return lbaBodyFatRangeRows(gender).map((row) => ({ ...row }));
 }
 
-/** @deprecated Use lbaBodyFatRangeCategories */
-export function aceHealthCategories(gender) {
-  return lbaBodyFatRangeCategories(gender);
-}
-
 export function lbaBodyFatRangeForPercent(gender, bodyFatPercent) {
   const bf = Number(bodyFatPercent);
   if (!Number.isFinite(bf)) return null;
@@ -173,11 +168,6 @@ export function lbaBodyFatRangeForPercent(gender, bodyFatPercent) {
     ));
   }
   return categories[categories.length - 1];
-}
-
-/** @deprecated Use lbaBodyFatRangeForPercent */
-export function aceHealthCategoryForBodyFat(gender, bodyFatPercent) {
-  return lbaBodyFatRangeForPercent(gender, bodyFatPercent);
 }
 
 function formatAceWeightRange(lbm, category) {
@@ -203,19 +193,9 @@ export function lbaBodyFatRangeWeightRanges(gender, lbm) {
   }));
 }
 
-/** @deprecated Use lbaBodyFatRangeWeightRanges */
-export function aceHealthWeightRanges(gender, lbm) {
-  return lbaBodyFatRangeWeightRanges(gender, lbm);
-}
-
 /** Neutral lead between BF% and weight tables — no third-party attribution. */
 export function lbaBodyFatRangeLeadMessage() {
   return BODY_FAT_PROGRESS_BAR_FOOTER;
-}
-
-/** @deprecated Use lbaBodyFatRangeLeadMessage */
-export function aceHealthAssessmentMessage() {
-  return lbaBodyFatRangeLeadMessage();
 }
 
 export function aceCategories(gender) {
@@ -380,11 +360,6 @@ export function fatBarTimelineMarkers(timeline) {
       weightLabel: row.weightDisplay || `${Math.round(Number(row.weight))} lbs`,
       badge: row.badge || null,
     }));
-}
-
-/** @deprecated ACE attribution removed — returns empty until new category copy is wired. */
-export function aceRiskMessage() {
-  return '';
 }
 
 export function weightGoalRangeLabel(lbm, category) {
