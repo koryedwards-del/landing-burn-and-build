@@ -2153,56 +2153,52 @@ function drawFoodPlanPage(doc, payload) {
 const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
 const SERVINGS_RULES_BREAK_GAP = 10;
 const SERVINGS_DAILY_RULES_COUNT = 3;
-const SERVINGS_DAILY_RULES_AFTER_GAP = PT.body + PT.lineGap;
 
 const SERVINGS_DAILY_RULES_BOX = Object.freeze({
   pad: 12,
   lineGap: 4,
   fontSize: PT.body,
   radius: 4,
-  fill: '#FFF9E0',
 });
+
+function servingsDailyRulesText(rules) {
+  return rules.map((line) => String(line).toUpperCase()).join('\n');
+}
 
 function measureServingsDailyRulesBox(doc, width, rules) {
   const { pad, lineGap, fontSize } = SERVINGS_DAILY_RULES_BOX;
   const innerW = width - pad * 2;
   doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
-  const linesH = rules.reduce((sum, line, index) => {
-    const lineH = doc.heightOfString(String(line).toUpperCase(), { width: innerW, align: 'center' });
-    return sum + lineH + (index < rules.length - 1 ? lineGap : 0);
-  }, 0);
+  const linesH = doc.heightOfString(servingsDailyRulesText(rules), {
+    width: innerW,
+    align: 'center',
+    lineGap,
+  });
   return pad * 2 + linesH;
 }
 
 function drawServingsDailyRulesBox(doc, payload, page, rules) {
-  const { pad, lineGap, fontSize, radius, fill } = SERVINGS_DAILY_RULES_BOX;
+  const { pad, lineGap, fontSize, radius } = SERVINGS_DAILY_RULES_BOX;
   const x = page.x;
   const y = page.y;
   const width = page.width;
   const innerW = width - pad * 2;
   const boxH = measureServingsDailyRulesBox(doc, width, rules);
 
-  doc.fillColor(fill).roundedRect(x, y, width, boxH, radius).fill();
   doc
     .strokeColor(PDF_FRAME_COLORS.gold)
     .lineWidth(1)
     .roundedRect(x, y, width, boxH, radius)
     .stroke();
 
-  let cy = y + pad;
   doc.font(SEMINAR_FONTS.bold).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-  rules.forEach((line, index) => {
-    doc.text(String(line).toUpperCase(), x + pad, cy, {
-      width: innerW,
-      align: 'center',
-      lineGap: 0,
-    });
-    if (index < rules.length - 1) {
-      cy = doc.y + lineGap;
-    }
+  doc.text(servingsDailyRulesText(rules), x + pad, y + pad, {
+    width: innerW,
+    align: 'center',
+    lineGap,
   });
 
-  return { ...page, y: y + boxH + LAYOUT.paragraphGap };
+  return { ...page, y: y + boxH };
 }
 
 function drawMealBuildSteps(doc, payload, page, steps) {
@@ -2217,11 +2213,9 @@ function drawMealBuildSteps(doc, payload, page, steps) {
   const boxH = measureServingsDailyRulesBox(doc, page.width, rules);
   page = ensureLockedSpace(doc, payload, page, boxH + LAYOUT.sectionGap);
   page = drawServingsDailyRulesBox(doc, payload, page, rules);
-  page = { ...page, y: page.y + SERVINGS_DAILY_RULES_AFTER_GAP };
 
   const afterRules = steps.slice(splitAt + SERVINGS_DAILY_RULES_COUNT);
   if (afterRules.length) {
-    page = { ...page, y: page.y + SERVINGS_RULES_BREAK_GAP };
     page = drawBodyParagraphs(doc, payload, page, afterRules, SERVINGS_STEPS_TYPO);
   }
   return page;
