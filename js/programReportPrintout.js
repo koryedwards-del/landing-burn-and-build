@@ -40,11 +40,6 @@ import {
 
 export { BURN_AND_BUILD_DIET_PDF_NAME };
 
-export {
-  PROGRAM_REPORT_PREVIEW_BUILD,
-  PROGRAM_REPORT_PREVIEW_MD5,
-} from './programReportPreviewBuild.js';
-
 export const SEMINAR_REPORT_HEADER = Object.freeze({
   phone: '253-988-6946',
   website: 'www.burnandbuilddiet.com',

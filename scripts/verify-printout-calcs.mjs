@@ -9,6 +9,11 @@ import {
 import { buildProgramPackage } from '../js/programPackage.js';
 import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
 import {
+  KRISTI_PREVIEW_FORM,
+  KRISTI_PREVIEW_GOLDEN,
+  KRISTI_PREVIEW_INTAKE,
+} from '../js/programReportPreviewFixtures.js';
+import {
   scaleStapleRows,
   scaleStapleServingLabel,
   stapleCategoryServings,
@@ -16,61 +21,6 @@ import {
 import { CUTTING_STAPLES_PROTEIN_DAIRY } from '../data/cuttingStaplesPrintout.js';
 
 const rnd = (x) => Math.round(x);
-
-/** Kristi Warner — seminar printout (davmc). LBM 113.7, work 1.5a, 3 wt / 0 cardio / 3 fat-burn. */
-const KRISTI_INTAKE = {
-  lbm: 113.7,
-  weight: 184,
-  bf: 38.22,
-  gender: 'female',
-  heightIn: 66,
-  intensity: 1.5,
-  weightTrainingHours: 3,
-  cardioHours: 0,
-  fatBurningHours: 3,
-};
-
-const KRISTI_FORM = {
-  preferredName: 'Kristi Warner',
-  email: 'preview@example.com',
-  sex: 'female',
-  heightFeet: '5',
-  heightInchesPart: '6',
-  age: 28,
-  weightText: '184',
-  fatPercentText: '38.22',
-  fatSource: 'skinfolds',
-  workPhysical: 'sitting',
-  workStress: 'comfortable',
-  weightTrainingHours: 3,
-  cardioHours: 0,
-  fatBurningHours: 3,
-  wakeTime: '06:00',
-};
-
-const KRISTI_PDF = {
-  servings: [9, 9, 3, 18],
-  maintain: [71, 219, 115, 2192],
-  reduce: [71, 219, 44, 1552],
-  rmr: [44, 78, 80, 1211],
-  workday: [25, 90, 27, 702],
-  weight: [9, 96, 3, 448],
-  cardio: [3, 88, 16, 509],
-  fatburn: [5, 54, 22, 436],
-  today: ['61.78', '38.22', '113.7', '70.3', '184.0'],
-  proj: [11, 1.3, 59.3, 173, 34.29, 65.71],
-  desirable: 106,
-  capped: false,
-  timeline: [
-    ['Current', '38.22%', '184 lbs', null],
-    ['8 weeks', '34.28%', '173.0 lbs', null],
-    ['16 weeks', '29.81%', '162.0 lbs', 'Average'],
-    ['24 weeks', '24.70%', '151.0 lbs', null],
-    ['32 weeks', '18.79%', '140.0 lbs', null],
-    ['40 weeks', '11.86%', '129.0 lbs', null],
-    ['43.7 weeks', '8.95%', '123.9 lbs', 'Showtime'],
-  ],
-};
 
 function verifyCase(name, intake, pdf) {
   const plan = computePlan(intake);
@@ -164,7 +114,7 @@ function verifyCase(name, intake, pdf) {
 }
 
 function verifyKristiPackage() {
-  const pkg = buildProgramPackage(KRISTI_FORM);
+  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM);
   const errors = [];
   const expect = (label, actual, expected) => {
     if (JSON.stringify(actual) !== JSON.stringify(expected)) {
@@ -172,16 +122,16 @@ function verifyKristiPackage() {
     }
   };
 
-  expect('leanBodyMass', pkg.intake.leanBodyMass, KRISTI_INTAKE.lbm);
-  expect('workIntensity', pkg.intake.workIntensity, KRISTI_INTAKE.intensity);
-  expect('weightTrainingHours', pkg.intake.weightTrainingHours, KRISTI_INTAKE.weightTrainingHours);
-  expect('cardioHours', pkg.intake.cardioHours, KRISTI_INTAKE.cardioHours);
-  expect('fatBurningHours', pkg.intake.fatBurningHours, KRISTI_INTAKE.fatBurningHours);
+  expect('leanBodyMass', pkg.intake.leanBodyMass, KRISTI_PREVIEW_INTAKE.lbm);
+  expect('workIntensity', pkg.intake.workIntensity, KRISTI_PREVIEW_INTAKE.intensity);
+  expect('weightTrainingHours', pkg.intake.weightTrainingHours, KRISTI_PREVIEW_INTAKE.weightTrainingHours);
+  expect('cardioHours', pkg.intake.cardioHours, KRISTI_PREVIEW_INTAKE.cardioHours);
+  expect('fatBurningHours', pkg.intake.fatBurningHours, KRISTI_PREVIEW_INTAKE.fatBurningHours);
 
   const f = pkg.plan.formula;
-  expect('maintain total', rnd(f.T7), KRISTI_PDF.maintain[3]);
-  expect('reduce total', rnd(f.T1), KRISTI_PDF.reduce[3]);
-  expect('protein servings', pkg.plan.servings.protein, KRISTI_PDF.servings[0]);
+  expect('maintain total', rnd(f.T7), KRISTI_PREVIEW_GOLDEN.maintain[3]);
+  expect('reduce total', rnd(f.T1), KRISTI_PREVIEW_GOLDEN.reduce[3]);
+  expect('protein servings', pkg.plan.servings.protein, KRISTI_PREVIEW_GOLDEN.servings[0]);
 
   if (errors.length) {
     console.error('FAIL Kristi Warner package');
@@ -193,7 +143,7 @@ function verifyKristiPackage() {
 }
 
 function verifyKristiServingsGrid() {
-  const pkg = buildProgramPackage(KRISTI_FORM);
+  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM);
   const rows = servingsGridRows(pkg);
   const errors = [];
   const expect = (label, actual, expected) => {
@@ -277,7 +227,7 @@ const ok = [
   verifyKristiPackage(),
   verifyKristiServingsGrid(),
   verifyStapleServingScale(),
-  verifyCase('Kristi Warner', KRISTI_INTAKE, KRISTI_PDF),
+  verifyCase('Kristi Warner', KRISTI_PREVIEW_INTAKE, KRISTI_PREVIEW_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,
     intensity: 2.0, weightTrainingHours: 0, cardioHours: 0.75, fatBurningHours: 3.5,

@@ -7,7 +7,6 @@ export { createPrintPdf, PrintPdfCreator } from './creator.js';
 export { PdfError, pdfError } from './errors.js';
 export { assertPdfBuffer, sanitizePdfFilename } from './http.js';
 export { validatePrintPayload, validatePrintView } from './validate.js';
-export { isProgramReportView as isPdfView, PROGRAM_REPORT_VIEW_SET as PDF_VIEWS } from '../../js/programReportViews.js';
 
 export async function renderPrintPdf(view, { title, payload } = {}) {
   validatePrintView(view);

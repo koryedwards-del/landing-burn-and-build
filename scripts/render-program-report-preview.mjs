@@ -53,16 +53,6 @@ const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).lengt
 const buildModule = `/** Auto-generated — node scripts/render-program-report-preview.mjs */
 export const PROGRAM_REPORT_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const PROGRAM_REPORT_PREVIEW_MD5 = ${JSON.stringify(md5)};
-export const PROGRAM_REPORT_SAMPLE_FILE = ${JSON.stringify(sampleName)};
-export const PROGRAM_REPORT_ARCHIVE_FILE = ${JSON.stringify(archiveName)};
-export const PROGRAM_REPORT_SAMPLE_PDF = '../docs/samples/' + ${JSON.stringify(sampleName)};
-export const PROGRAM_REPORT_SAMPLE_LATEST_FILE = ${JSON.stringify(LATEST_SAMPLE_NAME)};
-export const PROGRAM_REPORT_SAMPLE_DOWNLOAD_URL = '${GITHUB_RAW}/' + ${JSON.stringify(sampleName)};
-export const PROGRAM_REPORT_SAMPLE_LATEST_DOWNLOAD_URL = '${GITHUB_RAW}/${LATEST_SAMPLE_NAME}';
-
-export function programReportSamplePdfUrl() {
-  return \`\${PROGRAM_REPORT_SAMPLE_PDF}?build=\${encodeURIComponent(PROGRAM_REPORT_PREVIEW_BUILD)}&md5=\${PROGRAM_REPORT_PREVIEW_MD5.slice(0, 8)}\`;
-}
 `;
 
 fs.writeFileSync(path.join(root, 'js/programReportPreviewBuild.js'), buildModule);
