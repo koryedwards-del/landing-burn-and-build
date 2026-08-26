@@ -104,43 +104,61 @@ body.q-app--workroom {
   flex-shrink: 0;
   border-bottom: 1px solid var(--border);
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  overflow: hidden;
   background: #fff;
 }
 
-.q-app--workroom .q-nav::-webkit-scrollbar {
+.q-app--workroom .q-nav__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+.q-app--workroom .q-nav__list > li {
+  display: flex;
+  min-width: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.q-app--workroom .q-nav__list > li:nth-child(3n+2),
+.q-app--workroom .q-nav__list > li:nth-child(3n) {
+  border-left: 1px solid var(--border);
+}
+
+.q-app--workroom .q-nav__text--full {
   display: none;
 }
 
-.q-app--workroom .q-nav__list {
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 0 var(--q-inset-x);
-  margin: 0;
-  width: max-content;
-  min-width: 100%;
-  box-sizing: border-box;
-  list-style: none;
+.q-app--workroom .q-nav__text--short {
+  display: block;
 }
 
 .q-app--workroom .q-nav__item {
-  display: block;
-  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1 1 auto;
   font-family: inherit;
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+  white-space: normal;
   color: var(--muted);
   border: none;
   border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
-  min-height: var(--touch);
-  padding: 0.5rem 0.65rem 0.45rem 0;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.3rem;
   cursor: default;
 }
 
@@ -224,6 +242,52 @@ body.q-app--workroom {
   .q-app--workroom .q-main {
     border: 1px solid var(--border);
     border-radius: 0;
+  }
+
+  .q-app--workroom .q-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .q-app--workroom .q-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .q-app--workroom .q-nav__list {
+    display: flex;
+    flex-wrap: nowrap;
+    grid-template-columns: none;
+    width: max-content;
+    min-width: 100%;
+    padding: 0 var(--q-inset-x);
+  }
+
+  .q-app--workroom .q-nav__list > li {
+    display: block;
+    flex: 0 0 auto;
+    min-width: auto;
+    border: none;
+  }
+
+  .q-app--workroom .q-nav__text--full {
+    display: inline;
+  }
+
+  .q-app--workroom .q-nav__text--short {
+    display: none;
+  }
+
+  .q-app--workroom .q-nav__item {
+    display: block;
+    width: auto;
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+    text-transform: none;
+    text-align: left;
+    white-space: nowrap;
+    min-height: auto;
+    padding: 0.75rem 0.875rem 0.625rem 0;
   }
 
   .q-app--workroom .q-nav__item {

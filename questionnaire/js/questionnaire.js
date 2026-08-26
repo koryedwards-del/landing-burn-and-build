@@ -20,6 +20,15 @@ const STEPS = [
   { id: 'review', label: 'Review' },
 ];
 
+const STEP_NAV_SHORT = [
+  'Contact',
+  'Occupation',
+  'Exercise',
+  'Body',
+  'Agreement',
+  'Review',
+];
+
 const INFO_FIELDS = [
   'fullName',
   'sex',
@@ -1304,7 +1313,8 @@ function renderNav() {
     return `
     <li>
       <button type="button" class="${classes}" data-nav-step="${index}"${reachable ? '' : ' disabled'}>
-        ${index + 1}. ${item.label}
+        <span class="q-nav__text q-nav__text--full">${index + 1}. ${item.label}</span>
+        <span class="q-nav__text q-nav__text--short" aria-hidden="true">${STEP_NAV_SHORT[index]}</span>
       </button>
     </li>
   `;
