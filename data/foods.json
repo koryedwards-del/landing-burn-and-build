@@ -176,34 +176,10 @@
     "fatBracket": 0
   },
   {
-    "name": "Milk, 1% lowfat",
-    "category": "dairy",
-    "servingDescription": "liquid",
-    "gramWeight": 235,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Milk, lactose-free skim",
-    "category": "dairy",
-    "servingDescription": "liquid",
-    "gramWeight": 235,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
     "name": "Ricotta, nonfat",
     "category": "dairy",
     "servingDescription": "as-is",
     "gramWeight": 70,
-    "unitsPerServing": 0,
-    "fatBracket": 0
-  },
-  {
-    "name": "Skim milk (fat-free)",
-    "category": "dairy",
-    "servingDescription": "liquid",
-    "gramWeight": 235,
     "unitsPerServing": 0,
     "fatBracket": 0
   },

@@ -99,7 +99,6 @@ export const GROCERY_STAPLES_PANTRY = Object.freeze([
 
 /** PDF page 5 — protein + dairy, A–Z. P1/D1 engine-curated servings (session work). */
 export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
-  { name: '1% milk', serving: '235g' },
   { name: 'Chicken breast', serving: '26g' },
   { name: 'Cod', serving: '35g' },
   { name: 'Cottage cheese, 1%', serving: '73g' },
@@ -109,13 +108,11 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Egg whites (small)', serving: '3 whites' },
   { name: 'Eye of round', serving: '27g' },
   { name: 'Greek yogurt, lowfat', serving: '80g' },
-  { name: 'Lactose-free skim milk', serving: '235g' },
   { name: 'Lean ground beef (ground round)', serving: '27g' },
   { name: 'Plain Greek yogurt, nonfat', serving: '78g' },
   { name: 'Ricotta, nonfat', serving: '70g' },
   { name: 'Shrimp', serving: '33g' },
   { name: 'Sirloin steak', serving: '27g' },
-  { name: 'Skim milk', serving: '235g' },
   { name: 'Tilapia', serving: '31g' },
   { name: 'Tuna (canned)', serving: '34g' },
   { name: 'Turkey breast', serving: '28g' },

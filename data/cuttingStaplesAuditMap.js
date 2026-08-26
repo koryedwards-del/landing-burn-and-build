@@ -14,7 +14,6 @@
  * @type {ReadonlyArray<{ pdf: string, catalog: string | null, slot: 'P1' | 'D1', usda: UsdaMacros, countServing?: boolean }>}
  */
 export const PROTEIN_DAIRY_MAP = Object.freeze([
-  { pdf: '1% milk', catalog: 'Milk, 1% lowfat', slot: 'D1', usda: { p: 3.4, c: 5.0, f: 1.0 } },
   { pdf: 'Chicken breast', catalog: 'Chicken breast, no skin', slot: 'P1', usda: { p: 31.0, f: 3.6 } },
   { pdf: 'Cod', catalog: 'Cod, Atlantic, baked', slot: 'P1', usda: { p: 22.8, f: 0.9 } },
   { pdf: 'Cottage cheese, 1%', catalog: 'Cottage cheese, 1% fat', slot: 'D1', usda: { p: 11.0, c: 4.3, f: 1.0 } },
@@ -24,13 +23,11 @@ export const PROTEIN_DAIRY_MAP = Object.freeze([
   { pdf: 'Egg whites (small)', catalog: 'Egg whites', slot: 'P1', usda: { p: 10.9, f: 0.2 }, countServing: true },
   { pdf: 'Eye of round', catalog: 'Beef, eye of round', slot: 'P1', usda: { p: 29.9, f: 3.4 } },
   { pdf: 'Greek yogurt, lowfat', catalog: 'Greek yogurt, lowfat', slot: 'D1', usda: { p: 10.0, c: 3.6, f: 1.9 } },
-  { pdf: 'Lactose-free skim milk', catalog: 'Milk, lactose-free skim', slot: 'D1', usda: { p: 3.4, c: 5.0, f: 0.1 } },
   { pdf: 'Lean ground beef (ground round)', catalog: 'Beef, ground round', slot: 'P1', usda: { p: 29.9, f: 3.4 } },
   { pdf: 'Plain Greek yogurt, nonfat', catalog: 'Greek yogurt, nonfat', slot: 'D1', usda: { p: 10.2, c: 3.6, f: 0.4 } },
   { pdf: 'Ricotta, nonfat', catalog: 'Ricotta, nonfat', slot: 'D1', usda: { p: 11.4, c: 5.0, f: 0.3 } },
   { pdf: 'Shrimp', catalog: 'Shrimp, steamed', slot: 'P1', usda: { p: 24.0, f: 0.3 } },
   { pdf: 'Sirloin steak', catalog: 'Beef, top sirloin', slot: 'P1', usda: { p: 29.4, f: 4.0 } },
-  { pdf: 'Skim milk', catalog: 'Skim milk (fat-free)', slot: 'D1', usda: { p: 3.4, c: 5.0, f: 0.1 } },
   { pdf: 'Tilapia', catalog: 'Tilapia, baked', slot: 'P1', usda: { p: 26.0, f: 2.7 } },
   { pdf: 'Tuna (canned)', catalog: 'Tuna, canned in water', slot: 'P1', usda: { p: 23.6, f: 0.8 } },
   { pdf: 'Turkey breast', catalog: 'Turkey breast', slot: 'P1', usda: { p: 29.0, f: 1.7 } },
