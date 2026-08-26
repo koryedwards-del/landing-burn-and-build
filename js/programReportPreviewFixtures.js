@@ -4,13 +4,6 @@ import { buildProgramPackage } from './programPackage.js';
 import { computePlan } from './burnEngine.js';
 import { buildProgramReportLockedPayload } from './programReportLockedPayload.js';
 
-export {
-  PROGRAM_REPORT_WELCOME_COPY,
-  PROGRAM_REPORT_FOOD_PLAN_LEAD,
-  PROGRAM_REPORT_FOOD_PLAN_HOWTO,
-  PROGRAM_REPORT_FOOD_GROUPS_INTRO,
-} from './programReportCopy.js';
-
 export const KRISTI_PREVIEW_FORM = {
   preferredName: 'Kristi Warner',
   email: 'preview@example.com',

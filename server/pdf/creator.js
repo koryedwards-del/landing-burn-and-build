@@ -1,6 +1,5 @@
 import {
   collectPdfBuffer,
-  createLandscapePdf,
   createPortraitPdf,
 } from './draw.js';
 import { stampAllPageNumbers } from './drawFrame.js';
@@ -9,22 +8,14 @@ import { stampAllPageNumbers } from './drawFrame.js';
 export class PrintPdfCreator {
   #doc;
   #bufferPromise;
-  #layout;
 
-  constructor({ layout = 'portrait', title, author = 'Burn & Build Diet' } = {}) {
-    this.#layout = layout;
-    this.#doc = layout === 'landscape'
-      ? createLandscapePdf({ title, author })
-      : createPortraitPdf({ title, author });
+  constructor({ title, author = 'Burn & Build Diet' } = {}) {
+    this.#doc = createPortraitPdf({ title, author });
     this.#bufferPromise = collectPdfBuffer(this.#doc);
   }
 
   get doc() {
     return this.#doc;
-  }
-
-  get layout() {
-    return this.#layout;
   }
 
   async finish({ stampPageNumbers = true } = {}) {
@@ -36,6 +27,6 @@ export class PrintPdfCreator {
   }
 }
 
-export function createPrintPdf({ layout = 'portrait', title, author } = {}) {
-  return new PrintPdfCreator({ layout, title, author });
+export function createPrintPdf({ title, author } = {}) {
+  return new PrintPdfCreator({ title, author });
 }

@@ -65,11 +65,12 @@ After server changes on `main`, confirm Render auto-deploy finished (or trigger 
 
 ### Launch gate
 
-When ready to sell new programs publicly:
+Public questionnaire is **open** (`DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`).
 
-1. Set `DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`
-2. Push to `main` (GitHub Pages picks up landing + questionnaire entry)
-3. Smoke-test: `/` → `/questionnaire/` → checkout → PDF download
+To temporarily close new program creation:
+
+1. Set `DIET_CREATION_COMING_SOON = true` in `js/siteUrls.js`
+2. Push to `main` — landing CTAs route to `/createyourfoodplan/`; questionnaire redirects there
 
 ## Deprecated
 

@@ -10,8 +10,7 @@ import { buildQuestionnaireConfirmationRows } from '../../js/questionnaireConfir
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
-import { CREATOR_CHECKOUT_URL, captureDietCreationTestBypass, isDietCreationGated, withDietCreationTestParam } from '../../js/siteUrls.js';
-captureDietCreationTestBypass();
+import { CREATOR_CHECKOUT_URL, isDietCreationGated } from '../../js/siteUrls.js';
 
 const STEPS = [
   { id: 'start', label: 'Personal information' },
@@ -1526,7 +1525,7 @@ async function submitCheckout(triggerBtn) {
       persistProgramBridge(program);
     }
 
-    window.location.href = withDietCreationTestParam(CREATOR_CHECKOUT_URL);
+    window.location.href = CREATOR_CHECKOUT_URL;
   } catch (error) {
     console.error(error);
     window.alert('Could not build your program. Check your answers and try again.');

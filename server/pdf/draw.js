@@ -44,17 +44,3 @@ export function createPortraitPdf({ title, author = 'Burn & Build Diet', bufferP
     },
   });
 }
-
-export function createLandscapePdf({ title, author = 'Burn & Build Diet', bufferPages = true } = {}) {
-  return new PDFDocument({
-    size: 'LETTER',
-    layout: 'landscape',
-    margin: 0,
-    autoFirstPage: false,
-    bufferPages,
-    info: {
-      Title: title || 'Burn & Build Diet',
-      Author: author,
-    },
-  });
-}
