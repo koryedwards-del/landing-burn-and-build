@@ -1,5 +1,5 @@
 /**
- * B&B 5-page printout — 1982 Warner layout (Welcome → LBA → History → Food Plan → Servings).
+ * B&B 5-page printout — 1982 Warner layout (Welcome → LBA → Food Plan → Servings).
  * Preview: scripts/render-five-page-preview.mjs
  */
 import { createPrintPdf } from './creator.js';
@@ -227,7 +227,6 @@ function drawWelcomePage(doc, payload) {
   const page = begin1982Page(doc, payload, 'Welcome', { fullHeader: true });
   let current = drawParagraphs(doc, page, payload.welcome.intro);
   current = drawSectionBlock(doc, current, 'Lean Body Analysis', payload.welcome.leanBodyAnalysis);
-  current = drawSectionBlock(doc, current, 'History', payload.welcome.history);
   current = drawSectionBlock(doc, current, 'Food Plan', payload.welcome.foodPlan);
   drawSectionBlock(doc, current, 'Servings', payload.welcome.servings);
 }
@@ -303,39 +302,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   }
 
   drawParagraphs(doc, page, [lba.monitorCopy]);
-}
-
-function drawHistoryPage(doc, payload) {
-  let page = begin1982Page(doc, payload, 'Body Composition History');
-  const columns = [
-    { key: 'testDate', width: 0.12, align: 'center' },
-    { key: 'thigh', width: 0.1, align: 'center' },
-    { key: 'waist', width: 0.1, align: 'center' },
-    { key: 'weight', width: 0.12, align: 'center' },
-    { key: 'lean', width: 0.12, align: 'center' },
-    { key: 'fat', width: 0.12, align: 'center' },
-    { key: 'percent', width: 0.12, align: 'center' },
-    { key: 'activity', width: 0.2, align: 'center' },
-  ];
-  const headerRow = {
-    testDate: 'TEST\nDATE',
-    thigh: 'THIGH',
-    waist: 'WAIST',
-    weight: 'WEIGHT',
-    lean: 'LEAN',
-    fat: 'FAT',
-    percent: 'PERCENT',
-    activity: 'ACTIVITY',
-  };
-  const rows = [headerRow, ...(payload.history?.rows || [])];
-  drawLayoutTable(doc, {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns,
-    rows,
-    headerRows: 1,
-  });
 }
 
 function drawGoalTable(doc, x, y, width, goalTable) {
@@ -482,7 +448,7 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-export const FIVE_PAGE_PRINTOUT_PAGES = 5;
+export const FIVE_PAGE_PRINTOUT_PAGES = 4;
 
 export function validateFivePagePayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -511,7 +477,6 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
 
   drawWelcomePage(doc, payload);
   drawLeanBodyAnalysisPage(doc, payload);
-  drawHistoryPage(doc, payload);
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
 

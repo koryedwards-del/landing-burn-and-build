@@ -7,7 +7,6 @@ import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { formatMm, formatSexLabel, lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
 import { formatProgramDateLong, programClientName } from './programClientDataHelpers.js';
 import { localDateKey } from './programPackageData.js';
-import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
 import {
   aceBodyFatCategories,
   aceBodyFatWeightRanges,
@@ -39,58 +38,6 @@ function seminarPreparedDate(pkg) {
 
 function seminarClientName(pkg) {
   return String(programClientName(pkg) || 'You').trim().toUpperCase();
-}
-
-function formatHistoryTestDate(isoDate) {
-  const key = localDateKey(isoDate);
-  if (!key) return '—';
-  const [year, month, day] = key.split('-');
-  if (year >= '2020') return key;
-  return `${month}/${day}/${year.slice(2)}`;
-}
-
-function formatHistoryActivity(intake) {
-  if (!intake) return '—';
-  const wt = Number(intake.weightTrainingHours) || 0;
-  const cardio = Number(intake.cardioHours) || 0;
-  const fat = Number(intake.fatBurningHours) || 0;
-  const intensity = Number(intake.workIntensity);
-  const intensityText = Number.isFinite(intensity)
-    ? (Number.isInteger(intensity) ? String(intensity) : intensity.toFixed(1))
-    : '';
-  return `${wt}/${cardio}/${fat}/${intensityText}a`;
-}
-
-function historyRowFromProgram(pkg, testDate) {
-  const intake = pkg?.intake || {};
-  const weight = Number(intake.totalWeight) || 0;
-  const lbm = Number(intake.leanBodyMass) || 0;
-  const fatPct = Number(intake.fatPercent) || 0;
-  const fatLbs = weight > 0 && lbm >= 0 ? weight - lbm : 0;
-  return {
-    testDate: testDate || seminarPreparedDate(pkg),
-    thighMm: intake.thighMm ?? null,
-    waistMm: intake.waistMm ?? null,
-    weightLbs: weight,
-    leanLbs: lbm,
-    fatLbs,
-    fatPercent: fatPct,
-    activity: formatHistoryActivity(intake),
-  };
-}
-
-function buildCompositionHistoryRows(pkg, { sampleHistory = null } = {}) {
-  if (Array.isArray(sampleHistory) && sampleHistory.length) {
-    return sampleHistory.map((row) => ({ ...row }));
-  }
-  return [historyRowFromProgram(pkg, seminarPreparedDate(pkg))];
-}
-
-function resolveSampleHistory(pkg) {
-  if (pkg?.meta?.source === 'program-report-preview' || pkg?.meta?.source === 'five-page-preview') {
-    return KRISTI_PREVIEW_SEMINAR_HISTORY;
-  }
-  return null;
 }
 
 function lbaProfileLine1982(intake) {
@@ -193,8 +140,6 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
     heightInches: intake.heightInches,
     leanBodyMass: intake.leanBodyMass,
   });
-  const sampleHistory = options.sampleHistory ?? resolveSampleHistory(pkg);
-  const historyRows = buildCompositionHistoryRows(pkg, { sampleHistory });
   const formula = pkg?.plan?.formula || {};
 
   const fatLost = projection ? projection.fatLostLbs.toFixed(1) : '—';
@@ -227,18 +172,6 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
       lbmLead: lbmCopy.lead,
       lbmStatus: lbmCopy.congrats || lbmCopy.alert,
       monitorCopy: FIVE_PAGE_LBA.monitor,
-    },
-    history: {
-      rows: historyRows.map((row) => ({
-        testDate: formatHistoryTestDate(row.testDate),
-        thigh: formatMm(row.thighMm),
-        waist: formatMm(row.waistMm),
-        weight: `${Math.round(Number(row.weightLbs) || 0)} lbs.`,
-        lean: `${Number(row.leanLbs).toFixed(1)} lbs.`,
-        fat: `${Number(row.fatLbs).toFixed(1)} lbs.`,
-        percent: `${Number(row.fatPercent).toFixed(2)}%`,
-        activity: row.activity || '—',
-      })),
     },
     foodPlan: {
       lead: FIVE_PAGE_FOOD_PLAN.lead,
