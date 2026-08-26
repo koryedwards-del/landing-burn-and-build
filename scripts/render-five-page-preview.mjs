@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-/** Preview: B&B sample-female printout — 2026 program report content, full header every page. */
+/** Preview: B&B sample-female printout (full personalized header every page). */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
+import { buildSampleFemalePreviewPayload } from '../js/sampleFemalePreviewFixtures.js';
 import { renderSampleFemalePrintout } from '../server/pdf/renderSampleFemalePrintout.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,11 +34,8 @@ function nextNumber(re, basename, min = 0) {
 const sampleName = nextNumber(SAMPLE_RE, SAMPLE_BASENAME, SAMPLE_MIN);
 const archiveName = nextNumber(ARCHIVE_RE, ARCHIVE_BASENAME);
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildKristiPreviewPayload();
-const pdf = await renderSampleFemalePrintout(payload, {
-  buildLabel,
-  title: 'B&B Sample Female Printout',
-});
+const payload = buildSampleFemalePreviewPayload();
+const pdf = await renderSampleFemalePrintout(payload, { buildLabel });
 
 const samplePath = path.join(samplesDir, sampleName);
 const archivePath = path.join(samplesDir, archiveName);

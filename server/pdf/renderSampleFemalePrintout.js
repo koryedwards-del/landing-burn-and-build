@@ -1,7 +1,7 @@
 /**
- * B&B sample-female printout — 2026 program report content, full personalized header every page.
+ * B&B sample-female printout — full personalized header on every page.
  * Preview: scripts/render-five-page-preview.mjs
- * Do not use for the purchased 2026 program report (see renderProgramReportLockedPreview.js).
+ * Purchased program report: renderProgramReportLockedPreview.js
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -2465,13 +2465,13 @@ export async function renderSampleFemalePrintout(payload, { title, buildLabel } 
   validatePrintPayload('programreport', payload);
 
   const creator = createPrintPdf({
-    title: title || payload.title || 'B&B Sample Female Printout',
+    title: title || payload.title || BURN_AND_BUILD_DIET_PDF_NAME,
     author: 'Burn & Build Diet',
   });
 
   const doc = creator.doc;
   if (buildLabel) {
-    doc.info.Subject = `B&B sample-female printout ${buildLabel}`;
+    doc.info.Subject = `${BURN_AND_BUILD_DIET_PDF_NAME} sample-female preview ${buildLabel}`;
   }
 
   drawWelcomePage(doc, payload);
