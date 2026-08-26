@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=26" />
+  <link rel="stylesheet" href="css/intake-form.css?v=27" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -27,7 +27,7 @@
     <div class="q-layout">
       <nav class="q-nav" aria-label="Questionnaire steps">
         <ol class="q-nav__list" id="q-nav-list">
-          <li><span class="q-nav__item is-active">1. Personal information</span></li>
+          <li><span class="q-nav__item is-active">1. Contact Information</span></li>
         </ol>
       </nav>
 
@@ -36,7 +36,7 @@
           <section class="q-panel q-panel--intake" data-step="0">
             <div class="intake-form" id="info-form">
               <header class="intake-form__head">
-                <h2 class="intake-form__title">Personal information</h2>
+                <h2 class="intake-form__title">Contact Information</h2>
               </header>
 
               <div class="intake-form__intro">
@@ -480,7 +480,7 @@
           </section>
         </form>
 
-        <footer class="q-step-nav" id="q-step-nav" hidden>
+        <footer class="q-step-nav" id="q-step-nav">
           <button type="button" class="intake-nav-btn" data-q-step-back disabled>Back</button>
           <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-q-step-next>Next</button>
         </footer>
@@ -488,6 +488,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=150"></script>
+  <script type="module" src="js/questionnaire.js?v=151"></script>
 </body>
 </html>

@@ -4,6 +4,14 @@ body.q-app--workroom {
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
 }
 
 body.q-app--workroom,
@@ -77,10 +85,31 @@ body.q-app--workroom,
   border: 1px solid var(--border);
   border-radius: 0;
   box-shadow: none;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.q-app--workroom .q-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.q-app--workroom.q-app {
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;
+  width: min(100%, var(--layout-width, 1200px));
+  overflow: hidden;
 }
 
 .q-app--workroom .q-form {
   padding: 1.25rem 1.5rem 0;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .q-app--workroom .q-header__inner {
@@ -366,6 +395,7 @@ body.q-app--workroom,
   padding: 0.875rem 1rem;
   border-top: 1px solid var(--border);
   background: #fff;
+  flex-shrink: 0;
 }
 
 .intake-form__nav {

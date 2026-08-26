@@ -13,7 +13,7 @@ import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { CREATOR_CHECKOUT_URL } from '../../js/siteUrls.js';
 
 const STEPS = [
-  { id: 'start', label: 'Personal information' },
+  { id: 'start', label: 'Contact Information' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
   { id: 'body', label: 'Body composition' },
