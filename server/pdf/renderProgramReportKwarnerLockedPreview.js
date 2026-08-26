@@ -43,6 +43,8 @@ import {
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
 } from '../../js/lbaPrintout.js';
+import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintout.js';
+import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
@@ -372,6 +374,56 @@ function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
   return drawStapleListItems(doc, items, col, y, bottomY).nextIndex;
 }
 
+const STAPLES_TIPS_PARAGRAPH_GAP = 4;
+
+function measureStaplesTipsBlock(doc, width, tips) {
+  doc.font(SEMINAR_FONTS.boldItalic).fontSize(LAYOUT.subsectionSize);
+  let h = LAYOUT.sectionGap
+    + doc.heightOfString(tips.title, { width })
+    + LAYOUT.headerGap;
+  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  for (const paragraph of tips.paragraphs) {
+    h += doc.heightOfString(paragraph, { width, lineGap: LAYOUT.lineGap })
+      + STAPLES_TIPS_PARAGRAPH_GAP;
+  }
+  return h;
+}
+
+function drawStaplesTipsBlock(doc, col, yStart, tips) {
+  const { x, width } = col;
+  let y = yStart + LAYOUT.sectionGap;
+  doc
+    .font(SEMINAR_FONTS.boldItalic)
+    .fontSize(LAYOUT.subsectionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(tips.title, x, y, { width, lineGap: 0 });
+  y = doc.y + LAYOUT.headerGap;
+  for (const paragraph of tips.paragraphs) {
+    doc
+      .font(SEMINAR_FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(paragraph, x, y, { width, lineGap: LAYOUT.lineGap });
+    y = doc.y + STAPLES_TIPS_PARAGRAPH_GAP;
+  }
+  return y;
+}
+
+function drawStaplesTipsUnderList(doc, payload, page, col, yStart, tips) {
+  const tipsH = measureStaplesTipsBlock(doc, col.width, tips);
+  if (yStart + tipsH <= page.bottom) {
+    drawStaplesTipsBlock(doc, col, yStart, tips);
+    return page;
+  }
+  finishLockedPage(doc, page.box, payload);
+  page = startLockedPage(doc, payload, null);
+  const columns = staplesColumnLayout(page);
+  const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
+  drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+  drawStaplesTipsBlock(doc, columns[1], page.y, tips);
+  return page;
+}
+
 function staplesForPayload(items, category, payload) {
   const servings = stapleCategoryServings(payload.servings?.planServings, category);
   return scaleStapleRows(items, servings);
@@ -382,42 +434,36 @@ function drawStaplesFoodListPage(doc, payload) {
   const grainItems = staplesForPayload(CUTTING_STAPLES_GRAINS_STARCHES, 'grains', payload);
 
   let page = startLockedPage(doc, payload, 'Food List');
-  const columns = staplesColumnLayout(page);
+  let columns = staplesColumnLayout(page);
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
   drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
   drawStaplesColumn(doc, 'Protein & Dairy', proteinItems, columns[0], page.y, page.bottom);
 
-  let gsTitleY = drawSectionTitle(doc, 'Grains & Starches', columns[1].x, page.y, columns[1].width);
+  let gsCol = columns[1];
+  let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, page.y, gsCol.width);
   let gsIndex = 0;
-  let result = drawStapleListItems(
-    doc,
-    grainItems,
-    columns[1],
-    gsTitleY,
-    page.bottom,
-    gsIndex,
-  );
-  gsIndex = result.nextIndex;
 
   while (gsIndex < grainItems.length) {
-    finishLockedPage(doc, page.box, payload);
-    page = startLockedPage(doc, payload, null);
-    drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-    result = drawStapleListItems(
-      doc,
-      grainItems,
-      columns[1],
-      page.y,
-      page.bottom,
-      gsIndex,
-    );
+    const result = drawStapleListItems(doc, grainItems, gsCol, gsY, page.bottom, gsIndex);
     gsIndex = result.nextIndex;
+    gsY = result.y;
+
+    if (gsIndex < grainItems.length) {
+      finishLockedPage(doc, page.box, payload);
+      page = startLockedPage(doc, payload, null);
+      columns = staplesColumnLayout(page);
+      const nextRuleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
+      drawStaplesColumnRule(doc, nextRuleX, page.y, page.bottom);
+      gsCol = columns[1];
+      gsY = page.y;
+    }
   }
 
   if (gsIndex !== grainItems.length) {
     throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${grainItems.length}`);
   }
 
+  page = drawStaplesTipsUnderList(doc, payload, page, gsCol, gsY, GRAINS_STARCHES_TIPS_PROSE);
   finishLockedPage(doc, page.box, payload);
 }
 
@@ -427,14 +473,17 @@ function drawVegFruitFoodListPage(doc, payload) {
 
   let vegIndex = 0;
   let fruitIndex = 0;
+  let fruitTipsDrawn = false;
   let firstPage = true;
 
   while (vegIndex < vegetableItems.length || fruitIndex < fruitItems.length) {
-    const page = startLockedPage(doc, payload, firstPage ? 'Food List' : null);
+    let page = startLockedPage(doc, payload, firstPage ? 'Food List' : null);
     firstPage = false;
     const columns = staplesColumnLayout(page);
     const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+
+    let fruitColEndY = null;
 
     if (vegIndex < vegetableItems.length) {
       let y = page.y;
@@ -456,14 +505,28 @@ function drawVegFruitFoodListPage(doc, payload) {
       if (fruitIndex === 0) {
         y = drawSectionTitle(doc, 'Fruit', columns[1].x, y, columns[1].width);
       }
-      fruitIndex = drawStapleListItems(
+      const result = drawStapleListItems(
         doc,
         fruitItems,
         columns[1],
         y,
         page.bottom,
         fruitIndex,
-      ).nextIndex;
+      );
+      fruitIndex = result.nextIndex;
+      fruitColEndY = result.y;
+    }
+
+    if (!fruitTipsDrawn && fruitIndex >= fruitItems.length) {
+      page = drawStaplesTipsUnderList(
+        doc,
+        payload,
+        page,
+        columns[1],
+        fruitColEndY ?? page.y,
+        FRUIT_TIPS_PROSE,
+      );
+      fruitTipsDrawn = true;
     }
 
     finishLockedPage(doc, page.box, payload);
