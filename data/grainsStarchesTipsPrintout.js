@@ -22,7 +22,7 @@ export const GRAINS_STARCHES_TIPS_QA = [
   },
 ];
 
-/** Grains & starches tips — KWarner food list (under grains roster). */
+/** Grains & starches tips — program report food list (under grains roster). */
 export const GRAINS_STARCHES_TIPS_PROSE = Object.freeze({
   title: 'Grains/Starches Tips',
   paragraphs: [

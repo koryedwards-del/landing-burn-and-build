@@ -4,8 +4,8 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
-import { renderProgramReportKwarnerLockedPreview } from '../server/pdf/renderProgramReportKwarnerLockedPreview.js';
+import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
+import { renderProgramReportLockedPreview } from '../server/pdf/renderProgramReportLockedPreview.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -34,8 +34,8 @@ function nextNumber(re, basename, min = 0) {
 const sampleName = nextNumber(SAMPLE_RE, SAMPLE_BASENAME, SAMPLE_MIN);
 const archiveName = nextNumber(ARCHIVE_RE, ARCHIVE_BASENAME);
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildKristiKwarnerPreviewPayload();
-const pdf = await renderProgramReportKwarnerLockedPreview(payload, { buildLabel });
+const payload = buildKristiPreviewPayload();
+const pdf = await renderProgramReportLockedPreview(payload, { buildLabel });
 
 const samplePath = path.join(samplesDir, sampleName);
 const archivePath = path.join(samplesDir, archiveName);
@@ -50,7 +50,7 @@ if (fs.existsSync(artifactsDir)) {
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 
-const buildModule = `/** Auto-generated — node scripts/render-kwarner-locked-preview.mjs */
+const buildModule = `/** Auto-generated — node scripts/render-program-report-preview.mjs */
 export const PROGRAM_REPORT_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
 export const PROGRAM_REPORT_PREVIEW_MD5 = ${JSON.stringify(md5)};
 export const PROGRAM_REPORT_SAMPLE_FILE = ${JSON.stringify(sampleName)};

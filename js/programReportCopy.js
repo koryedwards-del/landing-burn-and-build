@@ -1,6 +1,6 @@
-/** KWarner locked preview — user-authored copy (no payload imports). */
+/** Burn & Build Diet program report — user-authored copy (no payload imports). */
 
-export const KWARNER_WELCOME_COPY = {
+export const PROGRAM_REPORT_WELCOME_COPY = {
   intro: [
     'Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is the most individualized program available for losing fat and building muscle. This diet will not work effectively for anyone else because it has been created just for you, using your lean body mass (LBM), your job, your lifestyle, and your weekly plan for weight training (WT), high heart rate aerobic activity (HHT), and low heart rate aerobic activity (LHR).',
     'How we did it. We used the information you provided on the program questionnaire — your body composition, job, lifestyle, and exercise hours — and Burn & Build generated this report.',
@@ -19,19 +19,19 @@ export const KWARNER_WELCOME_COPY = {
     'Starting on page seven, frequently asked questions answer the practical details clients ask most often — hunger, exercise, bread, water, artificial sweeteners, and more. Burn & Build has refined these answers since 1982. The final page of your report confirms the answers you gave on the program questionnaire.',
 };
 
-export const KWARNER_FOOD_PLAN_LEAD = [
+export const PROGRAM_REPORT_FOOD_PLAN_LEAD = [
   'Since 1982 Burn & Build has turned what your body needs into daily servings from proven fat-burning, muscle-building foods — not numbers you chase on a calculator while still wondering what to put on your plate. Burn & Build converts your protein and carbohydrates into servings and then does the serving math for you also.',
   'The table below shows what too much or too little does to each one.',
 ];
 
-export const KWARNER_FOOD_PLAN_HOWTO = [
+export const PROGRAM_REPORT_FOOD_PLAN_HOWTO = [
   'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your daily servings come from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else.',
 ];
 
-export const KWARNER_FOOD_PLAN_MEASURE_TIP =
+export const PROGRAM_REPORT_FOOD_PLAN_MEASURE_TIP =
   'Measure the food after it is prepared the way you plan to eat it (cooked vs raw).';
 
-export const KWARNER_FOOD_PLAN_TO_USE = Object.freeze({
+export const PROGRAM_REPORT_FOOD_PLAN_TO_USE = Object.freeze({
   title: 'To Use This Plan',
   paragraphs: [
     'You need to know only the four numbers from this custom diet.',
@@ -39,7 +39,7 @@ export const KWARNER_FOOD_PLAN_TO_USE = Object.freeze({
   ],
 });
 
-export const KWARNER_MEAL_BUILD_STEPS = [
+export const PROGRAM_REPORT_MEAL_BUILD_STEPS = [
   'Pull out your kitchen scale. Don\'t have one. Order one on Amazon. About $50.',
   'Set the scale to grams, not ounces. Grams are a more accurate measurement, down to the weight of a paper clip. We don\'t guesstimate.',
   'Put your plate on the scale and zero the weight. Now we can build our meal.',
@@ -58,4 +58,4 @@ export const KWARNER_MEAL_BUILD_STEPS = [
   'Summed up: the key to success is fill your plate, empty your plate.',
 ];
 
-export const KWARNER_FOOD_GROUPS_INTRO = [];
+export const PROGRAM_REPORT_FOOD_GROUPS_INTRO = [];

@@ -1,6 +1,6 @@
 /**
  * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → FAQ → Confirmation).
- * Production: renderProgramReport.js · Preview samples: scripts/render-kwarner-locked-preview.mjs
+ * Production: renderProgramReport.js · Preview samples: scripts/render-program-report-preview.mjs
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -2486,7 +2486,7 @@ function drawQuestionnaireConfirmationPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-export async function renderProgramReportKwarnerLockedPreview(payload, { title, buildLabel } = {}) {
+export async function renderProgramReportLockedPreview(payload, { title, buildLabel } = {}) {
   validatePrintPayload('programreport', payload);
 
   const creator = createPrintPdf({

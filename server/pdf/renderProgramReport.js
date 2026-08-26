@@ -1,10 +1,10 @@
-import { applyKwarnerLockedPayload } from '../../js/kwarnerLockedPayload.js';
+import { applyProgramReportLockedCopy } from '../../js/programReportLockedPayload.js';
 import { validatePrintPayload } from './validate.js';
-import { renderProgramReportKwarnerLockedPreview } from './renderProgramReportKwarnerLockedPreview.js';
+import { renderProgramReportLockedPreview } from './renderProgramReportLockedPreview.js';
 
-/** Production program report — Burn & Build Diet 6-page PDF. */
+/** Production program report — Burn & Build Diet PDF. */
 export async function renderProgramReportPdf(payload, { title } = {}) {
-  const locked = applyKwarnerLockedPayload({ ...payload });
+  const locked = applyProgramReportLockedCopy({ ...payload });
   validatePrintPayload('programreport', locked);
-  return renderProgramReportKwarnerLockedPreview(locked, { title: title || locked.title });
+  return renderProgramReportLockedPreview(locked, { title: title || locked.title });
 }

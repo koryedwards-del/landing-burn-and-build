@@ -132,7 +132,7 @@ Burn Engine defines **what** one serving delivers. USDA sizes **how many grams**
 
 ### 2. Dairy (`D1`)
 
-**Foods:** Milk, yogurt, cottage cheese, ricotta. Category `dairy` in `foods.json`. Listed with protein on KWarner food-list page 5 (`CUTTING_STAPLES_PROTEIN_DAIRY`).  
+**Foods:** Milk, yogurt, cottage cheese, ricotta. Category `dairy` in `foods.json`. Listed with protein on program report food-list page 5 (`CUTTING_STAPLES_PROTEIN_DAIRY`).  
 **Counts toward:** `servings.protein` (same daily total as meat/fish — **not** a separate Servings row).
 
 Dairy is a **compound serving** — one dairy serving carries protein, carbs, and fat budgets simultaneously:
@@ -254,7 +254,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Planner slot | Optional **fat** lane on breakfast/lunch/dinner meals (`TEMPLATE_SLOTS.meal`) |
 | Planner categories | `fat`, `sugar`, `alcohol` share one point pool (`servings.fatMaintain`) |
 | Portion sizing | Per-food **curated** in `foods.json` — grams (e.g. butter 6g/tsp) or descriptive units (e.g. `12 fl. oz.` beer) when `gramWeight` is 0 |
-| Food-list PDF | **Not** on KWarner staple gram pages |
+| Food-list PDF | **Not** on program report staple gram pages |
 | Unused points | Fewer points used → more fat loss (see engine projections in `js/burnEngine.js`) |
 
 **Sub-lanes for extra fat** (Fat · Sugar · Alcohol) all draw from the same `fatMaintain` daily total when menu planner UI returns.
@@ -312,9 +312,9 @@ Remainder distribution (e.g. 10 protein → 3, 4, 3): extras go to **lunch**, th
 | **Program report food list** | Plan slot servings × base gram weight | `78g` (3 × 26g) |
 | **Meal plan / grocery** | Assigned servings × gram weight | `78g` |
 
-### KWarner program report PDF
+### Burn & Build Diet program report PDF
 
-See `.cursor/rules/kwarner-preview-pdf.mdc`. Renderer: `server/pdf/renderProgramReportKwarnerLockedPreview.js`.
+See `.cursor/rules/program-report-preview-pdf.mdc`. Renderer: `server/pdf/renderProgramReportLockedPreview.js`.
 
 | Page | Grams? |
 |------|--------|
@@ -362,9 +362,9 @@ Menu planner week/grocery PDFs were retired with the planner UI removal.
 | Food-list PDF scaling | `js/stapleServingPrintout.js` |
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
-| KWarner PDF renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
+| Program report PDF renderer | `server/pdf/renderProgramReportLockedPreview.js` |
 | Print Shop views | `js/printShopViews.js`, `server/pdf/index.js` |
-| KWarner render workflow | `.cursor/rules/kwarner-preview-pdf.mdc` |
+| Preview render workflow | `.cursor/rules/program-report-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
 | Deep backlog | `docs/knowledge-base-backlog.md` |
@@ -379,7 +379,7 @@ Menu planner week/grocery PDFs were retired with the planner UI removal.
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
 5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the program report.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
-7. KWarner PDF changes → `npm run render:kwarner-preview` per `kwarner-preview-pdf.mdc`.
+7. Program report PDF changes → `npm run render:program-report-preview` per `program-report-preview-pdf.mdc`.
 
 ## Errata — do not repeat these mistakes
 

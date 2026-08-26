@@ -26,7 +26,7 @@ export const PROTEIN_TIPS_QA = [
   },
 ];
 
-/** Protein tips — KWarner food list (under protein roster). */
+/** Protein tips — program report food list (under protein roster). */
 export const PROTEIN_TIPS_PROSE = Object.freeze({
   title: 'Protein Tips',
   paragraphs: [

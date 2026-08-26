@@ -82,7 +82,7 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 - Colloquial **plan** when context is clearly servings or adherence (*your plan uses servings*) — not the product name
 - Waiver / everyday English (*changes to my diet*) — eating habits, not product naming
 - **Cutting-diet staples** — historical bodybuilding term in food-list copy
-- Locked KWarner user-authored lines — do not reauthor; flag only if user requests a terminology pass (see `.cursor/rules/user-authored-copy.mdc`)
+- Locked program report user-authored lines — do not reauthor; flag only if user requests a terminology pass (see `.cursor/rules/user-authored-copy.mdc`)
 
 ## Agent checklist
 

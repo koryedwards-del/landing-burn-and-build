@@ -38,6 +38,6 @@ Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Static v
 
 Four server PDF views — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
 
-## KWarner program-report preview PDF
+## Burn & Build Diet program report preview PDF
 
-See `.cursor/rules/kwarner-preview-pdf.mdc`. After layout changes: `npm run render:kwarner-preview` → commit samples → raw GitHub download links.
+See `.cursor/rules/program-report-preview-pdf.mdc`. After layout changes: `npm run render:program-report-preview` → commit samples → raw GitHub download links.

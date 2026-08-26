@@ -32,7 +32,7 @@ import {
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
-import { KRISTI_WARNER_SEMINAR_HISTORY } from '../data/kristiWarnerSeminarHistory.js';
+import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
 import { buildProgramReportNarratives } from './programReportNarrativePrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
 import {
@@ -242,7 +242,7 @@ export function buildCompositionHistoryRows(pkg, { programRows = [], sampleHisto
 
 function resolveSampleHistory(pkg) {
   if (pkg?.meta?.source === 'program-report-preview') {
-    return KRISTI_WARNER_SEMINAR_HISTORY;
+    return KRISTI_PREVIEW_SEMINAR_HISTORY;
   }
   return null;
 }

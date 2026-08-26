@@ -1,17 +1,17 @@
-/** Kristi Warner fixtures for KWarner locked preview PDF (script + API). */
+/** Kristi Warner sample fixtures for Burn & Build Diet preview PDF (script + verify). */
 
 import { buildProgramPackage } from './programPackage.js';
 import { computePlan } from './burnEngine.js';
-import { buildKwarnerLockedPayloadFromPackage } from './kwarnerLockedPayload.js';
+import { buildProgramReportLockedPayload } from './programReportLockedPayload.js';
 
 export {
-  KWARNER_WELCOME_COPY,
-  KWARNER_FOOD_PLAN_LEAD,
-  KWARNER_FOOD_PLAN_HOWTO,
-  KWARNER_FOOD_GROUPS_INTRO,
-} from './kwarnerLockedCopy.js';
+  PROGRAM_REPORT_WELCOME_COPY,
+  PROGRAM_REPORT_FOOD_PLAN_LEAD,
+  PROGRAM_REPORT_FOOD_PLAN_HOWTO,
+  PROGRAM_REPORT_FOOD_GROUPS_INTRO,
+} from './programReportCopy.js';
 
-export const KRISTI_KWARNER_FORM = {
+export const KRISTI_PREVIEW_FORM = {
   preferredName: 'Kristi Warner',
   email: 'preview@example.com',
   sex: 'female',
@@ -31,8 +31,8 @@ export const KRISTI_KWARNER_FORM = {
   waiverSignedDate: '2024-01-15',
 };
 
-export function buildKristiKwarnerPreviewPackage() {
-  const pkg = buildProgramPackage(KRISTI_KWARNER_FORM, {
+export function buildKristiPreviewPackage() {
+  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM, {
     label: '8-Week Burn & Build Program',
     meta: { source: 'program-report-preview' },
   });
@@ -40,8 +40,8 @@ export function buildKristiKwarnerPreviewPackage() {
   pkg.intake.workIntensity = 1.5;
   pkg.intake.thighMm = 25;
   pkg.intake.waistMm = 25;
-  pkg.intake.waiverSignature = KRISTI_KWARNER_FORM.waiverSignature;
-  pkg.intake.waiverSignedDate = KRISTI_KWARNER_FORM.waiverSignedDate;
+  pkg.intake.waiverSignature = KRISTI_PREVIEW_FORM.waiverSignature;
+  pkg.intake.waiverSignedDate = KRISTI_PREVIEW_FORM.waiverSignedDate;
   pkg.program.foodPlanCreatedDate = '2024-01-15';
   pkg.program.issuedAt = '2024-01-15T12:00:00.000Z';
 
@@ -69,6 +69,6 @@ export function buildKristiKwarnerPreviewPackage() {
   return pkg;
 }
 
-export function buildKristiKwarnerPreviewPayload() {
-  return buildKwarnerLockedPayloadFromPackage(buildKristiKwarnerPreviewPackage());
+export function buildKristiPreviewPayload() {
+  return buildProgramReportLockedPayload(buildKristiPreviewPackage());
 }

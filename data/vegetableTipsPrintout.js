@@ -18,7 +18,7 @@ export const VEGETABLE_TIPS_QA = [
   },
 ];
 
-/** Veggie tips — KWarner food list (under vegetable roster). */
+/** Veggie tips — program report food list (under vegetable roster). */
 export const VEGETABLE_TIPS_PROSE = Object.freeze({
   title: 'Veggie Tips',
   paragraphs: [

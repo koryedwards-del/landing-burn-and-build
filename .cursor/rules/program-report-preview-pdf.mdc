@@ -1,11 +1,11 @@
 ---
-description: KWarner locked preview PDF — mandatory render workflow for program-report printout work
+description: Burn & Build Diet program report preview PDF — mandatory render workflow for printout work
 alwaysApply: true
 ---
 
-# KWarner preview PDF (program report printout)
+# Burn & Build Diet preview PDF (program report printout)
 
-When the user asks for **PDF creation, PDF updates, printout layout, or program-report print changes**, work in the **KWarner locked preview pipeline** — not the web UI unless they explicitly ask for web.
+When the user asks for **PDF creation, PDF updates, printout layout, or program-report print changes**, work in the **program report preview pipeline** — not the web UI unless they explicitly ask for web.
 
 ## PDFKit (locked — do not change)
 
@@ -14,25 +14,26 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 | Do | Don't |
 |----|-------|
 | Edit PDFKit renderer + draw helpers | HTML/CSS print views, browser print, or client-side PDF libs |
-| `npm run render:kwarner-preview` → commit PDFs → raw GitHub download links | Artifacts panel, blob URLs, or burnandbuilddiet.com unless explicitly asked |
+| `npm run render:program-report-preview` → commit PDFs → raw GitHub download links | Artifacts panel, blob URLs, or burnandbuilddiet.com unless explicitly asked |
 
 ## Pipeline (source of truth)
 
 | Piece | Path |
 |-------|------|
 | PDF engine | **PDFKit** — `server/pdf/draw.js` (`PDFDocument`) |
-| Renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
+| Renderer | `server/pdf/renderProgramReportLockedPreview.js` |
 | Shared draw helpers | `server/pdf/drawSeminar.js`, `server/pdf/drawFrame.js` |
 | Macro signal data | `js/foodPlanPrintout.js` |
-| Payload | `js/programReportPrintout.js` + `js/kwarnerLockedPreviewFixtures.js` |
+| Payload | `js/programReportPrintout.js` + `js/programReportPreviewFixtures.js` |
+| Locked copy | `js/programReportCopy.js` |
 | Food list gram scaling | `js/stapleServingPrintout.js` — see `.cursor/rules/burn-engine-servings.mdc` |
-| Render script | `scripts/render-kwarner-locked-preview.mjs` |
+| Render script | `scripts/render-program-report-preview.mjs` |
 | Build metadata | `js/programReportPreviewBuild.js` (auto-generated) |
 | 1982 reference PDF | `docs/archive/kwarner-1982-original.pdf` |
 
 ## Mandatory after every PDF change
 
-1. Run **`npm run render:kwarner-preview`**
+1. Run **`npm run render:program-report-preview`**
 2. Script writes **three sample files**:
    - **Versioned:** `docs/samples/burn-and-build-diet-kristi-N.pdf` (N auto-increments, never overwrite)
    - **Archive:** `docs/samples/burn-and-build-diet-kristi-archive-vN.pdf`

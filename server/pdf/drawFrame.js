@@ -370,7 +370,7 @@ export function stampAllPageNumbers(doc) {
   }
 }
 
-/** KWarner program report — single footer draw, pinned to bottom (no gap hacks). */
+/** Burn & Build Diet program report — single footer draw, pinned to bottom (no gap hacks). */
 export const PINNED_FOOTER = Object.freeze({
   bottomPad: 4,
   contactGap: 4,

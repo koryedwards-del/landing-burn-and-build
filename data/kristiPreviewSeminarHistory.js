@@ -1,6 +1,6 @@
-/** Kristi Warner seminar sample — body composition history rows (KWarner.pdf page 3). */
+/** Kristi Warner sample — body composition history rows (program report page 3). */
 
-export const KRISTI_WARNER_SEMINAR_HISTORY = Object.freeze([
+export const KRISTI_PREVIEW_SEMINAR_HISTORY = Object.freeze([
   { testDate: '2013-02-19', thighMm: 20, waistMm: 20, weightLbs: 144, leanLbs: 97.9, fatLbs: 46.1, fatPercent: 32.0, activity: '///1a' },
   { testDate: '2012-03-12', thighMm: 20, waistMm: 23, weightLbs: 138, leanLbs: 91.7, fatLbs: 46.3, fatPercent: 33.53, activity: '///1a' },
   { testDate: '2012-12-27', thighMm: 21, waistMm: 30, weightLbs: 146, leanLbs: 90.0, fatLbs: 56.0, fatPercent: 38.36, activity: '0/2/3/1.5a' },

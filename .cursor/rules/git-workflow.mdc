@@ -12,7 +12,7 @@ The user does **not** review pull requests. Do not use the PR workflow.
 1. Work on **`main`** directly when possible. Short-lived `cursor/*` branches are OK only if needed for isolation — **merge to `main` and push in the same session**.
 2. **Commit** with a clear message.
 3. **Push** to `origin main`.
-4. For PDF work: run `npm run render:kwarner-preview`, commit the new PDFs + `js/programReportPreviewBuild.js`, push again if needed.
+4. For PDF work: run `npm run render:program-report-preview`, commit the new PDFs + `js/programReportPreviewBuild.js`, push again if needed.
 5. **Clean up after yourself** (see Housekeeping below).
 6. **Never end a session with uncommitted work.** If you changed files, commit and push to `main` in the same turn — do not wait for the user to ask.
 
@@ -37,4 +37,4 @@ The user is not responsible for repo hygiene. **Every agent session must leave t
 
 ## Delivery
 
-After push to `main`, give raw GitHub PDF download links per `kwarner-preview-pdf.mdc`.
+After push to `main`, give raw GitHub PDF download links per `program-report-preview-pdf.mdc`.

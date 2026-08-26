@@ -18,7 +18,7 @@ export const FRUIT_TIPS_QA = [
   },
 ];
 
-/** Fruit tips — KWarner food list (under fruit roster). */
+/** Fruit tips — program report food list (under fruit roster). */
 export const FRUIT_TIPS_PROSE = Object.freeze({
   title: 'Fruit Tips',
   paragraphs: [
