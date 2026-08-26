@@ -8,6 +8,7 @@ const KWARNER_WELCOME_SECTIONS = [
   ['Food Plan', 'foodPlan'],
   ['Servings', 'servings'],
   ['Food List', 'foodList'],
+  ['What to Print', 'whatToPrint'],
   ['Frequently Asked Questions', 'faq'],
 ];
 
