@@ -11,8 +11,8 @@ export const WORK_STRESS = [
   { id: 'stressful', label: 'Stressful', sub: 'High pressure. You come home drained.' },
 ];
 
-/** Job activity radios (3 choices) — used by engine and PDF confirmation page. */
-export const QUESTIONNAIRE_JOB_OPTIONS = Object.freeze([
+/** Job activity radios (3 choices) — used by engine and PDF answers page. */
+export const JOB_ACTIVITY_OPTIONS = Object.freeze([
   { id: 'sitting', label: 'Sitting' },
   { id: 'feet', label: 'Moving' },
   { id: 'carrying', label: 'Lifting' },

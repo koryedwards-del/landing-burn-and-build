@@ -14,7 +14,7 @@ export const DESIRABLE_LBM_BAR_TITLE = 'LEAN BODY MASS BAR';
 export const DESIRABLE_LBM_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
 export const DESIRABLE_LBM_BAR_FOOTER = 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. Burn & Build is built to reduce fat while protecting that lean tissue.';
 
-/** Body composition source — least to most involved (questionnaire fatSource options). */
+/** Body composition source options (profile / PDF answers page). */
 const FAT_SOURCE_OPTIONS = Object.freeze([
   { value: 'guess', label: "I'm estimating" },
   { value: 'smart_scales', label: 'Smart scales' },

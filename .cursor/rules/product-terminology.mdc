@@ -10,7 +10,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 ## Questionnaire vs intake (locked — launch conformity)
 
 **User-facing name:** **Questionnaire** (full: **program questionnaire**).  
-**Code-only name:** **`intake`** (`pkg.intake`, `intake-form` CSS, `intake-acc` markup).  
+**Code-only name:** **`intake`** (`pkg.intake` on the saved program object).  
 **Locked URL:** `/questionnaire/` — never rename the path.
 
 | Say this (users, docs, support, agents) | Not this |
@@ -25,10 +25,21 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 |---------|------|----------|
 | **User-facing process / page** | **Questionnaire** (or **program questionnaire**) | Nav, docs, support copy, “go back to the questionnaire”, waiver (“results of this questionnaire”) |
 | **URL / folder** | **`/questionnaire/`** | Locked path — do not rename to `/intake/` |
-| **Code / data model** | **`intake`** | `pkg.intake`, `intake-form` CSS classes, `intakeDate` — internal only, not a user-facing label |
+| **Code / data model** | **`intake`** | `pkg.intake` on the program package — internal only, not a user-facing label |
 | **Avoid as primary label** | **Intake form**, **intake wizard** | Do not use in UI, docs, or agent replies unless the user explicitly requests a rebrand |
 
-**Rule:** Say **questionnaire** to users and in agent/docs copy; say **`intake`** only in code when referring to the saved answers object or form markup.
+**Rule:** Say **questionnaire** to users and in agent/docs copy; say **`intake`** only in code when referring to the saved answers object on `pkg.intake`.
+
+## PDF page 12 — not a separate file
+
+The program report PDF is **one 12-page document**. Page 12 lists the customer's submitted answers.
+
+| Code | Role |
+|------|------|
+| `js/answersConfirmationPrintout.js` | Builds answer rows for PDF page 12 |
+| `js/profileEngine.js` | Profile math from answers (engine + PDF) |
+
+There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questionnaire confirmation") — that is user-authored copy on the printout.
 
 ## One-sentence rule
 

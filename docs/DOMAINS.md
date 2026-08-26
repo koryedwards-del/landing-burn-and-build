@@ -16,10 +16,12 @@ Questionnaire, checkout, and API shell were removed. Reconnect landing → quest
 |------|------|
 | `/` (`index.html`) | **Landing page** — standalone marketing (CTAs point to `/questionnaire/` when rebuilt) |
 | `js/burnEngine.js` | **Burn Engine** — serving math |
-| `js/burnEngineServingTargets.js` | Slot targets |
-| `js/onboardingEngine.js` | Profile fields used by engine + PDF |
-| `js/programPackage.js` | Build program package object |
-| `js/*Printout.js` | PDF payload sections |
+| `js/profileEngine.js` | Customer profile fields (answers → engine + PDF) |
+| `js/programPackage.js` | Builds the program package object |
+| `js/*Printout.js` | PDF section payloads |
+| `js/answersConfirmationPrintout.js` | PDF page 12 — customer's submitted answers |
+| `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
+| `js/programClientHelpers.js` | Client name + date helpers for PDF |
 | `data/foods.json` + `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
 | `server/pdf/` | **PDF** — PDFKit renderer |
 | `scripts/render-program-report-preview.mjs` | Generate sample PDFs |

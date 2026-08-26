@@ -1,12 +1,12 @@
-/** Questionnaire review rows — web review screen + PDF confirmation page. */
+/** PDF page 12 — rows that list the customer's submitted answers. */
 
 import {
-  QUESTIONNAIRE_JOB_OPTIONS,
+  JOB_ACTIVITY_OPTIONS,
   WORK_STRESS,
-} from './onboardingEngine.js';
-import { formatFatSourceLabel } from './lbaPrintout.js';
+} from './profileEngine.js';
+import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
 
-export const QUESTIONNAIRE_CONFIRMATION_INTRO =
+export const ANSWERS_CONFIRMATION_INTRO =
   'Answers submitted for this Burn & Build Diet program.';
 
 function displayValue(value) {
@@ -23,7 +23,7 @@ function formatConfirmationHeight(heightInches) {
 }
 
 function workPhysicalLabel(id) {
-  return QUESTIONNAIRE_JOB_OPTIONS.find((item) => item.id === id)?.label || id || '—';
+  return JOB_ACTIVITY_OPTIONS.find((item) => item.id === id)?.label || id || '—';
 }
 
 function workStressLabel(id) {
@@ -52,7 +52,7 @@ function bodyCompositionLabel(intake) {
 }
 
 /** @param {{ intake?: object } | object} source Program package or intake-shaped object. */
-export function buildQuestionnaireConfirmationRows(source) {
+export function buildAnswersConfirmationRows(source) {
   const intake = source?.intake || source || {};
 
   return [

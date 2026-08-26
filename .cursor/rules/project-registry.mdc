@@ -22,6 +22,21 @@ Shell between them (questionnaire, checkout, API) was removed for a clean rebuil
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
 
+## File names (plain English)
+
+| File | What it is |
+|------|------------|
+| `js/burnEngine.js` | Serving math |
+| `js/profileEngine.js` | Customer answers → profile (age, job, exercise, body) |
+| `js/programPackage.js` | Full program object (intake + plan) |
+| `js/programReportPrintout.js` | Full PDF payload |
+| `js/answersConfirmationPrintout.js` | **PDF page 12** — answer list (not a separate PDF) |
+| `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
+| `js/programClientHelpers.js` | Client name + date on PDF |
+| `js/servingsPrintout.js`, `foodPlanPrintout.js`, etc. | Other PDF sections |
+
+**Not a file:** “questionnaire PDF” — the web form is rebuilt later; answers appear on page 12 of the one program report PDF.
+
 ## Verify (engine + PDF)
 
 ```

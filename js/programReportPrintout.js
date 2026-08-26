@@ -18,8 +18,8 @@ import {
   lbaTodayTableRows,
   lbmCopyAfterFirstSentence,
   lbmStatusMessage,
-} from './lbaPrintout.js';
-import { formatProgramDateLong, programClientName } from './programBridgeUi.js';
+} from './leanBodyAnalysisPrintout.js';
+import { formatProgramDateLong, programClientName } from './programClientHelpers.js';
 import {
   eightWeekProjectionFromPackage,
   exerciseHoursSummary,
@@ -30,13 +30,13 @@ import {
 } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackage.js';
-import { WORK_PHYSICAL, WORK_STRESS } from './onboardingEngine.js';
+import { WORK_PHYSICAL, WORK_STRESS } from './profileEngine.js';
 import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNaming.js';
 import {
-  QUESTIONNAIRE_CONFIRMATION_INTRO,
-  buildQuestionnaireConfirmationRows,
-} from './questionnaireConfirmationPrintout.js';
+  ANSWERS_CONFIRMATION_INTRO,
+  buildAnswersConfirmationRows,
+} from './answersConfirmationPrintout.js';
 
 export { BURN_AND_BUILD_DIET_PDF_NAME };
 
@@ -236,9 +236,9 @@ export function buildProgramReportPayload(pkg, options = {}) {
       extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
-    questionnaireConfirmation: {
-      intro: QUESTIONNAIRE_CONFIRMATION_INTRO,
-      rows: buildQuestionnaireConfirmationRows(pkg),
+    answersConfirmation: {
+      intro: ANSWERS_CONFIRMATION_INTRO,
+      rows: buildAnswersConfirmationRows(pkg),
     },
   };
 }

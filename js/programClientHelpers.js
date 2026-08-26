@@ -1,4 +1,4 @@
-/** Shared program helpers for PDF and printouts. */
+/** Client name and date helpers for PDF printouts. */
 
 export function formatProgramDateLong(iso) {
   if (!iso) {

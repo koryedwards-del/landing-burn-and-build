@@ -37,12 +37,12 @@ import {
   scaleStapleRows,
   stapleCategoryServings,
 } from '../../js/stapleServingPrintout.js';
-import { QUESTIONNAIRE_JOB_OPTIONS, WORK_STRESS } from '../../js/onboardingEngine.js';
+import { JOB_ACTIVITY_OPTIONS, WORK_STRESS } from '../../js/profileEngine.js';
 import {
   BODY_FAT_PROGRESS_BAR_FOOTER,
   BODY_FAT_PROGRESS_BAR_SUBTITLE,
   BODY_FAT_PROGRESS_BAR_TITLE,
-} from '../../js/lbaPrintout.js';
+} from '../../js/leanBodyAnalysisPrintout.js';
 import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintout.js';
 import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
 import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
@@ -951,7 +951,7 @@ function buildProjectionsInputGridRows(fp) {
         type: 'choice',
         title: 'JOB',
         selectedId: fp.workPhysical,
-        options: QUESTIONNAIRE_JOB_OPTIONS,
+        options: JOB_ACTIVITY_OPTIONS,
       },
       {
         type: 'choice',
@@ -2430,8 +2430,8 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
   { key: 'value', width: 0.66 },
 ]);
 
-function drawQuestionnaireConfirmationPage(doc, payload) {
-  const confirmation = payload.questionnaireConfirmation;
+function drawAnswersConfirmationPage(doc, payload) {
+  const confirmation = payload.answersConfirmation;
   if (!confirmation?.rows?.length) return;
 
   let page = startLockedPage(doc, payload, 'Questionnaire confirmation');
@@ -2480,7 +2480,7 @@ export async function renderProgramReportLockedPreview(payload, { title, buildLa
   drawStaplesFoodListPage(doc, payload);
   drawVegFruitFoodListPage(doc, payload);
   drawFaqPages(doc, payload);
-  drawQuestionnaireConfirmationPage(doc, payload);
+  drawAnswersConfirmationPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);
 

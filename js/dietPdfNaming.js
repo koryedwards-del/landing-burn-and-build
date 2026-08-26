@@ -1,6 +1,6 @@
 /** Program report PDF document label + download filename. */
 
-import { programClientName } from './programBridgeUi.js';
+import { programClientName } from './programClientHelpers.js';
 import { localDateKey } from './programPackage.js';
 import { seminarPreparedDate } from './programReportPrintout.js';
 

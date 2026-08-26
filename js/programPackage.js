@@ -1,7 +1,7 @@
 /** Burn & Build program package — build and validate desktop program payloads. */
 
 import { computePlan } from './burnEngine.js';
-import { heartRates, profileFromForm } from './onboardingEngine.js';
+import { heartRates, profileFromForm } from './profileEngine.js';
 import { FOODS_CATALOG_VERSION } from './assetVersion.js';
 
 export const SCHEMA_VERSION = '1.0.0';
