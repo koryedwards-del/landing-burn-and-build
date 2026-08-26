@@ -47,15 +47,48 @@ const fatSourceOtherWrap = document.getElementById('fat-source-other-wrap');
 let step = 0;
 let programBuilt = false;
 
+function accordionItems(acc) {
+  return [...acc.querySelectorAll('.acc-item')].filter((el) => !el.hidden);
+}
+
+function focusablesIn(container) {
+  return [...container.querySelectorAll(
+    'input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])',
+  )].filter((el) => {
+    if (el.tabIndex < 0) return false;
+    return el.getClientRects().length > 0;
+  });
+}
+
+function syncAccordionInert(acc) {
+  accordionItems(acc).forEach((item) => {
+    item.inert = !item.classList.contains('is-open');
+    item.querySelector('.acc-item__head')?.setAttribute('tabindex', '-1');
+  });
+}
+
+function openAccordionItem(acc, item, focusPosition = 'first') {
+  accordionItems(acc).forEach((el) => el.classList.remove('is-open'));
+  item.classList.add('is-open');
+  syncAccordionInert(acc);
+  const fields = focusablesIn(item);
+  const target = focusPosition === 'last' ? fields[fields.length - 1] : fields[0];
+  target?.focus();
+}
+
 function initAccordions(root = form) {
   root.querySelectorAll('[data-accordion]').forEach((acc) => {
+    syncAccordionInert(acc);
     acc.querySelectorAll('.acc-item__head').forEach((head) => {
+      head.setAttribute('tabindex', '-1');
       head.addEventListener('click', () => {
         const item = head.closest('.acc-item');
         if (!item || item.hidden) return;
         const open = item.classList.contains('is-open');
-        acc.querySelectorAll('.acc-item').forEach((el) => el.classList.remove('is-open'));
+        accordionItems(acc).forEach((el) => el.classList.remove('is-open'));
         if (!open) item.classList.add('is-open');
+        syncAccordionInert(acc);
+        if (!open) openAccordionItem(acc, item);
       });
     });
   });
@@ -63,10 +96,47 @@ function initAccordions(root = form) {
 
 function resetAccordions(panel) {
   panel.querySelectorAll('[data-accordion]').forEach((acc) => {
-    const items = [...acc.querySelectorAll('.acc-item')].filter((el) => !el.hidden);
+    const items = accordionItems(acc);
     items.forEach((el) => el.classList.remove('is-open'));
     if (items[0]) items[0].classList.add('is-open');
+    syncAccordionInert(acc);
   });
+}
+
+function handleAccordionTab(event) {
+  if (event.key !== 'Tab') return;
+  const panel = panels[step];
+  if (!panel || panel.hidden) return;
+
+  const acc = panel.querySelector('[data-accordion]');
+  if (!acc) return;
+
+  const items = accordionItems(acc);
+  const openItem = acc.querySelector('.acc-item.is-open:not([hidden])');
+  if (!openItem) return;
+
+  const fields = focusablesIn(openItem);
+  const active = document.activeElement;
+  const idx = fields.indexOf(active);
+
+  if (event.shiftKey) {
+    if (idx <= 0) {
+      const itemIdx = items.indexOf(openItem);
+      if (itemIdx > 0) {
+        event.preventDefault();
+        openAccordionItem(acc, items[itemIdx - 1], 'last');
+      }
+    }
+    return;
+  }
+
+  if (idx === fields.length - 1) {
+    const itemIdx = items.indexOf(openItem);
+    if (itemIdx < items.length - 1) {
+      event.preventDefault();
+      openAccordionItem(acc, items[itemIdx + 1]);
+    }
+  }
 }
 
 function showError(message) {
@@ -214,12 +284,12 @@ function syncFatSourceOther() {
   const input = form.elements.fatSourceOther;
   input.disabled = !isOther;
   if (!isOther) input.value = '';
+  const acc = fatSourceOtherWrap.closest('[data-accordion]');
+  if (!acc) return;
   if (isOther) {
-    fatSourceOtherWrap.classList.add('is-open');
-    const acc = fatSourceOtherWrap.closest('[data-accordion]');
-    acc?.querySelectorAll('.acc-item').forEach((el) => {
-      if (el !== fatSourceOtherWrap) el.classList.remove('is-open');
-    });
+    openAccordionItem(acc, fatSourceOtherWrap);
+  } else {
+    syncAccordionInert(acc);
   }
 }
 
@@ -252,15 +322,17 @@ function renderStepNav() {
     if (index === step) classes.push('is-active');
     if (index < step) classes.push('is-done');
     const reachable = canReachStep(index);
-    return `<li><button type="button" class="${classes.join(' ')}" data-step="${index}"${reachable ? '' : ' disabled'}>${index + 1}. ${STEP_NAV_LABELS[index]}</button></li>`;
+    return `<li><button type="button" class="${classes.join(' ')}" data-step="${index}" tabindex="-1"${reachable ? '' : ' disabled'}>${index + 1}. ${STEP_NAV_LABELS[index]}</button></li>`;
   }).join('');
 }
 
 function showStep(index) {
   step = Math.max(0, Math.min(index, panels.length - 1));
   panels.forEach((panel, i) => {
-    panel.hidden = i !== step;
-    if (i === step) resetAccordions(panel);
+    const active = i === step;
+    panel.hidden = !active;
+    panel.inert = !active;
+    if (active) resetAccordions(panel);
   });
   renderStepNav();
   btnBack.disabled = step === 0;
@@ -269,6 +341,12 @@ function showStep(index) {
   if (step === 2) syncHeartRates();
   if (step === 5 && !programBuilt) renderReview();
   if (step < 5) formSuccess.hidden = true;
+
+  const panel = panels[step];
+  const acc = panel?.querySelector('[data-accordion]');
+  const openItem = acc?.querySelector('.acc-item.is-open:not([hidden])');
+  const firstField = openItem && focusablesIn(openItem)[0];
+  firstField?.focus();
 }
 
 function buildProgram() {
@@ -301,6 +379,8 @@ btnNext.addEventListener('click', () => {
   }
   showStep(step + 1);
 });
+
+form.addEventListener('keydown', handleAccordionTab);
 
 form.addEventListener('change', (event) => {
   if (event.target.name === 'fatSource') syncFatSourceOther();
