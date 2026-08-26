@@ -228,18 +228,6 @@ function resolveTableCellStyle(opts, row, rowIndex, col) {
   const isHeader = rowIndex < headerRows;
   const boldKeys = new Set(opts.boldColumnKeys ?? []);
 
-  if (typeof opts.getCellStyle === 'function') {
-    const style = opts.getCellStyle(row, rowIndex, col, { isHeader });
-    if (style) {
-      return {
-        font: style.font
-          ?? (isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular),
-        fontSize: style.fontSize
-          ?? (isHeader ? (opts.headFontSize ?? LAYOUT.tableHeadSize) : (opts.bodyFontSize ?? LAYOUT.tableBodySize)),
-      };
-    }
-  }
-
   if (typeof opts.getRowStyle === 'function') {
     const style = opts.getRowStyle(row, rowIndex, { isHeader });
     const font = style.font
@@ -2196,30 +2184,6 @@ function buildServingsTableRows(gridRows, extraFats = []) {
   ];
 }
 
-const SERVINGS_TABLE_DATA_COLUMNS = new Set([
-  'daily', 'breakfast', 'snack1', 'lunch', 'snack2', 'dinner', 'snack3',
-]);
-const SERVINGS_TABLE_DATA_FONT_SIZE = 13.5;
-
-function isServingsTableNumericCell(row, col) {
-  if (col.key === 'label' || !SERVINGS_TABLE_DATA_COLUMNS.has(col.key)) return false;
-  const value = String(row[col.key] ?? '').trim();
-  return /^\d+(\.\d+)?$/.test(value);
-}
-
-function servingsTableCellStyle(row, rowIndex, col, { isHeader }) {
-  if (isHeader) {
-    return { font: SEMINAR_FONTS.bold, fontSize: LAYOUT.tableHeadSize };
-  }
-  if (col.key === 'label') {
-    return { font: SEMINAR_FONTS.regular, fontSize: LAYOUT.tableBodySize };
-  }
-  if (isServingsTableNumericCell(row, col)) {
-    return { font: SEMINAR_FONTS.bold, fontSize: SERVINGS_TABLE_DATA_FONT_SIZE };
-  }
-  return { font: SEMINAR_FONTS.regular, fontSize: LAYOUT.tableBodySize };
-}
-
 function drawServingsTable(doc, payload, page, gridRows, extraFats = []) {
   const servingsTableOpts = {
     x: page.x,
@@ -2228,7 +2192,6 @@ function drawServingsTable(doc, payload, page, gridRows, extraFats = []) {
     columns: SERVINGS_TABLE_COLUMNS,
     rows: buildServingsTableRows(gridRows, extraFats),
     headerRows: 1,
-    getCellStyle: servingsTableCellStyle,
   };
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
   servingsTableOpts.y = page.y;
