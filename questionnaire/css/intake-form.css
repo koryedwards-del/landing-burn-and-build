@@ -1,19 +1,4 @@
-/* Utilitarian intake — workroom, not showroom */
-
-body.q-app--workroom {
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  box-sizing: border-box;
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 16px;
-}
+/* Utilitarian intake — mobile-first (phone/tablet), desktop overrides below */
 
 body.q-app--workroom,
 .q-app--workroom {
@@ -23,24 +8,53 @@ body.q-app--workroom,
   --text: #1a1a1a;
   --muted: #555555;
   --focus: #1a1a1a;
-  --layout-width: 42rem;
+  --layout-width: 100%;
   --q-inset-x: 1rem;
+  --touch: 44px;
 }
 
-@media (min-width: 40rem) {
-  .q-app--workroom {
-    --q-inset-x: 1.5rem;
-  }
+/* —— Mobile / tablet (default) —— */
+body.q-app--workroom {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.q-app--workroom.q-app {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  gap: 0;
 }
 
 .q-app--workroom .q-header {
+  flex-shrink: 0;
   border-bottom: 1px solid var(--border);
-  padding: 0 var(--q-inset-x) 12px;
+  padding: 0.75rem var(--q-inset-x);
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+  background: #fff;
 }
 
-.q-app--workroom .q-layout {
-  padding-left: var(--q-inset-x);
-  padding-right: var(--q-inset-x);
+.q-app--workroom .q-header__inner {
+  flex-wrap: nowrap;
 }
 
 .q-app--workroom .q-motto {
@@ -49,41 +63,85 @@ body.q-app--workroom,
 
 .q-app--workroom .q-logo {
   display: block;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   filter: none;
 }
 
 .q-app--workroom .q-title {
   font-family: inherit;
-  font-size: 1.125rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0;
-  text-transform: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--text);
   text-shadow: none;
 }
 
+.q-app--workroom .q-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 0;
+  padding: 0;
+}
+
+.q-app--workroom .q-main {
+  background: var(--panel);
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .q-app--workroom .q-nav {
+  flex-shrink: 0;
   border-bottom: 1px solid var(--border);
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: #fff;
+}
+
+.q-app--workroom .q-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .q-app--workroom .q-nav__list {
-  padding: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 0 var(--q-inset-x);
   margin: 0;
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
+  list-style: none;
 }
 
 .q-app--workroom .q-nav__item {
+  display: block;
+  flex: 0 0 auto;
   font-family: inherit;
-  font-size: 0.8125rem;
+  font-size: 0.625rem;
   font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
   color: var(--muted);
+  border: none;
   border-bottom: 2px solid transparent;
   border-radius: 0;
-  min-height: 44px;
-  padding: 0.75rem 0.875rem 0.625rem 0;
+  background: transparent;
+  min-height: var(--touch);
+  padding: 0.5rem 0.65rem 0.45rem 0;
+  cursor: default;
 }
 
 .q-app--workroom .q-nav__item.is-active {
@@ -99,44 +157,99 @@ body.q-app--workroom,
 
 .q-app--workroom .q-nav__item:disabled {
   cursor: default;
-  opacity: 0.55;
-}
-
-.q-app--workroom .q-main {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 0;
-  box-shadow: none;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.q-app--workroom .q-layout {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.q-app--workroom.q-app {
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-  width: min(100%, var(--layout-width));
-  max-width: var(--layout-width);
-  overflow: hidden;
+  opacity: 0.35;
 }
 
 .q-app--workroom .q-form {
-  padding: 1.25rem 0 0;
+  padding: 1rem var(--q-inset-x) 0;
   flex: 1;
   min-height: 0;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.q-app--workroom .q-header__inner {
-  flex-wrap: nowrap;
+.q-app--workroom .q-step-nav {
+  flex-shrink: 0;
+  padding: 0.75rem var(--q-inset-x);
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+.q-app--workroom .intake-nav-btn {
+  flex: 1;
+  min-height: var(--touch);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* —— Desktop —— */
+@media (min-width: 48rem) {
+  body.q-app--workroom {
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .q-app--workroom {
+    --layout-width: 42rem;
+    --q-inset-x: 1.5rem;
+  }
+
+  .q-app--workroom.q-app {
+    width: min(100%, var(--layout-width));
+    max-width: var(--layout-width);
+    height: auto;
+    max-height: calc(100dvh - 2rem);
+    gap: 0.75rem;
+  }
+
+  .q-app--workroom .q-header {
+    padding-top: 0;
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .q-app--workroom .q-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .q-app--workroom .q-title {
+    font-size: 1.125rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .q-app--workroom .q-main {
+    border: 1px solid var(--border);
+    border-radius: 0;
+  }
+
+  .q-app--workroom .q-nav__item {
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0.75rem 0.875rem 0.625rem 0;
+  }
+
+  .q-app--workroom .q-form {
+    padding-top: 1.25rem;
+  }
+
+  .q-app--workroom .q-step-nav {
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+  }
+
+  .q-app--workroom .intake-nav-btn {
+    flex: 0 0 auto;
+    min-height: auto;
+    min-width: 6.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
 }
 
 .q-app--workroom .q-btn {
@@ -419,10 +532,6 @@ body.q-app--workroom,
   align-items: center;
   gap: 0.75rem;
   margin-top: 0;
-  padding: 0.875rem 0;
-  border-top: 1px solid var(--border);
-  background: #fff;
-  flex-shrink: 0;
 }
 
 .intake-form__nav {
@@ -464,14 +573,14 @@ body.q-app--workroom,
 .intake-input {
   display: block;
   width: 100%;
-  max-width: 20rem;
+  max-width: 100%;
   padding: 0.5rem 0.625rem;
   border: 1px solid var(--border);
   border-radius: 0;
   background: #fff;
   color: var(--text);
   font: inherit;
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .intake-input:focus {
@@ -675,4 +784,39 @@ body.q-app--workroom,
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Mobile — review + waiver stack */
+.intake-review > div {
+  grid-template-columns: 1fr;
+  gap: 0.15rem;
+}
+
+.intake-waiver__sign {
+  grid-template-columns: 1fr;
+}
+
+.intake-waiver__cell--signed {
+  border-right: none;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 48rem) {
+  .intake-input:not(.intake-input--short) {
+    max-width: 20rem;
+  }
+
+  .intake-review > div {
+    grid-template-columns: 11rem 1fr;
+    gap: 0.75rem 1rem;
+  }
+
+  .intake-waiver__sign {
+    grid-template-columns: 3fr 1fr;
+  }
+
+  .intake-waiver__cell--signed {
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+  }
 }
