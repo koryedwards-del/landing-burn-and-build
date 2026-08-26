@@ -2154,6 +2154,7 @@ function drawFoodPlanPage(doc, payload) {
 const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
 const SERVINGS_RULES_BREAK_GAP = 10;
 const SERVINGS_DAILY_RULES_COUNT = 3;
+const SERVINGS_DAILY_RULES_AFTER_GAP = PT.body + PT.lineGap;
 
 const SERVINGS_DAILY_RULES_BOX = Object.freeze({
   pad: 12,
@@ -2217,6 +2218,7 @@ function drawMealBuildSteps(doc, payload, page, steps) {
   const boxH = measureServingsDailyRulesBox(doc, page.width, rules);
   page = ensureLockedSpace(doc, payload, page, boxH + LAYOUT.sectionGap);
   page = drawServingsDailyRulesBox(doc, payload, page, rules);
+  page = { ...page, y: page.y + SERVINGS_DAILY_RULES_AFTER_GAP };
 
   const afterRules = steps.slice(splitAt + SERVINGS_DAILY_RULES_COUNT);
   if (afterRules.length) {
