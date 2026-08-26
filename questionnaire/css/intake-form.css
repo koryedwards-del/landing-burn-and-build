@@ -685,8 +685,8 @@ body.q-app--workroom {
 
 .intake-review > div {
   display: grid;
-  grid-template-columns: 11rem 1fr;
-  gap: 0.75rem 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.15rem;
   padding: 0.625rem 1rem;
   border-top: 1px solid var(--border);
 }
@@ -786,12 +786,7 @@ body.q-app--workroom {
   border: 0;
 }
 
-/* Mobile — review + waiver stack */
-.intake-review > div {
-  grid-template-columns: 1fr;
-  gap: 0.15rem;
-}
-
+/* Mobile-first responsive tweaks */
 .intake-waiver__sign {
   grid-template-columns: 1fr;
 }
