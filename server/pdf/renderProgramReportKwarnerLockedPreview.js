@@ -2343,6 +2343,47 @@ function drawServingsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const FAQ_FAT_LOSS_QUESTION_NUMBER = 29;
+const FAQ_FAT_CAN_ROW = Object.freeze({
+  count: FAT_CAN_INLINE_COUNT,
+  maxHeight: 88,
+  gap: 14,
+  gapBefore: 18,
+  gapAfter: 12,
+});
+
+function faqFatCanRowContent(height = FAQ_FAT_CAN_ROW.maxHeight) {
+  return {
+    type: 'inlineImages',
+    path: FAT_CAN_3LB_IMAGE,
+    count: FAQ_FAT_CAN_ROW.count,
+    height,
+    gap: FAQ_FAT_CAN_ROW.gap,
+  };
+}
+
+function measureFaqFatCanRow(doc, width) {
+  const { height } = inlineImagesLayout(doc, faqFatCanRowContent(), width);
+  return FAQ_FAT_CAN_ROW.gapBefore + height + FAQ_FAT_CAN_ROW.gapAfter;
+}
+
+function drawFaqFatCanRow(doc, page) {
+  const available = page.bottom - page.y - FAQ_FAT_CAN_ROW.gapBefore - FAQ_FAT_CAN_ROW.gapAfter;
+  const targetHeight = Math.min(
+    FAQ_FAT_CAN_ROW.maxHeight,
+    Math.max(48, available),
+  );
+  const content = faqFatCanRowContent(targetHeight);
+  const { height, width, totalWidth } = inlineImagesLayout(doc, content, page.width);
+  const y = page.y + FAQ_FAT_CAN_ROW.gapBefore;
+  let x = page.x + (page.width - totalWidth) / 2;
+  for (let i = 0; i < FAQ_FAT_CAN_ROW.count; i += 1) {
+    doc.image(FAT_CAN_3LB_IMAGE, x, y, { height });
+    x += width + FAQ_FAT_CAN_ROW.gap;
+  }
+  return y + height + FAQ_FAT_CAN_ROW.gapAfter;
+}
+
 const FAQ_TYPO = Object.freeze({
   questionSize: PT.subsection,
   answerSize: PT.body,
@@ -2391,9 +2432,15 @@ function drawFaqPages(doc, payload) {
 
   HANDBOOK_FAQ_ITEMS.forEach((item, index) => {
     const questionNumber = index + 1;
-    const blockH = measureLockedFaqItem(doc, item, page.width, questionNumber);
+    let blockH = measureLockedFaqItem(doc, item, page.width, questionNumber);
+    if (questionNumber === FAQ_FAT_LOSS_QUESTION_NUMBER) {
+      blockH += measureFaqFatCanRow(doc, page.width);
+    }
     page = ensureLockedSpace(doc, payload, page, blockH);
     page = { ...page, y: drawLockedFaqItem(doc, page, item, questionNumber) };
+    if (questionNumber === FAQ_FAT_LOSS_QUESTION_NUMBER) {
+      page = { ...page, y: drawFaqFatCanRow(doc, page) };
+    }
   });
 
   finishLockedPage(doc, page.box, payload);
