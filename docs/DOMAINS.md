@@ -43,6 +43,16 @@ npm run verify:pdf
 
 `docs/samples/burn-and-build-diet-kristi-latest.pdf`
 
+## Questionnaire
+
+| Path | Role |
+|------|------|
+| `questionnaire/index.html` | Program Questionnaire markup (`intake-acc`, `q-app--workroom`) |
+| `questionnaire/js/questionnaire.js` | Step nav, accordion flow, Burn Engine build |
+| `questionnaire/css/questionnaire.css` | Single workroom stylesheet (mobile-first) |
+
+**Build my program** saves to `sessionStorage` (`bnb_program_draft`). Checkout/API not wired yet.
+
 ## Site
 
-**burnandbuilddiet.com** — GitHub Pages. Landing live; questionnaire/checkout to be reconnected.
+**burnandbuilddiet.com** — GitHub Pages. Landing and questionnaire live; checkout to reconnect at `/createyourfoodplan/`.

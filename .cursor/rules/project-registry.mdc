@@ -6,21 +6,45 @@ alwaysApply: true
 # Project context
 
 - Full map: `docs/DOMAINS.md`
-- This repo: **Burn & Build** — three standalone pieces on **burnandbuilddiet.com**
+- This repo: **Burn & Build** — desktop web product on **burnandbuilddiet.com**
 
 Push to `main` deploys the static site via GitHub Pages.
 
-## Three pieces
+## Paths
 
-| Piece | Path | Role |
-|-------|------|------|
-| **Landing** | `/` (`index.html`, `hardkor.css`) | Marketing — standalone |
-| **Burn Engine** | `js/burnEngine.js`, `data/foods.json` | Serving math — standalone |
-| **PDF** | `server/pdf/`, `js/*Printout.js` | Burn & Build Diet program report — standalone |
-
-Shell between them (questionnaire, checkout, API) was removed for a clean rebuild. **Reconnect** landing → questionnaire → checkout when ready.
+| Path | Role |
+|------|------|
+| `/` (`index.html`) | Marketing landing |
+| `/questionnaire/` | Program questionnaire → Burn Engine (checkout not wired yet) |
+| `/createyourfoodplan/` | Stripe checkout + purchaser download portal (to reconnect) |
+| `server/pdf/` | PDFKit program report renderer |
+| `js/` | Burn Engine, printout payloads, program package data |
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
+
+## Active product flow
+
+```
+Landing (/) → /questionnaire/ → [checkout TBD] → Burn & Build Diet PDF
+```
+
+**Build my program** on the review step runs the Burn Engine and saves the package to `sessionStorage` (`bnb_program_draft`). Stripe/API checkout wiring is next.
+
+## Questionnaire (workroom — clean build)
+
+Restored `intake-acc` accordion UI. **One stylesheet only** — no legacy dark-theme CSS, no second CSS file.
+
+| Piece | Path |
+|-------|------|
+| Markup | `questionnaire/index.html` — `q-app--workroom`, six steps, `intake-acc` fields |
+| Logic | `questionnaire/js/questionnaire.js` — step nav, accordion Tab/click flow, `buildProgram()` |
+| Styles | `questionnaire/css/questionnaire.css` — mobile-first workroom theme (`system-ui`) |
+
+**JS imports:** `js/profileDataEngine.js`, `js/programPackageData.js`, `js/answersConfirmationPrintout.js`.
+
+**Naming:** user-facing **questionnaire**; saved answers on the package object are `pkg.intake`. CSS classes `intake-form__*`, `intake-acc__*` are internal markup — not user-facing labels (see `.cursor/rules/product-terminology.mdc`).
+
+**Do not reintroduce:** `intake-form.css`, Barlow/Google font links, `#welcome` hash routing, hidden motto markup, or the old dark `questionnaire.css` wireframe.
 
 ## File naming (role suffix)
 
@@ -45,6 +69,7 @@ Every `js/` file name ends with its job:
 | `js/answersConfirmationPrintout.js` | PDF page 12 — answer list |
 | `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
 | `js/programClientDataHelpers.js` | Client name + date on PDF |
+| `questionnaire/js/questionnaire.js` | Questionnaire UI + `buildProgram()` |
 
 There is **no** separate questionnaire PDF — answers appear on page 12 of the one program report.
 
@@ -59,7 +84,7 @@ npm run verify:pdf
 
 Renderer: `server/pdf/` (PDFKit). Preview: `npm run render:program-report-preview`. See `.cursor/rules/program-report-preview-pdf.mdc`.
 
-## Locked paths (when shell is rebuilt)
+## Locked paths
 
 - Questionnaire: `/questionnaire/`
-- Checkout: `/createyourfoodplan/`
+- Checkout (when reconnected): `/createyourfoodplan/`

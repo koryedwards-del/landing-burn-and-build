@@ -19,7 +19,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 | “go back to the questionnaire” | “return to the intake form” |
 | **Program Questionnaire** (page title) | Intake form |
 
-CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
+CSS class names (`intake-form__*`, `intake-acc__*`) and `pkg.intake` stay as-is — that is internal code, not copy.
 
 | Context | Term | Examples |
 |---------|------|----------|
