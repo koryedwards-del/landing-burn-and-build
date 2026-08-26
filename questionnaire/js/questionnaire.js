@@ -1486,14 +1486,6 @@ function buildProgram(triggerBtn) {
     const pkg = renderReview();
     sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
     programBuilt = true;
-    const note = document.createElement('p');
-    note.className = 'intake-form__note';
-    note.style.marginTop = '1rem';
-    note.innerHTML = `<strong>Your program was built.</strong> Protein servings: ${pkg.plan.servings.protein}. Checkout wiring comes next.`;
-    if (!reviewEl.parentElement?.querySelector('[data-program-built]')) {
-      note.dataset.programBuilt = '1';
-      reviewEl.after(note);
-    }
     triggerBtn.textContent = 'Program built';
     updateStepNav();
   } catch (error) {
