@@ -21,7 +21,7 @@ export const KWARNER_FOOD_PLAN_LEAD = [
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
-  'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your daily servings come from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy, it is simple.',
+  'Burn & Build cuts the fine line between too much and too little — that\'s the secret to losing fat and building muscle on the same diet. Your daily servings come from protein, dairy, grains, starches, veggies, and fruits: whole clean foods, each sized to fit your needs. This program is customized to you and won\'t work for anyone else.',
 ];
 
 export const KWARNER_MEAL_BUILD_STEPS = [
