@@ -5,272 +5,489 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Burn &amp; Build — Program Questionnaire</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=16" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=90" />
+  <link rel="stylesheet" href="css/intake-form.css?v=28" />
 </head>
-<body>
-  <header class="q-header">
-    <a class="q-header__brand" href="/" aria-label="Burn &amp; Build home">
-      <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="48" height="48" />
-    </a>
-    <p class="q-header__title">Program Questionnaire</p>
-  </header>
-
-  <nav class="q-stepnav" aria-label="Questionnaire sections">
-    <ol class="q-stepnav__list" id="step-nav-list"></ol>
-  </nav>
-
-  <main class="q-main">
-    <form class="q-form" id="questionnaire-form" novalidate>
-      <!-- 1 Contact Information -->
-      <section class="form-step" data-step="0">
-        <h2 class="sheet__heading">Contact Information</h2>
-        <div class="sheet__intro">
-          <p>Help us help you build the most sophisticated diet available at any cost. Then the Burn Engine builds your program and delivers a PDF document for immediate download and sends a copy to the email address you provide on this screen.</p>
-          <p>Before you begin, know that you'll need to provide your weight, body fat percentage, total exercise hours per week. Having this info before you start the questionnaire will save you some time and probably frustration.</p>
-          <p class="sheet__price"><strong>$149</strong> one-time purchase.</p>
-          <p>When you have answered these questions to your satisfaction, your program will be created and you will complete the transaction through Stripe.</p>
-        </div>
-
-        <div class="acc" data-accordion>
-          <div class="acc-item is-open" data-field="preferredName">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">1.</span> What is your full name?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">First and last name as it should appear on your program printout.</p>
-              <input class="field__input" name="preferredName" autocomplete="name" required />
-            </div>
-          </div>
-
-          <div class="acc-item" data-field="sex">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">2.</span> What is your gender?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Select the option used in the calorie formulas.</p>
-              <label class="choice"><input type="radio" name="sex" value="female" required /> Female</label>
-              <label class="choice"><input type="radio" name="sex" value="male" /> Male</label>
-            </div>
-          </div>
-
-          <div class="acc-item" data-field="email">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">3.</span> What is your email address?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">We deliver your program here and use it to unlock your program after purchase.</p>
-              <input class="field__input" name="email" type="email" autocomplete="email" required />
-            </div>
-          </div>
-
-          <div class="acc-item" data-field="emailConfirm">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">4.</span> Confirm your email address</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Type the same address again. We cannot fix a typo after checkout.</p>
-              <input class="field__input" name="emailConfirm" type="email" autocomplete="email" required />
-            </div>
-          </div>
-
-          <div class="acc-item">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">5.</span> Who do we thank?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">If someone sent you here, enter their full name so we can thank them. Leave blank if you found us on your own.</p>
-              <input class="field__input" name="referrerName" autocomplete="off" />
-            </div>
+<body class="q-app--workroom">
+  <div class="q-app q-app--workroom">
+    <header class="q-header">
+      <div class="q-header__inner">
+        <div class="q-brand">
+          <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="72" height="72" />
+          <div class="q-brand__text">
+            <h1 class="q-title">Program Questionnaire</h1>
           </div>
         </div>
-      </section>
+        <p class="q-motto">Built on science. <span class="q-motto__accent">Forged in iron.</span></p>
+      </div>
+    </header>
 
-      <!-- 2 Occupation -->
-      <section class="form-step" data-step="1" hidden>
-        <h2 class="sheet__heading">Occupation</h2>
+    <div class="q-layout">
+      <nav class="q-nav" aria-label="Questionnaire steps">
+        <ol class="q-nav__list" id="q-nav-list">
+          <li><span class="q-nav__item is-active">1. Contact Information</span></li>
+        </ol>
+      </nav>
 
-        <div class="acc" data-accordion>
-          <div class="acc-item is-open" data-field="workPhysical">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">6.</span> How physically active is your job?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.</p>
-              <label class="choice">
-                <input type="radio" name="workPhysical" value="sitting" required />
-                <strong>Sitting</strong>
-                <span class="choice__sub">Desk, computer, driving, reception — accountant, software developer, office clerk, administrative assistant, data entry clerk, graphic designer, attorney, call center agent, receptionist, long-haul driver.</span>
-              </label>
-              <label class="choice">
-                <input type="radio" name="workPhysical" value="feet" />
-                <strong>Moving</strong>
-                <span class="choice__sub">On your feet most of the shift — nurse, teacher, retail associate, server, bartender, chef, pharmacist, hairdresser, security guard, bank teller.</span>
-              </label>
-              <label class="choice">
-                <input type="radio" name="workPhysical" value="carrying" />
-                <strong>Lifting</strong>
-                <span class="choice__sub">Regular carrying, loading, or trades work — warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.</span>
-              </label>
-            </div>
-          </div>
+      <main class="q-main">
+        <form class="q-form" id="q-form" novalidate>
+          <section class="q-panel q-panel--intake" data-step="0">
+            <div class="intake-form" id="info-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Contact Information</h2>
+              </header>
 
-          <div class="acc-item" data-field="workStress">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">7.</span> Your life outside work &amp; training hours</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Kids, soccer, errands, caregiving — the normal rhythm of your life when you're not at work and not exercising.</p>
-              <label class="choice">
-                <input type="radio" name="workStress" value="comfortable" required />
-                <strong>Comfortable</strong>
-                <span class="choice__sub">Manageable pace — time for recovery and the normal rhythm of life outside work and training.</span>
-              </label>
-              <label class="choice">
-                <input type="radio" name="workStress" value="busy" />
-                <strong>Busy</strong>
-                <span class="choice__sub">Kids, sports, errands, and obligations most days — a full schedule you generally keep up with.</span>
-              </label>
-              <label class="choice">
-                <input type="radio" name="workStress" value="stressful" />
-                <strong>Stressful</strong>
-                <span class="choice__sub">High demand most weeks — caregiving, tight schedules, little margin when things pile up.</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </section>
+              <div class="intake-form__intro">
+                <p class="intake-form__lede">Help us help you build the most sophisticated diet available at any cost. Then the Burn Engine builds your program and delivers a PDF document for immediate download and sends a copy to the email address you provide on this screen.</p>
+                <p class="intake-form__note">Before you begin, know that you'll need to provide your weight, body fat percentage, total exercise hours per week. Having this info before you start the questionnaire will save you some time and probably frustration.</p>
+                <div class="intake-form__pricing">
+                  <p class="intake-form__price"><strong>$149</strong> one-time purchase.</p>
+                  <p class="intake-form__checkout">When you have answered these questions to your satisfaction, your program will be created and you will complete the transaction through Stripe.</p>
+                </div>
+              </div>
+              <input type="hidden" name="intakeDate" />
 
-      <!-- 3 Exercise -->
-      <section class="form-step" data-step="2" hidden>
-        <h2 class="sheet__heading">Exercise</h2>
+              <div class="intake-acc" id="info-accordion">
+                <div class="intake-acc__item is-open" data-info-field="fullName">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label">Full name</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <label class="intake-acc__field">
+                      <span class="sr-only">Full name</span>
+                      <input class="intake-input" name="preferredName" autocomplete="name" required />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
 
-        <div class="acc" data-accordion>
-          <div class="acc-item is-open" data-field="age">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">8.</span> How young are you?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.</p>
-              <input class="field__input field__input--short" name="age" type="number" min="16" max="99" required />
-            </div>
-          </div>
+                <div class="intake-acc__item" data-info-field="sex">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label">Gender</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio"><input type="radio" name="sex" value="female" required /> Female</label>
+                      <label class="intake-radio"><input type="radio" name="sex" value="male" /> Male</label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
 
-          <div class="acc-item" data-field="weightTrainingHours">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">9.</span> How many hours per week of stop &amp; go activity?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym. Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" />
-                <span>hrs / week</span>
+                <div class="intake-acc__item" data-info-field="email">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label">Email address</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <label class="intake-acc__field">
+                      <span class="sr-only">Email address</span>
+                      <input class="intake-input" name="email" type="email" autocomplete="email" required />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-info-field="emailConfirm">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label">Confirm email</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <label class="intake-acc__field">
+                      <span class="sr-only">Confirm email address</span>
+                      <input
+                        class="intake-input"
+                        name="emailRetype"
+                        type="email"
+                        autocomplete="email"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        required
+                      />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-info-field="referrerName">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label">Referral</span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <p class="intake-acc__question" data-info-question></p>
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-info-guide></p>
+                      <p class="intake-acc__example" data-info-example></p>
+                    </div>
+                    <label class="intake-acc__field">
+                      <span class="sr-only">Who do we thank — full name</span>
+                      <input class="intake-input" name="referrerName" autocomplete="off" />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="acc-item" data-field="cardioHours">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">10.</span> How many hours per week in your cardio training range?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline. Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="cardioHours" inputmode="decimal" placeholder="0" />
-                <span>hrs / week</span>
+          <section class="q-panel q-panel--intake" data-step="1" hidden>
+            <div class="intake-form" id="occupation-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Occupation</h2>
+              </header>
+
+              <div class="intake-acc" id="occupation-accordion">
+                <div class="intake-acc__item is-open" data-occ-field="workPhysical">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-occ-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-occ-guide></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio" data-occ-choice="sitting">
+                        <input type="radio" name="workPhysical" value="sitting" required />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="feet">
+                        <input type="radio" name="workPhysical" value="feet" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="carrying">
+                        <input type="radio" name="workPhysical" value="carrying" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-occ-field="workStress">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-occ-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-occ-guide></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field">
+                      <label class="intake-radio" data-occ-choice="comfortable">
+                        <input type="radio" name="workStress" value="comfortable" required />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="busy">
+                        <input type="radio" name="workStress" value="busy" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                      <label class="intake-radio" data-occ-choice="stressful">
+                        <input type="radio" name="workStress" value="stressful" />
+                        <span class="intake-radio__text">
+                          <span class="intake-radio__label"></span>
+                          <span class="intake-radio__sub"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
-              <p class="field__note" id="cardio-heart-rate">Cardio training range (BPM) — enter age above</p>
             </div>
-          </div>
+          </section>
 
-          <div class="acc-item" data-field="fatBurningHours">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">11.</span> How many hours per week in your fat burning training range?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline. Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" />
-                <span>hrs / week</span>
+          <section class="q-panel q-panel--intake" data-step="2" hidden>
+            <div class="intake-form" id="exercise-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Exercise</h2>
+              </header>
+
+              <div class="intake-acc" id="exercise-accordion">
+                <div class="intake-acc__item is-open" data-ex-field="age">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                    </div>
+                    <div class="intake-choice intake-acc__field">
+                      <p class="intake-choice__sub" data-ex-sub></p>
+                      <label class="intake-choice__field">
+                        <span class="sr-only">Age</span>
+                        <input class="intake-input intake-input--short" name="age" type="number" inputmode="numeric" min="16" max="99" required />
+                      </label>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="sag">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                    </div>
+                    <div class="intake-choice intake-acc__field">
+                      <p class="intake-choice__sub" data-ex-sub></p>
+                      <div class="intake-inline">
+                        <input class="intake-input intake-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" aria-label="Stop and go hours per week" />
+                        <span class="intake-unit">hrs / week</span>
+                        <span class="intake-hours-help">
+                          <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
+                            <span class="intake-info-btn__icon" aria-hidden="true">i</span>
+                          </button>
+                          <span class="intake-hours-popover" hidden data-hours-info-panel></span>
+                        </span>
+                      </div>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="cardio">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                    </div>
+                    <div class="intake-choice intake-acc__field">
+                      <p class="intake-choice__sub" data-ex-sub></p>
+                      <div class="intake-inline">
+                        <input class="intake-input intake-input--short" name="cardioHours" inputmode="decimal" placeholder="0" aria-label="Cardio training range hours per week" />
+                        <span class="intake-unit">hrs / week</span>
+                        <span class="intake-hours-help">
+                          <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
+                            <span class="intake-info-btn__icon" aria-hidden="true">i</span>
+                          </button>
+                          <span class="intake-hours-popover" hidden data-hours-info-panel></span>
+                        </span>
+                      </div>
+                      <p class="intake-acc__meta" data-hr-cardio>Cardio training range (BPM) — enter age above</p>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-ex-field="moderate">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-ex-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-ex-guide></p>
+                    </div>
+                    <div class="intake-choice intake-acc__field">
+                      <p class="intake-choice__sub" data-ex-sub></p>
+                      <div class="intake-inline">
+                        <input class="intake-input intake-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" aria-label="Fat burning training range hours per week" />
+                        <span class="intake-unit">hrs / week</span>
+                        <span class="intake-hours-help">
+                          <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
+                            <span class="intake-info-btn__icon" aria-hidden="true">i</span>
+                          </button>
+                          <span class="intake-hours-popover" hidden data-hours-info-panel></span>
+                        </span>
+                      </div>
+                      <p class="intake-acc__meta" data-hr-fat>Fat burning training range (BPM) — enter age above</p>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
-              <p class="field__note" id="fat-burn-heart-rate">Fat burning training range (BPM) — enter age above</p>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <!-- 4 Body composition -->
-      <section class="form-step" data-step="3" hidden>
-        <h2 class="sheet__heading">Body composition</h2>
+          <section class="q-panel q-panel--intake" data-step="3" hidden>
+            <div class="intake-form" id="body-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Body composition</h2>
+              </header>
 
-        <div class="acc" data-accordion>
-          <div class="acc-item is-open" data-field="heightFeet">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">12.</span> What is your height?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Enter feet and inches in separate boxes.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="heightFeet" inputmode="numeric" placeholder="ft" required />
-                <input class="field__input field__input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" min="0" max="11" />
-                <span>ft / in</span>
+              <div class="intake-acc" id="body-accordion">
+                <div class="intake-acc__item is-open" data-body-field="height">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="true">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="heightFeet" inputmode="numeric" placeholder="ft" aria-label="Feet" required />
+                      <input class="intake-input intake-input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" aria-label="Inches" min="0" max="11" />
+                      <span class="intake-unit">ft / in</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="weight">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <p class="intake-acc__alert" data-body-alert hidden></p>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="weight" inputmode="decimal" required aria-label="Weight in pounds" />
+                      <span class="intake-unit">lbs</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="fatPercent">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-inline intake-acc__field">
+                      <input class="intake-input intake-input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" aria-label="Body fat percentage" />
+                      <span class="intake-unit">% body fat</span>
+                    </div>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
+
+                <div class="intake-acc__item" data-body-field="fatSource">
+                  <button type="button" class="intake-acc__trigger" aria-expanded="false">
+                    <span class="intake-acc__num" aria-hidden="true"></span>
+                    <span class="intake-acc__label" data-body-label></span>
+                    <span class="intake-acc__summary" hidden></span>
+                  </button>
+                  <div class="intake-acc__panel">
+                    <div class="intake-acc__howto">
+                      <p class="intake-acc__guide" data-body-guide></p>
+                      <p class="intake-acc__example" data-body-example></p>
+                    </div>
+                    <div class="intake-radios intake-acc__field" id="fat-source-radios"></div>
+                    <label class="intake-acc__field intake-fat-source-other" data-fat-source-other hidden>
+                      <span class="sr-only">Describe how you know</span>
+                      <input class="intake-input" name="fatSourceOther" autocomplete="off" disabled />
+                    </label>
+                    <p class="intake-acc__error" hidden></p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="acc-item" data-field="weight">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">13.</span> What is your weight?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Morning weight in pounds, before eating, after bathroom, same scale each time.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="weight" inputmode="decimal" required />
-                <span>lbs</span>
-              </div>
-              <p class="field__note">Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You're paying $149 for this program. The program will only be as beneficial as your answers are accurate.</p>
-            </div>
-          </div>
-
-          <div class="acc-item" data-field="fatPercent">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">14.</span> What is your body fat percentage?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one. Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower.</p>
-              <div class="field__row">
-                <input class="field__input field__input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" />
-                <span>% body fat</span>
+          <section class="q-panel q-panel--intake" data-step="4" hidden>
+            <div class="intake-form" id="waiver-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Waiver (please read and sign)</h2>
+              </header>
+              <div class="intake-waiver">
+                <p class="intake-waiver__text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
+                <div class="intake-waiver__sign">
+                  <label class="intake-waiver__cell intake-waiver__cell--signed">
+                    <span class="intake-waiver__label"><span class="intake-acc__num" aria-hidden="true"></span> Signed</span>
+                    <input class="intake-input intake-waiver__input" name="signature" autocomplete="name" placeholder="type your full name" required />
+                  </label>
+                  <label class="intake-waiver__cell intake-waiver__cell--date">
+                    <span class="intake-waiver__label"><span class="intake-acc__num" aria-hidden="true"></span> Date</span>
+                    <input class="intake-input intake-waiver__input" type="date" name="signatureDate" required />
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="acc-item" data-field="fatSource">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">15.</span> How do you know?</span></button>
-            <div class="acc-item__body">
-              <p class="field__hint">Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.</p>
-              <div id="fat-source-list"></div>
+          <section class="q-panel q-panel--intake" data-step="5" hidden>
+            <div class="intake-form" id="review-form">
+              <header class="intake-form__head">
+                <h2 class="intake-form__title">Review &amp; continue</h2>
+                <p class="intake-form__note">Confirm your answers, then continue to secure checkout ($149). Use <strong>Back</strong> below to fix anything.</p>
+              </header>
+              <dl class="intake-review" id="q-review"></dl>
             </div>
-          </div>
+          </section>
+        </form>
 
-          <div class="acc-item" id="fat-source-other-wrap" data-field="fatSourceOther" hidden>
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">16.</span> Describe how you know</span></button>
-            <div class="acc-item__body">
-              <input class="field__input" name="fatSourceOther" disabled />
-            </div>
-          </div>
-        </div>
-      </section>
+        <footer class="q-step-nav" id="q-step-nav">
+          <button type="button" class="intake-nav-btn" data-q-step-back disabled>Back</button>
+          <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-q-step-next>Next</button>
+        </footer>
+      </main>
+    </div>
+  </div>
 
-      <!-- 5 Agreement -->
-      <section class="form-step" data-step="4" hidden>
-        <h2 class="sheet__heading">Waiver (please read and sign)</h2>
-        <p class="waiver-text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
-        <div class="acc" data-accordion>
-          <div class="acc-item is-open" data-field="signature">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">17.</span> Signed</span></button>
-            <div class="acc-item__body">
-              <input class="field__input" name="signature" autocomplete="name" placeholder="type your full name" required />
-            </div>
-          </div>
-
-          <div class="acc-item" data-field="signatureDate">
-            <button type="button" class="acc-item__head"><span class="acc-item__label"><span class="acc-item__num">18.</span> Date</span></button>
-            <div class="acc-item__body">
-              <input class="field__input" name="signatureDate" type="date" required />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6 Review -->
-      <section class="form-step" data-step="5" hidden>
-        <h2 class="sheet__heading">Review &amp; continue</h2>
-        <p class="field__hint">Confirm your answers, then continue to secure checkout ($149). Use <strong>Back</strong> below to fix anything.</p>
-        <dl class="review-list" id="review-list"></dl>
-        <div class="form-success" id="form-success" hidden></div>
-        <p class="form-error" id="form-error" hidden></p>
-      </section>
-    </form>
-
-    <footer class="nav">
-      <button type="button" class="btn" id="btn-back" disabled>Back</button>
-      <button type="button" class="btn btn--primary" id="btn-next">Next</button>
-    </footer>
-  </main>
-
-  <script type="module" src="js/questionnaire.js?v=17"></script>
+  <script type="module" src="js/questionnaire.js?v=153"></script>
 </body>
 </html>
