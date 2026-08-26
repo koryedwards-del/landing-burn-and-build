@@ -50,8 +50,17 @@ import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNamingHelpers.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
+import { registerFivePageFonts } from './fivePageFonts.js';
 
 export const PROGRAM_REPORT_MIN_PAGES = 10;
+
+/** Per-render font + header overrides (restored after each render). */
+let activeFonts = SEMINAR_FONTS;
+let useFullHeaderEveryPage = false;
+
+function resolveFullHeader(explicit) {
+  return explicit ?? useFullHeaderEveryPage;
+}
 
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
@@ -130,7 +139,7 @@ function resolveBodyTypography(options = {}) {
 function measureParagraph(doc, paragraph, width, typography = {}) {
   if (!paragraph) return 0;
   const { bodySize, lineGap, paragraphGap } = resolveBodyTypography(typography);
-  doc.font(SEMINAR_FONTS.regular).fontSize(bodySize);
+  doc.font(activeFonts.regular).fontSize(bodySize);
   return doc.heightOfString(String(paragraph), {
     width,
     lineGap,
@@ -142,7 +151,7 @@ function drawCenteredBodyParagraph(doc, payload, page, text) {
   const blockH = measureParagraph(doc, text, page.width);
   let current = ensureLockedSpace(doc, payload, page, blockH);
   doc
-    .font(SEMINAR_FONTS.regular)
+    .font(activeFonts.regular)
     .fontSize(LAYOUT.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(text), current.x, current.y, {
@@ -167,7 +176,7 @@ function drawBodyParagraphs(doc, payload, page, paragraphs, {
     const blockH = measureParagraph(doc, paragraph, current.width, typography);
     current = ensureLockedSpace(doc, payload, current, blockH, { fullHeader });
     doc
-      .font(SEMINAR_FONTS.regular)
+      .font(activeFonts.regular)
       .fontSize(typography.bodySize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(paragraph), current.x, current.y, {
@@ -229,14 +238,14 @@ function resolveTableCellStyle(opts, row, rowIndex, col) {
   if (typeof opts.getRowStyle === 'function') {
     const style = opts.getRowStyle(row, rowIndex, { isHeader });
     const font = style.font
-      ?? (isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular);
+      ?? (isHeader || boldKeys.has(col.key) ? activeFonts.bold : activeFonts.regular);
     const fontSize = style.fontSize
       ?? (isHeader ? (opts.headFontSize ?? LAYOUT.tableHeadSize) : (opts.bodyFontSize ?? LAYOUT.tableBodySize));
     return { font, fontSize };
   }
 
   return {
-    font: isHeader || boldKeys.has(col.key) ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular,
+    font: isHeader || boldKeys.has(col.key) ? activeFonts.bold : activeFonts.regular,
     fontSize: isHeader
       ? (opts.headFontSize ?? LAYOUT.tableHeadSize)
       : (opts.bodyFontSize ?? LAYOUT.tableBodySize),
@@ -269,7 +278,7 @@ function layoutTableRowHeights(doc, opts) {
 
 function drawSectionTitle(doc, title, x, y, width) {
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(activeFonts.bold)
     .fontSize(LAYOUT.subsectionSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(title || ''), x, y, { width, lineGap: 0 });
@@ -332,7 +341,7 @@ function drawStapleListRow(doc, item, x, y, width) {
   const pad = STAPLES_LIST.leaderPad;
   const lineH = LAYOUT.bodySize;
 
-  doc.font(SEMINAR_FONTS.regular).fontSize(lineH).fillColor(SEMINAR_COLORS.body);
+  doc.font(activeFonts.regular).fontSize(lineH).fillColor(SEMINAR_COLORS.body);
 
   const servingW = doc.widthOfString(serving);
   const servingX = x + width - servingW;
@@ -378,11 +387,11 @@ function drawStaplesColumn(doc, title, items, col, yStart, bottomY) {
 const STAPLES_TIPS_PARAGRAPH_GAP = 4;
 
 function measureStaplesTipsBlock(doc, width, tips) {
-  doc.font(SEMINAR_FONTS.boldItalic).fontSize(LAYOUT.subsectionSize);
+  doc.font(activeFonts.boldItalic).fontSize(LAYOUT.subsectionSize);
   let h = LAYOUT.sectionGap
     + doc.heightOfString(tips.title, { width })
     + LAYOUT.headerGap;
-  doc.font(SEMINAR_FONTS.regular).fontSize(LAYOUT.bodySize);
+  doc.font(activeFonts.regular).fontSize(LAYOUT.bodySize);
   for (const paragraph of tips.paragraphs) {
     h += doc.heightOfString(paragraph, { width, lineGap: LAYOUT.lineGap })
       + STAPLES_TIPS_PARAGRAPH_GAP;
@@ -394,14 +403,14 @@ function drawStaplesTipsBlock(doc, col, yStart, tips) {
   const { x, width } = col;
   let y = yStart + LAYOUT.sectionGap;
   doc
-    .font(SEMINAR_FONTS.boldItalic)
+    .font(activeFonts.boldItalic)
     .fontSize(LAYOUT.subsectionSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(tips.title, x, y, { width, lineGap: 0 });
   y = doc.y + LAYOUT.headerGap;
   for (const paragraph of tips.paragraphs) {
     doc
-      .font(SEMINAR_FONTS.regular)
+      .font(activeFonts.regular)
       .fontSize(LAYOUT.bodySize)
       .fillColor(SEMINAR_COLORS.body)
       .text(paragraph, x, y, { width, lineGap: LAYOUT.lineGap });
@@ -643,18 +652,20 @@ function drawLayoutTable(doc, opts) {
   return tableY + totalH;
 }
 
-function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
+function beginLockedPage(doc, payload, pageTitle, { fullHeader } = {}) {
+  const useFullHeader = resolveFullHeader(fullHeader);
   const box = addFramePage(doc);
-  const topGoldY = fullHeader
-    ? drawPersonalizationHeader(doc, payload, box)
+  const topGoldY = useFullHeader
+    ? drawPersonalizationHeader(doc, payload, box, { fonts: activeFonts })
     : drawContinuationHeader(doc, box);
 
   const bottom = pinnedContentBottomY(box);
-  let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
+  let y = useFullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, {
       size: PT.pageTitle,
       gapAfter: PT.titleBottomGap,
+      fonts: activeFonts,
     });
   }
   return { box, x: box.x, y, width: box.width, bottom };
@@ -668,10 +679,10 @@ function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   return beginLockedPage(doc, payload, pageTitle, { fullHeader });
 }
 
-function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = {}) {
+function ensureLockedSpace(doc, payload, page, needed, { fullHeader } = {}) {
   if (page.y + needed <= page.bottom) return page;
   finishLockedPage(doc, page.box, payload);
-  return startLockedPage(doc, payload, null, { fullHeader });
+  return startLockedPage(doc, payload, null, { fullHeader: resolveFullHeader(fullHeader) });
 }
 
 function drawWelcomePage(doc, payload) {
@@ -697,19 +708,19 @@ function drawWelcomePage(doc, payload) {
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
-    doc.font(SEMINAR_FONTS.bold).fontSize(guide.sectionTitle);
+    doc.font(activeFonts.bold).fontSize(guide.sectionTitle);
     const blockH = guide.sectionTitle + guide.headerGap
       + doc.heightOfString(String(body), { width: page.width, lineGap: guide.lineGap })
       + guide.paragraphGap;
     page = ensureLockedSpace(doc, payload, page, blockH, { fullHeader: true });
     doc
-      .font(SEMINAR_FONTS.bold)
+      .font(activeFonts.bold)
       .fontSize(guide.sectionTitle)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(title), page.x, page.y, { width: page.width, lineGap: 0 });
     page = { ...page, y: doc.y + guide.headerGap };
     doc
-      .font(SEMINAR_FONTS.regular)
+      .font(activeFonts.regular)
       .fontSize(guide.sectionBody)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(body), page.x, page.y, {
@@ -734,15 +745,15 @@ const PROJECTION_TABLE_HEAD_SIZE = PT.macroTableHead;
 
 function projectionTimelineRowStyle(row, rowIndex, { isHeader }) {
   if (isHeader) {
-    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
+    return { font: activeFonts.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
   }
   if (row.isCurrent) {
-    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+    return { font: activeFonts.bold, fontSize: PT.body };
   }
   if (row.badge === 'Average') {
-    return { font: SEMINAR_FONTS.italic, fontSize: PT.subsection };
+    return { font: activeFonts.italic, fontSize: PT.subsection };
   }
-  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+  return { font: activeFonts.regular, fontSize: PT.subsection };
 }
 
 function buildProjectionSummaryTableOpts(projections, x, y, width) {
@@ -803,7 +814,7 @@ function resolveCenteredTableCellStyle(opts, row, rowIndex, colKey, { isHeader }
   if (typeof opts.getRowStyle === 'function') {
     return opts.getRowStyle(row, rowIndex, { isHeader });
   }
-  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+  return { font: activeFonts.regular, fontSize: PT.subsection };
 }
 
 function drawCenteredTableCell(doc, text, cellX, cellY, cellW, cellH, { font, fontSize }) {
@@ -902,15 +913,15 @@ function buildMacroSignalLayoutRows(macroRows = []) {
 
 function macroSignalCellStyle(row, rowIndex, colKey, { isHeader }) {
   if (isHeader) {
-    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
+    return { font: activeFonts.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
   }
   if (colKey === 'tooLittle' && row.emphasizeTooLittle) {
-    return { font: SEMINAR_FONTS.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
+    return { font: activeFonts.bold, fontSize: PROJECTION_TABLE_HEAD_SIZE };
   }
   if (colKey === 'macro') {
-    return { font: SEMINAR_FONTS.bold, fontSize: PT.body };
+    return { font: activeFonts.bold, fontSize: PT.body };
   }
-  return { font: SEMINAR_FONTS.regular, fontSize: PT.subsection };
+  return { font: activeFonts.regular, fontSize: PT.subsection };
 }
 
 function measureMacroSignalLayoutTable(doc, width, macroRows = []) {
@@ -987,7 +998,7 @@ const INPUT_GRID = {
   cellPad: 5,
   cellPadTop: 7,
   /** All 6 cell titles (LBM, JOB, …) — one size, bold. */
-  titleFont: SEMINAR_FONTS.bold,
+  titleFont: activeFonts.bold,
   titleSize: PROJECTION_TABLE_HEAD_SIZE,
   /** Match projection table data rows (184 lbs, Current, …). */
   textSize: PT.subsection,
@@ -1014,7 +1025,7 @@ function choiceCellFontSize(doc, cell, innerW) {
   while (size > 6) {
     let fits = true;
     cell.options.forEach((option) => {
-      const font = option.id === cell.selectedId ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+      const font = option.id === cell.selectedId ? activeFonts.bold : activeFonts.regular;
       doc.font(font).fontSize(size);
       if (doc.widthOfString(option.label) > slotW - 4) fits = false;
     });
@@ -1032,7 +1043,7 @@ function choiceRowFontSize(doc, row, innerW) {
 }
 
 function measureChoiceOptionRow(doc, optionSize) {
-  doc.font(SEMINAR_FONTS.regular).fontSize(optionSize);
+  doc.font(activeFonts.regular).fontSize(optionSize);
   return doc.currentLineHeight();
 }
 
@@ -1040,7 +1051,7 @@ function drawChoiceOptionRow(doc, cell, x, y, innerW, optionSize) {
   const slotW = innerW / cell.options.length;
   cell.options.forEach((option, index) => {
     const selected = option.id === cell.selectedId;
-    const font = selected ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+    const font = selected ? activeFonts.bold : activeFonts.regular;
     doc.font(font).fontSize(optionSize);
     const labelW = doc.widthOfString(option.label);
     const startX = x + slotW * index + (slotW - labelW) / 2;
@@ -1060,7 +1071,7 @@ function metricCellTypography() {
   return {
     labelFont: INPUT_GRID.titleFont,
     labelSize: INPUT_GRID.titleSize,
-    valueFont: SEMINAR_FONTS.regular,
+    valueFont: activeFonts.regular,
     valueSize: INPUT_GRID.textSize,
     labelGap: INPUT_GRID.labelGap,
   };
@@ -1070,7 +1081,7 @@ function metricValueFontSize(doc, text, innerW, minSize = 6) {
   const { textSize } = INPUT_GRID;
   let size = textSize;
   while (size > minSize) {
-    doc.font(SEMINAR_FONTS.regular).fontSize(size);
+    doc.font(activeFonts.regular).fontSize(size);
     if (doc.widthOfString(text) <= innerW) return size;
     size -= 0.25;
   }
@@ -1081,7 +1092,7 @@ function measureMetricInputCell(doc, cell, innerW, valueSize) {
   const { labelGap } = metricCellTypography(cell);
   const labelH = measureInputGridTitle(doc, cell.label, innerW);
   const size = valueSize ?? metricValueFontSize(doc, metricValueLine(cell), innerW);
-  doc.font(SEMINAR_FONTS.regular).fontSize(size);
+  doc.font(activeFonts.regular).fontSize(size);
   return labelH + labelGap + doc.currentLineHeight();
 }
 
@@ -1133,7 +1144,7 @@ function drawMetricInputCell(doc, cell, x, y, innerW, cellH, valueSize) {
   let cy = y + (cellH - contentH) / 2;
   drawInputGridTitle(doc, cell.label, x, cy, innerW);
   const valueY = doc.y + labelGap;
-  doc.font(SEMINAR_FONTS.regular).fontSize(resolvedValueSize).fillColor(SEMINAR_COLORS.body);
+  doc.font(activeFonts.regular).fontSize(resolvedValueSize).fillColor(SEMINAR_COLORS.body);
   const valueW = doc.widthOfString(valueLine);
   const valueX = x + pad + (innerW - valueW) / 2;
   doc.text(valueLine, valueX, valueY, { lineBreak: false });
@@ -1325,7 +1336,7 @@ function drawLbmCell(doc, lbmCell, x0, barY, segW, barH) {
 }
 
 function drawStackedBarCell(doc, { fatLabel, categoryLabel, poundsLabel }, x0, barY, segW, barH, textColor, isActive) {
-  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+  const font = isActive ? activeFonts.bold : activeFonts.regular;
   const gap = BODY_FAT_PROGRESS_BAR.cellLineGap;
   const fatH = fatLabel ? BODY_FAT_PROGRESS_BAR.capLabelSize : 0;
   const catH = categoryLabel ? BODY_FAT_PROGRESS_BAR.categorySize : 0;
@@ -1388,12 +1399,12 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
       .lineTo(markerX, markerTop)
       .stroke();
 
-    doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.timelineLabelSize).fillColor(color);
+    doc.font(activeFonts.bold).fontSize(BODY_FAT_PROGRESS_BAR.timelineLabelSize).fillColor(color);
     const labelW = doc.widthOfString(timelineLabel);
     const labelX = Math.max(pageX, Math.min(markerX - labelW / 2, pageX + pageWidth - labelW));
     doc.text(timelineLabel, labelX, labelY, { lineBreak: false });
 
-    doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.timelineBfSize);
+    doc.font(activeFonts.regular).fontSize(BODY_FAT_PROGRESS_BAR.timelineBfSize);
     const weightW = doc.widthOfString(marker.weightLabel);
     const weightX = Math.max(pageX, Math.min(markerX - weightW / 2, pageX + pageWidth - weightW));
     doc.text(marker.weightLabel, weightX, labelY + BODY_FAT_PROGRESS_BAR.timelineLabelSize + 2, { lineBreak: false });
@@ -1401,9 +1412,9 @@ function drawFatBarTimelineMarkers(doc, layout, barY, barH, scaleMax, markers, p
 }
 
 function measureBodyFatProgressBar(doc, width, footerText, bar) {
-  doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
+  doc.font(activeFonts.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
   const titleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_TITLE, { width, align: 'center' });
-  doc.font(SEMINAR_FONTS.regular).fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize);
+  doc.font(activeFonts.regular).fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize);
   const subtitleH = doc.heightOfString(BODY_FAT_PROGRESS_BAR_SUBTITLE, { width, align: 'center' });
   doc.font(PDF_FRAME_FONTS.italic).fontSize(BODY_FAT_PROGRESS_BAR.footerSize);
   const footerH = doc.heightOfString(footerText || BODY_FAT_PROGRESS_BAR_FOOTER, {
@@ -1437,7 +1448,7 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
   let cy = y;
   const gold = PDF_FRAME_COLORS.gold;
 
-  doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
+  doc.font(activeFonts.bold).fontSize(BODY_FAT_PROGRESS_BAR.titleSize);
   const titleParts = BODY_FAT_PROGRESS_BAR_TITLE.split(' ');
   const titleSplitAt = titleParts.length <= 2 ? 1 : 2;
   const titleSilver = titleParts.slice(0, titleSplitAt).join(' ');
@@ -1450,7 +1461,7 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
   cy += BODY_FAT_PROGRESS_BAR.titleSize + 4;
 
   doc
-    .font(SEMINAR_FONTS.regular)
+    .font(activeFonts.regular)
     .fontSize(BODY_FAT_PROGRESS_BAR.subtitleSize)
     .fillColor('#2F6FA8')
     .text(BODY_FAT_PROGRESS_BAR_SUBTITLE, x, cy, { width, align: 'center', lineGap: 0 });
@@ -1513,7 +1524,7 @@ function drawBodyFatProgressBar(doc, page, bar, footerText) {
   if (Number.isFinite(currentBf)) {
     const markerX = bfToBarX(layout.bfX, layout.bfW, currentBf, scaleMax);
     const markerLabel = `${currentBf}%`;
-    doc.font(SEMINAR_FONTS.bold).fontSize(BODY_FAT_PROGRESS_BAR.markerLabelSize);
+    doc.font(activeFonts.bold).fontSize(BODY_FAT_PROGRESS_BAR.markerLabelSize);
     const labelW = doc.widthOfString(markerLabel);
     const labelX = Math.max(x, Math.min(markerX - labelW / 2, x + width - labelW));
     doc.fillColor(SEMINAR_COLORS.body).text(markerLabel, labelX, cy, { lineBreak: false });
@@ -1606,7 +1617,7 @@ function lbmToBarX(x, width, lbm, scaleMax) {
 function drawLbmSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, textColor) {
   const stageName = zone.label.toUpperCase();
   const isActive = zone.label === activeStage;
-  const font = isActive ? SEMINAR_FONTS.bold : SEMINAR_FONTS.regular;
+  const font = isActive ? activeFonts.bold : activeFonts.regular;
   const gap = DESIRABLE_LBM_BAR.cellLineGap;
   const capH = zone.capLabel ? DESIRABLE_LBM_BAR.capLabelSize : 0;
   const catH = DESIRABLE_LBM_BAR.categorySize;
@@ -1622,9 +1633,9 @@ function drawLbmSegmentCellLabels(doc, zone, x0, barY, segW, barH, activeStage, 
 }
 
 function measureDesirableLbmBar(doc, width, footerText) {
-  doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
+  doc.font(activeFonts.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
   const titleH = doc.heightOfString(DESIRABLE_LBM_BAR_TITLE, { width, align: 'center' });
-  doc.font(SEMINAR_FONTS.regular).fontSize(DESIRABLE_LBM_BAR.subtitleSize);
+  doc.font(activeFonts.regular).fontSize(DESIRABLE_LBM_BAR.subtitleSize);
   const subtitleH = doc.heightOfString(DESIRABLE_LBM_BAR_SUBTITLE, { width, align: 'center' });
   doc.font(PDF_FRAME_FONTS.italic).fontSize(DESIRABLE_LBM_BAR.footerSize);
   const footerH = doc.heightOfString(footerText || DESIRABLE_LBM_BAR_FOOTER, {
@@ -1655,7 +1666,7 @@ function drawDesirableLbmBar(doc, page, bar, footerText) {
   let cy = y;
   const gold = PDF_FRAME_COLORS.gold;
 
-  doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
+  doc.font(activeFonts.bold).fontSize(DESIRABLE_LBM_BAR.titleSize);
   const titleParts = DESIRABLE_LBM_BAR_TITLE.split(' ');
   const titleSilver = titleParts.slice(0, 2).join(' ');
   const titleGold = titleParts.slice(2).join(' ');
@@ -1667,7 +1678,7 @@ function drawDesirableLbmBar(doc, page, bar, footerText) {
   cy += DESIRABLE_LBM_BAR.titleSize + 4;
 
   doc
-    .font(SEMINAR_FONTS.regular)
+    .font(activeFonts.regular)
     .fontSize(DESIRABLE_LBM_BAR.subtitleSize)
     .fillColor('#2F6FA8')
     .text(DESIRABLE_LBM_BAR_SUBTITLE, x, cy, { width, align: 'center', lineGap: 0 });
@@ -1709,7 +1720,7 @@ function drawDesirableLbmBar(doc, page, bar, footerText) {
   if (Number.isFinite(currentLbm)) {
     const markerX = lbmToBarX(x, width, currentLbm, scaleMax);
     const markerLabel = `${currentLbm} lbs`;
-    doc.font(SEMINAR_FONTS.bold).fontSize(DESIRABLE_LBM_BAR.markerLabelSize);
+    doc.font(activeFonts.bold).fontSize(DESIRABLE_LBM_BAR.markerLabelSize);
     const labelW = doc.widthOfString(markerLabel);
     const labelX = Math.max(x, Math.min(markerX - labelW / 2, x + width - labelW));
     doc.fillColor(SEMINAR_COLORS.body).text(markerLabel, labelX, cy, { lineBreak: false });
@@ -1786,12 +1797,12 @@ function lbaToday1982PctDisplay(pct) {
 function lbaTodayBlockLayout(doc, todayRows) {
   const labelSize = LBA_SNAPSHOT.todayLabelSize;
   const dataSize = LBA_SNAPSHOT.todayDataSize;
-  doc.font(SEMINAR_FONTS.bold).fontSize(labelSize);
+  doc.font(activeFonts.bold).fontSize(labelSize);
   const labelColW = todayRows.reduce(
     (max, row) => Math.max(max, doc.widthOfString(String(row.label || ''))),
     doc.widthOfString('TOTAL'),
   );
-  doc.font(SEMINAR_FONTS.regular).fontSize(dataSize);
+  doc.font(activeFonts.regular).fontSize(dataSize);
   const pctColW = todayRows.reduce(
     (max, row) => Math.max(max, doc.widthOfString(lbaToday1982PctDisplay(row.pct))),
     doc.widthOfString('100.00 %'),
@@ -1815,9 +1826,9 @@ function measureLbaProfileSection(doc, profileStats, width) {
   const colW = width / Math.max(profileStats?.length || 1, 1);
   const innerW = colW - pad;
 
-  doc.font(SEMINAR_FONTS.bold).fontSize(LBA_SNAPSHOT.profileLabelSize);
+  doc.font(activeFonts.bold).fontSize(LBA_SNAPSHOT.profileLabelSize);
   const profileLabelH = doc.heightOfString('HEIGHT', { width: innerW });
-  doc.font(SEMINAR_FONTS.regular).fontSize(LBA_SNAPSHOT.profileValueSize);
+  doc.font(activeFonts.regular).fontSize(LBA_SNAPSHOT.profileValueSize);
   const profileValueH = profileStats.reduce(
     (max, stat) => Math.max(
       max,
@@ -1866,7 +1877,7 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
   profileStats.forEach((stat, index) => {
     const colX = x + colW * index;
     doc
-      .font(SEMINAR_FONTS.bold)
+      .font(activeFonts.bold)
       .fontSize(LBA_SNAPSHOT.profileLabelSize)
       .fillColor(blue)
       .text(String(stat.label || ''), colX + pad, cy + pad, {
@@ -1875,7 +1886,7 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
         align: 'center',
       });
     doc
-      .font(SEMINAR_FONTS.regular)
+      .font(activeFonts.regular)
       .fontSize(LBA_SNAPSHOT.profileValueSize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(stat.value || ''), colX + pad, cy + pad + LBA_SNAPSHOT.profileLabelSize + 3, {
@@ -1896,7 +1907,7 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
 
   cy += LBA_SNAPSHOT.sectionGap;
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(activeFonts.bold)
     .fontSize(LBA_SNAPSHOT.todayTitleSize)
     .fillColor(blue)
     .text(LBA_TODAY_TITLE, x, cy, { width, align: 'center', lineGap: 0 });
@@ -1911,17 +1922,17 @@ function drawLbaSnapshotCard(doc, x, y, width, profileStats, todayRows) {
 
   todayRows.forEach((row) => {
     drawLbaToday1982Cell(doc, row.label, blockX, cy, labelColW, {
-      font: SEMINAR_FONTS.bold,
+      font: activeFonts.bold,
       fontSize: LBA_SNAPSHOT.todayLabelSize,
       align: 'left',
     });
     drawLbaToday1982Cell(doc, lbaToday1982PctDisplay(row.pct), pctX, cy, pctColW, {
-      font: SEMINAR_FONTS.regular,
+      font: activeFonts.regular,
       fontSize: bodySize,
       align: 'right',
     });
     drawLbaToday1982Cell(doc, row.lbs, lbsX, cy, lbsColW, {
-      font: SEMINAR_FONTS.regular,
+      font: activeFonts.regular,
       fontSize: bodySize,
       align: 'right',
     });
@@ -1964,7 +1975,7 @@ function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { ful
 
   if (!status) {
     doc
-      .font(SEMINAR_FONTS.regular)
+      .font(activeFonts.regular)
       .fontSize(typography.bodySize)
       .fillColor(SEMINAR_COLORS.body)
       .text(String(paragraph), current.x, current.y, {
@@ -1976,7 +1987,7 @@ function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { ful
   }
 
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(activeFonts.bold)
     .fontSize(typography.bodySize)
     .fillColor(status.color)
     .text(status.prefix, current.x, current.y, {
@@ -1984,7 +1995,7 @@ function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { ful
       lineGap: typography.lineGap,
     });
   doc
-    .font(SEMINAR_FONTS.regular)
+    .font(activeFonts.regular)
     .fontSize(typography.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text(status.rest, {
@@ -2132,7 +2143,7 @@ function measureMetricColumnGrid(doc, columns, width) {
   const colW = width / columns.length;
   const pad = TABLE_CONTAINER.cellPad;
   const innerW = colW - pad * 2;
-  doc.font(SEMINAR_FONTS.bold).fontSize(REPORT_GRID.labelSize);
+  doc.font(activeFonts.bold).fontSize(REPORT_GRID.labelSize);
   const maxLabelH = columns.reduce(
     (max, col) => Math.max(
       max,
@@ -2140,9 +2151,9 @@ function measureMetricColumnGrid(doc, columns, width) {
     ),
     0,
   );
-  doc.font(SEMINAR_FONTS.bold).fontSize(REPORT_GRID.valueSize);
+  doc.font(activeFonts.bold).fontSize(REPORT_GRID.valueSize);
   const valueH = doc.heightOfString('113.7', { width: innerW });
-  doc.font(SEMINAR_FONTS.regular).fontSize(REPORT_GRID.unitSize);
+  doc.font(activeFonts.regular).fontSize(REPORT_GRID.unitSize);
   const unitH = doc.heightOfString('hours per week', { width: innerW });
   return pad * 2 + maxLabelH + 6 + valueH + 4 + unitH;
 }
@@ -2233,7 +2244,7 @@ function drawFoodPlanTitledProse(doc, payload, page, titled, typo) {
   );
   page = { ...page, y: page.y + LAYOUT.sectionGap };
   doc
-    .font(SEMINAR_FONTS.boldItalic)
+    .font(activeFonts.boldItalic)
     .fontSize(LAYOUT.subsectionSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(titled.title, page.x, page.y, { width: page.width, lineGap: 0 });
@@ -2373,9 +2384,9 @@ const FAQ_TYPO = Object.freeze({
 
 function measureLockedFaqItem(doc, { q, a }, width, questionNumber) {
   const questionText = `${questionNumber}. ${q}`.toUpperCase();
-  doc.font(SEMINAR_FONTS.bold).fontSize(FAQ_TYPO.questionSize);
+  doc.font(activeFonts.bold).fontSize(FAQ_TYPO.questionSize);
   const questionH = doc.heightOfString(questionText, { width, lineGap: 0 });
-  doc.font(SEMINAR_FONTS.regular).fontSize(FAQ_TYPO.answerSize);
+  doc.font(activeFonts.regular).fontSize(FAQ_TYPO.answerSize);
   const answerH = doc.heightOfString(String(a || ''), {
     width,
     lineGap: FAQ_TYPO.lineGap,
@@ -2386,14 +2397,14 @@ function measureLockedFaqItem(doc, { q, a }, width, questionNumber) {
 function drawLockedFaqItem(doc, page, { q, a }, questionNumber) {
   const questionText = `${questionNumber}. ${q}`.toUpperCase();
   doc
-    .font(SEMINAR_FONTS.bold)
+    .font(activeFonts.bold)
     .fontSize(FAQ_TYPO.questionSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(questionText, page.x, page.y, { width: page.width, lineGap: 0 });
 
   const answerY = doc.y + FAQ_TYPO.questionAnswerGap;
   doc
-    .font(SEMINAR_FONTS.regular)
+    .font(activeFonts.regular)
     .fontSize(FAQ_TYPO.answerSize)
     .fillColor(SEMINAR_COLORS.body)
     .text(String(a || ''), page.x, answerY, {
@@ -2460,8 +2471,18 @@ function drawAnswersConfirmationPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-export async function renderProgramReportLockedPreview(payload, { title, buildLabel } = {}) {
+export async function renderProgramReportLockedPreview(payload, {
+  title,
+  buildLabel,
+  fonts,
+  fullHeaderEveryPage = false,
+} = {}) {
   validatePrintPayload('programreport', payload);
+
+  const prevFonts = activeFonts;
+  const prevFullHeader = useFullHeaderEveryPage;
+  activeFonts = fonts || activeFonts;
+  useFullHeaderEveryPage = fullHeaderEveryPage;
 
   const creator = createPrintPdf({
     title: title || payload.title || BURN_AND_BUILD_DIET_PDF_NAME,
@@ -2469,25 +2490,33 @@ export async function renderProgramReportLockedPreview(payload, { title, buildLa
   });
 
   const doc = creator.doc;
+  if (fonts) {
+    registerFivePageFonts(doc);
+  }
   if (buildLabel) {
     doc.info.Subject = `${BURN_AND_BUILD_DIET_PDF_NAME} sample ${buildLabel}`;
   }
 
-  drawWelcomePage(doc, payload);
-  drawLeanBodyAnalysisPage(doc, payload);
-  drawFoodPlanPage(doc, payload);
-  drawServingsPage(doc, payload);
-  drawStaplesFoodListPage(doc, payload);
-  drawVegFruitFoodListPage(doc, payload);
-  drawFaqPages(doc, payload);
-  drawAnswersConfirmationPage(doc, payload);
+  try {
+    drawWelcomePage(doc, payload);
+    drawLeanBodyAnalysisPage(doc, payload);
+    drawFoodPlanPage(doc, payload);
+    drawServingsPage(doc, payload);
+    drawStaplesFoodListPage(doc, payload);
+    drawVegFruitFoodListPage(doc, payload);
+    drawFaqPages(doc, payload);
+    drawAnswersConfirmationPage(doc, payload);
 
-  stampPinnedProgramFooters(doc, payload.header);
+    stampPinnedProgramFooters(doc, payload.header, activeFonts);
 
-  const buffer = await creator.finish({ stampPageNumbers: false });
-  const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages < PROGRAM_REPORT_MIN_PAGES) {
-    throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
+    const buffer = await creator.finish({ stampPageNumbers: false });
+    const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+    if (pages < PROGRAM_REPORT_MIN_PAGES) {
+      throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
+    }
+    return buffer;
+  } finally {
+    activeFonts = prevFonts;
+    useFullHeaderEveryPage = prevFullHeader;
   }
-  return buffer;
 }

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-/** Preview: B&B 5-page printout — always writes a NEW numbered PDF (never overwrites). */
+/** Preview: B&B sample-female printout — 2026 program report content, Montserrat, full header every page. */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildKristiFivePagePreviewPayload } from '../js/fivePagePrintoutData.js';
-import { renderFivePagePrintout } from '../server/pdf/renderFivePagePrintout.js';
+import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
+import { renderProgramReportLockedPreview } from '../server/pdf/renderProgramReportLockedPreview.js';
+import { FIVE_PAGE_FONTS } from '../server/pdf/fivePageFonts.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -34,8 +35,13 @@ function nextNumber(re, basename, min = 0) {
 const sampleName = nextNumber(SAMPLE_RE, SAMPLE_BASENAME, SAMPLE_MIN);
 const archiveName = nextNumber(ARCHIVE_RE, ARCHIVE_BASENAME);
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildKristiFivePagePreviewPayload();
-const pdf = await renderFivePagePrintout(payload, { buildLabel });
+const payload = buildKristiPreviewPayload();
+const pdf = await renderProgramReportLockedPreview(payload, {
+  buildLabel,
+  title: 'B&B Sample Female Printout',
+  fonts: FIVE_PAGE_FONTS,
+  fullHeaderEveryPage: true,
+});
 
 const samplePath = path.join(samplesDir, sampleName);
 const archivePath = path.join(samplesDir, archiveName);

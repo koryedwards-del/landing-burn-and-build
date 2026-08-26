@@ -15,11 +15,12 @@ export const SEMINAR_COLORS = {
   startHereText: '#111111',
 };
 
-export function drawPersonalizationHeader(doc, payload, box) {
+export function drawPersonalizationHeader(doc, payload, box, { fonts = PDF_FRAME_FONTS } = {}) {
   return drawFrameHeader(doc, box, {
     personalized: true,
     clientName: payload.clientName,
     preparedDateLong: payload.preparedDateLong,
     preparedDate: payload.preparedDate,
+    fonts,
   });
 }

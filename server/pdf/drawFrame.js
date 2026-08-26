@@ -199,11 +199,11 @@ export function framePageTitleStartY(topGoldY) {
   return topGoldY + 2 + PT.titleTopGap;
 }
 
-export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } = {}) {
+export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter, fonts = PDF_FRAME_FONTS } = {}) {
   const display = titleCaseWords(title);
 
   doc
-    .font(PDF_FRAME_FONTS.bold)
+    .font(fonts.bold)
     .fontSize(size || PDF_FRAME.contentPageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(display, x, y, { width, lineGap: 0 });
