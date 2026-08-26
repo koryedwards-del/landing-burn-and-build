@@ -3,7 +3,7 @@
  * Preview: scripts/render-five-page-preview.mjs
  */
 import { createPrintPdf } from './creator.js';
-import { registerFivePageFonts, FIVE_PAGE_FONTS } from './fivePageFonts.js';
+import { PDF_FRAME_FONTS } from './drawFrame.js';
 import { SEMINAR_COLORS } from './drawSeminar.js';
 import {
   begin1982Page,
@@ -12,7 +12,7 @@ import {
   TABLE_1982,
 } from './draw1982Frame.js';
 
-const FONTS = FIVE_PAGE_FONTS;
+const FONTS = PDF_FRAME_FONTS;
 const LAYOUT = FRAME_1982;
 
 function measureText(doc, text, width, { font, fontSize, lineGap = LAYOUT.lineGap } = {}) {
@@ -471,7 +471,6 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
     author: 'Burn & Build Diet',
   });
   const doc = creator.doc;
-  registerFivePageFonts(doc);
   if (buildLabel) {
     doc.info.Subject = `B&B 5-page printout sample ${buildLabel}`;
   }

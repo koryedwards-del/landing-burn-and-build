@@ -53,13 +53,6 @@ import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 
 export const PROGRAM_REPORT_MIN_PAGES = 10;
 
-/** Sample-female only: full personalized header on every new page (program report uses continuation headers). */
-let defaultFullHeader = false;
-
-function resolveFullHeader(explicit) {
-  return explicit ?? defaultFullHeader;
-}
-
 const pdfRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(pdfRoot, 'img/print/fat-can-3lb.png');
 const FAT_CAN_INLINE_COUNT = 3;
@@ -161,7 +154,7 @@ function drawCenteredBodyParagraph(doc, payload, page, text) {
 }
 
 function drawBodyParagraphs(doc, payload, page, paragraphs, {
-  fullHeader,
+  fullHeader = false,
   pageTitle = null,
   bodySize,
   lineGap,
@@ -650,15 +643,14 @@ function drawLayoutTable(doc, opts) {
   return tableY + totalH;
 }
 
-function beginLockedPage(doc, payload, pageTitle, { fullHeader } = {}) {
-  const useFullHeader = resolveFullHeader(fullHeader);
+function beginLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   const box = addFramePage(doc);
-  const topGoldY = useFullHeader
+  const topGoldY = fullHeader
     ? drawPersonalizationHeader(doc, payload, box)
     : drawContinuationHeader(doc, box);
 
   const bottom = pinnedContentBottomY(box);
-  let y = useFullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
+  let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
     y = drawFramePageTitle(doc, pageTitle, box.x, y, box.width, {
       size: PT.pageTitle,
@@ -672,14 +664,14 @@ function finishLockedPage(_doc, _box, _payload) {
   /* Footers stamped once after all pages — see stampPinnedProgramFooters */
 }
 
-function startLockedPage(doc, payload, pageTitle, { fullHeader } = {}) {
+function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
   return beginLockedPage(doc, payload, pageTitle, { fullHeader });
 }
 
-function ensureLockedSpace(doc, payload, page, needed, { fullHeader } = {}) {
+function ensureLockedSpace(doc, payload, page, needed, { fullHeader = false } = {}) {
   if (page.y + needed <= page.bottom) return page;
   finishLockedPage(doc, page.box, payload);
-  return startLockedPage(doc, payload, null, { fullHeader: resolveFullHeader(fullHeader) });
+  return startLockedPage(doc, payload, null, { fullHeader });
 }
 
 function drawWelcomePage(doc, payload) {
@@ -1964,7 +1956,7 @@ function parseLbaStatusPrefix(text) {
   return null;
 }
 
-function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { fullHeader } = {}) {
+function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { fullHeader = false } = {}) {
   if (!paragraph) return page;
   const status = parseLbaStatusPrefix(paragraph);
   const blockH = measureParagraph(doc, paragraph, page.width, typography);
@@ -2468,11 +2460,8 @@ function drawAnswersConfirmationPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
-async function renderLockedProgramReport(payload, { title, buildLabel, subjectLabel } = {}, fullHeaderEveryPage = false) {
+export async function renderProgramReportLockedPreview(payload, { title, buildLabel } = {}) {
   validatePrintPayload('programreport', payload);
-
-  const prevDefaultFullHeader = defaultFullHeader;
-  defaultFullHeader = fullHeaderEveryPage;
 
   const creator = createPrintPdf({
     title: title || payload.title || BURN_AND_BUILD_DIET_PDF_NAME,
@@ -2481,41 +2470,24 @@ async function renderLockedProgramReport(payload, { title, buildLabel, subjectLa
 
   const doc = creator.doc;
   if (buildLabel) {
-    const label = subjectLabel || `${BURN_AND_BUILD_DIET_PDF_NAME} sample`;
-    doc.info.Subject = `${label} ${buildLabel}`;
+    doc.info.Subject = `${BURN_AND_BUILD_DIET_PDF_NAME} sample ${buildLabel}`;
   }
 
-  try {
-    drawWelcomePage(doc, payload);
-    drawLeanBodyAnalysisPage(doc, payload);
-    drawFoodPlanPage(doc, payload);
-    drawServingsPage(doc, payload);
-    drawStaplesFoodListPage(doc, payload);
-    drawVegFruitFoodListPage(doc, payload);
-    drawFaqPages(doc, payload);
-    drawAnswersConfirmationPage(doc, payload);
+  drawWelcomePage(doc, payload);
+  drawLeanBodyAnalysisPage(doc, payload);
+  drawFoodPlanPage(doc, payload);
+  drawServingsPage(doc, payload);
+  drawStaplesFoodListPage(doc, payload);
+  drawVegFruitFoodListPage(doc, payload);
+  drawFaqPages(doc, payload);
+  drawAnswersConfirmationPage(doc, payload);
 
-    stampPinnedProgramFooters(doc, payload.header);
+  stampPinnedProgramFooters(doc, payload.header);
 
-    const buffer = await creator.finish({ stampPageNumbers: false });
-    const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-    if (pages < PROGRAM_REPORT_MIN_PAGES) {
-      throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
-    }
-    return buffer;
-  } finally {
-    defaultFullHeader = prevDefaultFullHeader;
+  const buffer = await creator.finish({ stampPageNumbers: false });
+  const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+  if (pages < PROGRAM_REPORT_MIN_PAGES) {
+    throw new Error(`Preview PDF expected at least ${PROGRAM_REPORT_MIN_PAGES} pages, got ${pages}`);
   }
-}
-
-export async function renderProgramReportLockedPreview(payload, options = {}) {
-  return renderLockedProgramReport(payload, options, false);
-}
-
-/** Sample-female preview — same render path, full header on every page. */
-export async function renderSampleFemalePrintout(payload, options = {}) {
-  return renderLockedProgramReport(payload, {
-    ...options,
-    subjectLabel: `${BURN_AND_BUILD_DIET_PDF_NAME} sample-female preview`,
-  }, true);
+  return buffer;
 }

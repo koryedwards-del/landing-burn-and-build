@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-/** Preview: B&B sample-female printout — writes one stable latest PDF only. */
+/** Preview: B&B 5-page sample-female printout — one latest PDF. */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildSampleFemalePreviewPayload } from '../js/sampleFemalePreviewFixtures.js';
-import { renderSampleFemalePrintout } from '../server/pdf/renderProgramReportLockedPreview.js';
+import { buildKristiFivePagePreviewPayload } from '../js/fivePagePrintoutData.js';
+import { renderFivePagePrintout } from '../server/pdf/renderFivePagePrintout.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -16,8 +16,8 @@ const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BR
 const LATEST_NAME = 'bb-five-page-sample-female-latest.pdf';
 
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildSampleFemalePreviewPayload();
-const pdf = await renderSampleFemalePrintout(payload, { buildLabel });
+const payload = buildKristiFivePagePreviewPayload();
+const pdf = await renderFivePagePrintout(payload, { buildLabel });
 
 const latestPath = path.join(samplesDir, LATEST_NAME);
 fs.writeFileSync(latestPath, pdf);

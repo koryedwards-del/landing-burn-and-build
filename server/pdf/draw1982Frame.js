@@ -7,8 +7,10 @@ import {
   drawFrameHeader,
   drawContinuationHeader,
   framePageTitleStartY,
+  PDF_FRAME_FONTS,
 } from './drawFrame.js';
-import { FIVE_PAGE_FONTS } from './fivePageFonts.js';
+
+const FRAME_FONTS = PDF_FRAME_FONTS;
 
 export const FRAME_1982 = Object.freeze({
   pageTitleSize: 20,
@@ -48,7 +50,7 @@ export function add1982Page(doc) {
   return frame1982ContentBox(doc);
 }
 
-export function draw1982PageTitle(doc, box, y, title, fonts = FIVE_PAGE_FONTS) {
+export function draw1982PageTitle(doc, box, y, title, fonts = FRAME_FONTS) {
   doc
     .font(fonts.bold)
     .fontSize(FRAME_1982.pageTitleSize)
@@ -57,7 +59,7 @@ export function draw1982PageTitle(doc, box, y, title, fonts = FIVE_PAGE_FONTS) {
   return doc.y + FRAME_1982.titleBottomGap;
 }
 
-export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, fonts = FIVE_PAGE_FONTS } = {}) {
+export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, fonts = FRAME_FONTS } = {}) {
   const box = add1982Page(doc);
   const topGoldY = fullHeader
     ? drawFrameHeader(doc, box, {
@@ -82,6 +84,6 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, font
   };
 }
 
-export function stamp1982Footers(doc, contact, fonts = FIVE_PAGE_FONTS) {
+export function stamp1982Footers(doc, contact, fonts = FRAME_FONTS) {
   return stampPinnedProgramFooters(doc, contact, fonts);
 }
