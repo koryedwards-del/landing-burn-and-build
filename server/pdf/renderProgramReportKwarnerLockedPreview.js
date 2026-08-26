@@ -694,8 +694,8 @@ function drawWelcomePage(doc, payload) {
     ['Food Plan', payload.welcome.foodPlan],
     ['Servings', payload.welcome.servings],
     ['Food List', payload.welcome.foodList],
-    ['What to Print', payload.welcome.whatToPrint],
     ['Frequently Asked Questions', payload.welcome.faq],
+    ['What to Print', payload.welcome.whatToPrint],
   ].filter(([, body]) => body);
 
   sections.forEach(([title, body], index) => {
