@@ -370,7 +370,7 @@ function readForm() {
     preferredName: String(data.get('preferredName') || '').trim(),
     referrerName: String(data.get('referrerName') || '').trim(),
     email: String(data.get('email') || '').trim(),
-    emailRetype: String(data.get('emailRetype') || '').trim(),
+    emailConfirm: String(data.get('emailConfirm') || '').trim(),
     phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
     heightFeet: data.get('heightFeet'),
@@ -437,9 +437,9 @@ function infoFieldSummary(fieldId, values) {
     case 'email':
       return values.email || '';
     case 'emailConfirm':
-      if (!values.emailRetype) return '';
-      if (values.email && values.emailRetype === values.email) return 'Matches';
-      return values.emailRetype;
+      if (!values.emailConfirm) return '';
+      if (values.email && values.emailConfirm === values.email) return 'Matches';
+      return values.emailConfirm;
     case 'referrerName':
       return values.referrerName || '';
     default:
@@ -460,9 +460,9 @@ function validateInfoField(fieldId, values) {
       if (!isValidEmail(values.email)) return 'Enter a valid email address.';
       return '';
     case 'emailConfirm':
-      if (!values.emailRetype) return 'Type your email address again.';
-      if (!isValidEmail(values.emailRetype)) return 'Enter a valid email address.';
-      if (values.email !== values.emailRetype) return 'Email addresses do not match. Type it again.';
+      if (!values.emailConfirm) return 'Type your email address again.';
+      if (!isValidEmail(values.emailConfirm)) return 'Enter a valid email address.';
+      if (values.email !== values.emailConfirm) return 'Email addresses do not match. Type it again.';
       return '';
     case 'referrerName':
       return '';
@@ -1312,9 +1312,9 @@ function renderNav() {
     ].filter(Boolean).join(' ');
     return `
     <li>
-      <button type="button" class="${classes}" data-nav-step="${index}"${reachable ? '' : ' disabled'}>
+      <button type="button" class="${classes}" data-nav-step="${index}" aria-label="${index + 1}. ${item.label}"${reachable ? '' : ' disabled'}>
         <span class="q-nav__text q-nav__text--full">${index + 1}. ${item.label}</span>
-        <span class="q-nav__text q-nav__text--short" aria-hidden="true">${STEP_NAV_SHORT[index]}</span>
+        <span class="q-nav__text q-nav__text--short">${STEP_NAV_SHORT[index]}</span>
       </button>
     </li>
   `;
@@ -1370,13 +1370,6 @@ function showStep(index) {
     syncAgeField();
   }
   updateStepNav();
-
-  const base = `${location.pathname}${location.search}`;
-  if (step === 0) {
-    history.replaceState(null, '', `${base}#welcome`);
-  } else if (location.hash === '#welcome') {
-    history.replaceState(null, '', base);
-  }
 }
 
 function initDefaults() {
@@ -1471,10 +1464,6 @@ function bindEvents() {
     if (!canProceed(step)) return;
     showStep(step + 1);
   });
-
-  window.addEventListener('hashchange', () => {
-    if (location.hash === '#welcome' && step !== 0) showStep(0);
-  });
 }
 
 function buildProgram(triggerBtn) {
@@ -1507,22 +1496,6 @@ function buildProgram(triggerBtn) {
   }
 }
 
-function activateIntakeMode() {
-  const infoForm = document.getElementById('info-form');
-  const startPanel = document.querySelector('.q-panel[data-step="0"]');
-  if (infoForm) infoForm.hidden = false;
-  startPanel?.classList.add('q-panel--intake');
-}
-
-function restoreQuestionnaireChrome() {
-  document.body.classList.add('q-app--workroom');
-  document.querySelector('.q-app')?.classList.add('q-app--workroom');
-  const title = document.querySelector('.q-title');
-  if (title) title.textContent = 'Program Questionnaire';
-  syncIntakeQuestionNumbers();
-  activateIntakeMode();
-}
-
 function showBootError(message) {
   const main = document.querySelector('.q-main');
   if (!main) return;
@@ -1537,7 +1510,6 @@ function showBootError(message) {
 function boot() {
   try {
     syncIntakeQuestionNumbers();
-    restoreQuestionnaireChrome();
     bindEvents();
     initDefaults();
     syncAgeField();
