@@ -8,6 +8,7 @@ const KWARNER_WELCOME_SECTIONS = [
   ['Food Plan', 'foodPlan'],
   ['Servings', 'servings'],
   ['Food List', 'foodList'],
+  ['Frequently Asked Questions', 'faq'],
 ];
 
 export function kwarnerWelcomePrintHtml(pkg) {
@@ -41,7 +42,7 @@ export function kwarnerWelcomePrintHtml(pkg) {
       ${sectionsHtml}
       <footer class="print-template__footer">
         253-988-6946 · www.burnandbuilddiet.com · support@burnandbuilddiet.com
-        <span class="print-template__footer-page">Page 1 of 7</span>
+        <span class="print-template__footer-page">Page 1 of 12</span>
       </footer>
     </article>
   `;

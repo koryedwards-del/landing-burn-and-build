@@ -13,6 +13,8 @@ export const KWARNER_WELCOME_COPY = {
     'Page four is the servings page. Burn & Build turns everything from page three into daily servings divided across breakfast, lunch, dinner, and fruit snacks so you have maximum strength and energy while losing fat fast.',
   foodList:
     'Pages five and six are your food list. Page five lists protein & dairy along with grains & starches. Page six lists the veggies and fruits. These foods have a track record for getting results since 1982. One serving is exactly the amount of the protein and carbohydrates your body needs to maximize your metabolism and build muscle at the same time. The gram weights on your list are scaled to your daily servings from page four.',
+  faq:
+    'Starting on page seven, frequently asked questions answer the practical details clients ask most often — hunger, exercise, bread, water, artificial sweeteners, and more. Burn & Build has refined these answers since 1982. The final page of your report confirms the answers you gave on the program questionnaire.',
 };
 
 export const KWARNER_FOOD_PLAN_LEAD = [
