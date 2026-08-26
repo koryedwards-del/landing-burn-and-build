@@ -355,14 +355,14 @@
       <li><a href="#questions">Questions</a></li>
       <li><a href="#sample">Sample Report</a></li>
       <li><a href="#who">Who It's For</a></li>
-      <li><a href="/createyourfoodplan/" class="nav-cta" data-primary-cta>Get the Diet</a></li>
+      <li><a href="/questionnaire/#welcome" class="nav-cta" data-primary-cta>Get the Diet</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
-    <a href="/createyourfoodplan/" class="nav-cta" data-primary-cta>Get the Diet</a>
+    <a href="/questionnaire/#welcome" class="nav-cta" data-primary-cta>Get the Diet</a>
     <a href="#questions">Questions</a>
     <a href="#sample">Sample Report</a>
     <a href="#who">Who It's For</a>
@@ -559,7 +559,7 @@
           <li>Servings</li>
           <li>Food List</li>
         </ul>
-        <a class="nav-cta" href="/createyourfoodplan/" data-primary-cta>Get the Diet</a>
+        <a class="nav-cta" href="/questionnaire/#welcome" data-primary-cta>Get the Diet</a>
       </div>
       <p class="heritage">Eat to Lose Fat &bull; 1982 &rarr; 2026</p>
     </div>
@@ -573,7 +573,7 @@
       <li><a href="/support">Support</a></li>
     </ul>
     <p class="footer-copy">&copy; 2026 Burn &amp; Build. All rights reserved.</p>
-    <a href="/createyourfoodplan/" class="sr-only" aria-hidden="true" tabindex="-1">Download your diet</a>
+    <a href="/questionnaire/#welcome" class="sr-only" aria-hidden="true" tabindex="-1">Get the Diet</a>
   </footer>
 
   <script>
@@ -599,12 +599,6 @@
     });
     mobileNav.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() { mobileNav.classList.remove('open'); });
-    });
-  </script>
-  <script type="module">
-    import { QUESTIONNAIRE_WELCOME_URL } from './js/siteUrls.js';
-    document.querySelectorAll('[data-primary-cta]').forEach((link) => {
-      link.href = QUESTIONNAIRE_WELCOME_URL;
     });
   </script>
 </body>

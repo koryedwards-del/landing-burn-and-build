@@ -18,7 +18,8 @@ Push to `main` deploys the static site via GitHub Pages.
 | `/` (index.html) | Marketing landing |
 | `/questionnaire/` | Program questionnaire → Burn Engine → checkout |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
-| `/program-report/`, `/menuplanner/`, `/get-your-diet/` | Redirect → `/createyourfoodplan/` |
+| `/program-report/`, `/menuplanner/` | Redirect → `/createyourfoodplan/` (purchaser restore) |
+| `/get-your-diet/` | Redirect → `/questionnaire/#welcome` (new program) |
 | `/support`, `/privacypolicy` | Support & legal |
 | `/contacts/` | Admin contact list |
 | `server/` | Express API + SQLite (Render) |
