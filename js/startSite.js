@@ -1,7 +1,7 @@
 /** Checkout paywall — questionnaire builds the program; Stripe unlocks PDF delivery. */
 
 import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramFromServer, fetchProgramPaymentStatus, fetchProgramByIdFromServer, fetchProgramResumeCheckout } from './programApi.js';
-import { persistProgramBridge, loadProgramBridge } from './programBridgeHandoff.js';
+import { persistProgramBridge, loadProgramBridge, persistPaidProgramId, readPaidProgramId } from './programBridgeHandoff.js';
 import {
   completeCheckoutForTest,
   createCheckoutSession,
@@ -11,8 +11,6 @@ import {
 import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
 import { cleanPurchaserPortalQuery, readPurchaserPortalParams } from './purchaserPortal.js';
 import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
-
-const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
 
 const store = {
   builtPackage: null,
@@ -49,22 +47,13 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function persistPaidProgramId(programId) {
-  const id = String(programId || '').trim();
-  store.paidProgramId = id;
-  if (id) {
-    sessionStorage.setItem(PAID_PROGRAM_ID_KEY, id);
-    try {
-      localStorage.setItem(PAID_PROGRAM_ID_KEY, id);
-    } catch {
-      /* ignore */
-    }
-  }
+function rememberPaidProgramId(programId) {
+  persistPaidProgramId(programId);
+  store.paidProgramId = String(programId || '').trim();
 }
 
 function restorePaidProgramId() {
-  const stored = sessionStorage.getItem(PAID_PROGRAM_ID_KEY)
-    || (typeof localStorage !== 'undefined' ? localStorage.getItem(PAID_PROGRAM_ID_KEY) : '');
+  const stored = readPaidProgramId();
   if (stored) {
     store.paidProgramId = stored;
   }
@@ -73,14 +62,6 @@ function restorePaidProgramId() {
 function restoreBuiltPackage() {
   if (store.builtPackage) return;
   store.builtPackage = loadProgramBridge();
-  const raw = sessionStorage.getItem('bnb_built_package');
-  if (!store.builtPackage && raw) {
-    try {
-      store.builtPackage = JSON.parse(raw);
-    } catch {
-      sessionStorage.removeItem('bnb_built_package');
-    }
-  }
 }
 
 function renderPurchaserLoading() {
@@ -169,7 +150,7 @@ async function restorePurchaseByEmail(rawEmail) {
   }
 
   store.builtPackage = resume.package;
-  persistPaidProgramId(resume.programId);
+  rememberPaidProgramId(resume.programId);
   persistProgramBridge(resume.package);
   store.programPaid = true;
   store.restoreError = '';
@@ -215,7 +196,7 @@ async function tryRestorePaidSession() {
 
   store.builtPackage = resume.package;
   store.email = persistAppEmail(email);
-  persistPaidProgramId(resume.programId);
+  rememberPaidProgramId(resume.programId);
   persistProgramBridge(resume.package);
   store.programPaid = true;
   return true;
@@ -231,7 +212,7 @@ async function restoreBuiltPackageFromServer(email, { force = false, programId }
   if (!result.ok || !result.package) return false;
   store.builtPackage = result.package;
   if (store.builtPackage?.program?.id) {
-    persistPaidProgramId(store.builtPackage.program.id);
+    rememberPaidProgramId(store.builtPackage.program.id);
   }
   persistProgramBridge(store.builtPackage);
   return true;
@@ -243,7 +224,7 @@ async function syncProgramAfterPayment({ email, programId } = {}) {
   if (!isValidEmail(resolvedEmail) || !resolvedProgramId) return false;
 
   store.paidProgramId = resolvedProgramId;
-  persistPaidProgramId(resolvedProgramId);
+  rememberPaidProgramId(resolvedProgramId);
   store.programPaid = true;
 
   const result = await fetchProgramByIdFromServer(resolvedEmail, resolvedProgramId);
@@ -308,7 +289,7 @@ async function refreshProgramPaymentStatus() {
     const result = await fetchProgramPaymentStatus(email, programId);
     store.programPaid = !!(result.ok && result.paid);
     if (store.programPaid) {
-      persistPaidProgramId(programId);
+      rememberPaidProgramId(programId);
     }
   }
 
@@ -624,7 +605,7 @@ async function handleCheckoutReturn() {
     store.email = persistAppEmail(result.email);
   }
   if (result.programId) {
-    persistPaidProgramId(result.programId);
+    rememberPaidProgramId(result.programId);
   }
   await syncProgramAfterPayment({ email: store.email, programId: result.programId });
 
@@ -684,7 +665,7 @@ async function completeTestCheckout() {
     return;
   }
   if (result.programId) {
-    persistPaidProgramId(result.programId);
+    rememberPaidProgramId(result.programId);
   }
   await syncProgramAfterPayment({ email, programId: result.programId || currentProgramId() });
   store.checkoutMessage = 'Test access granted.';
@@ -751,7 +732,7 @@ bindGlobal();
     store.email = persistAppEmail(portalParams.email);
   }
   if (portalParams.programId) {
-    persistPaidProgramId(portalParams.programId);
+    rememberPaidProgramId(portalParams.programId);
   }
 
   const checkoutParams = new URLSearchParams(location.search);

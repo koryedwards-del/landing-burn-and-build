@@ -1537,10 +1537,8 @@ async function submitCheckout(triggerBtn) {
 }
 
 function activateIntakeMode() {
-  const gate = document.getElementById('q-gate-content');
   const infoForm = document.getElementById('info-form');
   const startPanel = document.querySelector('.q-panel[data-step="0"]');
-  if (gate) gate.hidden = true;
   if (infoForm) infoForm.hidden = false;
   startPanel?.classList.add('q-panel--intake');
 }

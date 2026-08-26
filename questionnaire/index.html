@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
-  <link rel="stylesheet" href="css/intake-form.css?v=24" />
+  <link rel="stylesheet" href="css/intake-form.css?v=25" />
   <script type="module">
     import { captureDietCreationTestBypass, isDietCreationGated, CREATOR_CHECKOUT_URL } from '../js/siteUrls.js';
     captureDietCreationTestBypass();
@@ -24,7 +24,7 @@
         <div class="q-brand">
           <img class="q-logo" src="../img/brand/bblogo1.png" alt="Burn &amp; Build" width="72" height="72" />
           <div class="q-brand__text">
-            <h1 class="q-title">Coming Soon</h1>
+            <h1 class="q-title">Program Questionnaire</h1>
           </div>
         </div>
         <p class="q-motto">Built on science. <span class="q-motto__accent">Forged in iron.</span></p>
@@ -41,32 +41,7 @@
       <main class="q-main">
         <form class="q-form" id="q-form" novalidate>
           <section class="q-panel q-panel--intake" data-step="0">
-            <div id="q-gate-content">
-              <div class="q-panel__head">
-                <p class="q-eyebrow">Welcome</p>
-                <h2 class="q-panel__title">We&rsquo;re finishing the launch</h2>
-                <p class="q-panel__lead">
-                  New Burn &amp; Build programs are <strong>coming soon</strong>. We&rsquo;re not taking new diet orders yet so no one starts a program that isn&rsquo;t ready.
-                </p>
-              </div>
-              <div class="q-callout">
-                <span class="q-callout__icon" aria-hidden="true">!</span>
-                <div class="q-callout__body">
-                  <strong>Already purchased?</strong>
-                  <ul>
-                    <li>Return to <a href="../createyourfoodplan/">checkout</a> to download your PDF, or check the email you used at checkout.</li>
-                    <li>Questions? Email <a href="mailto:support@burnandbuilddiet.com">support@burnandbuilddiet.com</a>.</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="q-intro-actions">
-                <span class="q-btn q-btn--primary q-btn--soon" aria-disabled="true">Coming Soon</span>
-                <a class="q-btn q-btn--ghost" href="/">Back to website</a>
-              </div>
-              <p class="q-intro-price">$149 one-time purchase when we open · own your program forever</p>
-            </div>
-
-            <div class="intake-form" id="info-form" hidden>
+            <div class="intake-form" id="info-form">
               <header class="intake-form__head">
                 <h2 class="intake-form__title">Personal information</h2>
               </header>
@@ -520,6 +495,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=148"></script>
+  <script type="module" src="js/questionnaire.js?v=149"></script>
 </body>
 </html>

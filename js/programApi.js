@@ -1,4 +1,4 @@
-/** Client API — save/load diet by email (Creator → DB → Shell PWA) */
+/** Client API — save/load programs by email. */
 
 import { apiUrl } from './apiConfig.js';
 import { fetchJson } from './apiFetch.js';
@@ -60,18 +60,6 @@ export async function saveProgramToServer(email, pkg) {
   }
 }
 
-export async function fetchProgramSavedStatus(email) {
-  try {
-    const { res, data } = await fetchJson(
-      apiUrl(`/api/programs/saved?email=${encodeURIComponent(normalizeEmail(email))}`)
-    );
-    if (!res.ok) return apiFailure(res, data, 'Could not check saved plan status.');
-    return data;
-  } catch {
-    return { ok: false, message: 'Network error checking saved plan.' };
-  }
-}
-
 export async function fetchProgramPaymentStatus(email, programId) {
   try {
     const { res, data } = await fetchJson(
@@ -105,18 +93,6 @@ export async function fetchProgramFromServer(email) {
     return data;
   } catch {
     return { ok: false, message: 'Network error loading your plan.' };
-  }
-}
-
-export async function fetchProgramHistoryFromServer(email) {
-  try {
-    const { res, data } = await fetchJson(
-      apiUrl(`/api/programs/history?email=${encodeURIComponent(normalizeEmail(email))}`)
-    );
-    if (!res.ok) return apiFailure(res, data, 'Could not load diet history.');
-    return data;
-  } catch {
-    return { ok: false, message: 'Network error loading diet history.' };
   }
 }
 
