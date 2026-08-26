@@ -47,18 +47,6 @@ const fatSourceOtherWrap = document.getElementById('fat-source-other-wrap');
 let step = 0;
 let programBuilt = false;
 
-function numberQuestions() {
-  let n = 0;
-  form.querySelectorAll('.acc-item__head').forEach((head) => {
-    if (!head.dataset.qText) {
-      head.dataset.qText = head.innerHTML.trim();
-    }
-    n += 1;
-    head.innerHTML = `<span class="acc-item__num">${n}.</span> ${head.dataset.qText}`;
-    head.closest('.acc-item')?.setAttribute('data-q', String(n));
-  });
-}
-
 function accordionItems(acc) {
   return [...acc.querySelectorAll('.acc-item')].filter((el) => !el.hidden);
 }
@@ -408,7 +396,6 @@ stepNavList.addEventListener('click', (event) => {
 });
 
 renderFatSourceOptions();
-numberQuestions();
 initAccordions();
 syncFatSourceOther();
 const today = new Date().toISOString().slice(0, 10);
