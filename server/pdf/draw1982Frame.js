@@ -57,7 +57,7 @@ export function draw1982PageTitle(doc, box, y, title) {
   return doc.y + FRAME_1982.titleBottomGap;
 }
 
-export function begin1982Page(doc, payload, pageTitle, { fullHeader = false } = {}) {
+export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {}) {
   const box = add1982Page(doc);
   const topGoldY = fullHeader
     ? drawFrameHeader(doc, box, {
