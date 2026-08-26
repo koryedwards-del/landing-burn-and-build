@@ -5,7 +5,6 @@ import 'dotenv/config';
 import {
   deleteContact,
   enrollContactFromProgramCreation,
-  getContact,
   listContacts,
   programSavedForEmail,
   resolveProgramLoad,
@@ -321,22 +320,6 @@ app.post('/api/checkout/test-complete', async (req, res) => {
     console.error('Test checkout diet fulfillment:', err.message);
     res.json({ ok: true, email, programId, paid: true, test: true, pdfReady: false, error: err.message });
   }
-});
-
-app.get('/api/contacts/lookup', (req, res) => {
-  const email = normalizeEmail(req.query.email);
-  if (!isValidEmail(email)) {
-    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
-    return;
-  }
-
-  const contact = getContact(email);
-  if (!contact) {
-    res.status(404).json({ ok: false, message: 'This email is not in the contact list yet.' });
-    return;
-  }
-
-  res.json({ ok: true, contact });
 });
 
 app.get('/api/contacts', requireContactsAdmin, (_req, res) => {
@@ -702,27 +685,6 @@ app.delete('/api/programs/:id', (req, res) => {
   }
 
   res.json({ ok: true, email, programId: id, programCount: countPrograms(email) });
-});
-
-/** Public config for client — never put secrets here. */
-app.get('/config.js', (_req, res) => {
-  res.type('application/javascript');
-  res.setHeader('Cache-Control', 'public, max-age=300');
-  res.send(`window.BNB_CONFIG=${JSON.stringify({
-    apiBaseUrl: process.env.API_BASE_URL || '',
-    creatorBaseUrl: process.env.CREATOR_BASE_URL || '',
-    webpageUrl: process.env.WEBPAGE_URL || '',
-  })};`);
-});
-
-app.get('/api/config', (_req, res) => {
-  res.json({
-    ok: true,
-    apiBaseUrl: process.env.API_BASE_URL || '',
-    creatorBaseUrl: process.env.CREATOR_BASE_URL || '',
-    webpageUrl: process.env.WEBPAGE_URL || '',
-    stripe: stripeConfigured(),
-  });
 });
 
 app.get('/', (_req, res) => {

@@ -57,5 +57,8 @@ export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}/questionnaire/#
 /** Paywall + checkout return (after questionnaire builds the program) */
 export const CREATOR_CHECKOUT_URL = `${CREATOR_HOST_ORIGIN}/createyourfoodplan/`;
 
-/** Desktop checkout resume — plan-ready paywall after questionnaire */
-export const DESKTOP_CHECKOUT_URL = CREATOR_CHECKOUT_URL;
+/** Landing and support links while new program creation is gated. */
+export const PUBLIC_DIET_PORTAL_URL = CREATOR_CHECKOUT_URL;
+
+/** Internal questionnaire entry — append ?create=1 for testing while gate is on. */
+export const QUESTIONNAIRE_TEST_URL = `${CREATOR_HOST_ORIGIN}/questionnaire/?create=1`;

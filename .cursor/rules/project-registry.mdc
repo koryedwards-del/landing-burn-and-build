@@ -9,51 +9,35 @@ alwaysApply: true
 - This repo: **Burn & Build** — full desktop web product on **burnandbuilddiet.com**
 - API backend: `server/` → Render project **Burn & Build**, service `program-creator` (`program-creator-3tzd.onrender.com`)
 
-Push to `main` deploys static site via GitHub Pages.
+Push to `main` deploys the static site via GitHub Pages.
 
 ## Paths
 
 | Path | Role |
 |------|------|
 | `/` (index.html) | Marketing landing |
-| `questionnaire/` | Program questionnaire → Burn Engine → checkout handoff |
-| `createyourfoodplan/` | Stripe checkout paywall |
-| `program-report/` | Unified program shell (Welcome → Menu planner) |
-| `menuplanner/` | Redirect → program-report page 4 |
-| `server/` | Express API + SQLite (Render — Burn & Build project) |
-| `contacts/` | Admin contact list |
+| `/questionnaire/` | Program questionnaire → Burn Engine (gated; redirects to checkout portal when closed) |
+| `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
+| `/program-report/`, `/menuplanner/`, `/get-your-diet/` | Redirect → `/createyourfoodplan/` |
+| `/support`, `/privacypolicy` | Support & legal |
+| `/contacts/` | Admin contact list |
+| `server/` | Express API + SQLite (Render) |
 
 **Product name:** Menu planner (never “meal planner” in user-facing copy).
 
-## Print Shop (menu planner)
+## Active product flow (while gate is on)
 
-Five print documents, **two header templates**:
+```
+Purchasers → /createyourfoodplan/ → download Burn & Build Diet PDF
+New programs → coming soon (questionnaire with ?create=1 for internal testing only)
+```
 
-| Header | Documents |
-|--------|-----------|
-| **Personalized** (name + date) | Weekly meal plan, Grocery list |
-| **Generic** (brand + title) | Food list, For Best Results, FAQ |
+## Print Shop (server PDF pipeline)
 
-**User-authored copy is fixed everywhere** — see `.cursor/rules/user-authored-copy.mdc`. Never reauthor or ad lib; use source text as written unless the user supplies exact replacement words.
+Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Client menu planner UI was removed; data lives in `menuplanner/data/` for PDF renderers and audits.
 
-**Product terminology (diet / food plan / program / questionnaire)** — see `.cursor/rules/product-terminology.mdc`. Three product layers plus locked **questionnaire** naming; do not interchange.
-
-**Serving sizes & food-list gram weights** — macro-gram portions (8g protein, 14g carbs, prep state, dry vs cooked). See `.cursor/rules/burn-engine-servings.mdc`. **No calories** in portions or UI; engine calorie loops are in `docs/burn-engine-internal-calorie-loops.md` only.
-
-**Generic doc content is fixed** — do not ad lib or refactor copy/layout unless explicitly requested. Source data:
-
-| Document | Data |
-|----------|------|
-| Food list | `data/foodListPrintout.js` + tips Q&A in `data/*TipsPrintout.js`; food names from program |
-| For Best Results | `data/forBestResultsPrintout.js` |
-| FAQ | `data/handbookFaqPrintout.js` |
-
-**Print Shop PDF pipeline:** View registry in `js/printShopViews.js`. Server: `server/pdf/` (PDFKit via `PrintPdfCreator`). Client: `printShopClient.js` (fetch), `printShopDelivery.js` (new tab), `plannerPrintPayload.js` (planner data). Static docs — `GET /api/print/pdf`. Personalized docs — `POST /api/print/pdf`. Verify: `npm run verify:pdf`.
-
-**Deprecated:** `pwa-burn-and-build` (archived), `gettheburnandbuildapp.com`, `/myplan/` phone app.
+Five print documents — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
 
 ## KWarner program-report preview PDF
 
-Active printout work uses the **locked preview pipeline** — see `.cursor/rules/kwarner-preview-pdf.mdc`.
-
-After any PDF/layout change: `npm run render:kwarner-preview` → commit versioned + latest PDFs + `js/kwarnerPreviewBuild.js` → push to `main` → give user raw `raw.githubusercontent.com` download links (see `.cursor/rules/kwarner-preview-pdf.mdc`).
+See `.cursor/rules/kwarner-preview-pdf.mdc`. After layout changes: `npm run render:kwarner-preview` → commit samples → raw GitHub download links.
