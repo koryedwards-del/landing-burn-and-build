@@ -69,61 +69,6 @@ function kristiProgramReportPayload() {
   return buildProgramReportPayload(buildKristiPreviewPackage());
 }
 
-const weekPayload = {
-  view: 'week',
-  title: 'B&B - Weekly Meal Plan',
-  clientName: 'Alex',
-  preparedAt: 'Jul 31, 2026',
-  empty: false,
-  weekDays: [
-    { id: 'mon', label: 'Mon' },
-    { id: 'tue', label: 'Tue' },
-    { id: 'wed', label: 'Wed' },
-    { id: 'thu', label: 'Thu' },
-    { id: 'fri', label: 'Fri' },
-    { id: 'sat', label: 'Sat' },
-    { id: 'sun', label: 'Sun' },
-  ],
-  rows: Array.from({ length: 12 }, (_, index) => ({
-    id: `meal-${index}`,
-    time: `${6 + index}:00 AM`,
-    label: `Meal ${index + 1}`,
-    cells: {
-      mon: [{ foodName: `Food item ${index} with a longer name that wraps`, amount: '6 oz' }],
-      tue: [{ foodName: 'Eggs', amount: '3 whole' }],
-      wed: [],
-      thu: [{ foodName: 'Greek Yogurt', amount: '8 oz' }],
-      fri: [],
-      sat: [],
-      sun: [],
-    },
-  })),
-};
-
-const shoppingPayload = {
-  view: 'shopping',
-  title: 'B&B - Grocery List',
-  clientName: 'Alex',
-  preparedAt: 'Jul 31, 2026',
-  empty: false,
-  groups: [
-    {
-      category: 'Protein',
-      rows: Array.from({ length: 80 }, (_, index) => ({
-        foodName: `Protein item ${index + 1}`,
-        amount: `${index + 1} lb`,
-      })),
-    },
-    {
-      category: 'Grains & Starches',
-      rows: [
-        { foodName: 'Oatmeal', amount: '1 container' },
-        { foodName: 'White rice', amount: '2 cups dry' },
-      ],
-    },
-  ],
-};
-
 function pageCount(pdf) {
   return (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 }
@@ -157,7 +102,7 @@ function assertThrows(label, fn, { status, includes } = {}) {
 
 assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { status: 400 });
 assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
-assertThrows('validatePrintPayload rejects bad week', () => validatePrintPayload('week', {}), { status: 400 });
+assertThrows('validatePrintPayload rejects bad programreport', () => validatePrintPayload('programreport', {}), { status: 400 });
 
 const filename = sanitizePdfFilename('B&B - FAQ - Alex', 'faq');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
@@ -170,12 +115,6 @@ for (const view of STATIC_VIEWS) {
     minPages: view === 'faq' ? 3 : view === 'foodlist' ? 4 : 2,
   });
 }
-
-assertPdf('week (multi-row)', await renderPrintPdf('week', { payload: weekPayload }), { minPages: 2 });
-assertPdf('shopping (long list)', await renderPrintPdf('shopping', { payload: shoppingPayload }), { minPages: 2 });
-assertPdf('week (empty)', await renderPrintPdf('week', {
-  payload: { ...weekPayload, empty: true, rows: [] },
-}), { minPages: 1 });
 
 const kristiPayload = kristiProgramReportPayload();
 assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 10 });

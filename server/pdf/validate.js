@@ -49,30 +49,6 @@ export function validatePrintPayload(view, payload) {
     throw pdfError('empty must be a boolean.');
   }
 
-  if (view === 'week') {
-    requireArray(payload.weekDays, 'weekDays');
-    requireArray(payload.rows, 'rows');
-
-    payload.weekDays?.forEach((day, index) => {
-      if (!day || typeof day !== 'object') {
-        throw pdfError(`weekDays[${index}] must be an object.`);
-      }
-      requireString(day.id, `weekDays[${index}].id`, { required: true });
-      requireString(day.label, `weekDays[${index}].label`, { required: true });
-    });
-
-    payload.rows?.forEach((row, index) => {
-      if (!row || typeof row !== 'object') {
-        throw pdfError(`rows[${index}] must be an object.`);
-      }
-      requireString(row.id, `rows[${index}].id`, { required: true });
-      requireString(row.label, `rows[${index}].label`, { required: true });
-      if (row.cells != null && typeof row.cells !== 'object') {
-        throw pdfError(`rows[${index}].cells must be an object.`);
-      }
-    });
-  }
-
   if (view === 'programreport') {
     requireString(payload.preparedDate, 'preparedDate', { required: true });
     if (!payload.stepsToSuccess && !payload.welcome) {
@@ -98,26 +74,6 @@ export function validatePrintPayload(view, payload) {
     if (!payload.servings || typeof payload.servings !== 'object') {
       throw pdfError('servings is required.');
     }
-  }
-
-  if (view === 'shopping') {
-    requireArray(payload.groups, 'groups');
-
-    payload.groups?.forEach((group, index) => {
-      if (!group || typeof group !== 'object') {
-        throw pdfError(`groups[${index}] must be an object.`);
-      }
-      requireString(group.category, `groups[${index}].category`, { required: true });
-      requireArray(group.rows, `groups[${index}].rows`);
-
-      group.rows?.forEach((row, rowIndex) => {
-        if (!row || typeof row !== 'object') {
-          throw pdfError(`groups[${index}].rows[${rowIndex}] must be an object.`);
-        }
-        requireString(row.foodName, `groups[${index}].rows[${rowIndex}].foodName`, { required: true });
-        requireString(row.amount, `groups[${index}].rows[${rowIndex}].amount`, { required: true });
-      });
-    });
   }
 
   return payload;

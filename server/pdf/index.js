@@ -10,9 +10,7 @@ import { pdfError } from './errors.js';
 import { renderBestResultsPdf } from './renderBestResults.js';
 import { renderFaqPdf } from './renderFaq.js';
 import { renderFoodListPdf } from './renderFoodList.js';
-import { renderShoppingListPdf } from './renderShoppingList.js';
 import { renderProgramReportPdf } from './renderProgramReport.js';
-import { renderWeekPlanPdf } from './renderWeekPlan.js';
 import { validatePrintPayload, validatePrintView } from './validate.js';
 
 export { createPrintPdf, PrintPdfCreator } from './creator.js';
@@ -30,8 +28,6 @@ const RENDERERS = Object.freeze({
   faq: renderFaqPdf,
   foodlist: renderFoodListPdf,
   bestresults: renderBestResultsPdf,
-  week: renderWeekPlanPdf,
-  shopping: renderShoppingListPdf,
   programreport: renderProgramReportPdf,
 });
 

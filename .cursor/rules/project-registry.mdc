@@ -34,9 +34,9 @@ New programs → coming soon (questionnaire with ?create=1 for internal testing 
 
 ## Print Shop (server PDF pipeline)
 
-Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Client menu planner UI was removed; `menuplanner/data/` remains for meal-image audits (`npm run verify:meals`).
+Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Static views: FAQ, food list, For Best Results. Purchased diet PDF uses `/api/programs/diet-pdf`. Client menu planner UI was removed; `menuplanner/data/` remains for meal-image audits (`npm run verify:meals`).
 
-Five print documents — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
+Four server PDF views — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
 
 ## KWarner program-report preview PDF
 

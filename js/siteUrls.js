@@ -60,5 +60,10 @@ export const CREATOR_CHECKOUT_URL = `${CREATOR_HOST_ORIGIN}/createyourfoodplan/`
 /** Landing and support links while new program creation is gated. */
 export const PUBLIC_DIET_PORTAL_URL = CREATOR_CHECKOUT_URL;
 
+/** Primary marketing CTA — questionnaire when open, download portal while gated. */
+export function primaryCtaUrl() {
+  return isDietCreationGated() ? PUBLIC_DIET_PORTAL_URL : QUESTIONNAIRE_WELCOME_URL;
+}
+
 /** Internal questionnaire entry — append ?create=1 for testing while gate is on. */
 export const QUESTIONNAIRE_TEST_URL = `${CREATOR_HOST_ORIGIN}/questionnaire/?create=1`;

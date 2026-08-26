@@ -60,27 +60,3 @@ export const PDF_FOOD_LIST = {
   columnRuleWidth: 1,
   tipsMinBlock: 24,
 };
-
-/** Weekly meal plan — landscape agenda grid. */
-export const PDF_WEEK = {
-  dayHeadSize: 8,
-  mealTimeSize: 6.5,
-  mealLabelSize: 5.5,
-  foodSize: 7,
-  emptyMarkSize: 8,
-  rowHeadWidth: 76,
-  cellPadX: 6,
-  cellPadY: 14,
-  minRowHeight: 36,
-  lineGap: 2,
-  accent: '#FFCC00',
-};
-
-/** Grocery list — portrait checklist sections. */
-export const PDF_SHOPPING = {
-  sectionSize: 10,
-  rowSize: 9,
-  checkboxSize: 10,
-  sectionGap: 14,
-  rowPadY: 4,
-};

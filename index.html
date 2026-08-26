@@ -360,14 +360,14 @@
       <li><a href="#questions">Questions</a></li>
       <li><a href="#sample">Sample Report</a></li>
       <li><a href="#who">Who It's For</a></li>
-      <li><a href="/createyourfoodplan/" class="nav-cta">Get the Diet</a></li>
+      <li><a href="/createyourfoodplan/" class="nav-cta" data-primary-cta>Get the Diet</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
-    <a href="/createyourfoodplan/" class="nav-cta">Get the Diet</a>
+    <a href="/createyourfoodplan/" class="nav-cta" data-primary-cta>Get the Diet</a>
     <a href="#questions">Questions</a>
     <a href="#sample">Sample Report</a>
     <a href="#who">Who It's For</a>
@@ -564,7 +564,7 @@
           <li>Servings</li>
           <li>Food List</li>
         </ul>
-        <a class="nav-cta" href="/createyourfoodplan/">Get the Diet</a>
+        <a class="nav-cta" href="/createyourfoodplan/" data-primary-cta>Get the Diet</a>
       </div>
       <p class="heritage">Eat to Lose Fat &bull; 1982 &rarr; 2026</p>
     </div>
@@ -604,6 +604,13 @@
     });
     mobileNav.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() { mobileNav.classList.remove('open'); });
+    });
+  </script>
+  <script type="module">
+    import { primaryCtaUrl } from './js/siteUrls.js';
+    const href = primaryCtaUrl();
+    document.querySelectorAll('[data-primary-cta]').forEach((link) => {
+      link.href = href;
     });
   </script>
 </body>
