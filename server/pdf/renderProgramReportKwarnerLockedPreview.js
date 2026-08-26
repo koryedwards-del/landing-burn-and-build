@@ -1,5 +1,5 @@
 /**
- * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → Confirmation).
+ * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → FAQ → Confirmation).
  * Production: renderProgramReport.js · Preview samples: scripts/render-kwarner-locked-preview.mjs
  */
 import path from 'path';
@@ -49,8 +49,9 @@ import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
 import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
+import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 
-export const PROGRAM_REPORT_MIN_PAGES = 7;
+export const PROGRAM_REPORT_MIN_PAGES = 10;
 /** @deprecated Use PROGRAM_REPORT_MIN_PAGES */
 export const KWARNER_LOCKED_MIN_PAGES = PROGRAM_REPORT_MIN_PAGES;
 
@@ -2342,6 +2343,62 @@ function drawServingsPage(doc, payload) {
   finishLockedPage(doc, page.box, payload);
 }
 
+const FAQ_TYPO = Object.freeze({
+  questionSize: PT.subsection,
+  answerSize: PT.body,
+  itemGap: 10,
+  lineGap: PT.lineGap,
+  questionAnswerGap: 2,
+});
+
+function measureLockedFaqItem(doc, { q, a }, width, questionNumber) {
+  const questionText = `${questionNumber}. ${q}`.toUpperCase();
+  doc.font(SEMINAR_FONTS.bold).fontSize(FAQ_TYPO.questionSize);
+  const questionH = doc.heightOfString(questionText, { width, lineGap: 0 });
+  doc.font(SEMINAR_FONTS.regular).fontSize(FAQ_TYPO.answerSize);
+  const answerH = doc.heightOfString(String(a || ''), {
+    width,
+    lineGap: FAQ_TYPO.lineGap,
+  });
+  return questionH + FAQ_TYPO.questionAnswerGap + answerH + FAQ_TYPO.itemGap;
+}
+
+function drawLockedFaqItem(doc, page, { q, a }, questionNumber) {
+  const questionText = `${questionNumber}. ${q}`.toUpperCase();
+  doc
+    .font(SEMINAR_FONTS.bold)
+    .fontSize(FAQ_TYPO.questionSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(questionText, page.x, page.y, { width: page.width, lineGap: 0 });
+
+  const answerY = doc.y + FAQ_TYPO.questionAnswerGap;
+  doc
+    .font(SEMINAR_FONTS.regular)
+    .fontSize(FAQ_TYPO.answerSize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(a || ''), page.x, answerY, {
+      width: page.width,
+      lineGap: FAQ_TYPO.lineGap,
+    });
+
+  return doc.y + FAQ_TYPO.itemGap;
+}
+
+function drawFaqPages(doc, payload) {
+  if (!HANDBOOK_FAQ_ITEMS.length) return;
+
+  let page = startLockedPage(doc, payload, 'Frequently Asked Questions');
+
+  HANDBOOK_FAQ_ITEMS.forEach((item, index) => {
+    const questionNumber = index + 1;
+    const blockH = measureLockedFaqItem(doc, item, page.width, questionNumber);
+    page = ensureLockedSpace(doc, payload, page, blockH);
+    page = { ...page, y: drawLockedFaqItem(doc, page, item, questionNumber) };
+  });
+
+  finishLockedPage(doc, page.box, payload);
+}
+
 const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
   { key: 'label', width: 0.34 },
   { key: 'value', width: 0.66 },
@@ -2396,6 +2453,7 @@ export async function renderProgramReportKwarnerLockedPreview(payload, { title, 
   drawServingsPage(doc, payload);
   drawStaplesFoodListPage(doc, payload);
   drawVegFruitFoodListPage(doc, payload);
+  drawFaqPages(doc, payload);
   drawQuestionnaireConfirmationPage(doc, payload);
 
   stampPinnedProgramFooters(doc, payload.header);

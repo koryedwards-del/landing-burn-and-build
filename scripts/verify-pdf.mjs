@@ -178,7 +178,7 @@ assertPdf('week (empty)', await renderPrintPdf('week', {
 }), { minPages: 1 });
 
 const kristiPayload = kristiProgramReportPayload();
-assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 6 });
+assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 10 });
 
 if (kristiPayload.clientName !== 'KRISTI WARNER') {
   throw new Error(`Kristi clientName: got ${kristiPayload.clientName}`);
