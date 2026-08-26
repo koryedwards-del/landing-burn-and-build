@@ -2151,61 +2151,7 @@ function drawFoodPlanPage(doc, payload) {
 }
 
 const SERVINGS_STEPS_TYPO = { lineGap: 1, paragraphGap: 3 };
-const SERVINGS_RULES_BREAK_GAP = 10;
-const SERVINGS_DAILY_RULES_COUNT = 3;
-
-const SERVINGS_DAILY_RULES_BOX = Object.freeze({
-  pad: 8,
-  ruleGap: 3,
-  afterGap: 4,
-  fontSize: PT.tableBody,
-  radius: 4,
-});
-
-function measureServingsDailyRulesBox(doc, width, rules) {
-  const { pad, ruleGap, fontSize } = SERVINGS_DAILY_RULES_BOX;
-  const innerW = width - pad * 2;
-  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
-  const linesH = rules.reduce((sum, line, index) => {
-    const blockH = doc.heightOfString(String(line).toUpperCase(), {
-      width: innerW,
-      align: 'center',
-      lineGap: 0,
-    });
-    return sum + blockH + (index < rules.length - 1 ? ruleGap : 0);
-  }, 0);
-  return pad * 2 + linesH;
-}
-
-function drawServingsDailyRulesBox(doc, payload, page, rules) {
-  const { pad, ruleGap, afterGap, fontSize, radius } = SERVINGS_DAILY_RULES_BOX;
-  const x = page.x;
-  const y = page.y;
-  const width = page.width;
-  const innerW = width - pad * 2;
-  const boxH = measureServingsDailyRulesBox(doc, width, rules);
-
-  doc
-    .strokeColor(PDF_FRAME_COLORS.gold)
-    .lineWidth(1)
-    .roundedRect(x, y, width, boxH, radius)
-    .stroke();
-
-  let cy = y + pad;
-  rules.forEach((line, index) => {
-    doc.font(SEMINAR_FONTS.bold).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-    doc.text(String(line).toUpperCase(), x + pad, cy, {
-      width: innerW,
-      align: 'center',
-      lineGap: 0,
-    });
-    if (index < rules.length - 1) {
-      cy = doc.y + ruleGap;
-    }
-  });
-
-  return { ...page, y: y + boxH + afterGap };
-}
+const SERVINGS_RULES_BREAK_GAP = 6;
 
 function drawMealBuildSteps(doc, payload, page, steps) {
   const splitAt = steps.findIndex((paragraph) => /^1\. Eat/.test(String(paragraph)));
@@ -2214,17 +2160,7 @@ function drawMealBuildSteps(doc, payload, page, steps) {
   }
   page = drawBodyParagraphs(doc, payload, page, steps.slice(0, splitAt), SERVINGS_STEPS_TYPO);
   page = { ...page, y: page.y + SERVINGS_RULES_BREAK_GAP };
-
-  const rules = steps.slice(splitAt, splitAt + SERVINGS_DAILY_RULES_COUNT);
-  const boxH = measureServingsDailyRulesBox(doc, page.width, rules);
-  page = ensureLockedSpace(doc, payload, page, boxH + LAYOUT.sectionGap);
-  page = drawServingsDailyRulesBox(doc, payload, page, rules);
-
-  const afterRules = steps.slice(splitAt + SERVINGS_DAILY_RULES_COUNT);
-  if (afterRules.length) {
-    page = drawBodyParagraphs(doc, payload, page, afterRules, SERVINGS_STEPS_TYPO);
-  }
-  return page;
+  return drawBodyParagraphs(doc, payload, page, steps.slice(splitAt), SERVINGS_STEPS_TYPO);
 }
 
 function drawServingsPage(doc, payload) {
