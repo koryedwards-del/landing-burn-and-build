@@ -103,7 +103,7 @@ function lbaBfFloor(gender) {
 function lbaStageReadyCategory(gender) {
   const floor = lbaBfFloor(gender);
   return {
-    label: gender === 'female' ? 'Stage-ready' : 'Stage-ready (extremely lean)',
+    label: 'Stage-ready',
     bfMin: floor,
     bfMax: floor,
     bfRangeLabel: `${floor.toFixed(2)}%`,

@@ -1827,7 +1827,11 @@ function lbaBfRangeTableColumns(count) {
 
 function lbaBfRangeRowFromCategories(categories, valueKey) {
   return Object.fromEntries(
-    categories.map((cat, index) => [`c${index}`, cat[valueKey] || '']),
+    categories.map((cat, index) => {
+      let value = cat[valueKey] || '';
+      if (valueKey === 'label') value = String(value).toUpperCase();
+      return [`c${index}`, value];
+    }),
   );
 }
 
@@ -1868,6 +1872,11 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
   const weightRanges = lba.bfRangeWeightRanges || [];
   if (!categories.length) return page;
 
+  if (lba.bfRangeLead) {
+    page = drawBodyParagraphs(doc, payload, page, [lba.bfRangeLead]);
+    page = { ...page, y: page.y + LAYOUT.sectionGap };
+  }
+
   let tableH = measureLbaBfRangeTable(doc, categories, page.width, {
     headerKey: 'label',
     valueKey: 'bfRangeLabel',
@@ -1881,12 +1890,9 @@ function drawLbaBfRangeSection(doc, payload, page, lba) {
     }) + LAYOUT.sectionGap,
   };
 
-  const paragraphs = [
-    lba.bfRangeLead,
-    ...(lba.lbmParagraphs || []),
-  ].filter(Boolean);
-  if (paragraphs.length) {
-    page = drawBodyParagraphs(doc, payload, page, paragraphs);
+  const lbmParagraphs = (lba.lbmParagraphs || []).filter(Boolean);
+  if (lbmParagraphs.length) {
+    page = drawBodyParagraphs(doc, payload, page, lbmParagraphs);
     page = { ...page, y: page.y + LAYOUT.sectionGap };
   }
 
