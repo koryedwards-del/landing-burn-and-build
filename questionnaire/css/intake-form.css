@@ -79,6 +79,14 @@ body.q-app--workroom,
   box-shadow: none;
 }
 
+.q-app--workroom .q-form {
+  padding: 1.25rem 1.5rem 0;
+}
+
+.q-app--workroom .q-header__inner {
+  flex-wrap: nowrap;
+}
+
 .q-app--workroom .q-btn {
   font-family: inherit;
   font-weight: 600;
