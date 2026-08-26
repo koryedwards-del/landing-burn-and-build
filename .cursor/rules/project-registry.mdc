@@ -25,11 +25,11 @@ Push to `main` deploys the static site via GitHub Pages.
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
 
-## Active product flow (while gate is on)
+## Active product flow
 
 ```
-Purchasers → /createyourfoodplan/ → download Burn & Build Diet PDF
-New programs → coming soon (questionnaire with ?create=1 for internal testing only)
+Landing (/) → /questionnaire/ → /createyourfoodplan/ → Burn & Build Diet PDF
+Purchasers can restore at /createyourfoodplan/ by email
 ```
 
 ## Program report PDF (server)

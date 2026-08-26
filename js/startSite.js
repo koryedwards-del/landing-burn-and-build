@@ -114,8 +114,8 @@ function renderPurchaserPortal() {
             </button>
           </form>
           ${restoreError}
-          <p class="unlock-hint unlock-hint--soon">New Burn &amp; Build programs are coming soon.</p>
-          <p class="unlock-hint"><a href="/">← Back to website</a></p>
+          ${isDietCreationGated() ? '<p class="unlock-hint unlock-hint--soon">New Burn &amp; Build programs are coming soon.</p>' : ''}
+          <p class="unlock-hint"><a href="/">← Back to website</a>${isDietCreationGated() ? '' : ' · <a href="/questionnaire/#welcome">Create a new program</a>'}</p>
         </div>
       </div>
     </div>`;

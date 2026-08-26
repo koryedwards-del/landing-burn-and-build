@@ -11,20 +11,14 @@ Push to `main` deploys the static site via GitHub Pages. The API deploys separat
 
 ## User flow (all on burnandbuilddiet.com)
 
-**While `DIET_CREATION_COMING_SOON` is on** (see `js/siteUrls.js`):
-
-```
-Landing (/) → Questionnaire only with ?create=1 (internal testing)
-Purchasers → /createyourfoodplan/ (email restore + PDF download)
-Legacy URLs → redirect to /createyourfoodplan/
-```
-
-**At launch** (gate off):
+**Live** (`DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`):
 
 ```
 Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodplan/)
   → Download Burn & Build Diet PDF (program report)
 ```
+
+Purchasers can also return to `/createyourfoodplan/` to restore by email. Legacy URLs redirect there.
 
 | Path | Purpose |
 |------|---------|
