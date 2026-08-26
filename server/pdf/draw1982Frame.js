@@ -1,14 +1,18 @@
 import { PDF_MARGIN } from './constants.js';
+import { drawWatermark } from './draw.js';
 import {
   PDF_FRAME_FONTS,
   PDF_FRAME_COLORS,
   pinnedContentBottomY,
   stampPinnedProgramFooters,
+  drawFrameHeader,
+  drawContinuationHeader,
+  framePageTitleStartY,
 } from './drawFrame.js';
 
 export const FRAME_1982 = Object.freeze({
-  personalizationSize: 10,
-  pageTitleSize: 14,
+  pageTitleSize: 20,
+  titleBottomGap: 20,
   bodySize: 10,
   sectionTitleSize: 10,
   tableHeadSize: 9,
@@ -18,7 +22,6 @@ export const FRAME_1982 = Object.freeze({
   paragraphGap: 8,
   sectionGap: 10,
   headerGap: 6,
-  titleGap: 14,
   contentPad: 6,
 });
 
@@ -41,29 +44,8 @@ export function frame1982ContentBox(doc) {
 
 export function add1982Page(doc) {
   doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
+  drawWatermark(doc);
   return frame1982ContentBox(doc);
-}
-
-export function draw1982PersonalizationLine(doc, box, y, { clientName, preparedDate }) {
-  const rowY = y;
-  doc
-    .font(PDF_FRAME_FONTS.bold)
-    .fontSize(FRAME_1982.personalizationSize)
-    .fillColor(PDF_FRAME_COLORS.body)
-    .text(`Prepared exclusively for: ${String(clientName || '').toUpperCase()}`, box.x, rowY, {
-      width: box.width * 0.68,
-      align: 'left',
-      lineGap: 0,
-    });
-  doc
-    .font(PDF_FRAME_FONTS.bold)
-    .fontSize(FRAME_1982.personalizationSize)
-    .text(`On: ${preparedDate || ''}`, box.x + box.width * 0.68, rowY, {
-      width: box.width * 0.32,
-      align: 'right',
-      lineGap: 0,
-    });
-  return rowY + FRAME_1982.personalizationSize + FRAME_1982.titleGap;
 }
 
 export function draw1982PageTitle(doc, box, y, title) {
@@ -72,15 +54,21 @@ export function draw1982PageTitle(doc, box, y, title) {
     .fontSize(FRAME_1982.pageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(String(title || ''), box.x, y, { width: box.width, align: 'left', lineGap: 0 });
-  return doc.y + FRAME_1982.sectionGap;
+  return doc.y + FRAME_1982.titleBottomGap;
 }
 
-export function begin1982Page(doc, payload, pageTitle) {
+export function begin1982Page(doc, payload, pageTitle, { fullHeader = false } = {}) {
   const box = add1982Page(doc);
-  let y = draw1982PersonalizationLine(doc, box, box.y, {
-    clientName: payload.clientName,
-    preparedDate: payload.preparedDate,
-  });
+  const topGoldY = fullHeader
+    ? drawFrameHeader(doc, box, {
+      personalized: true,
+      clientName: payload.clientName,
+      preparedDateLong: payload.preparedDateLong,
+      preparedDate: payload.preparedDate,
+    })
+    : drawContinuationHeader(doc, box);
+
+  let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
     y = draw1982PageTitle(doc, box, y, pageTitle);
   }

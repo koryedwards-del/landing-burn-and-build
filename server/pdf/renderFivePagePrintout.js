@@ -224,7 +224,7 @@ function drawStatusParagraph(doc, page, paragraph) {
 }
 
 function drawWelcomePage(doc, payload) {
-  const page = begin1982Page(doc, payload, 'Welcome');
+  const page = begin1982Page(doc, payload, 'Welcome', { fullHeader: true });
   let current = drawParagraphs(doc, page, payload.welcome.intro);
   current = drawSectionBlock(doc, current, 'Lean Body Analysis', payload.welcome.leanBodyAnalysis);
   current = drawSectionBlock(doc, current, 'History', payload.welcome.history);
