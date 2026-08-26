@@ -233,16 +233,6 @@ app.get('/api/preview/burn-and-build-diet-pdf', async (_req, res) => {
   }
 });
 
-/** @deprecated Use /api/preview/burn-and-build-diet-pdf */
-app.get('/api/preview/kwarner-locked-pdf', async (_req, res) => {
-  try {
-    await sendBurnAndBuildDietSamplePdf(res);
-  } catch (err) {
-    console.error('Burn & Build Diet sample PDF error:', err);
-    res.status(500).json({ ok: false, message: err.message || 'Sample PDF failed.' });
-  }
-});
-
 function creatorBaseUrl(req) {
   return process.env.CREATOR_BASE_URL || `${req.protocol}://${req.get('host')}`;
 }

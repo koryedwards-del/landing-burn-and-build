@@ -9,6 +9,7 @@ import {
   verifyCheckoutSession,
 } from './checkoutApi.js';
 import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
+import { cleanPurchaserPortalQuery, readPurchaserPortalParams } from './purchaserPortal.js';
 import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
 
 const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
@@ -53,11 +54,17 @@ function persistPaidProgramId(programId) {
   store.paidProgramId = id;
   if (id) {
     sessionStorage.setItem(PAID_PROGRAM_ID_KEY, id);
+    try {
+      localStorage.setItem(PAID_PROGRAM_ID_KEY, id);
+    } catch {
+      /* ignore */
+    }
   }
 }
 
 function restorePaidProgramId() {
-  const stored = sessionStorage.getItem(PAID_PROGRAM_ID_KEY);
+  const stored = sessionStorage.getItem(PAID_PROGRAM_ID_KEY)
+    || (typeof localStorage !== 'undefined' ? localStorage.getItem(PAID_PROGRAM_ID_KEY) : '');
   if (stored) {
     store.paidProgramId = stored;
   }
@@ -76,7 +83,22 @@ function restoreBuiltPackage() {
   }
 }
 
-function renderGatedPortal() {
+function renderPurchaserLoading() {
+  document.getElementById('app').innerHTML = `
+    <div class="start-site">
+      <div class="screen unlock-screen">
+        <div class="start-success">
+          <div class="ob-welcome-line1">OPENING YOUR</div>
+          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>
+        </div>
+        <div class="unlock-panel">
+          <p class="unlock-lead unlock-lead--loading">One moment…</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPurchaserPortal() {
   const savedEmail = escapeHtml(getAppEmail());
   const restoreError = store.restoreError
     ? `<div class="unlock-error">${escapeHtml(store.restoreError)}</div>`
@@ -86,12 +108,12 @@ function renderGatedPortal() {
     <div class="start-site">
       <div class="screen unlock-screen">
         <div class="start-success">
-          <div class="ob-welcome-line1">COMING</div>
-          <div class="ob-welcome-line2">SOON</div>
+          <div class="check">✓</div>
+          <div class="ob-welcome-line1">DOWNLOAD YOUR</div>
+          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>
         </div>
         <div class="unlock-panel">
-          <p class="unlock-lead">New Burn &amp; Build programs are not open yet. We&rsquo;re finishing the launch so no one starts a diet that isn&rsquo;t ready.</p>
-          <p class="unlock-tagline">Already purchased? Enter the email you used at checkout to download your diet.</p>
+          <p class="unlock-lead">Enter the email you used at checkout.</p>
           <form class="unlock-restore" data-restore-form>
             <label class="unlock-restore__label" for="restore-email">Checkout email</label>
             <input
@@ -107,11 +129,11 @@ function renderGatedPortal() {
               ${store.restoreBusy ? 'disabled' : ''}
             />
             <button type="submit" class="btn-primary unlock-cta" data-restore-purchase ${store.restoreBusy ? 'disabled' : ''}>
-              ${store.restoreBusy ? 'LOOKING UP YOUR DIET…' : 'DOWNLOAD YOUR DIET'}
+              ${store.restoreBusy ? 'OPENING YOUR DIET…' : 'OPEN MY DIET'}
             </button>
           </form>
           ${restoreError}
-          <p class="unlock-hint">Use the same email address you entered in the questionnaire and at Stripe checkout.</p>
+          <p class="unlock-hint unlock-hint--soon">New Burn &amp; Build programs are coming soon.</p>
           <p class="unlock-hint"><a href="/">← Back to website</a></p>
         </div>
       </div>
@@ -122,13 +144,13 @@ async function restorePurchaseByEmail(rawEmail) {
   const email = String(rawEmail || '').trim();
   if (!isValidEmail(email)) {
     store.restoreError = 'Enter a valid email address.';
-    renderGatedPortal();
+    renderPurchaserPortal();
     return false;
   }
 
   store.restoreBusy = true;
   store.restoreError = '';
-  renderGatedPortal();
+  renderPurchaserPortal();
 
   store.email = persistAppEmail(email);
   const resume = await fetchProgramResumeCheckout(email);
@@ -136,13 +158,13 @@ async function restorePurchaseByEmail(rawEmail) {
 
   if (!resume.ok || !resume.package) {
     store.restoreError = resume.message || 'No program found for that email.';
-    renderGatedPortal();
+    renderPurchaserPortal();
     return false;
   }
 
   if (!resume.programPaid) {
     store.restoreError = 'Payment is not complete for this email. Contact support@burnandbuilddiet.com if you were charged.';
-    renderGatedPortal();
+    renderPurchaserPortal();
     return false;
   }
 
@@ -151,10 +173,32 @@ async function restorePurchaseByEmail(rawEmail) {
   persistProgramBridge(resume.package);
   store.programPaid = true;
   store.restoreError = '';
+  return finishPaidRestore();
+}
+
+async function tryAutoRestorePurchaser() {
+  if (await tryRestorePaidSession()) return true;
+
+  const email = ensurePlanReadyEmail();
+  const programId = activeProgramId();
+  if (!isValidEmail(email) || !programId) return false;
+
+  const synced = await syncProgramAfterPayment({ email, programId });
+  if (!synced) return false;
+
+  await refreshProgramPaymentStatus();
+  return store.programPaid;
+}
+
+async function finishPaidRestore({ autoDownload = false } = {}) {
   sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
+  cleanPurchaserPortalQuery();
   await preparePlanReadyState();
   render();
   startPostPaymentEmail();
+  if (autoDownload) {
+    await triggerDietDownload();
+  }
   return true;
 }
 
@@ -698,28 +742,38 @@ function bindGlobal() {
 bindGlobal();
 
 (async () => {
+  const portalParams = readPurchaserPortalParams();
   restorePaidProgramId();
   restoreBuiltPackage();
   store.email = getAppEmail() || store.builtPackage?.intake?.email || '';
 
+  if (isValidEmail(portalParams.email)) {
+    store.email = persistAppEmail(portalParams.email);
+  }
+  if (portalParams.programId) {
+    persistPaidProgramId(portalParams.programId);
+  }
+
   const checkoutParams = new URLSearchParams(location.search);
   const returningFromStripe = checkoutParams.has('checkout');
+  const shouldAutoRestore = isDietCreationGated() && !store.builtPackage && !returningFromStripe;
+
+  if (shouldAutoRestore) {
+    renderPurchaserLoading();
+  }
 
   if (!store.builtPackage && !returningFromStripe) {
-    if (isDietCreationGated()) {
-      const restored = await tryRestorePaidSession();
-      if (restored) {
-        sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
-        await preparePlanReadyState();
-        render();
-        startPostPaymentEmail();
-        return;
-      }
-      renderGatedPortal();
+    const restored = await tryAutoRestorePurchaser();
+    if (restored) {
+      await finishPaidRestore({ autoDownload: portalParams.autoDownload });
       return;
     }
-    const restored = await tryRestorePaidSession();
-    if (!restored) {
+    if (isDietCreationGated()) {
+      renderPurchaserPortal();
+      return;
+    }
+    const fallback = await tryRestorePaidSession();
+    if (!fallback) {
       redirectToQuestionnaire();
       return;
     }
@@ -734,15 +788,12 @@ bindGlobal();
 
   if (!store.builtPackage) {
     if (isDietCreationGated()) {
-      renderGatedPortal();
+      renderPurchaserPortal();
       return;
     }
     redirectToQuestionnaire();
     return;
   }
 
-  sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
-  await preparePlanReadyState();
-  render();
-  startPostPaymentEmail();
+  await finishPaidRestore({ autoDownload: portalParams.autoDownload });
 })();

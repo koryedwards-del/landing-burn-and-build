@@ -105,6 +105,15 @@
   text-align: center;
 }
 
+.unlock-hint--soon {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.unlock-lead--loading {
+  text-align: center;
+}
+
 .unlock-restore {
   display: flex;
   flex-direction: column;

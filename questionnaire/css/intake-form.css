@@ -114,6 +114,12 @@ body.q-app--workroom,
   margin-top: 0;
 }
 
+.intake-form__intro {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
 .intake-form__lede {
   margin: 0 0 1rem;
   font-size: 0.9375rem;

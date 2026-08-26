@@ -5,26 +5,35 @@
 **Repo:** `landing-burn-and-build`  
 **Site:** **https://burnandbuilddiet.com** (GitHub Pages, `CNAME`)
 
-This repo holds the **full desktop web product** from marketing through menu planner, plus the **API backend** deployed to Render.
+This repo holds the **full desktop web product** from marketing through checkout and PDF delivery, plus the **API backend** deployed to Render.
 
 Push to `main` deploys the static site via GitHub Pages. The API deploys separately on Render (see below).
 
 ## User flow (all on burnandbuilddiet.com)
 
+**While `DIET_CREATION_COMING_SOON` is on** (see `js/siteUrls.js`):
+
 ```
-Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodplan/)
-  → Program report (/program-report/) → Menu planner (page 4)
+Landing (/) → Questionnaire only with ?create=1 (internal testing)
+Purchasers → /createyourfoodplan/ (email restore + PDF download)
+Legacy URLs → redirect to /createyourfoodplan/
 ```
 
-Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
+**At launch** (gate off):
+
+```
+Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodplan/)
+  → Download Burn & Build Diet PDF (program report)
+```
 
 | Path | Purpose |
 |------|---------|
 | `/` | Marketing landing |
-| `/questionnaire/` | Program questionnaire → Burn Engine builds program |
-| `/createyourfoodplan/` | Stripe checkout paywall |
-| `/program-report/` | Welcome, projections, servings, menu planner |
-| `/menuplanner/` | Redirect → program-report page 4 |
+| `/questionnaire/` | Program questionnaire → Burn Engine builds program (gated; redirects to checkout portal when closed) |
+| `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
+| `/get-your-diet/` | Redirect → `/createyourfoodplan/` |
+| `/program-report/` | Redirect → `/createyourfoodplan/` (shell code retained for relaunch) |
+| `/menuplanner/` | Redirect → `/createyourfoodplan/` (planner UI retained for relaunch) |
 | `/support`, `/privacypolicy` | Support & legal |
 | `/contacts/` | Admin contact list (key auth) |
 
@@ -47,44 +56,22 @@ Return visits: `/menuplanner/` or `/program-report/?page=menuplanner` + email.
 
 Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
 
-### Connect program-creator to this repo
-
-Render Dashboard (no API key):
-
-1. [Render Dashboard](https://dashboard.render.com) → project **Burn & Build** → **program-creator**
-2. **Settings** → **Build & Deploy** → **Connected Repository**
-3. Connect **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
-4. **Manual Deploy** → Deploy latest commit (or push to `main` with auto-deploy on)
-
-Or from terminal (Render API key required):
-
-```bash
-RENDER_API_KEY=rnd_... node scripts/render-connect-repo.mjs
-```
-
-Verify: `curl https://program-creator-3tzd.onrender.com/health` should return `"project":"Burn & Build"` after deploy.
-
 ### Render checklist
 
-- [x] **program-creator** in Render project **Burn & Build** (separate from Signal+ billing)
+- [x] **program-creator** in Render project **Burn & Build**
 - [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
 - [x] End-to-end flow verified: questionnaire → payment → download printout
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `RESEND_API_KEY`, `DIET_EMAIL_FROM`, `DATABASE_PATH`, etc.
-- [ ] `curl https://program-creator-3tzd.onrender.com/health` shows `"dietEmail":true` (requires `RESEND_API_KEY` + verified domain in [Resend](https://resend.com/domains))
-
-### Before deleting `pwa-burn-and-build`
-
-1. Render Dashboard → project **Burn & Build** → **program-creator** → Settings → connect **this repo** (`landing-burn-and-build`).
-2. Confirm build command `npm install` and start command match `render.yaml`.
-3. Disable GitHub Pages on `pwa-burn-and-build` if still enabled (both repos had the same `CNAME`).
+- [ ] `curl https://program-creator-3tzd.onrender.com/health` shows `"dietEmail":true`
 
 ## Deprecated
 
 | Item | Status |
 |------|--------|
-| **`pwa-burn-and-build` repo** | Archived — static UI already migrated here. Safe to delete **after** Render points at this repo. |
-| **`gettheburnandbuildapp.com`** | Legacy app domain — no longer used in code. Do not rely on it. |
-| **`/myplan/` phone PWA** | Removed from PWA repo; product is desktop-only. |
+| **`pwa-burn-and-build` repo** | Archived — static UI migrated here |
+| **`gettheburnandbuildapp.com`** | Legacy app domain — no longer used in code |
+| **`/myplan/` phone PWA** | Removed; product is desktop-only |
+| **`docs/samples/kwarner-*.pdf`** | Retired naming — use `burn-and-build-diet-kristi-*.pdf` |
 
 ## Support email
 

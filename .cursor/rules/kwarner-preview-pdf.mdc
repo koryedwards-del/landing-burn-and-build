@@ -27,29 +27,17 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 | Payload | `js/programReportPrintout.js` + `js/kwarnerLockedPreviewFixtures.js` |
 | Food list gram scaling | `js/stapleServingPrintout.js` — see `.cursor/rules/burn-engine-servings.mdc` |
 | Render script | `scripts/render-kwarner-locked-preview.mjs` |
-| Build metadata | `js/kwarnerPreviewBuild.js` (auto-generated) |
+| Build metadata | `js/programReportPreviewBuild.js` (auto-generated) |
 | 1982 reference PDF | `docs/archive/kwarner-1982-original.pdf` |
-
-## Page map (9 pages — locked where noted)
-
-| Page | Title | Notes |
-|------|-------|-------|
-| 1 | Welcome | Report overview + section guide |
-| 2 | Lean Body Analysis | 1982 page 2 content |
-| 3–4 | Projections | Input grid + fat-loss timeline |
-| **5** | **Food Plan** | **Locked** |
-| **6** | **Servings** | **Locked** |
-| **7–8** | **Food List** | **Locked** — protein/grains, then veg/fruit |
-| 9 | Seasonings and Splashes | Flavor kits, splashes, pantry |
 
 ## Mandatory after every PDF change
 
 1. Run **`npm run render:kwarner-preview`**
 2. Script writes **three sample files**:
-   - **Versioned:** `docs/samples/kwarner-locked-preview-kristi-N.pdf` (N auto-increments, never overwrite)
-   - **Archive:** `docs/samples/kwarner-preview-kristi-veg-fruit-vN.pdf`
-   - **Latest (stable):** `docs/samples/kwarner-locked-preview-kristi-latest.pdf` (overwritten each render)
-3. **Commit and push to `main`:** versioned PDF, latest PDF, veg-fruit archive, and `js/kwarnerPreviewBuild.js`
+   - **Versioned:** `docs/samples/burn-and-build-diet-kristi-N.pdf` (N auto-increments, never overwrite)
+   - **Archive:** `docs/samples/burn-and-build-diet-kristi-archive-vN.pdf`
+   - **Latest (stable):** `docs/samples/burn-and-build-diet-kristi-latest.pdf` (overwritten each render)
+3. **Commit and push to `main`:** versioned PDF, latest PDF, archive, and `js/programReportPreviewBuild.js`
 4. **Give the user the raw download link** (see below)
 
 Optional: copy to `/opt/cursor/artifacts/` when that folder exists — never rely on it for delivery.
@@ -62,10 +50,10 @@ The user downloads PDFs to **Mac Downloads** by tapping a **raw GitHub URL**. Th
 
 Paste **both** raw links after every render (after push to `main`):
 
-- **Versioned:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<locked-filename>`
-- **Latest:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/kwarner-locked-preview-kristi-latest.pdf`
+- **Versioned:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/<versioned-filename>`
+- **Latest:** `https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/burn-and-build-diet-kristi-latest.pdf`
 
-State the exact versioned filename (e.g. `kwarner-locked-preview-kristi-24.pdf`).
+State the exact versioned filename (e.g. `burn-and-build-diet-kristi-45.pdf`).
 
 ### Never use for delivery
 
