@@ -6,9 +6,9 @@ export const WORK_PHYSICAL = [
 ];
 
 export const WORK_STRESS = [
-  { id: 'comfortable', label: 'Comfortable', sub: 'Relaxed pace. Manageable demands.' },
-  { id: 'busy', label: 'Busy', sub: 'Steady pace. Tired by end of day but manageable.' },
-  { id: 'stressful', label: 'Stressful', sub: 'High pressure. You come home drained.' },
+  { id: 'comfortable', label: 'Comfortable', sub: 'Manageable pace — time for recovery and the normal rhythm of life outside work and training.' },
+  { id: 'busy', label: 'Busy', sub: 'Kids, sports, errands, and obligations most days — a full schedule you generally keep up with.' },
+  { id: 'stressful', label: 'Stressful', sub: 'High demand most weeks — caregiving, tight schedules, little margin when things pile up.' },
 ];
 
 /** Job activity radios (3 choices) — used by engine and PDF answers page. */

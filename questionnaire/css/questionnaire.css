@@ -1,0 +1,191 @@
+/* Program questionnaire — plain paper layout */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #f4f1ea;
+  min-height: 100vh;
+}
+
+.sheet {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  background: #fffef9;
+  min-height: 100vh;
+  box-shadow: 0 0 0 1px #ddd8cc;
+}
+
+.sheet__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.sheet__step {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.sheet__heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.sheet__subheading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.sheet__intro p + p { margin-top: 0.75rem; }
+
+.sheet__intro { margin-bottom: 1.5rem; color: #333; }
+
+.sheet__price { margin-top: 1rem; }
+
+.field { display: block; margin-bottom: 1.25rem; }
+
+.field__label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.field__hint {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.field__optional { font-weight: 400; color: #666; }
+
+.field__input {
+  display: block;
+  width: 100%;
+  font: inherit;
+  padding: 0.45rem 0.5rem;
+  border: none;
+  border-bottom: 1px solid #333;
+  background: transparent;
+  border-radius: 0;
+}
+
+.field__input:focus {
+  outline: none;
+  border-bottom-color: #000;
+  background: #fffde8;
+}
+
+.field__input--short { width: 5rem; display: inline-block; }
+
+.field__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.choice {
+  display: block;
+  margin: 0.5rem 0;
+  padding-left: 0.25rem;
+  cursor: pointer;
+}
+
+.choice input { margin-right: 0.5rem; }
+
+.choice__sub {
+  display: block;
+  font-size: 0.88rem;
+  color: #555;
+  margin-left: 1.35rem;
+  margin-top: 0.15rem;
+}
+
+.field__note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.35rem;
+}
+
+.waiver-text {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: #faf9f5;
+}
+
+.review-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.review-list div {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dotted #ccc;
+}
+
+.review-list dt { font-weight: 700; }
+
+.review-list dd { margin: 0; }
+
+.form-error {
+  color: #8b0000;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.form-success {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #333;
+  background: #f8fff0;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn:hover { background: #f5f5f5; }
+
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn--primary {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.btn--primary:hover { background: #333; }
+
+[hidden] { display: none !important; }
+
+@media (max-width: 520px) {
+  .review-list div { grid-template-columns: 1fr; gap: 0.15rem; }
+}

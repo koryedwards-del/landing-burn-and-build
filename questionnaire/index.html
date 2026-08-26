@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Burn &amp; Build — Program Questionnaire</title>
+  <link rel="stylesheet" href="css/questionnaire.css?v=1" />
+</head>
+<body>
+  <div class="sheet">
+    <p class="sheet__title">Program Questionnaire</p>
+    <p class="sheet__step" id="step-label">Step 1 of 6 — Contact Information</p>
+
+    <form id="questionnaire-form" novalidate>
+      <!-- 1 Contact Information -->
+      <section class="form-step" data-step="0">
+        <h2 class="sheet__heading">Contact Information</h2>
+        <div class="sheet__intro">
+          <p>Help us help you build the most sophisticated diet available at any cost. Then the Burn Engine builds your program and delivers a PDF document for immediate download and sends a copy to the email address you provide on this screen.</p>
+          <p>Before you begin, know that you'll need to provide your weight, body fat percentage, total exercise hours per week. Having this info before you start the questionnaire will save you some time and probably frustration.</p>
+          <p class="sheet__price"><strong>$149</strong> one-time purchase.</p>
+          <p>When you have answered these questions to your satisfaction, your program will be created and you will complete the transaction through Stripe.</p>
+        </div>
+
+        <label class="field">
+          <span class="field__label">What is your full name?</span>
+          <span class="field__hint">First and last name as it should appear on your program printout.</span>
+          <input class="field__input" name="preferredName" autocomplete="name" required />
+        </label>
+
+        <fieldset class="field">
+          <legend class="field__label">What is your gender?</legend>
+          <span class="field__hint">Select the option used in the calorie formulas.</span>
+          <label class="choice"><input type="radio" name="sex" value="female" required /> Female</label>
+          <label class="choice"><input type="radio" name="sex" value="male" /> Male</label>
+        </fieldset>
+
+        <label class="field">
+          <span class="field__label">What is your email address?</span>
+          <span class="field__hint">We deliver your program here and use it to unlock your program after purchase.</span>
+          <input class="field__input" name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label class="field">
+          <span class="field__label">Confirm your email address</span>
+          <span class="field__hint">Type the same address again. We cannot fix a typo after checkout.</span>
+          <input class="field__input" name="emailConfirm" type="email" autocomplete="email" required />
+        </label>
+
+        <label class="field">
+          <span class="field__label">Who do we thank? <span class="field__optional">(optional)</span></span>
+          <span class="field__hint">If someone sent you here, enter their full name so we can thank them. Leave blank if you found us on your own.</span>
+          <input class="field__input" name="referrerName" autocomplete="off" />
+        </label>
+      </section>
+
+      <!-- 2 Occupation -->
+      <section class="form-step" data-step="1" hidden>
+        <h2 class="sheet__heading">Occupation</h2>
+
+        <h3 class="sheet__subheading">How physically active is your job?</h3>
+        <p class="field__hint">Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.</p>
+
+        <label class="choice">
+          <input type="radio" name="workPhysical" value="sitting" required />
+          <strong>Sitting</strong>
+          <span class="choice__sub">Desk, computer, driving, reception — accountant, software developer, office clerk, administrative assistant, data entry clerk, graphic designer, attorney, call center agent, receptionist, long-haul driver.</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="workPhysical" value="feet" />
+          <strong>Moving</strong>
+          <span class="choice__sub">On your feet most of the shift — nurse, teacher, retail associate, server, bartender, chef, pharmacist, hairdresser, security guard, bank teller.</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="workPhysical" value="carrying" />
+          <strong>Lifting</strong>
+          <span class="choice__sub">Regular carrying, loading, or trades work — warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.</span>
+        </label>
+
+        <h3 class="sheet__subheading">Your life outside work &amp; training hours</h3>
+        <p class="field__hint">Kids, soccer, errands, caregiving — the normal rhythm of your life when you're not at work and not exercising.</p>
+
+        <label class="choice">
+          <input type="radio" name="workStress" value="comfortable" required />
+          <strong>Comfortable</strong>
+          <span class="choice__sub">Manageable pace — time for recovery and the normal rhythm of life outside work and training.</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="workStress" value="busy" />
+          <strong>Busy</strong>
+          <span class="choice__sub">Kids, sports, errands, and obligations most days — a full schedule you generally keep up with.</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="workStress" value="stressful" />
+          <strong>Stressful</strong>
+          <span class="choice__sub">High demand most weeks — caregiving, tight schedules, little margin when things pile up.</span>
+        </label>
+      </section>
+
+      <!-- 3 Exercise -->
+      <section class="form-step" data-step="2" hidden>
+        <h2 class="sheet__heading">Exercise</h2>
+
+        <label class="field">
+          <span class="field__label">How young are you?</span>
+          <span class="field__hint">Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.</span>
+          <input class="field__input field__input--short" name="age" type="number" min="16" max="99" required />
+        </label>
+
+        <label class="field">
+          <span class="field__label">How many hours per week of stop &amp; go activity?</span>
+          <span class="field__hint">Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym. Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="weightTrainingHours" inputmode="decimal" placeholder="0" />
+            <span>hrs / week</span>
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="field__label">How many hours per week in your cardio training range?</span>
+          <span class="field__hint">Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline. Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="cardioHours" inputmode="decimal" placeholder="0" />
+            <span>hrs / week</span>
+          </div>
+          <p class="field__note" id="cardio-heart-rate">Cardio training range (BPM) — enter age above</p>
+        </label>
+
+        <label class="field">
+          <span class="field__label">How many hours per week in your fat burning training range?</span>
+          <span class="field__hint">A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline. Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" />
+            <span>hrs / week</span>
+          </div>
+          <p class="field__note" id="fat-burn-heart-rate">Fat burning training range (BPM) — enter age above</p>
+        </label>
+      </section>
+
+      <!-- 4 Body composition -->
+      <section class="form-step" data-step="3" hidden>
+        <h2 class="sheet__heading">Body composition</h2>
+
+        <div class="field">
+          <span class="field__label">What is your height?</span>
+          <span class="field__hint">Enter feet and inches in separate boxes.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="heightFeet" inputmode="numeric" placeholder="ft" required />
+            <input class="field__input field__input--short" name="heightInchesPart" inputmode="numeric" placeholder="in" min="0" max="11" />
+            <span>ft / in</span>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field__label">What is your weight?</span>
+          <span class="field__hint">Morning weight in pounds, before eating, after bathroom, same scale each time.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="weight" inputmode="decimal" required />
+            <span>lbs</span>
+          </div>
+          <p class="field__note">Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You're paying $149 for this program. The program will only be as beneficial as your answers are accurate.</p>
+        </label>
+
+        <label class="field">
+          <span class="field__label">What is your body fat percentage?</span>
+          <span class="field__hint">Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one. Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower.</span>
+          <div class="field__row">
+            <input class="field__input field__input--short" name="fatPercent" inputmode="decimal" required placeholder="e.g. 28" />
+            <span>% body fat</span>
+          </div>
+        </label>
+
+        <fieldset class="field">
+          <legend class="field__label">How do you know?</legend>
+          <span class="field__hint">Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.</span>
+          <div id="fat-source-list"></div>
+        </fieldset>
+
+        <label class="field" id="fat-source-other-wrap" hidden>
+          <span class="field__label">Describe how you know</span>
+          <input class="field__input" name="fatSourceOther" disabled />
+        </label>
+      </section>
+
+      <!-- 5 Agreement -->
+      <section class="form-step" data-step="4" hidden>
+        <h2 class="sheet__heading">Waiver (please read and sign)</h2>
+        <p class="waiver-text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
+        <label class="field">
+          <span class="field__label">Signed</span>
+          <input class="field__input" name="signature" autocomplete="name" placeholder="type your full name" required />
+        </label>
+        <label class="field">
+          <span class="field__label">Date</span>
+          <input class="field__input" name="signatureDate" type="date" required />
+        </label>
+      </section>
+
+      <!-- 6 Review -->
+      <section class="form-step" data-step="5" hidden>
+        <h2 class="sheet__heading">Review &amp; continue</h2>
+        <p class="field__hint">Confirm your answers, then continue to secure checkout ($149). Use <strong>Back</strong> below to fix anything.</p>
+        <dl class="review-list" id="review-list"></dl>
+        <div class="form-success" id="form-success" hidden></div>
+      </section>
+
+      <p class="form-error" id="form-error" hidden></p>
+    </form>
+
+    <footer class="nav">
+      <button type="button" class="btn" id="btn-back" disabled>Back</button>
+      <button type="button" class="btn btn--primary" id="btn-next">Next</button>
+    </footer>
+  </div>
+
+  <script type="module" src="js/questionnaire.js?v=1"></script>
+</body>
+</html>
