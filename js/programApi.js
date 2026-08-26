@@ -52,11 +52,25 @@ export async function saveProgramToServer(email, pkg) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: normalizeEmail(email), package: pkg }),
-    });
+    }, { retries: 6, delayMs: 2000 });
     if (!res.ok) return apiFailure(res, data, 'Could not save your program.');
     return data;
+  } catch (err) {
+    console.error('saveProgramToServer failed:', err);
+    return {
+      ok: false,
+      message: 'Could not reach the program server. Wait a few seconds, then tap Complete purchase again.',
+    };
+  }
+}
+
+/** Wake Render before a save — cold starts can exceed a single fetch timeout. */
+export async function warmProgramApi() {
+  try {
+    await fetchJson(apiUrl('/health'), {}, { retries: 4, delayMs: 2000 });
+    return true;
   } catch {
-    return { ok: false, message: 'Network error saving your plan.' };
+    return false;
   }
 }
 

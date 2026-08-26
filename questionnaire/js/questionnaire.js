@@ -7,7 +7,7 @@ import {
 } from '../../js/onboardingEngine.js';
 import { buildProgramPackage } from '../../js/programPackage.js';
 import { buildQuestionnaireConfirmationRows } from '../../js/questionnaireConfirmationPrintout.js';
-import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
+import { persistAppEmail, saveProgramToServer, warmProgramApi, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
 import { CREATOR_CHECKOUT_URL } from '../../js/siteUrls.js';
@@ -1507,6 +1507,7 @@ async function submitCheckout(triggerBtn) {
     persistProgramBridge(program);
     sessionStorage.setItem('bnb_creator_phase', 'plan-ready');
 
+    await warmProgramApi();
     const saved = await saveProgramToServer(email, program);
     if (!saved.ok) {
       window.alert(saved.message || 'Could not save your program. Check your connection and try again.');
