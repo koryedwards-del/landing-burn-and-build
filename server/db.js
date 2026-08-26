@@ -101,12 +101,6 @@ function mapProgramRow(row) {
   };
 }
 
-function stripLegacyPackageFields(pkg) {
-  if (!pkg?.menuPlanner) return pkg;
-  const { menuPlanner, ...rest } = pkg;
-  return rest;
-}
-
 /** Add or update a program for this email — same id updates in place. */
 export function saveProgram(email, pkg) {
   const key = normalizeEmail(email);
@@ -119,7 +113,7 @@ export function saveProgram(email, pkg) {
     throw new Error('This diet belongs to another account.');
   }
 
-  const storedPkg = stripLegacyPackageFields(pkg);
+  const storedPkg = pkg;
 
   if (existing) {
     const existingPkg = parsePackage(existing);

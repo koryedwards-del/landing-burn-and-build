@@ -2,10 +2,19 @@
 /** Launch readiness smoke — local checks + production health. */
 
 import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
 const API_HEALTH = process.env.BNB_API_HEALTH_URL
   || 'https://program-creator-3tzd.onrender.com/health';
+
+const removedPaths = ['menuplanner', 'program-report'];
+for (const dir of removedPaths) {
+  if (existsSync(dir)) {
+    console.error(`FAIL legacy on-device menu plan path still exists: ${dir}/`);
+    process.exit(1);
+  }
+}
+console.log('ok  no legacy menu planner paths');
 
 function localCommit() {
   return readFileSync('.git/HEAD', 'utf8').includes('ref:')

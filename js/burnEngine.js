@@ -284,27 +284,3 @@ export function computePlan({ lbm, intensity, weightTrainingHours, cardioHours, 
     reduceFatCalories: formula.FG,
   };
 }
-
-export function generateMealSlots(wakeHour, wakeMinute, servings) {
-  const proteinPerMeal = servings.protein / 3;
-  const grainsPerMeal = servings.grainsStarches / 3;
-  const fruitsPerSnack = servings.fruits / 3;
-
-  function timeLabel(hoursOffset) {
-    const totalMin = wakeHour * 60 + wakeMinute + hoursOffset * 60;
-    const h = Math.floor(totalMin / 60) % 24;
-    const m = totalMin % 60;
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const h12 = h % 12 || 12;
-    return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
-  }
-
-  return [
-    { label: 'Breakfast', mealType: 'meal', time: timeLabel(0), proteinServings: proteinPerMeal, grainStarchServings: grainsPerMeal, vegetableServings: 0, fruitServings: 0 },
-    { label: 'Morning Snack', mealType: 'snack', time: timeLabel(3), proteinServings: 0, grainStarchServings: 0, vegetableServings: 0, fruitServings: fruitsPerSnack },
-    { label: 'Lunch', mealType: 'meal', time: timeLabel(6), proteinServings: proteinPerMeal, grainStarchServings: grainsPerMeal, vegetableServings: 0, fruitServings: 0 },
-    { label: 'Afternoon Snack', mealType: 'snack', time: timeLabel(9), proteinServings: 0, grainStarchServings: 0, vegetableServings: 0, fruitServings: fruitsPerSnack },
-    { label: 'Dinner', mealType: 'meal', time: timeLabel(12), proteinServings: proteinPerMeal, grainStarchServings: grainsPerMeal, vegetableServings: servings.vegetables, fruitServings: 0 },
-    { label: 'Evening Snack', mealType: 'snack', time: timeLabel(15), proteinServings: 0, grainStarchServings: 0, vegetableServings: 0, fruitServings: fruitsPerSnack },
-  ];
-}

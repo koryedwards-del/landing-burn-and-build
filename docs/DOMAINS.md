@@ -24,8 +24,6 @@ Purchasers can restore at `/createyourfoodplan/` by email. Legacy URLs redirect 
 | `/questionnaire/` | Program questionnaire → Burn Engine → checkout (`#welcome` = step 1 Contact Information) |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
 | `/get-your-diet/` | Redirect → `/questionnaire/#welcome` |
-| `/program-report/` | Redirect → `/createyourfoodplan/` |
-| `/menuplanner/` | Redirect → `/createyourfoodplan/` |
 | `/support`, `/privacypolicy` | Support & legal |
 | `/contacts/` | Admin contact list (key auth) |
 
