@@ -17,6 +17,7 @@ export const KWARNER_WELCOME_COPY = {
 
 export const KWARNER_FOOD_PLAN_LEAD = [
   'Since 1982 Burn & Build has turned what your body needs into daily servings from proven fat-burning, muscle-building foods — not numbers you chase on a calculator while still wondering what to put on your plate. Burn & Build converts your protein and carbohydrates into servings and then does the serving math for you also.',
+  'The table below shows what too much or too little does to each one.',
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
