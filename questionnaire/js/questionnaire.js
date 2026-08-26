@@ -324,6 +324,7 @@ function renderStepNav() {
     const reachable = canReachStep(index);
     return `<li><button type="button" class="${classes.join(' ')}" data-step="${index}" tabindex="-1"${reachable ? '' : ' disabled'}>${index + 1}. ${STEP_NAV_LABELS[index]}</button></li>`;
   }).join('');
+  stepNavList.querySelector('.is-active')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
 }
 
 function showStep(index) {
