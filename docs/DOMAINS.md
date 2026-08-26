@@ -11,14 +11,12 @@ Push to `main` deploys the static site via GitHub Pages. The API deploys separat
 
 ## User flow (all on burnandbuilddiet.com)
 
-**Live** (`DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`):
-
 ```
 Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodplan/)
   → Download Burn & Build Diet PDF (program report)
 ```
 
-Purchasers can also return to `/createyourfoodplan/` to restore by email. Legacy URLs redirect there.
+Purchasers can restore at `/createyourfoodplan/` by email. Legacy URLs redirect there.
 
 | Path | Purpose |
 |------|---------|
@@ -62,15 +60,6 @@ After server changes on `main`, confirm Render auto-deploy finished (or trigger 
 - [ ] Latest `main` deployed on Render (check `curl …/health` → `commit` matches local)
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `RESEND_API_KEY`, `DIET_EMAIL_FROM`, `DATABASE_PATH`, etc.
 - [ ] `npm run verify:launch` passes (local + production health)
-
-### Launch gate
-
-Public questionnaire is **open** (`DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`).
-
-To temporarily close new program creation:
-
-1. Set `DIET_CREATION_COMING_SOON = true` in `js/siteUrls.js`
-2. Push to `main` — landing CTAs route to `/createyourfoodplan/`; questionnaire redirects there
 
 ## Deprecated
 

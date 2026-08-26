@@ -10,7 +10,7 @@ import {
 } from './checkoutApi.js';
 import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
 import { cleanPurchaserPortalQuery, readPurchaserPortalParams } from './purchaserPortal.js';
-import { QUESTIONNAIRE_WELCOME_URL, isDietCreationGated } from './siteUrls.js';
+import { QUESTIONNAIRE_WELCOME_URL } from './siteUrls.js';
 
 const store = {
   builtPackage: null,
@@ -64,21 +64,6 @@ function restoreBuiltPackage() {
   store.builtPackage = loadProgramBridge();
 }
 
-function renderPurchaserLoading() {
-  document.getElementById('app').innerHTML = `
-    <div class="start-site">
-      <div class="screen unlock-screen">
-        <div class="start-success">
-          <div class="ob-welcome-line1">OPENING YOUR</div>
-          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>
-        </div>
-        <div class="unlock-panel">
-          <p class="unlock-lead unlock-lead--loading">One moment…</p>
-        </div>
-      </div>
-    </div>`;
-}
-
 function renderPurchaserPortal() {
   const savedEmail = escapeHtml(getAppEmail());
   const restoreError = store.restoreError
@@ -114,8 +99,7 @@ function renderPurchaserPortal() {
             </button>
           </form>
           ${restoreError}
-          ${isDietCreationGated() ? '<p class="unlock-hint">New Burn &amp; Build programs are coming soon.</p>' : ''}
-          <p class="unlock-hint"><a href="/">← Back to website</a>${isDietCreationGated() ? '' : ' · <a href="/questionnaire/#welcome">Create a new program</a>'}</p>
+          <p class="unlock-hint"><a href="/">← Back to website</a> · <a href="${QUESTIONNAIRE_WELCOME_URL}">Create a new program</a></p>
         </div>
       </div>
     </div>`;
@@ -181,10 +165,6 @@ async function finishPaidRestore({ autoDownload = false } = {}) {
     await triggerDietDownload();
   }
   return true;
-}
-
-function redirectToQuestionnaire() {
-  window.location.replace(QUESTIONNAIRE_WELCOME_URL);
 }
 
 async function tryRestorePaidSession() {
@@ -737,11 +717,6 @@ bindGlobal();
 
   const checkoutParams = new URLSearchParams(location.search);
   const returningFromStripe = checkoutParams.has('checkout');
-  const shouldAutoRestore = isDietCreationGated() && !store.builtPackage && !returningFromStripe;
-
-  if (shouldAutoRestore) {
-    renderPurchaserLoading();
-  }
 
   if (!store.builtPackage && !returningFromStripe) {
     const restored = await tryAutoRestorePurchaser();
@@ -749,15 +724,8 @@ bindGlobal();
       await finishPaidRestore({ autoDownload: portalParams.autoDownload });
       return;
     }
-    if (isDietCreationGated()) {
-      renderPurchaserPortal();
-      return;
-    }
-    const fallback = await tryRestorePaidSession();
-    if (!fallback) {
-      redirectToQuestionnaire();
-      return;
-    }
+    renderPurchaserPortal();
+    return;
   }
 
   if (!store.builtPackage && returningFromStripe) {
@@ -768,11 +736,7 @@ bindGlobal();
   }
 
   if (!store.builtPackage) {
-    if (isDietCreationGated()) {
-      renderPurchaserPortal();
-      return;
-    }
-    redirectToQuestionnaire();
+    renderPurchaserPortal();
     return;
   }
 

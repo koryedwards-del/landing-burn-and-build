@@ -10,7 +10,7 @@ import { buildQuestionnaireConfirmationRows } from '../../js/questionnaireConfir
 import { persistAppEmail, saveProgramToServer, isValidEmail } from '../../js/programApi.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 
-import { CREATOR_CHECKOUT_URL, isDietCreationGated } from '../../js/siteUrls.js';
+import { CREATOR_CHECKOUT_URL } from '../../js/siteUrls.js';
 
 const STEPS = [
   { id: 'start', label: 'Personal information' },
@@ -514,10 +514,6 @@ function renderInfoAccordionState() {
 
 function updateStepNav() {
   if (!stepNav) return;
-  if (isDietCreationGated() && step === 0) {
-    stepNav.hidden = true;
-    return;
-  }
   stepNav.hidden = false;
   if (stepBackBtn) stepBackBtn.disabled = step === 0;
   if (stepNextBtn) {
@@ -1280,7 +1276,6 @@ function canProceed(stepIndex) {
   const values = readForm();
   switch (stepIndex) {
     case 0:
-      if (isDietCreationGated()) return true;
       return infoSectionComplete(values);
     case 1:
       return occupationSectionComplete(values);
@@ -1361,7 +1356,7 @@ function showStep(index) {
   });
   renderNav();
   if (step === 5) renderReview();
-  if (step === 0 && !isDietCreationGated()) renderInfoAccordionState();
+  if (step === 0) renderInfoAccordionState();
   if (step === 1) {
     if (occupationFieldIndex < 0 && !occupationSectionComplete(readForm())) {
       occupationFieldIndex = 0;
@@ -1565,10 +1560,6 @@ function showBootError(message) {
 function boot() {
   try {
     syncIntakeQuestionNumbers();
-    if (isDietCreationGated()) {
-      window.location.replace(CREATOR_CHECKOUT_URL);
-      return;
-    }
     restoreQuestionnaireChrome();
     bindEvents();
     initDefaults();

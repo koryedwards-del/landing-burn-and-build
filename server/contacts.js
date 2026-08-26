@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import Database from 'better-sqlite3';
 import { countPrograms, getLatestProgram, getLatestProgramMeta, getLatestPaidProgramMeta, getProgramById, isProgramPaid, normalizeEmail } from './db.js';
 import { prepareDatabasePath, resolveDatabasePath } from './dbPath.js';
@@ -12,11 +11,9 @@ function createContactsTable() {
     CREATE TABLE IF NOT EXISTS contacts (
       email TEXT PRIMARY KEY,
       display_name TEXT,
-      burn_and_build INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
-    CREATE INDEX IF NOT EXISTS idx_contacts_bnb ON contacts(burn_and_build);
   `);
 }
 
@@ -25,8 +22,8 @@ function backfillContactsFromPrograms() {
   const rows = db.prepare('SELECT DISTINCT email FROM programs').all();
   const now = new Date().toISOString();
   const upsert = db.prepare(`
-    INSERT INTO contacts (email, display_name, burn_and_build, created_at, updated_at)
-    VALUES (?, NULL, 0, ?, ?)
+    INSERT INTO contacts (email, display_name, created_at, updated_at)
+    VALUES (?, NULL, ?, ?)
     ON CONFLICT(email) DO UPDATE SET updated_at = excluded.updated_at
   `);
 
@@ -74,8 +71,8 @@ export function upsertContact({ email, displayName }) {
     `).run(displayName ?? null, now, key);
   } else {
     db.prepare(`
-      INSERT INTO contacts (email, display_name, burn_and_build, created_at, updated_at)
-      VALUES (?, ?, 0, ?, ?)
+      INSERT INTO contacts (email, display_name, created_at, updated_at)
+      VALUES (?, ?, ?, ?)
     `).run(key, displayName || null, now, now);
   }
 

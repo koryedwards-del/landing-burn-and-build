@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-/** Launch readiness smoke — gate status, local checks, production health. */
+/** Launch readiness smoke — local checks + production health. */
 
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
-import { DIET_CREATION_COMING_SOON } from '../js/siteUrls.js';
 
 const API_HEALTH = process.env.BNB_API_HEALTH_URL
   || 'https://program-creator-3tzd.onrender.com/health';
@@ -12,13 +11,6 @@ function localCommit() {
   return readFileSync('.git/HEAD', 'utf8').includes('ref:')
     ? execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim()
     : readFileSync('.git/HEAD', 'utf8').trim();
-}
-
-console.log(`Gate: DIET_CREATION_COMING_SOON = ${DIET_CREATION_COMING_SOON}`);
-if (DIET_CREATION_COMING_SOON) {
-  console.log('  Public questionnaire blocked — purchasers use /createyourfoodplan/');
-} else {
-  console.log('  Public questionnaire open — landing CTAs route to /questionnaire/');
 }
 
 execSync('npm run verify:server', { stdio: 'inherit' });

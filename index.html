@@ -602,10 +602,9 @@
     });
   </script>
   <script type="module">
-    import { primaryCtaUrl } from './js/siteUrls.js';
-    const href = primaryCtaUrl();
+    import { QUESTIONNAIRE_WELCOME_URL } from './js/siteUrls.js';
     document.querySelectorAll('[data-primary-cta]').forEach((link) => {
-      link.href = href;
+      link.href = QUESTIONNAIRE_WELCOME_URL;
     });
   </script>
 </body>
