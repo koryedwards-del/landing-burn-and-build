@@ -46,6 +46,7 @@ import {
 import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintout.js';
 import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
 import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
+import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNaming.js';
 import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
 
@@ -509,6 +510,7 @@ function drawVegFruitFoodListPage(doc, payload) {
 
   let vegIndex = 0;
   let fruitIndex = 0;
+  let vegTipsDrawn = false;
   let fruitTipsDrawn = false;
   let firstPage = true;
 
@@ -519,6 +521,7 @@ function drawVegFruitFoodListPage(doc, payload) {
     const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
 
+    let vegColEndY = null;
     let fruitColEndY = null;
 
     if (vegIndex < vegetableItems.length) {
@@ -526,14 +529,28 @@ function drawVegFruitFoodListPage(doc, payload) {
       if (vegIndex === 0) {
         y = drawSectionTitle(doc, 'Vegetables', columns[0].x, y, columns[0].width);
       }
-      vegIndex = drawStapleListItems(
+      const vegResult = drawStapleListItems(
         doc,
         vegetableItems,
         columns[0],
         y,
         page.bottom,
         vegIndex,
-      ).nextIndex;
+      );
+      vegIndex = vegResult.nextIndex;
+      vegColEndY = vegResult.y;
+    }
+
+    if (!vegTipsDrawn && vegIndex >= vegetableItems.length) {
+      page = drawStaplesTipsUnderList(
+        doc,
+        payload,
+        page,
+        columns[0],
+        vegColEndY ?? page.y,
+        VEGETABLE_TIPS_PROSE,
+      );
+      vegTipsDrawn = true;
     }
 
     if (fruitIndex < fruitItems.length) {
