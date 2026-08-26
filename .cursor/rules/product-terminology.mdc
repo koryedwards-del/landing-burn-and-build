@@ -19,7 +19,7 @@ Burn & Build uses **three terms for three layers**. Do not swap them for the sam
 | “go back to the questionnaire” | “return to the intake form” |
 | **Program Questionnaire** (page title) | Intake form |
 
-CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
+CSS class names (`intake-form__*`, `intake-acc__*`) and `pkg.intake` stay as-is — that is internal code, not copy.
 
 | Context | Term | Examples |
 |---------|------|----------|
@@ -49,7 +49,7 @@ There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questio
 
 | Term | Layer | Question it answers | Use for |
 |------|--------|---------------------|---------|
-| **Diet** | Product | What do they buy? | *The Burn & Build Diet*, *Get the Diet*, heritage (*Since 1982*), pricing ($149), checkout (*Download your Burn & Build Diet*), brand positioning |
+| **Diet** | Product | What do they buy? | *The Burn & Build Diet*, *Get the Diet*, heritage (*Since 1982*), pricing ($279), checkout (*Download your Burn & Build Diet*), brand positioning |
 | **Food plan** | Eating rules | What do they follow daily? | PDF page 3, servings prescription, meal-building steps, handbook/FAQ about portions and adherence |
 | **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **program report** PDF; saved account artifact; *your program will be created* before Stripe |
 
@@ -67,7 +67,7 @@ There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questio
 
 - Landing CTA: **Get the Diet** → `/questionnaire/?create=1`
 - Questionnaire page title: **Program Questionnaire** — no subtitle
-- Pricing product name: **The Burn & Build Diet** — $149 one-time purchase
+- Pricing product name: **The Burn & Build Diet** — $279 one-time purchase
 - Before checkout: *When you have answered these questions… your **program** will be created*
 - Sample / Welcome section title: **Food Plan** (PDF page 3 — eating rules, not the product name)
 - Program report PDF: **Burn & Build Diet** (full multi-page deliverable)
