@@ -56,6 +56,8 @@ Landing (/) → Questionnaire (/questionnaire/) → Checkout (/createyourfoodpla
 
 Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin contacts. The static site calls this API via `js/apiConfig.js`.
 
+Print Shop API (`GET /api/print/pdf`): static FAQ, food list, and For Best Results PDFs. Purchased diet PDFs use `GET /api/programs/diet-pdf` (always fresh render).
+
 ### Render checklist
 
 After server changes on `main`, confirm Render auto-deploy finished (or trigger manual deploy on **program-creator**).
@@ -63,9 +65,9 @@ After server changes on `main`, confirm Render auto-deploy finished (or trigger 
 - [x] **program-creator** in Render project **Burn & Build**
 - [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
 - [x] End-to-end flow verified: questionnaire → payment → download printout
-- [ ] Latest `main` deployed after purchaser-portal + API cleanup commits
+- [ ] Latest `main` deployed on Render (check `curl …/health` → `commit` matches local)
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `RESEND_API_KEY`, `DIET_EMAIL_FROM`, `DATABASE_PATH`, etc.
-- [ ] `curl https://program-creator-3tzd.onrender.com/health` shows `"dietEmail":true`
+- [ ] `npm run verify:launch` passes (local + production health)
 
 ### Launch gate
 

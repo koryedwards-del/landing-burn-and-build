@@ -257,7 +257,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Food-list PDF | **Not** on KWarner staple gram pages |
 | Unused points | Fewer points used → more fat loss (see engine projections in `js/burnEngine.js`) |
 
-**Sub-lanes in menu planner** (`FAT_LANE_SLOT_LABELS`): Fat · Sugar · Alcohol — all draw from the same `fatMaintain` daily total.
+**Sub-lanes for extra fat** (Fat · Sugar · Alcohol) all draw from the same `fatMaintain` daily total when menu planner UI returns.
 
 ---
 
@@ -338,13 +338,13 @@ displayed grams = stapleCategoryServings(planServings, category) × base one-ser
 
 Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
-### Print Shop (menu planner)
+### Print Shop (server PDF API)
 
-| Document | Scaling |
-|----------|---------|
-| Weekly meal plan | Print Shop POST payload (`amount` labels on week/shopping rows) |
-| Grocery list | `foodAmountLabel()` — weekly totals |
-| Generic food list (`foodlist` view) | Static names + tips only — no personalized grams |
+Static handbook PDFs via `GET /api/print/pdf` — FAQ, food list, For Best Results. No personalized grams on the generic food list view.
+
+Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program report with scaled food-list grams).
+
+Menu planner week/grocery PDFs were retired with the planner UI removal.
 
 ---
 
@@ -363,7 +363,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
 | KWarner PDF renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
-| Meal plan / grocery scaling | Print Shop POST payload (assigned servings × gram weight) |
+| Print Shop views | `js/printShopViews.js`, `server/pdf/index.js` |
 | KWarner render workflow | `.cursor/rules/kwarner-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
@@ -377,7 +377,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 2. **Burn Engine** — which slot (P1, D1, G1, S2, VE, FQ, FT)? What macro + fat limit?
 3. **USDA** — per-100g macros → base `gramWeight` via slot formula. **Full formula serving only** — never reduce grams to meet fat ceiling; fat overage at full serving is OK.
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
-5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams; **meal plan** = assigned × grams.
+5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the program report.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
 7. KWarner PDF changes → `npm run render:kwarner-preview` per `kwarner-preview-pdf.mdc`.
 
