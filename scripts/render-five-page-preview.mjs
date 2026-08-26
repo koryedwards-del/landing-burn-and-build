@@ -13,10 +13,10 @@ const artifactsDir = '/opt/cursor/artifacts';
 const GITHUB_REPO = 'koryedwards-del/landing-burn-and-build';
 const GITHUB_BRANCH = 'main';
 const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/docs/samples`;
-const LATEST_SAMPLE_NAME = 'bb-five-page-kristi-latest.pdf';
+const LATEST_SAMPLE_NAME = 'bb-five-page-sample-female-latest.pdf';
 
-const SAMPLE_BASENAME = 'bb-five-page-kristi-';
-const ARCHIVE_BASENAME = 'bb-five-page-kristi-archive-v';
+const SAMPLE_BASENAME = 'bb-five-page-sample-female-';
+const ARCHIVE_BASENAME = 'bb-five-page-sample-female-archive-v';
 const SAMPLE_RE = new RegExp(`^${SAMPLE_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
 const ARCHIVE_RE = new RegExp(`^${ARCHIVE_BASENAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)\\.pdf$`);
 
