@@ -1,6 +1,6 @@
 /** Checkout paywall — questionnaire builds the program; Stripe unlocks PDF delivery. */
 
-import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramFromServer, fetchProgramPaymentStatus, fetchProgramByIdFromServer, fetchProgramResumeCheckout } from './programApi.js';
+import { getAppEmail, persistAppEmail, saveProgramToServer, isValidEmail, fetchProgramPaymentStatus, fetchProgramByIdFromServer, fetchProgramResumeCheckout } from './programApi.js';
 import { persistProgramBridge, loadProgramBridge, persistPaidProgramId, readPaidProgramId } from './programBridgeHandoff.js';
 import {
   completeCheckoutForTest,
@@ -208,11 +208,11 @@ async function restoreBuiltPackageFromServer(email, { force = false, programId }
   }
   if (store.builtPackage && !force) return true;
   if (!isValidEmail(email)) return false;
-  const result = await fetchProgramFromServer(email);
-  if (!result.ok || !result.package) return false;
-  store.builtPackage = result.package;
-  if (store.builtPackage?.program?.id) {
-    rememberPaidProgramId(store.builtPackage.program.id);
+  const resume = await fetchProgramResumeCheckout(email);
+  if (!resume.ok || !resume.package || !resume.programPaid) return false;
+  store.builtPackage = resume.package;
+  if (resume.programId) {
+    rememberPaidProgramId(resume.programId);
   }
   persistProgramBridge(store.builtPackage);
   return true;

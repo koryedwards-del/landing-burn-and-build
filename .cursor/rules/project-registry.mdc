@@ -23,7 +23,7 @@ Push to `main` deploys the static site via GitHub Pages.
 | `/contacts/` | Admin contact list |
 | `server/` | Express API + SQLite (Render) |
 
-**Product name:** Menu planner (never “meal planner” in user-facing copy).
+**Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
 
 ## Active product flow (while gate is on)
 

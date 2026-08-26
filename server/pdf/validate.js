@@ -1,7 +1,4 @@
-import {
-  isPersonalizedPrintShopView,
-  isPrintShopView,
-} from '../../js/printShopViews.js';
+import { isProgramReportView } from '../../js/programReportViews.js';
 import { pdfError } from './errors.js';
 
 function requireString(value, field, { required = false } = {}) {
@@ -14,17 +11,11 @@ function requireString(value, field, { required = false } = {}) {
   }
 }
 
-function requireArray(value, field) {
-  if (value != null && !Array.isArray(value)) {
-    throw pdfError(`${field} must be an array.`);
-  }
-}
-
 export function validatePrintView(view) {
   if (!view) {
     throw pdfError('Missing print view.');
   }
-  if (!isPrintShopView(view)) {
+  if (!isProgramReportView(view)) {
     throw pdfError(`PDF view not supported: ${view}`);
   }
   return view;
@@ -32,10 +23,6 @@ export function validatePrintView(view) {
 
 export function validatePrintPayload(view, payload) {
   validatePrintView(view);
-
-  if (!isPersonalizedPrintShopView(view)) {
-    return payload;
-  }
 
   if (!payload || typeof payload !== 'object') {
     throw pdfError(`Personalized PDF view requires payload: ${view}`);
@@ -49,26 +36,24 @@ export function validatePrintPayload(view, payload) {
     throw pdfError('empty must be a boolean.');
   }
 
-  if (view === 'programreport') {
-    requireString(payload.preparedDate, 'preparedDate', { required: true });
-    if (!payload.welcome || typeof payload.welcome !== 'object') {
-      throw pdfError('welcome is required.');
-    }
-    if (!Array.isArray(payload.welcome.intro) || !payload.welcome.intro.length) {
-      throw pdfError('welcome.intro is required.');
-    }
-    if (!payload.leanBodyAnalysis || typeof payload.leanBodyAnalysis !== 'object') {
-      throw pdfError('leanBodyAnalysis is required.');
-    }
-    if (!payload.history || !Array.isArray(payload.history.rows)) {
-      throw pdfError('history.rows is required.');
-    }
-    if (!payload.foodPlan || typeof payload.foodPlan !== 'object') {
-      throw pdfError('foodPlan is required.');
-    }
-    if (!payload.servings || typeof payload.servings !== 'object') {
-      throw pdfError('servings is required.');
-    }
+  requireString(payload.preparedDate, 'preparedDate', { required: true });
+  if (!payload.welcome || typeof payload.welcome !== 'object') {
+    throw pdfError('welcome is required.');
+  }
+  if (!Array.isArray(payload.welcome.intro) || !payload.welcome.intro.length) {
+    throw pdfError('welcome.intro is required.');
+  }
+  if (!payload.leanBodyAnalysis || typeof payload.leanBodyAnalysis !== 'object') {
+    throw pdfError('leanBodyAnalysis is required.');
+  }
+  if (!payload.history || !Array.isArray(payload.history.rows)) {
+    throw pdfError('history.rows is required.');
+  }
+  if (!payload.foodPlan || typeof payload.foodPlan !== 'object') {
+    throw pdfError('foodPlan is required.');
+  }
+  if (!payload.servings || typeof payload.servings !== 'object') {
+    throw pdfError('servings is required.');
   }
 
   return payload;

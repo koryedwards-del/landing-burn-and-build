@@ -59,7 +59,7 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 - Pricing product name: **The Burn & Build Diet** — $149 one-time purchase
 - Before checkout: *When you have answered these questions… your **program** will be created*
 - Sample / Welcome section title: **Food Plan** (PDF page 3 — eating rules, not the product name)
-- Print Shop / PDF document: **Program Report** (full multi-page deliverable)
+- Program report PDF: **Burn & Build Diet** (full multi-page deliverable)
 - FAQ (all three in one sentence): *Bring your **food plan** and **program report** to your doctor before starting **the diet**.*
 
 ## Common mistakes (fix when editing copy)
@@ -68,7 +68,7 @@ CSS class names and `pkg.intake` stay as-is — that is internal code, not copy.
 |---------|-------|-------|
 | Questionnaire step label | Build Your **Diet Plan** | **Personal information**, **Occupation**, **Exercise**, etc. — section nouns, not commands like *Build Your Program* |
 | Questionnaire page title | **Intake form** | **Program Questionnaire** (or **Questionnaire** in short nav copy) |
-| Questionnaire intro | Burn Engine builds your **diet** | builds your **program** (report + planner) |
+| Questionnaire intro | Burn Engine builds your **diet** | builds your **program** (Burn & Build Diet PDF) |
 | Download button | Download **diet plan** | Download **program report** or **your diet** (product) |
 | Pricing disclaimer | difficult **program** | difficult **diet** (product) |
 | Program shell / library | Go to your **diet**; Your **diet plans** | **program** / **programs** |

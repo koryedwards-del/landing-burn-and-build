@@ -43,7 +43,6 @@ function rowToContact(row) {
   return {
     email: row.email,
     displayName: row.display_name || '',
-    burnAndBuild: row.burn_and_build === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     programCount: countPrograms(row.email),
@@ -61,7 +60,7 @@ export function listContacts() {
   return rows.map(rowToContact);
 }
 
-export function upsertContact({ email, displayName, burnAndBuild }) {
+export function upsertContact({ email, displayName }) {
   const key = normalizeEmail(email);
   const now = new Date().toISOString();
   const existing = db.prepare('SELECT email FROM contacts WHERE email = ?').get(key);
@@ -70,45 +69,14 @@ export function upsertContact({ email, displayName, burnAndBuild }) {
     db.prepare(`
       UPDATE contacts
       SET display_name = COALESCE(?, display_name),
-          burn_and_build = COALESCE(?, burn_and_build),
           updated_at = ?
       WHERE email = ?
-    `).run(
-      displayName ?? null,
-      burnAndBuild == null ? null : (burnAndBuild ? 1 : 0),
-      now,
-      key
-    );
+    `).run(displayName ?? null, now, key);
   } else {
     db.prepare(`
       INSERT INTO contacts (email, display_name, burn_and_build, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(
-      key,
-      displayName || null,
-      burnAndBuild ? 1 : 0,
-      now,
-      now
-    );
-  }
-
-  return getContact(key);
-}
-
-export function setBurnAndBuild(email, enabled) {
-  const key = normalizeEmail(email);
-  const now = new Date().toISOString();
-  const existing = db.prepare('SELECT email FROM contacts WHERE email = ?').get(key);
-
-  if (!existing) {
-    db.prepare(`
-      INSERT INTO contacts (email, display_name, burn_and_build, created_at, updated_at)
-      VALUES (?, NULL, ?, ?, ?)
-    `).run(key, enabled ? 1 : 0, now, now);
-  } else {
-    db.prepare(`
-      UPDATE contacts SET burn_and_build = ?, updated_at = ? WHERE email = ?
-    `).run(enabled ? 1 : 0, now, key);
+      VALUES (?, ?, 0, ?, ?)
+    `).run(key, displayName || null, now, now);
   }
 
   return getContact(key);
@@ -117,11 +85,9 @@ export function setBurnAndBuild(email, enabled) {
 /** Diet creation adds or updates contact; access unlocks after payment. */
 export function enrollContactFromProgramCreation(email, displayName) {
   const name = String(displayName || '').trim();
-  const existing = getContact(email);
   return upsertContact({
     email,
     displayName: name || undefined,
-    burnAndBuild: existing?.burnAndBuild ? true : false,
   });
 }
 

@@ -257,7 +257,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Food-list PDF | **Not** on program report staple gram pages |
 | Unused points | Fewer points used → more fat loss (see engine projections in `js/burnEngine.js`) |
 
-**Sub-lanes for extra fat** (Fat · Sugar · Alcohol) all draw from the same `fatMaintain` daily total when menu planner UI returns.
+**Sub-lanes for extra fat** (Fat · Sugar · Alcohol) all draw from the same `fatMaintain` daily total.
 
 ---
 
@@ -357,7 +357,7 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
 | Program report PDF renderer | `server/pdf/renderProgramReportLockedPreview.js` |
-| Print Shop views | `js/printShopViews.js`, `server/pdf/index.js` |
+| Print report view | `js/programReportViews.js`, `server/pdf/index.js` |
 | Preview render workflow | `.cursor/rules/program-report-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |

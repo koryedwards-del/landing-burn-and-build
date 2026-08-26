@@ -1,71 +1,11 @@
 #!/usr/bin/env node
 /** Program report PDF verification — run: npm run verify:pdf */
 
-import { buildProgramPackage } from '../js/programPackage.js';
-import { computePlan } from '../js/burnEngine.js';
-import { buildProgramReportLockedPayload } from '../js/programReportLockedPayload.js';
+import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
 import { renderPrintPdf } from '../server/pdf/index.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
 import { validatePrintPayload, validatePrintView } from '../server/pdf/validate.js';
-
-const KRISTI_FORM = {
-  preferredName: 'Kristi Warner',
-  email: 'preview@example.com',
-  sex: 'female',
-  heightFeet: '5',
-  heightInchesPart: '6',
-  age: 28,
-  weightText: '184',
-  fatPercentText: '38.22',
-  fatSource: 'skinfolds',
-  workPhysical: 'sitting',
-  workStress: 'comfortable',
-  weightTrainingHours: 3,
-  cardioHours: 0,
-  fatBurningHours: 3,
-  wakeTime: '06:00',
-};
-
-function buildKristiPreviewPackage() {
-  const pkg = buildProgramPackage(KRISTI_FORM, {
-    label: '8-Week Burn & Build Program',
-    meta: { source: 'program-report-preview' },
-  });
-  pkg.intake.leanBodyMass = 113.7;
-  pkg.intake.workIntensity = 1.5;
-  pkg.intake.thighMm = 25;
-  pkg.intake.waistMm = 25;
-  pkg.program.foodPlanCreatedDate = '2024-01-15';
-  pkg.program.issuedAt = '2024-01-15T12:00:00.000Z';
-
-  const plan = computePlan({
-    lbm: pkg.intake.leanBodyMass,
-    intensity: pkg.intake.workIntensity,
-    weightTrainingHours: pkg.intake.weightTrainingHours,
-    cardioHours: pkg.intake.cardioHours,
-    fatBurningHours: pkg.intake.fatBurningHours,
-  });
-  pkg.plan = {
-    ...pkg.plan,
-    servings: plan.servings,
-    summary: {
-      maintainTotalCals: plan.maintainTotalCals,
-      reduceTotalCals: plan.reduceTotalCals,
-      maintainProteinGrams: plan.maintainProteinGrams,
-      reduceFatGrams: plan.reduceFatGrams,
-      maintainFatCalories: plan.maintainFatCalories,
-      reduceFatCalories: plan.reduceFatCalories,
-      weeklyFatLossPounds: plan.weeklyFatLossPounds,
-    },
-    formula: plan.formula,
-  };
-  return pkg;
-}
-
-function kristiProgramReportPayload() {
-  return buildProgramReportLockedPayload(buildKristiPreviewPackage());
-}
 
 function pageCount(pdf) {
   return (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
@@ -108,7 +48,7 @@ if (!filename.endsWith('.pdf') || filename.includes('&')) {
 }
 console.log(`ok  sanitizePdfFilename — ${filename}`);
 
-const kristiPayload = kristiProgramReportPayload();
+const kristiPayload = buildKristiPreviewPayload();
 assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 10 });
 
 if (kristiPayload.clientName !== 'KRISTI WARNER') {

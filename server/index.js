@@ -8,7 +8,6 @@ import {
   getContact,
   listContacts,
   resolveProgramLoad,
-  setBurnAndBuild,
   upsertContact,
 } from './contacts.js';
 import { countPrograms, dbPathForHealth, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, markProgramPaid, normalizeEmail, revokeProgramAccess, saveProgram, wasDietEmailSent } from './db.js';
@@ -284,7 +283,6 @@ app.put('/api/contacts', requireContactsAdmin, (req, res) => {
   const contact = upsertContact({
     email,
     displayName: String(req.body?.displayName || '').trim(),
-    burnAndBuild: false,
   });
   res.json({ ok: true, contact });
 });
@@ -296,20 +294,6 @@ app.patch('/api/contacts', requireContactsAdmin, (req, res) => {
     return;
   }
 
-  if (typeof req.body?.burnAndBuild !== 'boolean') {
-    res.status(400).json({ ok: false, message: 'burnAndBuild must be true or false.' });
-    return;
-  }
-
-  if (req.body.burnAndBuild) {
-    res.status(403).json({
-      ok: false,
-      message: 'Access is granted through Stripe checkout only. Create a coupon in Stripe for complimentary access.',
-    });
-    return;
-  }
-
-  const contact = setBurnAndBuild(email, false);
   const revokedPrograms = revokeProgramAccess(email);
   res.json({ ok: true, contact: getContact(email), revokedPrograms });
 });
@@ -494,35 +478,6 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
     console.error('Resend diet email error:', err.message);
     res.status(500).json({ ok: false, message: err.message || 'Could not resend your diet email.' });
   }
-});
-
-app.get('/api/programs', (req, res) => {
-  const email = normalizeEmail(req.query.email);
-  if (!isValidEmail(email)) {
-    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
-    return;
-  }
-
-  const result = resolveProgramLoad(email, { getLatestProgram, countPrograms });
-  if (!result.ok) {
-    res.status(result.status).json({
-      ok: false,
-      message: result.message,
-      ...(result.saved ? {
-        saved: true,
-        programCount: result.programCount,
-        programId: result.programId || null,
-      } : {}),
-    });
-    return;
-  }
-
-  res.json({
-    ok: true,
-    email,
-    package: result.package,
-    programCount: result.programCount,
-  });
 });
 
 app.get('/api/programs/:id', (req, res) => {

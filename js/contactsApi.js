@@ -50,7 +50,7 @@ export async function revokeContactAccess(email) {
     const res = await fetch(apiUrl('/api/contacts'), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...adminHeaders() },
-      body: JSON.stringify({ email: normalizeEmail(email), burnAndBuild: false }),
+      body: JSON.stringify({ email: normalizeEmail(email) }),
     });
     const data = await res.json();
     if (!res.ok) return { ok: false, message: data.message || 'Could not revoke access.' };

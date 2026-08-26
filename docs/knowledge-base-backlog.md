@@ -71,7 +71,7 @@ Either fold alone is worth $149:
 | Fold | Standalone value |
 |------|------------------|
 | **Diet (answer)** | A proven recomp system — 40+ years, Burn Engine logic, curated food philosophy, handbook/FAQ |
-| **Food plan (path)** | Personalized servings for *your* body and activity — macros, five food groups, menu planner, printouts |
+| **Food plan (path)** | Personalized servings for *your* body and activity — macros, five food groups, Burn & Build Diet PDF |
 
 Combined at $149, it's a bargain in the industry. Competitors charge separately for "the program" and "your custom plan," or lock you into subscriptions. Burn & Build delivers both in one purchase.
 

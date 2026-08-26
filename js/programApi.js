@@ -84,18 +84,6 @@ export async function fetchProgramResumeCheckout(email) {
   }
 }
 
-export async function fetchProgramFromServer(email) {
-  try {
-    const { res, data } = await fetchJson(
-      apiUrl(`/api/programs?email=${encodeURIComponent(normalizeEmail(email))}`)
-    );
-    if (!res.ok) return apiFailure(res, data, 'No plan found for this email.');
-    return data;
-  } catch {
-    return { ok: false, message: 'Network error loading your plan.' };
-  }
-}
-
 export async function fetchProgramByIdFromServer(email, programId) {
   try {
     const { res, data } = await fetchJson(
