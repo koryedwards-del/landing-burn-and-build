@@ -14,7 +14,7 @@ export const KWARNER_WELCOME_COPY = {
   foodList:
     'Pages five and six are your food list. Page five lists protein & dairy along with grains & starches. Page six lists the veggies and fruits. These foods have a track record for getting results since 1982. One serving is exactly the amount of the protein and carbohydrates your body needs to maximize your metabolism and build muscle at the same time. The gram weights on your list are scaled to your daily servings from page four.',
   whatToPrint:
-    'You do not need to print all twelve pages. For daily use, print pages four through six only — your servings and food list. Keep those in the kitchen. The rest of your report can stay on your phone.',
+    'You do not need to print all twelve pages. For daily use you need only pages four through six in the kitchen — your servings and food list. The rest of your report can stay on your phone.',
   faq:
     'Starting on page seven, frequently asked questions answer the practical details clients ask most often — hunger, exercise, bread, water, artificial sweeteners, and more. Burn & Build has refined these answers since 1982. The final page of your report confirms the answers you gave on the program questionnaire.',
 };
