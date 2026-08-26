@@ -11,6 +11,7 @@ body.q-app--workroom {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   padding: 16px;
 }
 
@@ -22,11 +23,19 @@ body.q-app--workroom,
   --text: #1a1a1a;
   --muted: #555555;
   --focus: #1a1a1a;
+  --layout-width: 42rem;
+  --q-inset-x: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .q-app--workroom {
+    --q-inset-x: 1.5rem;
+  }
 }
 
 .q-app--workroom .q-header {
   border-bottom: 1px solid var(--border);
-  padding-bottom: 12px;
+  padding: 0 var(--q-inset-x) 12px;
 }
 
 .q-app--workroom .q-motto {
@@ -54,6 +63,11 @@ body.q-app--workroom,
   border-bottom: 1px solid var(--border);
 }
 
+.q-app--workroom .q-nav__list {
+  padding-left: var(--q-inset-x);
+  padding-right: var(--q-inset-x);
+}
+
 .q-app--workroom .q-nav__item {
   font-family: inherit;
   font-size: 0.8125rem;
@@ -62,6 +76,7 @@ body.q-app--workroom,
   text-transform: none;
   color: var(--muted);
   border-bottom: 2px solid transparent;
+  padding: 0.75rem 0.75rem 0.625rem;
 }
 
 .q-app--workroom .q-nav__item.is-active {
@@ -98,15 +113,16 @@ body.q-app--workroom,
 }
 
 .q-app--workroom.q-app {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  width: min(100%, var(--layout-width, 1200px));
+  width: min(100%, var(--layout-width));
+  max-width: var(--layout-width);
   overflow: hidden;
 }
 
 .q-app--workroom .q-form {
-  padding: 1.25rem 1.5rem 0;
+  padding: 1.25rem var(--q-inset-x) 0;
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -144,7 +160,8 @@ body.q-app--workroom,
 /* Intake accordion */
 
 .intake-form {
-  max-width: 40rem;
+  width: 100%;
+  max-width: none;
 }
 
 .intake-form__head + .intake-form__intro {
@@ -392,7 +409,7 @@ body.q-app--workroom,
   justify-content: space-between;
   gap: 0.75rem;
   margin-top: 0;
-  padding: 0.875rem 1rem;
+  padding: 0.875rem var(--q-inset-x);
   border-top: 1px solid var(--border);
   background: #fff;
   flex-shrink: 0;
