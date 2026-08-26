@@ -9,9 +9,3 @@ export const FOODS_CATALOG_VERSION = '2026.08.26a';
  * Stored diet PDFs on Render are invalidated when this changes.
  */
 export const DIET_PDF_GENERATION_VERSION = '2026.08.26.1';
-
-/** Bump when a static Print Shop PDF body changes — appended as ?rev= on API fetch. */
-export const PDF_PRINT_REVISIONS = {
-  faq: '3',
-  bestresults: '5',
-};

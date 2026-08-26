@@ -6,7 +6,6 @@ import {
   deleteContact,
   enrollContactFromProgramCreation,
   listContacts,
-  programSavedForEmail,
   resolveProgramLoad,
   setBurnAndBuild,
   upsertContact,
@@ -27,8 +26,6 @@ import {
   sendPrintPdfResponse,
   validatePrintView,
 } from './pdf/index.js';
-import { renderProgramReportKwarnerLockedPreview } from './pdf/renderProgramReportKwarnerLockedPreview.js';
-import { buildKristiKwarnerPreviewPayload } from '../js/kwarnerLockedPreviewFixtures.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
@@ -212,24 +209,6 @@ app.post('/api/print/pdf', async (req, res) => {
     return;
   }
   await handlePrintPdfRequest(req, res, { view, title, payload: body });
-});
-
-async function sendBurnAndBuildDietSamplePdf(res) {
-  const payload = buildKristiKwarnerPreviewPayload();
-  const pdf = await renderProgramReportKwarnerLockedPreview(payload);
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'inline; filename="burn-and-build-diet-sample.pdf"');
-  res.setHeader('Cache-Control', 'no-store');
-  res.send(pdf);
-}
-
-app.get('/api/preview/burn-and-build-diet-pdf', async (_req, res) => {
-  try {
-    await sendBurnAndBuildDietSamplePdf(res);
-  } catch (err) {
-    console.error('Burn & Build Diet sample PDF error:', err);
-    res.status(500).json({ ok: false, message: err.message || 'Sample PDF failed.' });
-  }
 });
 
 function creatorBaseUrl(req) {
@@ -416,24 +395,6 @@ app.post('/api/programs', (req, res) => {
   } catch (err) {
     res.status(403).json({ ok: false, message: err.message || 'Could not save your program.' });
   }
-});
-
-app.get('/api/programs/saved', (req, res) => {
-  const email = normalizeEmail(req.query.email);
-  if (!isValidEmail(email)) {
-    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
-    return;
-  }
-
-  const saved = programSavedForEmail(email);
-  res.json({
-    ok: true,
-    email,
-    saved: saved.saved,
-    programId: saved.programId || null,
-    programCount: saved.programCount,
-    programPaid: !!saved.programPaid,
-  });
 });
 
 app.get('/api/programs/resume-checkout', (req, res) => {

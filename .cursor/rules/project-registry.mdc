@@ -34,7 +34,7 @@ New programs → coming soon (questionnaire with ?create=1 for internal testing 
 
 ## Print Shop (server PDF pipeline)
 
-Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Client menu planner UI was removed; data lives in `menuplanner/data/` for PDF renderers and audits.
+Print Shop PDFs are generated on the server via `server/pdf/` (PDFKit). Client menu planner UI was removed; `menuplanner/data/` remains for meal-image audits (`npm run verify:meals`).
 
 Five print documents — see `js/printShopViews.js`. Verify: `npm run verify:pdf`.
 

@@ -113,17 +113,6 @@ export function setBurnAndBuild(email, enabled) {
   return getContact(key);
 }
 
-export function ensureBurnAndBuildAccess(email) {
-  const contact = getContact(email);
-  if (!contact) {
-    return { ok: false, message: 'This email is not in the contact list yet.' };
-  }
-  if (!contact.burnAndBuild) {
-    return { ok: false, message: 'Complete Stripe checkout to unlock your program.' };
-  }
-  return { ok: true, contact };
-}
-
 /** Diet creation adds or updates contact; access unlocks after payment. */
 export function enrollContactFromProgramCreation(email, displayName) {
   const name = String(displayName || '').trim();
@@ -133,19 +122,6 @@ export function enrollContactFromProgramCreation(email, displayName) {
     displayName: name || undefined,
     burnAndBuild: existing?.burnAndBuild ? true : false,
   });
-}
-
-export function programSavedForEmail(email) {
-  const meta = getLatestProgramMeta(email);
-  if (!meta) {
-    return { saved: false, programCount: 0, programPaid: false };
-  }
-  return {
-    saved: true,
-    programId: meta.id,
-    programCount: countPrograms(email),
-    programPaid: isProgramPaid(email, meta.id),
-  };
 }
 
 export function resolveProgramLoad(email, { getLatestProgram: getLatest, countPrograms: count }) {
