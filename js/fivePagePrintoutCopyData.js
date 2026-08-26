@@ -1,9 +1,10 @@
 /** B&B 5-page printout — locked 1982 Warner copy (user-authored; do not reauthor). */
 
+/** Footer contact — matches 2026 program report pinned footer. */
 export const FIVE_PAGE_HEADER = Object.freeze({
   phone: '253-988-6946',
-  website: 'www.eattolosefat.com',
-  email: 'kory.edwards@coachkory.com',
+  website: 'www.burnandbuilddiet.com',
+  email: 'support@burnandbuilddiet.com',
 });
 
 export const FIVE_PAGE_WELCOME = Object.freeze({

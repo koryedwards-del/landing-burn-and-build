@@ -1,11 +1,14 @@
 import { PDF_MARGIN } from './constants.js';
-import { PDF_FRAME_FONTS, PDF_FRAME_COLORS } from './drawFrame.js';
+import {
+  PDF_FRAME_FONTS,
+  PDF_FRAME_COLORS,
+  pinnedContentBottomY,
+  stampPinnedProgramFooters,
+} from './drawFrame.js';
 
 export const FRAME_1982 = Object.freeze({
-  contactSize: 9,
   personalizationSize: 10,
   pageTitleSize: 14,
-  pageNumberSize: 9,
   bodySize: 10,
   sectionTitleSize: 10,
   tableHeadSize: 9,
@@ -41,16 +44,6 @@ export function add1982Page(doc) {
   return frame1982ContentBox(doc);
 }
 
-export function draw1982ContactLine(doc, box, contact) {
-  const line = [contact.phone, contact.website, contact.email].filter(Boolean).join('     ');
-  doc
-    .font(PDF_FRAME_FONTS.regular)
-    .fontSize(FRAME_1982.contactSize)
-    .fillColor(PDF_FRAME_COLORS.body)
-    .text(line, box.x, box.y, { width: box.width, align: 'center', lineGap: 0 });
-  return doc.y + FRAME_1982.headerGap;
-}
-
 export function draw1982PersonalizationLine(doc, box, y, { clientName, preparedDate }) {
   const rowY = y;
   doc
@@ -84,35 +77,23 @@ export function draw1982PageTitle(doc, box, y, title) {
 
 export function begin1982Page(doc, payload, pageTitle) {
   const box = add1982Page(doc);
-  let y = draw1982ContactLine(doc, box, payload.header || {});
-  y = draw1982PersonalizationLine(doc, box, y, {
+  let y = draw1982PersonalizationLine(doc, box, box.y, {
     clientName: payload.clientName,
     preparedDate: payload.preparedDate,
   });
   if (pageTitle) {
     y = draw1982PageTitle(doc, box, y, pageTitle);
   }
-  const footerReserve = FRAME_1982.pageNumberSize + 16;
-  return { box, x: box.x, y, width: box.width, bottom: box.bottom - footerReserve };
+  return {
+    box,
+    x: box.x,
+    y,
+    width: box.width,
+    bottom: pinnedContentBottomY(box),
+  };
 }
 
-export function stamp1982PageNumbers(doc) {
-  if (typeof doc.bufferedPageRange !== 'function') return 0;
-  const range = doc.bufferedPageRange();
-  const total = range.count;
-  for (let index = 0; index < total; index += 1) {
-    doc.switchToPage(range.start + index);
-    const box = frame1982ContentBox(doc);
-    const label = `${index + 1} of ${total}`;
-    doc
-      .font(PDF_FRAME_FONTS.regular)
-      .fontSize(FRAME_1982.pageNumberSize)
-      .fillColor(PDF_FRAME_COLORS.muted)
-      .text(label, box.x, box.bottom - FRAME_1982.pageNumberSize - 4, {
-        width: box.width,
-        align: 'center',
-        lineGap: 0,
-      });
-  }
-  return total;
+/** 2026 program-report footer: page number, gold rule, contact line. */
+export function stamp1982Footers(doc, contact) {
+  return stampPinnedProgramFooters(doc, contact);
 }

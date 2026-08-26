@@ -8,7 +8,7 @@ import { SEMINAR_COLORS } from './drawSeminar.js';
 import {
   begin1982Page,
   FRAME_1982,
-  stamp1982PageNumbers,
+  stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
 
@@ -515,7 +515,7 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
 
-  stamp1982PageNumbers(doc);
+  stamp1982Footers(doc, payload.header);
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
