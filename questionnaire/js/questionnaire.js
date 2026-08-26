@@ -13,6 +13,7 @@ import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { CREATOR_CHECKOUT_URL } from '../../js/siteUrls.js';
 
 const STEPS = [
+  { id: 'welcome', label: 'Welcome' },
   { id: 'start', label: 'Personal information' },
   { id: 'work', label: 'Occupation' },
   { id: 'exercise', label: 'Exercise' },
@@ -514,8 +515,9 @@ function renderInfoAccordionState() {
 
 function updateStepNav() {
   if (!stepNav) return;
-  stepNav.hidden = false;
-  if (stepBackBtn) stepBackBtn.disabled = step === 0;
+  stepNav.hidden = step === 0;
+  if (step === 0) return;
+  if (stepBackBtn) stepBackBtn.disabled = step === 1;
   if (stepNextBtn) {
     stepNextBtn.textContent = step === panels.length - 1 ? 'Complete purchase →' : 'Next';
     stepNextBtn.disabled = step < panels.length - 1 && !canProceed(step);
@@ -1276,14 +1278,16 @@ function canProceed(stepIndex) {
   const values = readForm();
   switch (stepIndex) {
     case 0:
-      return infoSectionComplete(values);
+      return true;
     case 1:
-      return occupationSectionComplete(values);
+      return infoSectionComplete(values);
     case 2:
-      return exerciseSectionComplete(values);
+      return occupationSectionComplete(values);
     case 3:
-      return bodySectionComplete(values);
+      return exerciseSectionComplete(values);
     case 4:
+      return bodySectionComplete(values);
+    case 5:
       return Boolean(values.signature);
     default:
       return true;
@@ -1355,22 +1359,22 @@ function showStep(index) {
     panel.hidden = i !== step;
   });
   renderNav();
-  if (step === 5) renderReview();
-  if (step === 0) renderInfoAccordionState();
-  if (step === 1) {
+  if (step === 6) renderReview();
+  if (step === 1) renderInfoAccordionState();
+  if (step === 2) {
     if (occupationFieldIndex < 0 && !occupationSectionComplete(readForm())) {
       occupationFieldIndex = 0;
     }
     renderOccupationAccordionState();
   }
-  if (step === 3) {
+  if (step === 4) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
       bodyFieldIndex = 0;
     }
     syncFatSourceOtherField();
     renderBodyAccordionState();
   }
-  if (step === 2) {
+  if (step === 3) {
     if (exerciseFieldIndex < 0 && !exerciseSectionComplete(readForm())) {
       exerciseFieldIndex = 0;
     }
@@ -1471,6 +1475,10 @@ function bindEvents() {
     if (step > 0) showStep(step - 1);
   });
 
+  document.querySelector('[data-q-welcome-next]')?.addEventListener('click', () => {
+    showStep(1);
+  });
+
   stepNextBtn?.addEventListener('click', () => {
     if (step === panels.length - 1) {
       submitCheckout(stepNextBtn);
@@ -1487,12 +1495,12 @@ function bindEvents() {
 
 async function submitCheckout(triggerBtn) {
   const values = readForm();
-  if (!canProceed(4)) return;
+  if (!canProceed(5)) return;
 
   const email = String(values.email || '').trim();
   if (!isValidEmail(email)) {
     window.alert('Enter a valid email address before continuing.');
-    showStep(0);
+    showStep(1);
     return;
   }
 
@@ -1530,20 +1538,12 @@ async function submitCheckout(triggerBtn) {
   }
 }
 
-function activateIntakeMode() {
-  const infoForm = document.getElementById('info-form');
-  const startPanel = document.querySelector('.q-panel[data-step="0"]');
-  if (infoForm) infoForm.hidden = false;
-  startPanel?.classList.add('q-panel--intake');
-}
-
 function restoreQuestionnaireChrome() {
   document.body.classList.add('q-app--workroom');
   document.querySelector('.q-app')?.classList.add('q-app--workroom');
   const title = document.querySelector('.q-title');
   if (title) title.textContent = 'Program Questionnaire';
   syncIntakeQuestionNumbers();
-  activateIntakeMode();
 }
 
 function showBootError(message) {
