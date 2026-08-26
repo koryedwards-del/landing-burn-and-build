@@ -105,6 +105,37 @@
   text-align: center;
 }
 
+.unlock-restore {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 8px;
+}
+
+.unlock-restore__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.unlock-restore__input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+}
+
+.unlock-restore__input:focus {
+  outline: none;
+  border-color: var(--flame);
+}
+
 .unlock-hint a {
   color: var(--cyan);
 }
