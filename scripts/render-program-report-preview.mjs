@@ -50,13 +50,6 @@ if (fs.existsSync(artifactsDir)) {
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 
-const buildModule = `/** Auto-generated — node scripts/render-program-report-preview.mjs */
-export const PROGRAM_REPORT_PREVIEW_BUILD = ${JSON.stringify(buildLabel)};
-export const PROGRAM_REPORT_PREVIEW_MD5 = ${JSON.stringify(md5)};
-`;
-
-fs.writeFileSync(path.join(root, 'js/programReportPreviewBuild.js'), buildModule);
-
 console.log(`FILE ${samplePath}`);
 console.log(`FILE ${archivePath}`);
 if (fs.existsSync(artifactsDir)) {

@@ -84,10 +84,6 @@ function weightAtBfPercent(lbm, bfPercent) {
   return lbm / (1 - bfPercent / 100);
 }
 
-function formatCapHeader(cap) {
-  return `<${cap}%`;
-}
-
 function formatBarFatHeader(cap, gender) {
   const floor = gender === 'female' ? PROJECTION_BF_FLOOR.female : PROJECTION_BF_FLOOR.male;
   if (Math.abs(Number(cap) - floor) < 0.5) {
@@ -135,39 +131,8 @@ function lbaBodyFatRangeRows(gender) {
   return [lbaStageReadyCategory(key), ...LBA_BF_RANGE_REST[key].map((row) => ({ ...row }))];
 }
 
-function lbaBodyFatRangeSpan(category) {
-  if (!category) return Infinity;
-  if (category.bfMax == null) return Infinity;
-  return category.bfMax - category.bfMin;
-}
-
-function lbaBodyFatRangeMatches(bf, category) {
-  if (!category || !Number.isFinite(bf)) return false;
-  if (bf < category.bfMin) return false;
-  if (category.bfMax == null) return bf >= category.bfMin;
-  return bf <= category.bfMax;
-}
-
 export function lbaBodyFatRangeCategories(gender) {
   return lbaBodyFatRangeRows(gender).map((row) => ({ ...row }));
-}
-
-export function lbaBodyFatRangeForPercent(gender, bodyFatPercent) {
-  const bf = Number(bodyFatPercent);
-  if (!Number.isFinite(bf)) return null;
-  const categories = lbaBodyFatRangeCategories(gender);
-  const [stageReady, ...rest] = categories;
-  const nextMin = rest[0]?.bfMin;
-  if (stageReady && (bf <= stageReady.bfMin || (nextMin != null && bf < nextMin))) {
-    return stageReady;
-  }
-  const matches = rest.filter((category) => lbaBodyFatRangeMatches(bf, category));
-  if (matches.length) {
-    return matches.reduce((best, category) => (
-      lbaBodyFatRangeSpan(category) < lbaBodyFatRangeSpan(best) ? category : best
-    ));
-  }
-  return categories[categories.length - 1];
 }
 
 function formatAceWeightRange(lbm, category) {
@@ -198,15 +163,8 @@ export function lbaBodyFatRangeLeadMessage() {
   return BODY_FAT_PROGRESS_BAR_FOOTER;
 }
 
-export function aceCategories(gender) {
-  return leannessTable(gender).map((row) => ({
-    ...row,
-    rangeLabel: formatCapHeader(row.cap),
-  }));
-}
-
 /** Leanest stage where body fat is under the cap; null when above Training. */
-export function aceCategoryForBodyFat(gender, bodyFatPercent) {
+function aceCategoryForBodyFat(gender, bodyFatPercent) {
   const bf = Number(bodyFatPercent);
   const table = leannessTable(gender);
   if (!Number.isFinite(bf)) return null;
@@ -216,20 +174,7 @@ export function aceCategoryForBodyFat(gender, bodyFatPercent) {
   return null;
 }
 
-export function aceHeaderLabels(gender) {
-  return leannessTable(gender).map((row) => formatCapHeader(row.cap));
-}
-
-/** Stage columns with target weights for the client's gender and LBM. */
-export function leannessWeightGoalsTable(gender, lbm) {
-  const rows = leannessTable(gender);
-  return {
-    stageLabels: LEANNESS_LABELS,
-    values: rows.map((row) => weightGoalRangeLabel(lbm, row)),
-  };
-}
-
-export function desirableLbmBarFooter(lead) {
+function desirableLbmBarFooter(lead) {
   const parts = [lead, DESIRABLE_LBM_BAR_FOOTER].filter(Boolean);
   return parts.join(' ');
 }
@@ -246,10 +191,6 @@ export function lbmCopyAfterFirstSentence(text) {
   return end >= 0 ? text.slice(end + 2) : '';
 }
 
-export function leannessFatBarFooter(lead, congrats) {
-  return leannessFatBarFooterParts(lead, congrats).full;
-}
-
 export function leannessFatBarFooterParts(lead, congrats) {
   const congratsLead = lbmCopyFirstSentence(congrats);
   const lbmPart = desirableLbmBarFooter(lead);
@@ -258,38 +199,6 @@ export function leannessFatBarFooterParts(lead, congrats) {
     congratsLead,
     body,
     full: [congratsLead, body].filter(Boolean).join('\n\n'),
-  };
-}
-
-/** Below / at-or-above desirable LBM zones for the LBA lean-mass bar (client gender + height). */
-export function desirableLbmBar(gender, heightInches, leanBodyMass) {
-  const desirable = desirableLeanBodyMassLbs(gender, heightInches);
-  const lbm = Number(leanBodyMass);
-  if (!desirable || !Number.isFinite(lbm) || lbm <= 0) return null;
-
-  const scaleMax = Math.max(
-    Math.ceil((desirable * 1.2) / 5) * 5,
-    Math.ceil(lbm / 5) * 5 + 5,
-    desirable + 15,
-  );
-  const atOrAbove = lbm >= desirable;
-  return {
-    currentLbm: round2(lbm),
-    desirableLbm: round2(desirable),
-    scaleMax,
-    zones: [
-      {
-        label: 'Below desirable',
-        from: 0,
-        to: desirable,
-      },
-      {
-        label: 'At or above',
-        from: desirable,
-        to: scaleMax,
-      },
-    ],
-    activeStage: atOrAbove ? 'At or above' : 'Below desirable',
   };
 }
 
@@ -362,17 +271,10 @@ export function fatBarTimelineMarkers(timeline) {
     }));
 }
 
-export function weightGoalRangeLabel(lbm, category) {
+function weightGoalRangeLabel(lbm, category) {
   const lean = Number(lbm);
   if (!lean || lean <= 0 || !category) return '—';
   return `${Math.round(weightAtBfPercent(lean, category.cap))} lbs.`;
-}
-
-export function weightGoalRanges(gender, lbm) {
-  return leannessTable(gender).map((category) => ({
-    label: category.label,
-    range: weightGoalRangeLabel(lbm, category),
-  }));
 }
 
 export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {

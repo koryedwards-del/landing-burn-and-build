@@ -101,11 +101,8 @@ function mapProgramRow(row) {
   };
 }
 
-function packageForSave(email, programId, pkg) {
-  const key = normalizeEmail(email);
-  const id = programId || pkg.program?.id;
-  if (!id || !pkg?.menuPlanner) return pkg;
-  if (isProgramPaid(key, id)) return pkg;
+function stripLegacyPackageFields(pkg) {
+  if (!pkg?.menuPlanner) return pkg;
   const { menuPlanner, ...rest } = pkg;
   return rest;
 }
@@ -122,7 +119,7 @@ export function saveProgram(email, pkg) {
     throw new Error('This diet belongs to another account.');
   }
 
-  const storedPkg = packageForSave(key, id, pkg);
+  const storedPkg = stripLegacyPackageFields(pkg);
 
   if (existing) {
     const existingPkg = parsePackage(existing);
@@ -197,15 +194,6 @@ export function getProgramById(email, programId) {
     WHERE email = ? AND id = ?
   `).get(normalizeEmail(email), programId);
   return parsePackage(row);
-}
-
-/** Delete one diet for this email. Returns true if a row was removed. */
-export function deleteProgram(email, programId) {
-  const result = db.prepare(`
-    DELETE FROM programs
-    WHERE email = ? AND id = ?
-  `).run(normalizeEmail(email), programId);
-  return result.changes > 0;
 }
 
 export function isProgramPaid(email, programId) {

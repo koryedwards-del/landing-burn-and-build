@@ -28,7 +28,6 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
 | Locked copy | `js/programReportCopy.js` |
 | Food list gram scaling | `js/stapleServingPrintout.js` — see `.cursor/rules/burn-engine-servings.mdc` |
 | Render script | `scripts/render-program-report-preview.mjs` |
-| Build metadata | `js/programReportPreviewBuild.js` (auto-generated) |
 | 1982 reference PDF | `docs/archive/kwarner-1982-original.pdf` |
 
 ## Mandatory after every PDF change
@@ -38,7 +37,7 @@ These documents are **created with PDFKit** (`server/pdf/`, `PDFDocument` via `s
    - **Versioned:** `docs/samples/burn-and-build-diet-kristi-N.pdf` (N auto-increments, never overwrite)
    - **Archive:** `docs/samples/burn-and-build-diet-kristi-archive-vN.pdf`
    - **Latest (stable):** `docs/samples/burn-and-build-diet-kristi-latest.pdf` (overwritten each render)
-3. **Commit and push to `main`:** versioned PDF, latest PDF, archive, and `js/programReportPreviewBuild.js`
+3. **Commit and push to `main`:** versioned PDF, latest PDF, and archive
 4. **Give the user the raw download link** (see below)
 
 Optional: copy to `/opt/cursor/artifacts/` when that folder exists — never rely on it for delivery.

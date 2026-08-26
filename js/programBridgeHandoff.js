@@ -1,7 +1,7 @@
 /** Session handoff — questionnaire → checkout (Burn & Build Diet PDF download). */
 
-export const BUILT_PROGRAM_KEY = 'bnb_built_package';
-export const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
+const BUILT_PROGRAM_KEY = 'bnb_built_package';
+const PAID_PROGRAM_ID_KEY = 'bnb_paid_program_id';
 
 export function persistPaidProgramId(programId) {
   const id = String(programId || '').trim();

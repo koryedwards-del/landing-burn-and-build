@@ -62,23 +62,3 @@ export const PRINT_TEMPLATE_PROGRESS_BAR = Object.freeze({
   timelineBf: 11,
   footer: 9,
 });
-
-/** Food list staples (PDF pages 5–6). */
-export const PRINT_TEMPLATE_FOOD_LIST = Object.freeze({
-  sectionTitle: 11.5,
-  stapleLine: 10.5,
-});
-
-/** Seasonings and Splashes (PDF page 7). */
-export const PRINT_TEMPLATE_FLAVOR = Object.freeze({
-  panelSectionTitle: 11.5,
-  kitName: 10.5,
-  bullet: 10.5,
-  footnote: 10,
-});
-
-/** Legacy seminar header lines (older letterhead pages). */
-export const PRINT_TEMPLATE_SEMINAR_HEADER = Object.freeze({
-  contact: 8,
-  meta: 9,
-});

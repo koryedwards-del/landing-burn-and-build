@@ -67,24 +67,6 @@ export function frameFooterRuleY(box) {
   return box.bottom - FOOTER_BELOW_RULE;
 }
 
-/** Content band between top and bottom gold dividers with equal padding. */
-export function frameContentContainer(box, topGoldY) {
-  const bottomGoldY = frameFooterRuleY(box);
-  const pad = PDF_FRAME.contentPad;
-  const top = topGoldY + pad;
-  const bottom = bottomGoldY - pad;
-  return {
-    x: box.x,
-    y: top,
-    width: box.width,
-    top,
-    bottom,
-    topGoldY,
-    bottomGoldY,
-    height: Math.max(0, bottom - top),
-  };
-}
-
 const TITLE_CASE_SMALL_WORDS = new Set([
   'a', 'an', 'and', 'as', 'at', 'but', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'vs', 'via',
 ]);
@@ -194,54 +176,6 @@ export function drawFrameHeader(doc, box, {
   return y;
 }
 
-/** Content pages — personalization row + gold divider; contact lives in footer only. */
-export function drawCompactPersonalizedHeader(doc, box, {
-  clientName,
-  preparedDateLong,
-  preparedDate,
-  contact = PDF_FRAME_CONTACT,
-  showContact = false,
-} = {}) {
-  let y = box.y + 6;
-
-  if (showContact) {
-    const phone = contact?.phone || '';
-    const website = contact?.website || PDF_FRAME_CONTACT.website;
-    const email = contact?.email || PDF_FRAME_CONTACT.email;
-    const contactLine = [phone, website, email].filter(Boolean).join('  ·  ');
-    doc
-      .font(PDF_FRAME_FONTS.regular)
-      .fontSize(PDF_FRAME.footerContactSize + 1)
-      .fillColor(PDF_FRAME_COLORS.muted)
-      .text(contactLine, box.x, y, { width: box.width, align: 'center', lineGap: 0 });
-    y = doc.y + 8;
-  }
-
-  const name = titleCaseWords(clientName);
-  const date = formatPreparedDateOrdinal(preparedDateLong || preparedDate);
-  doc
-    .font(PDF_FRAME_FONTS.bold)
-    .fontSize(PDF_FRAME.personalizationSize)
-    .fillColor(PDF_FRAME_COLORS.body)
-    .text(`Prepared exclusively for: ${name}`, box.x, y, {
-      width: box.width * 0.64,
-      align: 'left',
-      lineGap: 0,
-    });
-  doc
-    .font(PDF_FRAME_FONTS.bold)
-    .fontSize(PDF_FRAME.personalizationSize)
-    .text(`On: ${date}`, box.x + box.width * 0.64, y, {
-      width: box.width * 0.36,
-      align: 'right',
-      lineGap: 0,
-    });
-
-  y = Math.max(doc.y, y + 14) + 10;
-  drawGoldDivider(doc, box.x, y, box.width);
-  return y;
-}
-
 export function drawContinuationHeader(doc, box) {
   const y = box.y + 14;
   drawGoldDivider(doc, box.x, y, box.width);
@@ -275,49 +209,8 @@ export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } =
   return doc.y + (gapAfter ?? PDF_FRAME.sectionGap);
 }
 
-export function frameContentContainerTight(box, topGoldY, pad = 6) {
-  const bottomGoldY = frameFooterRuleY(box);
-  const top = topGoldY + pad;
-  const bottom = bottomGoldY - pad;
-  return {
-    x: box.x,
-    y: top,
-    width: box.width,
-    top,
-    bottom,
-    topGoldY,
-    bottomGoldY,
-    height: Math.max(0, bottom - top),
-  };
-}
-
-export function drawFrameFooter(doc, box, contact = PDF_FRAME_CONTACT) {
-  clearContentFooterGap(doc, box);
-
-  const ruleY = frameFooterRuleY(box);
-  const website = contact?.website || PDF_FRAME_CONTACT.website;
-  const email = contact?.email || PDF_FRAME_CONTACT.email;
-  const phone = contact?.phone || '';
-  const footerLine = [phone, website, email].filter(Boolean).join('  ·  ');
-  const footerTextY = box.bottom - FOOTER_BOTTOM_PAD - PT.contact;
-
-  drawGoldDivider(doc, box.x, ruleY, box.width);
-
-  doc
-    .font(PDF_FRAME_FONTS.regular)
-    .fontSize(PDF_FRAME.footerContactSize)
-    .fillColor(PDF_FRAME_COLORS.muted)
-    .text(footerLine, box.x, footerTextY, {
-      width: box.width,
-      align: 'center',
-      lineGap: 0,
-    });
-
-  return ruleY;
-}
-
 /** Centered at bottom of content band, above the footer gold line. */
-export function drawFramePageNumber(doc, box, { page, total }) {
+function drawFramePageNumber(doc, box, { page, total }) {
   const label = `Page ${page} of ${total}`;
   doc
     .font(PDF_FRAME_FONTS.regular)
@@ -336,22 +229,9 @@ export function drawFramePageNumber(doc, box, { page, total }) {
   return y;
 }
 
-/** Program report: page number (optional) + gold footer.contact */
-export function drawFramePageFooter(doc, box, { page, total, contact } = {}) {
-  if (page != null && total != null) {
-    drawFramePageNumber(doc, box, { page, total });
-  }
-  drawFrameFooter(doc, box, contact);
-}
-
 /** Max y for body content when a page number is shown. */
 export function frameContentBottomLimit(box) {
   return frameFooterRuleY(box) - FOOTER_ABOVE_RULE;
-}
-
-/** Content container bottom when page numbers are reserved above the footer rule. */
-export function frameContentContainerBottom(box, topGoldY) {
-  return frameContentBottomLimit(box);
 }
 
 /** Stamp centered "Page X of Y" on every buffered page before finalize. */
