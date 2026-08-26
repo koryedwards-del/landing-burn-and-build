@@ -161,7 +161,7 @@ function drawCenteredBodyParagraph(doc, payload, page, text) {
 }
 
 function drawBodyParagraphs(doc, payload, page, paragraphs, {
-  fullHeader = false,
+  fullHeader,
   pageTitle = null,
   bodySize,
   lineGap,
@@ -672,7 +672,7 @@ function finishLockedPage(_doc, _box, _payload) {
   /* Footers stamped once after all pages — see stampPinnedProgramFooters */
 }
 
-function startLockedPage(doc, payload, pageTitle, { fullHeader = false } = {}) {
+function startLockedPage(doc, payload, pageTitle, { fullHeader } = {}) {
   return beginLockedPage(doc, payload, pageTitle, { fullHeader });
 }
 
@@ -1964,7 +1964,7 @@ function parseLbaStatusPrefix(text) {
   return null;
 }
 
-function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { fullHeader = false } = {}) {
+function drawLbaStatusParagraph(doc, payload, page, paragraph, typography, { fullHeader } = {}) {
   if (!paragraph) return page;
   const status = parseLbaStatusPrefix(paragraph);
   const blockH = measureParagraph(doc, paragraph, page.width, typography);
