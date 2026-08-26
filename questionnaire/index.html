@@ -9,6 +9,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/questionnaire.css?v=89" />
   <link rel="stylesheet" href="css/intake-form.css?v=24" />
+  <script type="module">
+    import { captureDietCreationTestBypass, isDietCreationGated, CREATOR_CHECKOUT_URL } from '../js/siteUrls.js';
+    captureDietCreationTestBypass();
+    if (isDietCreationGated()) {
+      window.location.replace(CREATOR_CHECKOUT_URL);
+    }
+  </script>
 </head>
 <body>
   <div class="q-app">
@@ -513,6 +520,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=147"></script>
+  <script type="module" src="js/questionnaire.js?v=148"></script>
 </body>
 </html>

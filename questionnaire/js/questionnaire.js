@@ -1569,7 +1569,7 @@ function boot() {
   try {
     syncIntakeQuestionNumbers();
     if (isDietCreationGated()) {
-      showStep(0);
+      window.location.replace(CREATOR_CHECKOUT_URL);
       return;
     }
     restoreQuestionnaireChrome();

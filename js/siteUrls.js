@@ -6,6 +6,8 @@ export const CREATOR_HOST_ORIGIN = MARKETING_ORIGIN;
 /** When true, hide questionnaire/checkout entry points; paid users use createyourfoodplan. */
 export const DIET_CREATION_COMING_SOON = true;
 
+/** Gated questionnaire visits redirect here (download portal for purchasers). */
+
 /** URL param + session flag for internal testing while Coming Soon is on (?create=1). */
 export const DIET_CREATION_TEST_PARAM = 'create';
 const DIET_CREATION_TEST_STORAGE_KEY = 'bnb_diet_creation_test';
