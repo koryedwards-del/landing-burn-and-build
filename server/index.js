@@ -529,8 +529,7 @@ app.get('/api/programs/diet-pdf', async (req, res) => {
   }
 
   try {
-    const forceRegenerate = String(req.query.regenerate || '') === '1';
-    const pdf = await ensureDietPdf(email, programId, { forceRegenerate });
+    const pdf = await ensureDietPdf(email, programId);
     const pkg = getProgramById(email, programId);
     const filename = dietPdfFilename({ preferredName: pkg?.intake?.preferredName, pkg });
     res.setHeader('Content-Type', 'application/pdf');

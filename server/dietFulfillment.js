@@ -2,7 +2,7 @@ import { dietPdfDocumentLabel } from '../js/dietPdfNaming.js';
 import { buildProgramReportPayload } from '../js/programReportPrintout.js';
 import { renderProgramReportPdf } from './pdf/renderProgramReport.js';
 import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent } from './db.js';
-import { readStoredDietPdf, writeStoredDietPdf, isStoredDietPdfCurrent, deleteStoredDietPdf } from './dietPdfStorage.js';
+import { writeStoredDietPdf } from './dietPdfStorage.js';
 import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
 
 const emailRetryTimers = new Map();
@@ -45,19 +45,11 @@ function normalizeRetryKey(email) {
   return String(email || '').trim().toLowerCase();
 }
 
-/** Generate (if needed), store, and return the Burn & Build Diet PDF (program report) buffer. */
-export async function ensureDietPdf(email, programId, { forceRegenerate = false } = {}) {
+/** Generate, store, and return the Burn & Build Diet PDF (program report) buffer. Always renders fresh. */
+export async function ensureDietPdf(email, programId) {
   const id = String(programId || '').trim();
   if (!id) throw new Error('Missing program id.');
   if (!isProgramPaid(email, id)) throw new Error('Purchase required for this program.');
-
-  if (!forceRegenerate && isStoredDietPdfCurrent(id)) {
-    return readStoredDietPdf(id);
-  }
-
-  if (forceRegenerate || readStoredDietPdf(id)) {
-    deleteStoredDietPdf(id);
-  }
 
   const pkg = getProgramById(email, id);
   if (!pkg) throw new Error('Program not found for this email.');
@@ -71,7 +63,7 @@ export async function ensureDietPdf(email, programId, { forceRegenerate = false 
 
 /** Ensure PDF exists and email a copy (skips duplicate sends unless force). */
 export async function fulfillDietDelivery(email, programId, { forceEmail = false } = {}) {
-  const pdf = await ensureDietPdf(email, programId, { forceRegenerate: forceEmail });
+  const pdf = await ensureDietPdf(email, programId);
   const pkg = getProgramById(email, programId);
   const preferredName = pkg?.intake?.preferredName || 'Your';
 

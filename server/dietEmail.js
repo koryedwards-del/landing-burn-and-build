@@ -1,4 +1,5 @@
 import { dietPdfAttachmentFilename } from '../js/dietPdfNaming.js';
+import { dietPdfDownloadUrl } from './dietPdfUrls.js';
 
 const RESEND_API = 'https://api.resend.com/emails';
 
@@ -27,6 +28,7 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
 
   const filename = dietPdfAttachmentFilename({ preferredName, pkg });
   const firstName = escapeHtml(String(preferredName || '').trim().split(/\s+/)[0] || 'there');
+  const downloadUrl = dietPdfDownloadUrl(to, programId);
 
   const headers = {
     Authorization: `Bearer ${apiKey}`,
@@ -46,10 +48,10 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
       subject: 'Your Burn & Build Diet',
       html: `
         <p>Hi ${firstName},</p>
-        <p>Payment confirmed — your personalized <strong>Burn &amp; Build Diet</strong> is attached.</p>
-        <p>If you do not see this message in your inbox within a few minutes, check your spam or junk folder.</p>
-        <p>Save this PDF somewhere you will see it every day. It is your Burn &amp; Build Diet — your full program report.</p>
-        <p>Need it again later? Return to <a href="https://burnandbuilddiet.com/createyourfoodplan/">burnandbuilddiet.com/createyourfoodplan</a> after checkout, or check this inbox for your PDF.</p>
+        <p>Payment confirmed — your <strong>Burn &amp; Build Diet</strong> is ready.</p>
+        <p><a href="${downloadUrl}">Download your Burn &amp; Build Diet</a></p>
+        <p>Return to <a href="https://burnandbuilddiet.com/createyourfoodplan/">burnandbuilddiet.com/createyourfoodplan</a> anytime to download again.</p>
+        <p>A copy is attached to this email.</p>
         <p>— Burn &amp; Build<br>support@burnandbuilddiet.com</p>
       `,
       attachments: [{

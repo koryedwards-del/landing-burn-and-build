@@ -84,7 +84,7 @@ function renderComingSoon() {
         </div>
         <div class="unlock-panel">
           <p class="unlock-lead">New Burn &amp; Build programs are not open yet. We&rsquo;re finishing the launch so no one starts a diet that isn&rsquo;t ready.</p>
-          <p class="unlock-hint">Already purchased? <a href="${CREATOR_CHECKOUT_URL}">Return to checkout</a> to download your PDF or check your email.</p>
+          <p class="unlock-hint">Already purchased? <a href="${CREATOR_CHECKOUT_URL}">Return to checkout</a> to download your diet.</p>
           <p class="unlock-hint"><a href="/">← Back to website</a></p>
         </div>
       </div>
@@ -222,22 +222,20 @@ async function syncDietEmailSentFromServer() {
 }
 
 function renderDietEmailSpamHint() {
-  if (!store.dietEmailAvailable) return '';
-  return '<p class="unlock-receipt__hint">Check your spam or junk folder if you do not see it within a few minutes.</p>';
+  if (!store.dietEmailAvailable || !store.dietEmailSent) return '';
+  return '<p class="unlock-receipt__hint">Check your spam folder if you do not see the email.</p>';
 }
 
 function renderDietEmailNote() {
-  if (!store.dietEmailAvailable) {
-    return '<p class="unlock-receipt__note">Save your PDF below — email delivery is not available right now.</p>';
-  }
+  if (!store.dietEmailAvailable) return '';
   if (store.dietEmailSent) {
-    return '<p class="unlock-receipt__note unlock-receipt__note--sent">a copy has also been sent to your email</p>';
+    return '<p class="unlock-receipt__note unlock-receipt__note--sent">A copy is also sent to your email.</p>';
   }
   if (store.dietEmailBusy) {
     return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
   }
   if (store.dietEmailError) {
-    return '<p class="unlock-receipt__note">We couldn\'t confirm email delivery yet — use the download button, or check your inbox in a few minutes.</p>';
+    return '<p class="unlock-receipt__note">Email is on the way — use the download button above.</p>';
   }
   return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
 }
