@@ -2089,37 +2089,46 @@ function foodPlanServingsBlock(payload) {
   return blocks.find((block) => /servings/i.test(String(block.title || '')));
 }
 
+function foodPlanPreambleParagraphs(fp) {
+  const intro = fp?.macroSignalIntro
+    ? (Array.isArray(fp.macroSignalIntro) ? fp.macroSignalIntro : [fp.macroSignalIntro])
+    : [];
+  return [...(fp?.lead || []), ...intro].filter(Boolean);
+}
+
+const FOOD_PLAN_PAGE_TYPO = Object.freeze({
+  lineGap: LAYOUT.lineGap,
+  paragraphGap: 8,
+  beforeTableGap: 6,
+  afterTableGap: 14,
+});
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = startLockedPage(doc, payload, 'Food Plan');
+  const typo = FOOD_PLAN_PAGE_TYPO;
 
-  const lead = fp.lead || [];
-  if (lead.length) {
-    page = drawBodyParagraphs(doc, payload, page, lead);
-  }
-
-  if (fp.macroSignalIntro) {
-    const introParagraphs = Array.isArray(fp.macroSignalIntro)
-      ? fp.macroSignalIntro
-      : [fp.macroSignalIntro];
-    page = drawBodyParagraphs(doc, payload, page, introParagraphs);
+  const preamble = foodPlanPreambleParagraphs(fp);
+  if (preamble.length) {
+    page = drawBodyParagraphs(doc, payload, page, preamble, typo);
+    page = { ...page, y: page.y + typo.beforeTableGap };
   }
 
   const macroRows = fp.macroSignalRows || [];
   if (macroRows.length) {
     const macroTableH = measureMacroSignalLayoutTable(doc, page.width, macroRows);
-    page = ensureLockedSpace(doc, payload, page, macroTableH + LAYOUT.sectionGap);
+    page = ensureLockedSpace(doc, payload, page, macroTableH + typo.afterTableGap);
     const tableBottomY = drawMacroSignalLayoutTable(doc, {
       x: page.x,
       y: page.y,
       width: page.width,
       rows: macroRows,
     });
-    page = { ...page, y: tableBottomY + LAYOUT.sectionGap };
+    page = { ...page, y: tableBottomY + typo.afterTableGap };
   }
 
   if (fp.howToParagraphs?.length) {
-    page = drawBodyParagraphs(doc, payload, page, fp.howToParagraphs);
+    page = drawBodyParagraphs(doc, payload, page, fp.howToParagraphs, typo);
   } else {
     const servingsBlock = foodPlanServingsBlock(payload);
     if (servingsBlock?.paragraphs?.length) {

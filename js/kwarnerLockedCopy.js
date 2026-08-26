@@ -20,7 +20,7 @@ export const KWARNER_FOOD_PLAN_LEAD = [
 ];
 
 export const KWARNER_FOOD_PLAN_HOWTO = [
-  'Burn & Build converted the proteins and carbohydrates into servings from protein, dairy, grains, starches, veggies and fruits. All whole clean food choices. Each food on the list is sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy it is simple.',
+  'Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet. Burn & Build converted the proteins and carbohydrates into servings from protein, dairy, grains, starches, veggies and fruits. All whole clean food choices. Each food on the list is sized to fit your needs. This program is customized to you and won\'t work for anyone else. And although it\'s not easy it is simple.',
 ];
 
 export const KWARNER_MEAL_BUILD_STEPS = [
@@ -43,7 +43,5 @@ export const KWARNER_MEAL_BUILD_STEPS = [
 ];
 
 export const KWARNER_FOOD_GROUPS_INTRO = [
-  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss.',
-  'The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercising isn\'t working?',
-  'Burn & Build cuts the fine line between too much and too little and that\'s the secret to losing fat and building muscle on the same diet.',
+  'Protein, carbohydrates, and fat each support lean mass, energy, and fat loss. The table below shows how tracking macros might lead you astray. Or answer this question. Are you puzzled why your exercising isn\'t working?',
 ];
