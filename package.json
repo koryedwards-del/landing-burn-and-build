@@ -10,6 +10,7 @@
   "sync:cutting-servings": "node scripts/sync-cutting-servings.mjs",
     "verify:server": "node scripts/verify-server.mjs",
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
+    "verify:questionnaire": "node scripts/verify-questionnaire.mjs",
     "verify:launch": "node scripts/verify-launch.mjs",
     "render:program-report-preview": "node scripts/render-program-report-preview.mjs",
     "render:connect": "node scripts/render-connect-repo.mjs"

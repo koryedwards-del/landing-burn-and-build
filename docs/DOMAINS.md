@@ -21,7 +21,7 @@ Purchasers can restore at `/createyourfoodplan/` by email. Legacy URLs redirect 
 | Path | Purpose |
 |------|---------|
 | `/` | Marketing landing |
-| `/questionnaire/` | Program questionnaire → Burn Engine builds program (gated; redirects to checkout portal when closed) |
+| `/questionnaire/` | Program questionnaire → Burn Engine → checkout (`#welcome` = step 1 Contact Information) |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal |
 | `/get-your-diet/` | Redirect → `/questionnaire/#welcome` |
 | `/program-report/` | Redirect → `/createyourfoodplan/` |
