@@ -342,7 +342,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 
 | Document | Scaling |
 |----------|---------|
-| Weekly meal plan | `gramWeightLabel()` — `menuplanner/js/plannerPrintPayload.js` |
+| Weekly meal plan | Print Shop POST payload (`amount` labels on week/shopping rows) |
 | Grocery list | `foodAmountLabel()` — weekly totals |
 | Generic food list (`foodlist` view) | Static names + tips only — no personalized grams |
 
@@ -363,7 +363,7 @@ Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
 | Program report payload | `js/programReportPrintout.js` |
 | KWarner PDF renderer | `server/pdf/renderProgramReportKwarnerLockedPreview.js` |
-| Meal plan / grocery scaling | `menuplanner/js/plannerPrintPayload.js`, `plannerState.js` |
+| Meal plan / grocery scaling | Print Shop POST payload (assigned servings × gram weight) |
 | KWarner render workflow | `.cursor/rules/kwarner-preview-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
