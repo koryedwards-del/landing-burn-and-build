@@ -2155,30 +2155,30 @@ const SERVINGS_RULES_BREAK_GAP = 10;
 const SERVINGS_DAILY_RULES_COUNT = 3;
 
 const SERVINGS_DAILY_RULES_BOX = Object.freeze({
-  pad: 12,
-  lineGap: 4,
-  fontSize: PT.body,
+  pad: 8,
+  ruleGap: 3,
+  afterGap: 4,
+  fontSize: PT.tableBody,
   radius: 4,
 });
 
-function servingsDailyRulesText(rules) {
-  return rules.map((line) => String(line).toUpperCase()).join('\n');
-}
-
 function measureServingsDailyRulesBox(doc, width, rules) {
-  const { pad, lineGap, fontSize } = SERVINGS_DAILY_RULES_BOX;
+  const { pad, ruleGap, fontSize } = SERVINGS_DAILY_RULES_BOX;
   const innerW = width - pad * 2;
   doc.font(SEMINAR_FONTS.bold).fontSize(fontSize);
-  const linesH = doc.heightOfString(servingsDailyRulesText(rules), {
-    width: innerW,
-    align: 'center',
-    lineGap,
-  });
+  const linesH = rules.reduce((sum, line, index) => {
+    const blockH = doc.heightOfString(String(line).toUpperCase(), {
+      width: innerW,
+      align: 'center',
+      lineGap: 0,
+    });
+    return sum + blockH + (index < rules.length - 1 ? ruleGap : 0);
+  }, 0);
   return pad * 2 + linesH;
 }
 
 function drawServingsDailyRulesBox(doc, payload, page, rules) {
-  const { pad, lineGap, fontSize, radius } = SERVINGS_DAILY_RULES_BOX;
+  const { pad, ruleGap, afterGap, fontSize, radius } = SERVINGS_DAILY_RULES_BOX;
   const x = page.x;
   const y = page.y;
   const width = page.width;
@@ -2191,14 +2191,20 @@ function drawServingsDailyRulesBox(doc, payload, page, rules) {
     .roundedRect(x, y, width, boxH, radius)
     .stroke();
 
-  doc.font(SEMINAR_FONTS.bold).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-  doc.text(servingsDailyRulesText(rules), x + pad, y + pad, {
-    width: innerW,
-    align: 'center',
-    lineGap,
+  let cy = y + pad;
+  rules.forEach((line, index) => {
+    doc.font(SEMINAR_FONTS.bold).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+    doc.text(String(line).toUpperCase(), x + pad, cy, {
+      width: innerW,
+      align: 'center',
+      lineGap: 0,
+    });
+    if (index < rules.length - 1) {
+      cy = doc.y + ruleGap;
+    }
   });
 
-  return { ...page, y: y + boxH };
+  return { ...page, y: y + boxH + afterGap };
 }
 
 function drawMealBuildSteps(doc, payload, page, steps) {
