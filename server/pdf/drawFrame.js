@@ -129,6 +129,7 @@ export function drawFrameHeader(doc, box, {
   clientName,
   preparedDateLong,
   preparedDate,
+  fonts = PDF_FRAME_FONTS,
 } = {}) {
   const logoY = box.y;
   const logoWidth = PDF_FRAME.logoWidth;
@@ -143,7 +144,7 @@ export function drawFrameHeader(doc, box, {
     const name = titleCaseWords(clientName);
     const date = formatPreparedDateOrdinal(preparedDateLong || preparedDate);
     doc
-      .font(PDF_FRAME_FONTS.bold)
+      .font(fonts.bold)
       .fontSize(rowSize)
       .fillColor(PDF_FRAME_COLORS.body)
       .text(`Personalized exclusively for: ${name}`, box.x, rowY, {
@@ -152,7 +153,7 @@ export function drawFrameHeader(doc, box, {
         lineGap: 0,
       });
     doc
-      .font(PDF_FRAME_FONTS.bold)
+      .font(fonts.bold)
       .fontSize(rowSize)
       .text(`On: ${date}`, box.x + box.width * 0.64, rowY, {
         width: box.width * 0.36,
@@ -161,7 +162,7 @@ export function drawFrameHeader(doc, box, {
       });
   } else {
     doc
-      .font(PDF_FRAME_FONTS.bold)
+      .font(fonts.bold)
       .fontSize(rowSize)
       .fillColor(PDF_FRAME_COLORS.body)
       .text(PDF_FRAME_TAGLINE, box.x, rowY, {
@@ -270,7 +271,7 @@ export function pinnedContentBottomY(box) {
   return box.bottom - pinnedFooterBelowRule() - pinnedFooterAboveRule();
 }
 
-export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT } = {}) {
+export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT, fonts = PDF_FRAME_FONTS } = {}) {
   const ruleY = box.bottom - pinnedFooterBelowRule();
   const contactY = box.bottom - PINNED_FOOTER.bottomPad - PT.contact;
   const phone = contact?.phone || '';
@@ -281,7 +282,7 @@ export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_F
   if (page != null && total != null) {
     const label = `Page ${page} of ${total}`;
     doc
-      .font(PDF_FRAME_FONTS.regular)
+      .font(fonts.regular)
       .fontSize(PT.pageNumber)
       .fillColor(PDF_FRAME_COLORS.muted);
     const textHeight = doc.heightOfString(label, { width: box.width, align: 'center', lineGap: 0 });
@@ -295,7 +296,7 @@ export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_F
   drawGoldDivider(doc, box.x, ruleY, box.width);
 
   doc
-    .font(PDF_FRAME_FONTS.regular)
+    .font(fonts.regular)
     .fontSize(PT.contact)
     .fillColor(PDF_FRAME_COLORS.muted)
     .text(footerLine, box.x, contactY, {
@@ -307,7 +308,7 @@ export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_F
   return ruleY;
 }
 
-export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT) {
+export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT, fonts = PDF_FRAME_FONTS) {
   if (typeof doc.bufferedPageRange !== 'function') return 0;
   const range = doc.bufferedPageRange();
   const total = range.count;
@@ -317,6 +318,7 @@ export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT) {
       page: index + 1,
       total,
       contact,
+      fonts,
     });
   }
   return total;

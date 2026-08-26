@@ -1,7 +1,6 @@
 import { PDF_MARGIN } from './constants.js';
 import { drawWatermark } from './draw.js';
 import {
-  PDF_FRAME_FONTS,
   PDF_FRAME_COLORS,
   pinnedContentBottomY,
   stampPinnedProgramFooters,
@@ -9,6 +8,7 @@ import {
   drawContinuationHeader,
   framePageTitleStartY,
 } from './drawFrame.js';
+import { FIVE_PAGE_FONTS } from './fivePageFonts.js';
 
 export const FRAME_1982 = Object.freeze({
   pageTitleSize: 20,
@@ -48,16 +48,16 @@ export function add1982Page(doc) {
   return frame1982ContentBox(doc);
 }
 
-export function draw1982PageTitle(doc, box, y, title) {
+export function draw1982PageTitle(doc, box, y, title, fonts = FIVE_PAGE_FONTS) {
   doc
-    .font(PDF_FRAME_FONTS.bold)
+    .font(fonts.bold)
     .fontSize(FRAME_1982.pageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(String(title || ''), box.x, y, { width: box.width, align: 'left', lineGap: 0 });
   return doc.y + FRAME_1982.titleBottomGap;
 }
 
-export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {}) {
+export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, fonts = FIVE_PAGE_FONTS } = {}) {
   const box = add1982Page(doc);
   const topGoldY = fullHeader
     ? drawFrameHeader(doc, box, {
@@ -65,12 +65,13 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {
       clientName: payload.clientName,
       preparedDateLong: payload.preparedDateLong,
       preparedDate: payload.preparedDate,
+      fonts,
     })
     : drawContinuationHeader(doc, box);
 
   let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {
-    y = draw1982PageTitle(doc, box, y, pageTitle);
+    y = draw1982PageTitle(doc, box, y, pageTitle, fonts);
   }
   return {
     box,
@@ -81,7 +82,6 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {
   };
 }
 
-/** 2026 program-report footer: page number, gold rule, contact line. */
-export function stamp1982Footers(doc, contact) {
-  return stampPinnedProgramFooters(doc, contact);
+export function stamp1982Footers(doc, contact, fonts = FIVE_PAGE_FONTS) {
+  return stampPinnedProgramFooters(doc, contact, fonts);
 }
