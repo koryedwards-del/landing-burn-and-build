@@ -47,6 +47,7 @@ function rowToContact(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     programCount: countPrograms(row.email),
+    programPaid: !!getLatestPaidProgramMeta(row.email),
   };
 }
 

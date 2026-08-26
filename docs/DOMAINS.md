@@ -58,11 +58,22 @@ Handles program save/load, Stripe checkout, webhooks, PDF generation, and admin 
 
 ### Render checklist
 
+After server changes on `main`, confirm Render auto-deploy finished (or trigger manual deploy on **program-creator**).
+
 - [x] **program-creator** in Render project **Burn & Build**
 - [x] Service deploys from **`koryedwards-del/landing-burn-and-build`**, branch **`main`**
 - [x] End-to-end flow verified: questionnaire → payment → download printout
+- [ ] Latest `main` deployed after purchaser-portal + API cleanup commits
 - [ ] Env vars set: `STRIPE_*`, `CONTACTS_ADMIN_KEY`, `RESEND_API_KEY`, `DIET_EMAIL_FROM`, `DATABASE_PATH`, etc.
 - [ ] `curl https://program-creator-3tzd.onrender.com/health` shows `"dietEmail":true`
+
+### Launch gate
+
+When ready to sell new programs publicly:
+
+1. Set `DIET_CREATION_COMING_SOON = false` in `js/siteUrls.js`
+2. Push to `main` (GitHub Pages picks up landing + questionnaire entry)
+3. Smoke-test: `/` → `/questionnaire/` → checkout → PDF download
 
 ## Deprecated
 

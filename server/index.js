@@ -5,12 +5,13 @@ import 'dotenv/config';
 import {
   deleteContact,
   enrollContactFromProgramCreation,
+  getContact,
   listContacts,
   resolveProgramLoad,
   setBurnAndBuild,
   upsertContact,
 } from './contacts.js';
-import { countPrograms, dbPathForHealth, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, markProgramPaid, normalizeEmail, saveProgram, wasDietEmailSent } from './db.js';
+import { countPrograms, dbPathForHealth, getLatestPaidProgramMeta, getLatestProgram, getLatestProgramMeta, getProgramById, isProgramPaid, markProgramPaid, normalizeEmail, revokeProgramAccess, saveProgram, wasDietEmailSent } from './db.js';
 import { validateProgramPackage } from '../js/programPackage.js';
 import {
   constructStripeWebhookEvent,
@@ -349,7 +350,8 @@ app.patch('/api/contacts', requireContactsAdmin, (req, res) => {
   }
 
   const contact = setBurnAndBuild(email, false);
-  res.json({ ok: true, contact });
+  const revokedPrograms = revokeProgramAccess(email);
+  res.json({ ok: true, contact: getContact(email), revokedPrograms });
 });
 
 app.delete('/api/contacts', requireContactsAdmin, (req, res) => {

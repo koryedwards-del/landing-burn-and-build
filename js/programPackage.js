@@ -1,6 +1,6 @@
 /** Burn & Build program package — build and validate desktop program payloads. */
 
-import { computePlan, generateMealSlots } from './burnEngine.js';
+import { computePlan } from './burnEngine.js';
 import { heartRates, profileFromForm } from './onboardingEngine.js';
 import { FOODS_CATALOG_VERSION } from './assetVersion.js';
 
@@ -17,8 +17,6 @@ export function buildProgramPackage(form, { startDate, programId, label, meta } 
     cardioHours: intake.cardioHours,
     fatBurningHours: intake.fatBurningHours,
   });
-  const [wh, wm] = (intake.wakeTime || '06:00').split(':').map(Number);
-  const mealSlots = generateMealSlots(wh, wm, plan.servings);
   const createdDate = localDateKey(new Date());
 
   return {
@@ -51,7 +49,6 @@ export function buildProgramPackage(form, { startDate, programId, label, meta } 
         weeklyFatLossPounds: plan.weeklyFatLossPounds,
       },
       formula: plan.formula,
-      mealSlots,
     },
     schedule: {
       heartRates: heartRates(intake.age),

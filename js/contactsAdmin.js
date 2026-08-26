@@ -33,7 +33,7 @@ function render() {
         <div class="contacts-table-wrap">
           ${store.loading ? '<div class="contacts-empty">Loading contacts…</div>' : renderTable()}
         </div>
-        <p class="contacts-meta">Paid status reflects Stripe checkout only. Revoke clears mistaken or test access.</p>
+        <p class="contacts-meta">Paid status reflects Stripe checkout on saved programs. Revoke clears paid access for testing or mistaken unlocks.</p>
       </div>
     </div>`;
 
@@ -49,10 +49,10 @@ function renderTable() {
     <tr>
       <td class="email">${contact.email}</td>
       <td>${contact.displayName || '—'}</td>
-      <td>${contact.burnAndBuild ? '<span class="contacts-paid">Paid</span>' : '—'}</td>
+      <td>${contact.programPaid ? '<span class="contacts-paid">Paid</span>' : '—'}</td>
       <td>${contact.programCount || 0}</td>
       <td class="actions">
-        ${contact.burnAndBuild ? `<button type="button" class="btn-secondary" data-revoke-access="${contact.email}">Revoke access</button>` : ''}
+        ${contact.programPaid ? `<button type="button" class="btn-secondary" data-revoke-access="${contact.email}">Revoke access</button>` : ''}
         <button type="button" class="btn-secondary" data-delete-contact="${contact.email}">Delete</button>
       </td>
     </tr>

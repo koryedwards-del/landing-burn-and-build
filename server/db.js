@@ -220,6 +220,17 @@ export function isProgramPaid(email, programId) {
   return !!(row?.paid_at);
 }
 
+/** Clear paid access for every program on this account (admin revoke / test cleanup). */
+export function revokeProgramAccess(email) {
+  const key = normalizeEmail(email);
+  const result = db.prepare(`
+    UPDATE programs
+    SET paid_at = NULL, diet_email_sent_at = NULL
+    WHERE email = ?
+  `).run(key);
+  return result.changes;
+}
+
 export function markProgramPaid(email, programId) {
   const key = normalizeEmail(email);
   const id = String(programId || '').trim();

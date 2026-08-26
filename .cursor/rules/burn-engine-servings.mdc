@@ -210,7 +210,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Detail | Value |
 |--------|-------|
 | Gram formula | `1000 ÷ carbs_per_100g` |
-| Meal placement | All daily vegetable servings at **dinner** (`generateMealSlots`) |
+| Meal placement | All daily vegetable servings at **dinner** (`generateMealSlots` in `js/burnEngine.js`) |
 | Prep | **Raw and cooked are separate catalog rows** — never interchange |
 | Measure rule | **After cooking** when cooked (`data/vegetableTipsPrintout.js`) |
 | Audit | `scripts/veg-fruit-audit.mjs` |
@@ -290,7 +290,7 @@ Cooking changes water content → carbs/protein per 100g change → **different 
 
 ## Meal & snack distribution
 
-From `generateMealSlots` / `js/servingsPrintout.js`:
+From `generateMealSlots` in `js/burnEngine.js` / `js/servingsPrintout.js`:
 
 | Group | Daily total split |
 |-------|-------------------|
