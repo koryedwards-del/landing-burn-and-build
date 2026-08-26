@@ -312,7 +312,25 @@ body {
   font-size: 0.9375rem;
 }
 
+.field-error {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #8b0000;
+  margin-bottom: 0.625rem;
+}
+
+.acc-item.is-error > .acc-item__head {
+  color: #8b0000;
+  font-weight: 700;
+  background: #fff5f5;
+}
+
+.acc-item.is-error > .acc-item__body {
+  background: #fffafa;
+}
+
 .form-error {
+  font-weight: 700;
   color: #8b0000;
   margin-top: 1rem;
   font-size: 0.9rem;

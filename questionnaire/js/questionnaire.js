@@ -139,9 +139,54 @@ function handleAccordionTab(event) {
   }
 }
 
-function showError(message) {
+function clearStepErrors(panel) {
+  panel?.querySelectorAll('.acc-item.is-error').forEach((item) => {
+    item.classList.remove('is-error');
+    const err = item.querySelector('.field-error');
+    if (err) {
+      err.textContent = '';
+      err.hidden = true;
+    }
+  });
+}
+
+function showFieldError(field, message) {
+  const panel = panels[step];
+  clearStepErrors(panel);
+  const item = panel?.querySelector(`.acc-item[data-field="${field}"]`);
+  if (!item) return false;
+  const acc = item.closest('[data-accordion]');
+  if (acc) openAccordionItem(acc, item);
+  item.classList.add('is-error');
+  let err = item.querySelector('.field-error');
+  if (!err) {
+    err = document.createElement('p');
+    err.className = 'field-error';
+    err.setAttribute('role', 'alert');
+    item.querySelector('.acc-item__body')?.prepend(err);
+  }
+  err.textContent = message;
+  err.hidden = false;
+  requestAnimationFrame(() => {
+    item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+  return true;
+}
+
+function showFormError(message) {
   formError.textContent = message;
   formError.hidden = !message;
+}
+
+function clearFieldErrorForInput(input) {
+  const item = input.closest('.acc-item[data-field]');
+  if (!item?.classList.contains('is-error')) return;
+  item.classList.remove('is-error');
+  const err = item.querySelector('.field-error');
+  if (err) {
+    err.textContent = '';
+    err.hidden = true;
+  }
 }
 
 function readForm() {
@@ -212,46 +257,49 @@ function parseHours(value, max = 15) {
 
 function validateStep(index) {
   const v = readForm();
+  const fail = (field, message) => ({ field, message });
   switch (index) {
     case 0:
-      if (!v.preferredName) return 'Enter your full name.';
-      if (!v.sex) return 'Select your gender.';
-      if (!isValidEmail(v.email)) return 'Enter a valid email address.';
-      if (v.email.toLowerCase() !== v.emailConfirm.toLowerCase()) return 'Email addresses do not match.';
-      return '';
+      if (!v.preferredName) return fail('preferredName', 'Enter your full name.');
+      if (!v.sex) return fail('sex', 'Select your gender.');
+      if (!isValidEmail(v.email)) return fail('email', 'Enter a valid email address.');
+      if (v.email.toLowerCase() !== v.emailConfirm.toLowerCase()) return fail('emailConfirm', 'Email addresses do not match.');
+      return null;
     case 1:
-      if (!v.workPhysical) return 'Select how physically active your job is.';
-      if (!v.workStress) return 'Select how you would describe your life outside work and training.';
-      return '';
+      if (!v.workPhysical) return fail('workPhysical', 'Select how physically active your job is.');
+      if (!v.workStress) return fail('workStress', 'Select how you would describe your life outside work and training.');
+      return null;
     case 2: {
       const age = Number(v.age);
-      if (!Number.isFinite(age) || age < 16 || age > 99) return 'Enter your age (16–99).';
+      if (!Number.isFinite(age) || age < 16 || age > 99) return fail('age', 'Enter your age (16–99).');
       for (const [field, label, max] of [
         ['weightTrainingHours', 'stop & go', 15],
         ['cardioHours', 'cardio training', 15],
         ['fatBurningHours', 'fat burning training', 20],
       ]) {
-        if (parseHours(v[field], max) === null) return `Enter ${label} hours per week (0 if none). Use decimals like 0.25 for 15 minutes.`;
+        if (parseHours(v[field], max) === null) {
+          return fail(field, `Enter ${label} hours per week (0 if none). Use decimals like 0.25 for 15 minutes.`);
+        }
       }
-      return '';
+      return null;
     }
     case 3: {
       const feet = Number(v.heightFeet);
-      if (!Number.isFinite(feet) || feet < 4 || feet > 8) return 'Enter your height in feet.';
+      if (!Number.isFinite(feet) || feet < 4 || feet > 8) return fail('heightFeet', 'Enter your height in feet.');
       const weight = Number(v.weight);
-      if (!Number.isFinite(weight) || weight <= 0) return 'Enter your weight in pounds.';
+      if (!Number.isFinite(weight) || weight <= 0) return fail('weight', 'Enter your weight in pounds.');
       const fat = Number(v.fatPercent);
-      if (!Number.isFinite(fat) || fat <= 0 || fat >= 70) return 'Enter your body fat percentage.';
-      if (!v.fatSource) return 'Select how you know your body fat percentage.';
-      if (v.fatSource === 'other' && !v.fatSourceOther) return 'Describe how you know your body fat percentage.';
-      return '';
+      if (!Number.isFinite(fat) || fat <= 0 || fat >= 70) return fail('fatPercent', 'Enter your body fat percentage.');
+      if (!v.fatSource) return fail('fatSource', 'Select how you know your body fat percentage.');
+      if (v.fatSource === 'other' && !v.fatSourceOther) return fail('fatSourceOther', 'Describe how you know your body fat percentage.');
+      return null;
     }
     case 4:
-      if (!v.signature) return 'Sign the waiver with your full name.';
-      if (!v.signatureDate) return 'Enter the date you signed.';
-      return '';
+      if (!v.signature) return fail('signature', 'Sign the waiver with your full name.');
+      if (!v.signatureDate) return fail('signatureDate', 'Enter the date you signed.');
+      return null;
     default:
-      return '';
+      return null;
   }
 }
 
@@ -305,7 +353,7 @@ function renderReview() {
 }
 
 function stepIsComplete(index) {
-  return !validateStep(index);
+  return validateStep(index) === null;
 }
 
 function canReachStep(target) {

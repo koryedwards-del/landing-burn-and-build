@@ -33,7 +33,7 @@
         </div>
 
         <div class="acc" data-accordion>
-          <div class="acc-item is-open">
+          <div class="acc-item is-open" data-field="preferredName">
             <button type="button" class="acc-item__head"><span class="acc-item__num">1.</span> What is your full name?</button>
             <div class="acc-item__body">
               <p class="field__hint">First and last name as it should appear on your program printout.</p>
@@ -41,7 +41,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="sex">
             <button type="button" class="acc-item__head"><span class="acc-item__num">2.</span> What is your gender?</button>
             <div class="acc-item__body">
               <p class="field__hint">Select the option used in the calorie formulas.</p>
@@ -50,7 +50,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="email">
             <button type="button" class="acc-item__head"><span class="acc-item__num">3.</span> What is your email address?</button>
             <div class="acc-item__body">
               <p class="field__hint">We deliver your program here and use it to unlock your program after purchase.</p>
@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="emailConfirm">
             <button type="button" class="acc-item__head"><span class="acc-item__num">4.</span> Confirm your email address</button>
             <div class="acc-item__body">
               <p class="field__hint">Type the same address again. We cannot fix a typo after checkout.</p>
@@ -81,7 +81,7 @@
         <h2 class="sheet__heading">Occupation</h2>
 
         <div class="acc" data-accordion>
-          <div class="acc-item is-open">
+          <div class="acc-item is-open" data-field="workPhysical">
             <button type="button" class="acc-item__head"><span class="acc-item__num">6.</span> How physically active is your job?</button>
             <div class="acc-item__body">
               <p class="field__hint">Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.</p>
@@ -103,7 +103,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="workStress">
             <button type="button" class="acc-item__head"><span class="acc-item__num">7.</span> Your life outside work &amp; training hours</button>
             <div class="acc-item__body">
               <p class="field__hint">Kids, soccer, errands, caregiving — the normal rhythm of your life when you're not at work and not exercising.</p>
@@ -132,7 +132,7 @@
         <h2 class="sheet__heading">Exercise</h2>
 
         <div class="acc" data-accordion>
-          <div class="acc-item is-open">
+          <div class="acc-item is-open" data-field="age">
             <button type="button" class="acc-item__head"><span class="acc-item__num">8.</span> How young are you?</button>
             <div class="acc-item__body">
               <p class="field__hint">Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.</p>
@@ -140,7 +140,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="weightTrainingHours">
             <button type="button" class="acc-item__head"><span class="acc-item__num">9.</span> How many hours per week of stop &amp; go activity?</button>
             <div class="acc-item__body">
               <p class="field__hint">Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym. Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.</p>
@@ -151,7 +151,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="cardioHours">
             <button type="button" class="acc-item__head"><span class="acc-item__num">10.</span> How many hours per week in your cardio training range?</button>
             <div class="acc-item__body">
               <p class="field__hint">Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline. Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.</p>
@@ -163,7 +163,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="fatBurningHours">
             <button type="button" class="acc-item__head"><span class="acc-item__num">11.</span> How many hours per week in your fat burning training range?</button>
             <div class="acc-item__body">
               <p class="field__hint">A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline. Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.</p>
@@ -182,7 +182,7 @@
         <h2 class="sheet__heading">Body composition</h2>
 
         <div class="acc" data-accordion>
-          <div class="acc-item is-open">
+          <div class="acc-item is-open" data-field="heightFeet">
             <button type="button" class="acc-item__head"><span class="acc-item__num">12.</span> What is your height?</button>
             <div class="acc-item__body">
               <p class="field__hint">Enter feet and inches in separate boxes.</p>
@@ -194,7 +194,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="weight">
             <button type="button" class="acc-item__head"><span class="acc-item__num">13.</span> What is your weight?</button>
             <div class="acc-item__body">
               <p class="field__hint">Morning weight in pounds, before eating, after bathroom, same scale each time.</p>
@@ -206,7 +206,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="fatPercent">
             <button type="button" class="acc-item__head"><span class="acc-item__num">14.</span> What is your body fat percentage?</button>
             <div class="acc-item__body">
               <p class="field__hint">Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one. Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower.</p>
@@ -217,7 +217,7 @@
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="fatSource">
             <button type="button" class="acc-item__head"><span class="acc-item__num">15.</span> How do you know?</button>
             <div class="acc-item__body">
               <p class="field__hint">Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.</p>
@@ -225,7 +225,7 @@
             </div>
           </div>
 
-          <div class="acc-item" id="fat-source-other-wrap" hidden>
+          <div class="acc-item" id="fat-source-other-wrap" data-field="fatSourceOther" hidden>
             <button type="button" class="acc-item__head"><span class="acc-item__num">16.</span> Describe how you know</button>
             <div class="acc-item__body">
               <input class="field__input" name="fatSourceOther" disabled />
@@ -239,14 +239,14 @@
         <h2 class="sheet__heading">Waiver (please read and sign)</h2>
         <p class="waiver-text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
         <div class="acc" data-accordion>
-          <div class="acc-item is-open">
+          <div class="acc-item is-open" data-field="signature">
             <button type="button" class="acc-item__head"><span class="acc-item__num">17.</span> Signed</button>
             <div class="acc-item__body">
               <input class="field__input" name="signature" autocomplete="name" placeholder="type your full name" required />
             </div>
           </div>
 
-          <div class="acc-item">
+          <div class="acc-item" data-field="signatureDate">
             <button type="button" class="acc-item__head"><span class="acc-item__num">18.</span> Date</button>
             <div class="acc-item__body">
               <input class="field__input" name="signatureDate" type="date" required />
@@ -261,9 +261,8 @@
         <p class="field__hint">Confirm your answers, then continue to secure checkout ($149). Use <strong>Back</strong> below to fix anything.</p>
         <dl class="review-list" id="review-list"></dl>
         <div class="form-success" id="form-success" hidden></div>
+        <p class="form-error" id="form-error" hidden></p>
       </section>
-
-      <p class="form-error" id="form-error" hidden></p>
     </form>
 
     <footer class="nav">
