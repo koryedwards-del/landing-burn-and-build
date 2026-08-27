@@ -18,6 +18,34 @@ import {
 
 const FONTS = PDF_FRAME_FONTS;
 const LAYOUT = FRAME_1982;
+const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
+const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
+
+function tableColumnSpanBounds(columns, colSpan) {
+  if (!colSpan?.from || !colSpan?.to) return null;
+  const fromIndex = columns.findIndex((col) => col.key === colSpan.from);
+  const toIndex = columns.findIndex((col) => col.key === colSpan.to);
+  if (fromIndex < 0 || toIndex < fromIndex) return null;
+  return { fromIndex, toIndex };
+}
+
+function tableColumnSpanWidth(colWidths, spanBounds) {
+  return colWidths.slice(spanBounds.fromIndex, spanBounds.toIndex + 1).reduce((sum, w) => sum + w, 0);
+}
+
+function isTableColumnSpanned(columns, row, colIndex) {
+  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
+  if (!spanBounds) return false;
+  return colIndex > spanBounds.fromIndex && colIndex <= spanBounds.toIndex;
+}
+
+function tableCellWidth(colWidths, columns, row, colIndex) {
+  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
+  if (spanBounds && colIndex === spanBounds.fromIndex) {
+    return tableColumnSpanWidth(colWidths, spanBounds);
+  }
+  return colWidths[colIndex];
+}
 
 function measureText(doc, text, width, { font, fontSize, lineGap = LAYOUT.lineGap } = {}) {
   doc.font(font || FONTS.regular).fontSize(fontSize || LAYOUT.bodySize);
@@ -63,12 +91,14 @@ function drawSectionBlock(doc, page, title, body) {
 
 function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad = LAYOUT.tableRowPad }) {
   const pad = TABLE_1982.cellPad;
+  const tableWidth = rows._tableWidth || 1;
+  const colWidths = columns.map((col) => col.width * tableWidth);
   return rows.map((row, rowIndex) => {
     const isHeader = rowIndex < headerRows;
     let maxH = tableRowPad * 2;
-    columns.forEach((col) => {
-      const colW = col.width * (rows._tableWidth || 1);
-      const innerW = colW - pad * 2;
+    columns.forEach((col, index) => {
+      if (isTableColumnSpanned(columns, row, index)) return;
+      const innerW = tableCellWidth(colWidths, columns, row, index) - pad * 2;
       const style = row._styles?.[col.key] || {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
@@ -102,7 +132,8 @@ function drawLayoutTable(doc, { x, y, width, columns, rows, headerRows = 1, tabl
     const isHeader = rowIndex < headerRows;
     let cx = x;
     columns.forEach((col, index) => {
-      const w = colWidths[index];
+      if (isTableColumnSpanned(columns, row, index)) return;
+      const w = tableCellWidth(colWidths, columns, row, index);
       const style = row._styles?.[col.key] || {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
@@ -523,6 +554,19 @@ const SERVINGS_COLUMNS = [
   { key: 'snack3', width: 0.1, align: 'center' },
 ];
 
+function servingsAnytimeRow(row) {
+  return {
+    ...row,
+    breakfast: SERVINGS_ANYTIME_NOTE,
+    snack1: '',
+    lunch: '',
+    snack2: '',
+    dinner: '',
+    snack3: '',
+    _colSpan: SERVINGS_MEAL_COL_SPAN,
+  };
+}
+
 function buildServingsRows(gridRows, extraFats) {
   const header = {
     label: '',
@@ -534,17 +578,14 @@ function buildServingsRows(gridRows, extraFats) {
     dinner: 'Dinner',
     snack3: 'Snack',
   };
-  const extraRows = (extraFats || []).map((line, index) => ({
+  const bodyRows = (gridRows || []).map((row) => (
+    row.label === 'Veggies' ? servingsAnytimeRow(row) : row
+  ));
+  const extraRows = (extraFats || []).map((line, index) => servingsAnytimeRow({
     label: index === 0 ? 'Extra Fats' : '',
     daily: line.value,
-    breakfast: line.note,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
   }));
-  return [header, ...gridRows, ...extraRows];
+  return [header, ...bodyRows, ...extraRows];
 }
 
 function drawServingsPage(doc, payload) {
