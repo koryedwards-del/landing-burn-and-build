@@ -21,7 +21,7 @@ const FAT_SOURCE_OPTIONS = Object.freeze([
   { value: 'tape', label: 'Tape measurements' },
   { value: 'bia', label: 'InBody/BIA' },
   { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
-  { value: 'skinfolds', label: 'Skinfolds' },
+  { value: 'skinfolds', label: 'Calipers' },
   { value: 'bodpod', label: 'Bod Pod' },
   { value: 'dexa', label: 'DEXA' },
   { value: 'hydrostatic', label: 'Hydrostatic weighing' },

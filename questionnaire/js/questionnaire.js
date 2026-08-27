@@ -137,7 +137,7 @@ const BODY_FIELD_META = {
   fatSource: {
     question: 'How do you know?',
     guide: 'Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
-    example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · skinfolds · Bod Pod · DEXA · hydrostatic weighing.',
+    example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · calipers · Bod Pod · DEXA · hydrostatic weighing.',
   },
   fatPercent: {
     question: 'What is your body fat percentage?',
@@ -153,7 +153,7 @@ const FAT_SOURCE_OPTIONS = [
   { value: 'tape', label: 'Tape measurements' },
   { value: 'bia', label: 'InBody/BIA' },
   { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
-  { value: 'skinfolds', label: 'Skinfolds' },
+  { value: 'skinfolds', label: 'Calipers' },
   { value: 'bodpod', label: 'Bod Pod' },
   { value: 'dexa', label: 'DEXA' },
   { value: 'hydrostatic', label: 'Hydrostatic weighing' },
