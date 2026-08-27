@@ -18,7 +18,7 @@ import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
-import { buildMenuPlanTemplatePayload } from '../../js/sampleDayMenuPrintoutData.js';
+import { buildMenuPlanTemplatePayload, SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
 const FONTS = PDF_FRAME_FONTS;
@@ -802,10 +802,11 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
 function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
   const fontSize = LAYOUT.bodySize;
   const lineYOffset = fontSize + 2;
-  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  const labelText = String(row.label);
+  const labelFont = labelText === SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL ? FONTS.bold : FONTS.regular;
+  doc.font(labelFont).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
 
   const gap = 5;
-  const labelText = String(row.label);
   const sizeLabel = SAMPLE_DAY_MENU_SERVING_SIZE_LABEL;
   const labelW = doc.widthOfString(labelText);
   const sizeLabelW = doc.widthOfString(sizeLabel);
