@@ -185,6 +185,7 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
       note: FIVE_PAGE_SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
+      planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
   };
 }

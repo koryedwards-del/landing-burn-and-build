@@ -11,6 +11,10 @@ import {
   stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
+import {
+  drawStaplesFoodListPage,
+  drawVegFruitFoodListPage,
+} from './drawStaplesFoodListPages.js';
 
 const FONTS = PDF_FRAME_FONTS;
 const LAYOUT = FRAME_1982;
@@ -448,7 +452,7 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-export const FIVE_PAGE_PRINTOUT_PAGES = 4;
+export const FIVE_PAGE_PRINTOUT_MIN_PAGES = 6;
 
 export function validateFivePagePayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -480,12 +484,19 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
   drawFoodPlanPage(doc, payload);
   drawServingsPage(doc, payload);
 
+  const foodListFrame = {
+    startPage: (doc, payload, pageTitle) => begin1982Page(doc, payload, pageTitle ?? null),
+    continuePage: (doc, payload) => begin1982Page(doc, payload, null),
+  };
+  drawStaplesFoodListPage(doc, payload, foodListFrame);
+  drawVegFruitFoodListPage(doc, payload, foodListFrame);
+
   stamp1982Footers(doc, payload.header);
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages !== FIVE_PAGE_PRINTOUT_PAGES) {
-    throw new Error(`Five-page printout expected ${FIVE_PAGE_PRINTOUT_PAGES} pages, got ${pages}`);
+  if (pages < FIVE_PAGE_PRINTOUT_MIN_PAGES) {
+    throw new Error(`Five-page printout expected at least ${FIVE_PAGE_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
   }
   return buffer;
 }

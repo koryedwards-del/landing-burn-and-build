@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 5-page sample-female preview PDF
 
-Separate from the **2026 program report** (12-page `burn-and-build-diet-kristi-*.pdf`). This is the **4-page** bodybuilder sample: Welcome → Lean Body Analysis → Food Plan → Servings.
+Separate from the **2026 program report** (12-page `burn-and-build-diet-kristi-*.pdf`). Sample-female: Welcome → Lean Body Analysis → Food Plan → Servings → Food List (×2).
 
 When the user asks for **5-page**, **sample-female**, or **bb-five-page** PDF work, use this pipeline — not `render:program-report-preview`.
 
@@ -15,6 +15,7 @@ When the user asks for **5-page**, **sample-female**, or **bb-five-page** PDF wo
 |-------|------|
 | Renderer | `server/pdf/renderFivePagePrintout.js` |
 | Frame / header | `server/pdf/draw1982Frame.js` |
+| Food list pages | `server/pdf/drawStaplesFoodListPages.js` |
 | Payload | `js/fivePagePrintoutData.js` → `buildKristiFivePagePreviewPayload()` |
 | Copy | `js/fivePagePrintoutCopyData.js` |
 | Render script | `scripts/render-five-page-preview.mjs` |
@@ -58,4 +59,4 @@ https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/do
 
 ## Sanity check after render
 
-Current 5-page sample-female should be **4 pages**, ~50–55 KB (Times fonts, full header every page). If the file is ~180 KB or 13+ pages, the wrong renderer was used.
+Current sample-female should be **6 pages** minimum (~90 KB+ with food lists), Times fonts, full header every page. If ~50 KB or 4 pages only, food lists are missing. If ~180 KB or 13+ pages, the wrong renderer was used.
