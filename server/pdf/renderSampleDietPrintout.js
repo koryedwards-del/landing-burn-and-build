@@ -139,18 +139,32 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
   });
 }
 
-function drawLayoutTable(doc, { x, y, width, columns, rows, headerRows = 1, tableRowPad = LAYOUT.tableRowPad }) {
+function drawLayoutTable(doc, {
+  x,
+  y,
+  width,
+  columns,
+  rows,
+  headerRows = 1,
+  tableRowPad = LAYOUT.tableRowPad,
+  gridLines = 'horizontal',
+  strokeColor = TABLE_1982.stroke,
+  radius = TABLE_1982.radius,
+  lineBreak = true,
+} = {}) {
   rows._tableWidth = width;
   const colWidths = columns.map((col) => col.width * width);
   const rowHeights = layoutTableRowHeights(doc, { columns, rows, headerRows, tableRowPad });
   const totalH = rowHeights.reduce((sum, h) => sum + h, 0);
   const pad = TABLE_1982.cellPad;
+  const fullGrid = gridLines === 'full';
 
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(1.25)
-    .roundedRect(x, y, width, totalH, TABLE_1982.radius)
-    .stroke();
+  doc.strokeColor(strokeColor).lineWidth(fullGrid ? 0.75 : 1.25);
+  if (fullGrid) {
+    doc.rect(x, y, width, totalH).stroke();
+  } else {
+    doc.roundedRect(x, y, width, totalH, radius).stroke();
+  }
 
   let cy = y;
   rows.forEach((row, rowIndex) => {
@@ -172,20 +186,37 @@ function drawLayoutTable(doc, { x, y, width, columns, rows, headerRows = 1, tabl
         .text(String(row[col.key] ?? ''), cx + pad, cy + tableRowPad, {
           width: w - pad * 2,
           lineGap: 0,
-          align: col.align || 'left',
+          align: row._aligns?.[col.key] || col.align || 'left',
+          lineBreak,
         });
       cx += w;
     });
     cy += rh;
     if (rowIndex < rows.length - 1) {
       doc
-        .strokeColor(TABLE_1982.stroke)
+        .strokeColor(strokeColor)
         .lineWidth(0.5)
-        .moveTo(x + TABLE_1982.radius, cy)
-        .lineTo(x + width - TABLE_1982.radius, cy)
+        .moveTo(fullGrid ? x : x + radius, cy)
+        .lineTo(fullGrid ? x + width : x + width - radius, cy)
         .stroke();
     }
   });
+
+  if (fullGrid) {
+    let cx = x;
+    columns.forEach((col, index) => {
+      cx += colWidths[index];
+      if (index < columns.length - 1) {
+        doc
+          .strokeColor(strokeColor)
+          .lineWidth(0.5)
+          .moveTo(cx, y)
+          .lineTo(cx, y + totalH)
+          .stroke();
+      }
+    });
+  }
+
   return y + totalH;
 }
 
@@ -402,63 +433,69 @@ function drawGoalTable(doc, x, y, width, goalTable) {
   });
 }
 
-const MACRO_TABLE_G_CAL_GAP_CHARS = 5;
+const MACRO_TABLE_COLUMNS = Object.freeze([
+  { key: 'label', width: 0.30, align: 'left' },
+  { key: 'proteinG', width: 0.075, align: 'right' },
+  { key: 'proteinCal', width: 0.115, align: 'right' },
+  { key: 'carbsG', width: 0.075, align: 'right' },
+  { key: 'carbsCal', width: 0.115, align: 'right' },
+  { key: 'fatG', width: 0.075, align: 'right' },
+  { key: 'fatCal', width: 0.115, align: 'right' },
+  { key: 'totalCal', width: 0.13, align: 'right' },
+]);
 
-function macroTableGramCalGap(doc) {
-  doc.font(FONTS.regular).fontSize(LAYOUT.tableBodySize);
-  return doc.widthOfString('0'.repeat(MACRO_TABLE_G_CAL_GAP_CHARS));
+const MACRO_TABLE_GROUP_SPANS = Object.freeze([
+  { from: 'proteinG', to: 'proteinCal' },
+  { from: 'carbsG', to: 'carbsCal' },
+  { from: 'fatG', to: 'fatCal' },
+]);
+
+const MACRO_TABLE_VALUE_KEYS = Object.freeze([
+  'proteinG',
+  'proteinCal',
+  'carbsG',
+  'carbsCal',
+  'fatG',
+  'fatCal',
+  'totalCal',
+]);
+
+function macroTableBoldRowStyles() {
+  return Object.fromEntries(
+    ['label', ...MACRO_TABLE_VALUE_KEYS].map((key) => [
+      key,
+      { font: FONTS.bold, fontSize: LAYOUT.tableBodySize },
+    ]),
+  );
 }
 
-function macroTableColDefs() {
-  return [
-    { key: 'label', width: 0.28, align: 'left' },
-    { key: 'proteinG', width: 0.07, align: 'right' },
-    { key: 'proteinCal', width: 0.08, align: 'left' },
-    { key: 'carbsG', width: 0.07, align: 'right' },
-    { key: 'carbsCal', width: 0.08, align: 'left' },
-    { key: 'fatG', width: 0.07, align: 'right' },
-    { key: 'fatCal', width: 0.08, align: 'left' },
-    { key: 'totalCal', width: 0.27, align: 'center' },
-  ];
+function macroTableBlankRow() {
+  return Object.fromEntries(
+    ['label', ...MACRO_TABLE_VALUE_KEYS].map((key) => [key, '']),
+  );
 }
 
-function macroTableCellPad(col, side) {
-  const key = col.key;
-  if (key.endsWith('G')) {
-    return side === 'left' ? 4 : 1;
-  }
-  if (key.endsWith('Cal') && key !== 'totalCal') {
-    return side === 'left' ? 1 : 4;
-  }
-  return 4;
-}
+const MACRO_TABLE_HEADER_ALIGNS = Object.freeze(
+  Object.fromEntries(
+    ['proteinG', 'carbsG', 'fatG', 'totalCal'].map((key) => [key, 'center']),
+  ),
+);
 
-function macroTableCellInsets(col, colWidth) {
-  const left = macroTableCellPad(col, 'left');
-  const right = macroTableCellPad(col, 'right');
-  return { left, right, innerW: colWidth - left - right };
-}
+const MACRO_TABLE_SUBHEADER_ALIGNS = Object.freeze(
+  Object.fromEntries(MACRO_TABLE_VALUE_KEYS.map((key) => [key, 'center'])),
+);
 
-function macroTableTextBox(col, index, colXs, colWidths, insets, gramCalGap) {
-  let { left, innerW } = insets;
-  if (col.key.endsWith('Cal') && col.key !== 'totalCal') {
-    left += gramCalGap;
-    innerW = Math.max(0, innerW - gramCalGap);
-  }
-  return { x: colXs[index] + left, width: innerW };
-}
-
-function macroTableGroupHeaders() {
-  return [
-    { label: 'PROTEIN', keys: ['proteinG', 'proteinCal'] },
-    { label: 'CARBS', keys: ['carbsG', 'carbsCal'] },
-    { label: 'FATS', keys: ['fatG', 'fatCal'] },
-    { label: 'TOTAL', keys: ['totalCal'] },
-  ];
-}
-
-function macroTableSubHeaderRow() {
-  return {
+function buildMacroTableLayoutRows(macroRows = []) {
+  const groupHeader = {
+    label: '',
+    proteinG: 'PROTEIN',
+    carbsG: 'CARBS',
+    fatG: 'FATS',
+    totalCal: 'TOTAL',
+    _colSpans: MACRO_TABLE_GROUP_SPANS,
+    _aligns: MACRO_TABLE_HEADER_ALIGNS,
+  };
+  const subHeader = {
     label: '',
     proteinG: 'grams',
     proteinCal: 'calories',
@@ -467,130 +504,33 @@ function macroTableSubHeaderRow() {
     fatG: 'grams',
     fatCal: 'calories',
     totalCal: 'calories',
+    _aligns: MACRO_TABLE_SUBHEADER_ALIGNS,
   };
-}
-
-function measureMacroTableRow(doc, row, colDefs, width, { isHeader, tableRowPad, gramCalGap }) {
-  let maxH = tableRowPad * 2;
-  colDefs.forEach((col, index) => {
-    const colW = col.width * width;
-    const insets = macroTableCellInsets(col, colW);
-    const { width: innerW } = macroTableTextBox(col, index, [], [], insets, gramCalGap);
-    doc.font(isHeader ? FONTS.bold : FONTS.regular).fontSize(
-      isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
-    );
-    maxH = Math.max(
-      maxH,
-      doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + tableRowPad * 2,
-    );
+  const bodyRows = [];
+  macroRows.forEach((row) => {
+    if (row.label === 'Reduce current fat %') {
+      bodyRows.push({ ...row, _styles: macroTableBoldRowStyles() });
+      bodyRows.push(macroTableBlankRow());
+      return;
+    }
+    bodyRows.push({ ...row });
   });
-  return maxH;
+  return [groupHeader, subHeader, ...bodyRows];
 }
 
 function drawMacroTable(doc, x, y, width, macroRows) {
-  const colDefs = macroTableColDefs();
-  const colWidths = colDefs.map((col) => col.width * width);
-  const colXs = [];
-  let cx = x;
-  for (const w of colWidths) {
-    colXs.push(cx);
-    cx += w;
-  }
-
-  const tableRowPad = 8;
-  const cellPad = 8;
-  const gramCalGap = macroTableGramCalGap(doc);
-  const subHeader = macroTableSubHeaderRow();
-  const bodyRows = macroRows.map((row) => ({ ...row }));
-  const groupHeaderH = LAYOUT.tableHeadSize + tableRowPad * 2;
-  const subHeaderH = measureMacroTableRow(doc, subHeader, colDefs, width, {
-    isHeader: true,
-    tableRowPad,
-    gramCalGap,
+  return drawLayoutTable(doc, {
+    x,
+    y,
+    width,
+    columns: MACRO_TABLE_COLUMNS,
+    rows: buildMacroTableLayoutRows(macroRows),
+    headerRows: 2,
+    gridLines: 'full',
+    strokeColor: SEMINAR_COLORS.body,
+    radius: 0,
+    lineBreak: false,
   });
-  const bodyHeights = bodyRows.map((row) => measureMacroTableRow(doc, row, colDefs, width, {
-    isHeader: false,
-    tableRowPad,
-    gramCalGap,
-  }));
-  const totalH = groupHeaderH + subHeaderH + bodyHeights.reduce((sum, h) => sum + h, 0);
-
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(1.25)
-    .roundedRect(x, y, width, totalH, TABLE_1982.radius)
-    .stroke();
-
-  let cy = y;
-
-  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SAMPLE_DIET_BLUE);
-  macroTableGroupHeaders().forEach((group) => {
-    const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
-    const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
-    const groupX = colXs[startIndex];
-    const groupW = colXs[endIndex] + colWidths[endIndex] - groupX;
-    doc.text(group.label, groupX + cellPad, cy + tableRowPad, {
-      width: groupW - cellPad * 2,
-      align: 'center',
-      lineGap: 0,
-    });
-  });
-  cy += groupHeaderH;
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(0.5)
-    .moveTo(x + TABLE_1982.radius, cy)
-    .lineTo(x + width - TABLE_1982.radius, cy)
-    .stroke();
-
-  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
-  colDefs.forEach((col, index) => {
-    const text = String(subHeader[col.key] ?? '');
-    if (!text) return;
-    const insets = macroTableCellInsets(col, colWidths[index]);
-    const { x, width: textW } = macroTableTextBox(col, index, colXs, colWidths, insets, gramCalGap);
-    doc.text(text, x, cy + tableRowPad, {
-      width: textW,
-      lineGap: 0,
-      align: col.align || 'left',
-      lineBreak: false,
-    });
-  });
-  cy += subHeaderH;
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(0.5)
-    .moveTo(x + TABLE_1982.radius, cy)
-    .lineTo(x + width - TABLE_1982.radius, cy)
-    .stroke();
-
-  bodyRows.forEach((row, rowIndex) => {
-    const rh = bodyHeights[rowIndex];
-    colDefs.forEach((col, index) => {
-      const insets = macroTableCellInsets(col, colWidths[index]);
-      const { x, width: textW } = macroTableTextBox(col, index, colXs, colWidths, insets, gramCalGap);
-      doc
-        .font(FONTS.regular)
-        .fontSize(LAYOUT.tableBodySize)
-        .fillColor(SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), x, cy + tableRowPad, {
-          width: textW,
-          align: col.align || 'left',
-          lineGap: 0,
-        });
-    });
-    cy += rh;
-    if (rowIndex < bodyRows.length - 1) {
-      doc
-        .strokeColor(TABLE_1982.stroke)
-        .lineWidth(0.5)
-        .moveTo(x + TABLE_1982.radius, cy)
-        .lineTo(x + width - TABLE_1982.radius, cy)
-        .stroke();
-    }
-  });
-
-  return y + totalH;
 }
 
 function drawFoodPlanPage(doc, payload) {
