@@ -1,6 +1,6 @@
 import { dietPdfDocumentLabel } from '../js/dietPdfNamingHelpers.js';
-import { buildProgramReportPayload } from '../js/programReportPrintout.js';
-import { renderProgramReportPdf } from './pdf/renderProgramReport.js';
+import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
+import { renderSampleDietPrintout } from './pdf/renderSampleDietPrintout.js';
 import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent, getProgramPaidAt } from './db.js';
 import { writeStoredDietPdf } from './dietPdfStorage.js';
 import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
@@ -45,7 +45,7 @@ function normalizeRetryKey(email) {
   return String(email || '').trim().toLowerCase();
 }
 
-/** Generate, store, and return the Burn & Build Diet PDF (program report) buffer. Always renders fresh. */
+/** Generate, store, and return the Burn & Build Diet PDF buffer. Always renders fresh. */
 export async function ensureDietPdf(email, programId) {
   const id = String(programId || '').trim();
   if (!id) throw new Error('Missing program id.');
@@ -54,9 +54,9 @@ export async function ensureDietPdf(email, programId) {
   const pkg = getProgramById(email, id);
   if (!pkg) throw new Error('Program not found for this email.');
 
-  const payload = buildProgramReportPayload(pkg);
+  const payload = buildSampleDietPrintoutPayload(pkg);
   const title = dietPdfDocumentLabel({ preferredName: pkg?.intake?.preferredName, pkg });
-  const pdf = await renderProgramReportPdf(payload, { title });
+  const pdf = await renderSampleDietPrintout(payload, { title });
   writeStoredDietPdf(id, pdf);
   return pdf;
 }

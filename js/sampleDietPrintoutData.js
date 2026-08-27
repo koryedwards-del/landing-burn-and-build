@@ -1,4 +1,4 @@
-/** B&B sample diet printout payload — 1982 Warner layout + burn-engine data. */
+/** Burn & Build Diet PDF payload — 1982 Warner layout + burn-engine data (sample + purchased). */
 
 import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import { analyzeLeanBodyMass } from './bodyCompositionData.js';

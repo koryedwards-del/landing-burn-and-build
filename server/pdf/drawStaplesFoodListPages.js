@@ -1,6 +1,6 @@
 /**
  * Cutting-staples food list pages (protein/grains + vegetables/fruit).
- * Used by B&B Sample Diet PDF (b&bsamplediet.pdf); program report keeps its own copy.
+ * Shared by the Burn & Build Diet PDF template (sample + purchased).
  */
 import { PDF_FRAME_COLORS } from './drawFrame.js';
 import { SEMINAR_COLORS, SEMINAR_FONTS } from './drawSeminar.js';
