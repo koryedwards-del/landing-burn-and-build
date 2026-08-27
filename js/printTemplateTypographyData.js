@@ -7,7 +7,7 @@
 export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
   contact: 9,
   personalization: 12,
-  pageTitle: 20,
+  pageTitle: 15,
   pageNumber: 9,
   body: 10.5,
   subsection: 11.5,

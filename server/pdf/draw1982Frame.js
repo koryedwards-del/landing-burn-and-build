@@ -1,5 +1,6 @@
 import { PDF_MARGIN } from './constants.js';
 import { drawWatermark } from './draw.js';
+import { PRINT_TEMPLATE_TYPOGRAPHY } from '../../js/printTemplateTypographyData.js';
 import {
   PDF_FRAME_COLORS,
   pinnedContentBottomY,
@@ -13,7 +14,7 @@ import {
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
 export const FRAME_1982 = Object.freeze({
-  pageTitleSize: 20,
+  pageTitleSize: PRINT_TEMPLATE_TYPOGRAPHY.pageTitle,
   titleBottomGap: 20,
   bodySize: 10,
   sectionTitleSize: 10,
