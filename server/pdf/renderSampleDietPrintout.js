@@ -519,112 +519,207 @@ function drawGoalTable(doc, x, y, width, goalTable) {
   });
 }
 
-const MACRO_GRID_COLUMNS = 10;
-const MACRO_GRID_ROWS = 9;
-/** Prior macro table footprint (~213pt tall); split evenly across nine rows. */
-const MACRO_GRID_ROW_HEIGHT = 213 / MACRO_GRID_ROWS;
-const MACRO_GRID_SUBHEAD_SIZE = 12;
-const MACRO_GRID_GROUP_HEAD_SIZE = 13;
-
-/** Row 1 group titles — 1-based inclusive column spans. */
-const MACRO_GRID_ROW1_GROUPS = Object.freeze([
-  { fromCol: 4, toCol: 5, label: 'PROTEIN' },
-  { fromCol: 6, toCol: 7, label: 'CARBS' },
-  { fromCol: 8, toCol: 9, label: 'FATS' },
-  { fromCol: 10, toCol: 10, label: 'TOTAL' },
+const MACRO_TABLE_VALUE_KEYS = Object.freeze([
+  'proteinG',
+  'proteinCal',
+  'carbsG',
+  'carbsCal',
+  'fatG',
+  'fatCal',
+  'totalCal',
 ]);
 
-/** Row 1 merged pairs — skip vertical rule between these columns (1-based after-col index). */
-const MACRO_GRID_ROW1_SKIP_BOUNDARIES = new Set([4, 6, 8]);
-
-/** Row 2 sub-headers — 1-based column numbers. */
-const MACRO_GRID_ROW2_LABELS = Object.freeze([
-  [4, 'grams'],
-  [5, 'calories'],
-  [6, 'grams'],
-  [7, 'calories'],
-  [8, 'grams'],
-  [9, 'calories'],
-  [10, 'calories'],
-]);
-
-function drawMacroGridCellText(doc, text, cellX, cellY, cellW, cellH, {
-  font = FONTS.bold,
-  fontSize = MACRO_GRID_SUBHEAD_SIZE,
-} = {}) {
-  doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-  const lineH = doc.currentLineHeight();
-  const textY = cellY + Math.max(0, (cellH - lineH) / 2);
-  doc.text(String(text), cellX, textY, {
-    width: cellW,
-    align: 'center',
-    lineBreak: false,
-  });
+function macroTableColDefs() {
+  return [
+    { key: 'label', width: 0.28, align: 'left' },
+    { key: 'proteinG', width: 0.07, align: 'right' },
+    { key: 'proteinCal', width: 0.08, align: 'right' },
+    { key: 'carbsG', width: 0.07, align: 'right' },
+    { key: 'carbsCal', width: 0.08, align: 'right' },
+    { key: 'fatG', width: 0.07, align: 'right' },
+    { key: 'fatCal', width: 0.08, align: 'right' },
+    { key: 'totalCal', width: 0.27, align: 'right' },
+  ];
 }
 
-function macroGridMergedWidth(colW, fromCol, toCol) {
-  return (toCol - fromCol + 1) * colW;
-}
-
-function macroGridColX(tableX, colW, colNum) {
-  return tableX + (colNum - 1) * colW;
-}
-
-function macroGridRowY(tableY, rowNum) {
-  return tableY + (rowNum - 1) * MACRO_GRID_ROW_HEIGHT;
-}
-
-function macroGridSkipBoundary(rowIndex, boundaryAfterCol) {
-  return rowIndex === 0 && MACRO_GRID_ROW1_SKIP_BOUNDARIES.has(boundaryAfterCol);
-}
-
-function drawMacroTable(doc, x, y, width) {
-  const colW = width / MACRO_GRID_COLUMNS;
-  const totalH = MACRO_GRID_ROW_HEIGHT * MACRO_GRID_ROWS;
-  const stroke = SEMINAR_COLORS.body;
-  const colBoundaries = [x];
-  for (let col = 1; col <= MACRO_GRID_COLUMNS; col += 1) {
-    colBoundaries.push(x + col * colW);
+function macroTableCellPad(col, side) {
+  const key = col.key;
+  if (key.endsWith('G')) {
+    return side === 'left' ? 4 : 1;
   }
-
-  doc.strokeColor(stroke).lineWidth(0.75).rect(x, y, width, totalH).stroke();
-
-  doc.strokeColor(stroke).lineWidth(0.5);
-  for (let row = 1; row < MACRO_GRID_ROWS; row += 1) {
-    const lineY = y + row * MACRO_GRID_ROW_HEIGHT;
-    doc.moveTo(x, lineY).lineTo(x + width, lineY).stroke();
+  if (key.endsWith('Cal') && key !== 'totalCal') {
+    return side === 'left' ? 1 : 4;
   }
+  return 4;
+}
 
-  for (let rowIndex = 0; rowIndex < MACRO_GRID_ROWS; rowIndex += 1) {
-    const rowY = y + rowIndex * MACRO_GRID_ROW_HEIGHT;
-    for (let boundary = 1; boundary < MACRO_GRID_COLUMNS; boundary += 1) {
-      if (macroGridSkipBoundary(rowIndex, boundary)) continue;
-      const lineX = colBoundaries[boundary];
-      doc.moveTo(lineX, rowY).lineTo(lineX, rowY + MACRO_GRID_ROW_HEIGHT).stroke();
+function macroTableCellInsets(col, colWidth) {
+  const left = macroTableCellPad(col, 'left');
+  const right = macroTableCellPad(col, 'right');
+  return { left, right, innerW: colWidth - left - right };
+}
+
+function macroTableTextBox(col, index, colXs, insets) {
+  return { x: colXs[index] + insets.left, width: insets.innerW };
+}
+
+function macroTableGroupHeaders() {
+  return [
+    { label: 'PROTEIN', keys: ['proteinG', 'proteinCal'] },
+    { label: 'CARBS', keys: ['carbsG', 'carbsCal'] },
+    { label: 'FATS', keys: ['fatG', 'fatCal'] },
+    { label: 'TOTAL', keys: ['totalCal'] },
+  ];
+}
+
+function macroTableSubHeaderRow() {
+  return {
+    label: '',
+    proteinG: 'grams',
+    proteinCal: 'calories',
+    carbsG: 'grams',
+    carbsCal: 'calories',
+    fatG: 'grams',
+    fatCal: 'calories',
+    totalCal: 'calories',
+  };
+}
+
+function macroTableBlankRow() {
+  return Object.fromEntries(
+    ['label', ...MACRO_TABLE_VALUE_KEYS].map((key) => [key, '']),
+  );
+}
+
+function buildMacroTableBodyRows(macroRows = []) {
+  const bodyRows = [];
+  macroRows.forEach((row) => {
+    if (row.label === 'Reduce current fat %') {
+      bodyRows.push({ ...row, _bold: true });
+      bodyRows.push(macroTableBlankRow());
+      return;
     }
-  }
+    bodyRows.push({ ...row });
+  });
+  return bodyRows;
+}
 
-  MACRO_GRID_ROW1_GROUPS.forEach(({ fromCol, toCol, label }) => {
-    drawMacroGridCellText(
-      doc,
-      label,
-      macroGridColX(x, colW, fromCol),
-      macroGridRowY(y, 1),
-      macroGridMergedWidth(colW, fromCol, toCol),
-      MACRO_GRID_ROW_HEIGHT,
-      { fontSize: MACRO_GRID_GROUP_HEAD_SIZE },
+function measureMacroTableRow(doc, row, colDefs, width, { isHeader, tableRowPad }) {
+  let maxH = tableRowPad * 2;
+  colDefs.forEach((col, index) => {
+    const colW = col.width * width;
+    const insets = macroTableCellInsets(col, colW);
+    const { width: innerW } = macroTableTextBox(col, index, [], insets);
+    const bold = row._bold && !isHeader;
+    doc.font(bold ? FONTS.bold : (isHeader ? FONTS.bold : FONTS.regular)).fontSize(
+      isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
+    );
+    maxH = Math.max(
+      maxH,
+      doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + tableRowPad * 2,
     );
   });
+  return maxH;
+}
 
-  MACRO_GRID_ROW2_LABELS.forEach(([colNum, label]) => {
-    drawMacroGridCellText(
-      doc,
-      label,
-      macroGridColX(x, colW, colNum),
-      macroGridRowY(y, 2),
-      colW,
-      MACRO_GRID_ROW_HEIGHT,
-    );
+function drawMacroTable(doc, x, y, width, macroRows) {
+  const colDefs = macroTableColDefs();
+  const colWidths = colDefs.map((col) => col.width * width);
+  const colXs = [];
+  let cx = x;
+  for (const w of colWidths) {
+    colXs.push(cx);
+    cx += w;
+  }
+
+  const tableRowPad = 8;
+  const cellPad = 8;
+  const subHeader = macroTableSubHeaderRow();
+  const bodyRows = buildMacroTableBodyRows(macroRows);
+  const groupHeaderH = LAYOUT.tableHeadSize + tableRowPad * 2;
+  const subHeaderH = measureMacroTableRow(doc, subHeader, colDefs, width, {
+    isHeader: true,
+    tableRowPad,
+  });
+  const bodyHeights = bodyRows.map((row) => measureMacroTableRow(doc, row, colDefs, width, {
+    isHeader: false,
+    tableRowPad,
+  }));
+  const totalH = groupHeaderH + subHeaderH + bodyHeights.reduce((sum, h) => sum + h, 0);
+
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, totalH, TABLE_1982.radius)
+    .stroke();
+
+  let cy = y;
+
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SAMPLE_DIET_BLUE);
+  macroTableGroupHeaders().forEach((group) => {
+    const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
+    const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
+    const groupX = colXs[startIndex];
+    const groupW = colXs[endIndex] + colWidths[endIndex] - groupX;
+    doc.text(group.label, groupX + cellPad, cy + tableRowPad, {
+      width: groupW - cellPad * 2,
+      align: 'center',
+      lineGap: 0,
+    });
+  });
+  cy += groupHeaderH;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.5)
+    .moveTo(x + TABLE_1982.radius, cy)
+    .lineTo(x + width - TABLE_1982.radius, cy)
+    .stroke();
+
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
+  colDefs.forEach((col, index) => {
+    const text = String(subHeader[col.key] ?? '');
+    if (!text) return;
+    const insets = macroTableCellInsets(col, colWidths[index]);
+    const { x: textX, width: textW } = macroTableTextBox(col, index, colXs, insets);
+    doc.text(text, textX, cy + tableRowPad, {
+      width: textW,
+      lineGap: 0,
+      align: col.align || 'left',
+      lineBreak: false,
+    });
+  });
+  cy += subHeaderH;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.5)
+    .moveTo(x + TABLE_1982.radius, cy)
+    .lineTo(x + width - TABLE_1982.radius, cy)
+    .stroke();
+
+  bodyRows.forEach((row, rowIndex) => {
+    const rh = bodyHeights[rowIndex];
+    colDefs.forEach((col, index) => {
+      const insets = macroTableCellInsets(col, colWidths[index]);
+      const { x: textX, width: textW } = macroTableTextBox(col, index, colXs, insets);
+      doc
+        .font(row._bold ? FONTS.bold : FONTS.regular)
+        .fontSize(LAYOUT.tableBodySize)
+        .fillColor(SEMINAR_COLORS.body)
+        .text(String(row[col.key] ?? ''), textX, cy + tableRowPad, {
+          width: textW,
+          align: col.align || 'left',
+          lineGap: 0,
+        });
+    });
+    cy += rh;
+    if (rowIndex < bodyRows.length - 1) {
+      doc
+        .strokeColor(TABLE_1982.stroke)
+        .lineWidth(0.5)
+        .moveTo(x + TABLE_1982.radius, cy)
+        .lineTo(x + width - TABLE_1982.radius, cy)
+        .stroke();
+    }
   });
 
   return y + totalH;
@@ -650,7 +745,7 @@ function drawFoodPlanPage(doc, payload) {
   if (fp.macroRows?.length) {
     page = {
       ...page,
-      y: drawMacroTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width) + LAYOUT.sectionGap,
+      y: drawMacroTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width, fp.macroRows) + LAYOUT.sectionGap,
     };
   }
 }
