@@ -37,6 +37,18 @@ https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/do
 
 If tap opens in browser instead of saving, give the script `CURL` line (Mac Terminal → `~/Downloads/b&bsamplediet.pdf`).
 
+## What worked (locked — do not change)
+
+User confirmed this delivery pattern on Mac Downloads (Aug 2026). **Keep doing it exactly this way:**
+
+1. **One filename forever:** `b&bsamplediet.pdf` in `docs/samples/` — overwrite in place each render. No numbered files (`-N`, `-latest`), no renames, no second copy with a different name.
+2. **One raw URL forever:** paste only the `DOWNLOAD` line from `npm run render:sample-diet-preview` (URL-encoded `%26` for `&`). Never send `github.com/.../blob/...` or Cursor artifacts links.
+3. **Push before link:** render → commit PDF → `git push origin main` → **then** paste the link. Linking early serves stale bytes; user waits on GitHub cache (~minutes).
+4. **One link per update:** do not send multiple conflicting URLs in one session. Same link every time until the filename changes (which it must not, unless the user asks).
+5. **Downloads clutter:** if the user re-downloads while the file already exists, macOS saves `b&bsamplediet-2.pdf` — that is normal. Tell them to keep the newest `b&bsamplediet.pdf` and delete older numbered / legacy names (`bb-five-page-sample-female-*`, etc.).
+
+Renaming the deliverable or switching to numbered PDFs ** broke downloads** and filled Downloads with duplicate files. Do not repeat.
+
 ## Do not
 
 | Wrong | Why |

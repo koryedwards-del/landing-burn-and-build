@@ -37,4 +37,4 @@ The user is not responsible for repo hygiene. **Every agent session must leave t
 
 ## Delivery
 
-After push to `main`, give the raw GitHub download link per `sample-diet-pdf.mdc`.
+After push to `main`, give **one** raw GitHub download link per `sample-diet-pdf.mdc` — same stable URL every time (`b&bsamplediet.pdf`). See **What worked (locked)** in that rule; do not rename the file or send alternate links.
