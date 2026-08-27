@@ -818,8 +818,6 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
   { key: 'value', width: 0.56 },
 ]);
 
-const CONFIRMATION_PAGE_COLUMN_GAP = 16;
-
 function splitConfirmationRows(rows) {
   const splitAt = Math.ceil(rows.length / 2);
   return [rows.slice(0, splitAt), rows.slice(splitAt)];
@@ -1129,7 +1127,7 @@ function drawAnswersConfirmationPage(doc, payload) {
     value: row.value,
   }));
   const [leftRows, rightRows] = splitConfirmationRows(mappedRows);
-  const columnWidth = (page.width - CONFIRMATION_PAGE_COLUMN_GAP) / 2;
+  const columnWidth = page.width / 2;
   const tableRowPad = LAYOUT.tableRowPad + 1;
 
   drawLayoutTable(doc, {
@@ -1143,7 +1141,7 @@ function drawAnswersConfirmationPage(doc, payload) {
   });
 
   drawLayoutTable(doc, {
-    x: page.x + columnWidth + CONFIRMATION_PAGE_COLUMN_GAP,
+    x: page.x + columnWidth,
     y: page.y,
     width: columnWidth,
     columns: CONFIRMATION_TABLE_COLUMNS,
