@@ -9,7 +9,6 @@ import {
   validateSampleDietPayload,
 } from '../server/pdf/renderSampleDietPrintout.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
-import { PdfError } from '../server/pdf/errors.js';
 
 function pageCount(pdf) {
   return (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
