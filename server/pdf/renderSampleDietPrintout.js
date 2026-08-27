@@ -815,6 +815,13 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
   { key: 'value', width: 0.56 },
 ]);
 
+const CONFIRMATION_PAGE_COLUMN_GAP = 16;
+
+function splitConfirmationRows(rows) {
+  const splitAt = Math.ceil(rows.length / 2);
+  return [rows.slice(0, splitAt), rows.slice(splitAt)];
+}
+
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
@@ -1114,17 +1121,32 @@ function drawAnswersConfirmationPage(doc, payload) {
     page = { ...page, y: doc.y + LAYOUT.headerGap };
   }
 
+  const mappedRows = confirmation.rows.map((row) => ({
+    label: formatAnswersConfirmationLabel(row),
+    value: row.value,
+  }));
+  const [leftRows, rightRows] = splitConfirmationRows(mappedRows);
+  const columnWidth = (page.width - CONFIRMATION_PAGE_COLUMN_GAP) / 2;
+  const tableRowPad = LAYOUT.tableRowPad + 1;
+
   drawLayoutTable(doc, {
     x: page.x,
     y: page.y,
-    width: page.width,
+    width: columnWidth,
     columns: CONFIRMATION_TABLE_COLUMNS,
-    rows: confirmation.rows.map((row) => ({
-      label: formatAnswersConfirmationLabel(row),
-      value: row.value,
-    })),
+    rows: leftRows,
     headerRows: 0,
-    tableRowPad: LAYOUT.tableRowPad + 1,
+    tableRowPad,
+  });
+
+  drawLayoutTable(doc, {
+    x: page.x + columnWidth + CONFIRMATION_PAGE_COLUMN_GAP,
+    y: page.y,
+    width: columnWidth,
+    columns: CONFIRMATION_TABLE_COLUMNS,
+    rows: rightRows,
+    headerRows: 0,
+    tableRowPad,
   });
 }
 
