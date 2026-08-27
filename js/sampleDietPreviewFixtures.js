@@ -4,7 +4,7 @@ import { buildProgramPackage } from './programPackageData.js';
 import { computePlan } from './burnEngine.js';
 
 export const SAMPLE_DIET_PREVIEW_FORM = {
-  preferredName: 'Sample Client',
+  preferredName: 'Sample Female',
   email: 'sample@example.com',
   sex: 'female',
   heightFeet: '5',
@@ -19,7 +19,7 @@ export const SAMPLE_DIET_PREVIEW_FORM = {
   cardioHours: 0,
   fatBurningHours: 3,
   wakeTime: '06:00',
-  waiverSignature: 'Sample Client',
+  waiverSignature: 'Sample Female',
   waiverSignedDate: '2024-01-15',
 };
 
