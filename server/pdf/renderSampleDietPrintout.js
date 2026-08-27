@@ -605,9 +605,16 @@ function buildServingsRows(gridRows, extraFats) {
   const bodyRows = (gridRows || []).map((row) => (
     row.label === 'Veggies' ? servingsAnytimeRow(row) : row
   ));
-  const extraRows = (extraFats || []).map((line, index) => servingsAnytimeRow({
+  const extraRows = (extraFats || []).map((line, index) => ({
     label: index === 0 ? 'Extra Fats' : '',
     daily: line.value,
+    breakfast: line.note,
+    snack1: '',
+    lunch: '',
+    snack2: '',
+    dinner: '',
+    snack3: '',
+    _colSpan: { from: 'breakfast', to: 'snack3' },
   }));
   return [header, ...bodyRows, ...extraRows];
 }
