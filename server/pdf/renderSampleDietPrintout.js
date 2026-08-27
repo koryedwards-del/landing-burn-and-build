@@ -27,7 +27,8 @@ const HANDWRITING_FONT_PATH = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   'fonts/Caveat-Regular.ttf',
 );
-const HANDWRITING_FONT_SIZE = 24;
+const HANDWRITING_FONT_SIZE = 16;
+const HANDWRITING_INK_COLOR = SAMPLE_DIET_BLUE;
 const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
 const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
@@ -656,13 +657,14 @@ function registerHandwritingFont(doc) {
   doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
 }
 
-function drawHandwritingOnLine(doc, text, x, y, width, { align = 'left' } = {}) {
+function drawHandwritingOnLine(doc, text, x, lineY, width, { align = 'left' } = {}) {
   if (!text) return;
+  const textY = lineY - HANDWRITING_FONT_SIZE * 0.78;
   doc
     .font(HANDWRITING_FONT)
     .fontSize(HANDWRITING_FONT_SIZE)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(String(text), x, y - 1, { width, align, lineBreak: false });
+    .fillColor(HANDWRITING_INK_COLOR)
+    .text(String(text), x, textY, { width, align, lineBreak: false });
 }
 
 function drawTimeColumn(doc, x, y) {
@@ -696,29 +698,31 @@ function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled) {
   const sizeLineStart = sizeTextX + sizeLabelW + gap;
   const sizeLineEnd = x + width;
 
+  const lineY = y + lineYOffset;
+
   doc.text(labelText, x, y, { lineBreak: false });
   doc.text(sizeLabel, sizeTextX, y, { lineBreak: false });
 
   doc
     .strokeColor(TABLE_1982.stroke)
     .lineWidth(0.75)
-    .moveTo(foodLineStart, y + lineYOffset)
-    .lineTo(foodLineEnd, y + lineYOffset)
+    .moveTo(foodLineStart, lineY)
+    .lineTo(foodLineEnd, lineY)
     .stroke()
-    .moveTo(sizeLineStart, y + lineYOffset)
-    .lineTo(sizeLineEnd, y + lineYOffset)
+    .moveTo(sizeLineStart, lineY)
+    .lineTo(sizeLineEnd, lineY)
     .stroke();
 
   if (filled) {
-    drawHandwritingOnLine(doc, row.food, foodLineStart + 2, y, foodLineEnd - foodLineStart - 4);
-    drawHandwritingOnLine(doc, row.servingSize, sizeLineStart + 2, y, sizeLineEnd - sizeLineStart - 4);
+    drawHandwritingOnLine(doc, row.food, foodLineStart + 2, lineY, foodLineEnd - foodLineStart - 4);
+    drawHandwritingOnLine(doc, row.servingSize, sizeLineStart + 2, lineY, sizeLineEnd - sizeLineStart - 4);
   }
 
-  return y + lineYOffset + SAMPLE_DAY_MENU_ROW_GAP;
+  return lineY + SAMPLE_DAY_MENU_ROW_GAP;
 }
 
 function measureSampleDayMenuRowHeight() {
-  return LAYOUT.bodySize + 2 + SAMPLE_DAY_MENU_ROW_GAP;
+  return Math.max(LAYOUT.bodySize + 2 + SAMPLE_DAY_MENU_ROW_GAP, HANDWRITING_FONT_SIZE + 8);
 }
 
 function measureMenuSectionHeight(section) {
@@ -740,19 +744,21 @@ function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
   const lineStart = x + labelW + gap;
   const lineEnd = x + width;
 
+  const lineY = y + lineYOffset;
+
   doc.text(labelText, x, y, { lineBreak: false });
   doc
     .strokeColor(TABLE_1982.stroke)
     .lineWidth(0.75)
-    .moveTo(lineStart, y + lineYOffset)
-    .lineTo(lineEnd, y + lineYOffset)
+    .moveTo(lineStart, lineY)
+    .lineTo(lineEnd, lineY)
     .stroke();
 
   if (filled && planFor.value) {
-    drawHandwritingOnLine(doc, planFor.value, lineStart + 4, y, lineEnd - lineStart - 8);
+    drawHandwritingOnLine(doc, planFor.value, lineStart + 4, lineY, lineEnd - lineStart - 8);
   }
 
-  return y + lineYOffset + SAMPLE_DAY_MENU_ROW_GAP + LAYOUT.sectionGap;
+  return lineY + SAMPLE_DAY_MENU_ROW_GAP + LAYOUT.sectionGap;
 }
 
 function drawMenuSection(doc, page, y, section, filled) {
