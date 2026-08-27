@@ -5,7 +5,7 @@ import { computePlan } from './burnEngine.js';
 import { buildProgramReportLockedPayload } from './programReportLockedPayloadData.js';
 
 export const GOLDEN_SAMPLE_FORM = {
-  preferredName: 'Sample Client',
+  preferredName: 'Sample Female',
   email: 'verify@example.com',
   sex: 'female',
   heightFeet: '5',
@@ -20,7 +20,7 @@ export const GOLDEN_SAMPLE_FORM = {
   cardioHours: 0,
   fatBurningHours: 3,
   wakeTime: '06:00',
-  waiverSignature: 'Sample Client',
+  waiverSignature: 'Sample Female',
   waiverSignedDate: '2024-01-15',
 };
 

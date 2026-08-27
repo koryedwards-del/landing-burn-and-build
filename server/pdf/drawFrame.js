@@ -44,6 +44,7 @@ export const PDF_FRAME_COLORS = Object.freeze({
   body: '#111111',
   muted: '#444444',
   gold: '#FFCC00',
+  accentBlue: '#2F6FA8',
 });
 
 export function frameContentBox(doc) {
@@ -121,7 +122,7 @@ export function drawGoldDivider(doc, x, y, width, color = PDF_FRAME_COLORS.gold)
 }
 
 /**
- * Unified header: centered logo, row 2 personalized or tagline, gold divider.
+ * Unified header: centered logo, row 2 personalized or tagline, header rule (default gold).
  * @returns {number} body top y
  */
 export function drawFrameHeader(doc, box, {
@@ -195,9 +196,9 @@ export function clearContentFooterGap(doc, box) {
   doc.restore();
 }
 
-/** Y to start page title — clears the header gold rule. */
-export function framePageTitleStartY(topGoldY) {
-  return topGoldY + 2 + PT.titleTopGap;
+/** Y to start page title — clears the header rule. */
+export function framePageTitleStartY(topRuleY) {
+  return topRuleY + 2 + PT.titleTopGap;
 }
 
 export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } = {}) {
@@ -211,7 +212,7 @@ export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } =
   return doc.y + (gapAfter ?? PT.titleBottomGap);
 }
 
-/** Centered at bottom of content band, above the footer gold line. */
+/** Centered at bottom of content band, above the footer rule. */
 function drawFramePageNumber(doc, box, { page, total }) {
   const label = `Page ${page} of ${total}`;
   doc

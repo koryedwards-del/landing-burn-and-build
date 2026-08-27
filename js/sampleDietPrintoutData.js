@@ -99,7 +99,6 @@ function buildMacroTableRows(formula, workIntensity) {
 function buildGoalTable(today, projection) {
   if (!today || !projection) return null;
   return {
-    headers: ['TODAY', 'EIGHT WEEK GOAL'],
     rows: [
       {
         label: 'LEAN',

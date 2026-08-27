@@ -14,6 +14,10 @@ alwaysApply: true
 | Piece | Path |
 |-------|------|
 | Renderer | `server/pdf/renderSampleDietPrintout.js` |
+| Payload | `js/sampleDietPrintoutData.js` → `buildSampleDietPreviewPayload()` |
+| Fixtures | `js/sampleDietPreviewFixtures.js`, `js/printoutVerifyFixtures.js` |
+| Copy | `js/sampleDietPrintoutCopyData.js`, `js/sampleDietAceData.js` |
+| Frame | `server/pdf/draw1982Frame.js` |
 | Render script | `scripts/render-sample-diet-preview.mjs` |
 | Deliverable | `docs/samples/b&bsamplediet.pdf` |
 

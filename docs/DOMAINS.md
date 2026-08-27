@@ -27,8 +27,13 @@ Three standalone pieces:
 | `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
 | `js/programClientDataHelpers.js` | Client name + date helpers |
 | `js/programReportCopyData.js` | Locked user-authored PDF copy |
+| `js/sampleDietPrintoutData.js` | Sample diet PDF payload |
+| `js/sampleDietPrintoutCopyData.js` | Sample diet locked copy |
+| `js/sampleDietPreviewFixtures.js` | Sample diet preview fixtures |
+| `js/printoutVerifyFixtures.js` | Golden verify fixtures (engine + PDF) |
 | `js/printTemplateTypographyData.js` | PDF typography tokens |
 | `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
+| `server/pdf/renderSampleDietPrintout.js` | Sample diet PDF renderer (`b&bsamplediet.pdf`) |
 | `server/pdf/` | PDFKit renderer |
 | `docs/samples/` | Sample diet PDF (`b&bsamplediet.pdf`) |
 

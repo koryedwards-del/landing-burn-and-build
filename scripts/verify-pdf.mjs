@@ -1,8 +1,13 @@
 #!/usr/bin/env node
-/** Program report PDF verification — run: npm run verify:pdf */
+/** Program report + sample diet PDF verification — run: npm run verify:pdf */
 
+import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { buildVerifyProgramReportPayload } from '../js/printoutVerifyFixtures.js';
 import { renderPrintPdf } from '../server/pdf/index.js';
+import {
+  renderSampleDietPrintout,
+  SAMPLE_DIET_PRINTOUT_MIN_PAGES,
+} from '../server/pdf/renderSampleDietPrintout.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
 import { validatePrintPayload, validatePrintView } from '../server/pdf/validate.js';
@@ -42,7 +47,7 @@ assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { s
 assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
 assertThrows('validatePrintPayload rejects bad programreport', () => validatePrintPayload('programreport', {}), { status: 400 });
 
-const filename = sanitizePdfFilename('Burn & Build Diet - Sample Client', 'programreport');
+const filename = sanitizePdfFilename('Burn & Build Diet - Sample Female', 'programreport');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
   throw new Error(`sanitizePdfFilename failed: ${filename}`);
 }
@@ -51,7 +56,7 @@ console.log(`ok  sanitizePdfFilename — ${filename}`);
 const payload = buildVerifyProgramReportPayload();
 assertPdf('programreport (golden sample)', await renderPrintPdf('programreport', { payload }), { minPages: 10 });
 
-if (payload.clientName !== 'SAMPLE CLIENT') {
+if (payload.clientName !== 'SAMPLE FEMALE') {
   throw new Error(`clientName: got ${payload.clientName}`);
 }
 if (payload.preparedDate !== '2024-01-15') {
@@ -65,4 +70,16 @@ if (payload.servings.gridRows[0].daily !== '9') {
 }
 console.log('ok  golden sample program report payload');
 
-console.log('\nProgram report PDF checks passed.');
+const samplePayload = buildSampleDietPreviewPayload();
+assertPdf('sample diet (golden sample)', await renderSampleDietPrintout(samplePayload), {
+  minPages: SAMPLE_DIET_PRINTOUT_MIN_PAGES,
+});
+if (samplePayload.view !== 'samplediet') {
+  throw new Error(`sample view: got ${samplePayload.view}`);
+}
+if (samplePayload.clientName !== 'SAMPLE FEMALE') {
+  throw new Error(`sample clientName: got ${samplePayload.clientName}`);
+}
+console.log('ok  golden sample diet payload');
+
+console.log('\nPDF checks passed.');

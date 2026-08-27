@@ -1,4 +1,4 @@
-/** Golden 5-page seminar printouts — regression check for burnEngine.js */
+/** Golden sample fixtures — regression check for burnEngine.js + printout calcs */
 import { computePlan, PROJECTION_BF_FLOOR } from '../js/burnEngine.js';
 import {
   computeDietEightWeekProjection,

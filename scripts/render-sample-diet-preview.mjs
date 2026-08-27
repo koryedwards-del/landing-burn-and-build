@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
 
-export const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
+const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');

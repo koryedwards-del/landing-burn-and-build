@@ -13,8 +13,8 @@ import {
 
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
-/** Matches --TODAY-- on Lean Body Analysis (page 2). */
-export const SAMPLE_DIET_BLUE = '#2F6FA8';
+/** Matches --TODAY-- accent; sample diet headers, footers, and table titles. */
+export const SAMPLE_DIET_BLUE = PDF_FRAME_COLORS.accentBlue;
 
 export const FRAME_1982 = Object.freeze({
   pageTitleSize: PRINT_TEMPLATE_TYPOGRAPHY.pageTitle,
@@ -32,7 +32,7 @@ export const FRAME_1982 = Object.freeze({
 });
 
 export const TABLE_1982 = Object.freeze({
-  stroke: PDF_FRAME_COLORS.gold,
+  stroke: PDF_FRAME_COLORS.gold, // table borders stay gold; header/footer rules use SAMPLE_DIET_BLUE
   radius: 4,
   cellPad: 6,
 });
@@ -65,7 +65,7 @@ export function draw1982PageTitle(doc, box, y, title, fonts = FRAME_FONTS) {
 
 export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, fonts = FRAME_FONTS } = {}) {
   const box = add1982Page(doc);
-  const topGoldY = fullHeader
+  const topRuleY = fullHeader
     ? drawFrameHeader(doc, box, {
       personalized: true,
       clientName: payload.clientName,
@@ -76,7 +76,7 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, font
     })
     : drawContinuationHeader(doc, box, { ruleColor: SAMPLE_DIET_BLUE });
 
-  let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
+  let y = fullHeader ? framePageTitleStartY(topRuleY) : topRuleY + 16;
   if (pageTitle) {
     y = draw1982PageTitle(doc, box, y, pageTitle, fonts);
   }
