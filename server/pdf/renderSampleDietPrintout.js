@@ -336,28 +336,30 @@ function drawGoalTable(doc, x, y, width, goalTable) {
   });
 }
 
-function drawMacroTable(doc, x, y, width, macroRows) {
-  const columns = [
-    { key: 'label', width: 0.22, align: 'left' },
-    { key: 'proteinG', width: 0.08, align: 'center' },
-    { key: 'proteinCal', width: 0.1, align: 'center' },
-    { key: 'carbsG', width: 0.08, align: 'center' },
-    { key: 'carbsCal', width: 0.1, align: 'center' },
-    { key: 'fatG', width: 0.08, align: 'center' },
-    { key: 'fatCal', width: 0.1, align: 'center' },
-    { key: 'totalCal', width: 0.12, align: 'center' },
+function macroTableColDefs() {
+  return [
+    { key: 'label', width: 0.27, align: 'left' },
+    { key: 'proteinG', width: 0.06, align: 'center' },
+    { key: 'proteinCal', width: 0.12, align: 'center' },
+    { key: 'carbsG', width: 0.06, align: 'center' },
+    { key: 'carbsCal', width: 0.12, align: 'center' },
+    { key: 'fatG', width: 0.06, align: 'center' },
+    { key: 'fatCal', width: 0.12, align: 'center' },
+    { key: 'totalCal', width: 0.19, align: 'center' },
   ];
-  const head1 = {
-    label: '',
-    proteinG: 'PROTEIN',
-    proteinCal: '',
-    carbsG: 'CARBS',
-    carbsCal: '',
-    fatG: 'FATS',
-    fatCal: '',
-    totalCal: 'TOTAL',
-  };
-  const head2 = {
+}
+
+function macroTableGroupHeaders() {
+  return [
+    { label: 'PROTEIN', keys: ['proteinG', 'proteinCal'] },
+    { label: 'CARBS', keys: ['carbsG', 'carbsCal'] },
+    { label: 'FATS', keys: ['fatG', 'fatCal'] },
+    { label: 'TOTAL', keys: ['totalCal'] },
+  ];
+}
+
+function macroTableSubHeaderRow() {
+  return {
     label: '',
     proteinG: 'grams',
     proteinCal: 'calories',
@@ -367,15 +369,122 @@ function drawMacroTable(doc, x, y, width, macroRows) {
     fatCal: 'calories',
     totalCal: 'calories',
   };
-  const body = macroRows.map((row) => ({ ...row }));
-  return drawLayoutTable(doc, {
-    x,
-    y,
-    width,
-    columns,
-    rows: [head1, head2, ...body],
-    headerRows: 2,
+}
+
+function measureMacroTableRow(doc, row, colDefs, width, { isHeader, tableRowPad, cellPad }) {
+  let maxH = tableRowPad * 2;
+  colDefs.forEach((col) => {
+    const colW = col.width * width;
+    const innerW = colW - cellPad * 2;
+    doc.font(isHeader ? FONTS.bold : FONTS.regular).fontSize(
+      isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
+    );
+    maxH = Math.max(
+      maxH,
+      doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + tableRowPad * 2,
+    );
   });
+  return maxH;
+}
+
+function drawMacroTable(doc, x, y, width, macroRows) {
+  const colDefs = macroTableColDefs();
+  const colWidths = colDefs.map((col) => col.width * width);
+  const colXs = [];
+  let cx = x;
+  for (const w of colWidths) {
+    colXs.push(cx);
+    cx += w;
+  }
+
+  const tableRowPad = 8;
+  const cellPad = 8;
+  const subHeader = macroTableSubHeaderRow();
+  const bodyRows = macroRows.map((row) => ({ ...row }));
+  const groupHeaderH = LAYOUT.tableHeadSize + tableRowPad * 2;
+  const subHeaderH = measureMacroTableRow(doc, subHeader, colDefs, width, {
+    isHeader: true,
+    tableRowPad,
+    cellPad,
+  });
+  const bodyHeights = bodyRows.map((row) => measureMacroTableRow(doc, row, colDefs, width, {
+    isHeader: false,
+    tableRowPad,
+    cellPad,
+  }));
+  const totalH = groupHeaderH + subHeaderH + bodyHeights.reduce((sum, h) => sum + h, 0);
+
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, totalH, TABLE_1982.radius)
+    .stroke();
+
+  let cy = y;
+
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
+  macroTableGroupHeaders().forEach((group) => {
+    const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
+    const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
+    const groupX = colXs[startIndex];
+    const groupW = colXs[endIndex] + colWidths[endIndex] - groupX;
+    doc.text(group.label, groupX + cellPad, cy + tableRowPad, {
+      width: groupW - cellPad * 2,
+      align: 'center',
+      lineGap: 0,
+    });
+  });
+  cy += groupHeaderH;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.5)
+    .moveTo(x + TABLE_1982.radius, cy)
+    .lineTo(x + width - TABLE_1982.radius, cy)
+    .stroke();
+
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
+  colDefs.forEach((col, index) => {
+    const text = String(subHeader[col.key] ?? '');
+    if (!text) return;
+    doc.text(text, colXs[index] + cellPad, cy + tableRowPad, {
+      width: colWidths[index] - cellPad * 2,
+      align: col.align || 'left',
+      lineGap: 0,
+    });
+  });
+  cy += subHeaderH;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.5)
+    .moveTo(x + TABLE_1982.radius, cy)
+    .lineTo(x + width - TABLE_1982.radius, cy)
+    .stroke();
+
+  bodyRows.forEach((row, rowIndex) => {
+    const rh = bodyHeights[rowIndex];
+    colDefs.forEach((col, index) => {
+      doc
+        .font(FONTS.regular)
+        .fontSize(LAYOUT.tableBodySize)
+        .fillColor(SEMINAR_COLORS.body)
+        .text(String(row[col.key] ?? ''), colXs[index] + cellPad, cy + tableRowPad, {
+          width: colWidths[index] - cellPad * 2,
+          align: col.align || 'left',
+          lineGap: 0,
+        });
+    });
+    cy += rh;
+    if (rowIndex < bodyRows.length - 1) {
+      doc
+        .strokeColor(TABLE_1982.stroke)
+        .lineWidth(0.5)
+        .moveTo(x + TABLE_1982.radius, cy)
+        .lineTo(x + width - TABLE_1982.radius, cy)
+        .stroke();
+    }
+  });
+
+  return y + totalH;
 }
 
 function drawFoodPlanPage(doc, payload) {
