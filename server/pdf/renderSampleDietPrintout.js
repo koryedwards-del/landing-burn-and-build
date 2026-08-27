@@ -523,6 +523,29 @@ const MACRO_GRID_COLUMNS = 10;
 const MACRO_GRID_ROWS = 9;
 /** Prior macro table footprint (~213pt tall); split evenly across nine rows. */
 const MACRO_GRID_ROW_HEIGHT = 213 / MACRO_GRID_ROWS;
+const MACRO_GRID_SUBHEAD_SIZE = 12;
+
+/** Row 2 sub-headers — 1-based column numbers. */
+const MACRO_GRID_ROW2_LABELS = Object.freeze([
+  [4, 'grams'],
+  [5, 'calories'],
+  [6, 'grams'],
+  [7, 'calories'],
+  [8, 'grams'],
+  [9, 'calories'],
+  [10, 'calories'],
+]);
+
+function drawMacroGridCellText(doc, text, cellX, cellY, cellW, cellH, {
+  font = FONTS.bold,
+  fontSize = MACRO_GRID_SUBHEAD_SIZE,
+} = {}) {
+  doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  const label = String(text);
+  const textW = doc.widthOfString(label);
+  const textH = doc.heightOfString(label, { width: cellW, lineBreak: false });
+  doc.text(label, cellX + (cellW - textW) / 2, cellY + (cellH - textH) / 2, { lineBreak: false });
+}
 
 function drawMacroTable(doc, x, y, width) {
   const colW = width / MACRO_GRID_COLUMNS;
@@ -540,6 +563,18 @@ function drawMacroTable(doc, x, y, width) {
     const lineX = x + col * colW;
     doc.moveTo(lineX, y).lineTo(lineX, y + totalH).stroke();
   }
+
+  const row2Y = y + MACRO_GRID_ROW_HEIGHT;
+  MACRO_GRID_ROW2_LABELS.forEach(([colNum, label]) => {
+    drawMacroGridCellText(
+      doc,
+      label,
+      x + (colNum - 1) * colW,
+      row2Y,
+      colW,
+      MACRO_GRID_ROW_HEIGHT,
+    );
+  });
 
   return y + totalH;
 }
