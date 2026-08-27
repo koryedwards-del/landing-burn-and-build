@@ -58,7 +58,14 @@ function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
   };
 }
 
-function buildMacroTableRows(formula, workPhysical) {
+function macroExerciseHoursLabel(hours) {
+  const n = Number(hours);
+  const value = Number.isFinite(n) ? n : 0;
+  const text = Number.isInteger(value) ? String(value) : value.toFixed(1).replace(/\.0$/, '');
+  return `${text} ${value === 1 ? 'hour' : 'hours'}`;
+}
+
+function buildMacroTableRows(formula, workPhysical, intake = {}) {
   const f = formula || {};
   const workdayLabel = macroWorkdayRowLabel(workPhysical);
   const row = (label, q, c, f, total) => ({
@@ -76,9 +83,9 @@ function buildMacroTableRows(formula, workPhysical) {
     row('Reduce current fat %', f.QA, f.C1, f.FG, f.T1),
     row('Resting(RMR)', f.QB, f.C2, f.FH, f.T2),
     row(`Workday (${workdayLabel})`, f.QC, f.C3, f.FJ, f.T3),
-    row('Weight Training', f.QD, f.C4, f.FK, f.T4),
-    row('Cardiovascular Activities', f.QE, f.C5, f.FL, f.T5),
-    row('Fat Burning Activities', f.QF, f.C6, f.FM, f.T6),
+    row(`Weight Training (${macroExerciseHoursLabel(intake.weightTrainingHours)})`, f.QD, f.C4, f.FK, f.T4),
+    row(`Cardiovascular Activities (${macroExerciseHoursLabel(intake.cardioHours)})`, f.QE, f.C5, f.FL, f.T5),
+    row(`Fat Burning Activities (${macroExerciseHoursLabel(intake.fatBurningHours)})`, f.QF, f.C6, f.FM, f.T6),
   ];
 }
 
@@ -163,7 +170,7 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       weeklyLine,
       macroIntro: SAMPLE_DIET_FOOD_PLAN.macroIntro,
       goalTable: buildGoalTable(today, projection),
-      macroRows: buildMacroTableRows(formula, intake.workPhysical),
+      macroRows: buildMacroTableRows(formula, intake.workPhysical, intake),
     },
     servings: {
       note: SAMPLE_DIET_SERVINGS_NOTE,
