@@ -18,7 +18,7 @@ When the user asks for **5-page**, **sample-female**, or **bb-five-page** PDF wo
 | Payload | `js/fivePagePrintoutData.js` → `buildKristiFivePagePreviewPayload()` |
 | Copy | `js/fivePagePrintoutCopyData.js` |
 | Render script | `scripts/render-five-page-preview.mjs` |
-| Sample file (only) | `docs/samples/bb-five-page-sample-female-latest.pdf` |
+| Sample file | `docs/samples/bb-five-page-sample-female-N.pdf` (N auto-increments) |
 
 Run: `npm run render:five-page-preview`
 
@@ -30,21 +30,21 @@ The download link is a **raw GitHub URL**. It serves whatever is **committed on 
 
 1. Edit renderer / payload / copy
 2. `npm run render:five-page-preview`
-3. **Commit** `bb-five-page-sample-female-latest.pdf` (and code changes)
+3. **Commit** the new `bb-five-page-sample-female-N.pdf` (and code changes)
 4. **`git push origin main`**
-5. **Only then** paste the download link
+5. **Only then** paste the download link for **that numbered file**
 
 If you give the link **before push**, the user gets the **previous** PDF in Mac **Downloads** — wrong size, wrong page count, or missing fixes. Say explicitly: *“Pushed to main — tap this link; it will save to Downloads.”*
 
 ## Give the user (one link only)
 
 ```
-https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/bb-five-page-sample-female-latest.pdf
+https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/bb-five-page-sample-female-<N>.pdf
 ```
 
-- **One** stable filename — do not also send versioned `bb-five-page-sample-female-N.pdf` or archive links for this product.
-- Saves to **Mac Downloads** as `bb-five-page-sample-female-latest.pdf`.
-- If Safari saves `…-latest-2.pdf`, an older copy is already in Downloads — delete old copies or choose Replace.
+- **One** new numbered file per render (e.g. `bb-five-page-sample-female-12.pdf`) — each tap saves a unique name in **Mac Downloads** (no `-latest-2` suffix clutter).
+- State the exact filename in the message.
+- Do not also send `-latest`, archive, or program-report links for sample-female work.
 
 ## Do not
 
