@@ -12,8 +12,6 @@ import {
   CUTTING_STAPLES_VEGETABLES,
 } from '../../data/cuttingStaplesPrintout.js';
 import { scaleStapleRows, stapleCategoryServings } from '../../js/stapleServingPrintout.js';
-import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
-import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 
 const FONTS = SEMINAR_FONTS;
 const LAYOUT = Object.freeze({
@@ -30,8 +28,6 @@ const STAPLES_LIST = Object.freeze({
   leaderPad: 4,
   ruleWidth: 0.75,
 });
-
-const STAPLES_TIPS_PARAGRAPH_GAP = 4;
 
 function staplesFirstLine(doc, text, maxWidth) {
   const words = String(text).split(/\s+/);
@@ -129,39 +125,6 @@ function drawStapleListItems(doc, items, col, yStart, bottomY, startIndex = 0) {
   return { y, nextIndex: index };
 }
 
-function measureStaplesTipsBlock(doc, width, tips) {
-  doc.font(FONTS.boldItalic).fontSize(LAYOUT.subsectionSize);
-  let h = LAYOUT.sectionGap
-    + doc.heightOfString(tips.title, { width })
-    + LAYOUT.headerGap;
-  doc.font(FONTS.regular).fontSize(LAYOUT.bodySize);
-  for (const paragraph of tips.paragraphs) {
-    h += doc.heightOfString(paragraph, { width, lineGap: LAYOUT.lineGap })
-      + STAPLES_TIPS_PARAGRAPH_GAP;
-  }
-  return h;
-}
-
-function drawStaplesTipsBlock(doc, col, yStart, tips) {
-  const { x, width } = col;
-  let y = yStart + LAYOUT.sectionGap;
-  doc
-    .font(FONTS.boldItalic)
-    .fontSize(LAYOUT.subsectionSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(tips.title, x, y, { width, lineGap: 0 });
-  y = doc.y + LAYOUT.headerGap;
-  for (const paragraph of tips.paragraphs) {
-    doc
-      .font(FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(paragraph, x, y, { width, lineGap: LAYOUT.lineGap });
-    y = doc.y + STAPLES_TIPS_PARAGRAPH_GAP;
-  }
-  return y;
-}
-
 function staplesForPayload(items, category, payload) {
   const servings = stapleCategoryServings(payload.servings?.planServings, category);
   return scaleStapleRows(items, servings);
@@ -219,29 +182,12 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
   }
 }
 
-function drawStaplesTipsUnderList(doc, payload, page, frame, col, yStart, tips) {
-  const tipsH = measureStaplesTipsBlock(doc, col.width, tips);
-  if (yStart + tipsH <= page.bottom) {
-    drawStaplesTipsBlock(doc, col, yStart, tips);
-    return page;
-  }
-  page = frame.continuePage(doc, payload);
-  const columns = staplesColumnLayout(page);
-  const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
-  drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-  const spillCol = columns.find((column) => column.x === col.x) || col;
-  drawStaplesTipsBlock(doc, spillCol, page.y, tips);
-  return page;
-}
-
 export function drawVegFruitFoodListPage(doc, payload, frame) {
   const vegetableItems = staplesForPayload(CUTTING_STAPLES_VEGETABLES, 'vegetable', payload);
   const fruitItems = staplesForPayload(CUTTING_STAPLES_FRUIT, 'fruit', payload);
 
   let vegIndex = 0;
   let fruitIndex = 0;
-  let vegTipsDrawn = false;
-  let fruitTipsDrawn = false;
   let firstPage = true;
 
   while (vegIndex < vegetableItems.length || fruitIndex < fruitItems.length) {
@@ -252,9 +198,6 @@ export function drawVegFruitFoodListPage(doc, payload, frame) {
     const columns = staplesColumnLayout(page);
     const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
     drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
-
-    let vegColEndY = null;
-    let fruitColEndY = null;
 
     if (vegIndex < vegetableItems.length) {
       let y = page.y;
@@ -270,12 +213,6 @@ export function drawVegFruitFoodListPage(doc, payload, frame) {
         vegIndex,
       );
       vegIndex = vegResult.nextIndex;
-      vegColEndY = vegResult.y;
-    }
-
-    if (!vegTipsDrawn && vegIndex >= vegetableItems.length) {
-      drawStaplesTipsUnderList(doc, payload, page, frame, columns[0], vegColEndY ?? page.y, VEGETABLE_TIPS_PROSE);
-      vegTipsDrawn = true;
     }
 
     if (fruitIndex < fruitItems.length) {
@@ -292,12 +229,6 @@ export function drawVegFruitFoodListPage(doc, payload, frame) {
         fruitIndex,
       );
       fruitIndex = result.nextIndex;
-      fruitColEndY = result.y;
-    }
-
-    if (!fruitTipsDrawn && fruitIndex >= fruitItems.length) {
-      drawStaplesTipsUnderList(doc, payload, page, frame, columns[1], fruitColEndY ?? page.y, FRUIT_TIPS_PROSE);
-      fruitTipsDrawn = true;
     }
   }
 
