@@ -1,6 +1,6 @@
 /**
  * Cutting-staples food list pages (protein/grains + vegetables/fruit).
- * Used by sample-female 5-page printout; program report keeps its own copy.
+ * Used by B&B Sample Diet PDF (b&samplediet.pdf); program report keeps its own copy.
  */
 import { PDF_FRAME_COLORS } from './drawFrame.js';
 import { SEMINAR_COLORS, SEMINAR_FONTS } from './drawSeminar.js';

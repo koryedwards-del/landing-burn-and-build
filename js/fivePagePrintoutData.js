@@ -153,7 +153,7 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
 
   return {
     view: 'fivepage',
-    title: `B&B 5-Page Printout - ${programClientName(pkg)}`,
+    title: `B&B Sample Diet - ${programClientName(pkg)}`,
     clientName: seminarClientName(pkg),
     preparedAt: seminarPreparedDate(pkg),
     preparedDate: seminarPreparedDate(pkg),
@@ -192,6 +192,6 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
 
 export function buildKristiFivePagePreviewPayload() {
   const pkg = buildKristiPreviewPackage();
-  pkg.meta = { ...pkg.meta, source: 'five-page-preview' };
+  pkg.meta = { ...pkg.meta, source: 'sample-diet-preview' };
   return buildFivePagePrintoutPayload(pkg);
 }

@@ -1,6 +1,6 @@
 /**
- * B&B 5-page printout — 1982 Warner layout (Welcome → LBA → Food Plan → Servings).
- * Preview: scripts/render-five-page-preview.mjs
+ * B&B Sample Diet PDF (deliverable: docs/samples/b&samplediet.pdf).
+ * 1982 Warner layout + food lists. Preview: scripts/render-sample-diet-preview.mjs
  */
 import { createPrintPdf } from './creator.js';
 import { PDF_FRAME_FONTS } from './drawFrame.js';
@@ -471,12 +471,12 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
   validateFivePagePayload(payload);
 
   const creator = createPrintPdf({
-    title: title || payload.title || 'B&B 5-Page Printout',
+    title: title || payload.title || 'B&B Sample Diet',
     author: 'Burn & Build Diet',
   });
   const doc = creator.doc;
   if (buildLabel) {
-    doc.info.Subject = `B&B 5-page printout sample ${buildLabel}`;
+    doc.info.Subject = `B&B Sample Diet ${buildLabel}`;
   }
 
   drawWelcomePage(doc, payload);

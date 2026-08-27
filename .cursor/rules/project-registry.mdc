@@ -84,9 +84,9 @@ npm run verify:pdf
 
 Renderer: `server/pdf/` (PDFKit). Preview: `npm run render:program-report-preview`. See `.cursor/rules/program-report-preview-pdf.mdc`.
 
-## 5-page sample-female PDF (separate product)
+## B&B Sample Diet PDF (`b&samplediet.pdf`)
 
-4-page sample printout for bodybuilders — **not** the purchased program report. Preview: `npm run render:five-page-preview` → push → one download link. See `.cursor/rules/five-page-sample-female-pdf.mdc`.
+6-page sample deliverable (1982 layout + food lists) — **not** the 2026 program report. Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&samplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 

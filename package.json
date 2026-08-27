@@ -11,7 +11,8 @@
     "verify:server": "node scripts/verify-server.mjs",
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "render:program-report-preview": "node scripts/render-program-report-preview.mjs",
-    "render:five-page-preview": "node scripts/render-five-page-preview.mjs"
+    "render:sample-diet-preview": "node scripts/render-sample-diet-preview.mjs",
+    "render:five-page-preview": "node scripts/render-sample-diet-preview.mjs"
   },
   "engines": {
     "node": ">=20"
