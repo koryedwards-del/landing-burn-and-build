@@ -2,7 +2,6 @@
 
 /** Footer contact — pinned footer on every sample diet page. */
 export const SAMPLE_DIET_HEADER = Object.freeze({
-  phone: '253-988-6946',
   website: 'www.burnandbuilddiet.com',
   email: 'support@burnandbuilddiet.com',
 });
