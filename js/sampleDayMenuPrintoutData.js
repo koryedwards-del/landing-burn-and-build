@@ -1,21 +1,29 @@
 /** Sample Day Menu — fill-in meal worksheet for sample diet PDF (page 7). */
 
-import { SLOT_COLUMNS } from './servingsPrintout.js';
+export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
 
-/** Category rows per meal slot — top-to-bottom worksheet layout. */
-const MEAL_CATEGORY_ROWS = Object.freeze({
-  breakfast: ['Proteins', 'Grains/Starches'],
-  snack1: ['Fruits'],
-  lunch: ['Proteins', 'Grains/Starches'],
-  snack2: ['Fruits'],
-  dinner: ['Proteins', 'Grains/Starches', 'Veggies'],
-});
+function mainMealSection(title, rowLabels) {
+  return {
+    title,
+    rows: rowLabels.map((label) => ({ label })),
+  };
+}
 
+function fruitSnackSection() {
+  return {
+    title: null,
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL }],
+  };
+}
+
+/** Top-to-bottom: main meals with a fruit snack row after breakfast, lunch, and dinner. */
 export function buildSampleDayMenuSections() {
-  return SLOT_COLUMNS
-    .filter((slot) => MEAL_CATEGORY_ROWS[slot.key])
-    .map((slot) => ({
-      title: slot.slotLabel,
-      rows: MEAL_CATEGORY_ROWS[slot.key].map((label) => ({ label })),
-    }));
+  return [
+    mainMealSection('Breakfast', ['Proteins', 'Grains/Starches']),
+    fruitSnackSection(),
+    mainMealSection('Lunch', ['Proteins', 'Grains/Starches']),
+    fruitSnackSection(),
+    mainMealSection('Dinner', ['Proteins', 'Grains/Starches', 'Veggies']),
+    fruitSnackSection(),
+  ];
 }

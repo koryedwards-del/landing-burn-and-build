@@ -682,12 +682,14 @@ function drawSampleDayMenuPage(doc, payload) {
   let y = page.y + LAYOUT.sectionGap;
 
   menu.sections.forEach((section, sectionIndex) => {
-    doc
-      .font(FONTS.bold)
-      .fontSize(LAYOUT.sectionTitleSize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(String(section.title), page.x, y, { width: page.width, lineGap: 0 });
-    y = doc.y + LAYOUT.headerGap;
+    if (section.title) {
+      doc
+        .font(FONTS.bold)
+        .fontSize(LAYOUT.sectionTitleSize)
+        .fillColor(SEMINAR_COLORS.body)
+        .text(String(section.title), page.x, y, { width: page.width, lineGap: 0 });
+      y = doc.y + LAYOUT.headerGap;
+    }
 
     (section.rows || []).forEach((row) => {
       y = drawSampleDayMenuFillInRow(doc, page.x, y, page.width, row.label);
