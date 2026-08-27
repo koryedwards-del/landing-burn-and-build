@@ -365,12 +365,12 @@ function drawGoalTable(doc, x, y, width, goalTable) {
     label: '',
     todayPct: 'TODAY',
     todayLbs: '',
-    goalA: 'EIGHT WEEK GOAL',
-    goalB: '',
+    goalA: '',
+    goalB: 'EIGHT WEEK GOAL',
     goalC: '',
     _colSpans: [
       { from: 'todayPct', to: 'todayLbs' },
-      { from: 'goalA', to: 'goalC' },
+      { from: 'goalB', to: 'goalC' },
     ],
   };
   return drawLayoutTable(doc, {
