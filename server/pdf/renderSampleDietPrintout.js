@@ -18,7 +18,7 @@ import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
-import { buildMenuPlanTemplatePayload, SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL } from '../../js/sampleDayMenuPrintoutData.js';
+import { buildMenuPlanWorksheetPayload, SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
 const FONTS = PDF_FRAME_FONTS;
@@ -760,7 +760,7 @@ function measureMenuSectionHeight(section, rowGap) {
   return Math.max(height, hasTimeLine ? 40 : 34);
 }
 
-function measureMenuPlanTemplateNoteHeight(doc, note, width) {
+function measureMenuPlanWorksheetNoteHeight(doc, note, width) {
   if (!note?.url) return 0;
   doc.font(FONTS.regular).fontSize(LAYOUT.bodySize);
   const text = `${note.lead || ''}${note.linkLabel || note.url}`;
@@ -779,8 +779,8 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
     baseHeight += baseSectionGap;
   });
 
-  const noteHeight = filled && menu.templateNote
-    ? measureMenuPlanTemplateNoteHeight(doc, menu.templateNote, page.width) + 8
+  const noteHeight = filled && menu.worksheetNote
+    ? measureMenuPlanWorksheetNoteHeight(doc, menu.worksheetNote, page.width) + 8
     : 0;
 
   const contentTop = page.y;
@@ -891,7 +891,7 @@ function drawMenuSection(doc, page, y, section, filled, layout) {
   return y + Math.max(sectionHeight, mealY - y) + layout.sectionGap;
 }
 
-function drawMenuPlanTemplateNote(doc, x, y, width, note) {
+function drawMenuPlanWorksheetNote(doc, x, y, width, note) {
   if (!note?.url) return y;
 
   doc
@@ -924,7 +924,7 @@ function drawSampleDayMenuPage(doc, payload) {
   if (filled) registerHandwritingFont(doc);
 
   const page = begin1982Page(doc, payload, null, {
-    personalized: !payload.template,
+    personalized: !payload.worksheet,
   });
   const layout = computeMenuPlanLayout(doc, menu, page, filled);
   let y = drawMenuPlanTitleRow(
@@ -942,8 +942,8 @@ function drawSampleDayMenuPage(doc, payload) {
     y = drawMenuSection(doc, page, y, section, filled, layout);
   });
 
-  if (filled && menu.templateNote) {
-    drawMenuPlanTemplateNote(doc, page.x, layout.noteY, page.width, menu.templateNote);
+  if (filled && menu.worksheetNote) {
+    drawMenuPlanWorksheetNote(doc, page.x, layout.noteY, page.width, menu.worksheetNote);
   }
 }
 
@@ -1030,8 +1030,8 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   return buffer;
 }
 
-export async function renderMenuPlanTemplate(payload = null) {
-  const menuPayload = payload || buildMenuPlanTemplatePayload();
+export async function renderMenuPlanWorksheet(payload = null) {
+  const menuPayload = payload || buildMenuPlanWorksheetPayload();
 
   const creator = createPrintPdf({
     title: menuPayload.title || 'Burn & Build Menu Plan',
@@ -1045,7 +1045,7 @@ export async function renderMenuPlanTemplate(payload = null) {
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
   if (pages !== 1) {
-    throw new Error(`Menu plan template expected 1 page, got ${pages}`);
+    throw new Error(`Menu Plan worksheet expected 1 page, got ${pages}`);
   }
   return buffer;
 }

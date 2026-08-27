@@ -42,14 +42,4 @@ export function menuPlanWorksheetUrl() {
   return MENU_PLAN_WORKSHEET_URL;
 }
 
-/** @deprecated Use menuPlanWorksheetUrl */
-export function blankMenuPlansUrl() {
-  return menuPlanWorksheetUrl();
-}
-
-/** @deprecated Use menuPlanWorksheetUrl */
-export function menuPlanTemplateUrl() {
-  return menuPlanWorksheetUrl();
-}
-
 export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';

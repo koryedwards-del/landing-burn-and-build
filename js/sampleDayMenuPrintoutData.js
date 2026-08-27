@@ -8,7 +8,7 @@ import {
 } from '../data/cuttingStaplesPrintout.js';
 import {
   SAMPLE_DAY_MENU_PAGE_TITLE,
-  SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
+  SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
 import { MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
@@ -186,8 +186,8 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
     planFor: {
       value: filled ? formatMenuPlanForDate(dateIso) : '',
     },
-    templateNote: filled ? {
-      lead: SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
+    worksheetNote: filled ? {
+      lead: SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
       url: MENU_PLAN_WORKSHEET_URL,
       linkLabel: 'program-creator-3tzd.onrender.com/api/samples/menu-plan-worksheet',
     } : null,
@@ -195,11 +195,11 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
   };
 }
 
-/** Blank printable template — no handwriting fills; same layout as page 7. */
-export function buildMenuPlanTemplatePayload() {
+/** Blank Menu Plan worksheet — no handwriting fills; same layout as sample diet page 7. */
+export function buildMenuPlanWorksheetPayload() {
   return {
-    view: 'menuplantemplate',
-    template: true,
+    view: 'menuplanworksheet',
+    worksheet: true,
     title: 'Burn & Build Menu Plan',
     clientName: '',
     preparedDate: '',

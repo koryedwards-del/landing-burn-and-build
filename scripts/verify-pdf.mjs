@@ -5,7 +5,7 @@ import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { buildVerifyProgramReportPayload } from '../js/printoutVerifyFixtures.js';
 import { renderPrintPdf } from '../server/pdf/index.js';
 import {
-  renderMenuPlanTemplate,
+  renderMenuPlanWorksheet,
   renderSampleDietPrintout,
   SAMPLE_DIET_PRINTOUT_MIN_PAGES,
 } from '../server/pdf/renderSampleDietPrintout.js';
@@ -83,6 +83,6 @@ if (samplePayload.clientName !== 'SAMPLE FEMALE') {
 }
 console.log('ok  golden sample diet payload');
 
-assertPdf('menu plan template (blank)', await renderMenuPlanTemplate(), { minPages: 1 });
+assertPdf('menu plan worksheet (blank)', await renderMenuPlanWorksheet(), { minPages: 1 });
 
 console.log('\nPDF checks passed.');

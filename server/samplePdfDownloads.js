@@ -5,10 +5,6 @@ import path from 'path';
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
   'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf' },
   'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
-  /** @deprecated Old slug — same PDF as menu-plan-worksheet */
-  'blank-menu-plans': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
-  /** @deprecated Old slug — same PDF as menu-plan-worksheet */
-  'menu-plan-template': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
 });
 
 /** @param {string} root @param {string} slug */

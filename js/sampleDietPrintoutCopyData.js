@@ -37,4 +37,4 @@ export const SAMPLE_DIET_SERVINGS_NOTE =
 
 export const SAMPLE_DAY_MENU_PAGE_TITLE = 'Menu Plan for day or week of:';
 
-export const SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD = 'You can download blank Menu Plans at ';
+export const SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD = 'You can download blank Menu Plans at ';

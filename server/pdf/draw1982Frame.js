@@ -69,7 +69,7 @@ export function begin1982Page(doc, payload, pageTitle, {
   fonts = FRAME_FONTS,
 } = {}) {
   const box = add1982Page(doc);
-  const usePersonalized = personalized ?? !payload?.template;
+  const usePersonalized = personalized ?? !payload?.worksheet;
   const topRuleY = fullHeader
     ? drawFrameHeader(doc, box, {
       personalized: usePersonalized,

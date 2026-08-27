@@ -31,7 +31,7 @@ function firstNameFromPreferredName(preferredName) {
   return String(preferredName || '').trim().split(/\s+/)[0] || 'there';
 }
 
-function buildDietEmailText({ firstName, downloadUrl, portalUrl, templateUrl }) {
+function buildDietEmailText({ firstName, downloadUrl, portalUrl, worksheetUrl }) {
   return [
     `Hi ${firstName},`,
     '',
@@ -47,7 +47,7 @@ function buildDietEmailText({ firstName, downloadUrl, portalUrl, templateUrl }) 
     'A copy of your Burn & Build Diet is attached to this email.',
     '',
     'Resources',
-    `Print a blank Menu Plan worksheet: ${templateUrl}`,
+    `Print a blank Menu Plan worksheet: ${worksheetUrl}`,
     '',
     `Questions or need help getting started? Contact us at ${SUPPORT_EMAIL} — we are happy to help.`,
     '',
@@ -56,7 +56,7 @@ function buildDietEmailText({ firstName, downloadUrl, portalUrl, templateUrl }) 
   ].join('\n');
 }
 
-function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, templateUrl, logoUrl }) {
+function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, worksheetUrl, logoUrl }) {
   const supportMailto = `mailto:${SUPPORT_EMAIL}`;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -96,7 +96,7 @@ function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, templateUrl, lo
               <p style="margin:0 0 16px;">Need it again later? <a href="${portalUrl}" style="color:#2F6FA8;">Open your download page</a> — your program opens automatically.</p>
               <p style="margin:0 0 24px;">A copy of your Burn &amp; Build Diet is attached to this email.</p>
               <p style="margin:0 0 8px;font-weight:bold;">Resources</p>
-              <p style="margin:0;"><a href="${templateUrl}" style="color:#2F6FA8;">Print a blank Menu Plan worksheet</a></p>
+              <p style="margin:0;"><a href="${worksheetUrl}" style="color:#2F6FA8;">Print a blank Menu Plan worksheet</a></p>
             </td>
           </tr>
           <tr>
@@ -133,13 +133,13 @@ export async function sendDietPdfEmail({
   const firstName = escapeHtml(firstNameRaw);
   const downloadUrl = dietPdfDownloadUrl(to, programId);
   const portalUrl = purchaserPortalUrl(to, programId);
-  const templateUrl = menuPlanWorksheetUrl();
+  const worksheetUrl = menuPlanWorksheetUrl();
   const logoUrl = brandLogoUrl();
   const emailContent = {
     firstName: firstNameRaw,
     downloadUrl,
     portalUrl,
-    templateUrl,
+    worksheetUrl,
     logoUrl,
   };
 

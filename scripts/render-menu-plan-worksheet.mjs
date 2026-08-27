@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { renderMenuPlanTemplate } from '../server/pdf/renderSampleDietPrintout.js';
+import { renderMenuPlanWorksheet } from '../server/pdf/renderSampleDietPrintout.js';
 import { MENU_PLAN_WORKSHEET_DOWNLOAD_URL } from '../js/siteUrls.js';
 
 const WORKSHEET_FILENAME = 'menu-plan-worksheet.pdf';
@@ -13,16 +13,9 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
 const artifactsDir = '/opt/cursor/artifacts';
 
-const pdf = await renderMenuPlanTemplate();
+const pdf = await renderMenuPlanWorksheet();
 const worksheetPath = path.join(samplesDir, WORKSHEET_FILENAME);
 fs.writeFileSync(worksheetPath, pdf);
-
-for (const legacyName of ['blank-menu-plans.pdf', 'menu-plan-template.pdf']) {
-  const legacyPath = path.join(samplesDir, legacyName);
-  if (fs.existsSync(legacyPath)) {
-    fs.unlinkSync(legacyPath);
-  }
-}
 
 if (fs.existsSync(artifactsDir)) {
   fs.copyFileSync(worksheetPath, path.join(artifactsDir, WORKSHEET_FILENAME));
