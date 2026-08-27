@@ -21,6 +21,12 @@ const LAYOUT = FRAME_1982;
 const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
 const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
+function getRowColSpans(row) {
+  if (Array.isArray(row._colSpans) && row._colSpans.length) return row._colSpans;
+  if (row._colSpan) return [row._colSpan];
+  return [];
+}
+
 function tableColumnSpanBounds(columns, colSpan) {
   if (!colSpan?.from || !colSpan?.to) return null;
   const fromIndex = columns.findIndex((col) => col.key === colSpan.from);
@@ -34,15 +40,20 @@ function tableColumnSpanWidth(colWidths, spanBounds) {
 }
 
 function isTableColumnSpanned(columns, row, colIndex) {
-  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
-  if (!spanBounds) return false;
-  return colIndex > spanBounds.fromIndex && colIndex <= spanBounds.toIndex;
+  for (const span of getRowColSpans(row)) {
+    const bounds = tableColumnSpanBounds(columns, span);
+    if (!bounds) continue;
+    if (colIndex > bounds.fromIndex && colIndex <= bounds.toIndex) return true;
+  }
+  return false;
 }
 
 function tableCellWidth(colWidths, columns, row, colIndex) {
-  const spanBounds = tableColumnSpanBounds(columns, row._colSpan);
-  if (spanBounds && colIndex === spanBounds.fromIndex) {
-    return tableColumnSpanWidth(colWidths, spanBounds);
+  for (const span of getRowColSpans(row)) {
+    const bounds = tableColumnSpanBounds(columns, span);
+    if (bounds && colIndex === bounds.fromIndex) {
+      return tableColumnSpanWidth(colWidths, bounds);
+    }
   }
   return colWidths[colIndex];
 }
@@ -341,13 +352,14 @@ function drawLeanBodyAnalysisPage(doc, payload) {
 
 function drawGoalTable(doc, x, y, width, goalTable) {
   if (!goalTable) return y;
+  // 6 columns — 1982 layout: label | TODAY % | TODAY lbs | fat loss | goal % | goal lbs
   const columns = [
-    { key: 'label', width: 0.12, align: 'left' },
-    { key: 'todayPct', width: 0.14, align: 'center' },
-    { key: 'todayLbs', width: 0.16, align: 'center' },
-    { key: 'goalA', width: 0.2, align: 'center' },
+    { key: 'label', width: 0.11, align: 'left' },
+    { key: 'todayPct', width: 0.13, align: 'center' },
+    { key: 'todayLbs', width: 0.15, align: 'center' },
+    { key: 'goalA', width: 0.24, align: 'center' },
     { key: 'goalB', width: 0.14, align: 'center' },
-    { key: 'goalC', width: 0.24, align: 'center' },
+    { key: 'goalC', width: 0.23, align: 'center' },
   ];
   const head = {
     label: '',
@@ -356,6 +368,10 @@ function drawGoalTable(doc, x, y, width, goalTable) {
     goalA: 'EIGHT WEEK GOAL',
     goalB: '',
     goalC: '',
+    _colSpans: [
+      { from: 'todayPct', to: 'todayLbs' },
+      { from: 'goalA', to: 'goalC' },
+    ],
   };
   return drawLayoutTable(doc, {
     x,
