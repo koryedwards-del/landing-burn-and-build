@@ -642,20 +642,27 @@ function drawAnswersConfirmationPage(doc, payload) {
   if (!confirmation?.rows?.length) return;
 
   let page = begin1982Page(doc, payload, 'Questionnaire confirmation');
+
   if (confirmation.intro) {
-    page = drawParagraphs(doc, page, [confirmation.intro]);
+    doc
+      .font(FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(confirmation.intro), page.x, page.y, {
+        width: page.width,
+        lineGap: LAYOUT.lineGap,
+      });
+    page = { ...page, y: doc.y + LAYOUT.headerGap };
   }
+
   drawLayoutTable(doc, {
     x: page.x,
-    y: page.y + LAYOUT.sectionGap,
+    y: page.y,
     width: page.width,
     columns: CONFIRMATION_TABLE_COLUMNS,
     rows: confirmation.rows.map((row) => ({
       label: row.label,
       value: row.value,
-      _styles: {
-        label: { font: FONTS.bold, fontSize: LAYOUT.tableBodySize },
-      },
     })),
     headerRows: 0,
     tableRowPad: LAYOUT.tableRowPad + 1,
