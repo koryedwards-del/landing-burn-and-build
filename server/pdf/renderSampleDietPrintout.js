@@ -649,10 +649,8 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
-const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 56;
+const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 52;
 const SAMPLE_DAY_MENU_TIME_MEAL_GAP = 14;
-const SAMPLE_DAY_MENU_TIME_LINE_WIDTH = 38;
-const SAMPLE_DAY_MENU_PERIOD_CIRCLE_R = 3.5;
 
 function registerHandwritingFont(doc) {
   doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
@@ -667,53 +665,18 @@ function drawHandwritingOnLine(doc, text, x, y, width, { align = 'left' } = {}) 
     .text(String(text), x, y - 1, { width, align, lineBreak: false });
 }
 
-function drawPeriodCircle(doc, x, y, label, selected, filled) {
-  const r = SAMPLE_DAY_MENU_PERIOD_CIRCLE_R;
-  const centerX = x + r;
-  const centerY = y + r + 1;
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(0.75)
-    .circle(centerX, centerY, r)
-    .stroke();
-  if (filled && selected) {
-    doc
-      .fillColor(SEMINAR_COLORS.body)
-      .circle(centerX, centerY, r - 1.2)
-      .fill();
-  }
+function drawTimeColumn(doc, x, y) {
   doc
     .font(FONTS.regular)
-    .fontSize(8)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(label, centerX + r + 3, y, { lineBreak: false });
-  return centerX + r + 3 + doc.widthOfString(label);
-}
-
-function drawTimeColumn(doc, x, y, time, filled) {
-  doc
-    .font(FONTS.regular)
-    .fontSize(8)
+    .fontSize(LAYOUT.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text('Time', x, y, { lineBreak: false });
 
-  const lineY = y + 11;
-  doc
-    .strokeColor(TABLE_1982.stroke)
-    .lineWidth(0.75)
-    .moveTo(x, lineY)
-    .lineTo(x + SAMPLE_DAY_MENU_TIME_LINE_WIDTH, lineY)
-    .stroke();
+  const periodY = y + LAYOUT.bodySize + 4;
+  doc.text('AM', x, periodY, { lineBreak: false });
+  doc.text('PM', x + 22, periodY, { lineBreak: false });
 
-  if (filled && time?.value) {
-    drawHandwritingOnLine(doc, time.value, x + 1, lineY, SAMPLE_DAY_MENU_TIME_LINE_WIDTH - 2, { align: 'center' });
-  }
-
-  const circleY = lineY + 7;
-  drawPeriodCircle(doc, x, circleY, 'AM', time?.period === 'AM', filled);
-  drawPeriodCircle(doc, x + 28, circleY, 'PM', time?.period === 'PM', filled);
-
-  return lineY + 22;
+  return periodY + LAYOUT.bodySize + 2;
 }
 
 function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled) {
@@ -763,7 +726,7 @@ function measureMenuSectionHeight(section) {
   let height = 0;
   if (section.title) height += LAYOUT.sectionTitleSize + LAYOUT.headerGap;
   height += (section.rows?.length || 0) * rowH;
-  return Math.max(height, 42);
+  return Math.max(height, 34);
 }
 
 function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
@@ -797,7 +760,7 @@ function drawMenuSection(doc, page, y, section, filled) {
   const mealWidth = page.width - SAMPLE_DAY_MENU_TIME_COL_WIDTH - SAMPLE_DAY_MENU_TIME_MEAL_GAP;
   const sectionHeight = measureMenuSectionHeight(section);
 
-  drawTimeColumn(doc, page.x, y, section.time, filled);
+  drawTimeColumn(doc, page.x, y);
 
   let mealY = y;
   if (section.title) {

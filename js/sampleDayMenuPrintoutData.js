@@ -6,7 +6,8 @@ import {
   CUTTING_STAPLES_PROTEIN_DAIRY,
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
-import { SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
+import {
+  SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
   SAMPLE_DAY_MENU_TEMPLATE_NOTE,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
@@ -32,16 +33,6 @@ const FOOD_PICKS = Object.freeze({
   },
   fruit: 'Apples',
 });
-
-/** Example times for the filled page-7 demo (blank template leaves these empty). */
-const EXAMPLE_SECTION_TIMES = Object.freeze([
-  { value: '7:00', period: 'AM' },
-  { value: '10:00', period: 'AM' },
-  { value: '12:30', period: 'PM' },
-  { value: '3:30', period: 'PM' },
-  { value: '6:30', period: 'PM' },
-  { value: '9:00', period: 'PM' },
-]);
 
 const MENU_SECTION_DEFS = Object.freeze([
   {
@@ -152,12 +143,6 @@ export function formatMenuPlanForDate(isoDate) {
   return `${weekday}, ${dateLong}`;
 }
 
-/** @deprecated Use formatMenuPlanForDate for planFor; page title is "Menu Plan". */
-export function formatMenuPlanPageTitle(isoDate) {
-  const planDate = formatMenuPlanForDate(isoDate);
-  return planDate ? `Menu Plan — ${planDate}` : 'Menu Plan';
-}
-
 function buildRow(rowDef, mealKey, gridRows, filled) {
   const row = { label: rowDef.label };
   if (!filled) return row;
@@ -171,11 +156,8 @@ function buildRow(rowDef, mealKey, gridRows, filled) {
 }
 
 function buildMenuSections(gridRows, { filled = false } = {}) {
-  return MENU_SECTION_DEFS.map((sectionDef, index) => ({
+  return MENU_SECTION_DEFS.map((sectionDef) => ({
     title: sectionDef.title,
-    time: filled
-      ? { ...EXAMPLE_SECTION_TIMES[index] }
-      : { value: '', period: null },
     rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, gridRows, filled)),
   }));
 }
