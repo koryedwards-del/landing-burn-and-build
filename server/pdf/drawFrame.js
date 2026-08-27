@@ -207,7 +207,7 @@ export function drawFramePageTitle(doc, title, x, y, width, { size, gapAfter } =
     .fontSize(size || PDF_FRAME.contentPageTitleSize)
     .fillColor(PDF_FRAME_COLORS.body)
     .text(display, x, y, { width, lineGap: 0 });
-  return doc.y + (gapAfter ?? PDF_FRAME.sectionGap);
+  return doc.y + (gapAfter ?? PT.titleBottomGap);
 }
 
 /** Centered at bottom of content band, above the footer gold line. */

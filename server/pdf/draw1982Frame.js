@@ -15,7 +15,7 @@ const FRAME_FONTS = PDF_FRAME_FONTS;
 
 export const FRAME_1982 = Object.freeze({
   pageTitleSize: PRINT_TEMPLATE_TYPOGRAPHY.pageTitle,
-  titleBottomGap: 20,
+  titleBottomGap: PRINT_TEMPLATE_TYPOGRAPHY.titleBottomGap,
   bodySize: 10,
   sectionTitleSize: 10,
   tableHeadSize: 9,

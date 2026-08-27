@@ -20,8 +20,8 @@ export const PRINT_TEMPLATE_TYPOGRAPHY = Object.freeze({
   sectionGap: 14,
   headerGap: 8,
   contentPad: 6,
-  titleTopGap: 28,
-  titleBottomGap: 20,
+  titleTopGap: 14,
+  titleBottomGap: 10,
   /** Macro / projection table header row (body × 1.5 × 0.75). */
   macroTableHead: 11.8125,
   /** Small footnotes (e.g. seasonings panel notes). */
