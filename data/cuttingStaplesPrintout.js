@@ -155,7 +155,7 @@ export const CUTTING_STAPLES_GRAINS_STARCHES = Object.freeze([
 
 /**
  * Build a PDF staple row from a foods.json catalog entry.
- * Prep label matches catalog servingDescription (fresh / cooked on the PDF food list).
+ * Prep label matches catalog servingDescription (whole, fresh / cooked on the PDF food list).
  * @param {string} label
  * @param {string} catalogName
  */
@@ -163,7 +163,7 @@ function catalogStapleRow(label, catalogName) {
   const food = foods.find((f) => f.name === catalogName);
   if (!food) throw new Error(`Missing catalog food: ${catalogName}`);
   const prep = food.servingDescription === 'raw'
-    ? 'fresh'
+    ? 'whole, fresh'
     : food.servingDescription === 'dry'
       ? null
       : 'cooked';
