@@ -1032,7 +1032,7 @@ export async function renderMenuPlanWorksheet(payload = null) {
   const doc = creator.doc;
 
   drawSampleDayMenuPage(doc, menuPayload);
-  stamp1982Footers(doc, menuPayload.header);
+  stamp1982Footers(doc, menuPayload.header, { pageNumbers: false });
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;

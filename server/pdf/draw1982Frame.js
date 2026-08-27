@@ -94,6 +94,6 @@ export function begin1982Page(doc, payload, pageTitle, {
   };
 }
 
-export function stamp1982Footers(doc, contact, fonts = FRAME_FONTS) {
-  return stampPinnedProgramFooters(doc, contact, fonts, { ruleColor: SAMPLE_DIET_BLUE });
+export function stamp1982Footers(doc, contact, { fonts = FRAME_FONTS, pageNumbers = true } = {}) {
+  return stampPinnedProgramFooters(doc, contact, fonts, { ruleColor: SAMPLE_DIET_BLUE, pageNumbers });
 }

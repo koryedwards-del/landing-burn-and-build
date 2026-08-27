@@ -320,7 +320,7 @@ export function stampPinnedProgramFooters(
   doc,
   contact = PDF_FRAME_CONTACT,
   fonts = PDF_FRAME_FONTS,
-  { ruleColor = PDF_FRAME_COLORS.gold } = {},
+  { ruleColor = PDF_FRAME_COLORS.gold, pageNumbers = true } = {},
 ) {
   if (typeof doc.bufferedPageRange !== 'function') return 0;
   const range = doc.bufferedPageRange();
@@ -328,8 +328,8 @@ export function stampPinnedProgramFooters(
   for (let index = 0; index < total; index += 1) {
     doc.switchToPage(range.start + index);
     drawPinnedProgramFooter(doc, frameContentBox(doc), {
-      page: index + 1,
-      total,
+      page: pageNumbers ? index + 1 : null,
+      total: pageNumbers ? total : null,
       contact,
       fonts,
       ruleColor,
