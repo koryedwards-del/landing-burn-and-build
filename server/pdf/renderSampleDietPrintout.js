@@ -19,6 +19,7 @@ import {
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
 import { buildMenuPlanTemplatePayload } from '../../js/sampleDayMenuPrintoutData.js';
+import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
 const FONTS = PDF_FRAME_FONTS;
 const LAYOUT = FRAME_1982;
@@ -745,8 +746,8 @@ function countMenuPlanRowGaps(sections) {
   );
 }
 
-function measureMenuPlanForRowHeight() {
-  return LAYOUT.bodySize + 2 + LAYOUT.sectionGap;
+function measureMenuPlanTitleHeight() {
+  return LAYOUT.pageTitleSize + 2 + LAYOUT.sectionGap;
 }
 
 function measureMenuSectionHeight(section, rowGap) {
@@ -770,8 +771,7 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
   const baseSectionGap = SAMPLE_DAY_MENU_SECTION_GAP;
   const baseRowGap = SAMPLE_DAY_MENU_ROW_GAP;
 
-  let baseHeight = menu.planFor ? 0 : LAYOUT.headerGap;
-  if (menu.planFor) baseHeight += measureMenuPlanForRowHeight();
+  let baseHeight = measureMenuPlanTitleHeight();
 
   sections.forEach((section) => {
     baseHeight += measureMenuSectionHeight(section, baseRowGap);
@@ -782,7 +782,7 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
     ? measureMenuPlanTemplateNoteHeight(doc, menu.templateNote, page.width) + 8
     : 0;
 
-  const contentTop = menu.planFor ? page.y : page.y + LAYOUT.headerGap;
+  const contentTop = page.y;
   const contentBottom = page.bottom - noteHeight;
   const available = contentBottom - contentTop;
   const extra = Math.max(0, available - baseHeight);
@@ -837,17 +837,16 @@ function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
   return lineY + rowGap;
 }
 
-function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
-  const fontSize = LAYOUT.bodySize;
+function drawMenuPlanTitleRow(doc, x, y, width, title, value, filled) {
+  const fontSize = LAYOUT.pageTitleSize;
   const lineYOffset = fontSize + 2;
-  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  doc.font(FONTS.bold).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
 
   const gap = 5;
-  const labelText = String(planFor.label || 'Menu Plan for day or week of.');
+  const labelText = String(title || SAMPLE_DAY_MENU_PAGE_TITLE);
   const labelW = doc.widthOfString(labelText);
   const lineStart = x + labelW + gap;
   const lineEnd = x + width;
-
   const lineY = y + lineYOffset;
 
   doc.text(labelText, x, y, { lineBreak: false });
@@ -858,8 +857,8 @@ function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
     .lineTo(lineEnd, lineY)
     .stroke();
 
-  if (filled && planFor.value) {
-    drawHandwritingOnLine(doc, planFor.value, lineStart + 4, lineY, lineEnd - lineStart - 8);
+  if (filled && value) {
+    drawHandwritingOnLine(doc, value, lineStart + 4, lineY, lineEnd - lineStart - 8);
   }
 
   return lineY + LAYOUT.sectionGap;
@@ -921,15 +920,19 @@ function drawSampleDayMenuPage(doc, payload) {
   const filled = Boolean(menu.filled);
   if (filled) registerHandwritingFont(doc);
 
-  const page = begin1982Page(doc, payload, menu.pageTitle || 'Menu Plan', {
+  const page = begin1982Page(doc, payload, null, {
     personalized: !payload.template,
   });
   const layout = computeMenuPlanLayout(doc, menu, page, filled);
-  let y = layout.contentTop;
-
-  if (menu.planFor) {
-    y = drawMenuPlanForRow(doc, page.x, y, page.width, menu.planFor, filled);
-  }
+  let y = drawMenuPlanTitleRow(
+    doc,
+    page.x,
+    layout.contentTop,
+    page.width,
+    menu.pageTitle || SAMPLE_DAY_MENU_PAGE_TITLE,
+    menu.planFor?.value,
+    filled,
+  );
 
   menu.sections.forEach((section) => {
     y = drawMenuSection(doc, page, y, section, filled, layout);

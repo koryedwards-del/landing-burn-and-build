@@ -7,7 +7,7 @@ import {
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
 import {
-  SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
+  SAMPLE_DAY_MENU_PAGE_TITLE,
   SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
@@ -182,9 +182,8 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
 
   return {
     filled,
-    pageTitle: 'Menu Plan',
+    pageTitle: SAMPLE_DAY_MENU_PAGE_TITLE,
     planFor: {
-      label: SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
       value: filled ? formatMenuPlanForDate(dateIso) : '',
     },
     templateNote: filled ? {
@@ -207,9 +206,8 @@ export function buildMenuPlanTemplatePayload() {
     header: { ...SAMPLE_DIET_HEADER },
     sampleDayMenu: {
       filled: false,
-      pageTitle: 'Menu Plan',
+      pageTitle: SAMPLE_DAY_MENU_PAGE_TITLE,
       planFor: {
-        label: SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
         value: '',
       },
       sections: buildMenuSections([], { filled: false }),
