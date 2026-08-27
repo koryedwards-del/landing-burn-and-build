@@ -17,6 +17,7 @@ import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
+import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
 import { buildMenuPlanWorksheetPayload } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
@@ -1119,7 +1120,7 @@ function drawAnswersConfirmationPage(doc, payload) {
     width: page.width,
     columns: CONFIRMATION_TABLE_COLUMNS,
     rows: confirmation.rows.map((row) => ({
-      label: row.label,
+      label: formatAnswersConfirmationLabel(row),
       value: row.value,
     })),
     headerRows: 0,

@@ -5,7 +5,10 @@ import {
   JOB_ACTIVITY_OPTIONS,
 } from '../../js/profileDataEngine.js';
 import { buildProgramPackage } from '../../js/programPackageData.js';
-import { buildAnswersConfirmationRows } from '../../js/answersConfirmationPrintout.js';
+import {
+  buildAnswersConfirmationRows,
+  formatAnswersConfirmationLabel,
+} from '../../js/answersConfirmationPrintout.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
 
@@ -1354,8 +1357,8 @@ function renderReview() {
   const pkg = buildProgramFromValues(values);
   const rows = buildAnswersConfirmationRows(pkg);
 
-  reviewEl.innerHTML = rows.map(({ label, value }) => `
-    <div><dt>${label}</dt><dd>${value}</dd></div>
+  reviewEl.innerHTML = rows.map((row) => `
+    <div><dt>${formatAnswersConfirmationLabel(row)}</dt><dd>${row.value}</dd></div>
   `).join('');
   return pkg;
 }

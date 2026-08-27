@@ -44,11 +44,17 @@ function waiverSignedLabel(signature, signatureDate) {
   return date && date !== '—' ? `${name} — ${date}` : name;
 }
 
-function bodyCompositionLabel(intake) {
+function bodyFatPercentValue(intake) {
   const fatPct = Number(intake.fatPercent);
   if (!Number.isFinite(fatPct) || fatPct <= 0) return '—';
-  const source = formatFatSourceLabel(intake.fatSource, intake.fatSourceOther);
-  return `${fatPct}% (${source})`;
+  return `${fatPct}%`;
+}
+
+/** @param {{ questionNumber?: number, label: string }} row */
+export function formatAnswersConfirmationLabel({ questionNumber, label }) {
+  const n = Number(questionNumber);
+  if (!Number.isFinite(n) || n <= 0) return label;
+  return `${n}. ${label}`;
 }
 
 /** @param {{ intake?: object } | object} source Program package or intake-shaped object. */
@@ -56,20 +62,34 @@ export function buildAnswersConfirmationRows(source) {
   const intake = source?.intake || source || {};
 
   return [
-    { label: 'Name', value: displayValue(intake.preferredName) },
-    { label: 'Email', value: displayValue(intake.email) },
-    { label: 'Who we thank', value: displayValue(intake.referrerName) },
-    { label: 'Height', value: formatConfirmationHeight(intake.heightInches) },
-    { label: 'Gender', value: displayValue(intake.sex) },
-    { label: 'Age', value: intake.age > 0 ? String(intake.age) : '—' },
-    { label: 'Weight', value: intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—' },
-    { label: 'Body composition', value: bodyCompositionLabel(intake) },
-    { label: 'Job activity', value: workPhysicalLabel(intake.workPhysical) },
-    { label: 'My Weeks', value: workStressLabel(intake.workStress) },
-    { label: 'SAG hours / week', value: displayValue(intake.weightTrainingHours) },
-    { label: 'Cardio training hours / week', value: displayValue(intake.cardioHours) },
-    { label: 'Fat burning training hours / week', value: displayValue(intake.fatBurningHours) },
+    { questionNumber: 1, label: 'Name', value: displayValue(intake.preferredName) },
+    { questionNumber: 2, label: 'Gender', value: displayValue(intake.sex) },
+    { questionNumber: 3, label: 'Email', value: displayValue(intake.email) },
+    { questionNumber: 5, label: 'Who we thank', value: displayValue(intake.referrerName) },
+    { questionNumber: 6, label: 'Job activity', value: workPhysicalLabel(intake.workPhysical) },
+    { questionNumber: 7, label: 'My Life', value: workStressLabel(intake.workStress) },
+    { questionNumber: 8, label: 'Age', value: intake.age > 0 ? String(intake.age) : '—' },
+    { questionNumber: 9, label: 'SAG hours / week', value: displayValue(intake.weightTrainingHours) },
+    { questionNumber: 10, label: 'Cardio training hours / week', value: displayValue(intake.cardioHours) },
     {
+      questionNumber: 11,
+      label: 'Fat burning training hours / week',
+      value: displayValue(intake.fatBurningHours),
+    },
+    { questionNumber: 12, label: 'Height', value: formatConfirmationHeight(intake.heightInches) },
+    {
+      questionNumber: 13,
+      label: 'Weight',
+      value: intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—',
+    },
+    { questionNumber: 14, label: 'Body fat %', value: bodyFatPercentValue(intake) },
+    {
+      questionNumber: 15,
+      label: 'How do you know',
+      value: formatFatSourceLabel(intake.fatSource, intake.fatSourceOther),
+    },
+    {
+      questionNumber: 16,
       label: 'Waiver signed',
       value: waiverSignedLabel(intake.waiverSignature, intake.waiverSignedDate),
     },
