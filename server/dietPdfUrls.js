@@ -1,4 +1,5 @@
 import { normalizeEmail } from './db.js';
+import { MENU_PLAN_TEMPLATE_URL } from '../js/siteUrls.js';
 
 const RENDER_API_ORIGIN = String(
   process.env.DIET_PDF_DOWNLOAD_ORIGIN || 'https://program-creator-3tzd.onrender.com',
@@ -38,7 +39,7 @@ export function brandLogoUrl() {
 }
 
 export function menuPlanTemplateUrl() {
-  return `${SITE_ORIGIN}/docs/samples/menu-plan-template.pdf`;
+  return MENU_PLAN_TEMPLATE_URL;
 }
 
 export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';

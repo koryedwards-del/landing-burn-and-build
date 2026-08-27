@@ -8,3 +8,4 @@ export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}${QUESTIONNAIRE_
 export const CREATOR_CHECKOUT_URL = `${CREATOR_HOST_ORIGIN}/createyourfoodplan/`;
 export const PRIVACY_POLICY_URL = `${CREATOR_HOST_ORIGIN}/privacypolicy/`;
 export const SUPPORT_URL = `${CREATOR_HOST_ORIGIN}/support/`;
+export const MENU_PLAN_TEMPLATE_URL = `${CREATOR_HOST_ORIGIN}/docs/samples/menu-plan-template.pdf`;

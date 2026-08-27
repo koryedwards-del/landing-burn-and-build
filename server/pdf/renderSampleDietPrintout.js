@@ -779,6 +779,31 @@ function drawMenuSection(doc, page, y, section, filled) {
   return y + Math.max(sectionHeight, mealY - y) + SAMPLE_DAY_MENU_SECTION_GAP;
 }
 
+function drawMenuPlanTemplateNote(doc, x, y, width, note) {
+  if (!note?.url) return y;
+
+  doc
+    .font(FONTS.regular)
+    .fontSize(LAYOUT.bodySize)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(note.lead || 'You can download blank Menu Plans at '), x, y, {
+      width,
+      lineGap: LAYOUT.lineGap,
+      continued: true,
+    });
+
+  doc
+    .fillColor(SAMPLE_DIET_BLUE)
+    .text(String(note.linkLabel || note.url), {
+      link: note.url,
+      underline: true,
+      continued: false,
+    });
+
+  doc.fillColor(SEMINAR_COLORS.body);
+  return doc.y + LAYOUT.paragraphGap;
+}
+
 function drawSampleDayMenuPage(doc, payload) {
   const menu = payload.sampleDayMenu;
   if (!menu?.sections?.length) return;
@@ -800,14 +825,7 @@ function drawSampleDayMenuPage(doc, payload) {
   });
 
   if (filled && menu.templateNote) {
-    doc
-      .font(FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(String(menu.templateNote), page.x, y, {
-        width: page.width,
-        lineGap: LAYOUT.lineGap,
-      });
+    drawMenuPlanTemplateNote(doc, page.x, y, page.width, menu.templateNote);
   }
 }
 

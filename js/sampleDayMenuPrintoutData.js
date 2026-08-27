@@ -8,9 +8,10 @@ import {
 } from '../data/cuttingStaplesPrintout.js';
 import {
   SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
-  SAMPLE_DAY_MENU_TEMPLATE_NOTE,
+  SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
+import { MENU_PLAN_TEMPLATE_URL } from './siteUrls.js';
 import { scaleStapleServingLabel } from './stapleServingPrintout.js';
 import { servingsGridRows } from './servingsPrintout.js';
 
@@ -175,7 +176,11 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
       label: SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
       value: filled ? formatMenuPlanForDate(dateIso) : '',
     },
-    templateNote: filled ? SAMPLE_DAY_MENU_TEMPLATE_NOTE : '',
+    templateNote: filled ? {
+      lead: SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
+      url: MENU_PLAN_TEMPLATE_URL,
+      linkLabel: 'burnandbuilddiet.com/docs/samples/menu-plan-template.pdf',
+    } : null,
     sections: buildMenuSections(gridRows, { filled }),
   };
 }
