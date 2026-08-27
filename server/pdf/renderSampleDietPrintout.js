@@ -28,7 +28,9 @@ const HANDWRITING_FONT_PATH = path.join(
   'fonts/Caveat-Regular.ttf',
 );
 const HANDWRITING_FONT_SIZE = 16;
-const HANDWRITING_INK_COLOR = SAMPLE_DIET_BLUE;
+/** Ballpoint ink — not SAMPLE_DIET_BLUE (PDF accent). */
+const HANDWRITING_INK_COLOR = '#184A94';
+const HANDWRITING_BASELINE_NUDGE = 1.5;
 const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
 const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
@@ -658,9 +660,15 @@ function registerHandwritingFont(doc) {
   doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
 }
 
+function handwritingTopForLine(doc, lineY) {
+  doc.font(HANDWRITING_FONT).fontSize(HANDWRITING_FONT_SIZE);
+  const ascent = doc.heightOfString('Ag', { lineGap: 0 });
+  return lineY - ascent + HANDWRITING_BASELINE_NUDGE;
+}
+
 function drawHandwritingOnLine(doc, text, x, lineY, width, { align = 'left' } = {}) {
   if (!text) return;
-  const textY = lineY - HANDWRITING_FONT_SIZE * 0.78;
+  const textY = handwritingTopForLine(doc, lineY);
   doc
     .font(HANDWRITING_FONT)
     .fontSize(HANDWRITING_FONT_SIZE)
