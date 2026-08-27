@@ -433,16 +433,54 @@ function drawGoalTable(doc, x, y, width, goalTable) {
   });
 }
 
-const MACRO_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.30, align: 'left' },
-  { key: 'proteinG', width: 0.075, align: 'right' },
-  { key: 'proteinCal', width: 0.115, align: 'right' },
-  { key: 'carbsG', width: 0.075, align: 'right' },
-  { key: 'carbsCal', width: 0.115, align: 'right' },
-  { key: 'fatG', width: 0.075, align: 'right' },
-  { key: 'fatCal', width: 0.115, align: 'right' },
-  { key: 'totalCal', width: 0.13, align: 'right' },
-]);
+const MACRO_TABLE_GRAM_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG']);
+const MACRO_TABLE_CAL_KEYS = Object.freeze(['proteinCal', 'carbsCal', 'fatCal']);
+
+function macroTableTextWidth(doc, text, font, fontSize) {
+  doc.font(font).fontSize(fontSize);
+  return doc.widthOfString(String(text ?? ''));
+}
+
+function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
+  const pad = TABLE_1982.cellPad * 2;
+  const gramsHeadingW = macroTableTextWidth(doc, 'grams', FONTS.bold, LAYOUT.tableHeadSize);
+  const caloriesHeadingW = macroTableTextWidth(doc, 'calories', FONTS.bold, LAYOUT.tableHeadSize);
+
+  let gramsMax = gramsHeadingW;
+  let caloriesMax = caloriesHeadingW;
+  let totalMax = caloriesHeadingW;
+  let labelMax = 0;
+
+  macroRows.forEach((row) => {
+    const rowFont = row.label === 'Reduce current fat %' ? FONTS.bold : FONTS.regular;
+    labelMax = Math.max(labelMax, macroTableTextWidth(doc, row.label, rowFont, LAYOUT.tableBodySize));
+    MACRO_TABLE_GRAM_KEYS.forEach((key) => {
+      gramsMax = Math.max(gramsMax, macroTableTextWidth(doc, row[key], rowFont, LAYOUT.tableBodySize));
+    });
+    MACRO_TABLE_CAL_KEYS.forEach((key) => {
+      caloriesMax = Math.max(caloriesMax, macroTableTextWidth(doc, row[key], rowFont, LAYOUT.tableBodySize));
+    });
+    totalMax = Math.max(totalMax, macroTableTextWidth(doc, row.totalCal, rowFont, LAYOUT.tableBodySize));
+  });
+
+  const gramsColW = gramsMax + pad;
+  const calColW = caloriesMax + pad;
+  const totalColW = totalMax + pad;
+  const macroColsW = 3 * gramsColW + 3 * calColW;
+  const labelColW = Math.max(labelMax + pad, tableWidth - macroColsW - totalColW);
+
+  const toFrac = (w) => w / tableWidth;
+  return [
+    { key: 'label', width: toFrac(labelColW), align: 'left' },
+    { key: 'proteinG', width: toFrac(gramsColW), align: 'right' },
+    { key: 'proteinCal', width: toFrac(calColW), align: 'right' },
+    { key: 'carbsG', width: toFrac(gramsColW), align: 'right' },
+    { key: 'carbsCal', width: toFrac(calColW), align: 'right' },
+    { key: 'fatG', width: toFrac(gramsColW), align: 'right' },
+    { key: 'fatCal', width: toFrac(calColW), align: 'right' },
+    { key: 'totalCal', width: toFrac(totalColW), align: 'right' },
+  ];
+}
 
 const MACRO_TABLE_GROUP_SPANS = Object.freeze([
   { from: 'proteinG', to: 'proteinCal' },
@@ -523,7 +561,7 @@ function drawMacroTable(doc, x, y, width, macroRows) {
     x,
     y,
     width,
-    columns: MACRO_TABLE_COLUMNS,
+    columns: macroTableColumnWidths(doc, width, macroRows),
     rows: buildMacroTableLayoutRows(macroRows),
     headerRows: 2,
     gridLines: 'full',
