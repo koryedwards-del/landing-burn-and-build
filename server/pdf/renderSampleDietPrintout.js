@@ -62,6 +62,13 @@ function isTableColumnSpanned(columns, row, colIndex) {
   return false;
 }
 
+function tableCellStartsSpan(columns, row, colIndex) {
+  return getRowColSpans(row).some((span) => {
+    const bounds = tableColumnSpanBounds(columns, span);
+    return bounds && bounds.fromIndex === colIndex;
+  });
+}
+
 function tableCellWidth(colWidths, columns, row, colIndex) {
   for (const span of getRowColSpans(row)) {
     const bounds = tableColumnSpanBounds(columns, span);
@@ -70,6 +77,38 @@ function tableCellWidth(colWidths, columns, row, colIndex) {
     }
   }
   return colWidths[colIndex];
+}
+
+function drawLayoutTableCellText(doc, {
+  text,
+  cx,
+  cy,
+  cellW,
+  pad,
+  tableRowPad,
+  style,
+  fillColor,
+  align,
+  lineBreak,
+}) {
+  doc
+    .font(style.font)
+    .fontSize(style.fontSize)
+    .fillColor(fillColor);
+  const cellText = String(text ?? '');
+  if (align === 'center' && !lineBreak && !cellText.includes('\n')) {
+    const textW = doc.widthOfString(cellText);
+    if (textW <= cellW) {
+      doc.text(cellText, cx + (cellW - textW) / 2, cy + tableRowPad, { lineBreak: false });
+      return;
+    }
+  }
+  doc.text(cellText, cx + pad, cy + tableRowPad, {
+    width: cellW - pad * 2,
+    lineGap: 0,
+    align,
+    lineBreak,
+  });
 }
 
 function measureText(doc, text, width, { font, fontSize, lineGap = LAYOUT.lineGap } = {}) {
@@ -179,16 +218,19 @@ function drawLayoutTable(doc, {
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
       };
       const style = { ...defaultStyle, ...row._styles?.[col.key] };
-      doc
-        .font(style.font)
-        .fontSize(style.fontSize)
-        .fillColor(row._colors?.[col.key] || SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), cx + pad, cy + tableRowPad, {
-          width: w - pad * 2,
-          lineGap: 0,
-          align: row._aligns?.[col.key] || col.align || 'left',
-          lineBreak,
-        });
+      const align = row._aligns?.[col.key] || col.align || 'left';
+      drawLayoutTableCellText(doc, {
+        text: row[col.key],
+        cx,
+        cy,
+        cellW: w,
+        pad,
+        tableRowPad,
+        style,
+        fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
+        align,
+        lineBreak,
+      });
       cx += w;
     });
     cy += rh;
