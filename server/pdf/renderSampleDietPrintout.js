@@ -2,6 +2,8 @@
  * B&B Sample Diet PDF (deliverable: docs/samples/b&bsamplediet.pdf).
  * 1982 Warner layout + food lists. Preview: scripts/render-sample-diet-preview.mjs
  */
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { createPrintPdf } from './creator.js';
 import { PDF_FRAME_FONTS } from './drawFrame.js';
 import { SEMINAR_COLORS } from './drawSeminar.js';
@@ -16,9 +18,16 @@ import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
+import { buildMenuPlanTemplatePayload } from '../../js/sampleDayMenuPrintoutData.js';
 
 const FONTS = PDF_FRAME_FONTS;
 const LAYOUT = FRAME_1982;
+const HANDWRITING_FONT = 'Caveat';
+const HANDWRITING_FONT_PATH = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  'fonts/Caveat-Regular.ttf',
+);
+const HANDWRITING_FONT_SIZE = 12;
 const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
 const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
@@ -640,14 +649,80 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
+const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 56;
+const SAMPLE_DAY_MENU_TIME_MEAL_GAP = 14;
+const SAMPLE_DAY_MENU_TIME_LINE_WIDTH = 38;
+const SAMPLE_DAY_MENU_PERIOD_CIRCLE_R = 3.5;
 
-function drawSampleDayMenuFillInRow(doc, x, y, width, categoryLabel) {
+function registerHandwritingFont(doc) {
+  doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
+}
+
+function drawHandwritingOnLine(doc, text, x, y, width, { align = 'left' } = {}) {
+  if (!text) return;
+  doc
+    .font(HANDWRITING_FONT)
+    .fontSize(HANDWRITING_FONT_SIZE)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(String(text), x, y - 1, { width, align, lineBreak: false });
+}
+
+function drawPeriodCircle(doc, x, y, label, selected, filled) {
+  const r = SAMPLE_DAY_MENU_PERIOD_CIRCLE_R;
+  const centerX = x + r;
+  const centerY = y + r + 1;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.75)
+    .circle(centerX, centerY, r)
+    .stroke();
+  if (filled && selected) {
+    doc
+      .fillColor(SEMINAR_COLORS.body)
+      .circle(centerX, centerY, r - 1.2)
+      .fill();
+  }
+  doc
+    .font(FONTS.regular)
+    .fontSize(8)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(label, centerX + r + 3, y, { lineBreak: false });
+  return centerX + r + 3 + doc.widthOfString(label);
+}
+
+function drawTimeColumn(doc, x, y, time, filled) {
+  doc
+    .font(FONTS.regular)
+    .fontSize(8)
+    .fillColor(SEMINAR_COLORS.body)
+    .text('Time', x, y, { lineBreak: false });
+
+  const lineY = y + 11;
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.75)
+    .moveTo(x, lineY)
+    .lineTo(x + SAMPLE_DAY_MENU_TIME_LINE_WIDTH, lineY)
+    .stroke();
+
+  if (filled && time?.value) {
+    drawHandwritingOnLine(doc, time.value, x + 1, lineY, SAMPLE_DAY_MENU_TIME_LINE_WIDTH - 2, { align: 'center' });
+  }
+
+  const circleY = lineY + 7;
+  drawPeriodCircle(doc, x, circleY, 'AM', time?.period === 'AM', filled);
+  drawPeriodCircle(doc, x + 28, circleY, 'PM', time?.period === 'PM', filled);
+
+  return lineY + 22;
+}
+
+function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled) {
   const fontSize = LAYOUT.bodySize;
   const lineYOffset = fontSize + 2;
   doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
 
   const gap = 5;
-  const labelText = String(categoryLabel);
+  const labelText = String(row.label);
   const sizeLabel = SAMPLE_DAY_MENU_SERVING_SIZE_LABEL;
   const labelW = doc.widthOfString(labelText);
   const sizeLabelW = doc.widthOfString(sizeLabel);
@@ -671,33 +746,94 @@ function drawSampleDayMenuFillInRow(doc, x, y, width, categoryLabel) {
     .lineTo(sizeLineEnd, y + lineYOffset)
     .stroke();
 
+  if (filled) {
+    drawHandwritingOnLine(doc, row.food, foodLineStart + 2, y, foodLineEnd - foodLineStart - 4);
+    drawHandwritingOnLine(doc, row.servingSize, sizeLineStart + 2, y, sizeLineEnd - sizeLineStart - 4);
+  }
+
   return y + lineYOffset + SAMPLE_DAY_MENU_ROW_GAP;
+}
+
+function measureSampleDayMenuRowHeight() {
+  return LAYOUT.bodySize + 2 + SAMPLE_DAY_MENU_ROW_GAP;
+}
+
+function measureMenuSectionHeight(section) {
+  const rowH = measureSampleDayMenuRowHeight();
+  let height = 0;
+  if (section.title) height += LAYOUT.sectionTitleSize + LAYOUT.headerGap;
+  height += (section.rows?.length || 0) * rowH;
+  return Math.max(height, 42);
+}
+
+function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
+  const fontSize = LAYOUT.bodySize;
+  const lineYOffset = fontSize + 2;
+  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+
+  const gap = 5;
+  const labelText = String(planFor.label || 'Menu Plan for');
+  const labelW = doc.widthOfString(labelText);
+  const lineStart = x + labelW + gap;
+  const lineEnd = x + width;
+
+  doc.text(labelText, x, y, { lineBreak: false });
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.75)
+    .moveTo(lineStart, y + lineYOffset)
+    .lineTo(lineEnd, y + lineYOffset)
+    .stroke();
+
+  if (filled && planFor.value) {
+    drawHandwritingOnLine(doc, planFor.value, lineStart + 4, y, lineEnd - lineStart - 8);
+  }
+
+  return y + lineYOffset + SAMPLE_DAY_MENU_ROW_GAP + LAYOUT.sectionGap;
+}
+
+function drawMenuSection(doc, page, y, section, filled) {
+  const mealX = page.x + SAMPLE_DAY_MENU_TIME_COL_WIDTH + SAMPLE_DAY_MENU_TIME_MEAL_GAP;
+  const mealWidth = page.width - SAMPLE_DAY_MENU_TIME_COL_WIDTH - SAMPLE_DAY_MENU_TIME_MEAL_GAP;
+  const sectionHeight = measureMenuSectionHeight(section);
+
+  drawTimeColumn(doc, page.x, y, section.time, filled);
+
+  let mealY = y;
+  if (section.title) {
+    doc
+      .font(FONTS.bold)
+      .fontSize(LAYOUT.sectionTitleSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(section.title), mealX, mealY, { width: mealWidth, lineGap: 0 });
+    mealY = doc.y + LAYOUT.headerGap;
+  }
+
+  (section.rows || []).forEach((row) => {
+    mealY = drawSampleDayMenuFillInRow(doc, mealX, mealY, mealWidth, row, filled);
+  });
+
+  return y + Math.max(sectionHeight, mealY - y) + SAMPLE_DAY_MENU_SECTION_GAP;
 }
 
 function drawSampleDayMenuPage(doc, payload) {
   const menu = payload.sampleDayMenu;
   if (!menu?.sections?.length) return;
 
-  const page = begin1982Page(doc, payload, menu.pageTitle || 'Sample Day Menu');
+  const filled = Boolean(menu.filled);
+  if (filled) registerHandwritingFont(doc);
+
+  const page = begin1982Page(doc, payload, menu.pageTitle || 'Menu Plan', {
+    personalized: !payload.template,
+  });
   let y = page.y + LAYOUT.sectionGap;
 
-  menu.sections.forEach((section, sectionIndex) => {
-    if (section.title) {
-      doc
-        .font(FONTS.bold)
-        .fontSize(LAYOUT.sectionTitleSize)
-        .fillColor(SEMINAR_COLORS.body)
-        .text(String(section.title), page.x, y, { width: page.width, lineGap: 0 });
-      y = doc.y + LAYOUT.headerGap;
-    }
+  if (menu.planFor) {
+    y = drawMenuPlanForRow(doc, page.x, y, page.width, menu.planFor, filled);
+  }
 
-    (section.rows || []).forEach((row) => {
-      y = drawSampleDayMenuFillInRow(doc, page.x, y, page.width, row.label);
-    });
-
-    if (sectionIndex < menu.sections.length - 1) {
-      y += SAMPLE_DAY_MENU_SECTION_GAP;
-    }
+  menu.sections.forEach((section) => {
+    y = drawMenuSection(doc, page, y, section, filled);
   });
 }
 
@@ -780,6 +916,26 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
   if (pages < SAMPLE_DIET_PRINTOUT_MIN_PAGES) {
     throw new Error(`Sample diet printout expected at least ${SAMPLE_DIET_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
+  }
+  return buffer;
+}
+
+export async function renderMenuPlanTemplate(payload = null) {
+  const menuPayload = payload || buildMenuPlanTemplatePayload();
+
+  const creator = createPrintPdf({
+    title: menuPayload.title || 'Burn & Build Menu Plan',
+    author: 'Burn & Build Diet',
+  });
+  const doc = creator.doc;
+
+  drawSampleDayMenuPage(doc, menuPayload);
+  stamp1982Footers(doc, menuPayload.header);
+
+  const buffer = await creator.finish({ stampPageNumbers: false });
+  const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+  if (pages !== 1) {
+    throw new Error(`Menu plan template expected 1 page, got ${pages}`);
   }
   return buffer;
 }

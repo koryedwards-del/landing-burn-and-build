@@ -17,14 +17,13 @@ import {
   aceRiskMessage,
 } from './sampleDietAceData.js';
 import {
-  SAMPLE_DAY_MENU_PAGE_TITLE,
   SAMPLE_DIET_FOOD_PLAN,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
   SAMPLE_DIET_SERVINGS_NOTE,
   SAMPLE_DIET_WELCOME,
 } from './sampleDietPrintoutCopyData.js';
-import { buildSampleDayMenuSections } from './sampleDayMenuPrintoutData.js';
+import { buildSampleDayMenu } from './sampleDayMenuPrintoutData.js';
 import { buildSampleDietPreviewPackage } from './sampleDietPreviewFixtures.js';
 
 const rnd = (x) => Math.round(Number(x));
@@ -182,10 +181,7 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
-    sampleDayMenu: {
-      pageTitle: SAMPLE_DAY_MENU_PAGE_TITLE,
-      sections: buildSampleDayMenuSections(),
-    },
+    sampleDayMenu: buildSampleDayMenu(pkg, { filled: true }),
     answersConfirmation: {
       intro: ANSWERS_CONFIRMATION_INTRO,
       rows: buildAnswersConfirmationRows(pkg),

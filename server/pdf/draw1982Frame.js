@@ -63,11 +63,16 @@ export function draw1982PageTitle(doc, box, y, title, fonts = FRAME_FONTS) {
   return doc.y + FRAME_1982.titleBottomGap;
 }
 
-export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, fonts = FRAME_FONTS } = {}) {
+export function begin1982Page(doc, payload, pageTitle, {
+  fullHeader = true,
+  personalized,
+  fonts = FRAME_FONTS,
+} = {}) {
   const box = add1982Page(doc);
+  const usePersonalized = personalized ?? !payload?.template;
   const topRuleY = fullHeader
     ? drawFrameHeader(doc, box, {
-      personalized: true,
+      personalized: usePersonalized,
       clientName: payload.clientName,
       preparedDateLong: payload.preparedDateLong,
       preparedDate: payload.preparedDate,
