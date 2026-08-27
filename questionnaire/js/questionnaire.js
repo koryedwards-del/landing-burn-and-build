@@ -7,6 +7,7 @@ import {
 import { buildProgramPackage } from '../../js/programPackageData.js';
 import { buildAnswersConfirmationRows } from '../../js/answersConfirmationPrintout.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
+import { persistAppEmail } from '../../js/programApi.js';
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
@@ -1511,6 +1512,7 @@ function buildProgram(triggerBtn) {
 
   try {
     const pkg = renderReview();
+    persistAppEmail(email);
     sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
     persistProgramBridge(pkg);
     programBuilt = true;

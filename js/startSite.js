@@ -232,6 +232,14 @@ async function syncProgramAfterPayment({ email, programId } = {}) {
 
 function ensurePlanReadyEmail() {
   restoreBuiltPackage();
+
+  /** Active program on this device wins over stale browser storage (trainers, shared devices). */
+  const fromPackage = String(store.builtPackage?.intake?.email || '').trim();
+  if (isValidEmail(fromPackage)) {
+    store.email = persistAppEmail(fromPackage);
+    return store.email;
+  }
+
   const fromStore = String(store.email || '').trim();
   if (isValidEmail(fromStore)) return fromStore;
 
@@ -239,12 +247,6 @@ function ensurePlanReadyEmail() {
   if (isValidEmail(fromSaved)) {
     store.email = fromSaved;
     return fromSaved;
-  }
-
-  const fromPackage = String(store.builtPackage?.intake?.email || '').trim();
-  if (isValidEmail(fromPackage)) {
-    store.email = persistAppEmail(fromPackage);
-    return store.email;
   }
 
   return '';
