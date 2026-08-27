@@ -111,10 +111,11 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
       const innerW = tableCellWidth(colWidths, columns, row, index) - pad * 2;
-      const style = row._styles?.[col.key] || {
+      const defaultStyle = {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
       };
+      const style = { ...defaultStyle, ...row._styles?.[col.key] };
       doc.font(style.font).fontSize(style.fontSize);
       maxH = Math.max(
         maxH,
@@ -146,10 +147,11 @@ function drawLayoutTable(doc, { x, y, width, columns, rows, headerRows = 1, tabl
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
       const w = tableCellWidth(colWidths, columns, row, index);
-      const style = row._styles?.[col.key] || {
+      const defaultStyle = {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
       };
+      const style = { ...defaultStyle, ...row._styles?.[col.key] };
       doc
         .font(style.font)
         .fontSize(style.fontSize)
