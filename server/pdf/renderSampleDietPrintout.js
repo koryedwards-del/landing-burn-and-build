@@ -105,8 +105,9 @@ function drawLayoutTableCellText(doc, {
   }
   if (align === 'center' && !lineBreak && !cellText.includes('\n')) {
     const textW = doc.widthOfString(cellText);
-    if (textW <= cellW) {
-      doc.text(cellText, cx + (cellW - textW) / 2, textY, { lineBreak: false });
+    const innerW = cellW - pad * 2;
+    if (textW <= innerW) {
+      doc.text(cellText, cx + pad + (innerW - textW) / 2, textY, { lineBreak: false });
       return;
     }
   }
@@ -160,6 +161,10 @@ function drawSectionBlock(doc, page, title, body) {
   return { ...page, y: doc.y + LAYOUT.paragraphGap + LAYOUT.sectionGap };
 }
 
+function layoutTableCellPad(col, defaultPad) {
+  return col.cellPad ?? defaultPad;
+}
+
 function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad = LAYOUT.tableRowPad }) {
   const pad = TABLE_1982.cellPad;
   const tableWidth = rows._tableWidth || 1;
@@ -170,7 +175,8 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
     let maxH = rowPad * 2;
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
-      const innerW = tableCellWidth(colWidths, columns, row, index) - pad * 2;
+      const cellPad = layoutTableCellPad(col, pad);
+      const innerW = tableCellWidth(colWidths, columns, row, index) - cellPad * 2;
       const defaultStyle = {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
@@ -228,13 +234,14 @@ function drawLayoutTable(doc, {
       };
       const style = { ...defaultStyle, ...row._styles?.[col.key] };
       const align = row._aligns?.[col.key] || col.align || 'left';
+      const cellPad = layoutTableCellPad(col, pad);
       drawLayoutTableCellText(doc, {
         text: row[col.key],
         cx,
         cy,
         cellW: w,
         cellH: rh,
-        pad,
+        pad: cellPad,
         tableRowPad: rowPad,
         style,
         fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
@@ -513,6 +520,9 @@ function macroTableSubheadStyles() {
   );
 }
 
+/** Extra inset on TOTAL column left/right — default cell pad feels tight at 12pt. */
+const MACRO_TABLE_TOTAL_EXTRA_PAD = 4;
+
 function macroTableTextWidth(doc, text, font, fontSize) {
   doc.font(font).fontSize(fontSize);
   return doc.widthOfString(String(text ?? ''));
@@ -525,7 +535,10 @@ function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
 
   let gramsMax = gramsHeadingW;
   let caloriesMax = caloriesHeadingW;
-  let totalMax = caloriesHeadingW;
+  let totalMax = Math.max(
+    caloriesHeadingW,
+    macroTableTextWidth(doc, 'TOTAL', FONTS.bold, MACRO_TABLE_GROUP_HEAD_SIZE),
+  );
   let labelMax = 0;
 
   macroRows.forEach((row) => {
@@ -542,7 +555,8 @@ function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
 
   const gramsColW = gramsMax + pad;
   const calColW = caloriesMax + pad;
-  const totalColW = totalMax + pad;
+  const totalCellPad = TABLE_1982.cellPad + MACRO_TABLE_TOTAL_EXTRA_PAD;
+  const totalColW = totalMax + totalCellPad * 2;
   const macroColsW = 3 * gramsColW + 3 * calColW;
   const labelColW = Math.max(labelMax + pad, tableWidth - macroColsW - totalColW);
 
@@ -555,7 +569,12 @@ function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
     { key: 'carbsCal', width: toFrac(calColW), align: 'right' },
     { key: 'fatG', width: toFrac(gramsColW), align: 'right' },
     { key: 'fatCal', width: toFrac(calColW), align: 'right' },
-    { key: 'totalCal', width: toFrac(totalColW), align: 'right' },
+    {
+      key: 'totalCal',
+      width: toFrac(totalColW),
+      align: 'right',
+      cellPad: totalCellPad,
+    },
   ];
 }
 
