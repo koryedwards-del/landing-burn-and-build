@@ -15,7 +15,7 @@ import { MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
 import { scaleStapleServingLabel } from './stapleServingPrintout.js';
 import { servingsGridRows } from './servingsPrintout.js';
 
-export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
+export const SAMPLE_DAY_MENU_FRUIT_LABEL = 'Fruits';
 
 /** Illustrative food picks — serving sizes scale from the customer's plan. */
 const FOOD_PICKS = Object.freeze({
@@ -57,7 +57,7 @@ const MENU_SECTION_DEFS = Object.freeze([
   {
     key: 'snack1',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, staples: 'fruit', slot: 'snack1' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack1' }],
   },
   {
     key: 'lunch',
@@ -70,7 +70,7 @@ const MENU_SECTION_DEFS = Object.freeze([
   {
     key: 'snack2',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, staples: 'fruit', slot: 'snack2' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack2' }],
   },
   {
     key: 'dinner',
@@ -84,7 +84,7 @@ const MENU_SECTION_DEFS = Object.freeze([
   {
     key: 'snack3',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, staples: 'fruit', slot: 'snack3' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack3' }],
   },
 ]);
 
