@@ -30,6 +30,19 @@ const STEP_NAV_SHORT = [
   'Review',
 ];
 
+const STEP_HEADINGS = [
+  'Contact Information',
+  'Occupation',
+  'Exercise',
+  'Body composition',
+  'Waiver (please read and sign)',
+  'Review & continue',
+];
+
+const STEP_HEADING_NOTES = {
+  5: 'Confirm your answers, then continue to secure checkout ($279). Use Back below to fix anything.',
+};
+
 const INFO_FIELDS = [
   'fullName',
   'sex',
@@ -228,6 +241,8 @@ const OCCUPATION_CHOICE_COPY = {
 
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
+const stepHeadingEl = document.getElementById('q-step-heading');
+const stepHeadingNoteEl = document.getElementById('q-step-heading-note');
 const reviewEl = document.getElementById('q-review');
 const stepBackBtn = document.querySelector('[data-q-step-back]');
 const stepNextBtn = document.querySelector('[data-q-step-next]');
@@ -1302,6 +1317,17 @@ function canProceed(stepIndex) {
   }
 }
 
+function renderStepHeading() {
+  if (stepHeadingEl) {
+    stepHeadingEl.textContent = STEP_HEADINGS[step] || STEPS[step]?.label || '';
+  }
+  if (stepHeadingNoteEl) {
+    const note = STEP_HEADING_NOTES[step] || '';
+    stepHeadingNoteEl.textContent = note;
+    stepHeadingNoteEl.hidden = !note;
+  }
+}
+
 function renderNav() {
   navList.innerHTML = STEPS.map((item, index) => {
     const reachable = canReachStep(index);
@@ -1348,6 +1374,7 @@ function showStep(index) {
     panel.hidden = i !== step;
   });
   renderNav();
+  renderStepHeading();
   if (step === 5) renderReview();
   if (step === 0) renderInfoAccordionState();
   if (step === 1) {

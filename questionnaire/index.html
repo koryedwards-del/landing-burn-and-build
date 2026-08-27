@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Burn &amp; Build — Program Questionnaire</title>
-  <link rel="stylesheet" href="css/questionnaire.css?v=101" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=102" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -27,13 +27,14 @@
           </ol>
         </nav>
 
+        <div class="q-step-heading">
+          <h2 class="q-step-heading__title" id="q-step-heading">Contact Information</h2>
+          <p class="q-step-heading__note" id="q-step-heading-note" hidden></p>
+        </div>
+
         <form class="q-form" id="q-form" novalidate>
           <section class="q-panel q-panel--intake" data-step="0">
             <div class="intake-form" id="info-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Contact Information</h2>
-              </header>
-
               <div class="intake-form__intro">
                 <p class="intake-form__lede">Help us help you build the most sophisticated diet available at any cost. Then the Burn Engine builds your program and delivers a PDF document for immediate download and sends a copy to the email address you provide on this screen.</p>
                 <p class="intake-form__note">Before you begin, know that you'll need to provide your weight, body fat percentage, total exercise hours per week. Having this info before you start the questionnaire will save you some time and probably frustration.</p>
@@ -158,10 +159,6 @@
 
           <section class="q-panel q-panel--intake" data-step="1" hidden>
             <div class="intake-form" id="occupation-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Occupation</h2>
-              </header>
-
               <div class="intake-acc" id="occupation-accordion">
                 <div class="intake-acc__item is-open" data-occ-field="workPhysical">
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
@@ -242,10 +239,6 @@
 
           <section class="q-panel q-panel--intake" data-step="2" hidden>
             <div class="intake-form" id="exercise-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Exercise</h2>
-              </header>
-
               <div class="intake-acc" id="exercise-accordion">
                 <div class="intake-acc__item is-open" data-ex-field="age">
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
@@ -356,10 +349,6 @@
 
           <section class="q-panel q-panel--intake" data-step="3" hidden>
             <div class="intake-form" id="body-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Body composition</h2>
-              </header>
-
               <div class="intake-acc" id="body-accordion">
                 <div class="intake-acc__item is-open" data-body-field="height">
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
@@ -445,9 +434,6 @@
 
           <section class="q-panel q-panel--intake" data-step="4" hidden>
             <div class="intake-form" id="waiver-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Waiver (please read and sign)</h2>
-              </header>
               <div class="intake-waiver">
                 <p class="intake-waiver__text">I agree the results of this questionnaire and computer printout are meant to be informative and <strong>are not</strong> a recommendation or a prescription. I also agree I should consult my doctor before making any changes to my diet or exercise habits. In addition I will not hold Kory Edwards or his employees or representatives responsible for damage or injury to my person or property.</p>
                 <div class="intake-waiver__sign">
@@ -466,10 +452,6 @@
 
           <section class="q-panel q-panel--intake" data-step="5" hidden>
             <div class="intake-form" id="review-form">
-              <header class="intake-form__head">
-                <h2 class="intake-form__title">Review &amp; continue</h2>
-                <p class="intake-form__note">Confirm your answers, then continue to secure checkout ($279). Use <strong>Back</strong> below to fix anything.</p>
-              </header>
               <dl class="intake-review" id="q-review"></dl>
             </div>
           </section>
@@ -483,6 +465,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=155"></script>
+  <script type="module" src="js/questionnaire.js?v=156"></script>
 </body>
 </html>

@@ -221,6 +221,32 @@ body.q-app--workroom {
   cursor: default;
 }
 
+.q-app--workroom .q-step-heading {
+  flex-shrink: 0;
+  padding: 0.875rem var(--q-inset-x) 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+
+.q-app--workroom .q-step-heading__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.q-app--workroom .q-step-heading__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.q-app--workroom .q-step-heading__note[hidden] {
+  display: none !important;
+}
+
 .q-app--workroom .q-form {
   padding: 1rem var(--q-inset-x) 0;
   flex: 1;
@@ -354,6 +380,10 @@ body.q-app--workroom {
   margin-top: 0;
 }
 
+.intake-form__head {
+  display: none;
+}
+
 .intake-form__intro {
   margin-bottom: 1.5rem;
   padding-bottom: 1.25rem;
@@ -388,9 +418,7 @@ body.q-app--workroom {
 }
 
 .intake-form__head {
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
+  display: none;
 }
 
 .intake-form__title {
