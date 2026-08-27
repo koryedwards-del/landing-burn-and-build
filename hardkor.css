@@ -124,6 +124,33 @@ nav {
 
 .nav-links a:hover { color: var(--yellow); }
 
+.nav-links a[aria-current="page"] { color: var(--yellow); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.nav-cta:hover { opacity: 0.85; color: var(--black); }
+
 /* ------------------------------------------------------------
    HAMBURGER
    ------------------------------------------------------------ */
@@ -320,6 +347,76 @@ footer {
 .page p {
   color: var(--text-dim);
   margin-bottom: 16px;
+}
+
+.page ul {
+  margin: 0 0 16px 24px;
+  color: var(--text-dim);
+}
+
+.page li {
+  margin-bottom: 6px;
+}
+
+.page a {
+  color: var(--yellow);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page a:hover { color: var(--text-light); }
+
+.page-intro {
+  font-size: var(--text-body);
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  max-width: 640px;
+}
+
+.last-updated {
+  font-size: var(--text-meta);
+  color: var(--gray-muted);
+  margin-top: 48px;
+}
+
+.info-card {
+  background: var(--gray);
+  border: 1px solid var(--gray-mid);
+  border-left: 3px solid var(--yellow);
+  border-radius: 8px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+}
+
+.info-card h2 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.info-card p {
+  font-size: var(--text-small);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.info-card p:last-child { margin-bottom: 0; }
+
+.info-card a {
+  color: var(--yellow);
+  text-decoration: none;
+}
+
+.info-card a:hover { text-decoration: underline; }
+
+.info-card__meta {
+  font-size: var(--text-meta);
+  color: var(--gray-muted);
+  margin-top: 8px;
 }
 
 /* ------------------------------------------------------------

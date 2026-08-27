@@ -82,6 +82,17 @@ body.q-app--workroom {
   min-width: 0;
 }
 
+.q-brand__link {
+  display: block;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.q-brand__link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .q-app--workroom .q-logo {
   display: block;
   width: 40px;
@@ -864,6 +875,45 @@ body.q-app--workroom {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.q-site-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: #fff;
+  padding: 0.75rem var(--q-inset-x) calc(0.75rem + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.q-site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0;
+}
+
+.q-site-footer__links a {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.q-site-footer__links a:hover,
+.q-site-footer__links a:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.q-site-footer__copy {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--muted);
 }
 
 @media (min-width: 48rem) {

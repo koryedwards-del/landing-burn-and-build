@@ -367,6 +367,7 @@
       <li><a href="#questions">Questions</a></li>
       <li><a href="#sample">Sample Report</a></li>
       <li><a href="#who">Who It's For</a></li>
+      <li><a href="/support/">Support</a></li>
     </ul>
     <div class="nav-actions">
       <a href="/questionnaire/" class="nav-cta">Get the Diet</a>
@@ -380,8 +381,9 @@
     <a href="#sample">Sample Report</a>
     <a href="#who">Who It's For</a>
     <a href="#pricing">Pricing</a>
-    <a href="/privacypolicy">Privacy Policy</a>
-    <a href="/support">Support</a>
+    <a href="/questionnaire/">Get the Diet</a>
+    <a href="/privacypolicy/">Privacy Policy</a>
+    <a href="/support/">Support</a>
   </div>
 
   <section class="hero">
@@ -586,8 +588,9 @@
     <div class="footer-logo">Burn &amp; Build</div>
     <ul class="footer-links">
       <li><a href="/">Home</a></li>
-      <li><a href="/privacypolicy">Privacy Policy</a></li>
-      <li><a href="/support">Support</a></li>
+      <li><a href="/questionnaire/">Questionnaire</a></li>
+      <li><a href="/privacypolicy/">Privacy Policy</a></li>
+      <li><a href="/support/">Support</a></li>
     </ul>
     <p class="footer-copy">&copy; 2026 Burn &amp; Build. All rights reserved.</p>
   </footer>
@@ -607,15 +610,6 @@
       });
     })();
   </script>
-  <script>
-    var ham = document.getElementById('hamburger');
-    var mobileNav = document.getElementById('mobile-nav');
-    ham.addEventListener('click', function() {
-      mobileNav.classList.toggle('open');
-    });
-    mobileNav.querySelectorAll('a').forEach(function(a) {
-      a.addEventListener('click', function() { mobileNav.classList.remove('open'); });
-    });
-  </script>
+  <script src="js/siteNav.js"></script>
 </body>
 </html>
