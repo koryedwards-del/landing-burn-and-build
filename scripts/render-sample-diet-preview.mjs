@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Preview + delivery build: B&B Sample Diet PDF (b&samplediet.pdf). */
+/** Preview + delivery build: B&B Sample Diet PDF (b&bsamplediet.pdf). */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { buildKristiFivePagePreviewPayload } from '../js/fivePagePrintoutData.js';
 import { renderFivePagePrintout } from '../server/pdf/renderFivePagePrintout.js';
 
-export const SAMPLE_DIET_FILENAME = 'b&samplediet.pdf';
+export const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
