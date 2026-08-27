@@ -72,8 +72,9 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, font
       preparedDateLong: payload.preparedDateLong,
       preparedDate: payload.preparedDate,
       fonts,
+      ruleColor: SAMPLE_DIET_BLUE,
     })
-    : drawContinuationHeader(doc, box);
+    : drawContinuationHeader(doc, box, { ruleColor: SAMPLE_DIET_BLUE });
 
   let y = fullHeader ? framePageTitleStartY(topGoldY) : topGoldY + 16;
   if (pageTitle) {

@@ -130,6 +130,7 @@ export function drawFrameHeader(doc, box, {
   preparedDateLong,
   preparedDate,
   fonts = PDF_FRAME_FONTS,
+  ruleColor = PDF_FRAME_COLORS.gold,
 } = {}) {
   const logoY = box.y;
   const logoWidth = PDF_FRAME.logoWidth;
@@ -173,13 +174,13 @@ export function drawFrameHeader(doc, box, {
   }
 
   const y = Math.max(doc.y, rowY + 14) + 10;
-  drawGoldDivider(doc, box.x, y, box.width);
+  drawGoldDivider(doc, box.x, y, box.width, ruleColor);
   return y;
 }
 
-export function drawContinuationHeader(doc, box) {
+export function drawContinuationHeader(doc, box, { ruleColor = PDF_FRAME_COLORS.gold } = {}) {
   const y = box.y + 14;
-  drawGoldDivider(doc, box.x, y, box.width);
+  drawGoldDivider(doc, box.x, y, box.width, ruleColor);
   return y;
 }
 
