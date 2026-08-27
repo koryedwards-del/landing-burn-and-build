@@ -4,7 +4,7 @@ import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import { analyzeLeanBodyMass } from './bodyCompositionData.js';
 import { eightWeekProjectionFromPackage, exerciseHoursSummary } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
-import { formatMm, formatSexLabel, lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
+import { lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
 import { formatProgramDateLong, programClientName } from './programClientDataHelpers.js';
 import { localDateKey } from './programPackageData.js';
 import {
@@ -38,15 +38,6 @@ function seminarPreparedDate(pkg) {
 
 function seminarClientName(pkg) {
   return String(programClientName(pkg) || 'You').trim().toUpperCase();
-}
-
-function lbaProfileLine1982(intake) {
-  const height = intake.heightInches;
-  const sex = formatSexLabel(intake.sex);
-  const thigh = formatMm(intake.thighMm);
-  const waist = formatMm(intake.waistMm);
-  const age = intake.age;
-  return `Height: ${height} inches  Sex: ${sex}  Thigh: ${thigh}  Waist: ${waist}  Age: ${age} years of experience`;
 }
 
 function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
@@ -162,7 +153,6 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
     header: { ...SAMPLE_DIET_HEADER },
     welcome: { ...SAMPLE_DIET_WELCOME },
     leanBodyAnalysis: {
-      profileLine: lbaProfileLine1982(intake),
       todayRows: lbaTodayTableRows(today),
       bfRangeCategories: aceBodyFatCategories(gender),
       bfRangeWeightRanges: aceBodyFatWeightRanges(gender, intake.leanBodyMass),

@@ -283,13 +283,6 @@ function drawLeanBodyAnalysisPage(doc, payload) {
   const lba = payload.leanBodyAnalysis;
   let page = begin1982Page(doc, payload, 'Lean Body Analysis');
 
-  doc
-    .font(FONTS.regular)
-    .fontSize(LAYOUT.bodySize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(lba.profileLine, page.x, page.y, { width: page.width, lineGap: 0 });
-  page = { ...page, y: doc.y + LAYOUT.sectionGap };
-
   page = { ...page, y: drawLbaTodayBlock(doc, page.x, page.y, page.width, lba.todayRows) + LAYOUT.sectionGap };
 
   const bfCategories = lba.bfRangeCategories || [];
