@@ -6,15 +6,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
+import { SAMPLE_DIET_ATTACHMENT_URL, SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
 
 const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
 const artifactsDir = '/opt/cursor/artifacts';
-const GITHUB_REPO = 'koryedwards-del/landing-burn-and-build';
-const GITHUB_BRANCH = 'main';
-const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/docs/samples`;
 
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
 const payload = buildSampleDietPreviewPayload();
@@ -29,8 +27,9 @@ if (fs.existsSync(artifactsDir)) {
 
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-const downloadUrl = `${GITHUB_RAW}/${encodeURIComponent(SAMPLE_DIET_FILENAME)}`;
-const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${downloadUrl}"`;
+const downloadUrl = SAMPLE_DIET_DOWNLOAD_URL;
+const attachmentUrl = SAMPLE_DIET_ATTACHMENT_URL;
+const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${attachmentUrl}"`;
 
 console.log(`FILE ${samplePath}`);
 if (fs.existsSync(artifactsDir)) {
@@ -38,4 +37,5 @@ if (fs.existsSync(artifactsDir)) {
 }
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
 console.log(`DOWNLOAD ${downloadUrl}`);
+console.log(`ATTACHMENT ${attachmentUrl}`);
 console.log(`CURL ${curlCmd}`);

@@ -1,6 +1,6 @@
 /** Resolve API origin — GitHub Pages (static) + Render project Burn & Build (API). */
 
-const RENDER_API_ORIGIN = 'https://program-creator-3tzd.onrender.com';
+export const RENDER_API_ORIGIN = 'https://program-creator-3tzd.onrender.com';
 
 const STATIC_SITE_HOSTS = new Set([
   'burnandbuilddiet.com',

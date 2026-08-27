@@ -22,6 +22,7 @@ import {
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
+import { resolveSamplePdfPath } from './samplePdfDownloads.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -383,6 +384,19 @@ app.get('/api/programs/payment-status', (req, res) => {
     paid: isProgramPaid(email, programId),
     dietEmailSent: wasDietEmailSent(email, programId),
   });
+});
+
+app.get('/api/samples/:slug', (req, res) => {
+  const resolved = resolveSamplePdfPath(root, String(req.params.slug || '').trim());
+  if (!resolved) {
+    res.status(404).json({ ok: false, message: 'Sample PDF not found.' });
+    return;
+  }
+  const { spec, filePath } = resolved;
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${spec.filename}"`);
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.sendFile(filePath);
 });
 
 app.get('/api/programs/diet-pdf', async (req, res) => {
