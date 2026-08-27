@@ -529,16 +529,21 @@ const MACRO_TABLE_VALUE_KEYS = Object.freeze([
   'totalCal',
 ]);
 
+const MACRO_TABLE_LABEL_WIDTH = 0.28;
+/** Equal width for PROTEIN, CARBS, FATS, and TOTAL column groups. */
+const MACRO_TABLE_GROUP_WIDTH = (1 - MACRO_TABLE_LABEL_WIDTH) / 4;
+const MACRO_TABLE_PAIR_COL_WIDTH = MACRO_TABLE_GROUP_WIDTH / 2;
+
 function macroTableColDefs() {
   return [
-    { key: 'label', width: 0.28, align: 'left' },
-    { key: 'proteinG', width: 0.07, align: 'right' },
-    { key: 'proteinCal', width: 0.08, align: 'right' },
-    { key: 'carbsG', width: 0.07, align: 'right' },
-    { key: 'carbsCal', width: 0.08, align: 'right' },
-    { key: 'fatG', width: 0.07, align: 'right' },
-    { key: 'fatCal', width: 0.08, align: 'right' },
-    { key: 'totalCal', width: 0.27, align: 'right' },
+    { key: 'label', width: MACRO_TABLE_LABEL_WIDTH, align: 'left' },
+    { key: 'proteinG', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'proteinCal', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'carbsG', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'carbsCal', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'fatG', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'fatCal', width: MACRO_TABLE_PAIR_COL_WIDTH, align: 'right' },
+    { key: 'totalCal', width: MACRO_TABLE_GROUP_WIDTH, align: 'right' },
   ];
 }
 
