@@ -1,69 +1,47 @@
 ---
-description: B&B Sample Diet PDF (bbsamplediet.pdf) — render, push, then download link
+description: B&B Sample Diet PDF (b&bsamplediet.pdf) — render, push, then download link
 alwaysApply: true
 ---
 
-# B&B Sample Diet PDF (`bbsamplediet.pdf`)
+# B&B Sample Diet PDF (`b&bsamplediet.pdf`)
 
-**Deliverable filename:** `docs/samples/bbsamplediet.pdf` — stable name, no special characters (Mac Downloads–safe). Overwritten each render.
+**Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — **locked**. Overwritten each render. **Do not rename** without explicit user request.
 
 **Pages:** Welcome → Lean Body Analysis → Food Plan → Servings → Food List (protein/grains) → Food List (vegetables/fruit) — **6 pages**.
-
-When the user asks for **sample diet**, **sample-female**, or **bbsamplediet** work, use this pipeline.
 
 ## Pipeline
 
 | Piece | Path |
 |-------|------|
 | Renderer | `server/pdf/renderSampleDietPrintout.js` |
-| Frame / header | `server/pdf/draw1982Frame.js` |
-| Food list pages | `server/pdf/drawStaplesFoodListPages.js` |
-| Payload | `js/sampleDietPrintoutData.js` → `buildSampleDietPreviewPayload()` |
-| Copy | `js/sampleDietPrintoutCopyData.js` |
-| Preview fixtures | `js/sampleDietPreviewFixtures.js` |
 | Render script | `scripts/render-sample-diet-preview.mjs` |
-| Deliverable | `docs/samples/bbsamplediet.pdf` |
+| Deliverable | `docs/samples/b&bsamplediet.pdf` |
 
 Run: `npm run render:sample-diet-preview`
 
-## Delivery order (critical — tell the user)
+## Delivery order (critical)
 
-The download link is a **raw GitHub URL**. It serves whatever is **committed on `main`**.
-
-**Required order every time:**
-
-1. Edit renderer / payload / copy
+1. Edit code
 2. `npm run render:sample-diet-preview`
-3. **Commit** `docs/samples/bbsamplediet.pdf` (and code changes)
+3. **Commit** `docs/samples/b&bsamplediet.pdf`
 4. **`git push origin main`**
-5. **Only then** paste the download link
+5. **Only then** give the download link (use script `DOWNLOAD` line)
 
-Say explicitly: *“Pushed to main — tap this link; it saves to Downloads as `bbsamplediet.pdf`.”*
-
-If tap-to-download still opens in the browser, give the **Terminal one-liner** (Mac):
-
-```bash
-curl -L -o ~/Downloads/bbsamplediet.pdf "https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/bbsamplediet.pdf"
-```
-
-## Give the user (one link only)
+## Give the user (one link — never change filename)
 
 ```
-https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/bbsamplediet.pdf
+https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/docs/samples/b%26bsamplediet.pdf
 ```
 
-- **No `&` in filename** — `b&bsamplediet.pdf` breaks many Mac/Safari downloads.
-- Do not link before push.
+(`&` is URL-encoded as `%26`. Saves as `b&bsamplediet.pdf` in Downloads.)
+
+If tap opens in browser instead of saving, give the script `CURL` line (Mac Terminal → `~/Downloads/b&bsamplediet.pdf`).
 
 ## Do not
 
 | Wrong | Why |
 |-------|-----|
-| Link before push | GitHub still serves old bytes |
-| `&` in deliverable filename | Mac Downloads often fails |
+| Rename the deliverable file | Breaks the user's working download link |
+| Link before push | GitHub serves old or missing file |
 | Cursor artifacts panel | Broken download UX on Cursor Web |
 | `github.com/.../blob/...` | Opens browser; does not download |
-
-## Sanity check after render
-
-**6 pages**, ~70 KB, Times fonts, full header every page, food lists without tips.

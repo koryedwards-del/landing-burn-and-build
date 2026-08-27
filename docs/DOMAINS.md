@@ -30,7 +30,7 @@ Three standalone pieces:
 | `js/printTemplateTypographyData.js` | PDF typography tokens |
 | `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
 | `server/pdf/` | PDFKit renderer |
-| `docs/samples/` | Sample diet PDF (`bbsamplediet.pdf`) |
+| `docs/samples/` | Sample diet PDF (`b&bsamplediet.pdf`) |
 
 ## Verify
 
@@ -41,7 +41,7 @@ npm run verify:pdf
 
 ## Sample PDF
 
-`docs/samples/bbsamplediet.pdf`
+`docs/samples/b&bsamplediet.pdf`
 
 ## Questionnaire
 

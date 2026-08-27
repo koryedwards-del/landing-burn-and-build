@@ -12,7 +12,7 @@ The user does **not** review pull requests. Do not use the PR workflow.
 1. Work on **`main`** directly when possible. Short-lived `cursor/*` branches are OK only if needed for isolation — **merge to `main` and push in the same session**.
 2. **Commit** with a clear message.
 3. **Push** to `origin main`.
-4. For sample diet PDF work: run `npm run render:sample-diet-preview`, commit `docs/samples/bbsamplediet.pdf`, push again if needed.
+4. For sample diet PDF work: run `npm run render:sample-diet-preview`, commit `docs/samples/b&bsamplediet.pdf`, push again if needed.
 5. **Clean up after yourself** (see Housekeeping below).
 6. **Never end a session with uncommitted work.** If you changed files, commit and push to `main` in the same turn — do not wait for the user to ask.
 

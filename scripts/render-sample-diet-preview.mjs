@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Preview + delivery build: B&B Sample Diet PDF (bbsamplediet.pdf). */
+/** Preview + delivery build: B&B Sample Diet PDF (b&bsamplediet.pdf). */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
 
-export const SAMPLE_DIET_FILENAME = 'bbsamplediet.pdf';
+export const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const samplesDir = path.join(root, 'docs/samples');
@@ -30,6 +30,7 @@ if (fs.existsSync(artifactsDir)) {
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 const downloadUrl = `${GITHUB_RAW}/${encodeURIComponent(SAMPLE_DIET_FILENAME)}`;
+const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${downloadUrl}"`;
 
 console.log(`FILE ${samplePath}`);
 if (fs.existsSync(artifactsDir)) {
@@ -37,3 +38,4 @@ if (fs.existsSync(artifactsDir)) {
 }
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
 console.log(`DOWNLOAD ${downloadUrl}`);
+console.log(`CURL ${curlCmd}`);
