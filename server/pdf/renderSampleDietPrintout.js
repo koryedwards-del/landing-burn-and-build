@@ -524,6 +524,18 @@ const MACRO_GRID_ROWS = 9;
 /** Prior macro table footprint (~213pt tall); split evenly across nine rows. */
 const MACRO_GRID_ROW_HEIGHT = 213 / MACRO_GRID_ROWS;
 const MACRO_GRID_SUBHEAD_SIZE = 12;
+const MACRO_GRID_GROUP_HEAD_SIZE = 13;
+
+/** Row 1 group titles — 1-based inclusive column spans. */
+const MACRO_GRID_ROW1_GROUPS = Object.freeze([
+  { fromCol: 4, toCol: 5, label: 'PROTEIN' },
+  { fromCol: 6, toCol: 7, label: 'CARBS' },
+  { fromCol: 8, toCol: 9, label: 'FATS' },
+  { fromCol: 10, toCol: 10, label: 'TOTAL' },
+]);
+
+/** Row 1 merged pairs — skip vertical rule between these columns (1-based after-col index). */
+const MACRO_GRID_ROW1_SKIP_BOUNDARIES = new Set([4, 6, 8]);
 
 /** Row 2 sub-headers — 1-based column numbers. */
 const MACRO_GRID_ROW2_LABELS = Object.freeze([
@@ -550,10 +562,30 @@ function drawMacroGridCellText(doc, text, cellX, cellY, cellW, cellH, {
   });
 }
 
+function macroGridMergedWidth(colW, fromCol, toCol) {
+  return (toCol - fromCol + 1) * colW;
+}
+
+function macroGridColX(tableX, colW, colNum) {
+  return tableX + (colNum - 1) * colW;
+}
+
+function macroGridRowY(tableY, rowNum) {
+  return tableY + (rowNum - 1) * MACRO_GRID_ROW_HEIGHT;
+}
+
+function macroGridSkipBoundary(rowIndex, boundaryAfterCol) {
+  return rowIndex === 0 && MACRO_GRID_ROW1_SKIP_BOUNDARIES.has(boundaryAfterCol);
+}
+
 function drawMacroTable(doc, x, y, width) {
   const colW = width / MACRO_GRID_COLUMNS;
   const totalH = MACRO_GRID_ROW_HEIGHT * MACRO_GRID_ROWS;
   const stroke = SEMINAR_COLORS.body;
+  const colBoundaries = [x];
+  for (let col = 1; col <= MACRO_GRID_COLUMNS; col += 1) {
+    colBoundaries.push(x + col * colW);
+  }
 
   doc.strokeColor(stroke).lineWidth(0.75).rect(x, y, width, totalH).stroke();
 
@@ -562,18 +594,34 @@ function drawMacroTable(doc, x, y, width) {
     const lineY = y + row * MACRO_GRID_ROW_HEIGHT;
     doc.moveTo(x, lineY).lineTo(x + width, lineY).stroke();
   }
-  for (let col = 1; col < MACRO_GRID_COLUMNS; col += 1) {
-    const lineX = x + col * colW;
-    doc.moveTo(lineX, y).lineTo(lineX, y + totalH).stroke();
+
+  for (let rowIndex = 0; rowIndex < MACRO_GRID_ROWS; rowIndex += 1) {
+    const rowY = y + rowIndex * MACRO_GRID_ROW_HEIGHT;
+    for (let boundary = 1; boundary < MACRO_GRID_COLUMNS; boundary += 1) {
+      if (macroGridSkipBoundary(rowIndex, boundary)) continue;
+      const lineX = colBoundaries[boundary];
+      doc.moveTo(lineX, rowY).lineTo(lineX, rowY + MACRO_GRID_ROW_HEIGHT).stroke();
+    }
   }
 
-  const row2Y = y + MACRO_GRID_ROW_HEIGHT;
+  MACRO_GRID_ROW1_GROUPS.forEach(({ fromCol, toCol, label }) => {
+    drawMacroGridCellText(
+      doc,
+      label,
+      macroGridColX(x, colW, fromCol),
+      macroGridRowY(y, 1),
+      macroGridMergedWidth(colW, fromCol, toCol),
+      MACRO_GRID_ROW_HEIGHT,
+      { fontSize: MACRO_GRID_GROUP_HEAD_SIZE },
+    );
+  });
+
   MACRO_GRID_ROW2_LABELS.forEach(([colNum, label]) => {
     drawMacroGridCellText(
       doc,
       label,
-      x + (colNum - 1) * colW,
-      row2Y,
+      macroGridColX(x, colW, colNum),
+      macroGridRowY(y, 2),
       colW,
       MACRO_GRID_ROW_HEIGHT,
     );
