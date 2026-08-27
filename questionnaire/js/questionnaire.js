@@ -9,6 +9,7 @@ import {
   buildAnswersConfirmationRows,
   formatAnswersConfirmationLabel,
 } from '../../js/answersConfirmationPrintout.js';
+import { FAT_SOURCE_OPTIONS, formatFatSourceLabel } from '../../js/leanBodyAnalysisPrintout.js';
 import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
@@ -146,20 +147,6 @@ const BODY_FIELD_META = {
     example: 'Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower. Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement.',
   },
 };
-
-/** Body composition source — least to most involved. */
-const FAT_SOURCE_OPTIONS = [
-  { value: 'guess', label: "I'm estimating" },
-  { value: 'smart_scales', label: 'Smart scales' },
-  { value: 'tape', label: 'Tape measurements' },
-  { value: 'bia', label: 'InBody/BIA' },
-  { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
-  { value: 'skinfolds', label: 'Calipers' },
-  { value: 'bodpod', label: 'Bod Pod' },
-  { value: 'dexa', label: 'DEXA' },
-  { value: 'hydrostatic', label: 'Hydrostatic weighing' },
-  { value: 'other', label: 'Other' },
-];
 
 const OCCUPATION_FIELDS = [
   'workPhysical',
@@ -362,14 +349,6 @@ function workPhysicalLabel(id) {
 
 function workStressLabel(id) {
   return WORK_STRESS.find((item) => item.id === id)?.label || id || '—';
-}
-
-function fatSourceLabel(value, otherText = '') {
-  if (value === 'other') return otherText || 'Other';
-  const match = FAT_SOURCE_OPTIONS.find((option) => option.value === value);
-  if (match) return match.label;
-  if (value === 'recent') return 'Calipers / ultrasound / BodPod';
-  return '—';
 }
 
 function initFatSourceRadios() {
@@ -849,7 +828,7 @@ function bodyFieldSummary(fieldId, values) {
     case 'weight':
       return values.weight ? `${values.weight} lbs` : '';
     case 'fatSource':
-      return values.fatSource ? fatSourceLabel(values.fatSource, values.fatSourceOther) : '';
+      return values.fatSource ? formatFatSourceLabel(values.fatSource, values.fatSourceOther) : '';
     case 'fatPercent':
       return values.fatPercent ? `${values.fatPercent}%` : '';
     default:

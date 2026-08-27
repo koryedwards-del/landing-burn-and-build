@@ -40,7 +40,9 @@ Restored `intake-acc` accordion UI. **One stylesheet only** — no legacy dark-t
 | Logic | `questionnaire/js/questionnaire.js` — step nav, accordion Tab/click flow, `buildProgram()` |
 | Styles | `questionnaire/css/questionnaire.css` — mobile-first workroom theme (`system-ui`) |
 
-**JS imports:** `js/profileDataEngine.js`, `js/programPackageData.js`, `js/answersConfirmationPrintout.js`.
+**JS imports:** `js/profileDataEngine.js`, `js/programPackageData.js`, `js/intakeQuestionCopyData.js`, `js/answersConfirmationPrintout.js`.
+
+**Validation:** step Next highlights missing fields (red border); Review links jump to each question.
 
 **Naming:** user-facing **questionnaire**; saved answers on the package object are `pkg.intake`. CSS classes `intake-form__*`, `intake-acc__*` are internal markup — not user-facing labels (see `.cursor/rules/product-terminology.mdc`).
 
@@ -65,6 +67,7 @@ Every `js/` file name ends with its job:
 | `js/burnEngine.js` | Serving math |
 | `js/profileDataEngine.js` | Customer answers → profile |
 | `js/programPackageData.js` | Full program object (`pkg.intake` + plan) |
+| `js/intakeQuestionCopyData.js` | Shared questionnaire question text + numbering |
 | `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload |
 | `js/answersConfirmationPrintout.js` | PDF page 8 — answer list |
 | `js/leanBodyAnalysisPrintout.js` | LBA table row helper |

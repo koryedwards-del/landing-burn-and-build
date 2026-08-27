@@ -23,10 +23,11 @@ Three standalone pieces:
 | `js/programPackageData.js` | Program package object |
 | `js/bodyCompositionData.js` | Body composition calculations |
 | `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload (sample + purchased) |
+| `js/intakeQuestionCopyData.js` | Shared questionnaire question text + field numbering |
 | `js/sampleDietPrintoutCopyData.js` | Locked PDF page copy |
 | `js/programReportCopyData.js` | Burn & Build Diet copy archive (pending wiring) |
 | `js/answersConfirmationPrintout.js` | PDF page 8 — submitted answers |
-| `js/leanBodyAnalysisPrintout.js` | LBA table rows helper |
+| `js/leanBodyAnalysisPrintout.js` | LBA helpers + fat-source labels (bar/timeline exports retained for copy archive) |
 | `js/programClientDataHelpers.js` | Client name + date helpers |
 | `js/sampleDietPreviewFixtures.js` | Sample Female preview fixtures |
 | `js/printoutVerifyFixtures.js` | Golden verify fixtures (engine + PDF) |
