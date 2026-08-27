@@ -650,8 +650,9 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
-const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 52;
+const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 58;
 const SAMPLE_DAY_MENU_TIME_MEAL_GAP = 14;
+const SAMPLE_DAY_MENU_TIME_LINE_WIDTH = 42;
 
 function registerHandwritingFont(doc) {
   doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
@@ -667,18 +668,53 @@ function drawHandwritingOnLine(doc, text, x, lineY, width, { align = 'left' } = 
     .text(String(text), x, textY, { width, align, lineBreak: false });
 }
 
-function drawTimeColumn(doc, x, y) {
+function drawPeriodLabel(doc, x, y, label, selected, filled) {
+  doc
+    .font(FONTS.regular)
+    .fontSize(8)
+    .fillColor(SEMINAR_COLORS.body)
+    .text(label, x, y, { lineBreak: false });
+
+  if (!filled || !selected) return;
+
+  const labelW = doc.widthOfString(label);
+  const centerX = x + labelW / 2;
+  const centerY = y + 4;
+  doc
+    .strokeColor(HANDWRITING_INK_COLOR)
+    .lineWidth(0.85)
+    .ellipse(centerX, centerY, labelW / 2 + 3, 5.5, 0)
+    .stroke();
+}
+
+function drawTimeColumn(doc, x, y, time, filled) {
   doc
     .font(FONTS.regular)
     .fontSize(LAYOUT.bodySize)
     .fillColor(SEMINAR_COLORS.body)
     .text('Time', x, y, { lineBreak: false });
 
-  const periodY = y + LAYOUT.bodySize + 4;
-  doc.text('AM', x, periodY, { lineBreak: false });
-  doc.text('PM', x + 22, periodY, { lineBreak: false });
+  let periodY;
+  if (filled) {
+    const lineY = y + LAYOUT.bodySize + 3;
+    doc
+      .strokeColor(TABLE_1982.stroke)
+      .lineWidth(0.75)
+      .moveTo(x, lineY)
+      .lineTo(x + SAMPLE_DAY_MENU_TIME_LINE_WIDTH, lineY)
+      .stroke();
+    if (time?.value) {
+      drawHandwritingOnLine(doc, time.value, x + 1, lineY, SAMPLE_DAY_MENU_TIME_LINE_WIDTH - 2, { align: 'center' });
+    }
+    periodY = lineY + 8;
+  } else {
+    periodY = y + LAYOUT.bodySize + 4;
+  }
 
-  return periodY + LAYOUT.bodySize + 2;
+  drawPeriodLabel(doc, x, periodY, 'AM', time?.period === 'AM', filled);
+  drawPeriodLabel(doc, x + 22, periodY, 'PM', time?.period === 'PM', filled);
+
+  return periodY + 12;
 }
 
 function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled) {
@@ -730,7 +766,8 @@ function measureMenuSectionHeight(section) {
   let height = 0;
   if (section.title) height += LAYOUT.sectionTitleSize + LAYOUT.headerGap;
   height += (section.rows?.length || 0) * rowH;
-  return Math.max(height, 34);
+  const hasFilledTime = Boolean(section.time?.value);
+  return Math.max(height, hasFilledTime ? 48 : 34);
 }
 
 function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
@@ -766,7 +803,7 @@ function drawMenuSection(doc, page, y, section, filled) {
   const mealWidth = page.width - SAMPLE_DAY_MENU_TIME_COL_WIDTH - SAMPLE_DAY_MENU_TIME_MEAL_GAP;
   const sectionHeight = measureMenuSectionHeight(section);
 
-  drawTimeColumn(doc, page.x, y);
+  drawTimeColumn(doc, page.x, y, section.time, filled);
 
   let mealY = y;
   if (section.title) {

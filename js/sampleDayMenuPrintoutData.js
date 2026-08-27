@@ -35,6 +35,16 @@ const FOOD_PICKS = Object.freeze({
   fruit: 'Apples',
 });
 
+/** Filled sample only — meals every 3 hours from 7:00 AM. */
+const EXAMPLE_SECTION_TIMES = Object.freeze([
+  { value: '7:00', period: 'AM' },
+  { value: '10:00', period: 'AM' },
+  { value: '1:00', period: 'PM' },
+  { value: '4:00', period: 'PM' },
+  { value: '7:00', period: 'PM' },
+  { value: '10:00', period: 'PM' },
+]);
+
 const MENU_SECTION_DEFS = Object.freeze([
   {
     key: 'breakfast',
@@ -157,8 +167,9 @@ function buildRow(rowDef, mealKey, gridRows, filled) {
 }
 
 function buildMenuSections(gridRows, { filled = false } = {}) {
-  return MENU_SECTION_DEFS.map((sectionDef) => ({
+  return MENU_SECTION_DEFS.map((sectionDef, index) => ({
     title: sectionDef.title,
+    time: filled ? { ...EXAMPLE_SECTION_TIMES[index] } : null,
     rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, gridRows, filled)),
   }));
 }
