@@ -637,6 +637,68 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
   { key: 'value', width: 0.66 },
 ]);
 
+const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
+const SAMPLE_DAY_MENU_ROW_GAP = 10;
+const SAMPLE_DAY_MENU_SECTION_GAP = 16;
+
+function drawSampleDayMenuFillInRow(doc, x, y, width, categoryLabel) {
+  const fontSize = LAYOUT.bodySize;
+  const lineYOffset = fontSize + 2;
+  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+
+  const gap = 5;
+  const labelText = String(categoryLabel);
+  const sizeLabel = SAMPLE_DAY_MENU_SERVING_SIZE_LABEL;
+  const labelW = doc.widthOfString(labelText);
+  const sizeLabelW = doc.widthOfString(sizeLabel);
+
+  const foodLineStart = x + labelW + gap;
+  const sizeTextX = x + width * 0.62;
+  const foodLineEnd = sizeTextX - gap;
+  const sizeLineStart = sizeTextX + sizeLabelW + gap;
+  const sizeLineEnd = x + width;
+
+  doc.text(labelText, x, y, { lineBreak: false });
+  doc.text(sizeLabel, sizeTextX, y, { lineBreak: false });
+
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.75)
+    .moveTo(foodLineStart, y + lineYOffset)
+    .lineTo(foodLineEnd, y + lineYOffset)
+    .stroke()
+    .moveTo(sizeLineStart, y + lineYOffset)
+    .lineTo(sizeLineEnd, y + lineYOffset)
+    .stroke();
+
+  return y + lineYOffset + SAMPLE_DAY_MENU_ROW_GAP;
+}
+
+function drawSampleDayMenuPage(doc, payload) {
+  const menu = payload.sampleDayMenu;
+  if (!menu?.sections?.length) return;
+
+  const page = begin1982Page(doc, payload, menu.pageTitle || 'Sample Day Menu');
+  let y = page.y + LAYOUT.sectionGap;
+
+  menu.sections.forEach((section, sectionIndex) => {
+    doc
+      .font(FONTS.bold)
+      .fontSize(LAYOUT.sectionTitleSize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(section.title), page.x, y, { width: page.width, lineGap: 0 });
+    y = doc.y + LAYOUT.headerGap;
+
+    (section.rows || []).forEach((row) => {
+      y = drawSampleDayMenuFillInRow(doc, page.x, y, page.width, row.label);
+    });
+
+    if (sectionIndex < menu.sections.length - 1) {
+      y += SAMPLE_DAY_MENU_SECTION_GAP;
+    }
+  });
+}
+
 function drawAnswersConfirmationPage(doc, payload) {
   const confirmation = payload.answersConfirmation;
   if (!confirmation?.rows?.length) return;
@@ -669,7 +731,7 @@ function drawAnswersConfirmationPage(doc, payload) {
   });
 }
 
-export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 7;
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 8;
 
 export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -707,6 +769,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   };
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
+  drawSampleDayMenuPage(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
 
   stamp1982Footers(doc, payload.header);
