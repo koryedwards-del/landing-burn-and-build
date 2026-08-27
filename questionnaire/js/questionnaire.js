@@ -25,7 +25,7 @@ const STEP_NAV_SHORT = [
   'Contact',
   'Occupation',
   'Exercise',
-  'Body',
+  'Body comp',
   'Agreement',
   'Review',
 ];
