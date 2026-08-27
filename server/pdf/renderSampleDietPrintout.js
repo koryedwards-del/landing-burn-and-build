@@ -672,6 +672,7 @@ const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
+const SAMPLE_DAY_MENU_TITLE_SECTION_GAP = 28;
 const SAMPLE_DAY_MENU_TIME_COL_WIDTH = 58;
 const SAMPLE_DAY_MENU_TIME_MEAL_GAP = 14;
 const SAMPLE_DAY_MENU_TIME_LINE_WIDTH = 42;
@@ -747,7 +748,7 @@ function countMenuPlanRowGaps(sections) {
 }
 
 function measureMenuPlanTitleHeight() {
-  return LAYOUT.pageTitleSize + 2 + LAYOUT.sectionGap;
+  return LAYOUT.pageTitleSize + 2 + SAMPLE_DAY_MENU_TITLE_SECTION_GAP;
 }
 
 function measureMenuSectionHeight(section, rowGap) {
@@ -786,12 +787,13 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
   const contentBottom = page.bottom - noteHeight;
   const available = contentBottom - contentTop;
   const extra = Math.max(0, available - baseHeight);
-  const gapCount = sections.length + countMenuPlanRowGaps(sections);
+  const gapCount = sections.length + countMenuPlanRowGaps(sections) + 1;
   const extraPerGap = gapCount > 0 ? extra / gapCount : 0;
 
   return {
     contentTop,
     noteY: page.bottom - noteHeight,
+    titleSectionGap: SAMPLE_DAY_MENU_TITLE_SECTION_GAP + extraPerGap,
     sectionGap: baseSectionGap + extraPerGap,
     rowGap: baseRowGap + extraPerGap,
   };
@@ -861,7 +863,7 @@ function drawMenuPlanTitleRow(doc, x, y, width, title, value, filled) {
     drawHandwritingOnLine(doc, value, lineStart + 4, lineY, lineEnd - lineStart - 8);
   }
 
-  return lineY + LAYOUT.sectionGap;
+  return lineY;
 }
 
 function drawMenuSection(doc, page, y, section, filled, layout) {
@@ -933,6 +935,7 @@ function drawSampleDayMenuPage(doc, payload) {
     menu.planFor?.value,
     filled,
   );
+  y += layout.titleSectionGap;
 
   menu.sections.forEach((section) => {
     y = drawMenuSection(doc, page, y, section, filled, layout);
