@@ -6,7 +6,7 @@ Three standalone pieces:
 
 1. **Landing page** — `index.html` + `hardkor.css` + assets (marketing only)
 2. **Burn Engine** — serving math (`js/burnEngine.js`, foods data)
-3. **Burn & Build Diet PDF** — program report (`server/pdf/`, printout payload)
+3. **Burn & Build Diet PDF** — purchased deliverable (`server/pdf/renderSampleDietPrintout.js`, 8 pages)
 
 ## File naming
 
@@ -22,20 +22,19 @@ Three standalone pieces:
 | `js/profileDataEngine.js` | Customer answers → profile |
 | `js/programPackageData.js` | Program package object |
 | `js/bodyCompositionData.js` | Body composition calculations |
-| `js/programReportPrintout.js` | Full PDF payload |
-| `js/answersConfirmationPrintout.js` | PDF page 12 — submitted answers |
-| `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
+| `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload (sample + purchased) |
+| `js/sampleDietPrintoutCopyData.js` | Locked PDF page copy |
+| `js/programReportCopyData.js` | Burn & Build Diet copy archive (pending wiring) |
+| `js/answersConfirmationPrintout.js` | PDF page 8 — submitted answers |
+| `js/leanBodyAnalysisPrintout.js` | LBA table rows helper |
 | `js/programClientDataHelpers.js` | Client name + date helpers |
-| `js/programReportCopyData.js` | Locked user-authored PDF copy |
-| `js/sampleDietPrintoutData.js` | Sample diet PDF payload |
-| `js/sampleDietPrintoutCopyData.js` | Sample diet locked copy |
-| `js/sampleDietPreviewFixtures.js` | Sample diet preview fixtures |
+| `js/sampleDietPreviewFixtures.js` | Sample Female preview fixtures |
 | `js/printoutVerifyFixtures.js` | Golden verify fixtures (engine + PDF) |
 | `js/printTemplateTypographyData.js` | PDF typography tokens |
 | `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
-| `server/pdf/renderSampleDietPrintout.js` | Sample diet PDF renderer (`b&bsamplediet.pdf`) |
+| `server/pdf/renderSampleDietPrintout.js` | Burn & Build Diet PDF renderer |
 | `server/pdf/` | PDFKit renderer |
-| `docs/samples/` | Sample diet PDF (`b&bsamplediet.pdf`) |
+| `docs/samples/` | Sample PDF (`b&bsamplediet.pdf`) |
 
 ## Verify
 
@@ -44,9 +43,9 @@ npm run verify:printout-calcs
 npm run verify:pdf
 ```
 
-## Sample PDF
+## Sample / purchased PDF
 
-`docs/samples/b&bsamplediet.pdf`
+`docs/samples/b&bsamplediet.pdf` — 8 pages. Checkout uses the same renderer (`server/dietFulfillment.js`).
 
 ## Questionnaire
 

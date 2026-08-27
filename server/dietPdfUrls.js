@@ -9,7 +9,7 @@ const SITE_ORIGIN = String(
   process.env.WEBPAGE_URL || process.env.CREATOR_BASE_URL || 'https://burnandbuilddiet.com',
 ).replace(/\/$/, '');
 
-/** Direct download link — always renders the current program-report PDF. */
+/** Direct download link — always renders the current Burn & Build Diet PDF. */
 export function dietPdfDownloadUrl(email, programId) {
   const params = new URLSearchParams({
     email: normalizeEmail(email),

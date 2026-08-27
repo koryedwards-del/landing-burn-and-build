@@ -1,4 +1,4 @@
-/** Burn & Build Diet program report — user-authored copy (no payload imports). */
+/** Burn & Build Diet PDF copy — user-authored; pending wiring into sampleDietPrintoutCopyData.js */
 
 export const PROGRAM_REPORT_WELCOME_COPY = {
   intro: [

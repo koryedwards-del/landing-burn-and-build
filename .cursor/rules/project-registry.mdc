@@ -17,7 +17,7 @@ Push to `main` deploys the static site via GitHub Pages.
 | `/` (`index.html`) | Marketing landing |
 | `/questionnaire/` | Program questionnaire → Burn Engine (checkout not wired yet) |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal (to reconnect) |
-| `server/pdf/` | PDFKit program report renderer |
+| `server/pdf/` | PDFKit Burn & Build Diet renderer (`renderSampleDietPrintout.js`) |
 | `js/` | Burn Engine, printout payloads, program package data |
 
 **Product name:** Burn & Build Diet (never “meal planner” in user-facing copy).
@@ -53,7 +53,7 @@ Every `js/` file name ends with its job:
 | Suffix | Meaning | Examples |
 |--------|---------|----------|
 | **Engine** | Math / computation | `burnEngine.js`, `profileDataEngine.js` |
-| **Data** | Structured objects, constants, copy strings | `programPackageData.js`, `programReportCopyData.js` |
+| **Data** | Structured objects, constants, copy strings | `programPackageData.js`, `sampleDietPrintoutCopyData.js` |
 | **Helpers** | Small utility functions | `programClientDataHelpers.js`, `dietPdfNamingHelpers.js` |
 | **Printout** | One PDF section payload | `servingsPrintout.js`, `answersConfirmationPrintout.js` |
 | **Fixtures** | Test / preview sample inputs | `sampleDietPreviewFixtures.js`, `printoutVerifyFixtures.js` |
@@ -65,13 +65,13 @@ Every `js/` file name ends with its job:
 | `js/burnEngine.js` | Serving math |
 | `js/profileDataEngine.js` | Customer answers → profile |
 | `js/programPackageData.js` | Full program object (`pkg.intake` + plan) |
-| `js/programReportPrintout.js` | Full PDF payload |
-| `js/answersConfirmationPrintout.js` | PDF page 12 — answer list |
-| `js/leanBodyAnalysisPrintout.js` | PDF lean body analysis page |
+| `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload |
+| `js/answersConfirmationPrintout.js` | PDF page 8 — answer list |
+| `js/leanBodyAnalysisPrintout.js` | LBA table row helper |
 | `js/programClientDataHelpers.js` | Client name + date on PDF |
 | `questionnaire/js/questionnaire.js` | Questionnaire UI + `buildProgram()` |
 
-There is **no** separate questionnaire PDF — answers appear on page 12 of the one program report.
+There is **no** separate questionnaire PDF — answers appear on page 8 of the Burn & Build Diet PDF.
 
 ## Verify (engine + PDF)
 
@@ -80,13 +80,13 @@ npm run verify:printout-calcs
 npm run verify:pdf
 ```
 
-## Program report PDF
+## Burn & Build Diet PDF
 
-Renderer: `server/pdf/` (PDFKit). Purchased diet PDF via `GET /api/programs/diet-pdf`.
+Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf` — same renderer as `b&bsamplediet.pdf`.
 
 ## B&B Sample Diet PDF (`b&bsamplediet.pdf`)
 
-6-page sample deliverable. Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
+8-page sample (Sample Female). Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 

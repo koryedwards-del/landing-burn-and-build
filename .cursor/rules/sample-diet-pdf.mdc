@@ -7,7 +7,7 @@ alwaysApply: true
 
 **Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — **locked**. Overwritten each render. **Do not rename** without explicit user request.
 
-**Pages:** Welcome → Lean Body Analysis → Food Plan → Servings → Food List (protein/grains) → Food List (vegetables/fruit) — **6 pages**.
+**Pages:** Welcome → Lean Body Analysis → Food Plan → Servings → Food List (protein/grains) → Food List (vegetables/fruit) → Menu Plan → Questionnaire confirmation — **8 pages**.
 
 ## Pipeline
 

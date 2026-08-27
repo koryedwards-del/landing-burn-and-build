@@ -5,7 +5,7 @@ export const ASSET_VERSION = '317';
 export const FOODS_CATALOG_VERSION = '2026.08.26a';
 
 /**
- * Bump when the purchased program-report PDF template changes (layout, pages, copy pipeline).
+ * Bump when the Burn & Build Diet PDF template changes (layout, pages, copy pipeline).
  * Stored diet PDFs on Render are invalidated when this changes.
  */
-export const DIET_PDF_GENERATION_VERSION = '2026.08.27.53';
+export const DIET_PDF_GENERATION_VERSION = '2026.08.27.54';

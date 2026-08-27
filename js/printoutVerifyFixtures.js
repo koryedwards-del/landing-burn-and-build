@@ -2,7 +2,6 @@
 
 import { buildProgramPackage } from './programPackageData.js';
 import { computePlan } from './burnEngine.js';
-import { buildProgramReportLockedPayload } from './programReportLockedPayloadData.js';
 
 export const GOLDEN_SAMPLE_FORM = {
   preferredName: 'Sample Female',
@@ -97,8 +96,4 @@ export function buildGoldenSamplePackage() {
     formula: plan.formula,
   };
   return pkg;
-}
-
-export function buildVerifyProgramReportPayload() {
-  return buildProgramReportLockedPayload(buildGoldenSamplePackage());
 }

@@ -1,6 +1,5 @@
 /**
- * B&B Sample Diet PDF (deliverable: docs/samples/b&bsamplediet.pdf).
- * 1982 Warner layout + food lists. Preview: scripts/render-sample-diet-preview.mjs
+ * Burn & Build Diet PDF (deliverable: docs/samples/b&bsamplediet.pdf).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';

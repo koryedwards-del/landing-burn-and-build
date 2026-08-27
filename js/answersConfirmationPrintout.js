@@ -1,4 +1,4 @@
-/** PDF page 12 — rows that list the customer's submitted answers. */
+/** PDF page 8 — rows that list the customer's submitted answers. */
 
 import {
   JOB_ACTIVITY_OPTIONS,

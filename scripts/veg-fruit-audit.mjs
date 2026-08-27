@@ -51,7 +51,7 @@ function vegAudit(name, carbsPer100, grams) {
 }
 
 console.log('=== RAW vs COOKED — page 6 vegetables ===');
-console.log('Handbook: measure after cooking (vegetableTipsPrintout.js)\n');
+console.log('Measure after cooking when cooked (cutting list / burn-engine-servings)\n');
 console.log(
   'Item'.padEnd(24),
   'Selected'.padEnd(10),

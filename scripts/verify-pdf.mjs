@@ -1,17 +1,15 @@
 #!/usr/bin/env node
-/** Program report + sample diet PDF verification — run: npm run verify:pdf */
+/** Burn & Build Diet PDF verification — run: npm run verify:pdf */
 
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
-import { buildVerifyProgramReportPayload } from '../js/printoutVerifyFixtures.js';
-import { renderPrintPdf } from '../server/pdf/index.js';
 import {
   renderMenuPlanWorksheet,
   renderSampleDietPrintout,
   SAMPLE_DIET_PRINTOUT_MIN_PAGES,
+  validateSampleDietPayload,
 } from '../server/pdf/renderSampleDietPrintout.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
-import { validatePrintPayload, validatePrintView } from '../server/pdf/validate.js';
 
 function pageCount(pdf) {
   return (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
@@ -44,35 +42,23 @@ function assertThrows(label, fn, { status, includes } = {}) {
   }
 }
 
-assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { status: 400 });
-assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
-assertThrows('validatePrintPayload rejects bad programreport', () => validatePrintPayload('programreport', {}), { status: 400 });
+try {
+  validateSampleDietPayload(null);
+  throw new Error('validateSampleDietPayload rejects empty: expected throw');
+} catch (err) {
+  if (!String(err.message).includes('payload object')) throw err;
+  console.log('ok  validateSampleDietPayload rejects empty');
+}
 
-const filename = sanitizePdfFilename('Burn & Build Diet - Sample Female', 'programreport');
+const filename = sanitizePdfFilename('Burn & Build Diet - Sample Female', 'samplediet');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
   throw new Error(`sanitizePdfFilename failed: ${filename}`);
 }
 console.log(`ok  sanitizePdfFilename — ${filename}`);
 
-const payload = buildVerifyProgramReportPayload();
-assertPdf('programreport (golden sample)', await renderPrintPdf('programreport', { payload }), { minPages: 10 });
-
-if (payload.clientName !== 'SAMPLE FEMALE') {
-  throw new Error(`clientName: got ${payload.clientName}`);
-}
-if (payload.preparedDate !== '2024-01-15') {
-  throw new Error(`preparedDate: got ${payload.preparedDate}`);
-}
-if (payload.foodPlan.fatLostLbs !== '11.0') {
-  throw new Error(`fat lost: got ${payload.foodPlan.fatLostLbs}`);
-}
-if (payload.servings.gridRows[0].daily !== '9') {
-  throw new Error(`protein servings: got ${payload.servings.gridRows[0].daily}`);
-}
-console.log('ok  golden sample program report payload');
-
 const samplePayload = buildSampleDietPreviewPayload();
-assertPdf('sample diet (golden sample)', await renderSampleDietPrintout(samplePayload), {
+validateSampleDietPayload(samplePayload);
+assertPdf('Burn & Build Diet (golden sample)', await renderSampleDietPrintout(samplePayload), {
   minPages: SAMPLE_DIET_PRINTOUT_MIN_PAGES,
 });
 if (samplePayload.view !== 'samplediet') {
@@ -80,6 +66,15 @@ if (samplePayload.view !== 'samplediet') {
 }
 if (samplePayload.clientName !== 'SAMPLE FEMALE') {
   throw new Error(`sample clientName: got ${samplePayload.clientName}`);
+}
+if (samplePayload.preparedDate !== '2024-01-15') {
+  throw new Error(`preparedDate: got ${samplePayload.preparedDate}`);
+}
+if (samplePayload.foodPlan.macroRows?.[0]?.totalCal !== '2,192') {
+  throw new Error(`macro total: got ${samplePayload.foodPlan.macroRows?.[0]?.totalCal}`);
+}
+if (samplePayload.servings.gridRows?.[0]?.daily !== '9') {
+  throw new Error(`protein servings: got ${samplePayload.servings.gridRows?.[0]?.daily}`);
 }
 console.log('ok  golden sample diet payload');
 

@@ -1,4 +1,4 @@
-/** Burn & Build Diet PDF payload — 1982 Warner layout + burn-engine data (sample + purchased). */
+/** Burn & Build Diet PDF payload — questionnaire data + burn-engine calcs (sample + purchased). */
 
 import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import { analyzeLeanBodyMass } from './bodyCompositionData.js';
@@ -9,8 +9,12 @@ import {
   ANSWERS_CONFIRMATION_INTRO,
   buildAnswersConfirmationRows,
 } from './answersConfirmationPrintout.js';
-import { formatProgramDateLong, programClientName } from './programClientDataHelpers.js';
-import { localDateKey } from './programPackageData.js';
+import {
+  formatProgramDateLong,
+  programClientName,
+  programClientNameUpper,
+  programPreparedDate,
+} from './programClientDataHelpers.js';
 import {
   aceBodyFatCategories,
   aceBodyFatWeightRanges,
@@ -30,19 +34,6 @@ const rnd = (x) => Math.round(Number(x));
 
 function formatCalories(n) {
   return rnd(n).toLocaleString('en-US');
-}
-
-function seminarPreparedDate(pkg) {
-  return localDateKey(
-    pkg?.program?.foodPlanCreatedDate
-    || pkg?.program?.issuedAtLocalDate
-    || pkg?.program?.issuedAt
-    || pkg?.program?.startDate,
-  ) || '';
-}
-
-function seminarClientName(pkg) {
-  return String(programClientName(pkg) || 'You').trim().toUpperCase();
 }
 
 function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
@@ -149,9 +140,9 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
   return {
     view: 'samplediet',
     title: `B&B Sample Diet - ${programClientName(pkg)}`,
-    clientName: seminarClientName(pkg),
-    preparedAt: seminarPreparedDate(pkg),
-    preparedDate: seminarPreparedDate(pkg),
+    clientName: programClientNameUpper(pkg),
+    preparedAt: programPreparedDate(pkg),
+    preparedDate: programPreparedDate(pkg),
     preparedDateLong: formatProgramDateLong(
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),

@@ -1,4 +1,4 @@
-/** Download / resend Burn & Build Diet PDF (program report) after purchase. */
+/** Download / resend Burn & Build Diet PDF after purchase. */
 
 import { apiUrl } from './apiConfig.js';
 import { fetchJson } from './apiFetch.js';

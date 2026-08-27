@@ -1,8 +1,7 @@
-/** Program report PDF document label + download filename. */
+/** Program PDF document label + download filename. */
 
-import { programClientName } from './programClientDataHelpers.js';
+import { programClientName, programPreparedDate } from './programClientDataHelpers.js';
 import { localDateKey } from './programPackageData.js';
-import { seminarPreparedDate } from './programReportPrintout.js';
 
 const DIET_PDF_PREFIX = 'Burn&Build';
 
@@ -26,7 +25,7 @@ function formatCreationDate(isoOrDate) {
 
 export function dietPdfDocumentLabel({ preferredName, createdAt, pkg } = {}) {
   const name = sanitizeNamePart(preferredName || (pkg ? programClientName(pkg) : ''));
-  const date = formatCreationDate(createdAt || (pkg ? seminarPreparedDate(pkg) : null));
+  const date = formatCreationDate(createdAt || (pkg ? programPreparedDate(pkg) : null));
   return `${DIET_PDF_PREFIX}-${name}-${date}`;
 }
 

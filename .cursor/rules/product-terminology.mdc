@@ -30,16 +30,16 @@ CSS class names (`intake-form__*`, `intake-acc__*`) and `pkg.intake` stay as-is 
 
 **Rule:** Say **questionnaire** to users and in agent/docs copy; say **`intake`** only in code when referring to the saved answers object on `pkg.intake`.
 
-## PDF page 12 — not a separate file
+## PDF page 8 — not a separate file
 
-The program report PDF is **one 12-page document**. Page 12 lists the customer's submitted answers.
+The Burn & Build Diet PDF is **one 8-page document**. Page 8 lists the customer's submitted answers.
 
 | Code | Role |
 |------|------|
-| `js/answersConfirmationPrintout.js` | Builds answer rows for PDF page 12 |
+| `js/answersConfirmationPrintout.js` | Builds answer rows for PDF page 8 |
 | `js/profileDataEngine.js` | Profile math from answers (engine + PDF) |
 
-There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questionnaire confirmation") — that is user-authored copy on the printout.
+There is **no** `questionnaire.pdf`. Do not rename page 8's PDF title ("Questionnaire confirmation") — that is user-authored copy on the printout.
 
 ## One-sentence rule
 
@@ -51,7 +51,7 @@ There is **no** `questionnaire.pdf`. Do not rename page 12's PDF title ("Questio
 |------|--------|---------------------|---------|
 | **Diet** | Product | What do they buy? | *The Burn & Build Diet*, *Get the Diet*, heritage (*Since 1982*), pricing ($279), checkout (*Download your Burn & Build Diet*), brand positioning |
 | **Food plan** | Eating rules | What do they follow daily? | PDF page 3, servings prescription, meal-building steps, handbook/FAQ about portions and adherence |
-| **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **program report** PDF; saved account artifact; *your program will be created* before Stripe |
+| **Program** | Generated package | What did the engine produce? | Questionnaire → Burn Engine → **Burn & Build Diet** PDF; saved account artifact; *your program will be created* before Stripe |
 
 ## Avoid
 

@@ -146,10 +146,10 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Detail | Value |
 |--------|-------|
 | Gram formula | **Curated per item** — do not use the meat `800/protein` formula blindly |
-| Product guidance | At least **one-third of daily protein from dairy** (`data/proteinTipsPrintout.js`) |
+| Product guidance | At least **one-third of daily protein from dairy** |
 | Meal split | Same as protein — daily protein ÷ 3 per meal |
 | PDF food-list scale | `planServings.protein / 3` (same multiplier as meat) |
-| Tips | `data/proteinTipsPrintout.js` |
+| Tips | Prep/measure rules in this doc and cutting roster |
 
 ---
 
@@ -191,7 +191,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Meal split | Daily total ÷ 3 → breakfast, lunch, dinner |
 | Prep | Mostly **cooked** |
 | Audit | `scripts/starches-14-0-audit.mjs`, `scripts/starches-82-audit.mjs` |
-| Note | Beans/rice count here as **starches/grains**, not protein (`data/grainsStarchesTipsPrintout.js`) |
+| Note | Beans/rice count here as **starches/grains**, not protein |
 
 **Why grains and starches are separate internally:** Same **14g carb** target, different **fat ceilings** (1.0g vs 0.44g). User sees one combined number; agents must use the correct slot when sizing portions.
 
@@ -212,7 +212,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Gram formula | `1000 ÷ carbs_per_100g` |
 | Meal placement | All daily vegetable servings at **dinner** (`distributeWholeServings` in `js/servingsPrintout.js`) |
 | Prep | **Raw and cooked are separate catalog rows** — never interchange |
-| Measure rule | **After cooking** when cooked (`data/vegetableTipsPrintout.js`) |
+| Measure rule | **After cooking** when cooked (see cutting list prep labels) |
 | Audit | `scripts/veg-fruit-audit.mjs` |
 | Engine cap | `VE` capped at 1; excess converts to grain (`G1`) servings |
 
@@ -309,9 +309,9 @@ Remainder distribution (e.g. 10 protein → 3, 4, 3): extras go to **lunch**, th
 | **Servings page** | Counts only | `3` — no grams |
 | **Program report food list** | Plan slot servings × base gram weight | `78g` (3 × 26g) |
 
-### Burn & Build Diet program report PDF
+### Burn & Build Diet PDF
 
-Renderer: `server/pdf/renderProgramReportLockedPreview.js`. Sample diet preview: `.cursor/rules/sample-diet-pdf.mdc`.
+Renderer: `server/pdf/renderSampleDietPrintout.js`. Preview: `.cursor/rules/sample-diet-pdf.mdc`.
 
 | Page | Grams? |
 |------|--------|
@@ -333,9 +333,9 @@ displayed grams = stapleCategoryServings(planServings, category) × base one-ser
 | Fruit | `planServings.fruits / 3` |
 | Extra fat / sugar / alcohol | Not on staple pages |
 
-Payload: `payload.servings.planServings` from `js/programReportPrintout.js`.
+Payload: `payload.servings.planServings` from `js/sampleDietPrintoutData.js`.
 
-Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program report with scaled food-list grams, FAQ, and confirmation pages).
+Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (same 8-page deliverable as `b&bsamplediet.pdf`).
 
 ---
 
@@ -352,11 +352,10 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 | Audit single servings | `npm run verify:cutting-servings` |
 | Food-list PDF scaling | `js/stapleServingPrintout.js` |
 | Servings grid + extra fat rows | `js/servingsPrintout.js` |
-| Program report payload | `js/programReportPrintout.js` |
-| Program report PDF renderer | `server/pdf/renderProgramReportLockedPreview.js` |
+| Program report payload | `js/sampleDietPrintoutData.js` |
+| Burn & Build Diet PDF renderer | `server/pdf/renderSampleDietPrintout.js` |
 | PDF entrypoint | `server/pdf/index.js` |
 | Sample diet preview | `.cursor/rules/sample-diet-pdf.mdc` |
-| Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
 
 ---
@@ -367,9 +366,9 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 2. **Burn Engine** — which slot (P1, D1, G1, S2, VE, FQ, FT)? What macro + fat limit?
 3. **USDA** — per-100g macros → base `gramWeight` via slot formula. **Full formula serving only** — never reduce grams to meet fat ceiling; fat overage at full serving is OK.
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
-5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the program report.
+5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the Burn & Build Diet PDF.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
-7. Sample diet PDF changes → `npm run render:sample-diet-preview` per `sample-diet-pdf.mdc`.
+7. Burn & Build Diet PDF changes → `npm run render:sample-diet-preview` per `sample-diet-pdf.mdc`.
 
 ## Errata — do not repeat these mistakes
 
