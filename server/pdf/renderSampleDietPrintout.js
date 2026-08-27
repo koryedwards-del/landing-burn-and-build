@@ -27,7 +27,7 @@ const HANDWRITING_FONT_PATH = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   'fonts/Caveat-Regular.ttf',
 );
-const HANDWRITING_FONT_SIZE = 12;
+const HANDWRITING_FONT_SIZE = 24;
 const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
 const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
