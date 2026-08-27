@@ -84,26 +84,33 @@ function drawLayoutTableCellText(doc, {
   cx,
   cy,
   cellW,
+  cellH,
   pad,
   tableRowPad,
   style,
   fillColor,
   align,
   lineBreak,
+  valign = 'top',
 }) {
   doc
     .font(style.font)
     .fontSize(style.fontSize)
     .fillColor(fillColor);
   const cellText = String(text ?? '');
+  let textY = cy + tableRowPad;
+  if (valign === 'middle' && cellH) {
+    const textH = doc.heightOfString(cellText, { width: cellW, lineBreak: false });
+    textY = cy + Math.max(0, (cellH - textH) / 2);
+  }
   if (align === 'center' && !lineBreak && !cellText.includes('\n')) {
     const textW = doc.widthOfString(cellText);
     if (textW <= cellW) {
-      doc.text(cellText, cx + (cellW - textW) / 2, cy + tableRowPad, { lineBreak: false });
+      doc.text(cellText, cx + (cellW - textW) / 2, textY, { lineBreak: false });
       return;
     }
   }
-  doc.text(cellText, cx + pad, cy + tableRowPad, {
+  doc.text(cellText, cx + pad, textY, {
     width: cellW - pad * 2,
     lineGap: 0,
     align,
@@ -159,7 +166,8 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
   const colWidths = columns.map((col) => col.width * tableWidth);
   return rows.map((row, rowIndex) => {
     const isHeader = rowIndex < headerRows;
-    let maxH = tableRowPad * 2;
+    const rowPad = row._rowPad ?? tableRowPad;
+    let maxH = rowPad * 2;
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
       const innerW = tableCellWidth(colWidths, columns, row, index) - pad * 2;
@@ -171,7 +179,7 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
       doc.font(style.font).fontSize(style.fontSize);
       maxH = Math.max(
         maxH,
-        doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + tableRowPad * 2,
+        doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + rowPad * 2,
       );
     });
     return maxH;
@@ -213,6 +221,7 @@ function drawLayoutTable(doc, {
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
       const w = tableCellWidth(colWidths, columns, row, index);
+      const rowPad = row._rowPad ?? tableRowPad;
       const defaultStyle = {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
@@ -224,12 +233,14 @@ function drawLayoutTable(doc, {
         cx,
         cy,
         cellW: w,
+        cellH: rh,
         pad,
-        tableRowPad,
+        tableRowPad: rowPad,
         style,
         fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
         align,
         lineBreak,
+        valign: row._valign || 'top',
       });
       cx += w;
     });
@@ -477,8 +488,21 @@ function drawGoalTable(doc, x, y, width, goalTable) {
 
 const MACRO_TABLE_GRAM_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG']);
 const MACRO_TABLE_CAL_KEYS = Object.freeze(['proteinCal', 'carbsCal', 'fatCal']);
-/** Sub-header row — slightly larger than group headers so columns breathe. */
+const MACRO_TABLE_GROUP_HEAD_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG', 'totalCal']);
+/** Group title row — PROTEIN, CARBS, FATS, TOTAL. */
+const MACRO_TABLE_GROUP_HEAD_SIZE = 11;
+const MACRO_TABLE_GROUP_ROW_PAD = 2;
+/** Sub-header row — grams / calories. */
 const MACRO_TABLE_SUBHEAD_SIZE = LAYOUT.bodySize;
+
+function macroTableGroupHeadStyles() {
+  return Object.fromEntries(
+    MACRO_TABLE_GROUP_HEAD_KEYS.map((key) => [
+      key,
+      { font: FONTS.bold, fontSize: MACRO_TABLE_GROUP_HEAD_SIZE },
+    ]),
+  );
+}
 
 function macroTableSubheadStyles() {
   return Object.fromEntries(
@@ -585,6 +609,9 @@ function buildMacroTableLayoutRows(macroRows = []) {
     totalCal: 'TOTAL',
     _colSpans: MACRO_TABLE_GROUP_SPANS,
     _aligns: MACRO_TABLE_HEADER_ALIGNS,
+    _styles: macroTableGroupHeadStyles(),
+    _rowPad: MACRO_TABLE_GROUP_ROW_PAD,
+    _valign: 'middle',
   };
   const subHeader = {
     label: '',
