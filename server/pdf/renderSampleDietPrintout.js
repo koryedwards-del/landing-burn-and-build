@@ -477,6 +477,17 @@ function drawGoalTable(doc, x, y, width, goalTable) {
 
 const MACRO_TABLE_GRAM_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG']);
 const MACRO_TABLE_CAL_KEYS = Object.freeze(['proteinCal', 'carbsCal', 'fatCal']);
+/** Sub-header row — slightly larger than group headers so columns breathe. */
+const MACRO_TABLE_SUBHEAD_SIZE = LAYOUT.bodySize;
+
+function macroTableSubheadStyles() {
+  return Object.fromEntries(
+    MACRO_TABLE_VALUE_KEYS.map((key) => [
+      key,
+      { font: FONTS.bold, fontSize: MACRO_TABLE_SUBHEAD_SIZE },
+    ]),
+  );
+}
 
 function macroTableTextWidth(doc, text, font, fontSize) {
   doc.font(font).fontSize(fontSize);
@@ -485,8 +496,8 @@ function macroTableTextWidth(doc, text, font, fontSize) {
 
 function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
   const pad = TABLE_1982.cellPad * 2;
-  const gramsHeadingW = macroTableTextWidth(doc, 'grams', FONTS.bold, LAYOUT.tableHeadSize);
-  const caloriesHeadingW = macroTableTextWidth(doc, 'calories', FONTS.bold, LAYOUT.tableHeadSize);
+  const gramsHeadingW = macroTableTextWidth(doc, 'grams', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
+  const caloriesHeadingW = macroTableTextWidth(doc, 'calories', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
 
   let gramsMax = gramsHeadingW;
   let caloriesMax = caloriesHeadingW;
@@ -585,6 +596,7 @@ function buildMacroTableLayoutRows(macroRows = []) {
     fatCal: 'calories',
     totalCal: 'calories',
     _aligns: MACRO_TABLE_SUBHEADER_ALIGNS,
+    _styles: macroTableSubheadStyles(),
   };
   const bodyRows = [];
   macroRows.forEach((row) => {
