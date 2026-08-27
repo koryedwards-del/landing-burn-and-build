@@ -730,28 +730,31 @@ function drawMacroTable(doc, x, y, width, macroRows) {
   return y + totalH;
 }
 
+const FOOD_PLAN_TEXT_GAP = Object.freeze({
+  paragraphGap: 5,
+  lineGap: LAYOUT.lineGap,
+});
+const FOOD_PLAN_TABLE_GAP = 4;
+
 function drawFoodPlanPage(doc, payload) {
   const fp = payload.foodPlan;
   let page = begin1982Page(doc, payload, 'Food Plan');
 
-  page = drawParagraphs(doc, page, [fp.lead]);
-  if (fp.exerciseParagraph) page = drawParagraphs(doc, page, [fp.exerciseParagraph]);
+  page = drawParagraphs(doc, page, [fp.lead], FOOD_PLAN_TEXT_GAP);
+  if (fp.exerciseParagraph) page = drawParagraphs(doc, page, [fp.exerciseParagraph], FOOD_PLAN_TEXT_GAP);
 
   if (fp.goalTable) {
     page = {
       ...page,
-      y: drawGoalTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width, fp.goalTable) + LAYOUT.sectionGap,
+      y: drawGoalTable(doc, page.x, page.y + FOOD_PLAN_TABLE_GAP, page.width, fp.goalTable) + FOOD_PLAN_TABLE_GAP,
     };
   }
 
-  if (fp.weeklyLine) page = drawParagraphs(doc, page, [fp.weeklyLine]);
-  if (fp.macroIntro) page = drawParagraphs(doc, page, [fp.macroIntro]);
+  if (fp.weeklyLine) page = drawParagraphs(doc, page, [fp.weeklyLine], FOOD_PLAN_TEXT_GAP);
+  if (fp.macroIntro) page = drawParagraphs(doc, page, [fp.macroIntro], FOOD_PLAN_TEXT_GAP);
 
   if (fp.macroRows?.length) {
-    page = {
-      ...page,
-      y: drawMacroTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width, fp.macroRows) + LAYOUT.sectionGap,
-    };
+    drawMacroTable(doc, page.x, page.y + FOOD_PLAN_TABLE_GAP, page.width, fp.macroRows);
   }
 }
 
