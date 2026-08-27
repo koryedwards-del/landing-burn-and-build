@@ -1315,7 +1315,7 @@ function renderNav() {
     <li>
       <button type="button" class="${classes}" data-nav-step="${index}" aria-label="${index + 1}. ${item.label}"${reachable ? '' : ' disabled'}>
         <span class="q-nav__text q-nav__text--full">${index + 1}. ${item.label}</span>
-        <span class="q-nav__text q-nav__text--short">${STEP_NAV_SHORT[index]}</span>
+        <span class="q-nav__text q-nav__text--short">${index + 1}. ${STEP_NAV_SHORT[index]}</span>
       </button>
     </li>
   `;
