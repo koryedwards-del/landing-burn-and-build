@@ -792,12 +792,15 @@ function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
   const fontSize = LAYOUT.bodySize;
   const lineYOffset = fontSize + 2;
   const labelText = String(row.label);
-  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
+  const labelFont = row.labelBold ? FONTS.bold : FONTS.regular;
+  doc.font(labelFont).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
 
   const gap = 5;
   const sizeLabel = SAMPLE_DAY_MENU_SERVING_SIZE_LABEL;
   const labelW = doc.widthOfString(labelText);
+  doc.font(FONTS.regular).fontSize(fontSize);
   const sizeLabelW = doc.widthOfString(sizeLabel);
+  doc.font(labelFont).fontSize(fontSize);
 
   const foodLineStart = x + labelW + gap;
   const sizeTextX = x + width * 0.62;
@@ -808,6 +811,7 @@ function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
   const lineY = y + lineYOffset;
 
   doc.text(labelText, x, y, { lineBreak: false });
+  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
   doc.text(sizeLabel, sizeTextX, y, { lineBreak: false });
 
   doc

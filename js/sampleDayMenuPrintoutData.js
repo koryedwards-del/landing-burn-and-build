@@ -11,12 +11,11 @@ import {
   SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
-import { MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
+import { MENU_PLAN_WORKSHEET_LINK_LABEL, MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
 import { scaleStapleServingLabel } from './stapleServingPrintout.js';
 import { servingsGridRows } from './servingsPrintout.js';
 
-export const SAMPLE_DAY_MENU_FRUIT_SNACK_TITLE = 'Fruit Snack';
-export const SAMPLE_DAY_MENU_FRUIT_LABEL = 'Fruits';
+export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
 
 /** Illustrative food picks — serving sizes scale from the customer's plan. */
 const FOOD_PICKS = Object.freeze({
@@ -57,8 +56,8 @@ const MENU_SECTION_DEFS = Object.freeze([
   },
   {
     key: 'snack1',
-    title: SAMPLE_DAY_MENU_FRUIT_SNACK_TITLE,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack1' }],
+    title: null,
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack1' }],
   },
   {
     key: 'lunch',
@@ -70,8 +69,8 @@ const MENU_SECTION_DEFS = Object.freeze([
   },
   {
     key: 'snack2',
-    title: SAMPLE_DAY_MENU_FRUIT_SNACK_TITLE,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack2' }],
+    title: null,
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack2' }],
   },
   {
     key: 'dinner',
@@ -84,8 +83,8 @@ const MENU_SECTION_DEFS = Object.freeze([
   },
   {
     key: 'snack3',
-    title: SAMPLE_DAY_MENU_FRUIT_SNACK_TITLE,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_LABEL, staples: 'fruit', slot: 'snack3' }],
+    title: null,
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack3' }],
   },
 ]);
 
@@ -157,6 +156,7 @@ export function formatMenuPlanForDate(isoDate) {
 
 function buildRow(rowDef, mealKey, gridRows, filled) {
   const row = { label: rowDef.label };
+  if (rowDef.labelBold) row.labelBold = true;
   if (!filled) return row;
 
   const stapleName = pickNameForRow(rowDef, mealKey);
@@ -190,7 +190,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
     worksheetNote: filled ? {
       lead: SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
       url: MENU_PLAN_WORKSHEET_URL,
-      linkLabel: 'program-creator-3tzd.onrender.com/api/samples/menu-plan-worksheet',
+      linkLabel: MENU_PLAN_WORKSHEET_LINK_LABEL,
     } : null,
     sections: buildMenuSections(gridRows, { filled }),
   };
