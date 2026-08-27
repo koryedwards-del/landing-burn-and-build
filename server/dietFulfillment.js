@@ -1,7 +1,7 @@
 import { dietPdfDocumentLabel } from '../js/dietPdfNamingHelpers.js';
 import { buildProgramReportPayload } from '../js/programReportPrintout.js';
 import { renderProgramReportPdf } from './pdf/renderProgramReport.js';
-import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent } from './db.js';
+import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent, getProgramPaidAt } from './db.js';
 import { writeStoredDietPdf } from './dietPdfStorage.js';
 import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
 
@@ -84,6 +84,7 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
     pkg,
     pdfBuffer: pdf,
     programId,
+    paidAt: getProgramPaidAt(email, programId),
     forceResend: forceEmail,
   });
 

@@ -343,7 +343,8 @@ app.get('/api/programs/resume-checkout', (req, res) => {
   }
 
   const paidMeta = getLatestPaidProgramMeta(email);
-  const meta = paidMeta || getLatestProgramMeta(email);
+  const latestMeta = getLatestProgramMeta(email);
+  const meta = latestMeta || paidMeta;
   if (!meta) {
     res.status(404).json({ ok: false, message: 'No program saved for this email.' });
     return;
@@ -422,8 +423,9 @@ app.post('/api/programs/resend-diet-email', async (req, res) => {
     return;
   }
   if (!programId) {
-    const meta = getLatestPaidProgramMeta(email);
-    programId = meta?.id || '';
+    const latestMeta = getLatestProgramMeta(email);
+    const paidMeta = getLatestPaidProgramMeta(email);
+    programId = latestMeta?.id || paidMeta?.id || '';
   }
   if (!programId) {
     res.status(404).json({ ok: false, message: 'No purchased program found for this email.' });

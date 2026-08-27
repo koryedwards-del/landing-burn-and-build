@@ -125,7 +125,7 @@ export function saveProgram(email, pkg) {
     }
     db.prepare(`
       UPDATE programs
-      SET label = ?, package_json = ?
+      SET label = ?, package_json = ?, diet_email_sent_at = NULL
       WHERE id = ? AND email = ?
     `).run(label, JSON.stringify(storedPkg), id, key);
   } else {
@@ -219,9 +219,16 @@ export function markProgramPaid(email, programId) {
   if (!id) return false;
   const now = new Date().toISOString();
   const result = db.prepare(`
-    UPDATE programs SET paid_at = ? WHERE id = ? AND email = ?
+    UPDATE programs SET paid_at = ?, diet_email_sent_at = NULL WHERE id = ? AND email = ?
   `).run(now, id, key);
   return result.changes > 0;
+}
+
+export function getProgramPaidAt(email, programId) {
+  const row = db.prepare(`
+    SELECT paid_at FROM programs WHERE id = ? AND email = ?
+  `).get(String(programId || '').trim(), normalizeEmail(email));
+  return row?.paid_at || null;
 }
 
 export function wasDietEmailSent(email, programId) {

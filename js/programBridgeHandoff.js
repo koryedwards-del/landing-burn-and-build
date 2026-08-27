@@ -23,8 +23,6 @@ export function readPaidProgramId() {
 
 export function persistProgramBridge(pkg) {
   if (!pkg) return;
-  const programId = String(pkg?.program?.id || '').trim();
-  if (programId) persistPaidProgramId(programId);
   try {
     sessionStorage.setItem(BUILT_PROGRAM_KEY, JSON.stringify(pkg));
     sessionStorage.setItem(DRAFT_PROGRAM_KEY, JSON.stringify(pkg));

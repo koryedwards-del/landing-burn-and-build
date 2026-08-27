@@ -200,7 +200,10 @@ async function restoreBuiltPackageFromServer(email, { force = false, programId }
 
 async function syncProgramAfterPayment({ email, programId } = {}) {
   const resolvedEmail = isValidEmail(email) ? email : ensurePlanReadyEmail();
-  const resolvedProgramId = String(programId || store.paidProgramId || '').trim();
+  restoreBuiltPackage();
+  const resolvedProgramId = String(
+    programId || store.builtPackage?.program?.id || store.paidProgramId || ''
+  ).trim();
   if (!isValidEmail(resolvedEmail) || !resolvedProgramId) return false;
 
   store.paidProgramId = resolvedProgramId;
@@ -249,7 +252,9 @@ function ensurePlanReadyEmail() {
 
 function activeProgramId() {
   restoreBuiltPackage();
-  return String(store.paidProgramId || store.builtPackage?.program?.id || '').trim();
+  const builtId = String(store.builtPackage?.program?.id || '').trim();
+  if (builtId) return builtId;
+  return String(store.paidProgramId || '').trim();
 }
 
 function currentProgramId() {
@@ -615,6 +620,13 @@ async function startCheckout() {
   store.checkoutMessage = '';
   store.checkoutBusy = true;
   render();
+
+  const saved = await savePlanToServer();
+  if (!saved) {
+    store.checkoutBusy = false;
+    render();
+    return;
+  }
 
   const programId = currentProgramId();
   if (!programId) {

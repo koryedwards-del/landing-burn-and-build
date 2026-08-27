@@ -1,4 +1,5 @@
 import { dietPdfAttachmentFilename } from '../js/dietPdfNamingHelpers.js';
+import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
   brandLogoUrl,
   dietPdfDownloadUrl,
@@ -106,7 +107,15 @@ function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, logoUrl }) {
 </html>`;
 }
 
-export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, programId, forceResend = false }) {
+export async function sendDietPdfEmail({
+  to,
+  preferredName,
+  pkg,
+  pdfBuffer,
+  programId,
+  paidAt,
+  forceResend = false,
+}) {
   const apiKey = String(process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) {
     console.warn('[diet-email] RESEND_API_KEY not set — skipping email.');
@@ -132,7 +141,8 @@ export async function sendDietPdfEmail({ to, preferredName, pkg, pdfBuffer, prog
   };
   const id = String(programId || '').trim();
   if (id && !forceResend) {
-    headers['Idempotency-Key'] = `diet-pdf/${id}`;
+    const paidStamp = paidAt || pkg?.program?.issuedAt || 'unknown';
+    headers['Idempotency-Key'] = `diet-pdf/${id}/${paidStamp}/${DIET_PDF_GENERATION_VERSION}`;
   }
 
   const res = await fetch(RESEND_API, {
