@@ -1,6 +1,12 @@
 /** PDF page 8 — rows that list the customer's submitted answers. */
 
 import {
+  INTAKE_FIELD_QUESTIONS,
+  INTAKE_FIELD_QUESTION_NUMBERS,
+  INTAKE_WAIVER_SIGNED_LABEL,
+  INTAKE_WAIVER_SIGNED_QUESTION_NUMBER,
+} from './intakeQuestionCopyData.js';
+import {
   JOB_ACTIVITY_OPTIONS,
   WORK_STRESS,
 } from './profileDataEngine.js';
@@ -50,6 +56,14 @@ function bodyFatPercentValue(intake) {
   return `${fatPct}%`;
 }
 
+function confirmationRow(fieldId, value) {
+  return {
+    questionNumber: INTAKE_FIELD_QUESTION_NUMBERS[fieldId],
+    label: INTAKE_FIELD_QUESTIONS[fieldId],
+    value,
+  };
+}
+
 /** @param {{ questionNumber?: number, label: string }} row */
 export function formatAnswersConfirmationLabel({ questionNumber, label }) {
   const n = Number(questionNumber);
@@ -62,35 +76,23 @@ export function buildAnswersConfirmationRows(source) {
   const intake = source?.intake || source || {};
 
   return [
-    { questionNumber: 1, label: 'Name', value: displayValue(intake.preferredName) },
-    { questionNumber: 2, label: 'Gender', value: displayValue(intake.sex) },
-    { questionNumber: 3, label: 'Email', value: displayValue(intake.email) },
-    { questionNumber: 5, label: 'Who we thank', value: displayValue(intake.referrerName) },
-    { questionNumber: 6, label: 'Job activity', value: workPhysicalLabel(intake.workPhysical) },
-    { questionNumber: 7, label: 'My Life', value: workStressLabel(intake.workStress) },
-    { questionNumber: 8, label: 'Age', value: intake.age > 0 ? String(intake.age) : '—' },
-    { questionNumber: 9, label: 'SAG hours / week', value: displayValue(intake.weightTrainingHours) },
-    { questionNumber: 10, label: 'Cardio training hours / week', value: displayValue(intake.cardioHours) },
+    confirmationRow('fullName', displayValue(intake.preferredName)),
+    confirmationRow('sex', displayValue(intake.sex)),
+    confirmationRow('email', displayValue(intake.email)),
+    confirmationRow('referrerName', displayValue(intake.referrerName)),
+    confirmationRow('workPhysical', workPhysicalLabel(intake.workPhysical)),
+    confirmationRow('workStress', workStressLabel(intake.workStress)),
+    confirmationRow('age', intake.age > 0 ? String(intake.age) : '—'),
+    confirmationRow('sag', displayValue(intake.weightTrainingHours)),
+    confirmationRow('cardio', displayValue(intake.cardioHours)),
+    confirmationRow('moderate', displayValue(intake.fatBurningHours)),
+    confirmationRow('height', formatConfirmationHeight(intake.heightInches)),
+    confirmationRow('weight', intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—'),
+    confirmationRow('fatPercent', bodyFatPercentValue(intake)),
+    confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
     {
-      questionNumber: 11,
-      label: 'Fat burning training hours / week',
-      value: displayValue(intake.fatBurningHours),
-    },
-    { questionNumber: 12, label: 'Height', value: formatConfirmationHeight(intake.heightInches) },
-    {
-      questionNumber: 13,
-      label: 'Weight',
-      value: intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—',
-    },
-    { questionNumber: 14, label: 'Body fat %', value: bodyFatPercentValue(intake) },
-    {
-      questionNumber: 15,
-      label: 'How do you know',
-      value: formatFatSourceLabel(intake.fatSource, intake.fatSourceOther),
-    },
-    {
-      questionNumber: 16,
-      label: 'Waiver signed',
+      questionNumber: INTAKE_WAIVER_SIGNED_QUESTION_NUMBER,
+      label: INTAKE_WAIVER_SIGNED_LABEL,
       value: waiverSignedLabel(intake.waiverSignature, intake.waiverSignedDate),
     },
   ];

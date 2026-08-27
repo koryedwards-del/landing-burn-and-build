@@ -9,6 +9,7 @@ import {
   buildAnswersConfirmationRows,
   formatAnswersConfirmationLabel,
 } from '../../js/answersConfirmationPrintout.js';
+import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
 
@@ -57,27 +58,27 @@ const INFO_FIELDS = [
 
 const INFO_FIELD_META = {
   fullName: {
-    question: 'What is your full name?',
+    question: INTAKE_FIELD_QUESTIONS.fullName,
     guide: 'First and last name as it should appear on your program printout.',
     example: 'Example: Kory Edwards',
   },
   sex: {
-    question: 'What is your gender?',
+    question: INTAKE_FIELD_QUESTIONS.sex,
     guide: 'Select the option used in the calorie formulas.',
     example: 'Example: Male or Female',
   },
   email: {
-    question: 'What is your email address?',
+    question: INTAKE_FIELD_QUESTIONS.email,
     guide: 'We deliver your program here and use it to unlock your program after purchase.',
     example: 'Example: you@email.com',
   },
   emailConfirm: {
-    question: 'Confirm your email address',
+    question: INTAKE_FIELD_QUESTIONS.emailConfirm,
     guide: 'Type the same address again. We cannot fix a typo after checkout.',
     example: 'Must match the email you just entered.',
   },
   referrerName: {
-    question: 'Who do we thank?',
+    question: INTAKE_FIELD_QUESTIONS.referrerName,
     guide: 'If someone sent you here, enter their full name so we can thank them. Leave blank if you found us on your own.',
     example: 'Example: Jane Smith',
   },
@@ -94,22 +95,22 @@ const EXERCISE_HOURS_BREAKDOWN = 'Enter hours in decimals: 0.25 = 15 min, 0.5 = 
 
 const EXERCISE_FIELD_META = {
   age: {
-    question: 'How young are you?',
+    question: INTAKE_FIELD_QUESTIONS.age,
     guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
     sub: 'Example: 45',
   },
   sag: {
-    question: 'How many hours per week of stop & go activity?',
+    question: INTAKE_FIELD_QUESTIONS.sag,
     guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
     sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.',
   },
   cardio: {
-    question: 'How many hours per week in your cardio training range?',
+    question: INTAKE_FIELD_QUESTIONS.cardio,
     guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
     sub: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
   moderate: {
-    question: 'How many hours per week in your fat burning training range?',
+    question: INTAKE_FIELD_QUESTIONS.moderate,
     guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
     sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.',
   },
@@ -124,23 +125,23 @@ const BODY_FIELDS = [
 
 const BODY_FIELD_META = {
   height: {
-    question: 'What is your height?',
+    question: INTAKE_FIELD_QUESTIONS.height,
     guide: 'Enter feet and inches in separate boxes.',
     example: 'Example: 5 ft 10 in (enter 5 and 10)',
   },
   weight: {
-    question: 'What is your weight?',
+    question: INTAKE_FIELD_QUESTIONS.weight,
     guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
     example: 'Example: 168 lbs',
     alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $279 for this program. The program will only be as beneficial as your answers are accurate.',
   },
   fatSource: {
-    question: 'How do you know?',
+    question: INTAKE_FIELD_QUESTIONS.fatSource,
     guide: 'Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
     example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · calipers · Bod Pod · DEXA · hydrostatic weighing.',
   },
   fatPercent: {
-    question: 'What is your body fat percentage?',
+    question: INTAKE_FIELD_QUESTIONS.fatPercent,
     guide: 'Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one.',
     example: 'Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower. Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement.',
   },
@@ -203,11 +204,11 @@ function syncIntakeQuestionNumbers() {
 
 const OCCUPATION_FIELD_META = {
   workPhysical: {
-    question: 'How physically active is your job?',
+    question: INTAKE_FIELD_QUESTIONS.workPhysical,
     guide: 'Most people work 40–48 hours a week. That is a lot of time — your job activity affects how many servings you need every day. Pick what describes most workdays, not your hardest day.',
   },
   workStress: {
-    question: 'Your life outside work & training hours',
+    question: INTAKE_FIELD_QUESTIONS.workStress,
     guide: 'Kids, soccer, errands, caregiving — the normal rhythm of your life when you\'re not at work and not exercising.',
   },
 };

@@ -811,8 +811,8 @@ function drawServingsPage(doc, payload) {
 }
 
 const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.34 },
-  { key: 'value', width: 0.66 },
+  { key: 'label', width: 0.44 },
+  { key: 'value', width: 0.56 },
 ]);
 
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
