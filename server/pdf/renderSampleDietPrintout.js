@@ -632,7 +632,37 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 6;
+const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
+  { key: 'label', width: 0.34 },
+  { key: 'value', width: 0.66 },
+]);
+
+function drawAnswersConfirmationPage(doc, payload) {
+  const confirmation = payload.answersConfirmation;
+  if (!confirmation?.rows?.length) return;
+
+  let page = begin1982Page(doc, payload, 'Questionnaire confirmation');
+  if (confirmation.intro) {
+    page = drawParagraphs(doc, page, [confirmation.intro]);
+  }
+  drawLayoutTable(doc, {
+    x: page.x,
+    y: page.y + LAYOUT.sectionGap,
+    width: page.width,
+    columns: CONFIRMATION_TABLE_COLUMNS,
+    rows: confirmation.rows.map((row) => ({
+      label: row.label,
+      value: row.value,
+      _styles: {
+        label: { font: FONTS.bold, fontSize: LAYOUT.tableBodySize },
+      },
+    })),
+    headerRows: 0,
+    tableRowPad: LAYOUT.tableRowPad + 1,
+  });
+}
+
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 7;
 
 export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -670,6 +700,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   };
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
+  drawAnswersConfirmationPage(doc, payload);
 
   stamp1982Footers(doc, payload.header);
 

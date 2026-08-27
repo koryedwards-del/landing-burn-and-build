@@ -5,6 +5,10 @@ import { analyzeLeanBodyMass } from './bodyCompositionData.js';
 import { eightWeekProjectionFromPackage, exerciseHoursSummary } from './foodPlanPrintout.js';
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
+import {
+  ANSWERS_CONFIRMATION_INTRO,
+  buildAnswersConfirmationRows,
+} from './answersConfirmationPrintout.js';
 import { formatProgramDateLong, programClientName } from './programClientDataHelpers.js';
 import { localDateKey } from './programPackageData.js';
 import {
@@ -175,6 +179,10 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
+    },
+    answersConfirmation: {
+      intro: ANSWERS_CONFIRMATION_INTRO,
+      rows: buildAnswersConfirmationRows(pkg),
     },
   };
 }
