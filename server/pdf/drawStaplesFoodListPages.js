@@ -12,9 +12,7 @@ import {
   CUTTING_STAPLES_VEGETABLES,
 } from '../../data/cuttingStaplesPrintout.js';
 import { scaleStapleRows, stapleCategoryServings } from '../../js/stapleServingPrintout.js';
-import { GRAINS_STARCHES_TIPS_PROSE } from '../../data/grainsStarchesTipsPrintout.js';
 import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
-import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
 import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 
 const FONTS = SEMINAR_FONTS;
@@ -196,8 +194,6 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
   if (proteinResult.nextIndex !== proteinItems.length) {
     throw new Error(`Protein list truncated: drew ${proteinResult.nextIndex} of ${proteinItems.length}`);
   }
-  proteinY = proteinResult.y;
-  const proteinTipsDrawn = drawStaplesTipsUnderListIfFits(doc, page, proteinCol, proteinY, PROTEIN_TIPS_PROSE);
 
   let gsCol = columns[1];
   let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, page.y, gsCol.width);
@@ -221,21 +217,6 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
   if (gsIndex !== grainItems.length) {
     throw new Error(`Grains/starches list truncated: drew ${gsIndex} of ${grainItems.length}`);
   }
-
-  if (!proteinTipsDrawn) {
-    page = drawStaplesTipsUnderList(doc, payload, page, frame, proteinCol, page.y, PROTEIN_TIPS_PROSE);
-  }
-
-  drawStaplesTipsUnderList(doc, payload, page, frame, gsCol, gsY, GRAINS_STARCHES_TIPS_PROSE);
-}
-
-function drawStaplesTipsUnderListIfFits(doc, page, col, yStart, tips) {
-  const tipsH = measureStaplesTipsBlock(doc, col.width, tips);
-  if (yStart + tipsH > page.bottom) {
-    return false;
-  }
-  drawStaplesTipsBlock(doc, col, yStart, tips);
-  return true;
 }
 
 function drawStaplesTipsUnderList(doc, payload, page, frame, col, yStart, tips) {
