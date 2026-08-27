@@ -490,10 +490,10 @@ const MACRO_TABLE_GRAM_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG']);
 const MACRO_TABLE_CAL_KEYS = Object.freeze(['proteinCal', 'carbsCal', 'fatCal']);
 const MACRO_TABLE_GROUP_HEAD_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG', 'totalCal']);
 /** Group title row — PROTEIN, CARBS, FATS, TOTAL. */
-const MACRO_TABLE_GROUP_HEAD_SIZE = 11;
+const MACRO_TABLE_GROUP_HEAD_SIZE = 13;
 const MACRO_TABLE_GROUP_ROW_PAD = 2;
 /** Sub-header row — grams / calories. */
-const MACRO_TABLE_SUBHEAD_SIZE = LAYOUT.bodySize;
+const MACRO_TABLE_SUBHEAD_SIZE = 12;
 
 function macroTableGroupHeadStyles() {
   return Object.fromEntries(
