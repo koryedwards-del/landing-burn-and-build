@@ -746,7 +746,7 @@ function countMenuPlanRowGaps(sections) {
 }
 
 function measureMenuPlanForRowHeight() {
-  return LAYOUT.bodySize + 2 + SAMPLE_DAY_MENU_ROW_GAP + LAYOUT.sectionGap;
+  return LAYOUT.bodySize + 2 + LAYOUT.sectionGap;
 }
 
 function measureMenuSectionHeight(section, rowGap) {
@@ -770,7 +770,7 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
   const baseSectionGap = SAMPLE_DAY_MENU_SECTION_GAP;
   const baseRowGap = SAMPLE_DAY_MENU_ROW_GAP;
 
-  let baseHeight = LAYOUT.headerGap;
+  let baseHeight = menu.planFor ? 0 : LAYOUT.headerGap;
   if (menu.planFor) baseHeight += measureMenuPlanForRowHeight();
 
   sections.forEach((section) => {
@@ -782,7 +782,7 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
     ? measureMenuPlanTemplateNoteHeight(doc, menu.templateNote, page.width) + 8
     : 0;
 
-  const contentTop = page.y + LAYOUT.headerGap;
+  const contentTop = menu.planFor ? page.y : page.y + LAYOUT.headerGap;
   const contentBottom = page.bottom - noteHeight;
   const available = contentBottom - contentTop;
   const extra = Math.max(0, available - baseHeight);
@@ -843,7 +843,7 @@ function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
   doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
 
   const gap = 5;
-  const labelText = String(planFor.label || 'Menu Plan for');
+  const labelText = String(planFor.label || 'Menu Plan for day or week of.');
   const labelW = doc.widthOfString(labelText);
   const lineStart = x + labelW + gap;
   const lineEnd = x + width;
@@ -862,7 +862,7 @@ function drawMenuPlanForRow(doc, x, y, width, planFor, filled) {
     drawHandwritingOnLine(doc, planFor.value, lineStart + 4, lineY, lineEnd - lineStart - 8);
   }
 
-  return lineY + SAMPLE_DAY_MENU_ROW_GAP + LAYOUT.sectionGap;
+  return lineY + LAYOUT.sectionGap;
 }
 
 function drawMenuSection(doc, page, y, section, filled, layout) {

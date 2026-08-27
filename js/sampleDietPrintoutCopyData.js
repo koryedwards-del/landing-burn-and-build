@@ -35,6 +35,6 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
 export const SAMPLE_DIET_SERVINGS_NOTE =
   'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
-export const SAMPLE_DAY_MENU_PLAN_FOR_LABEL = 'Menu Plan for';
+export const SAMPLE_DAY_MENU_PLAN_FOR_LABEL = 'Menu Plan for day or week of.';
 
 export const SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD = 'You can download blank Menu Plans at ';
