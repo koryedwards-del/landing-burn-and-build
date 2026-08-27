@@ -519,206 +519,29 @@ function drawGoalTable(doc, x, y, width, goalTable) {
   });
 }
 
-const MACRO_TABLE_GRAM_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG']);
-const MACRO_TABLE_CAL_KEYS = Object.freeze(['proteinCal', 'carbsCal', 'fatCal']);
-const MACRO_TABLE_GROUP_HEAD_KEYS = Object.freeze(['proteinG', 'carbsG', 'fatG', 'totalCal']);
-/** Group title row — PROTEIN, CARBS, FATS, TOTAL. */
-const MACRO_TABLE_GROUP_HEAD_SIZE = 13;
-const MACRO_TABLE_GROUP_ROW_PAD = 2;
-/** Sub-header row — grams / calories. */
-const MACRO_TABLE_SUBHEAD_SIZE = 12;
+const MACRO_GRID_COLUMNS = 10;
+const MACRO_GRID_ROWS = 9;
+/** Prior macro table footprint (~213pt tall); split evenly across nine rows. */
+const MACRO_GRID_ROW_HEIGHT = 213 / MACRO_GRID_ROWS;
 
-function macroTableGroupHeadStyles() {
-  return Object.fromEntries(
-    MACRO_TABLE_GROUP_HEAD_KEYS.map((key) => [
-      key,
-      { font: FONTS.bold, fontSize: MACRO_TABLE_GROUP_HEAD_SIZE },
-    ]),
-  );
-}
+function drawMacroTable(doc, x, y, width) {
+  const colW = width / MACRO_GRID_COLUMNS;
+  const totalH = MACRO_GRID_ROW_HEIGHT * MACRO_GRID_ROWS;
+  const stroke = SEMINAR_COLORS.body;
 
-function macroTableSubheadStyles() {
-  return Object.fromEntries(
-    MACRO_TABLE_VALUE_KEYS.map((key) => [
-      key,
-      { font: FONTS.bold, fontSize: MACRO_TABLE_SUBHEAD_SIZE },
-    ]),
-  );
-}
+  doc.strokeColor(stroke).lineWidth(0.75).rect(x, y, width, totalH).stroke();
 
-/** Extra inset on TOTAL column left/right — default cell pad feels tight at 12pt. */
-const MACRO_TABLE_TOTAL_EXTRA_PAD = 4;
-/** Tight gap between grams and calories within one macro group. */
-const MACRO_TABLE_PAIR_INNER_PAD = 2;
-/** Wider gutter between protein | carbs | fats | total column groups. */
-const MACRO_TABLE_GROUP_GAP = 10;
+  doc.strokeColor(stroke).lineWidth(0.5);
+  for (let row = 1; row < MACRO_GRID_ROWS; row += 1) {
+    const lineY = y + row * MACRO_GRID_ROW_HEIGHT;
+    doc.moveTo(x, lineY).lineTo(x + width, lineY).stroke();
+  }
+  for (let col = 1; col < MACRO_GRID_COLUMNS; col += 1) {
+    const lineX = x + col * colW;
+    doc.moveTo(lineX, y).lineTo(lineX, y + totalH).stroke();
+  }
 
-function macroTableTextWidth(doc, text, font, fontSize) {
-  doc.font(font).fontSize(fontSize);
-  return doc.widthOfString(String(text ?? ''));
-}
-
-function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
-  const base = TABLE_1982.cellPad;
-  const pairInner = MACRO_TABLE_PAIR_INNER_PAD;
-  const groupHalf = MACRO_TABLE_GROUP_GAP / 2;
-  const gramsHeadingW = macroTableTextWidth(doc, 'grams', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
-  const caloriesHeadingW = macroTableTextWidth(doc, 'calories', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
-
-  let gramsMax = gramsHeadingW;
-  let caloriesMax = caloriesHeadingW;
-  let totalMax = Math.max(
-    caloriesHeadingW,
-    macroTableTextWidth(doc, 'TOTAL', FONTS.bold, MACRO_TABLE_GROUP_HEAD_SIZE),
-  );
-  let labelMax = 0;
-
-  macroRows.forEach((row) => {
-    const rowFont = row.label === 'Reduce current fat %' ? FONTS.bold : FONTS.regular;
-    labelMax = Math.max(labelMax, macroTableTextWidth(doc, row.label, rowFont, LAYOUT.tableBodySize));
-    MACRO_TABLE_GRAM_KEYS.forEach((key) => {
-      gramsMax = Math.max(gramsMax, macroTableTextWidth(doc, row[key], rowFont, LAYOUT.tableBodySize));
-    });
-    MACRO_TABLE_CAL_KEYS.forEach((key) => {
-      caloriesMax = Math.max(caloriesMax, macroTableTextWidth(doc, row[key], rowFont, LAYOUT.tableBodySize));
-    });
-    totalMax = Math.max(totalMax, macroTableTextWidth(doc, row.totalCal, rowFont, LAYOUT.tableBodySize));
-  });
-
-  const gramsColW = gramsMax + base + pairInner;
-  const calColEndGroupW = caloriesMax + pairInner + base + groupHalf;
-  const gramsColAfterGapW = gramsMax + base + groupHalf + pairInner;
-  const totalPadLeft = base + groupHalf;
-  const totalPadRight = base + MACRO_TABLE_TOTAL_EXTRA_PAD;
-  const totalColW = totalMax + totalPadLeft + totalPadRight;
-  const macroColsW = gramsColW + calColEndGroupW + gramsColAfterGapW + calColEndGroupW
-    + gramsColAfterGapW + calColEndGroupW;
-  const labelColW = Math.max(labelMax + base * 2, tableWidth - macroColsW - totalColW);
-
-  const toFrac = (w) => w / tableWidth;
-  const gramCol = (key, width, padLeft, padRight) => ({
-    key,
-    width: toFrac(width),
-    align: 'right',
-    padLeft,
-    padRight,
-  });
-  const calColEndGroup = (key) => gramCol(
-    key,
-    calColEndGroupW,
-    pairInner,
-    base + groupHalf,
-  );
-
-  return [
-    { key: 'label', width: toFrac(labelColW), align: 'left', padLeft: base, padRight: base },
-    gramCol('proteinG', gramsColW, base, pairInner),
-    calColEndGroup('proteinCal'),
-    gramCol('carbsG', gramsColAfterGapW, base + groupHalf, pairInner),
-    calColEndGroup('carbsCal'),
-    gramCol('fatG', gramsColAfterGapW, base + groupHalf, pairInner),
-    calColEndGroup('fatCal'),
-    {
-      key: 'totalCal',
-      width: toFrac(totalColW),
-      align: 'right',
-      padLeft: totalPadLeft,
-      padRight: totalPadRight,
-    },
-  ];
-}
-
-const MACRO_TABLE_GROUP_SPANS = Object.freeze([
-  { from: 'proteinG', to: 'proteinCal' },
-  { from: 'carbsG', to: 'carbsCal' },
-  { from: 'fatG', to: 'fatCal' },
-]);
-
-const MACRO_TABLE_VALUE_KEYS = Object.freeze([
-  'proteinG',
-  'proteinCal',
-  'carbsG',
-  'carbsCal',
-  'fatG',
-  'fatCal',
-  'totalCal',
-]);
-
-function macroTableBoldRowStyles() {
-  return Object.fromEntries(
-    ['label', ...MACRO_TABLE_VALUE_KEYS].map((key) => [
-      key,
-      { font: FONTS.bold, fontSize: LAYOUT.tableBodySize },
-    ]),
-  );
-}
-
-function macroTableBlankRow() {
-  return Object.fromEntries(
-    ['label', ...MACRO_TABLE_VALUE_KEYS].map((key) => [key, '']),
-  );
-}
-
-const MACRO_TABLE_HEADER_ALIGNS = Object.freeze(
-  Object.fromEntries(
-    ['proteinG', 'carbsG', 'fatG', 'totalCal'].map((key) => [key, 'center']),
-  ),
-);
-
-const MACRO_TABLE_SUBHEADER_ALIGNS = Object.freeze(
-  Object.fromEntries(MACRO_TABLE_VALUE_KEYS.map((key) => [key, 'center'])),
-);
-
-function buildMacroTableLayoutRows(macroRows = []) {
-  const groupHeader = {
-    label: '',
-    proteinG: 'PROTEIN',
-    carbsG: 'CARBS',
-    fatG: 'FATS',
-    totalCal: 'TOTAL',
-    _colSpans: MACRO_TABLE_GROUP_SPANS,
-    _aligns: MACRO_TABLE_HEADER_ALIGNS,
-    _styles: macroTableGroupHeadStyles(),
-    _rowPad: MACRO_TABLE_GROUP_ROW_PAD,
-    _valign: 'middle',
-  };
-  const subHeader = {
-    label: '',
-    proteinG: 'grams',
-    proteinCal: 'calories',
-    carbsG: 'grams',
-    carbsCal: 'calories',
-    fatG: 'grams',
-    fatCal: 'calories',
-    totalCal: 'calories',
-    _aligns: MACRO_TABLE_SUBHEADER_ALIGNS,
-    _styles: macroTableSubheadStyles(),
-  };
-  const bodyRows = [];
-  macroRows.forEach((row) => {
-    if (row.label === 'Reduce current fat %') {
-      bodyRows.push({ ...row, _styles: macroTableBoldRowStyles() });
-      bodyRows.push(macroTableBlankRow());
-      return;
-    }
-    bodyRows.push({ ...row });
-  });
-  return [groupHeader, subHeader, ...bodyRows];
-}
-
-function drawMacroTable(doc, x, y, width, macroRows) {
-  return drawLayoutTable(doc, {
-    x,
-    y,
-    width,
-    columns: macroTableColumnWidths(doc, width, macroRows),
-    rows: buildMacroTableLayoutRows(macroRows),
-    headerRows: 2,
-    gridLines: 'full',
-    strokeColor: SEMINAR_COLORS.body,
-    radius: 0,
-    lineBreak: false,
-  });
+  return y + totalH;
 }
 
 function drawFoodPlanPage(doc, payload) {
@@ -741,7 +564,7 @@ function drawFoodPlanPage(doc, payload) {
   if (fp.macroRows?.length) {
     page = {
       ...page,
-      y: drawMacroTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width, fp.macroRows) + LAYOUT.sectionGap,
+      y: drawMacroTable(doc, page.x, page.y + LAYOUT.sectionGap, page.width) + LAYOUT.sectionGap,
     };
   }
 }
