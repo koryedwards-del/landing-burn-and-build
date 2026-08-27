@@ -6,9 +6,7 @@ import {
   CUTTING_STAPLES_PROTEIN_DAIRY,
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
-import { programClientName } from './programClientDataHelpers.js';
-import {
-  SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
+import { SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
   SAMPLE_DAY_MENU_TEMPLATE_NOTE,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
@@ -142,16 +140,22 @@ function pickNameForRow(rowDef, mealKey) {
   return meal?.[rowDef.pickKey] || '';
 }
 
-export function formatMenuPlanPageTitle(isoDate) {
+export function formatMenuPlanForDate(isoDate) {
   const date = isoDate ? new Date(isoDate) : new Date();
-  if (Number.isNaN(date.getTime())) return 'Menu Plan';
+  if (Number.isNaN(date.getTime())) return '';
   const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
   const dateLong = date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-  return `Menu Plan — ${weekday}, ${dateLong}`;
+  return `${weekday}, ${dateLong}`;
+}
+
+/** @deprecated Use formatMenuPlanForDate for planFor; page title is "Menu Plan". */
+export function formatMenuPlanPageTitle(isoDate) {
+  const planDate = formatMenuPlanForDate(isoDate);
+  return planDate ? `Menu Plan — ${planDate}` : 'Menu Plan';
 }
 
 function buildRow(rowDef, mealKey, gridRows, filled) {
@@ -184,10 +188,10 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
 
   return {
     filled,
-    pageTitle: formatMenuPlanPageTitle(dateIso),
+    pageTitle: 'Menu Plan',
     planFor: {
       label: SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
-      value: filled ? programClientName(pkg) : '',
+      value: filled ? formatMenuPlanForDate(dateIso) : '',
     },
     templateNote: filled ? SAMPLE_DAY_MENU_TEMPLATE_NOTE : '',
     sections: buildMenuSections(gridRows, { filled }),
