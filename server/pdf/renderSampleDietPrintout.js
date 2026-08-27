@@ -480,7 +480,7 @@ function drawMacroTable(doc, x, y, width, macroRows) {
 
   let cy = y;
 
-  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SAMPLE_DIET_BLUE);
   macroTableGroupHeaders().forEach((group) => {
     const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
     const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
