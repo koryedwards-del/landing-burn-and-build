@@ -8,6 +8,7 @@ import { SEMINAR_COLORS } from './drawSeminar.js';
 import {
   begin1982Page,
   FRAME_1982,
+  SAMPLE_DIET_BLUE,
   stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
@@ -179,7 +180,6 @@ function lbaTodayPctDisplay(pct) {
 }
 
 function drawLbaTodayBlock(doc, x, y, width, todayRows) {
-  const blue = '#2F6FA8';
   const pad = 8;
   const labelSize = 9;
   const dataSize = 10;
@@ -215,7 +215,7 @@ function drawLbaTodayBlock(doc, x, y, width, todayRows) {
   doc
     .font(FONTS.bold)
     .fontSize(titleH)
-    .fillColor(blue)
+    .fillColor(SAMPLE_DIET_BLUE)
     .text('--TODAY--', x, cy, { width, align: 'center', lineGap: 0 });
   cy += titleH + 4;
 
@@ -372,6 +372,10 @@ function drawGoalTable(doc, x, y, width, goalTable) {
       { from: 'todayPct', to: 'todayLbs' },
       { from: 'goalB', to: 'goalC' },
     ],
+    _colors: {
+      todayPct: SAMPLE_DIET_BLUE,
+      goalB: SAMPLE_DIET_BLUE,
+    },
   };
   return drawLayoutTable(doc, {
     x,

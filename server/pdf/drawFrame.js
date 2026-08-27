@@ -111,9 +111,9 @@ function formatPreparedDateOrdinal(value) {
   return String(value);
 }
 
-export function drawGoldDivider(doc, x, y, width) {
+export function drawGoldDivider(doc, x, y, width, color = PDF_FRAME_COLORS.gold) {
   doc
-    .strokeColor(PDF_FRAME_COLORS.gold)
+    .strokeColor(color)
     .lineWidth(1.5)
     .moveTo(x, y)
     .lineTo(x + width, y)
@@ -271,7 +271,13 @@ export function pinnedContentBottomY(box) {
   return box.bottom - pinnedFooterBelowRule() - pinnedFooterAboveRule();
 }
 
-export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT, fonts = PDF_FRAME_FONTS } = {}) {
+export function drawPinnedProgramFooter(doc, box, {
+  page,
+  total,
+  contact = PDF_FRAME_CONTACT,
+  fonts = PDF_FRAME_FONTS,
+  ruleColor = PDF_FRAME_COLORS.gold,
+} = {}) {
   const ruleY = box.bottom - pinnedFooterBelowRule();
   const contactY = box.bottom - PINNED_FOOTER.bottomPad - PT.contact;
   const phone = contact?.phone || '';
@@ -293,7 +299,7 @@ export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_F
     });
   }
 
-  drawGoldDivider(doc, box.x, ruleY, box.width);
+  drawGoldDivider(doc, box.x, ruleY, box.width, ruleColor);
 
   doc
     .font(fonts.regular)
@@ -308,7 +314,12 @@ export function drawPinnedProgramFooter(doc, box, { page, total, contact = PDF_F
   return ruleY;
 }
 
-export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT, fonts = PDF_FRAME_FONTS) {
+export function stampPinnedProgramFooters(
+  doc,
+  contact = PDF_FRAME_CONTACT,
+  fonts = PDF_FRAME_FONTS,
+  { ruleColor = PDF_FRAME_COLORS.gold } = {},
+) {
   if (typeof doc.bufferedPageRange !== 'function') return 0;
   const range = doc.bufferedPageRange();
   const total = range.count;
@@ -319,6 +330,7 @@ export function stampPinnedProgramFooters(doc, contact = PDF_FRAME_CONTACT, font
       total,
       contact,
       fonts,
+      ruleColor,
     });
   }
   return total;

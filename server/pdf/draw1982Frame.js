@@ -13,6 +13,9 @@ import {
 
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
+/** Matches --TODAY-- on Lean Body Analysis (page 2). */
+export const SAMPLE_DIET_BLUE = '#2F6FA8';
+
 export const FRAME_1982 = Object.freeze({
   pageTitleSize: PRINT_TEMPLATE_TYPOGRAPHY.pageTitle,
   titleBottomGap: PRINT_TEMPLATE_TYPOGRAPHY.titleBottomGap,
@@ -86,5 +89,5 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true, font
 }
 
 export function stamp1982Footers(doc, contact, fonts = FRAME_FONTS) {
-  return stampPinnedProgramFooters(doc, contact, fonts);
+  return stampPinnedProgramFooters(doc, contact, fonts, { ruleColor: SAMPLE_DIET_BLUE });
 }
