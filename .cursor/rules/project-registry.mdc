@@ -84,9 +84,9 @@ npm run verify:pdf
 
 Renderer: `server/pdf/` (PDFKit). Purchased diet PDF via `GET /api/programs/diet-pdf`.
 
-## B&B Sample Diet PDF (`b&bsamplediet.pdf`)
+## B&B Sample Diet PDF (`bbsamplediet.pdf`)
 
-6-page sample deliverable (1982 layout + food lists). Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
+6-page sample deliverable (1982 layout + food lists). Preview: `npm run render:sample-diet-preview` → commit `docs/samples/bbsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 

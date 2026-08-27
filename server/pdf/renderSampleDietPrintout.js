@@ -1,5 +1,5 @@
 /**
- * B&B Sample Diet PDF (deliverable: docs/samples/b&bsamplediet.pdf).
+ * B&B Sample Diet PDF (deliverable: docs/samples/bbsamplediet.pdf).
  * 1982 Warner layout + food lists. Preview: scripts/render-sample-diet-preview.mjs
  */
 import { createPrintPdf } from './creator.js';
