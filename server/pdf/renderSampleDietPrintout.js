@@ -62,6 +62,17 @@ function isTableColumnSpanned(columns, row, colIndex) {
   return false;
 }
 
+function isTableColumnBorderSpanned(columns, row, boundaryAfterColIndex) {
+  for (const span of getRowColSpans(row)) {
+    const bounds = tableColumnSpanBounds(columns, span);
+    if (!bounds) continue;
+    if (boundaryAfterColIndex >= bounds.fromIndex && boundaryAfterColIndex < bounds.toIndex) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function tableCellStartsSpan(columns, row, colIndex) {
   return getRowColSpans(row).some((span) => {
     const bounds = tableColumnSpanBounds(columns, span);
@@ -263,17 +274,26 @@ function drawLayoutTable(doc, {
   });
 
   if (fullGrid) {
-    let cx = x;
+    const colBoundaries = [x];
+    let boundaryX = x;
     columns.forEach((col, index) => {
-      cx += colWidths[index];
-      if (index < columns.length - 1) {
+      boundaryX += colWidths[index];
+      colBoundaries.push(boundaryX);
+    });
+
+    let rowY = y;
+    rows.forEach((row, rowIndex) => {
+      const rh = rowHeights[rowIndex];
+      for (let i = 1; i < colBoundaries.length - 1; i += 1) {
+        if (isTableColumnBorderSpanned(columns, row, i - 1)) continue;
         doc
           .strokeColor(strokeColor)
           .lineWidth(0.5)
-          .moveTo(cx, y)
-          .lineTo(cx, y + totalH)
+          .moveTo(colBoundaries[i], rowY)
+          .lineTo(colBoundaries[i], rowY + rh)
           .stroke();
       }
+      rowY += rh;
     });
   }
 
