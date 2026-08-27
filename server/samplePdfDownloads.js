@@ -4,9 +4,11 @@ import path from 'path';
 /** Public sample PDFs — served with Content-Disposition: attachment for Safari downloads. */
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
   'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf' },
-  'blank-menu-plans': { file: 'blank-menu-plans.pdf', filename: 'blank-menu-plans.pdf' },
-  /** @deprecated Old slug — same PDF as blank-menu-plans */
-  'menu-plan-template': { file: 'blank-menu-plans.pdf', filename: 'blank-menu-plans.pdf' },
+  'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
+  /** @deprecated Old slug — same PDF as menu-plan-worksheet */
+  'blank-menu-plans': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
+  /** @deprecated Old slug — same PDF as menu-plan-worksheet */
+  'menu-plan-template': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
 });
 
 /** @param {string} root @param {string} slug */

@@ -3,7 +3,7 @@ import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
   brandLogoUrl,
   dietPdfDownloadUrl,
-  blankMenuPlansUrl,
+  menuPlanWorksheetUrl,
   purchaserPortalUrl,
   siteOrigin,
   SUPPORT_EMAIL,
@@ -47,7 +47,7 @@ function buildDietEmailText({ firstName, downloadUrl, portalUrl, templateUrl }) 
     'A copy of your Burn & Build Diet is attached to this email.',
     '',
     'Resources',
-    `Download blank menu plans: ${templateUrl}`,
+    `Print a blank Menu Plan worksheet: ${templateUrl}`,
     '',
     `Questions or need help getting started? Contact us at ${SUPPORT_EMAIL} — we are happy to help.`,
     '',
@@ -96,7 +96,7 @@ function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, templateUrl, lo
               <p style="margin:0 0 16px;">Need it again later? <a href="${portalUrl}" style="color:#2F6FA8;">Open your download page</a> — your program opens automatically.</p>
               <p style="margin:0 0 24px;">A copy of your Burn &amp; Build Diet is attached to this email.</p>
               <p style="margin:0 0 8px;font-weight:bold;">Resources</p>
-              <p style="margin:0;"><a href="${templateUrl}" style="color:#2F6FA8;">Download blank menu plans</a></p>
+              <p style="margin:0;"><a href="${templateUrl}" style="color:#2F6FA8;">Print a blank Menu Plan worksheet</a></p>
             </td>
           </tr>
           <tr>
@@ -133,7 +133,7 @@ export async function sendDietPdfEmail({
   const firstName = escapeHtml(firstNameRaw);
   const downloadUrl = dietPdfDownloadUrl(to, programId);
   const portalUrl = purchaserPortalUrl(to, programId);
-  const templateUrl = blankMenuPlansUrl();
+  const templateUrl = menuPlanWorksheetUrl();
   const logoUrl = brandLogoUrl();
   const emailContent = {
     firstName: firstNameRaw,

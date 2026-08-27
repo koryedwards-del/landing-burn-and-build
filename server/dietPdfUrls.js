@@ -1,5 +1,5 @@
 import { normalizeEmail } from './db.js';
-import { BLANK_MENU_PLANS_URL } from '../js/siteUrls.js';
+import { MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
 
 const RENDER_API_ORIGIN = String(
   process.env.DIET_PDF_DOWNLOAD_ORIGIN || 'https://program-creator-3tzd.onrender.com',
@@ -38,13 +38,18 @@ export function brandLogoUrl() {
   return `${SITE_ORIGIN}/img/brand/bblogo1.png`;
 }
 
-export function blankMenuPlansUrl() {
-  return BLANK_MENU_PLANS_URL;
+export function menuPlanWorksheetUrl() {
+  return MENU_PLAN_WORKSHEET_URL;
 }
 
-/** @deprecated Use blankMenuPlansUrl */
+/** @deprecated Use menuPlanWorksheetUrl */
+export function blankMenuPlansUrl() {
+  return menuPlanWorksheetUrl();
+}
+
+/** @deprecated Use menuPlanWorksheetUrl */
 export function menuPlanTemplateUrl() {
-  return blankMenuPlansUrl();
+  return menuPlanWorksheetUrl();
 }
 
 export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';

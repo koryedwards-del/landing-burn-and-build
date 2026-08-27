@@ -11,7 +11,7 @@ import {
   SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
-import { BLANK_MENU_PLANS_URL } from './siteUrls.js';
+import { MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
 import { scaleStapleServingLabel } from './stapleServingPrintout.js';
 import { servingsGridRows } from './servingsPrintout.js';
 
@@ -188,8 +188,8 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
     },
     templateNote: filled ? {
       lead: SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
-      url: BLANK_MENU_PLANS_URL,
-      linkLabel: 'program-creator-3tzd.onrender.com/api/samples/blank-menu-plans',
+      url: MENU_PLAN_WORKSHEET_URL,
+      linkLabel: 'program-creator-3tzd.onrender.com/api/samples/menu-plan-worksheet',
     } : null,
     sections: buildMenuSections(gridRows, { filled }),
   };
