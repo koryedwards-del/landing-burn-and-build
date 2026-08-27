@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
-import { SAMPLE_DIET_ATTACHMENT_URL, SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
+import { SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
 
 const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
@@ -28,8 +28,7 @@ if (fs.existsSync(artifactsDir)) {
 const md5 = crypto.createHash('md5').update(pdf).digest('hex');
 const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
 const downloadUrl = SAMPLE_DIET_DOWNLOAD_URL;
-const attachmentUrl = SAMPLE_DIET_ATTACHMENT_URL;
-const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${attachmentUrl}"`;
+const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${downloadUrl}"`;
 
 console.log(`FILE ${samplePath}`);
 if (fs.existsSync(artifactsDir)) {
@@ -37,5 +36,4 @@ if (fs.existsSync(artifactsDir)) {
 }
 console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
 console.log(`DOWNLOAD ${downloadUrl}`);
-console.log(`ATTACHMENT ${attachmentUrl}`);
 console.log(`CURL ${curlCmd}`);

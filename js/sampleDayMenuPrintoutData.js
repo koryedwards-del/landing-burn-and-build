@@ -189,7 +189,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
     templateNote: filled ? {
       lead: SAMPLE_DAY_MENU_TEMPLATE_NOTE_LEAD,
       url: MENU_PLAN_TEMPLATE_URL,
-      linkLabel: 'burnandbuilddiet.com/download/menu-plan-template/',
+      linkLabel: 'program-creator-3tzd.onrender.com/api/samples/menu-plan-template',
     } : null,
     sections: buildMenuSections(gridRows, { filled }),
   };
