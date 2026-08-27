@@ -18,6 +18,10 @@ export const INTAKE_FIELD_QUESTIONS = Object.freeze({
   fatSource: 'How do you know?',
 });
 
+/** User-facing name for weightTrainingHours (questionnaire field sag). */
+export const INTAKE_STOP_AND_GO_ACTIVITY = 'stop & go activity';
+export const INTAKE_STOP_AND_GO_ACTIVITY_TITLE = 'Stop & Go Activity';
+
 /** Continuous question numbers across intake steps (email confirm = 4, omitted from PDF confirmation). */
 export const INTAKE_FIELD_QUESTION_NUMBERS = Object.freeze({
   fullName: 1,
