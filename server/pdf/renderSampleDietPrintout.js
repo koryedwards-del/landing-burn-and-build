@@ -541,10 +541,13 @@ function drawMacroGridCellText(doc, text, cellX, cellY, cellW, cellH, {
   fontSize = MACRO_GRID_SUBHEAD_SIZE,
 } = {}) {
   doc.font(font).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-  const label = String(text);
-  const textW = doc.widthOfString(label);
-  const textH = doc.heightOfString(label, { width: cellW, lineBreak: false });
-  doc.text(label, cellX + (cellW - textW) / 2, cellY + (cellH - textH) / 2, { lineBreak: false });
+  const lineH = doc.currentLineHeight();
+  const textY = cellY + Math.max(0, (cellH - lineH) / 2);
+  doc.text(String(text), cellX, textY, {
+    width: cellW,
+    align: 'center',
+    lineBreak: false,
+  });
 }
 
 function drawMacroTable(doc, x, y, width) {
