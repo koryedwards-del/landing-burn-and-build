@@ -403,15 +403,32 @@ function drawGoalTable(doc, x, y, width, goalTable) {
 
 function macroTableColDefs() {
   return [
-    { key: 'label', width: 0.24, align: 'left' },
-    { key: 'proteinG', width: 0.09, align: 'center' },
-    { key: 'proteinCal', width: 0.108, align: 'center' },
-    { key: 'carbsG', width: 0.09, align: 'center' },
-    { key: 'carbsCal', width: 0.108, align: 'center' },
-    { key: 'fatG', width: 0.09, align: 'center' },
-    { key: 'fatCal', width: 0.108, align: 'center' },
-    { key: 'totalCal', width: 0.166, align: 'center' },
+    { key: 'label', width: 0.28, align: 'left' },
+    { key: 'proteinG', width: 0.07, align: 'right' },
+    { key: 'proteinCal', width: 0.08, align: 'left' },
+    { key: 'carbsG', width: 0.07, align: 'right' },
+    { key: 'carbsCal', width: 0.08, align: 'left' },
+    { key: 'fatG', width: 0.07, align: 'right' },
+    { key: 'fatCal', width: 0.08, align: 'left' },
+    { key: 'totalCal', width: 0.27, align: 'center' },
   ];
+}
+
+function macroTableCellPad(col, side) {
+  const key = col.key;
+  if (key.endsWith('G')) {
+    return side === 'left' ? 4 : 1;
+  }
+  if (key.endsWith('Cal') && key !== 'totalCal') {
+    return side === 'left' ? 1 : 4;
+  }
+  return 4;
+}
+
+function macroTableCellInsets(col, colWidth) {
+  const left = macroTableCellPad(col, 'left');
+  const right = macroTableCellPad(col, 'right');
+  return { left, right, innerW: colWidth - left - right };
 }
 
 function macroTableGroupHeaders() {
@@ -440,7 +457,7 @@ function measureMacroTableRow(doc, row, colDefs, width, { isHeader, tableRowPad,
   let maxH = tableRowPad * 2;
   colDefs.forEach((col) => {
     const colW = col.width * width;
-    const innerW = colW - cellPad * 2;
+    const { innerW } = macroTableCellInsets(col, colW);
     doc.font(isHeader ? FONTS.bold : FONTS.regular).fontSize(
       isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
     );
@@ -511,8 +528,9 @@ function drawMacroTable(doc, x, y, width, macroRows) {
   colDefs.forEach((col, index) => {
     const text = String(subHeader[col.key] ?? '');
     if (!text) return;
-    doc.text(text, colXs[index] + cellPad, cy + tableRowPad, {
-      width: colWidths[index] - cellPad * 2,
+    const { left, innerW } = macroTableCellInsets(col, colWidths[index]);
+    doc.text(text, colXs[index] + left, cy + tableRowPad, {
+      width: innerW,
       lineGap: 0,
       align: col.align || 'left',
       lineBreak: false,
@@ -529,12 +547,13 @@ function drawMacroTable(doc, x, y, width, macroRows) {
   bodyRows.forEach((row, rowIndex) => {
     const rh = bodyHeights[rowIndex];
     colDefs.forEach((col, index) => {
+      const { left, innerW } = macroTableCellInsets(col, colWidths[index]);
       doc
         .font(FONTS.regular)
         .fontSize(LAYOUT.tableBodySize)
         .fillColor(SEMINAR_COLORS.body)
-        .text(String(row[col.key] ?? ''), colXs[index] + cellPad, cy + tableRowPad, {
-          width: colWidths[index] - cellPad * 2,
+        .text(String(row[col.key] ?? ''), colXs[index] + left, cy + tableRowPad, {
+          width: innerW,
           align: col.align || 'left',
           lineGap: 0,
         });
