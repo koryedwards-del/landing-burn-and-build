@@ -362,7 +362,14 @@ function drawGoalTable(doc, x, y, width, goalTable) {
     y,
     width,
     columns,
-    rows: [head, ...goalTable.rows],
+    rows: [
+      head,
+      ...goalTable.rows.map((row) => (
+        row.label === 'FAT'
+          ? { ...row, _styles: { ...row._styles, goalA: { font: FONTS.bold } } }
+          : row
+      )),
+    ],
     headerRows: 1,
   });
 }
