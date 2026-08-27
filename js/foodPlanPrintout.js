@@ -4,7 +4,7 @@ import {
   computeDietEightWeekProjection,
   computeDietProjectionTimeline,
 } from './bodyCompositionData.js';
-import { INTAKE_STOP_AND_GO_ACTIVITY } from './intakeQuestionCopyData.js';
+import { INTAKE_WEIGHTS_RACQUET_SPORTS } from './intakeQuestionCopyData.js';
 
 
 function formatHours(n) {
@@ -77,7 +77,7 @@ export function buildProjectionsPrintoutSection(pkg) {
     'body mass (LBM), and on your activities. This is the most individualized program available for',
     'losing fat and building muscle.',
     `In your questionnaire, you indicated you plan to exercise a total of ${hours.total} hour(s) per week.`,
-    `${hours.wt} hour(s) of ${INTAKE_STOP_AND_GO_ACTIVITY}, ${hours.cardio} hour(s) of cardiovascular activities,`,
+    `${hours.wt} hour(s) of ${INTAKE_WEIGHTS_RACQUET_SPORTS}, ${hours.cardio} hour(s) of cardiovascular activities,`,
     `${hours.fatBurn} hour(s) of fat-burning activities`,
   ].join(' ');
 

@@ -54,8 +54,8 @@ if (samplePayload.preparedDate !== '2024-01-15') {
 if (samplePayload.foodPlan.macroRows?.[3]?.label !== 'Workday (Sitting)') {
   throw new Error(`workday label: got ${samplePayload.foodPlan.macroRows?.[3]?.label}`);
 }
-if (samplePayload.foodPlan.macroRows?.[4]?.label !== 'Stop & Go Activity (3 hours)') {
-  throw new Error(`stop & go activity label: got ${samplePayload.foodPlan.macroRows?.[4]?.label}`);
+if (samplePayload.foodPlan.macroRows?.[4]?.label !== 'Weights/Racquet Sports (3 hours)') {
+  throw new Error(`weights/racquet sports label: got ${samplePayload.foodPlan.macroRows?.[4]?.label}`);
 }
 if (samplePayload.foodPlan.macroRows?.[0]?.totalCal !== '2,192') {
   throw new Error(`macro total: got ${samplePayload.foodPlan.macroRows?.[0]?.totalCal}`);

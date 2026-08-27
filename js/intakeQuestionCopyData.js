@@ -9,7 +9,7 @@ export const INTAKE_FIELD_QUESTIONS = Object.freeze({
   workPhysical: 'How physically active is your job?',
   workStress: 'Your life outside work & training hours',
   age: 'How young are you?',
-  sag: 'How many hours per week of stop & go activity?',
+  sag: 'How many hours per week of Weights/Racquet Sports?',
   cardio: 'How many hours per week in your cardio training range?',
   moderate: 'How many hours per week in your fat burning training range?',
   height: 'What is your height?',
@@ -19,8 +19,8 @@ export const INTAKE_FIELD_QUESTIONS = Object.freeze({
 });
 
 /** User-facing name for weightTrainingHours (questionnaire field sag). */
-export const INTAKE_STOP_AND_GO_ACTIVITY = 'stop & go activity';
-export const INTAKE_STOP_AND_GO_ACTIVITY_TITLE = 'Stop & Go Activity';
+export const INTAKE_WEIGHTS_RACQUET_SPORTS = 'weights/racquet sports';
+export const INTAKE_WEIGHTS_RACQUET_SPORTS_TITLE = 'Weights/Racquet Sports';
 
 /** Continuous question numbers across intake steps (email confirm = 4, omitted from PDF confirmation). */
 export const INTAKE_FIELD_QUESTION_NUMBERS = Object.freeze({

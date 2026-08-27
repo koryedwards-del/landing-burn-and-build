@@ -3,7 +3,7 @@
 import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import { analyzeLeanBodyMass } from './bodyCompositionData.js';
 import { eightWeekProjectionFromPackage, exerciseHoursSummary } from './foodPlanPrintout.js';
-import { INTAKE_STOP_AND_GO_ACTIVITY, INTAKE_STOP_AND_GO_ACTIVITY_TITLE } from './intakeQuestionCopyData.js';
+import { INTAKE_WEIGHTS_RACQUET_SPORTS, INTAKE_WEIGHTS_RACQUET_SPORTS_TITLE } from './intakeQuestionCopyData.js';
 import { servingsGridRows } from './servingsPrintout.js';
 import { lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
 import {
@@ -84,7 +84,7 @@ function buildMacroTableRows(formula, workPhysical, intake = {}) {
     row('Reduce current fat %', f.QA, f.C1, f.FG, f.T1),
     row('Resting(RMR)', f.QB, f.C2, f.FH, f.T2),
     row(`Workday (${workdayLabel})`, f.QC, f.C3, f.FJ, f.T3),
-    row(`${INTAKE_STOP_AND_GO_ACTIVITY_TITLE} (${macroExerciseHoursLabel(intake.weightTrainingHours)})`, f.QD, f.C4, f.FK, f.T4),
+    row(`${INTAKE_WEIGHTS_RACQUET_SPORTS_TITLE} (${macroExerciseHoursLabel(intake.weightTrainingHours)})`, f.QD, f.C4, f.FK, f.T4),
     row(`Cardiovascular Activities (${macroExerciseHoursLabel(intake.cardioHours)})`, f.QE, f.C5, f.FL, f.T5),
     row(`Fat Burning Activities (${macroExerciseHoursLabel(intake.fatBurningHours)})`, f.QF, f.C6, f.FM, f.T6),
   ];
@@ -137,7 +137,7 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
 
   const fatLost = projection ? projection.fatLostLbs.toFixed(1) : '—';
   const exerciseParagraph = projection
-    ? `In eight weeks, you could safely lose ${fatLost} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${hours.total} hour(s) per week. ${hours.wt} hour(s) of ${INTAKE_STOP_AND_GO_ACTIVITY}, ${hours.cardio} hour(s) of cardiovascular activities, ${hours.fatBurn} hour(s) of fat-burning activities`
+    ? `In eight weeks, you could safely lose ${fatLost} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${hours.total} hour(s) per week. ${hours.wt} hour(s) of ${INTAKE_WEIGHTS_RACQUET_SPORTS}, ${hours.cardio} hour(s) of cardiovascular activities, ${hours.fatBurn} hour(s) of fat-burning activities`
     : '';
 
   const weeklyLine = projection
