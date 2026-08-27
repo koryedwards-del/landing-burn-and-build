@@ -27,3 +27,14 @@ export function purchaserPortalUrl(email, programId) {
   const query = params.toString();
   return `${SITE_ORIGIN}/createyourfoodplan/${query ? `?${query}` : ''}`;
 }
+
+export function siteOrigin() {
+  return SITE_ORIGIN;
+}
+
+/** Public logo URL for transactional email (hosted on GitHub Pages). */
+export function brandLogoUrl() {
+  return `${SITE_ORIGIN}/img/brand/bblogo1.png`;
+}
+
+export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';
