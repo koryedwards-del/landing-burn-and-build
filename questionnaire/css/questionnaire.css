@@ -330,6 +330,10 @@ body.q-app--workroom {
     border-bottom: none;
   }
 
+  .q-app--workroom .q-nav__list > li:nth-child(3n) {
+    border-right: 1px solid var(--border);
+  }
+
   .q-app--workroom .q-nav__list > li:last-child {
     border-right: none;
   }
