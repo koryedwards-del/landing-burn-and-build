@@ -715,29 +715,19 @@ function drawPeriodLabel(doc, x, y, label, selected, filled) {
 }
 
 function drawTimeColumn(doc, x, y, time, filled) {
+  const lineY = y + LAYOUT.bodySize;
   doc
-    .font(FONTS.regular)
-    .fontSize(LAYOUT.bodySize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text('Time', x, y, { lineBreak: false });
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(0.75)
+    .moveTo(x, lineY)
+    .lineTo(x + SAMPLE_DAY_MENU_TIME_LINE_WIDTH, lineY)
+    .stroke();
 
-  let periodY;
-  if (filled) {
-    const lineY = y + LAYOUT.bodySize + 3;
-    doc
-      .strokeColor(TABLE_1982.stroke)
-      .lineWidth(0.75)
-      .moveTo(x, lineY)
-      .lineTo(x + SAMPLE_DAY_MENU_TIME_LINE_WIDTH, lineY)
-      .stroke();
-    if (time?.value) {
-      drawHandwritingOnLine(doc, time.value, x + 1, lineY, SAMPLE_DAY_MENU_TIME_LINE_WIDTH - 2, { align: 'center' });
-    }
-    periodY = lineY + 8;
-  } else {
-    periodY = y + LAYOUT.bodySize + 4;
+  if (filled && time?.value) {
+    drawHandwritingOnLine(doc, time.value, x + 1, lineY, SAMPLE_DAY_MENU_TIME_LINE_WIDTH - 2, { align: 'center' });
   }
 
+  const periodY = lineY + 8;
   drawPeriodLabel(doc, x, periodY, 'AM', time?.period === 'AM', filled);
   drawPeriodLabel(doc, x + 22, periodY, 'PM', time?.period === 'PM', filled);
 
