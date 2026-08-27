@@ -376,14 +376,14 @@ function drawGoalTable(doc, x, y, width, goalTable) {
 
 function macroTableColDefs() {
   return [
-    { key: 'label', width: 0.27, align: 'left' },
-    { key: 'proteinG', width: 0.06, align: 'center' },
-    { key: 'proteinCal', width: 0.12, align: 'center' },
-    { key: 'carbsG', width: 0.06, align: 'center' },
-    { key: 'carbsCal', width: 0.12, align: 'center' },
-    { key: 'fatG', width: 0.06, align: 'center' },
-    { key: 'fatCal', width: 0.12, align: 'center' },
-    { key: 'totalCal', width: 0.19, align: 'center' },
+    { key: 'label', width: 0.24, align: 'left' },
+    { key: 'proteinG', width: 0.09, align: 'center' },
+    { key: 'proteinCal', width: 0.108, align: 'center' },
+    { key: 'carbsG', width: 0.09, align: 'center' },
+    { key: 'carbsCal', width: 0.108, align: 'center' },
+    { key: 'fatG', width: 0.09, align: 'center' },
+    { key: 'fatCal', width: 0.108, align: 'center' },
+    { key: 'totalCal', width: 0.166, align: 'center' },
   ];
 }
 
@@ -486,8 +486,9 @@ function drawMacroTable(doc, x, y, width, macroRows) {
     if (!text) return;
     doc.text(text, colXs[index] + cellPad, cy + tableRowPad, {
       width: colWidths[index] - cellPad * 2,
-      align: col.align || 'left',
       lineGap: 0,
+      align: col.align || 'left',
+      lineBreak: false,
     });
   });
   cy += subHeaderH;
