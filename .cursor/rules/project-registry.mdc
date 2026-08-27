@@ -56,7 +56,7 @@ Every `js/` file name ends with its job:
 | **Data** | Structured objects, constants, copy strings | `programPackageData.js`, `programReportCopyData.js` |
 | **Helpers** | Small utility functions | `programClientDataHelpers.js`, `dietPdfNamingHelpers.js` |
 | **Printout** | One PDF section payload | `servingsPrintout.js`, `answersConfirmationPrintout.js` |
-| **Fixtures** | Test / preview sample inputs | `programReportPreviewFixtures.js` |
+| **Fixtures** | Test / preview sample inputs | `sampleDietPreviewFixtures.js`, `printoutVerifyFixtures.js` |
 
 ## Key files
 
@@ -82,11 +82,11 @@ npm run verify:pdf
 
 ## Program report PDF
 
-Renderer: `server/pdf/` (PDFKit). Preview: `npm run render:program-report-preview`. See `.cursor/rules/program-report-preview-pdf.mdc`.
+Renderer: `server/pdf/` (PDFKit). Purchased diet PDF via `GET /api/programs/diet-pdf`.
 
 ## B&B Sample Diet PDF (`b&bsamplediet.pdf`)
 
-6-page sample deliverable (1982 layout + food lists) — **not** the 2026 program report. Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
+6-page sample deliverable (1982 layout + food lists). Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 

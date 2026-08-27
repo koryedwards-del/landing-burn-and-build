@@ -9,10 +9,10 @@ import {
 import { buildProgramPackage } from '../js/programPackageData.js';
 import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
 import {
-  KRISTI_PREVIEW_FORM,
-  KRISTI_PREVIEW_GOLDEN,
-  KRISTI_PREVIEW_INTAKE,
-} from '../js/programReportPreviewFixtures.js';
+  GOLDEN_SAMPLE_FORM,
+  GOLDEN_SAMPLE_GOLDEN,
+  GOLDEN_SAMPLE_INTAKE,
+} from '../js/printoutVerifyFixtures.js';
 import {
   scaleStapleRows,
   scaleStapleServingLabel,
@@ -113,8 +113,8 @@ function verifyCase(name, intake, pdf) {
   return true;
 }
 
-function verifyKristiPackage() {
-  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM);
+function verifyGoldenSamplePackage() {
+  const pkg = buildProgramPackage(GOLDEN_SAMPLE_FORM);
   const errors = [];
   const expect = (label, actual, expected) => {
     if (JSON.stringify(actual) !== JSON.stringify(expected)) {
@@ -122,28 +122,28 @@ function verifyKristiPackage() {
     }
   };
 
-  expect('leanBodyMass', pkg.intake.leanBodyMass, KRISTI_PREVIEW_INTAKE.lbm);
-  expect('workIntensity', pkg.intake.workIntensity, KRISTI_PREVIEW_INTAKE.intensity);
-  expect('weightTrainingHours', pkg.intake.weightTrainingHours, KRISTI_PREVIEW_INTAKE.weightTrainingHours);
-  expect('cardioHours', pkg.intake.cardioHours, KRISTI_PREVIEW_INTAKE.cardioHours);
-  expect('fatBurningHours', pkg.intake.fatBurningHours, KRISTI_PREVIEW_INTAKE.fatBurningHours);
+  expect('leanBodyMass', pkg.intake.leanBodyMass, GOLDEN_SAMPLE_INTAKE.lbm);
+  expect('workIntensity', pkg.intake.workIntensity, GOLDEN_SAMPLE_INTAKE.intensity);
+  expect('weightTrainingHours', pkg.intake.weightTrainingHours, GOLDEN_SAMPLE_INTAKE.weightTrainingHours);
+  expect('cardioHours', pkg.intake.cardioHours, GOLDEN_SAMPLE_INTAKE.cardioHours);
+  expect('fatBurningHours', pkg.intake.fatBurningHours, GOLDEN_SAMPLE_INTAKE.fatBurningHours);
 
   const f = pkg.plan.formula;
-  expect('maintain total', rnd(f.T7), KRISTI_PREVIEW_GOLDEN.maintain[3]);
-  expect('reduce total', rnd(f.T1), KRISTI_PREVIEW_GOLDEN.reduce[3]);
-  expect('protein servings', pkg.plan.servings.protein, KRISTI_PREVIEW_GOLDEN.servings[0]);
+  expect('maintain total', rnd(f.T7), GOLDEN_SAMPLE_GOLDEN.maintain[3]);
+  expect('reduce total', rnd(f.T1), GOLDEN_SAMPLE_GOLDEN.reduce[3]);
+  expect('protein servings', pkg.plan.servings.protein, GOLDEN_SAMPLE_GOLDEN.servings[0]);
 
   if (errors.length) {
-    console.error('FAIL Kristi Warner package');
+    console.error('FAIL golden sample package');
     errors.forEach((e) => console.error(`  ${e}`));
     return false;
   }
-  console.log('OK Kristi Warner package');
+  console.log('OK golden sample package');
   return true;
 }
 
-function verifyKristiServingsGrid() {
-  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM);
+function verifyGoldenSampleServingsGrid() {
+  const pkg = buildProgramPackage(GOLDEN_SAMPLE_FORM);
   const rows = servingsGridRows(pkg);
   const errors = [];
   const expect = (label, actual, expected) => {
@@ -156,7 +156,7 @@ function verifyKristiServingsGrid() {
   expect('distributeWholeServings(4, 3)', distributeWholeServings(4, 3), [1, 2, 1]);
 
   const protein = rows.find((row) => row.label === 'Protein');
-  expect('Kristi protein row', protein, {
+  expect('golden sample protein row', protein, {
     label: 'Protein',
     daily: '9',
     breakfast: '3',
@@ -168,7 +168,7 @@ function verifyKristiServingsGrid() {
   });
 
   const fruits = rows.find((row) => row.label === 'Fruits');
-  expect('Kristi fruit row', fruits, {
+  expect('golden sample fruit row', fruits, {
     label: 'Fruits',
     daily: '3',
     breakfast: '',
@@ -189,11 +189,11 @@ function verifyKristiServingsGrid() {
   }
 
   if (errors.length) {
-    console.error('FAIL Kristi servings grid');
+    console.error('FAIL golden sample servings grid');
     errors.forEach((e) => console.error(`  ${e}`));
     return false;
   }
-  console.log('OK Kristi servings grid');
+  console.log('OK golden sample servings grid');
   return true;
 }
 
@@ -212,7 +212,7 @@ function verifyStapleServingScale() {
     CUTTING_STAPLES_PROTEIN_DAIRY,
     stapleCategoryServings(plan, 'protein'),
   ).find((row) => row.name === 'Chicken breast');
-  expect('Kristi chicken food list', chicken?.serving, '78g');
+  expect('golden sample chicken food list', chicken?.serving, '78g');
 
   if (errors.length) {
     console.error('FAIL staple serving scale');
@@ -224,10 +224,10 @@ function verifyStapleServingScale() {
 }
 
 const ok = [
-  verifyKristiPackage(),
-  verifyKristiServingsGrid(),
+  verifyGoldenSamplePackage(),
+  verifyGoldenSampleServingsGrid(),
   verifyStapleServingScale(),
-  verifyCase('Kristi Warner', KRISTI_PREVIEW_INTAKE, KRISTI_PREVIEW_GOLDEN),
+  verifyCase('Golden sample female', GOLDEN_SAMPLE_INTAKE, GOLDEN_SAMPLE_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,
     intensity: 2.0, weightTrainingHours: 0, cardioHours: 0.75, fatBurningHours: 3.5,

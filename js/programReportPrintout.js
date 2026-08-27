@@ -31,7 +31,6 @@ import {
 import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackageData.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './profileDataEngine.js';
-import { KRISTI_PREVIEW_SEMINAR_HISTORY } from '../data/kristiPreviewSeminarHistory.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNamingHelpers.js';
 import {
   ANSWERS_CONFIRMATION_INTRO,
@@ -119,13 +118,6 @@ function buildCompositionHistoryRows(pkg, { programRows = [], sampleHistory = nu
   });
 }
 
-function resolveSampleHistory(pkg) {
-  if (pkg?.meta?.source === 'program-report-preview') {
-    return KRISTI_PREVIEW_SEMINAR_HISTORY;
-  }
-  return null;
-}
-
 export function buildProgramReportPayload(pkg, options = {}) {
   const intake = pkg?.intake || {};
   const gender = String(intake.sex || '').toLowerCase().startsWith('f') ? 'female' : 'male';
@@ -142,10 +134,9 @@ export function buildProgramReportPayload(pkg, options = {}) {
   const timelineMarkers = fatBarTimelineMarkers(projectionTimelineFromPackage(pkg));
   if (timelineMarkers.length) fatBar.timelineMarkers = timelineMarkers;
 
-  const sampleHistory = options.sampleHistory ?? resolveSampleHistory(pkg);
   const historyRows = buildCompositionHistoryRows(pkg, {
     programRows: options.programRows,
-    sampleHistory,
+    sampleHistory: options.sampleHistory ?? null,
   });
 
   return {

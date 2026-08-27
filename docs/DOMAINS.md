@@ -30,7 +30,7 @@ Three standalone pieces:
 | `js/printTemplateTypographyData.js` | PDF typography tokens |
 | `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
 | `server/pdf/` | PDFKit renderer |
-| `docs/samples/` | Kristi preview PDFs |
+| `docs/samples/` | Sample diet PDF (`b&bsamplediet.pdf`) |
 
 ## Verify
 
@@ -41,7 +41,7 @@ npm run verify:pdf
 
 ## Sample PDF
 
-`docs/samples/burn-and-build-diet-kristi-latest.pdf`
+`docs/samples/b&bsamplediet.pdf`
 
 ## Questionnaire
 

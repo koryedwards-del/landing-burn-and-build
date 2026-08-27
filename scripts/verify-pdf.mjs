@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /** Program report PDF verification — run: npm run verify:pdf */
 
-import { buildKristiPreviewPayload } from '../js/programReportPreviewFixtures.js';
+import { buildVerifyProgramReportPayload } from '../js/printoutVerifyFixtures.js';
 import { renderPrintPdf } from '../server/pdf/index.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 import { PdfError } from '../server/pdf/errors.js';
@@ -42,27 +42,27 @@ assertThrows('validatePrintView rejects empty', () => validatePrintView(''), { s
 assertThrows('validatePrintView rejects unknown', () => validatePrintView('nope'), { status: 400, includes: 'not supported' });
 assertThrows('validatePrintPayload rejects bad programreport', () => validatePrintPayload('programreport', {}), { status: 400 });
 
-const filename = sanitizePdfFilename('Burn & Build Diet - Kristi Warner', 'programreport');
+const filename = sanitizePdfFilename('Burn & Build Diet - Sample Client', 'programreport');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
   throw new Error(`sanitizePdfFilename failed: ${filename}`);
 }
 console.log(`ok  sanitizePdfFilename — ${filename}`);
 
-const kristiPayload = buildKristiPreviewPayload();
-assertPdf('programreport (Kristi Warner)', await renderPrintPdf('programreport', { payload: kristiPayload }), { minPages: 10 });
+const payload = buildVerifyProgramReportPayload();
+assertPdf('programreport (golden sample)', await renderPrintPdf('programreport', { payload }), { minPages: 10 });
 
-if (kristiPayload.clientName !== 'KRISTI WARNER') {
-  throw new Error(`Kristi clientName: got ${kristiPayload.clientName}`);
+if (payload.clientName !== 'SAMPLE CLIENT') {
+  throw new Error(`clientName: got ${payload.clientName}`);
 }
-if (kristiPayload.preparedDate !== '2024-01-15') {
-  throw new Error(`Kristi preparedDate: got ${kristiPayload.preparedDate}`);
+if (payload.preparedDate !== '2024-01-15') {
+  throw new Error(`preparedDate: got ${payload.preparedDate}`);
 }
-if (kristiPayload.foodPlan.fatLostLbs !== '11.0') {
-  throw new Error(`Kristi fat lost: got ${kristiPayload.foodPlan.fatLostLbs}`);
+if (payload.foodPlan.fatLostLbs !== '11.0') {
+  throw new Error(`fat lost: got ${payload.foodPlan.fatLostLbs}`);
 }
-if (kristiPayload.servings.gridRows[0].daily !== '9') {
-  throw new Error(`Kristi protein servings: got ${kristiPayload.servings.gridRows[0].daily}`);
+if (payload.servings.gridRows[0].daily !== '9') {
+  throw new Error(`protein servings: got ${payload.servings.gridRows[0].daily}`);
 }
-console.log('ok  Kristi Warner program report payload');
+console.log('ok  golden sample program report payload');
 
 console.log('\nProgram report PDF checks passed.');

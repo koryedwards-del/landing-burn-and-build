@@ -311,7 +311,7 @@ Remainder distribution (e.g. 10 protein → 3, 4, 3): extras go to **lunch**, th
 
 ### Burn & Build Diet program report PDF
 
-See `.cursor/rules/program-report-preview-pdf.mdc`. Renderer: `server/pdf/renderProgramReportLockedPreview.js`.
+Renderer: `server/pdf/renderProgramReportLockedPreview.js`. Sample diet preview: `.cursor/rules/sample-diet-pdf.mdc`.
 
 | Page | Grams? |
 |------|--------|
@@ -355,7 +355,7 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 | Program report payload | `js/programReportPrintout.js` |
 | Program report PDF renderer | `server/pdf/renderProgramReportLockedPreview.js` |
 | PDF entrypoint | `server/pdf/index.js` |
-| Preview render workflow | `.cursor/rules/program-report-preview-pdf.mdc` |
+| Sample diet preview | `.cursor/rules/sample-diet-pdf.mdc` |
 | Tips (prep/measure) | `data/*TipsPrintout.js` |
 | Audits | `scripts/protein-82-audit.mjs`, `grains-14-1-audit.mjs`, `starches-14-0-audit.mjs`, `veg-fruit-audit.mjs`, `cutting-food-list-audit.mjs` |
 
@@ -369,7 +369,7 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (program r
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
 5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the program report.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
-7. Program report PDF changes → `npm run render:program-report-preview` per `program-report-preview-pdf.mdc`.
+7. Sample diet PDF changes → `npm run render:sample-diet-preview` per `sample-diet-pdf.mdc`.
 
 ## Errata — do not repeat these mistakes
 

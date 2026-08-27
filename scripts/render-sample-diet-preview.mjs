@@ -4,8 +4,8 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildKristiFivePagePreviewPayload } from '../js/fivePagePrintoutData.js';
-import { renderFivePagePrintout } from '../server/pdf/renderFivePagePrintout.js';
+import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
+import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
 
 export const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
 
@@ -17,8 +17,8 @@ const GITHUB_BRANCH = 'main';
 const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/docs/samples`;
 
 const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildKristiFivePagePreviewPayload();
-const pdf = await renderFivePagePrintout(payload, { buildLabel });
+const payload = buildSampleDietPreviewPayload();
+const pdf = await renderSampleDietPrintout(payload, { buildLabel });
 
 const samplePath = path.join(samplesDir, SAMPLE_DIET_FILENAME);
 fs.writeFileSync(samplePath, pdf);

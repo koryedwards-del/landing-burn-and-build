@@ -1,6 +1,6 @@
 /**
- * 2026 Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → FAQ → Confirmation).
- * Production: renderProgramReport.js · Preview samples: scripts/render-program-report-preview.mjs
+ * Burn & Build Diet program report (Welcome → LBA → Food Plan → Servings → Food List → FAQ → Confirmation).
+ * Production: renderProgramReport.js
  */
 import path from 'path';
 import { fileURLToPath } from 'url';

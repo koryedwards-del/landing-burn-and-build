@@ -1,4 +1,4 @@
-/** B&B 5-page printout payload — 1982 Warner layout + burn-engine data. */
+/** B&B sample diet printout payload — 1982 Warner layout + burn-engine data. */
 
 import { computeTodayBodyComposition } from './bodyCompositionData.js';
 import { analyzeLeanBodyMass } from './bodyCompositionData.js';
@@ -11,15 +11,15 @@ import {
   aceBodyFatCategories,
   aceBodyFatWeightRanges,
   aceRiskMessage,
-} from './fivePageAceData.js';
+} from './sampleDietAceData.js';
 import {
-  FIVE_PAGE_FOOD_PLAN,
-  FIVE_PAGE_HEADER,
-  FIVE_PAGE_LBA,
-  FIVE_PAGE_SERVINGS_NOTE,
-  FIVE_PAGE_WELCOME,
-} from './fivePagePrintoutCopyData.js';
-import { buildKristiPreviewPackage } from './programReportPreviewFixtures.js';
+  SAMPLE_DIET_FOOD_PLAN,
+  SAMPLE_DIET_HEADER,
+  SAMPLE_DIET_LBA,
+  SAMPLE_DIET_SERVINGS_NOTE,
+  SAMPLE_DIET_WELCOME,
+} from './sampleDietPrintoutCopyData.js';
+import { buildSampleDietPreviewPackage } from './sampleDietPreviewFixtures.js';
 
 const rnd = (x) => Math.round(Number(x));
 
@@ -59,14 +59,14 @@ function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
   if (analysis.atOrAbove) {
     return {
       lead,
-      congrats: `CONGRATULATIONS! Your LBM is at or above the desirable amount. ${FIVE_PAGE_LBA.congratsSuffix}`,
+      congrats: `CONGRATULATIONS! Your LBM is at or above the desirable amount. ${SAMPLE_DIET_LBA.congratsSuffix}`,
       alert: '',
     };
   }
   return {
     lead,
     congrats: '',
-    alert: `ALERT! Your LBM is below the desirable amount for your height. ${FIVE_PAGE_LBA.alertSuffix}`,
+    alert: `ALERT! Your LBM is below the desirable amount for your height. ${SAMPLE_DIET_LBA.alertSuffix}`,
   };
 }
 
@@ -129,7 +129,7 @@ function buildGoalTable(today, projection) {
   };
 }
 
-export function buildFivePagePrintoutPayload(pkg, options = {}) {
+export function buildSampleDietPrintoutPayload(pkg, options = {}) {
   const intake = pkg?.intake || {};
   const gender = String(intake.sex || '').toLowerCase().startsWith('f') ? 'female' : 'male';
   const today = computeTodayBodyComposition(intake);
@@ -148,11 +148,11 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
     : '';
 
   const weeklyLine = projection
-    ? `You project to lose an average of ${projection.weeklyFatLossLbs.toFixed(1)} pounds of fat per week. ${FIVE_PAGE_FOOD_PLAN.projectionSuffix}`
+    ? `You project to lose an average of ${projection.weeklyFatLossLbs.toFixed(1)} pounds of fat per week. ${SAMPLE_DIET_FOOD_PLAN.projectionSuffix}`
     : '';
 
   return {
-    view: 'fivepage',
+    view: 'samplediet',
     title: `B&B Sample Diet - ${programClientName(pkg)}`,
     clientName: seminarClientName(pkg),
     preparedAt: seminarPreparedDate(pkg),
@@ -160,29 +160,29 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
     preparedDateLong: formatProgramDateLong(
       pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
     ),
-    header: { ...FIVE_PAGE_HEADER },
-    welcome: { ...FIVE_PAGE_WELCOME },
+    header: { ...SAMPLE_DIET_HEADER },
+    welcome: { ...SAMPLE_DIET_WELCOME },
     leanBodyAnalysis: {
       profileLine: lbaProfileLine1982(intake),
       todayRows: lbaTodayTableRows(today),
       bfRangeCategories: aceBodyFatCategories(gender),
       bfRangeWeightRanges: aceBodyFatWeightRanges(gender, intake.leanBodyMass),
       aceRiskMessage: aceRiskMessage(gender, intake.fatPercent),
-      aceLead: FIVE_PAGE_LBA.aceLead,
+      aceLead: SAMPLE_DIET_LBA.aceLead,
       lbmLead: lbmCopy.lead,
       lbmStatus: lbmCopy.congrats || lbmCopy.alert,
-      monitorCopy: FIVE_PAGE_LBA.monitor,
+      monitorCopy: SAMPLE_DIET_LBA.monitor,
     },
     foodPlan: {
-      lead: FIVE_PAGE_FOOD_PLAN.lead,
+      lead: SAMPLE_DIET_FOOD_PLAN.lead,
       exerciseParagraph,
       weeklyLine,
-      macroIntro: FIVE_PAGE_FOOD_PLAN.macroIntro,
+      macroIntro: SAMPLE_DIET_FOOD_PLAN.macroIntro,
       goalTable: buildGoalTable(today, projection),
       macroRows: buildMacroTableRows(formula, intake.workIntensity),
     },
     servings: {
-      note: FIVE_PAGE_SERVINGS_NOTE,
+      note: SAMPLE_DIET_SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
@@ -190,8 +190,7 @@ export function buildFivePagePrintoutPayload(pkg, options = {}) {
   };
 }
 
-export function buildKristiFivePagePreviewPayload() {
-  const pkg = buildKristiPreviewPackage();
-  pkg.meta = { ...pkg.meta, source: 'sample-diet-preview' };
-  return buildFivePagePrintoutPayload(pkg);
+export function buildSampleDietPreviewPayload() {
+  const pkg = buildSampleDietPreviewPackage();
+  return buildSampleDietPrintoutPayload(pkg);
 }

@@ -1,4 +1,4 @@
-/** 1982 ACE body-fat categories and weight-goal ranges (5-page printout). */
+/** 1982 ACE body-fat categories and weight-goal ranges (sample diet printout). */
 
 const ACE_CATEGORIES = Object.freeze({
   female: [
@@ -17,7 +17,7 @@ const ACE_CATEGORIES = Object.freeze({
   ],
 });
 
-/** 1982 seminar rounding — tuned to match kwarner-1982-original.pdf (Kristi golden). */
+/** 1982 seminar rounding — tuned to match the archived 1982 reference layout. */
 function aceWeightRangeLabel(lbm, category, index) {
   const lean = Number(lbm);
   if (!lean || lean <= 0) return '—';

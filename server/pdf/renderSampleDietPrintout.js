@@ -452,14 +452,14 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-export const FIVE_PAGE_PRINTOUT_MIN_PAGES = 6;
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 6;
 
-export function validateFivePagePayload(payload) {
+export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
-    throw new Error('Five-page printout requires a payload object.');
+    throw new Error('Sample diet printout requires a payload object.');
   }
-  if (payload.view !== 'fivepage') {
-    throw new Error(`Expected view fivepage, got ${payload.view}`);
+  if (payload.view !== 'samplediet') {
+    throw new Error(`Expected view samplediet, got ${payload.view}`);
   }
   if (!payload.clientName || !payload.preparedDate) {
     throw new Error('clientName and preparedDate are required.');
@@ -467,8 +467,8 @@ export function validateFivePagePayload(payload) {
   return payload;
 }
 
-export async function renderFivePagePrintout(payload, { title, buildLabel } = {}) {
-  validateFivePagePayload(payload);
+export async function renderSampleDietPrintout(payload, { title, buildLabel } = {}) {
+  validateSampleDietPayload(payload);
 
   const creator = createPrintPdf({
     title: title || payload.title || 'B&B Sample Diet',
@@ -495,8 +495,8 @@ export async function renderFivePagePrintout(payload, { title, buildLabel } = {}
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages < FIVE_PAGE_PRINTOUT_MIN_PAGES) {
-    throw new Error(`Five-page printout expected at least ${FIVE_PAGE_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
+  if (pages < SAMPLE_DIET_PRINTOUT_MIN_PAGES) {
+    throw new Error(`Sample diet printout expected at least ${SAMPLE_DIET_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
   }
   return buffer;
 }

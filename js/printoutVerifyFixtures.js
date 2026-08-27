@@ -1,12 +1,12 @@
-/** Kristi Warner sample fixtures for Burn & Build Diet preview PDF (script + verify). */
+/** Golden verify fixtures for burn-engine + program report PDF checks. */
 
 import { buildProgramPackage } from './programPackageData.js';
 import { computePlan } from './burnEngine.js';
 import { buildProgramReportLockedPayload } from './programReportLockedPayloadData.js';
 
-export const KRISTI_PREVIEW_FORM = {
-  preferredName: 'Kristi Warner',
-  email: 'preview@example.com',
+export const GOLDEN_SAMPLE_FORM = {
+  preferredName: 'Sample Client',
+  email: 'verify@example.com',
   sex: 'female',
   heightFeet: '5',
   heightInchesPart: '6',
@@ -20,12 +20,12 @@ export const KRISTI_PREVIEW_FORM = {
   cardioHours: 0,
   fatBurningHours: 3,
   wakeTime: '06:00',
-  waiverSignature: 'Kristi Warner',
+  waiverSignature: 'Sample Client',
   waiverSignedDate: '2024-01-15',
 };
 
-/** Burn-engine intake + golden PDF values for Kristi — shared by verify scripts. */
-export const KRISTI_PREVIEW_INTAKE = {
+/** Burn-engine intake + golden PDF values — shared by verify scripts. */
+export const GOLDEN_SAMPLE_INTAKE = {
   lbm: 113.7,
   weight: 184,
   bf: 38.22,
@@ -37,7 +37,7 @@ export const KRISTI_PREVIEW_INTAKE = {
   fatBurningHours: 3,
 };
 
-export const KRISTI_PREVIEW_GOLDEN = {
+export const GOLDEN_SAMPLE_GOLDEN = {
   servings: [9, 9, 3, 18],
   maintain: [71, 219, 115, 2192],
   reduce: [71, 219, 44, 1552],
@@ -61,17 +61,17 @@ export const KRISTI_PREVIEW_GOLDEN = {
   ],
 };
 
-export function buildKristiPreviewPackage() {
-  const pkg = buildProgramPackage(KRISTI_PREVIEW_FORM, {
+export function buildGoldenSamplePackage() {
+  const pkg = buildProgramPackage(GOLDEN_SAMPLE_FORM, {
     label: '8-Week Burn & Build Program',
-    meta: { source: 'program-report-preview' },
+    meta: { source: 'verify' },
   });
   pkg.intake.leanBodyMass = 113.7;
   pkg.intake.workIntensity = 1.5;
   pkg.intake.thighMm = 25;
   pkg.intake.waistMm = 25;
-  pkg.intake.waiverSignature = KRISTI_PREVIEW_FORM.waiverSignature;
-  pkg.intake.waiverSignedDate = KRISTI_PREVIEW_FORM.waiverSignedDate;
+  pkg.intake.waiverSignature = GOLDEN_SAMPLE_FORM.waiverSignature;
+  pkg.intake.waiverSignedDate = GOLDEN_SAMPLE_FORM.waiverSignedDate;
   pkg.program.foodPlanCreatedDate = '2024-01-15';
   pkg.program.issuedAt = '2024-01-15T12:00:00.000Z';
 
@@ -99,6 +99,6 @@ export function buildKristiPreviewPackage() {
   return pkg;
 }
 
-export function buildKristiPreviewPayload() {
-  return buildProgramReportLockedPayload(buildKristiPreviewPackage());
+export function buildVerifyProgramReportPayload() {
+  return buildProgramReportLockedPayload(buildGoldenSamplePackage());
 }

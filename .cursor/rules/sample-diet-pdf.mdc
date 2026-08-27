@@ -5,27 +5,26 @@ alwaysApply: true
 
 # B&B Sample Diet PDF (`b&bsamplediet.pdf`)
 
-Formerly the 1982 “5-page” sample-female printout. **Separate from the 2026 program report** (`burn-and-build-diet-kristi-*.pdf`).
-
-**Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — stable name, overwritten each render. This is the PDF headed for customer delivery.
+**Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — stable name, overwritten each render. This is the PDF headed for customer delivery and the landing-page sample embed.
 
 **Pages:** Welcome → Lean Body Analysis → Food Plan → Servings → Food List (protein/grains) → Food List (vegetables/fruit) — **6 pages**.
 
-When the user asks for **sample diet**, **sample-female**, **b&samplediet**, or legacy **five-page** work, use this pipeline — not `render:program-report-preview`.
+When the user asks for **sample diet**, **sample-female**, or **b&bsamplediet** work, use this pipeline.
 
 ## Pipeline
 
 | Piece | Path |
 |-------|------|
-| Renderer | `server/pdf/renderFivePagePrintout.js` |
+| Renderer | `server/pdf/renderSampleDietPrintout.js` |
 | Frame / header | `server/pdf/draw1982Frame.js` |
 | Food list pages | `server/pdf/drawStaplesFoodListPages.js` |
-| Payload | `js/fivePagePrintoutData.js` → `buildKristiFivePagePreviewPayload()` |
-| Copy | `js/fivePagePrintoutCopyData.js` |
+| Payload | `js/sampleDietPrintoutData.js` → `buildSampleDietPreviewPayload()` |
+| Copy | `js/sampleDietPrintoutCopyData.js` |
+| Preview fixtures | `js/sampleDietPreviewFixtures.js` |
 | Render script | `scripts/render-sample-diet-preview.mjs` |
 | Deliverable | `docs/samples/b&bsamplediet.pdf` |
 
-Run: `npm run render:sample-diet-preview` (alias: `render:five-page-preview`)
+Run: `npm run render:sample-diet-preview`
 
 ## Delivery order (critical — tell the user)
 
@@ -49,7 +48,7 @@ https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/do
 
 (`&` is URL-encoded as `%26`.)
 
-- **One** stable filename — do not send numbered `bb-five-page-sample-female-N.pdf` or program-report links.
+- **One** stable filename — do not send numbered archive PDFs.
 - Do not link before push.
 
 ## Do not
@@ -57,10 +56,9 @@ https://raw.githubusercontent.com/koryedwards-del/landing-burn-and-build/main/do
 | Wrong | Why |
 |-------|-----|
 | Link before push | GitHub still serves old bytes |
-| `render:program-report-preview` for sample diet | Wrong product (12+ pages) |
 | Cursor artifacts panel | Broken download UX on Cursor Web |
 | `github.com/.../blob/...` | Opens browser; does not download |
 
 ## Sanity check after render
 
-**6 pages**, ~70 KB, Times fonts, full header every page, food lists without tips. If ~50 KB / 4 pages, food lists missing. If ~180 KB / 13+ pages, wrong renderer.
+**6 pages**, ~70 KB, Times fonts, full header every page, food lists without tips. If ~50 KB / 4 pages, food lists missing.
