@@ -58,6 +58,7 @@ function bodyFatPercentValue(intake) {
 
 function confirmationRow(fieldId, value) {
   return {
+    fieldId,
     questionNumber: INTAKE_FIELD_QUESTION_NUMBERS[fieldId],
     label: INTAKE_FIELD_QUESTIONS[fieldId],
     value,
@@ -91,6 +92,7 @@ export function buildAnswersConfirmationRows(source) {
     confirmationRow('fatPercent', bodyFatPercentValue(intake)),
     confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
     {
+      fieldId: 'waiver',
       questionNumber: INTAKE_WAIVER_SIGNED_QUESTION_NUMBER,
       label: INTAKE_WAIVER_SIGNED_LABEL,
       value: waiverSignedLabel(intake.waiverSignature, intake.waiverSignedDate),

@@ -793,6 +793,26 @@ body.q-app--workroom {
   color: var(--text);
 }
 
+.intake-review__link {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  cursor: pointer;
+}
+
+.intake-review__link:hover,
+.intake-review__link:focus-visible {
+  color: var(--text);
+}
+
 .intake-review dd {
   margin: 0;
   font-size: 0.9375rem;
@@ -857,6 +877,14 @@ body.q-app--workroom {
   margin: 0.5rem 0 0;
   font-size: 0.8125rem;
   color: var(--muted);
+}
+
+.intake-acc__item.is-invalid {
+  box-shadow: inset 0 0 0 2px #8b0000;
+}
+
+.intake-waiver__cell.is-invalid {
+  box-shadow: inset 0 0 0 2px #8b0000;
 }
 
 .intake-acc__error {

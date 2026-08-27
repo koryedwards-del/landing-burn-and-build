@@ -506,9 +506,11 @@ function setInfoFieldError(item, message) {
   if (message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
+    item.classList.add('is-invalid');
   } else {
     errorEl.textContent = '';
     errorEl.hidden = true;
+    item.classList.remove('is-invalid');
   }
 }
 
@@ -538,7 +540,10 @@ function renderInfoAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) setInfoFieldError(item, '');
+    if (!isOpen) {
+      const error = validateInfoField(fieldId, values);
+      setInfoFieldError(item, isDone ? '' : error);
+    }
   });
 }
 
@@ -548,9 +553,7 @@ function updateStepNav() {
   if (stepBackBtn) stepBackBtn.disabled = step === 0;
   if (stepNextBtn) {
     stepNextBtn.textContent = step === panels.length - 1 ? 'Build my program' : 'Next';
-    stepNextBtn.disabled = step === panels.length - 1
-      ? programBuilt
-      : step < panels.length - 1 && !canProceed(step);
+    stepNextBtn.disabled = step === panels.length - 1 && programBuilt;
   }
 }
 
@@ -686,9 +689,11 @@ function setOccupationFieldError(item, message) {
   if (message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
+    item.classList.add('is-invalid');
   } else {
     errorEl.textContent = '';
     errorEl.hidden = true;
+    item.classList.remove('is-invalid');
   }
 }
 
@@ -718,7 +723,10 @@ function renderOccupationAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) setOccupationFieldError(item, '');
+    if (!isOpen) {
+      const error = validateOccupationField(fieldId, values);
+      setOccupationFieldError(item, isDone ? '' : error);
+    }
   });
 }
 
@@ -900,9 +908,11 @@ function setBodyFieldError(item, message) {
   if (message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
+    item.classList.add('is-invalid');
   } else {
     errorEl.textContent = '';
     errorEl.hidden = true;
+    item.classList.remove('is-invalid');
   }
 }
 
@@ -932,7 +942,10 @@ function renderBodyAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) setBodyFieldError(item, '');
+    if (!isOpen) {
+      const error = validateBodyField(fieldId, values);
+      setBodyFieldError(item, isDone ? '' : error);
+    }
   });
 }
 
@@ -1130,9 +1143,11 @@ function setExerciseFieldError(item, message) {
   if (message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
+    item.classList.add('is-invalid');
   } else {
     errorEl.textContent = '';
     errorEl.hidden = true;
+    item.classList.remove('is-invalid');
   }
 }
 
@@ -1162,7 +1177,10 @@ function renderExerciseAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) setExerciseFieldError(item, '');
+    if (!isOpen) {
+      const error = validateExerciseField(fieldId, values);
+      setExerciseFieldError(item, isDone ? '' : error);
+    }
   });
 }
 
@@ -1316,9 +1334,127 @@ function canProceed(stepIndex) {
     case 3:
       return bodySectionComplete(values);
     case 4:
-      return Boolean(values.signature);
+      return Boolean(values.signature && values.signatureDate);
     default:
       return true;
+  }
+}
+
+function clearWaiverInvalidState() {
+  document.querySelectorAll('.intake-waiver__cell.is-invalid').forEach((cell) => {
+    cell.classList.remove('is-invalid');
+  });
+}
+
+function highlightWaiverValidationErrors(values) {
+  clearWaiverInvalidState();
+  let focusTarget = null;
+  if (!values.signature) {
+    document.querySelector('.intake-waiver__cell--signed')?.classList.add('is-invalid');
+    focusTarget = form.elements.signature;
+  }
+  if (!values.signatureDate) {
+    document.querySelector('.intake-waiver__cell--date')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.signatureDate;
+  }
+  focusTarget?.focus();
+}
+
+function highlightStepValidationErrors(stepIndex) {
+  const values = readForm();
+
+  switch (stepIndex) {
+    case 0: {
+      let firstInvalidIndex = -1;
+      INFO_FIELDS.forEach((fieldId, index) => {
+        const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
+        const error = validateInfoField(fieldId, values);
+        setInfoFieldError(item, error);
+        if (error && firstInvalidIndex < 0) firstInvalidIndex = index;
+      });
+      if (firstInvalidIndex >= 0) openInfoField(firstInvalidIndex);
+      else renderInfoAccordionState();
+      break;
+    }
+    case 1: {
+      let firstInvalidIndex = -1;
+      OCCUPATION_FIELDS.forEach((fieldId, index) => {
+        const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
+        const error = validateOccupationField(fieldId, values);
+        setOccupationFieldError(item, error);
+        if (error && firstInvalidIndex < 0) firstInvalidIndex = index;
+      });
+      if (firstInvalidIndex >= 0) openOccupationField(firstInvalidIndex);
+      else renderOccupationAccordionState();
+      break;
+    }
+    case 2: {
+      let firstInvalidIndex = -1;
+      EXERCISE_FIELDS.forEach((fieldId, index) => {
+        const item = exerciseAccordion?.querySelector(`[data-ex-field="${fieldId}"]`);
+        const error = validateExerciseField(fieldId, values);
+        setExerciseFieldError(item, error);
+        if (error && firstInvalidIndex < 0) firstInvalidIndex = index;
+      });
+      if (firstInvalidIndex >= 0) openExerciseField(firstInvalidIndex);
+      else renderExerciseAccordionState();
+      break;
+    }
+    case 3: {
+      let firstInvalidIndex = -1;
+      BODY_FIELDS.forEach((fieldId, index) => {
+        const item = bodyAccordion?.querySelector(`[data-body-field="${fieldId}"]`);
+        const error = validateBodyField(fieldId, values);
+        setBodyFieldError(item, error);
+        if (error && firstInvalidIndex < 0) firstInvalidIndex = index;
+      });
+      if (firstInvalidIndex >= 0) openBodyField(firstInvalidIndex);
+      else renderBodyAccordionState();
+      break;
+    }
+    case 4:
+      highlightWaiverValidationErrors(values);
+      break;
+    default:
+      break;
+  }
+}
+
+function intakeFieldStepIndex(fieldId) {
+  return INTAKE_QUESTION_SECTIONS.findIndex(({ fields }) => fields.includes(fieldId));
+}
+
+function navigateToIntakeField(fieldId) {
+  if (fieldId === 'waiver') {
+    showStep(4);
+    form.elements.signature?.focus();
+    return;
+  }
+
+  const stepIndex = intakeFieldStepIndex(fieldId);
+  if (stepIndex < 0) return;
+
+  const section = INTAKE_QUESTION_SECTIONS[stepIndex];
+  const fieldIndex = section.fields.indexOf(fieldId);
+  if (fieldIndex < 0) return;
+
+  showStep(stepIndex);
+
+  switch (stepIndex) {
+    case 0:
+      openInfoField(fieldIndex);
+      break;
+    case 1:
+      openOccupationField(fieldIndex);
+      break;
+    case 2:
+      openExerciseField(fieldIndex);
+      break;
+    case 3:
+      openBodyField(fieldIndex);
+      break;
+    default:
+      break;
   }
 }
 
@@ -1358,9 +1494,18 @@ function renderReview() {
   const pkg = buildProgramFromValues(values);
   const rows = buildAnswersConfirmationRows(pkg);
 
-  reviewEl.innerHTML = rows.map((row) => `
-    <div><dt>${formatAnswersConfirmationLabel(row)}</dt><dd>${row.value}</dd></div>
-  `).join('');
+  reviewEl.innerHTML = rows.map((row) => {
+    const label = formatAnswersConfirmationLabel(row);
+    const fieldId = row.fieldId || '';
+    return `
+    <div>
+      <dt>
+        <button type="button" class="intake-review__link" data-review-field="${fieldId}">${label}</button>
+      </dt>
+      <dd>${row.value}</dd>
+    </div>
+  `;
+  }).join('');
   return pkg;
 }
 
@@ -1471,17 +1616,36 @@ function bindEvents() {
     const btn = event.target.closest('[data-nav-step]');
     if (!btn) return;
     const target = Number(btn.dataset.navStep);
-    if (!canReachStep(target)) return;
+    if (!canReachStep(target)) {
+      for (let i = 0; i < target; i += 1) {
+        if (!canProceed(i)) {
+          showStep(i);
+          highlightStepValidationErrors(i);
+          return;
+        }
+      }
+      return;
+    }
     showStep(target);
+  });
+
+  reviewEl?.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-review-field]');
+    if (!link) return;
+    const fieldId = link.dataset.reviewField;
+    if (!fieldId) return;
+    navigateToIntakeField(fieldId);
   });
 
   form.addEventListener('input', () => {
     syncAgeField();
+    clearWaiverInvalidState();
     updateStepNav();
   });
 
   form.addEventListener('change', () => {
     syncAgeField();
+    clearWaiverInvalidState();
     updateStepNav();
   });
 
@@ -1494,13 +1658,20 @@ function bindEvents() {
       buildProgram(stepNextBtn);
       return;
     }
-    if (!canProceed(step)) return;
+    if (!canProceed(step)) {
+      highlightStepValidationErrors(step);
+      return;
+    }
     showStep(step + 1);
   });
 }
 
 function buildProgram(triggerBtn) {
-  if (!canProceed(4)) return;
+  if (!canProceed(4)) {
+    showStep(4);
+    highlightWaiverValidationErrors(readForm());
+    return;
+  }
 
   const email = String(readForm().email || '').trim();
   if (!isValidEmail(email)) {
