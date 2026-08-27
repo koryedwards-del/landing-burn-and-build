@@ -96,7 +96,8 @@ function drawLayoutTableCellText(doc, {
   cy,
   cellW,
   cellH,
-  pad,
+  padLeft,
+  padRight,
   tableRowPad,
   style,
   fillColor,
@@ -114,16 +115,16 @@ function drawLayoutTableCellText(doc, {
     const textH = doc.heightOfString(cellText, { width: cellW, lineBreak: false });
     textY = cy + Math.max(0, (cellH - textH) / 2);
   }
+  const innerW = cellW - padLeft - padRight;
   if (align === 'center' && !lineBreak && !cellText.includes('\n')) {
     const textW = doc.widthOfString(cellText);
-    const innerW = cellW - pad * 2;
     if (textW <= innerW) {
-      doc.text(cellText, cx + pad + (innerW - textW) / 2, textY, { lineBreak: false });
+      doc.text(cellText, cx + padLeft + (innerW - textW) / 2, textY, { lineBreak: false });
       return;
     }
   }
-  doc.text(cellText, cx + pad, textY, {
-    width: cellW - pad * 2,
+  doc.text(cellText, cx + padLeft, textY, {
+    width: innerW,
     lineGap: 0,
     align,
     lineBreak,
@@ -172,8 +173,12 @@ function drawSectionBlock(doc, page, title, body) {
   return { ...page, y: doc.y + LAYOUT.paragraphGap + LAYOUT.sectionGap };
 }
 
-function layoutTableCellPad(col, defaultPad) {
-  return col.cellPad ?? defaultPad;
+function layoutTableCellPads(col, defaultPad) {
+  const uniform = col.cellPad ?? defaultPad;
+  return {
+    left: col.padLeft ?? uniform,
+    right: col.padRight ?? uniform,
+  };
 }
 
 function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad = LAYOUT.tableRowPad }) {
@@ -186,8 +191,8 @@ function layoutTableRowHeights(doc, { columns, rows, headerRows = 1, tableRowPad
     let maxH = rowPad * 2;
     columns.forEach((col, index) => {
       if (isTableColumnSpanned(columns, row, index)) return;
-      const cellPad = layoutTableCellPad(col, pad);
-      const innerW = tableCellWidth(colWidths, columns, row, index) - cellPad * 2;
+      const { left: padLeft, right: padRight } = layoutTableCellPads(col, pad);
+      const innerW = tableCellWidth(colWidths, columns, row, index) - padLeft - padRight;
       const defaultStyle = {
         font: isHeader ? FONTS.bold : FONTS.regular,
         fontSize: isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
@@ -245,14 +250,15 @@ function drawLayoutTable(doc, {
       };
       const style = { ...defaultStyle, ...row._styles?.[col.key] };
       const align = row._aligns?.[col.key] || col.align || 'left';
-      const cellPad = layoutTableCellPad(col, pad);
+      const { left: padLeft, right: padRight } = layoutTableCellPads(col, pad);
       drawLayoutTableCellText(doc, {
         text: row[col.key],
         cx,
         cy,
         cellW: w,
         cellH: rh,
-        pad: cellPad,
+        padLeft,
+        padRight,
         tableRowPad: rowPad,
         style,
         fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
@@ -542,6 +548,10 @@ function macroTableSubheadStyles() {
 
 /** Extra inset on TOTAL column left/right — default cell pad feels tight at 12pt. */
 const MACRO_TABLE_TOTAL_EXTRA_PAD = 4;
+/** Tight gap between grams and calories within one macro group. */
+const MACRO_TABLE_PAIR_INNER_PAD = 2;
+/** Wider gutter between protein | carbs | fats | total column groups. */
+const MACRO_TABLE_GROUP_GAP = 10;
 
 function macroTableTextWidth(doc, text, font, fontSize) {
   doc.font(font).fontSize(fontSize);
@@ -549,7 +559,9 @@ function macroTableTextWidth(doc, text, font, fontSize) {
 }
 
 function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
-  const pad = TABLE_1982.cellPad * 2;
+  const base = TABLE_1982.cellPad;
+  const pairInner = MACRO_TABLE_PAIR_INNER_PAD;
+  const groupHalf = MACRO_TABLE_GROUP_GAP / 2;
   const gramsHeadingW = macroTableTextWidth(doc, 'grams', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
   const caloriesHeadingW = macroTableTextWidth(doc, 'calories', FONTS.bold, MACRO_TABLE_SUBHEAD_SIZE);
 
@@ -573,27 +585,45 @@ function macroTableColumnWidths(doc, tableWidth, macroRows = []) {
     totalMax = Math.max(totalMax, macroTableTextWidth(doc, row.totalCal, rowFont, LAYOUT.tableBodySize));
   });
 
-  const gramsColW = gramsMax + pad;
-  const calColW = caloriesMax + pad;
-  const totalCellPad = TABLE_1982.cellPad + MACRO_TABLE_TOTAL_EXTRA_PAD;
-  const totalColW = totalMax + totalCellPad * 2;
-  const macroColsW = 3 * gramsColW + 3 * calColW;
-  const labelColW = Math.max(labelMax + pad, tableWidth - macroColsW - totalColW);
+  const gramsColW = gramsMax + base + pairInner;
+  const calColEndGroupW = caloriesMax + pairInner + base + groupHalf;
+  const gramsColAfterGapW = gramsMax + base + groupHalf + pairInner;
+  const totalPadLeft = base + groupHalf;
+  const totalPadRight = base + MACRO_TABLE_TOTAL_EXTRA_PAD;
+  const totalColW = totalMax + totalPadLeft + totalPadRight;
+  const macroColsW = gramsColW + calColEndGroupW + gramsColAfterGapW + calColEndGroupW
+    + gramsColAfterGapW + calColEndGroupW;
+  const labelColW = Math.max(labelMax + base * 2, tableWidth - macroColsW - totalColW);
 
   const toFrac = (w) => w / tableWidth;
+  const gramCol = (key, width, padLeft, padRight) => ({
+    key,
+    width: toFrac(width),
+    align: 'right',
+    padLeft,
+    padRight,
+  });
+  const calColEndGroup = (key) => gramCol(
+    key,
+    calColEndGroupW,
+    pairInner,
+    base + groupHalf,
+  );
+
   return [
-    { key: 'label', width: toFrac(labelColW), align: 'left' },
-    { key: 'proteinG', width: toFrac(gramsColW), align: 'right' },
-    { key: 'proteinCal', width: toFrac(calColW), align: 'right' },
-    { key: 'carbsG', width: toFrac(gramsColW), align: 'right' },
-    { key: 'carbsCal', width: toFrac(calColW), align: 'right' },
-    { key: 'fatG', width: toFrac(gramsColW), align: 'right' },
-    { key: 'fatCal', width: toFrac(calColW), align: 'right' },
+    { key: 'label', width: toFrac(labelColW), align: 'left', padLeft: base, padRight: base },
+    gramCol('proteinG', gramsColW, base, pairInner),
+    calColEndGroup('proteinCal'),
+    gramCol('carbsG', gramsColAfterGapW, base + groupHalf, pairInner),
+    calColEndGroup('carbsCal'),
+    gramCol('fatG', gramsColAfterGapW, base + groupHalf, pairInner),
+    calColEndGroup('fatCal'),
     {
       key: 'totalCal',
       width: toFrac(totalColW),
       align: 'right',
-      cellPad: totalCellPad,
+      padLeft: totalPadLeft,
+      padRight: totalPadRight,
     },
   ];
 }
