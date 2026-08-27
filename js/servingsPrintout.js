@@ -100,22 +100,4 @@ export function servingsGridRows(pkg) {
   ];
 }
 
-/** Servings grid — extra fat row label (maintain / reduce lines). */
-export const EXTRA_FATS_LABEL = 'Extra fat, sugar and alcohol';
-
-export function extraFatLines(pkg) {
-  const servings = pkg?.plan?.servings;
-  if (!servings) return [];
-  return [
-    {
-      value: formatServingCell(servings.fatMaintain),
-      note: 'To maintain your current fat %',
-    },
-    {
-      value: formatServingCell(servings.fatReduce ?? 0) || '0',
-      note: 'To reduce your current fat %',
-    },
-  ];
-}
-
 export { SLOT_COLUMNS };

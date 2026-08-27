@@ -622,7 +622,7 @@ function servingsAnytimeRow(row) {
   };
 }
 
-function buildServingsRows(gridRows, extraFats) {
+function buildServingsRows(gridRows) {
   const header = {
     label: '',
     daily: 'Daily',
@@ -636,18 +636,7 @@ function buildServingsRows(gridRows, extraFats) {
   const bodyRows = (gridRows || []).map((row) => (
     row.label === 'Veggies' ? servingsAnytimeRow(row) : row
   ));
-  const extraRows = (extraFats || []).map((line, index) => ({
-    label: index === 0 ? 'Extra Fats' : '',
-    daily: line.value,
-    breakfast: line.note,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-    _colSpan: { from: 'breakfast', to: 'snack3' },
-  }));
-  return [header, ...bodyRows, ...extraRows];
+  return [header, ...bodyRows];
 }
 
 function drawServingsPage(doc, payload) {
@@ -659,7 +648,7 @@ function drawServingsPage(doc, payload) {
     y: page.y + LAYOUT.sectionGap,
     width: page.width,
     columns: SERVINGS_COLUMNS,
-    rows: buildServingsRows(servings.gridRows || [], servings.extraFats || []),
+    rows: buildServingsRows(servings.gridRows || []),
     headerRows: 1,
   });
 }

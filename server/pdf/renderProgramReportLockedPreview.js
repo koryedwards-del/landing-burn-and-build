@@ -48,7 +48,7 @@ import { FRUIT_TIPS_PROSE } from '../../data/fruitTipsPrintout.js';
 import { PROTEIN_TIPS_PROSE } from '../../data/proteinTipsPrintout.js';
 import { VEGETABLE_TIPS_PROSE } from '../../data/vegetableTipsPrintout.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from '../../js/dietPdfNamingHelpers.js';
-import { EXTRA_FATS_LABEL } from '../../js/servingsPrintout.js';
+import { distributeWholeServings } from '../../js/servingsPrintout.js';
 import { HANDBOOK_FAQ_ITEMS } from '../../data/handbookFaqPrintout.js';
 
 export const PROGRAM_REPORT_MIN_PAGES = 10;
@@ -2158,19 +2158,7 @@ const SERVINGS_TABLE_COLUMNS = Object.freeze([
   { key: 'snack3', width: 0.1, align: 'center' },
 ]);
 
-function buildServingsTableRows(gridRows, extraFats = []) {
-  const extraRows = extraFats.map((line, index) => ({
-    label: index === 0 ? EXTRA_FATS_LABEL : '',
-    daily: line.value,
-    breakfast: line.note,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-    _colSpan: { from: 'breakfast', to: 'snack3' },
-  }));
-
+function buildServingsTableRows(gridRows) {
   return [
     {
       label: '',
@@ -2183,17 +2171,16 @@ function buildServingsTableRows(gridRows, extraFats = []) {
       snack3: 'Fruit',
     },
     ...gridRows,
-    ...extraRows,
   ];
 }
 
-function drawServingsTable(doc, payload, page, gridRows, extraFats = []) {
+function drawServingsTable(doc, payload, page, gridRows) {
   const servingsTableOpts = {
     x: page.x,
     y: page.y,
     width: page.width,
     columns: SERVINGS_TABLE_COLUMNS,
-    rows: buildServingsTableRows(gridRows, extraFats),
+    rows: buildServingsTableRows(gridRows),
     headerRows: 1,
   };
   page = ensureLockedSpace(doc, payload, page, measureLayoutTable(doc, servingsTableOpts));
@@ -2313,7 +2300,7 @@ function drawServingsPage(doc, payload) {
   page = drawBodyParagraphs(doc, payload, page, [servings.note]);
 
   const gridRows = servings.gridRows.map((row) => ({ ...row }));
-  page = drawServingsTable(doc, payload, page, gridRows, servings.extraFats || []);
+  page = drawServingsTable(doc, payload, page, gridRows);
 
   if (servings.mealBuildSteps?.length) {
     page = drawMealBuildSteps(doc, payload, page, servings.mealBuildSteps);

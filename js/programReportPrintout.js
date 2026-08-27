@@ -28,7 +28,7 @@ import {
   MACRO_SIGNAL_INTRO,
   MACRO_SIGNAL_ROWS,
 } from './foodPlanPrintout.js';
-import { extraFatLines, servingsGridRows } from './servingsPrintout.js';
+import { servingsGridRows } from './servingsPrintout.js';
 import { localDateKey } from './programPackageData.js';
 import { WORK_PHYSICAL, WORK_STRESS } from './profileDataEngine.js';
 import { BURN_AND_BUILD_DIET_PDF_NAME } from './dietPdfNamingHelpers.js';
@@ -224,7 +224,6 @@ export function buildProgramReportPayload(pkg, options = {}) {
     servings: {
       note: SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
-      extraFats: extraFatLines(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
     answersConfirmation: {
