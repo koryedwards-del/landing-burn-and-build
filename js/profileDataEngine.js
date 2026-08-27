@@ -18,6 +18,18 @@ export const JOB_ACTIVITY_OPTIONS = Object.freeze([
   { id: 'carrying', label: 'Lifting' },
 ]);
 
+/** Macro table workday row — job activity word, not engine intensity (e.g. not "1.5a"). */
+export const MACRO_WORKDAY_LABELS = Object.freeze({
+  sitting: 'Sitting',
+  feet: 'Standing',
+  carrying: 'Lifting',
+  heavy: 'Heavy labor',
+});
+
+export function macroWorkdayRowLabel(workPhysical) {
+  return MACRO_WORKDAY_LABELS[workPhysical] || 'Workday';
+}
+
 function computeWorkIntensity(physical, stress) {
   if (!physical || !stress) return 2.0;
   const map = {

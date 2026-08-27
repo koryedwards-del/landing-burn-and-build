@@ -23,24 +23,6 @@ function assertPdf(label, pdf, { minPages = 1 } = {}) {
   console.log(`ok  ${label} — ${pages} page(s), ${pdf.length} bytes`);
 }
 
-function assertThrows(label, fn, { status, includes } = {}) {
-  try {
-    fn();
-    throw new Error(`${label}: expected throw`);
-  } catch (err) {
-    if (!(err instanceof PdfError || err.status)) {
-      throw err;
-    }
-    if (status != null && err.status !== status) {
-      throw new Error(`${label}: expected status ${status}, got ${err.status}`);
-    }
-    if (includes && !String(err.message).includes(includes)) {
-      throw new Error(`${label}: message "${err.message}" missing "${includes}"`);
-    }
-    console.log(`ok  ${label}`);
-  }
-}
-
 try {
   validateSampleDietPayload(null);
   throw new Error('validateSampleDietPayload rejects empty: expected throw');
@@ -68,6 +50,9 @@ if (samplePayload.clientName !== 'SAMPLE FEMALE') {
 }
 if (samplePayload.preparedDate !== '2024-01-15') {
   throw new Error(`preparedDate: got ${samplePayload.preparedDate}`);
+}
+if (samplePayload.foodPlan.macroRows?.[3]?.label !== 'Workday (Sitting)') {
+  throw new Error(`workday label: got ${samplePayload.foodPlan.macroRows?.[3]?.label}`);
 }
 if (samplePayload.foodPlan.macroRows?.[0]?.totalCal !== '2,192') {
   throw new Error(`macro total: got ${samplePayload.foodPlan.macroRows?.[0]?.totalCal}`);

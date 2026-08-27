@@ -20,6 +20,7 @@ import {
   aceBodyFatWeightRanges,
   aceRiskMessage,
 } from './sampleDietAceData.js';
+import { macroWorkdayRowLabel } from './profileDataEngine.js';
 import {
   SAMPLE_DIET_FOOD_PLAN,
   SAMPLE_DIET_HEADER,
@@ -57,11 +58,9 @@ function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
   };
 }
 
-function buildMacroTableRows(formula, workIntensity) {
+function buildMacroTableRows(formula, workPhysical) {
   const f = formula || {};
-  const intensityLabel = Number.isFinite(Number(workIntensity))
-    ? (Number.isInteger(Number(workIntensity)) ? String(workIntensity) : Number(workIntensity).toFixed(1))
-    : '1.5';
+  const workdayLabel = macroWorkdayRowLabel(workPhysical);
   const row = (label, q, c, f, total) => ({
     label,
     proteinG: rnd(q),
@@ -76,7 +75,7 @@ function buildMacroTableRows(formula, workIntensity) {
     row('Maintain current fat %', f.QA, f.C1, f.FD, f.T7),
     row('Reduce current fat %', f.QA, f.C1, f.FG, f.T1),
     row('Resting(RMR)', f.QB, f.C2, f.FH, f.T2),
-    row(`Workday (${intensityLabel}a)`, f.QC, f.C3, f.FJ, f.T3),
+    row(`Workday (${workdayLabel})`, f.QC, f.C3, f.FJ, f.T3),
     row('Weight Training', f.QD, f.C4, f.FK, f.T4),
     row('Cardiovascular Activities', f.QE, f.C5, f.FL, f.T5),
     row('Fat Burning Activities', f.QF, f.C6, f.FM, f.T6),
@@ -164,7 +163,7 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       weeklyLine,
       macroIntro: SAMPLE_DIET_FOOD_PLAN.macroIntro,
       goalTable: buildGoalTable(today, projection),
-      macroRows: buildMacroTableRows(formula, intake.workIntensity),
+      macroRows: buildMacroTableRows(formula, intake.workPhysical),
     },
     servings: {
       note: SAMPLE_DIET_SERVINGS_NOTE,
