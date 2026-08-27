@@ -835,6 +835,17 @@ function drawSampleDayMenuPage(doc, payload) {
   menu.sections.forEach((section) => {
     y = drawMenuSection(doc, page, y, section, filled);
   });
+
+  if (filled && menu.templateNote) {
+    doc
+      .font(FONTS.regular)
+      .fontSize(LAYOUT.bodySize)
+      .fillColor(SEMINAR_COLORS.body)
+      .text(String(menu.templateNote), page.x, y, {
+        width: page.width,
+        lineGap: LAYOUT.lineGap,
+      });
+  }
 }
 
 function drawAnswersConfirmationPage(doc, payload) {

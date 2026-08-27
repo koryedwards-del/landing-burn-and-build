@@ -9,6 +9,7 @@ import {
 import { programClientName } from './programClientDataHelpers.js';
 import {
   SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
+  SAMPLE_DAY_MENU_TEMPLATE_NOTE,
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
 import { scaleStapleServingLabel } from './stapleServingPrintout.js';
@@ -188,6 +189,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
       label: SAMPLE_DAY_MENU_PLAN_FOR_LABEL,
       value: filled ? programClientName(pkg) : '',
     },
+    templateNote: filled ? SAMPLE_DAY_MENU_TEMPLATE_NOTE : '',
     sections: buildMenuSections(gridRows, { filled }),
   };
 }

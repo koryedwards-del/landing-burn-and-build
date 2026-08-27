@@ -37,4 +37,8 @@ export function brandLogoUrl() {
   return `${SITE_ORIGIN}/img/brand/bblogo1.png`;
 }
 
+export function menuPlanTemplateUrl() {
+  return `${SITE_ORIGIN}/docs/samples/menu-plan-template.pdf`;
+}
+
 export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';
