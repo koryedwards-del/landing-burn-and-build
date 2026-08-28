@@ -1,5 +1,5 @@
 /**
- * Burn & Build Diet PDF — 8-page program report (purchased + landing sample).
+ * Burn & Build Diet PDF — 7-page program report (purchased + landing sample).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,7 +16,6 @@ import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
-import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
 import { buildMenuPlanWorksheetPayload } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
@@ -408,7 +407,6 @@ function drawWelcomePage(doc, payload) {
   current = drawSectionBlock(doc, current, 'Servings', payload.welcome.servings);
   current = drawSectionBlock(doc, current, 'Food List', payload.welcome.foodList);
   current = drawSectionBlock(doc, current, 'Menu Plan', payload.welcome.menuPlan);
-  drawSectionBlock(doc, current, 'Questionnaire confirmation', payload.welcome.questionnaireConfirmation);
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
@@ -811,42 +809,6 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.5 },
-  { key: 'value', width: 0.5 },
-]);
-
-function drawAnswersConfirmationPage(doc, payload) {
-  const confirmation = payload.answersConfirmation;
-  if (!confirmation?.rows?.length) return;
-
-  let page = begin1982Page(doc, payload, 'Questionnaire confirmation');
-
-  if (confirmation.intro) {
-    doc
-      .font(FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(String(confirmation.intro), page.x, page.y, {
-        width: page.width,
-        lineGap: LAYOUT.lineGap,
-      });
-    page = { ...page, y: doc.y + LAYOUT.headerGap };
-  }
-
-  drawLayoutTable(doc, {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: CONFIRMATION_TABLE_COLUMNS,
-    rows: confirmation.rows.map((row) => ({
-      label: formatAnswersConfirmationLabel(row),
-      value: row.value,
-    })),
-    headerRows: 0,
-    tableRowPad: LAYOUT.tableRowPad + 1,
-  });
-}
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
@@ -1128,7 +1090,7 @@ function drawSampleDayMenuPage(doc, payload) {
   }
 }
 
-export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 8;
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 7;
 
 export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -1167,7 +1129,6 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
   drawSampleDayMenuPage(doc, payload);
-  drawAnswersConfirmationPage(doc, payload);
 
   stamp1982Footers(doc, payload.header);
 

@@ -63,7 +63,7 @@ export const GROCERY_STAPLES_FRUIT = Object.freeze([
   'Watermelon',
 ]);
 
-/** ### Flavor Builders — grocery staples only (not on the 8-page diet PDF). */
+/** ### Flavor Builders — grocery staples only (not on the 7-page diet PDF). */
 export const GROCERY_STAPLES_FLAVOR = Object.freeze([
   'Salsa',
   'Mustard',
@@ -75,7 +75,7 @@ export const GROCERY_STAPLES_FLAVOR = Object.freeze([
   'Fresh herbs',
 ]);
 
-/** ### Seasonings — grocery staples only (not on the 8-page diet PDF). */
+/** ### Seasonings — grocery staples only (not on the 7-page diet PDF). */
 export const GROCERY_STAPLES_SEASONINGS = Object.freeze([
   'Salt',
   'Black pepper',
@@ -88,7 +88,7 @@ export const GROCERY_STAPLES_SEASONINGS = Object.freeze([
   'Cinnamon',
 ]);
 
-/** ### Pantry — grocery staples only (not on the 8-page diet PDF). */
+/** ### Pantry — grocery staples only (not on the 7-page diet PDF). */
 export const GROCERY_STAPLES_PANTRY = Object.freeze([
   'Cooking spray',
   'Nonstick foil',

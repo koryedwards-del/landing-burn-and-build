@@ -382,9 +382,9 @@ function verifyWelcomePageRefs() {
   expectExcludes('servings page', SAMPLE_DIET_WELCOME.servings, 'Page five');
   expectIncludes('foodList pages', SAMPLE_DIET_WELCOME.foodList, 'Pages five and six');
   expectIncludes('menuPlan page', SAMPLE_DIET_WELCOME.menuPlan, 'Page seven');
-  expectIncludes('questionnaire page', SAMPLE_DIET_WELCOME.questionnaireConfirmation, 'Page eight');
   expectExcludes('intro history', SAMPLE_DIET_WELCOME.intro[1], 'body composition history');
   expectExcludes('intro last two pages', SAMPLE_DIET_WELCOME.intro[1], 'last two pages');
+  expectExcludes('intro questionnaire', SAMPLE_DIET_WELCOME.intro[1], 'questionnaire');
 
   if (errors.length) {
     console.error('FAIL welcome page refs');
