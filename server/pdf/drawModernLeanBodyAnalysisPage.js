@@ -337,24 +337,11 @@ function drawLbmWhySection(doc, x, y, width, lbmWhy) {
   }
 
   if (lbmWhy.closing) {
-    const closing = String(lbmWhy.closing);
-    const youToken = ' you ';
-    const youIndex = closing.indexOf(youToken);
-    doc.font(FONTS.regular).fontSize(LAYOUT.lbmBodySize).fillColor(COLORS.body);
-    if (youIndex >= 0) {
-      const beforeYou = closing.slice(0, youIndex + 1);
-      const afterYou = closing.slice(youIndex + youToken.length);
-      doc.text(beforeYou, x, cursorY, { lineBreak: false });
-      const beforeW = doc.widthOfString(beforeYou);
-      doc.font(FONTS.italic).text('you', x + beforeW, cursorY, { lineBreak: false });
-      const youW = doc.widthOfString('you');
-      doc.font(FONTS.regular).text(afterYou, x + beforeW + youW, cursorY, {
-        width: width - beforeW - youW,
-        lineGap: LAYOUT.bodyLineGap,
-      });
-    } else {
-      doc.text(closing, x, cursorY, { width, lineGap: LAYOUT.bodyLineGap });
-    }
+    doc
+      .font(FONTS.regular)
+      .fontSize(LAYOUT.lbmBodySize)
+      .fillColor(COLORS.body)
+      .text(String(lbmWhy.closing), x, cursorY, { width, lineGap: LAYOUT.bodyLineGap });
     cursorY = doc.y + LAYOUT.bodyGap;
   }
 
