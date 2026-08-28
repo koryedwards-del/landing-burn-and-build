@@ -164,7 +164,68 @@
     }
 
     .search-faq { padding: 0 40px; background: var(--black); }
-    .search-faq-inner { max-width: 760px; margin: 0 auto; }
+    .search-faq-inner { max-width: 720px; margin: 0 auto; }
+
+    .wondering-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wondering-item {
+      border: none;
+      background: transparent;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 28px 0;
+    }
+
+    .wondering-item:first-child {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .wondering-question {
+      list-style: none;
+      display: block;
+      cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+      line-height: 1.45;
+      letter-spacing: 0.01em;
+      color: var(--gray-light);
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .wondering-question::-webkit-details-marker { display: none; }
+
+    .wondering-item[open] .wondering-question {
+      color: var(--white);
+    }
+
+    .wondering-question:hover {
+      color: var(--white);
+    }
+
+    .wondering-answer {
+      padding: 18px 0 4px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.97rem;
+      line-height: 1.7;
+      color: var(--text-dim);
+    }
+
+    .wondering-answer p {
+      margin: 0;
+    }
+
+    .wondering-answer p + p {
+      margin-top: 1em;
+    }
+
+    .wondering-answer strong {
+      color: var(--white);
+      font-weight: 600;
+    }
 
     #questions,
     #sample,
@@ -179,42 +240,6 @@
 
     .sample-tap-line {
       padding-top: 24px;
-    }
-    .accordion { display: flex; flex-direction: column; gap: 3px; }
-    .accordion-item { background: var(--gray); border-left: 3px solid transparent; }
-    .accordion-item[open] { border-left-color: var(--yellow); }
-    .accordion-trigger {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 24px;
-      cursor: pointer;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: 0.04em;
-      color: var(--gray-light);
-    }
-    .accordion-trigger::-webkit-details-marker { display: none; }
-    .accordion-trigger::after {
-      content: '+';
-      font-family: Impact, 'Arial Narrow', sans-serif;
-      color: var(--yellow);
-      font-size: 1.25rem;
-      line-height: 1;
-    }
-    .accordion-item[open] .accordion-trigger::after { content: '−'; }
-    .accordion-body {
-      padding: 0 24px 20px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.97rem;
-      line-height: 1.65;
-      color: var(--text-dim);
-    }
-    .accordion-body p + p {
-      margin-top: 1em;
     }
 
     .sample-split-wrap {
@@ -424,58 +449,66 @@
   <section class="search-faq" id="questions">
     <div class="search-faq-inner">
       <div class="section-head">
-        <p class="section-label">Questions</p>
+        <p class="section-label">You might be wondering…</p>
       </div>
-      <div class="accordion" id="search-accordion">
-        <details class="accordion-item" open>
-          <summary class="accordion-trigger">Why aren't my workouts working?</summary>
-          <div class="accordion-body">
+      <div class="wondering-list" id="wondering-list">
+        <details class="wondering-item" open>
+          <summary class="wondering-question">Why aren't my workouts working?</summary>
+          <div class="wondering-answer">
             <p>You train hard. You eat clean. You're paying a coach every month — and you're still not recomping—exchanging fat for muscle.</p>
-            <p>The most common reason the results don't match the effort is not eating enough. And I don't mean junk calories. I mean the good clean muscle creating fat burning foods. Simply put hunger is a sign you aren't eating enough often enough. When you get your food intake dialed in, effort and results line up.</p>
+            <p><strong>You may not be eating enough.</strong></p>
+            <p>And I don't mean junk calories. I mean the good, clean, muscle-building, fat-burning foods.</p>
+            <p>Put hunger aside for a minute. Your body still needs enough food to support what you're asking it to do.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">How do I lose fat without losing muscle?</summary>
-          <div class="accordion-body">
-            <p>Losing fat without losing muscle takes a fine tuned diet approach. You have to feed the lean body weight with enough protein to protect your metabolism. And eat enough complex carbohydrates to protect the muscle from being burned for energy. A typical low-cal diet will cause as much as 75% muscle loss.</p>
-            <p>Feeding the body the right amount of protein and carbs and keeping the fat sugar and alcohol intake as low as possible is the ONLY way to lose fat and preserve muscle.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">How do I lose fat without losing muscle?</summary>
+          <div class="wondering-answer">
+            <p>You can't starve fat off and expect muscle to stay. You have to feed your lean body weight — enough protein to protect your metabolism, enough complex carbohydrates so muscle isn't burned for energy.</p>
+            <p>A typical low-cal diet? You might lose weight — but as much as 75% of that can be muscle.</p>
+            <p>The only way to lose fat and keep muscle is the right amount of protein and carbs, with fat, sugar, and alcohol kept as low as possible.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">Can I build muscle and lose fat at the same time?</summary>
-          <div class="accordion-body">
-            <p>Yes. Your body can add muscle and lose fat at the same time — but only if your diet is set up correctly for your LBM (metabolism), job, lifestyle and exercise/activities. Random eating gets random results, specific eating gets specific results.</p>
-            <p>A perfect diet will successfully build muscle and burn fat. What's a perfect diet? The right kind of food, at the right time in the right amount.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">Can I build muscle and lose fat at the same time?</summary>
+          <div class="wondering-answer">
+            <p>Yes — but only if your diet is set up for your LBM, your job, your lifestyle, and what you do in the gym.</p>
+            <p>Random eating gets random results. Specific eating gets specific results.</p>
+            <p>A perfect diet builds muscle and burns fat at the same time. What's perfect? The right food, at the right time, in the right amount.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">How much should I eat?</summary>
-          <div class="accordion-body">
-            <p>The answer isn't really what should you eat but how much of what should you eat. You need enough protein to repair muscle. And enough carbs for the muscles to burn for energy so they don't burn themselves up. Muscle can easily be broken down and converted to blood sugar.</p>
-            <p>And that's why low cal diets can cause massive muscle loss. And it's why the current thinking on protein intake is to consume massive amounts as a protection against muscle loss. It's not wrong but protein is way more expensive than bread or rice as a source of energy.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">How much should I eat?</summary>
+          <div class="wondering-answer">
+            <p>The question isn't really what should you eat — it's how much of what.</p>
+            <p>You need enough protein to repair muscle. Enough carbs so muscle has energy to burn — so it doesn't burn itself. Muscle can easily be broken down and converted to blood sugar.</p>
+            <p>That's why low-cal diets cause massive muscle loss. And that's why everyone's talking about eating massive amounts of protein — it's not wrong, but protein is a lot more expensive than bread or rice as energy.</p>
             <p>How much? That depends on your LBM, your job, and what you do in the gym — not a one-size template.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">Do I need all this protein?</summary>
-          <div class="accordion-body">
-            <p>Enough protein to repair and protect lean mass — spread through the day. That's the starting point. The current trend is massive amounts of protein to build muscles and prevent muscle loss. It's not wrong, it just begs the question what does the body do with excessive protein intake.</p>
-            <p>Well the protein not used for LBM replacement is turned to fat. And this is why it can be difficult to reach a low body fat %.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">Do I need all this protein?</summary>
+          <div class="wondering-answer">
+            <p>Enough protein to repair and protect lean mass — spread through the day. That's the starting point.</p>
+            <p>The trend right now is massive protein to build muscle and prevent loss. Not wrong — but what does the body do with the excess?</p>
+            <p>What isn't used for lean mass goes to fat. That's part of why getting to a low body fat % can be so hard.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">Should I count calories?</summary>
-          <div class="accordion-body">
-            <p>Do you know a calorie is actually a measurement of the energy required to raise a gram of water one degree. Counting calories is completely backwards from the way diets should be created.</p>
-            <p>You start with the body comp test to determine your muscle (LBM) that helps set the protein needs. Any protein not used for repair will be stored as fat. Then you determine how much energy you expend every day in your job, a toll taker doesn't expend as much energy as a construction worker. Then you calculate how much protein fat and carbs are used during your workouts. The intensity level (heart rate) has a lot of bearing on this number.</p>
-            <p>When you have both of those numbers you can determine the calories you need. But you don't need to know the calories because you've already determined how much protein and complex carbs you need. By then you already have your daily prescription — without counting calories.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">Should I count calories?</summary>
+          <div class="wondering-answer">
+            <p>Do you even know what a calorie is? It's the energy required to raise a gram of water one degree. Counting calories is backwards from how diets should be built.</p>
+            <p>You start with body comp — your muscle, your LBM — that sets protein. Protein you don't use for repair gets stored as fat.</p>
+            <p>Then you look at your job. A toll taker doesn't burn what a construction worker burns. Then your workouts — intensity, heart rate, all of it.</p>
+            <p>You can figure out calories from all that. But you don't need to count them — you've already got your protein and complex carbs. That's your prescription.</p>
           </div>
         </details>
-        <details class="accordion-item">
-          <summary class="accordion-trigger">What is recomp?</summary>
-          <div class="accordion-body">
-            <p>Recomp is slang for recomposition. And recomping the body is exchanging fat for muscle or vice versa. Adding ten pounds of muscle and losing ten pounds of fat leaves you at the same body weight but a completely different body composition.</p>
-            <p>The alternative is losing fat and muscle at the same time and that often results in a person being a smaller softer version of their fat self. They didn't add and subtract, they just subtracted.</p>
+        <details class="wondering-item">
+          <summary class="wondering-question">What is recomp?</summary>
+          <div class="wondering-answer">
+            <p>Recomp is slang for recomposition — exchanging fat for muscle, or the other way around.</p>
+            <p>Add ten pounds of muscle, lose ten pounds of fat — same scale weight, completely different body.</p>
+            <p>The other path is losing fat and muscle together. You end up a smaller, softer version of your fat self. You didn't recomp — you just subtracted.</p>
           </div>
         </details>
       </div>
@@ -610,9 +643,9 @@
 
   <script>
     (function () {
-      var root = document.getElementById('search-accordion');
+      var root = document.getElementById('wondering-list');
       if (!root) return;
-      var items = root.querySelectorAll('.accordion-item');
+      var items = root.querySelectorAll('.wondering-item');
       items.forEach(function (item) {
         item.addEventListener('toggle', function () {
           if (!item.open) return;
