@@ -18,7 +18,6 @@ import {
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
 import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
-import { SERVINGS_TABLE_HEADER } from '../../js/servingsPrintout.js';
 import { buildMenuPlanWorksheetPayload } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
@@ -262,7 +261,7 @@ function drawLayoutTable(doc, {
         padRight,
         tableRowPad: rowPad,
         style,
-        fillColor: row._colors?.[col.key] || (isHeader ? SAMPLE_DIET_BLUE : SEMINAR_COLORS.body),
+        fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
         align,
         lineBreak,
         valign: row._valign || 'top',
@@ -784,7 +783,16 @@ function servingsAnytimeRow(row) {
 }
 
 function buildServingsRows(gridRows) {
-  const header = { ...SERVINGS_TABLE_HEADER };
+  const header = {
+    label: '',
+    daily: 'Daily',
+    breakfast: 'Breakfast',
+    snack1: 'Snack',
+    lunch: 'Lunch',
+    snack2: 'Snack',
+    dinner: 'Dinner',
+    snack3: 'Snack',
+  };
   const bodyRows = (gridRows || []).map((row) => (
     row.label === 'Veggies' ? servingsAnytimeRow(row) : row
   ));
