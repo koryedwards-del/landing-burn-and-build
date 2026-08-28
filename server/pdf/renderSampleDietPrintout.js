@@ -18,6 +18,7 @@ import {
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
 import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
+import { SERVINGS_TABLE_HEADER } from '../../js/servingsPrintout.js';
 import { buildMenuPlanWorksheetPayload } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
@@ -783,16 +784,7 @@ function servingsAnytimeRow(row) {
 }
 
 function buildServingsRows(gridRows) {
-  const header = {
-    label: '',
-    daily: 'DAILY',
-    breakfast: 'BREAKFAST',
-    snack1: 'FRUIT',
-    lunch: 'LUNCH',
-    snack2: 'FRUIT',
-    dinner: 'DINNER',
-    snack3: 'FRUIT',
-  };
+  const header = { ...SERVINGS_TABLE_HEADER };
   const bodyRows = (gridRows || []).map((row) => (
     row.label === 'Veggies' ? servingsAnytimeRow(row) : row
   ));

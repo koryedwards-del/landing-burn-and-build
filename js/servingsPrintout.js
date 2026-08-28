@@ -33,13 +33,20 @@ function cellFromWhole(value) {
 }
 
 const SLOT_COLUMNS = [
-  { key: 'breakfast', label: 'Breakfast', slotLabel: 'Breakfast' },
-  { key: 'snack1', label: 'Snack', slotLabel: 'Morning Snack' },
-  { key: 'lunch', label: 'Lunch', slotLabel: 'Lunch' },
-  { key: 'snack2', label: 'Snack', slotLabel: 'Afternoon Snack' },
-  { key: 'dinner', label: 'Dinner', slotLabel: 'Dinner' },
-  { key: 'snack3', label: 'Snack', slotLabel: 'Evening Snack' },
+  { key: 'breakfast', label: 'BREAKFAST', slotLabel: 'Breakfast' },
+  { key: 'snack1', label: 'FRUIT', slotLabel: 'Morning Snack' },
+  { key: 'lunch', label: 'LUNCH', slotLabel: 'Lunch' },
+  { key: 'snack2', label: 'FRUIT', slotLabel: 'Afternoon Snack' },
+  { key: 'dinner', label: 'DINNER', slotLabel: 'Dinner' },
+  { key: 'snack3', label: 'FRUIT', slotLabel: 'Evening Snack' },
 ];
+
+/** PDF Servings grid header row (page 4). */
+export const SERVINGS_TABLE_HEADER = Object.freeze({
+  label: '',
+  daily: 'DAILY',
+  ...Object.fromEntries(SLOT_COLUMNS.map((col) => [col.key, col.label])),
+});
 
 export function formatServingCell(value) {
   const n = Number(value);
