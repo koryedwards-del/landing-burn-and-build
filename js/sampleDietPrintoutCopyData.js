@@ -38,7 +38,7 @@ export const SAMPLE_DIET_SERVINGS_NOTE =
 
 /** Food List page 1 — user-authored; do not reauthor. */
 export const SAMPLE_DIET_FOOD_LIST_INTRO =
-  'the amount shown is calculated to match your servings. No math needed.';
+  'The amount shown is calculated to match your servings. No math needed.';
 
 export const SAMPLE_DAY_MENU_PAGE_TITLE = 'Menu Plan for day or week of:';
 
