@@ -113,7 +113,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
   };
 }
 
-/** Blank Menu Plan worksheet — no handwriting fills; same layout as sample diet page 7. */
+/** Blank Menu Plan worksheet — modern layout; no handwriting fills. */
 export function buildMenuPlanWorksheetPayload() {
   return {
     view: 'menuplanworksheet',
@@ -127,6 +127,12 @@ export function buildMenuPlanWorksheetPayload() {
       pageTitle: SAMPLE_DAY_MENU_PAGE_TITLE,
       planFor: {
         value: '',
+      },
+      worksheetNote: {
+        calloutTitle: SAMPLE_DAY_MENU_CALLOUT_TITLE,
+        lead: SAMPLE_DAY_MENU_CALLOUT_LEAD,
+        url: MENU_PLAN_WORKSHEET_URL,
+        linkLabel: MENU_PLAN_WORKSHEET_LINK_LABEL,
       },
       sections: buildMenuSections(null, { filled: false }),
     },

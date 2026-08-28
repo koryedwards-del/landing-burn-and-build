@@ -1125,12 +1125,12 @@ function drawSampleDayMenuPage(doc, payload) {
   const menu = payload.sampleDayMenu;
   if (!menu?.sections?.length) return;
 
-  const filled = Boolean(menu.filled);
-  if (filled && !payload.worksheet) {
+  if (menu.filled || payload.worksheet) {
     drawModernMenuPlanPage(doc, payload);
     return;
   }
 
+  const filled = Boolean(menu.filled);
   if (filled) registerHandwritingFont(doc);
 
   const page = begin1982Page(doc, payload, 'Menu Plan', {
