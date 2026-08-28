@@ -158,16 +158,14 @@ function measureMenuRowHeight(doc, contentX, contentWidth, row, filled, category
   let bottom = lineY + categoryRowGap + LAYOUT.rowTail;
   if (!filled || !doc) return bottom;
 
-  const sizeLabelX = contentX + contentWidth * SERVING_LABEL_COL_RATIO;
-  const lineGap = 5;
-  doc.font(MODERN_REPORT_FONTS.regular).fontSize(LAYOUT.rowSize);
-  const sizeLabelW = doc.widthOfString(SERVING_SIZE_LABEL);
-  const foodLineEnd = sizeLabelX - lineGap;
-  const servingLineStart = sizeLabelX + sizeLabelW + lineGap;
-  const servingWidth = contentX + contentWidth - servingLineStart;
+  const category = rowCategoryLabel(row);
+  const layout = menuRowLayout(doc, contentX, contentWidth, category);
+  const foodTextX = layout.foodLineStart + 2;
+  const foodTextW = layout.foodLineEnd - layout.foodLineStart - 4;
+  const servingWidth = contentX + contentWidth - layout.servingLineStart;
 
   if (row.food) {
-    const foodH = measureHandwritingBandHeight(doc, row.food, foodLineEnd - contentX - 4);
+    const foodH = measureHandwritingBandHeight(doc, row.food, foodTextW);
     bottom = Math.max(bottom, lineY + foodH + categoryRowGap + LAYOUT.rowTail);
   }
   if (row.servingSize) {
@@ -291,14 +289,36 @@ function rowCategoryLabel(row) {
   return String(row.label || '');
 }
 
+function menuRowLayout(doc, contentX, contentWidth, category) {
+  const fonts = MODERN_REPORT_FONTS;
+  const lineGap = 5;
+  doc.font(fonts.bold).fontSize(LAYOUT.categorySize);
+  const categoryW = doc.widthOfString(category);
+  doc.font(fonts.regular).fontSize(LAYOUT.rowSize);
+  const sizeLabelW = doc.widthOfString(SERVING_SIZE_LABEL);
+
+  const sizeLabelX = contentX + contentWidth * SERVING_LABEL_COL_RATIO;
+  const foodLineStart = contentX + categoryW + lineGap;
+  const foodLineEnd = sizeLabelX - lineGap;
+  const servingLineStart = sizeLabelX + sizeLabelW + lineGap;
+
+  return {
+    lineGap,
+    sizeLabelX,
+    sizeLabelW,
+    foodLineStart,
+    foodLineEnd,
+    servingLineStart,
+  };
+}
+
 function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap, filled) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
   const category = rowCategoryLabel(row);
   const marginRight = page.x + page.width;
-  const sizeLabelX = contentX + contentWidth * SERVING_LABEL_COL_RATIO;
+  const layout = menuRowLayout(doc, contentX, contentWidth, category);
   const lineY = y + LAYOUT.rowSize + 2;
-  const lineGap = 5;
 
   doc
     .font(fonts.bold)
@@ -310,24 +330,19 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap, 
     .font(fonts.regular)
     .fontSize(LAYOUT.rowSize)
     .fillColor(colors.body)
-    .text(SERVING_SIZE_LABEL, sizeLabelX, y, { lineBreak: false });
-
-  doc.font(fonts.regular).fontSize(LAYOUT.rowSize);
-  const sizeLabelW = doc.widthOfString(SERVING_SIZE_LABEL);
-  const foodLineEnd = sizeLabelX - lineGap;
-  const servingLineStart = sizeLabelX + sizeLabelW + lineGap;
+    .text(SERVING_SIZE_LABEL, layout.sizeLabelX, y, { lineBreak: false });
 
   doc
     .strokeColor(colors.gold)
     .lineWidth(0.75)
-    .moveTo(contentX, lineY)
-    .lineTo(foodLineEnd, lineY)
+    .moveTo(layout.foodLineStart, lineY)
+    .lineTo(layout.foodLineEnd, lineY)
     .stroke();
 
   doc
     .strokeColor(colors.gold)
     .lineWidth(0.75)
-    .moveTo(servingLineStart, lineY)
+    .moveTo(layout.servingLineStart, lineY)
     .lineTo(marginRight, lineY)
     .stroke();
 
@@ -336,9 +351,9 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap, 
       drawHandwritingOnLine(
         doc,
         row.food,
-        contentX + 2,
+        layout.foodLineStart + 2,
         lineY,
-        foodLineEnd - contentX - 4,
+        layout.foodLineEnd - layout.foodLineStart - 4,
       );
     }
     if (row.servingSize) {
@@ -347,8 +362,8 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap, 
         .font(HANDWRITING_FONT)
         .fontSize(HANDWRITING_FONT_SIZE)
         .fillColor(HANDWRITING_INK_COLOR)
-        .text(String(row.servingSize), servingLineStart + 2, servingTop, {
-          width: marginRight - servingLineStart - 4,
+        .text(String(row.servingSize), layout.servingLineStart + 2, servingTop, {
+          width: marginRight - layout.servingLineStart - 4,
           lineGap: 1,
         });
     }
