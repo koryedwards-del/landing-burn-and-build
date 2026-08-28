@@ -33,7 +33,6 @@ const LAYOUT = Object.freeze({
   contentPadLeft: 10,
   mainMealBarH: 16,
   mainMealBarSize: 8,
-  snackTitleSize: 8,
   rowSize: 8.5,
   categorySize: 7.5,
   rowGap: 5,
@@ -119,6 +118,23 @@ function isMainMeal(section) {
   return Boolean(section.title);
 }
 
+function drawMealBar(doc, contentX, y, contentWidth, heading) {
+  const fonts = MODERN_REPORT_FONTS;
+  const colors = MODERN_REPORT_COLORS;
+  doc
+    .roundedRect(contentX, y, contentWidth, LAYOUT.mainMealBarH, 3)
+    .fill(colors.body);
+  doc
+    .font(fonts.bold)
+    .fontSize(LAYOUT.mainMealBarSize)
+    .fillColor(colors.white)
+    .text(heading, contentX + 8, y + 4, {
+      width: contentWidth - 16,
+      lineBreak: false,
+    });
+  return y + LAYOUT.mainMealBarH + 6;
+}
+
 function rowCategoryLabel(row) {
   if (row.label === SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL) return 'Fruit';
   return String(row.label || '');
@@ -168,7 +184,6 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
 }
 
 function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth) {
-  const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
   const sectionTop = y;
   const mainMeal = isMainMeal(section);
@@ -177,26 +192,8 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
   drawFilledTimeColumn(doc, page.x, y, section.time);
 
   let mealY = y;
-  if (mainMeal) {
-    doc
-      .roundedRect(contentX, mealY, contentWidth, LAYOUT.mainMealBarH, 3)
-      .fill(colors.body);
-    doc
-      .font(fonts.bold)
-      .fontSize(LAYOUT.mainMealBarSize)
-      .fillColor(colors.white)
-      .text(heading, contentX + 8, mealY + 4, {
-        width: contentWidth - 16,
-        lineBreak: false,
-      });
-    mealY += LAYOUT.mainMealBarH + 6;
-  } else if (heading) {
-    doc
-      .font(fonts.bold)
-      .fontSize(LAYOUT.snackTitleSize)
-      .fillColor(colors.muted)
-      .text(heading, contentX, mealY, { width: contentWidth, lineBreak: false });
-    mealY += LAYOUT.snackTitleSize + 6;
+  if (heading) {
+    mealY = drawMealBar(doc, contentX, mealY, contentWidth, heading);
   }
 
   (section.rows || []).forEach((row) => {
