@@ -49,41 +49,41 @@ const MENU_SECTION_DEFS = Object.freeze([
     key: 'breakfast',
     title: 'Breakfast',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein', slot: 'breakfast' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains', slot: 'breakfast' },
+      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
     key: 'snack1',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack1' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit' }],
   },
   {
     key: 'lunch',
     title: 'Lunch',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein', slot: 'lunch' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains', slot: 'lunch' },
+      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
     key: 'snack2',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack2' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit' }],
   },
   {
     key: 'dinner',
     title: 'Dinner',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein', slot: 'dinner' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains', slot: 'dinner' },
-      { label: 'Veggies', pickKey: 'veggies', staples: 'vegetables', slot: 'daily' },
+      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Veggies', pickKey: 'veggies', staples: 'vegetables' },
     ],
   },
   {
     key: 'snack3',
     title: null,
-    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit', slot: 'snack3' }],
+    rows: [{ label: SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL, labelBold: true, staples: 'fruit' }],
   },
 ]);
 
@@ -115,10 +115,6 @@ function scaledServing(staple, servingCount) {
   return scaleStapleServingLabel(staple.serving, count);
 }
 
-function servingCountForRow(planServings, rowDef) {
-  return menuPlanServingCount(planServings, rowDef.staples);
-}
-
 function pickNameForRow(rowDef, mealKey) {
   if (rowDef.staples === 'fruit') return FOOD_PICKS.fruit;
   if (rowDef.staples === 'vegetables') return FOOD_PICKS.dinner.veggies;
@@ -145,7 +141,7 @@ function buildRow(rowDef, mealKey, planServings, filled) {
 
   const stapleName = pickNameForRow(rowDef, mealKey);
   const staple = findStaple(stapleListFor(rowDef.staples), stapleName);
-  const servingCount = servingCountForRow(planServings, rowDef);
+  const servingCount = menuPlanServingCount(planServings, rowDef.staples);
   row.food = staple.name;
   row.servingSize = scaledServing(staple, servingCount);
   return row;

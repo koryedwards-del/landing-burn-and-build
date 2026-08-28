@@ -35,7 +35,8 @@ Three standalone pieces:
 | `data/foods.json`, `data/cuttingStaplesPrintout.js` | Food roster + gram weights |
 | `server/pdf/renderSampleDietPrintout.js` | Burn & Build Diet PDF renderer |
 | `server/pdf/` | PDFKit renderer |
-| `docs/samples/` | Sample PDF (`b&bsamplediet.pdf`) |
+| `server/publicSampleDiet.js` | Landing-page sample diet (live program on Render) |
+| `docs/samples/` | Static menu-plan-worksheet PDF only |
 
 ## Verify
 
@@ -46,7 +47,7 @@ npm run verify:pdf
 
 ## Sample / purchased PDF
 
-`docs/samples/b&bsamplediet.pdf` — 8 pages. Checkout uses the same renderer (`server/dietFulfillment.js`).
+Landing sample: `GET /api/samples/sample-diet` (live program — configure via `server/publicSampleDiet.js`). Purchased diet: `GET /api/programs/diet-pdf` via `server/dietFulfillment.js`. Same 8-page renderer.
 
 ## Questionnaire
 

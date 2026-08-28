@@ -1,5 +1,5 @@
 /**
- * Burn & Build Diet PDF (deliverable: docs/samples/b&bsamplediet.pdf).
+ * Burn & Build Diet PDF — 8-page program report (purchased + landing sample).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';

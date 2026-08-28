@@ -2,46 +2,10 @@
 
 import { stapleCategoryServings } from './stapleServingPrintout.js';
 
-/**
- * Split a daily total into whole-number servings across meal/snack slots.
- * Legacy helper — page 4 uses daily ÷ 3 (decimals when needed) instead.
- */
-export function distributeWholeServings(total, slotCount) {
-  const daily = Math.round(Number(total));
-  const slots = Number(slotCount);
-  if (!Number.isFinite(daily) || daily <= 0 || !Number.isFinite(slots) || slots <= 0) {
-    return Array(Math.max(0, slots)).fill(0);
-  }
-  const base = Math.floor(daily / slots);
-  const remainder = daily - base * slots;
-  const parts = Array(slots).fill(base);
-  if (slots === 3) {
-    if (remainder >= 1) parts[1] += 1;
-    if (remainder >= 2) parts[2] += 1;
-    return parts;
-  }
-  for (let i = slots - 1; remainder > 0 && i >= 0; i -= 1) {
-    parts[i] += 1;
-    remainder -= 1;
-  }
-  return parts;
-}
-
 function cellFromDailyThird(planServings, category) {
   const count = stapleCategoryServings(planServings, category);
   if (!Number.isFinite(count) || count <= 0) return '';
   return formatServingCell(count);
-}
-
-/** Per-slot serving count from the page 4 grid (menu plan uses the same values). */
-export function servingsGridSlotCount(gridRows, rowLabel, slotKey) {
-  const row = gridRows.find((entry) => entry.label === rowLabel);
-  if (slotKey === 'daily') {
-    const count = Number(row?.daily);
-    return Number.isFinite(count) && count > 0 ? Math.round(count) : 0;
-  }
-  const count = Number(row?.[slotKey]);
-  return Number.isFinite(count) && count > 0 ? count : 0;
 }
 
 const SLOT_COLUMNS = [
@@ -60,6 +24,7 @@ export function formatServingCell(value) {
   return n.toFixed(1);
 }
 
+/** Page 4 grid — daily total in the first column; meal/snack columns show daily ÷ 3. */
 export function servingsGridRows(pkg) {
   const servings = pkg?.plan?.servings;
   if (!servings) return [];

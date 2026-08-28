@@ -7,7 +7,7 @@ import {
   desirableLeanBodyMassLbs,
 } from '../js/bodyCompositionData.js';
 import { buildProgramPackage } from '../js/programPackageData.js';
-import { distributeWholeServings, servingsGridRows } from '../js/servingsPrintout.js';
+import { servingsGridRows } from '../js/servingsPrintout.js';
 import {
   GOLDEN_SAMPLE_FORM,
   GOLDEN_SAMPLE_GOLDEN,
@@ -15,6 +15,7 @@ import {
 } from '../js/printoutVerifyFixtures.js';
 import {
   scaleStapleRows,
+  menuPlanServingCount,
   scaleStapleServingLabel,
   stapleCategoryServings,
 } from '../js/stapleServingPrintout.js';
@@ -155,9 +156,6 @@ function verifyGoldenSampleServingsGrid() {
       errors.push(`${label}: got ${JSON.stringify(actual)}, want ${JSON.stringify(expected)}`);
     }
   };
-
-  expect('distributeWholeServings(10, 3)', distributeWholeServings(10, 3), [3, 4, 3]);
-  expect('distributeWholeServings(4, 3)', distributeWholeServings(4, 3), [1, 2, 1]);
 
   const protein = rows.find((row) => row.label === 'Protein');
   expect('golden sample protein row', protein, {
@@ -356,6 +354,7 @@ function verifySampleDayMenuScale() {
   const lunchTen = menuTen.sections.find((section) => section.title === 'Lunch');
   expect('menu breakfast eggs daily 10', breakfastTen?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
   expect('menu lunch chicken daily 10', lunchTen?.rows[0]?.servingSize, '87g');
+  expect('menuPlanServingCount protein 10', menuPlanServingCount(pkgTen.plan.servings, 'protein'), 10 / 3);
 
   if (errors.length) {
     console.error('FAIL sample day menu scale');

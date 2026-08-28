@@ -85,7 +85,7 @@ npm run verify:pdf
 
 ## Burn & Build Diet PDF
 
-Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf` — same renderer as `b&bsamplediet.pdf`.
+Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf`; landing sample via `GET /api/samples/sample-diet`.
 
 ## B&B Sample Diet PDF (landing page)
 

@@ -210,7 +210,7 @@ Dairy is a **compound serving** — one dairy serving carries protein, carbs, an
 | Detail | Value |
 |--------|-------|
 | Gram formula | `1000 ÷ carbs_per_100g` |
-| Meal placement | All daily vegetable servings at **dinner** (`distributeWholeServings` in `js/servingsPrintout.js`) |
+| Meal placement | All daily vegetable servings at **dinner** (menu plan + servings note) |
 | Prep | **Raw and cooked are separate catalog rows** — never interchange |
 | Measure rule | **After cooking** when cooked (see cutting list prep labels) |
 | Audit | `scripts/veg-fruit-audit.mjs` |
@@ -288,17 +288,15 @@ Cooking changes water content → carbs/protein per 100g change → **different 
 
 ## Meal & snack distribution
 
-From `distributeWholeServings` in `js/servingsPrintout.js`:
+Page 4 (`servingsGridRows` in `js/servingsPrintout.js`) and the menu plan (`menuPlanServingCount` in `js/stapleServingPrintout.js`) use **`stapleCategoryServings`** — daily total ÷ 3 for protein, grains, and fruit (decimals when needed; same count in every breakfast/lunch/dinner or fruit-snack column). Vegetables use the full daily count (all at dinner).
 
-| Group | Daily total split |
-|-------|-------------------|
-| Protein (+ dairy) | ÷ 3 → breakfast, lunch, dinner |
-| Grains & starches | ÷ 3 → breakfast, lunch, dinner |
-| Vegetables | **All at dinner** |
-| Fruits | ÷ 3 → three snack slots |
+| Group | Per meal/snack column |
+|-------|------------------------|
+| Protein (+ dairy) | `daily protein ÷ 3` |
+| Grains & starches | `daily grainsStarches ÷ 3` |
+| Vegetables | full daily count (dinner on menu plan) |
+| Fruits | `daily fruits ÷ 3` per snack |
 | Extra fat | **Not** in servings grid — total `fatMaintain` only |
-
-Remainder distribution (e.g. 10 protein → 3, 4, 3): extras go to **lunch**, then **dinner** — not breakfast.
 
 ---
 
@@ -335,7 +333,7 @@ displayed grams = stapleCategoryServings(planServings, category) × base one-ser
 
 Payload: `payload.servings.planServings` from `js/sampleDietPrintoutData.js`.
 
-Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf` (same 8-page deliverable as `b&bsamplediet.pdf`).
+Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf`. Landing sample uses `GET /api/samples/sample-diet` (live program on Render).
 
 ---
 
