@@ -124,20 +124,10 @@ function rowCategoryLabel(row) {
   return String(row.label || '');
 }
 
-function simplifyFoodName(name) {
-  return String(name || '')
-    .replace(/, white \(cooked\)/i, '')
-    .replace(/ \(cooked\)/i, '')
-    .replace(/ \(dry\)/i, '')
-    .replace(/ \(whole, fresh\)/i, '');
-}
-
 function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
   const category = rowCategoryLabel(row);
-  const food = simplifyFoodName(row.food);
-  const serving = String(row.servingSize || '');
   const marginRight = page.x + page.width;
   const sizeLabelX = contentX + contentWidth * SERVING_LABEL_COL_RATIO;
   const lineY = y + LAYOUT.rowSize + 2;
@@ -173,27 +163,6 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
     .moveTo(servingLineStart, lineY)
     .lineTo(marginRight, lineY)
     .stroke();
-
-  const foodTop = lineY - LAYOUT.rowSize + 1;
-  doc
-    .font(fonts.regular)
-    .fontSize(LAYOUT.rowSize)
-    .fillColor(colors.body)
-    .text(food, contentX + 2, foodTop, {
-      width: foodLineEnd - contentX - 4,
-      lineBreak: false,
-    });
-
-  if (serving) {
-    doc
-      .font(fonts.regular)
-      .fontSize(LAYOUT.rowSize)
-      .fillColor(colors.body)
-      .text(serving, servingLineStart + 2, foodTop, {
-        width: marginRight - servingLineStart - 4,
-        lineBreak: false,
-      });
-  }
 
   return lineY + LAYOUT.rowGap + 4;
 }
@@ -231,7 +200,6 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
   }
 
   (section.rows || []).forEach((row) => {
-    if (!row.food) return;
     mealY = drawMenuRow(doc, page, contentX, mealY, contentWidth, row);
   });
 

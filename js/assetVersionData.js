@@ -8,4 +8,4 @@ export const FOODS_CATALOG_VERSION = '2026.08.26a';
  * Bump when the Burn & Build Diet PDF template changes (layout, pages, copy pipeline).
  * Stored diet PDFs on Render are invalidated when this changes.
  */
-export const DIET_PDF_GENERATION_VERSION = '2026.08.28.20';
+export const DIET_PDF_GENERATION_VERSION = '2026.08.28.21';

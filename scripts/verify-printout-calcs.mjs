@@ -327,39 +327,16 @@ function verifySampleDayMenuScale() {
   const pkg = buildGoldenSamplePackage();
   const menu = buildSampleDayMenu(pkg);
 
-  const breakfast = menu.sections.find((section) => section.title === 'Breakfast');
-  expect('menu breakfast eggs', breakfast?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
-  expect('menu breakfast oatmeal', breakfast?.rows[1]?.servingSize, '63g');
-
-  const snack1 = menu.sections[1]?.rows[0];
-  expect('menu snack1 apples', snack1?.servingSize, '130g');
-
-  const lunch = menu.sections.find((section) => section.title === 'Lunch');
-  expect('menu lunch chicken', lunch?.rows[0]?.servingSize, '78g');
-  expect('menu lunch rice', lunch?.rows[1]?.servingSize, '150g');
-
-  const dinner = menu.sections.find((section) => section.title === 'Dinner');
-  expect('menu dinner sirloin', dinner?.rows[0]?.servingSize, '81g');
-  expect('menu dinner sweet potato', dinner?.rows[1]?.servingSize, '204g');
-  expect('menu dinner broccoli', dinner?.rows[2]?.servingSize, '139g');
-
-  const pkgFour = buildGoldenSamplePackage();
-  pkgFour.plan.servings.fruits = 4;
-  const menuFour = buildSampleDayMenu(pkgFour);
-  const snack1Four = menuFour.sections[1]?.rows[0];
-  const snack2Four = menuFour.sections[3]?.rows[0];
-  const snack3Four = menuFour.sections[5]?.rows[0];
-  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '173g');
-  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '173g');
-  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '173g');
+  expect('menu section count', menu.sections.length, 6);
+  expect('menu filled flag', menu.filled, true);
+  expect('menu breakfast row count', menu.sections.find((section) => section.title === 'Breakfast')?.rows.length, 2);
+  expect('menu dinner row count', menu.sections.find((section) => section.title === 'Dinner')?.rows.length, 3);
+  expect('menu breakfast time', menu.sections[0]?.time?.value, '7:00');
+  expect('menu breakfast no prefilled food', menu.sections[0]?.rows[0]?.food, undefined);
+  expect('menu breakfast no prefilled serving', menu.sections[0]?.rows[0]?.servingSize, undefined);
 
   const pkgTen = buildGoldenSamplePackage();
   pkgTen.plan.servings.protein = 10;
-  const menuTen = buildSampleDayMenu(pkgTen);
-  const breakfastTen = menuTen.sections.find((section) => section.title === 'Breakfast');
-  const lunchTen = menuTen.sections.find((section) => section.title === 'Lunch');
-  expect('menu breakfast eggs daily 10', breakfastTen?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
-  expect('menu lunch chicken daily 10', lunchTen?.rows[0]?.servingSize, '87g');
   expect('menuPlanServingCount protein 10', menuPlanServingCount(pkgTen.plan.servings, 'protein'), 10 / 3);
 
   if (errors.length) {
