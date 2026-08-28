@@ -5,9 +5,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { PDF_MARGIN } from './constants.js';
 import { logoPath } from './draw.js';
-import { PDF_FRAME_CONTACT } from './drawFrame.js';
+import { PDF_FRAME_COLORS, PDF_FRAME_CONTACT } from './drawFrame.js';
 
 const FONT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fonts');
+const BRAND_GOLD = PDF_FRAME_COLORS.gold;
 
 export const MODERN_REPORT_FONTS = Object.freeze({
   regular: 'Montserrat',
@@ -19,9 +20,9 @@ export const MODERN_REPORT_FONTS = Object.freeze({
 export const MODERN_REPORT_COLORS = Object.freeze({
   body: '#111111',
   muted: '#5C5C5C',
-  gold: '#C9A227',
-  goldLight: '#F3E4B8',
-  goldPale: '#FBF6E8',
+  gold: BRAND_GOLD,
+  goldLight: '#FFF0B3',
+  goldPale: '#FFFBE6',
   white: '#FFFFFF',
   rule: '#D8D8D8',
 });
