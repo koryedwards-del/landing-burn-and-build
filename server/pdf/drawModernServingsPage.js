@@ -104,6 +104,7 @@ function buildServingsRows(gridRows) {
         dinner: '',
         snack3: '',
         _colSpan: MEAL_COL_SPAN,
+        _spanAlign: 'left',
       }
       : row
   ));
@@ -185,7 +186,7 @@ function drawServingsTable(doc, { x, y, width, rows }) {
         const bounds = spanBounds(TABLE_COLUMNS, row._colSpan);
         if (bounds && index === bounds.fromIndex) {
           cellW = spanWidth(colWidths, bounds);
-          align = 'center';
+          align = row._spanAlign === 'left' ? 'left' : 'center';
         }
       }
 
