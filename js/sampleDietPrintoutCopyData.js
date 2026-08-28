@@ -21,8 +21,9 @@ export const SAMPLE_DIET_WELCOME = Object.freeze({
 });
 
 export const SAMPLE_DIET_LBA = Object.freeze({
-  aceLead: 'How much fat is right for each individual is a personal choice. How you look in the mirror is the only true judge of whether you have fat to lose. If you see more fat than you personally want, then exercise and follow this plan until you reach your desired goals.',
-  monitor: 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.',
+  aceLead: 'How much body fat is right for you is a personal choice. If you have more body fat than you personally want, your Burn & Build plan gives you a path toward changing it.',
+  lbaRecheckHeading: 'RECHECK YOUR PROGRESS',
+  lbaRecheckBody: 'Recheck your body composition every 6–8 weeks. The goal is to see fat coming down while protecting your lean body mass, strength and energy.',
   congratsSuffix: 'Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.',
   alertSuffix: 'Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass.',
   /** LBA page — connects lean mass to the weight-range table. */

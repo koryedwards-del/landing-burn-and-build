@@ -158,9 +158,9 @@ function verifyGoldenSampleServingsGrid() {
     }
   };
 
-  const protein = rows.find((row) => row.label === 'Protein/Dairy');
+  const protein = rows.find((row) => row.label === 'Protein & Dairy');
   expect('golden sample protein row', protein, {
-    label: 'Protein/Dairy',
+    label: 'Protein & Dairy',
     daily: '9',
     breakfast: '3',
     snack1: '',
@@ -185,9 +185,9 @@ function verifyGoldenSampleServingsGrid() {
   const pkgTen = buildProgramPackage(GOLDEN_SAMPLE_FORM);
   pkgTen.plan = { servings: { protein: 10, grainsStarches: 11, vegetables: 1, fruits: 4 } };
   const divided = servingsGridRows(pkgTen);
-  const proteinTen = divided.find((row) => row.label === 'Protein/Dairy');
+  const proteinTen = divided.find((row) => row.label === 'Protein & Dairy');
   expect('protein 10 daily thirds', proteinTen, {
-    label: 'Protein/Dairy',
+    label: 'Protein & Dairy',
     daily: '10',
     breakfast: '3.33',
     snack1: '',
@@ -196,7 +196,7 @@ function verifyGoldenSampleServingsGrid() {
     dinner: '3.33',
     snack3: '',
   });
-  const grainsEleven = divided.find((row) => row.label === 'Grain/Starch');
+  const grainsEleven = divided.find((row) => row.label === 'Grains & Starches');
   expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.66');
   expect('grains 11 daily thirds lunch', grainsEleven?.lunch, '3.66');
   const fruitsFour = divided.find((row) => row.label === 'Fruit');
@@ -206,7 +206,7 @@ function verifyGoldenSampleServingsGrid() {
 
   const pkgElevenProtein = buildProgramPackage(GOLDEN_SAMPLE_FORM);
   pkgElevenProtein.plan = { servings: { protein: 11, grainsStarches: 11, vegetables: 1, fruits: 4 } };
-  const proteinEleven = servingsGridRows(pkgElevenProtein).find((row) => row.label === 'Protein/Dairy');
+  const proteinEleven = servingsGridRows(pkgElevenProtein).find((row) => row.label === 'Protein & Dairy');
   expect('protein 11 daily thirds', proteinEleven?.breakfast, '3.66');
 
   for (const row of rows) {

@@ -67,13 +67,12 @@ function formatLbaBodyFatPercent(value) {
   return Number.isFinite(n) ? `${n.toFixed(2)}%` : `${raw}%`;
 }
 
-function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
+function lbmStatusCopy1982({ heightInches, leanBodyMass, gender }) {
   const analysis = analyzeLeanBodyMass({ gender, heightInches, leanBodyMass });
-  const genderWord = gender === 'female' ? 'female' : 'male';
   if (!analysis.desirableLbm) {
     return { lead: '', congrats: '', alert: '' };
   }
-  const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
+  const lead = `Desirable lean body mass for your height is ${Math.round(analysis.desirableLbm)} pounds or more.`;
   if (analysis.atOrAbove) {
     return {
       lead,
@@ -166,11 +165,11 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
 
   const fatLost = projection ? projection.fatLostLbs.toFixed(1) : '—';
   const exerciseParagraph = projection
-    ? `In eight weeks, you could safely lose ${fatLost} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${hours.total} hour(s) per week. ${hours.wt} hour(s) of ${INTAKE_WEIGHTS_RACQUET_SPORTS}, ${hours.cardio} hour(s) of cardiovascular activities, ${hours.fatBurn} hour(s) of fat-burning activities`
+    ? `In eight weeks, you could lose ${fatLost} pounds of fat. On your information sheet, you indicated you plan to exercise a total of ${hours.total} hour(s) per week. ${hours.wt} hour(s) of ${INTAKE_WEIGHTS_RACQUET_SPORTS}, ${hours.cardio} hour(s) of cardiovascular activities, ${hours.fatBurn} hour(s) of fat-burning activities`
     : '';
 
   const weeklyLine = projection
-    ? `You project to lose an average of ${projection.weeklyFatLossLbs.toFixed(1)} pounds of fat per week. ${SAMPLE_DIET_FOOD_PLAN.projectionSuffix}`
+    ? `Your plan projects an average fat loss of ${projection.weeklyFatLossLbs.toFixed(1)} pounds per week. ${SAMPLE_DIET_FOOD_PLAN.projectionSuffix}`
     : '';
 
   const activeBfCategory = aceActiveBodyFatCategory(gender, intake.fatPercent);
@@ -207,7 +206,10 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
         punchline: SAMPLE_DIET_LBA.lbmWhyPunchline,
         closing: SAMPLE_DIET_LBA.lbmWhyClosing,
       },
-      monitorCopy: SAMPLE_DIET_LBA.monitor,
+      recheckProgress: {
+        heading: SAMPLE_DIET_LBA.lbaRecheckHeading,
+        body: SAMPLE_DIET_LBA.lbaRecheckBody,
+      },
     },
     foodPlan: {
       lead: SAMPLE_DIET_FOOD_PLAN.lead,

@@ -229,7 +229,7 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
   }
 
   let gsCol = columns[1];
-  let gsY = drawSectionTitle(doc, 'Grain & Starch', gsCol.x, contentY, gsCol.width);
+  let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, contentY, gsCol.width);
   let gsIndex = 0;
 
   while (gsIndex < grainItems.length) {

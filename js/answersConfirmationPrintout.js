@@ -4,7 +4,6 @@ import {
   INTAKE_FIELD_QUESTIONS,
   INTAKE_FIELD_QUESTION_NUMBERS,
   INTAKE_WAIVER_SIGNED_LABEL,
-  INTAKE_WAIVER_SIGNED_QUESTION_NUMBER,
 } from './intakeQuestionCopyData.js';
 import {
   JOB_ACTIVITY_OPTIONS,
@@ -76,7 +75,7 @@ export function formatAnswersConfirmationLabel({ questionNumber, label }) {
 export function buildAnswersConfirmationRows(source) {
   const intake = source?.intake || source || {};
 
-  return [
+  const rows = [
     confirmationRow('preferredName', displayValue(intake.preferredName)),
     confirmationRow('sex', displayValue(intake.sex)),
     confirmationRow('email', displayValue(intake.email)),
@@ -93,9 +92,13 @@ export function buildAnswersConfirmationRows(source) {
     confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
     {
       fieldId: 'waiver',
-      questionNumber: INTAKE_WAIVER_SIGNED_QUESTION_NUMBER,
       label: INTAKE_WAIVER_SIGNED_LABEL,
       value: waiverSignedLabel(intake.waiverSignature, intake.waiverSignedDate),
     },
   ];
+
+  return rows.map((row, index) => ({
+    ...row,
+    questionNumber: index + 1,
+  }));
 }

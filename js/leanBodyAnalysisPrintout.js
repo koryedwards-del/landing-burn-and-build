@@ -285,14 +285,13 @@ function weightGoalRangeLabel(lbm, category) {
 
 export function lbmStatusMessage({ gender, heightInches, leanBodyMass }) {
   const analysis = analyzeLeanBodyMass({ gender, heightInches, leanBodyMass });
-  const genderWord = gender === 'female' ? 'female' : 'male';
   if (!analysis.desirableLbm) {
     return {
       lead: '',
       congrats: '',
     };
   }
-  const lead = `A ${genderWord} your height in good condition has ${Math.round(analysis.desirableLbm)} pounds or more of lean body weight.`;
+  const lead = `Desirable lean body mass for your height is ${Math.round(analysis.desirableLbm)} pounds or more.`;
   const congrats = analysis.atOrAbove
     ? 'CONGRATULATIONS! Your LBM is at or above the desirable amount. Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh at each body fat range from Stage-ready to Average based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.'
     : 'ALERT! Your LBM is below the desirable amount for your height. Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below shows target weights at each body fat range from Stage-ready to Average based on your current Lean Body Mass.';

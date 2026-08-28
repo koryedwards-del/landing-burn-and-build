@@ -85,7 +85,7 @@ function drawBodyParagraph(doc, x, y, width, text) {
 
 function parseExerciseParagraph(text) {
   const raw = String(text || '');
-  const loseMatch = raw.match(/(In eight weeks, you could safely lose )([\d.]+)( pounds of fat\.)(.*)/i);
+  const loseMatch = raw.match(/(In eight weeks, you could (?:safely )?lose )([\d.]+)( pounds of fat\.)(.*)/i);
   if (!loseMatch) return null;
   const hoursMatch = loseMatch[4].match(/(.*?)([\d.]+)( hour\(s\) per week\.)(.*)/i);
   if (!hoursMatch) return null;

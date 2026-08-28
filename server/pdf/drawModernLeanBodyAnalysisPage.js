@@ -5,7 +5,6 @@ import { begin1982Page, TABLE_1982 } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
-  modernFooterRuleY,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
 
@@ -42,10 +41,6 @@ const LAYOUT = Object.freeze({
   tableLabelActiveSize: 8,
   tableValueSize: 8.5,
   tableValueActiveSize: 9.5,
-  monitorSize: 8,
-  monitorLineGap: 1.5,
-  monitorGapAboveFooter: 18,
-  monitorSectionGap: 8,
 });
 
 function drawSectionHeading(doc, x, y, width, text) {
@@ -359,26 +354,21 @@ function drawBodyParagraph(doc, x, y, width, text) {
   return doc.y + LAYOUT.bodyGap;
 }
 
-function drawMonitorCopy(doc, page, y, text) {
-  if (!text) return y;
-  const ruleY = modernFooterRuleY(page.box);
-  const maxBottom = ruleY - LAYOUT.monitorGapAboveFooter;
-  const body = String(text);
-  doc.font(FONTS.regular).fontSize(LAYOUT.monitorSize);
-  const textH = doc.heightOfString(body, {
-    width: page.width,
-    lineGap: LAYOUT.monitorLineGap,
-  });
-  const flowStartY = y + LAYOUT.monitorSectionGap;
-  const startY = Math.min(flowStartY, maxBottom - textH);
-  if (startY + textH > maxBottom) return y;
+function drawRecheckProgressSection(doc, x, y, width, recheck) {
+  if (!recheck?.body) return y;
 
-  doc.fillColor(COLORS.muted).text(body, page.x, startY, {
-    width: page.width,
-    lineGap: LAYOUT.monitorLineGap,
-    align: 'left',
-  });
-  return Math.min(doc.y, maxBottom);
+  let cursorY = y + LAYOUT.sectionGap;
+  if (recheck.heading) {
+    cursorY = drawSectionHeading(doc, x, cursorY, width, recheck.heading);
+  }
+
+  doc
+    .font(FONTS.regular)
+    .fontSize(LAYOUT.bodySize)
+    .fillColor(COLORS.body)
+    .text(String(recheck.body), x, cursorY, { width, lineGap: LAYOUT.bodyLineGap });
+
+  return doc.y + LAYOUT.bodyGap;
 }
 
 export function drawModernLeanBodyAnalysisPage(doc, payload) {
@@ -476,5 +466,5 @@ export function drawModernLeanBodyAnalysisPage(doc, payload) {
     });
   }
 
-  drawMonitorCopy(doc, page, y, lba.monitorCopy);
+  drawRecheckProgressSection(doc, page.x, y, page.width, lba.recheckProgress);
 }
