@@ -1024,7 +1024,6 @@ function bindBodyAccordion() {
 
   bodyAccordion.addEventListener('input', () => {
     renderBodyAccordionState();
-    collapseBodyIfComplete();
     updateStepNav();
   });
 
