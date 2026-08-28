@@ -27,9 +27,9 @@ export const SAMPLE_DIET_LBA = Object.freeze({
   alertSuffix: 'Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass.',
   /** LBA page — connects lean mass to the weight-range table. */
   lbmWhyHeading: 'Why Lean Body Mass Matters',
-  lbmWhyLead: 'Lean body mass is predominantly muscle. It\'s your strength, your energy, and your true body shape underneath the fat. It also includes your bones, organs, skin, hair, and more.',
+  lbmWhyLead: 'Lean body mass (predominantly muscle) is your strength, your energy, and your true body shape under your fat. It\'s your muscle, bones, organs, skin, hair, and hormones.',
   lbmWhyPunchline: 'Actually, it\'s you.',
-  lbmWhyClosing: 'Keeping your lean body mass means keeping as much of you as possible—strong, energetic and vibrant.',
+  lbmWhyClosing: 'Keeping your lean is keeping you as healthy and vibrant as possible. When your lean is gone, you are gone.',
 });
 
 /** Lean Body Analysis page — section headings (user-authored). */
