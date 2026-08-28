@@ -234,71 +234,73 @@
       flex-direction: column;
       justify-content: center;
     }
-    .sample-label {
+    .sample-built {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 28rem;
+    }
+
+    .sample-built-heading {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
       font-size: 0.75rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--yellow);
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
-    .sample-list {
+
+    .sample-built-body {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+
+    .sample-built-body p {
+      margin: 0 0 18px;
+    }
+
+    .sample-built-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .sample-built-body strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .sample-built-pledges {
+      list-style: none;
+      margin: 40px 0 36px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .sample-built-pledges li {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.35;
+      color: var(--yellow);
+    }
+
+    .sample-built-steps {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--text-dim);
+      margin: 0;
+      padding: 0;
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    .sample-list li {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--gray-light);
-      padding-left: 18px;
-      position: relative;
-    }
-    .sample-list li::before {
-      content: '▶';
-      position: absolute;
-      left: 0;
-      color: var(--yellow);
-      font-size: 0.6rem;
-      top: 4px;
-    }
-
-    .sample-sections {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .sample-sections-intro {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 20px;
-    }
-
-    .sample-section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 0.9rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 8px;
-    }
-
-    .sample-section-body {
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.92rem;
-      line-height: 1.6;
-      color: var(--text-dim);
+      gap: 6px;
     }
 
     .pdf-preview { display: block; text-decoration: none; color: inherit; cursor: pointer; }
@@ -495,32 +497,23 @@
           </a>
         </div>
         <div class="sample-panel sample-panel--detail">
-          <p class="sample-sections-intro">What you get</p>
-          <div class="sample-sections">
-            <section>
-              <h3 class="sample-section-title">Welcome</h3>
-              <p class="sample-section-body">Page one introduces your program and what each section covers.</p>
-            </section>
-            <section>
-              <h3 class="sample-section-title">Lean Body Analysis</h3>
-              <p class="sample-section-body">Page two is the results of your body composition test.</p>
-            </section>
-            <section>
-              <h3 class="sample-section-title">Food Plan</h3>
-              <p class="sample-section-body">Page three is your custom-designed food plan.</p>
-            </section>
-            <section>
-              <h3 class="sample-section-title">Servings</h3>
-              <p class="sample-section-body">Page four is the servings page.</p>
-            </section>
-            <section>
-              <h3 class="sample-section-title">Food List</h3>
-              <p class="sample-section-body">Pages five and six are your food list.</p>
-            </section>
-            <section>
-              <h3 class="sample-section-title">Menu Plan</h3>
-              <p class="sample-section-body">Page seven is a filled sample menu plan for one day.</p>
-            </section>
+          <div class="sample-built">
+            <h2 class="sample-built-heading">Built around you</h2>
+            <div class="sample-built-body">
+              <p>Your food plan starts with your <strong>lean body mass</strong>—the part of your body you want to keep.</p>
+              <p>Then Burn &amp; Build accounts for your workday, your training, and your activity to calculate how much food <strong>you</strong> need.</p>
+              <p>Those calculations are turned into your personal daily servings and the exact amount of each food that equals one serving.</p>
+            </div>
+            <ul class="sample-built-pledges" aria-label="What you do not need to do">
+              <li>No calorie counting</li>
+              <li>No macro math</li>
+              <li>No guessing at portions</li>
+            </ul>
+            <ul class="sample-built-steps">
+              <li>Choose foods from your list.</li>
+              <li>Eat the servings in your plan.</li>
+              <li>Build your day around your life.</li>
+            </ul>
           </div>
         </div>
       </div>
