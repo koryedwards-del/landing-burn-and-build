@@ -39,7 +39,7 @@ export function servingsGridRows(pkg) {
 
   return [
     {
-      label: 'Protein',
+      label: 'Protein/Dairy',
       daily: formatServingCell(servings.protein),
       breakfast: proteinThird,
       snack1: '',
@@ -49,7 +49,7 @@ export function servingsGridRows(pkg) {
       snack3: '',
     },
     {
-      label: 'Grains/Starches',
+      label: 'Grain/Starch',
       daily: formatServingCell(servings.grainsStarches),
       breakfast: grainThird,
       snack1: '',
