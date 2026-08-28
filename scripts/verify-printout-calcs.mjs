@@ -170,9 +170,9 @@ function verifyGoldenSampleServingsGrid() {
     snack3: '',
   });
 
-  const fruits = rows.find((row) => row.label === 'Fruits');
+  const fruits = rows.find((row) => row.label === 'Fruit');
   expect('golden sample fruit row', fruits, {
-    label: 'Fruits',
+    label: 'Fruit',
     daily: '3',
     breakfast: '',
     snack1: '1',
@@ -199,7 +199,7 @@ function verifyGoldenSampleServingsGrid() {
   const grainsEleven = divided.find((row) => row.label === 'Grain/Starch');
   expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.66');
   expect('grains 11 daily thirds lunch', grainsEleven?.lunch, '3.66');
-  const fruitsFour = divided.find((row) => row.label === 'Fruits');
+  const fruitsFour = divided.find((row) => row.label === 'Fruit');
   expect('fruits 4 daily thirds', fruitsFour?.snack1, '1.33');
   expect('fruits 4 daily thirds snack2', fruitsFour?.snack2, '1.33');
   expect('fruits 4 daily thirds snack3', fruitsFour?.snack3, '1.33');
