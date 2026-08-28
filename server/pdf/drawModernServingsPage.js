@@ -86,11 +86,11 @@ function buildServingsRows(gridRows) {
     label: '',
     daily: 'Daily',
     breakfast: 'Breakfast',
-    snack1: 'Snack',
+    snack1: 'Fruit',
     lunch: 'Lunch',
-    snack2: 'Snack',
+    snack2: 'Fruit',
     dinner: 'Dinner',
-    snack3: 'Snack',
+    snack3: 'Fruit',
     _isHeader: true,
   };
   const bodyRows = (gridRows || []).map((row) => (

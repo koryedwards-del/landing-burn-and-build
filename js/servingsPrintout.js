@@ -10,11 +10,11 @@ function cellFromDailyThird(planServings, category) {
 
 const SLOT_COLUMNS = [
   { key: 'breakfast', label: 'Breakfast', slotLabel: 'Breakfast' },
-  { key: 'snack1', label: 'Snack', slotLabel: 'Morning Snack' },
+  { key: 'snack1', label: 'Fruit', slotLabel: 'Morning Snack' },
   { key: 'lunch', label: 'Lunch', slotLabel: 'Lunch' },
-  { key: 'snack2', label: 'Snack', slotLabel: 'Afternoon Snack' },
+  { key: 'snack2', label: 'Fruit', slotLabel: 'Afternoon Snack' },
   { key: 'dinner', label: 'Dinner', slotLabel: 'Dinner' },
-  { key: 'snack3', label: 'Snack', slotLabel: 'Evening Snack' },
+  { key: 'snack3', label: 'Fruit', slotLabel: 'Evening Snack' },
 ];
 
 export function formatServingCell(value) {
