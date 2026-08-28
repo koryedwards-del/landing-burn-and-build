@@ -150,9 +150,7 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
     clientName: programClientNameUpper(pkg),
     preparedAt: programPreparedDate(pkg),
     preparedDate: programPreparedDate(pkg),
-    preparedDateLong: formatProgramDateLong(
-      pkg?.program?.issuedAt || pkg?.program?.foodPlanCreatedDate,
-    ),
+    preparedDateLong: formatProgramDateLong(programPreparedDate(pkg)),
     header: { ...SAMPLE_DIET_HEADER },
     welcome: { ...SAMPLE_DIET_WELCOME },
     leanBodyAnalysis: {

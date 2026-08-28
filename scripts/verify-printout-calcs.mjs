@@ -19,6 +19,9 @@ import {
   stapleCategoryServings,
 } from '../js/stapleServingPrintout.js';
 import { CUTTING_STAPLES_PROTEIN_DAIRY } from '../data/cuttingStaplesPrintout.js';
+import { formatProgramDateLong, programPreparedDate } from '../js/programClientDataHelpers.js';
+import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
+import { buildGoldenSamplePackage } from '../js/printoutVerifyFixtures.js';
 
 const rnd = (x) => Math.round(x);
 
@@ -251,10 +254,48 @@ function verifyStapleServingScale() {
   return true;
 }
 
+function verifyProgramDates() {
+  const errors = [];
+  const expect = (label, actual, expected) => {
+    if (actual !== expected) errors.push(`${label}: got ${actual}, want ${expected}`);
+  };
+
+  const pkg = {
+    program: {
+      foodPlanCreatedDate: '2026-08-27',
+      issuedAt: '2026-08-28T02:00:00.000Z',
+      clientTimezone: 'America/Los_Angeles',
+    },
+  };
+  expect('programPreparedDate prefers local created date', programPreparedDate(pkg), '2026-08-27');
+  expect('formatProgramDateLong from date key', formatProgramDateLong('2026-08-27'), 'August 27, 2026');
+
+  const tzOnly = {
+    program: {
+      issuedAt: '2026-08-28T02:00:00.000Z',
+      clientTimezone: 'America/Los_Angeles',
+    },
+  };
+  expect('programPreparedDate uses client timezone', programPreparedDate(tzOnly), '2026-08-27');
+
+  const payload = buildSampleDietPrintoutPayload(buildGoldenSamplePackage());
+  expect('payload preparedDate', payload.preparedDate, '2024-01-15');
+  expect('payload preparedDateLong matches preparedDate', payload.preparedDateLong, 'January 15, 2024');
+
+  if (errors.length) {
+    console.error('FAIL program dates');
+    errors.forEach((e) => console.error(`  ${e}`));
+    return false;
+  }
+  console.log('OK program dates');
+  return true;
+}
+
 const ok = [
   verifyGoldenSamplePackage(),
   verifyGoldenSampleServingsGrid(),
   verifyStapleServingScale(),
+  verifyProgramDates(),
   verifyCase('Golden sample female', GOLDEN_SAMPLE_INTAKE, GOLDEN_SAMPLE_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,

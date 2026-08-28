@@ -28,6 +28,7 @@ export function buildProgramPackage(form, { startDate, programId, label, meta } 
       issuedAtLocalDate: localDateKey(new Date()),
       firstSavedAtLocalDate: createdDate,
       foodPlanCreatedDate: createdDate,
+      clientTimezone: resolveClientTimezone(),
       startDate: startDate || todayDateKey(),
       durationDays: PROGRAM_DURATION_DAYS,
       status: 'active',
@@ -112,8 +113,11 @@ export function validateProgramPackage(pkg) {
   return { ok: errors.length === 0, errors };
 }
 
-export function localDateKey(from = new Date()) {
-  if (from == null || from === '') return null;
+export function localDateKey(from, timeZone) {
+  if (from == null || from === '') {
+    if (arguments.length === 0) from = new Date();
+    else return null;
+  }
   const s = typeof from === 'string' ? from.trim() : from;
   if (typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   const d = from instanceof Date ? from : new Date(from);
@@ -121,10 +125,31 @@ export function localDateKey(from = new Date()) {
     const m = String(from).match(/^(\d{4})-(\d{2})-(\d{2})/);
     return m ? `${m[1]}-${m[2]}-${m[3]}` : null;
   }
+  if (timeZone) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(d);
+    const get = (type) => parts.find((part) => part.type === type)?.value;
+    const year = get('year');
+    const month = get('month');
+    const day = get('day');
+    if (year && month && day) return `${year}-${month}-${day}`;
+  }
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
+}
+
+function resolveClientTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+  } catch {
+    return null;
+  }
 }
 
 function todayDateKey() {

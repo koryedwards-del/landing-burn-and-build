@@ -99,10 +99,11 @@ function formatPreparedDateOrdinal(value) {
   if (!value) return '';
   const isoMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (isoMatch) {
-    const d = new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T12:00:00`);
-    const month = d.toLocaleDateString('en-US', { month: 'long' });
-    const day = d.getDate();
-    return `${month} ${day}${ordinalSuffix(day)}, ${d.getFullYear()}`;
+    const year = Number(isoMatch[1]);
+    const monthIndex = Number(isoMatch[2]) - 1;
+    const day = Number(isoMatch[3]);
+    const month = new Date(year, monthIndex, 1).toLocaleDateString('en-US', { month: 'long' });
+    return `${month} ${day}${ordinalSuffix(day)}, ${year}`;
   }
   const longMatch = String(value).match(/^(\w+)\s+(\d{1,2}),?\s+(\d{4})$/);
   if (longMatch) {
