@@ -801,10 +801,9 @@ body.q-app--workroom {
   background: none;
   font: inherit;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text);
   text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
+  text-decoration: none;
   cursor: pointer;
 }
 
