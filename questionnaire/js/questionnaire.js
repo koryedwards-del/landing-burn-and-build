@@ -4,7 +4,7 @@ import {
   WORK_STRESS,
   JOB_ACTIVITY_OPTIONS,
 } from '../../js/profileDataEngine.js';
-import { buildProgramPackage } from '../../js/programPackageData.js';
+import { buildProgramPackage, localDateKey } from '../../js/programPackageData.js';
 import {
   buildAnswersConfirmationRows,
   formatAnswersConfirmationLabel,
@@ -1520,7 +1520,7 @@ function showStep(index) {
 }
 
 function initDefaults() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey(new Date());
   if (form.elements.intakeDate) {
     form.elements.intakeDate.value = today;
   }
