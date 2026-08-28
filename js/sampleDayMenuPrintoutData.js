@@ -7,6 +7,9 @@ import {
   CUTTING_STAPLES_VEGETABLES,
 } from '../data/cuttingStaplesPrintout.js';
 import {
+  SAMPLE_DAY_MENU_CALLOUT_LEAD,
+  SAMPLE_DAY_MENU_CALLOUT_TITLE,
+  SAMPLE_DAY_MENU_INTRO,
   SAMPLE_DAY_MENU_PAGE_TITLE,
   SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
   SAMPLE_DIET_HEADER,
@@ -163,12 +166,14 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
 
   return {
     filled,
+    intro: filled ? SAMPLE_DAY_MENU_INTRO : null,
     pageTitle: SAMPLE_DAY_MENU_PAGE_TITLE,
     planFor: {
       value: filled ? formatMenuPlanForDate(dateIso) : '',
     },
     worksheetNote: filled ? {
-      lead: SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD,
+      calloutTitle: SAMPLE_DAY_MENU_CALLOUT_TITLE,
+      lead: SAMPLE_DAY_MENU_CALLOUT_LEAD,
       url: MENU_PLAN_WORKSHEET_URL,
       linkLabel: MENU_PLAN_WORKSHEET_LINK_LABEL,
     } : null,

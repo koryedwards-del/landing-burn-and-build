@@ -13,6 +13,7 @@ import {
   TABLE_1982,
 } from './draw1982Frame.js';
 import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
+import { drawModernMenuPlanPage } from './drawModernMenuPlanPage.js';
 import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
@@ -1125,6 +1126,11 @@ function drawSampleDayMenuPage(doc, payload) {
   if (!menu?.sections?.length) return;
 
   const filled = Boolean(menu.filled);
+  if (filled && !payload.worksheet) {
+    drawModernMenuPlanPage(doc, payload);
+    return;
+  }
+
   if (filled) registerHandwritingFont(doc);
 
   const page = begin1982Page(doc, payload, 'Menu Plan', {

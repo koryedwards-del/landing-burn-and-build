@@ -38,4 +38,11 @@ export const SAMPLE_DIET_SERVINGS_NOTE =
 
 export const SAMPLE_DAY_MENU_PAGE_TITLE = 'Menu Plan for day or week of:';
 
+/** Modern Menu Plan page (sample diet page 2) — user-authored; do not reauthor. */
+export const SAMPLE_DAY_MENU_INTRO = 'See how easy it is to build your day.';
+
+export const SAMPLE_DAY_MENU_CALLOUT_TITLE = 'BUILD YOUR OWN DAY';
+
+export const SAMPLE_DAY_MENU_CALLOUT_LEAD = 'Download a blank Menu Plan at';
+
 export const SAMPLE_DAY_MENU_WORKSHEET_NOTE_LEAD = 'You can download blank Menu Plans at ';
