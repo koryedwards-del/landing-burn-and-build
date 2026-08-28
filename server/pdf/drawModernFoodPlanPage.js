@@ -371,11 +371,11 @@ const MACRO_VALUE_KEYS = Object.freeze([
 ]);
 
 function macroColDefs() {
-  const labelW = 0.27;
+  const labelW = 0.33;
   const groupW = (1 - labelW) / 4;
   const pairW = groupW / 2;
   return [
-    { key: 'label', width: labelW, align: 'left' },
+    { key: 'label', width: labelW, align: 'left', singleLine: true },
     { key: 'proteinG', width: pairW, align: 'right' },
     { key: 'proteinCal', width: pairW, align: 'right' },
     { key: 'carbsG', width: pairW, align: 'right' },
@@ -439,10 +439,11 @@ function drawModernMacroTable(doc, x, y, width, macroRows = []) {
     colDefs.forEach((col, index) => {
       const innerW = colWidths[index] - 8;
       doc.font(isYourPlanRow(row) ? fonts.bold : fonts.regular);
-      maxH = Math.max(
-        maxH,
-        doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 }) + rowPad * 2,
-      );
+      const text = String(row[col.key] ?? '');
+      const textH = col.singleLine
+        ? doc.heightOfString(text, { lineBreak: false })
+        : doc.heightOfString(text, { width: innerW, lineGap: 0 });
+      maxH = Math.max(maxH, textH + rowPad * 2);
     });
     return maxH;
   });
@@ -517,14 +518,16 @@ function drawModernMacroTable(doc, x, y, width, macroRows = []) {
     }
     colDefs.forEach((col, index) => {
       const bold = isYourPlanRow(row);
+      const cellText = String(row[col.key] ?? '');
       doc
         .font(bold ? fonts.bold : fonts.regular)
         .fontSize(LAYOUT.tableBodySize)
         .fillColor(colors.body)
-        .text(String(row[col.key] ?? ''), colXs[index] + 4, cy + rowPad, {
-          width: colWidths[index] - 8,
+        .text(cellText, colXs[index] + 4, cy + rowPad, {
+          width: col.singleLine ? undefined : colWidths[index] - 8,
           align: col.align || 'left',
           lineGap: 0,
+          lineBreak: !col.singleLine,
         });
     });
     cy += rh;
