@@ -29,7 +29,7 @@ export const SAMPLE_DIET_LBA = Object.freeze({
   lbmWhyHeading: 'Why Lean Body Mass Matters',
   lbmWhyLead: 'Lean body mass (predominantly muscle) is your strength, your energy, and your true body shape under your fat. It\'s your muscle, bones, organs, skin, hair, and hormones.',
   lbmWhyPunchline: 'Actually, it\'s you.',
-  lbmWhyClosing: 'Keeping your lean is keeping you as healthy and vibrant as possible. When your lean is gone, you are gone.',
+  lbmWhyClosing: 'Eating to keep your muscle (LBM) is a solid move toward being as healthy and vibrant as possible. When your lean is gone, you are gone.',
 });
 
 /** Lean Body Analysis page — section headings (user-authored). */
