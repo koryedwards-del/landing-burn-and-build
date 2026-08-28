@@ -27,6 +27,9 @@ import {
   SAMPLE_DIET_FOOD_LIST_INTRO,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
+  SAMPLE_DIET_SERVINGS_DAILY_HEADING,
+  SAMPLE_DIET_SERVINGS_DIVIDE_HEADING,
+  SAMPLE_DIET_SERVINGS_INTRO,
   SAMPLE_DIET_SERVINGS_NOTE,
   SAMPLE_DIET_WELCOME,
 } from './sampleDietPrintoutCopyData.js';
@@ -173,6 +176,9 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       macroRows: buildMacroTableRows(formula, intake.workPhysical, intake),
     },
     servings: {
+      intro: SAMPLE_DIET_SERVINGS_INTRO,
+      dailyHeading: SAMPLE_DIET_SERVINGS_DAILY_HEADING,
+      divideHeading: SAMPLE_DIET_SERVINGS_DIVIDE_HEADING,
       note: SAMPLE_DIET_SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,

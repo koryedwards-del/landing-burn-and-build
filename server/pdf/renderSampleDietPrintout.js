@@ -15,6 +15,7 @@ import {
 import { drawAnswersConfirmationPage } from './drawAnswersConfirmationPage.js';
 import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
 import { drawModernMenuPlanPage } from './drawModernMenuPlanPage.js';
+import { drawModernServingsPage } from './drawModernServingsPage.js';
 import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
@@ -33,8 +34,6 @@ const HANDWRITING_FONT_SIZE = 16;
 /** Ballpoint ink — not SAMPLE_DIET_BLUE (PDF accent). */
 const HANDWRITING_INK_COLOR = '#184A94';
 const HANDWRITING_BASELINE_NUDGE = 1.5;
-const SERVINGS_ANYTIME_NOTE = 'can be eaten any time of day.';
-const SERVINGS_MEAL_COL_SPAN = Object.freeze({ from: 'breakfast', to: 'snack3' });
 
 function getRowColSpans(row) {
   if (Array.isArray(row._colSpans) && row._colSpans.length) return row._colSpans;
@@ -703,59 +702,8 @@ function drawFoodPlanPage(doc, payload) {
   drawModernFoodPlanPage(doc, payload);
 }
 
-const SERVINGS_COLUMNS = [
-  { key: 'label', width: 0.18, align: 'left' },
-  { key: 'daily', width: 0.1, align: 'center' },
-  { key: 'breakfast', width: 0.12, align: 'center' },
-  { key: 'snack1', width: 0.1, align: 'center' },
-  { key: 'lunch', width: 0.1, align: 'center' },
-  { key: 'snack2', width: 0.1, align: 'center' },
-  { key: 'dinner', width: 0.12, align: 'center' },
-  { key: 'snack3', width: 0.1, align: 'center' },
-];
-
-function servingsAnytimeRow(row) {
-  return {
-    ...row,
-    breakfast: SERVINGS_ANYTIME_NOTE,
-    snack1: '',
-    lunch: '',
-    snack2: '',
-    dinner: '',
-    snack3: '',
-    _colSpan: SERVINGS_MEAL_COL_SPAN,
-  };
-}
-
-function buildServingsRows(gridRows) {
-  const header = {
-    label: '',
-    daily: 'Daily',
-    breakfast: 'Breakfast',
-    snack1: 'Snack',
-    lunch: 'Lunch',
-    snack2: 'Snack',
-    dinner: 'Dinner',
-    snack3: 'Snack',
-  };
-  const bodyRows = (gridRows || []).map((row) => (
-    row.label === 'Veggies' ? servingsAnytimeRow(row) : row
-  ));
-  return [header, ...bodyRows];
-}
-
 function drawServingsPage(doc, payload) {
-  const servings = payload.servings;
-  let page = begin1982Page(doc, payload, 'Servings');
-  page = drawParagraphs(doc, page, [servings.note]);
-  drawLayoutTable(doc, {
-    x: page.x,
-    y: page.y + LAYOUT.sectionGap,
-    width: page.width,
-    columns: SERVINGS_COLUMNS,
-    rows: buildServingsRows(servings.gridRows || []),
-    headerRows: 1,
-  });
+  drawModernServingsPage(doc, payload);
 }
 
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';

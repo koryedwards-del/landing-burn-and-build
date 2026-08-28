@@ -36,6 +36,14 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
 export const SAMPLE_DIET_SERVINGS_NOTE =
   'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
+/** Servings page — user-authored; do not reauthor. */
+export const SAMPLE_DIET_SERVINGS_INTRO =
+  'This is how many servings you eat each day — and where they go.';
+
+export const SAMPLE_DIET_SERVINGS_DAILY_HEADING = 'YOUR DAILY SERVINGS';
+
+export const SAMPLE_DIET_SERVINGS_DIVIDE_HEADING = 'HOW TO DIVIDE THEM THROUGH YOUR DAY';
+
 /** Food List page 1 — user-authored; do not reauthor. */
 export const SAMPLE_DIET_FOOD_LIST_INTRO =
   'The amount shown is calculated to match your servings. No math needed.';
