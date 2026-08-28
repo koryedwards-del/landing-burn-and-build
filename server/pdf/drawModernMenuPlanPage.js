@@ -129,31 +129,47 @@ function simplifyFoodName(name) {
     .replace(/ \(whole, fresh\)/i, '');
 }
 
-function drawMenuRow(doc, x, y, width, row) {
+function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
   const category = rowCategoryLabel(row);
   const food = simplifyFoodName(row.food);
   const serving = String(row.servingSize || '');
+  const lineEndX = page.x + page.width * 0.5;
+  const lineY = y + LAYOUT.categorySize + 2;
 
-  doc.font(fonts.bold).fontSize(LAYOUT.rowSize);
-  const servingW = serving ? doc.widthOfString(serving) : 0;
-  const leftW = width - servingW - (serving ? 8 : 0);
+  doc
+    .font(fonts.bold)
+    .fontSize(LAYOUT.categorySize)
+    .fillColor(colors.body)
+    .text(category, contentX, y, { lineBreak: false });
 
-  doc.font(fonts.bold).fontSize(LAYOUT.categorySize).fillColor(colors.body);
-  doc.text(`${category} · `, x, y, { continued: true, lineBreak: false });
-  doc.font(fonts.regular).fontSize(LAYOUT.rowSize).fillColor(colors.body);
-  doc.text(food, { width: leftW, lineBreak: false });
+  doc
+    .strokeColor(colors.gold)
+    .lineWidth(0.75)
+    .moveTo(contentX, lineY)
+    .lineTo(lineEndX, lineY)
+    .stroke();
+
+  const foodTop = lineY - LAYOUT.rowSize + 1;
+  doc
+    .font(fonts.regular)
+    .fontSize(LAYOUT.rowSize)
+    .fillColor(colors.body)
+    .text(food, contentX + 2, foodTop, {
+      width: lineEndX - contentX - 6,
+      lineBreak: false,
+    });
 
   if (serving) {
+    doc.font(fonts.bold).fontSize(LAYOUT.rowSize);
+    const servingW = doc.widthOfString(serving);
     doc
-      .font(fonts.bold)
-      .fontSize(LAYOUT.rowSize)
       .fillColor(colors.body)
-      .text(serving, x + width - servingW, y, { lineBreak: false });
+      .text(serving, contentX + contentWidth - servingW, foodTop, { lineBreak: false });
   }
 
-  return y + LAYOUT.rowSize + LAYOUT.rowGap + 2;
+  return lineY + LAYOUT.rowGap + 4;
 }
 
 function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth) {
@@ -190,7 +206,7 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
 
   (section.rows || []).forEach((row) => {
     if (!row.food) return;
-    mealY = drawMenuRow(doc, contentX, mealY, contentWidth, row);
+    mealY = drawMenuRow(doc, page, contentX, mealY, contentWidth, row);
   });
 
   const sectionBottom = mealY + (mainMeal ? LAYOUT.sectionGap : LAYOUT.snackSectionGap);
