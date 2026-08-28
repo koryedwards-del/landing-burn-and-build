@@ -184,11 +184,30 @@ function verifyGoldenSampleServingsGrid() {
     snack3: '1',
   });
 
+  const pkgTen = buildProgramPackage(GOLDEN_SAMPLE_FORM);
+  pkgTen.plan = { servings: { protein: 10, grainsStarches: 11, vegetables: 1, fruits: 4 } };
+  const divided = servingsGridRows(pkgTen);
+  const proteinTen = divided.find((row) => row.label === 'Protein');
+  expect('protein 10 daily thirds', proteinTen, {
+    label: 'Protein',
+    daily: '10',
+    breakfast: '3.3',
+    snack1: '',
+    lunch: '3.3',
+    snack2: '',
+    dinner: '3.3',
+    snack3: '',
+  });
+  const grainsEleven = divided.find((row) => row.label === 'Grains/Starches');
+  expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.7');
+  const fruitsFour = divided.find((row) => row.label === 'Fruits');
+  expect('fruits 4 daily thirds', fruitsFour?.snack1, '1.3');
+
   for (const row of rows) {
     for (const [key, value] of Object.entries(row)) {
       if (key === 'label' || value === '') continue;
-      if (String(value).includes('.')) {
-        errors.push(`${row.label}.${key}: decimal cell "${value}"`);
+      if (/^\d+\.\d{2,}/.test(String(value))) {
+        errors.push(`${row.label}.${key}: over-precise decimal "${value}"`);
       }
     }
   }
