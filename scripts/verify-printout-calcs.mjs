@@ -24,6 +24,7 @@ import { formatProgramDateLong, programPreparedDate } from '../js/programClientD
 import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
 import { buildGoldenSamplePackage } from '../js/printoutVerifyFixtures.js';
 import { buildSampleDayMenu } from '../js/sampleDayMenuPrintoutData.js';
+import { SAMPLE_DIET_WELCOME } from '../js/sampleDietPrintoutCopyData.js';
 
 const rnd = (x) => Math.round(x);
 
@@ -365,12 +366,42 @@ function verifySampleDayMenuScale() {
   return true;
 }
 
+function verifyWelcomePageRefs() {
+  const errors = [];
+  const expectIncludes = (label, text, needle) => {
+    if (!String(text).includes(needle)) errors.push(`${label}: missing "${needle}"`);
+  };
+  const expectExcludes = (label, text, needle) => {
+    if (String(text).includes(needle)) errors.push(`${label}: should not include "${needle}"`);
+  };
+
+  expectIncludes('foodPlan page', SAMPLE_DIET_WELCOME.foodPlan, 'Page three');
+  expectExcludes('foodPlan page', SAMPLE_DIET_WELCOME.foodPlan, 'Page four');
+  expectIncludes('servings page', SAMPLE_DIET_WELCOME.servings, 'Page four');
+  expectIncludes('servings table ref', SAMPLE_DIET_WELCOME.servings, 'page three');
+  expectExcludes('servings page', SAMPLE_DIET_WELCOME.servings, 'Page five');
+  expectIncludes('foodList pages', SAMPLE_DIET_WELCOME.foodList, 'Pages five and six');
+  expectIncludes('menuPlan page', SAMPLE_DIET_WELCOME.menuPlan, 'Page seven');
+  expectIncludes('questionnaire page', SAMPLE_DIET_WELCOME.questionnaireConfirmation, 'Page eight');
+  expectExcludes('intro history', SAMPLE_DIET_WELCOME.intro[1], 'body composition history');
+  expectExcludes('intro last two pages', SAMPLE_DIET_WELCOME.intro[1], 'last two pages');
+
+  if (errors.length) {
+    console.error('FAIL welcome page refs');
+    errors.forEach((e) => console.error(`  ${e}`));
+    return false;
+  }
+  console.log('OK welcome page refs');
+  return true;
+}
+
 const ok = [
   verifyGoldenSamplePackage(),
   verifyGoldenSampleServingsGrid(),
   verifyStapleServingScale(),
   verifyProgramDates(),
   verifySampleDayMenuScale(),
+  verifyWelcomePageRefs(),
   verifyCase('Golden sample female', GOLDEN_SAMPLE_INTAKE, GOLDEN_SAMPLE_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,

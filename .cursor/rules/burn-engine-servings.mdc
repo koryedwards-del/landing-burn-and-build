@@ -315,7 +315,6 @@ Renderer: `server/pdf/renderSampleDietPrintout.js`. Preview: `.cursor/rules/samp
 |------|--------|
 | Servings | **Counts only** |
 | Food list (protein, grains, veg, fruit) | **Scaled grams** |
-| Flavor kits | No gram servings |
 
 ### Food-list scaling (`js/stapleServingPrintout.js`)
 
