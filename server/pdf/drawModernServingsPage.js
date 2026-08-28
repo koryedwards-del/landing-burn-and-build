@@ -43,6 +43,7 @@ const LAYOUT = Object.freeze({
   gettingStartedRuleWidth: 1.25,
   gettingStartedHeadingGap: 10,
   tipsHeadingSize: 9,
+  tipsHeadingColor: '#444444',
   sectionGap: 16,
   bulletSize: 9.5,
   bulletGap: 5,
@@ -247,7 +248,7 @@ function drawQuietSectionHeading(doc, x, y, width, text) {
   doc
     .font(FONTS.bold)
     .fontSize(LAYOUT.tipsHeadingSize)
-    .fillColor(COLORS.muted)
+    .fillColor(LAYOUT.tipsHeadingColor)
     .text(String(text || ''), x, y, { width, lineBreak: false });
   return y + LAYOUT.tipsHeadingSize + LAYOUT.sectionHeadingGap;
 }
