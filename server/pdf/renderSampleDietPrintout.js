@@ -1197,7 +1197,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   drawLeanBodyAnalysisPage(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
 
-  stamp1982Footers(doc, payload.header, { modernFooterPageIndex: 0 });
+  stamp1982Footers(doc, payload.header);
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;

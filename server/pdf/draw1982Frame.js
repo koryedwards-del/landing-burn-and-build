@@ -1,18 +1,11 @@
 import { PDF_MARGIN } from './constants.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY } from '../../js/printTemplateTypographyData.js';
 import {
-  PDF_FRAME_COLORS,
-  pinnedContentBottomY,
-  PDF_FRAME_FONTS,
-  frameContentBox,
-  drawPinnedProgramFooter,
-} from './drawFrame.js';
-import {
   drawModernReportFooter,
   drawModernReportHeader,
 } from './drawModernReportFrame.js';
 
-const FRAME_FONTS = PDF_FRAME_FONTS;
+import { PDF_FRAME_COLORS, frameContentBox, pinnedContentBottomY } from './drawFrame.js';
 
 /** Matches --TODAY-- accent in legacy layouts; table borders stay gold. */
 export const SAMPLE_DIET_BLUE = PDF_FRAME_COLORS.accentBlue;
@@ -71,26 +64,17 @@ export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {
   };
 }
 
-export function stamp1982Footers(doc, contact, { fonts = FRAME_FONTS, pageNumbers = true, modernFooterPageIndex = null } = {}) {
+export function stamp1982Footers(doc, contact, { pageNumbers = true } = {}) {
   if (typeof doc.bufferedPageRange !== 'function') return 0;
   const range = doc.bufferedPageRange();
   const total = range.count;
   for (let index = 0; index < total; index += 1) {
     doc.switchToPage(range.start + index);
     const box = frameContentBox(doc);
-    const footerArgs = {
+    drawModernReportFooter(doc, box, {
       page: pageNumbers ? index + 1 : null,
       total: pageNumbers ? total : null,
       contact,
-    };
-    if (modernFooterPageIndex != null && index === modernFooterPageIndex) {
-      drawModernReportFooter(doc, box, footerArgs);
-      continue;
-    }
-    drawPinnedProgramFooter(doc, box, {
-      ...footerArgs,
-      fonts,
-      ruleColor: SAMPLE_DIET_BLUE,
     });
   }
   return total;
