@@ -46,3 +46,7 @@ projects:
                 sync: false
               - key: DIET_EMAIL_FROM
                 sync: false
+              - key: SAMPLE_DIET_EMAIL
+                sync: false
+              - key: SAMPLE_DIET_PROGRAM_ID
+                sync: false

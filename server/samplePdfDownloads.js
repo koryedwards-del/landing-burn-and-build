@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-/** Public sample PDFs — served with Content-Disposition: attachment for Safari downloads. */
+/** Public sample PDFs — menu worksheet is static; sample diet is live-rendered. */
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
-  'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf' },
   'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
 });
 

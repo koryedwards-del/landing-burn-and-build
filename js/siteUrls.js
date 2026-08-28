@@ -10,8 +10,9 @@ export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}${QUESTIONNAIRE_
 export const CREATOR_CHECKOUT_URL = `${CREATOR_HOST_ORIGIN}/createyourfoodplan/`;
 export const PRIVACY_POLICY_URL = `${CREATOR_HOST_ORIGIN}/privacypolicy/`;
 export const SUPPORT_URL = `${CREATOR_HOST_ORIGIN}/support/`;
-/** Direct download links — API serves PDF with Content-Disposition: attachment. */
+/** Direct download — live program on Render (see publicSampleDiet.js). */
 export const SAMPLE_DIET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/sample-diet`;
+export const SAMPLE_DIET_INLINE_URL = `${SAMPLE_DIET_DOWNLOAD_URL}?inline=1`;
 export const MENU_PLAN_WORKSHEET_PATH = '/menuplanworksheet/';
 export const MENU_PLAN_WORKSHEET_PUBLIC_URL = `${CREATOR_HOST_ORIGIN}${MENU_PLAN_WORKSHEET_PATH}`;
 export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'burnandbuilddiet.com/menuplanworksheet';

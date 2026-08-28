@@ -1,5 +1,5 @@
 ---
-description: Git workflow — push directly to main; no pull requests
+description: Git workflow — push to main, no PRs, live sample diet on Render
 alwaysApply: true
 ---
 
@@ -12,9 +12,20 @@ The user does **not** review pull requests. Do not use the PR workflow.
 1. Work on **`main`** directly when possible. Short-lived `cursor/*` branches are OK only if needed for isolation — **merge to `main` and push in the same session**.
 2. **Commit** with a clear message.
 3. **Push** to `origin main`.
-4. For sample diet PDF work: run `npm run render:sample-diet-preview`, commit `docs/samples/b&bsamplediet.pdf`, push again if needed.
-5. **Clean up after yourself** (see Housekeeping below).
-6. **Never end a session with uncommitted work.** If you changed files, commit and push to `main` in the same turn — do not wait for the user to ask.
+4. **Clean up after yourself** (see Housekeeping below).
+5. **Never end a session with uncommitted work.** If you changed files, commit and push to `main` in the same turn — do not wait for the user to ask.
+
+## Landing-page sample diet
+
+The sample on the landing page is **not** a static PDF in the repo. It is rendered live on Render from a program created via questionnaire + Stripe.
+
+After PDF pipeline changes the user cares about on the landing page:
+
+1. Push code to `main` (Render redeploys).
+2. User updates the public sample program via `POST /api/admin/public-sample-diet` or Render env vars (`SAMPLE_DIET_EMAIL`, `SAMPLE_DIET_PROGRAM_ID`).
+3. Download link for users: `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`
+
+Do **not** commit `docs/samples/b&bsamplediet.pdf`. Do **not** run `render:sample-diet-preview` as a delivery step.
 
 ## Housekeeping
 
@@ -22,19 +33,11 @@ The user is not responsible for repo hygiene. **Every agent session must leave t
 
 - **`main` is the only long-lived branch.** Everything shipped lives there.
 - **Do not create PRs** and do not leave `cursor/*` branches on the remote after work is done.
-- After pushing to `main`, **delete any remote `cursor/*` branches** you created or that are fully merged:
-  - `git push origin --delete cursor/<branch-name>`
-  - Or batch: delete all merged `cursor/*` branches before ending the session.
-- **Delete local** `cursor/*` branches after merge: `git branch -D cursor/<branch-name>`.
-- **Do not accumulate** stale agent branches. If you merged it, delete the branch — don't wait for the user to ask.
+- After pushing to `main`, **delete any remote `cursor/*` branches** you created or that are fully merged.
 - Before ending a session, verify: `git branch -r` should show only `origin/main` (no orphan `cursor/*` branches).
 
 ## Do not
 
 - Create pull requests (`ManagePullRequest`, `gh pr create`, draft PRs).
 - Leave work only on a feature branch without pushing to `main`.
-- Ask the user to review or merge a PR.
-
-## Delivery
-
-After push to `main`, give the direct API download link per `sample-diet-pdf.mdc` (`https://program-creator-3tzd.onrender.com/api/samples/sample-diet`).
+- Commit static sample diet PDFs to `docs/samples/`.

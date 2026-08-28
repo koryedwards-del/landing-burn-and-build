@@ -23,6 +23,12 @@ import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
 import { resolveSamplePdfPath } from './samplePdfDownloads.js';
+import {
+  publicSampleDietFilename,
+  readPublicSampleDietConfig,
+  renderPublicSampleDietPdf,
+  writePublicSampleDietConfig,
+} from './publicSampleDiet.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -168,6 +174,7 @@ app.get('/health', (_req, res) => {
     stripe: stripeConfigured(),
     dietEmail: dietEmailConfigured(),
     pdf: true,
+    publicSampleDiet: Boolean(readPublicSampleDietConfig()),
     commit: process.env.RENDER_GIT_COMMIT || null,
   });
 });
@@ -306,6 +313,46 @@ app.delete('/api/contacts', requireContactsAdmin, (req, res) => {
   res.json({ ok: true, email });
 });
 
+app.get('/api/admin/public-sample-diet', requireContactsAdmin, (_req, res) => {
+  const config = readPublicSampleDietConfig();
+  res.json({
+    ok: true,
+    configured: Boolean(config),
+    config: config ? { email: config.email, programId: config.programId, updatedAt: config.updatedAt } : null,
+    downloadUrl: '/api/samples/sample-diet',
+  });
+});
+
+app.post('/api/admin/public-sample-diet', requireContactsAdmin, (req, res) => {
+  const email = normalizeEmail(req.body?.email);
+  const programId = String(req.body?.programId || req.body?.program_id || '').trim();
+  if (!isValidEmail(email)) {
+    res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
+    return;
+  }
+  if (!programId) {
+    res.status(400).json({ ok: false, message: 'programId is required.' });
+    return;
+  }
+  const pkg = getProgramById(email, programId);
+  if (!pkg) {
+    res.status(404).json({ ok: false, message: 'Program not found for that email and program id.' });
+    return;
+  }
+
+  try {
+    const config = writePublicSampleDietConfig({ email, programId });
+    res.json({
+      ok: true,
+      config,
+      downloadUrl: '/api/samples/sample-diet',
+      preferredName: pkg?.intake?.preferredName || null,
+    });
+  } catch (err) {
+    res.status(400).json({ ok: false, message: err.message || 'Could not save public sample diet config.' });
+  }
+});
+
 app.post('/api/programs', (req, res) => {
   const email = normalizeEmail(req.body?.email);
   const pkg = req.body?.package;
@@ -386,8 +433,31 @@ app.get('/api/programs/payment-status', (req, res) => {
   });
 });
 
-app.get('/api/samples/:slug', (req, res) => {
-  const resolved = resolveSamplePdfPath(root, String(req.params.slug || '').trim());
+app.get('/api/samples/:slug', async (req, res) => {
+  const slug = String(req.params.slug || '').trim();
+
+  if (slug === 'sample-diet') {
+    try {
+      const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+      const pdf = await renderPublicSampleDietPdf();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `${inline ? 'inline' : 'attachment'}; filename="${publicSampleDietFilename()}"`,
+      );
+      res.setHeader('Cache-Control', 'public, max-age=60');
+      res.send(pdf);
+    } catch (err) {
+      console.error('Public sample diet error:', err.message);
+      res.status(err.message.includes('not configured') ? 503 : 500).json({
+        ok: false,
+        message: err.message || 'Could not render the sample diet PDF.',
+      });
+    }
+    return;
+  }
+
+  const resolved = resolveSamplePdfPath(root, slug);
   if (!resolved) {
     res.status(404).json({ ok: false, message: 'Sample PDF not found.' });
     return;

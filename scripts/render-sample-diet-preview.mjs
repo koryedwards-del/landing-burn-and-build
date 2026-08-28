@@ -1,39 +1,15 @@
 #!/usr/bin/env node
-/** Preview + delivery build: B&B Sample Diet PDF (b&bsamplediet.pdf). */
-import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
-import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
+/** Public sample diet is live-rendered on Render — not a committed static PDF. */
 import { SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
 
-const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
-
-const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const samplesDir = path.join(root, 'docs/samples');
-const artifactsDir = '/opt/cursor/artifacts';
-
-const buildLabel = new Date().toISOString().replace(/[:.]/g, '-');
-const payload = buildSampleDietPreviewPayload();
-const pdf = await renderSampleDietPrintout(payload, { buildLabel });
-
-const samplePath = path.join(samplesDir, SAMPLE_DIET_FILENAME);
-fs.writeFileSync(samplePath, pdf);
-
-if (fs.existsSync(artifactsDir)) {
-  fs.copyFileSync(samplePath, path.join(artifactsDir, SAMPLE_DIET_FILENAME));
-}
-
-const md5 = crypto.createHash('md5').update(pdf).digest('hex');
-const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-const downloadUrl = SAMPLE_DIET_DOWNLOAD_URL;
-const curlCmd = `curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${downloadUrl}"`;
-
-console.log(`FILE ${samplePath}`);
-if (fs.existsSync(artifactsDir)) {
-  console.log(`FILE ${path.join(artifactsDir, SAMPLE_DIET_FILENAME)}`);
-}
-console.log(`${pages} page(s), ${pdf.length} bytes, md5=${md5}`);
-console.log(`DOWNLOAD ${downloadUrl}`);
-console.log(`CURL ${curlCmd}`);
+console.log('The landing-page sample diet is no longer a static file in docs/samples/.');
+console.log('');
+console.log('After questionnaire + Stripe, point Render at that program:');
+console.log('  POST /api/admin/public-sample-diet');
+console.log('  Header: x-contacts-admin-key: <CONTACTS_ADMIN_KEY>');
+console.log('  Body: { "email": "...", "programId": "..." }');
+console.log('');
+console.log('Or set env vars on Render: SAMPLE_DIET_EMAIL, SAMPLE_DIET_PROGRAM_ID');
+console.log('');
+console.log(`DOWNLOAD ${SAMPLE_DIET_DOWNLOAD_URL}`);
+console.log(`CURL curl -L -o ~/Downloads/b\\&bsamplediet.pdf "${SAMPLE_DIET_DOWNLOAD_URL}"`);

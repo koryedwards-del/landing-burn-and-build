@@ -87,9 +87,9 @@ npm run verify:pdf
 
 Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf` — same renderer as `b&bsamplediet.pdf`.
 
-## B&B Sample Diet PDF (`b&bsamplediet.pdf`)
+## B&B Sample Diet PDF (landing page)
 
-8-page sample (Sample Female). Preview: `npm run render:sample-diet-preview` → commit `docs/samples/b&bsamplediet.pdf` → push → download link. See `.cursor/rules/sample-diet-pdf.mdc`.
+Live-rendered on Render from a real questionnaire + Stripe program — **not** a static file in `docs/samples/`. Configure with `POST /api/admin/public-sample-diet` or `SAMPLE_DIET_EMAIL` + `SAMPLE_DIET_PROGRAM_ID` on Render. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 
