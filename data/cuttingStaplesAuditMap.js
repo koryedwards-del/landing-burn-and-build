@@ -19,8 +19,6 @@ export const PROTEIN_DAIRY_MAP = Object.freeze([
   { pdf: 'Cottage cheese, 1%', catalog: 'Cottage cheese, 1% fat', slot: 'D1', usda: { p: 11.0, c: 4.3, f: 1.0 } },
   { pdf: 'Cottage cheese, 2%', catalog: 'Cottage cheese, 2% fat', slot: 'D1', usda: { p: 11.0, c: 4.3, f: 2.0 } },
   { pdf: 'Cottage cheese, nonfat', catalog: 'Cottage cheese, nonfat', slot: 'D1', usda: { p: 10.3, c: 6.7, f: 0.3 } },
-  { pdf: 'Egg whites (extra large)', catalog: 'Egg whites', slot: 'P1', usda: { p: 10.9, f: 0.2 }, countServing: true },
-  { pdf: 'Egg whites (small)', catalog: 'Egg whites', slot: 'P1', usda: { p: 10.9, f: 0.2 }, countServing: true },
   {
     pdf: 'Eggs',
     catalog: 'Eggs',

@@ -20,7 +20,7 @@ export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
 /** Illustrative food picks — serving sizes scale from the customer's plan. */
 const FOOD_PICKS = Object.freeze({
   breakfast: {
-    protein: 'Egg whites (extra large)',
+    protein: 'Eggs',
     grains: 'Oatmeal (dry)',
   },
   lunch: {
