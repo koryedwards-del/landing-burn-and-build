@@ -2,16 +2,17 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
+import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
 import { SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const deliverable = path.join(root, 'docs/samples/b&bsamplediet.pdf');
 
-if (!fs.existsSync(deliverable)) {
-  console.error(`Missing ${deliverable}`);
-  console.error('Add the approved sample PDF, then commit and push to main.');
-  process.exit(1);
-}
+const payload = buildSampleDietPreviewPayload();
+const pdf = await renderSampleDietPrintout(payload, { title: 'B&B Sample Diet' });
+fs.mkdirSync(path.dirname(deliverable), { recursive: true });
+fs.writeFileSync(deliverable, pdf);
 
 const stat = fs.statSync(deliverable);
 console.log(`OK ${deliverable} (${stat.size} bytes)`);

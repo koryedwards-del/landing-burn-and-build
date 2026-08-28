@@ -9,7 +9,10 @@ import {
   drawContinuationHeader,
   framePageTitleStartY,
   PDF_FRAME_FONTS,
+  frameContentBox,
+  drawPinnedProgramFooter,
 } from './drawFrame.js';
+import { drawModernFoodPlanFooter } from './drawModernFoodPlanPage.js';
 
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
@@ -94,6 +97,28 @@ export function begin1982Page(doc, payload, pageTitle, {
   };
 }
 
-export function stamp1982Footers(doc, contact, { fonts = FRAME_FONTS, pageNumbers = true } = {}) {
-  return stampPinnedProgramFooters(doc, contact, fonts, { ruleColor: SAMPLE_DIET_BLUE, pageNumbers });
+export function stamp1982Footers(doc, contact, { fonts = FRAME_FONTS, pageNumbers = true, modernFooterPageIndex = null } = {}) {
+  if (typeof doc.bufferedPageRange !== 'function') return 0;
+  const range = doc.bufferedPageRange();
+  const total = range.count;
+  for (let index = 0; index < total; index += 1) {
+    doc.switchToPage(range.start + index);
+    const box = frameContentBox(doc);
+    if (modernFooterPageIndex != null && index === modernFooterPageIndex) {
+      drawModernFoodPlanFooter(doc, box, {
+        page: pageNumbers ? index + 1 : null,
+        total: pageNumbers ? total : null,
+        contact,
+      });
+      continue;
+    }
+    drawPinnedProgramFooter(doc, box, {
+      page: pageNumbers ? index + 1 : null,
+      total: pageNumbers ? total : null,
+      contact,
+      fonts,
+      ruleColor: SAMPLE_DIET_BLUE,
+    });
+  }
+  return total;
 }

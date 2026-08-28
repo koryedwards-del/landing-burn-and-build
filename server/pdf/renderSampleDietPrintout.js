@@ -12,6 +12,7 @@ import {
   stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
+import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
 import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
@@ -734,25 +735,7 @@ const FOOD_PLAN_TEXT_GAP = Object.freeze({
 const FOOD_PLAN_TABLE_GAP = 4;
 
 function drawFoodPlanPage(doc, payload) {
-  const fp = payload.foodPlan;
-  let page = begin1982Page(doc, payload, 'Food Plan');
-
-  page = drawParagraphs(doc, page, [fp.lead], FOOD_PLAN_TEXT_GAP);
-  if (fp.exerciseParagraph) page = drawParagraphs(doc, page, [fp.exerciseParagraph], FOOD_PLAN_TEXT_GAP);
-
-  if (fp.goalTable) {
-    page = {
-      ...page,
-      y: drawGoalTable(doc, page.x, page.y + FOOD_PLAN_TABLE_GAP, page.width, fp.goalTable) + FOOD_PLAN_TABLE_GAP,
-    };
-  }
-
-  if (fp.weeklyLine) page = drawParagraphs(doc, page, [fp.weeklyLine], FOOD_PLAN_TEXT_GAP);
-  if (fp.macroIntro) page = drawParagraphs(doc, page, [fp.macroIntro], FOOD_PLAN_TEXT_GAP);
-
-  if (fp.macroRows?.length) {
-    drawMacroTable(doc, page.x, page.y + FOOD_PLAN_TABLE_GAP, page.width, fp.macroRows);
-  }
+  drawModernFoodPlanPage(doc, payload);
 }
 
 const SERVINGS_COLUMNS = [
@@ -1231,9 +1214,8 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
     doc.info.Subject = `B&B Sample Diet ${buildLabel}`;
   }
 
-  drawWelcomePage(doc, payload);
-  drawLeanBodyAnalysisPage(doc, payload);
   drawFoodPlanPage(doc, payload);
+  drawSampleDayMenuPage(doc, payload);
   drawServingsPage(doc, payload);
 
   const foodListFrame = {
@@ -1242,10 +1224,11 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   };
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
-  drawSampleDayMenuPage(doc, payload);
+  drawLeanBodyAnalysisPage(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
+  drawWelcomePage(doc, payload);
 
-  stamp1982Footers(doc, payload.header);
+  stamp1982Footers(doc, payload.header, { modernFooterPageIndex: 0 });
 
   const buffer = await creator.finish({ stampPageNumbers: false });
   const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
