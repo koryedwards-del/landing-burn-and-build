@@ -1,4 +1,4 @@
-/** Questionnaire review rows — labels and values for the program questionnaire review step. */
+/** PDF page 8 — rows that list the customer's submitted answers. */
 
 import {
   INTAKE_FIELD_QUESTIONS,

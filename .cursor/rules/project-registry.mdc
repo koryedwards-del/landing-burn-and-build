@@ -57,7 +57,7 @@ Every `js/` file name ends with its job:
 | **Engine** | Math / computation | `burnEngine.js`, `profileDataEngine.js` |
 | **Data** | Structured objects, constants, copy strings | `programPackageData.js`, `sampleDietPrintoutCopyData.js` |
 | **Helpers** | Small utility functions | `programClientDataHelpers.js`, `dietPdfNamingHelpers.js` |
-| **Printout** | One PDF section payload | `servingsPrintout.js`, `sampleDayMenuPrintoutData.js` |
+| **Printout** | One PDF section payload | `servingsPrintout.js`, `answersConfirmationPrintout.js` |
 | **Fixtures** | Test / preview sample inputs | `sampleDietPreviewFixtures.js`, `printoutVerifyFixtures.js` |
 
 ## Key files
@@ -69,12 +69,12 @@ Every `js/` file name ends with its job:
 | `js/programPackageData.js` | Full program object (`pkg.intake` + plan) |
 | `js/intakeQuestionCopyData.js` | Shared questionnaire question text + numbering |
 | `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload |
-| `js/answersConfirmationPrintout.js` | Questionnaire review step — answer rows |
+| `js/answersConfirmationPrintout.js` | PDF page 8 — answer list |
 | `js/leanBodyAnalysisPrintout.js` | LBA table row helper |
 | `js/programClientDataHelpers.js` | Client name + date on PDF |
 | `questionnaire/js/questionnaire.js` | Questionnaire UI + `buildProgram()` |
 
-There is **no** separate questionnaire PDF. Submitted answers appear on the questionnaire **Review** step only.
+There is **no** separate questionnaire PDF — answers appear on page 8 of the Burn & Build Diet PDF.
 
 ## Verify (engine + PDF)
 

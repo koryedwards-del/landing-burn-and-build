@@ -7,6 +7,10 @@ import { INTAKE_WEIGHTS_RACQUET_SPORTS, INTAKE_WEIGHTS_RACQUET_SPORTS_TITLE } fr
 import { servingsGridRows } from './servingsPrintout.js';
 import { lbaTodayTableRows } from './leanBodyAnalysisPrintout.js';
 import {
+  ANSWERS_CONFIRMATION_INTRO,
+  buildAnswersConfirmationRows,
+} from './answersConfirmationPrintout.js';
+import {
   formatProgramDateLong,
   programClientName,
   programClientNameUpper,
@@ -173,6 +177,10 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
     },
     sampleDayMenu: buildSampleDayMenu(pkg, { filled: true }),
+    answersConfirmation: {
+      intro: ANSWERS_CONFIRMATION_INTRO,
+      rows: buildAnswersConfirmationRows(pkg),
+    },
   };
 }
 
