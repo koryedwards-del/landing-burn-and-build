@@ -366,7 +366,7 @@ Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf`. Landing s
 4. Confirm **prep state** (dry / cooked / raw / as-is) matches the cutting-list row.
 5. **Servings PDF** = counts only; **food list PDF** = plan servings × base grams on the Burn & Build Diet PDF.
 6. **Never** put calories in user-facing copy, PDF gram labels, or portion explanations.
-7. Burn & Build Diet PDF changes → `npm run render:sample-diet-preview` per `sample-diet-pdf.mdc`.
+7. Burn & Build Diet PDF changes → push to `main`, run `npm run verify:printout-calcs` and `npm run verify:pdf`, bump `DIET_PDF_GENERATION_VERSION` if purchased PDFs need cache invalidation — per `sample-diet-pdf.mdc`.
 
 ## Errata — do not repeat these mistakes
 
