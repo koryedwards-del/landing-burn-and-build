@@ -341,9 +341,9 @@ function drawLbmWhySection(doc, x, y, width, lbmWhy) {
     const youToken = ' you ';
     const youIndex = closing.indexOf(youToken);
     doc.font(FONTS.regular).fontSize(LAYOUT.lbmBodySize).fillColor(COLORS.body);
-    if (youIndex > 0) {
+    if (youIndex >= 0) {
       const beforeYou = closing.slice(0, youIndex + 1);
-      const afterYou = closing.slice(youIndex + 1);
+      const afterYou = closing.slice(youIndex + youToken.length);
       doc.text(beforeYou, x, cursorY, { lineBreak: false });
       const beforeW = doc.widthOfString(beforeYou);
       doc.font(FONTS.italic).text('you', x + beforeW, cursorY, { lineBreak: false });
