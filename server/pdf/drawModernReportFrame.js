@@ -36,6 +36,16 @@ export const MODERN_HEADER_LAYOUT = Object.freeze({
   personalSize: 7.5,
 });
 
+/** Shared with page bodies that pin content above the modern footer. */
+export const MODERN_REPORT_FOOTER_LAYOUT = Object.freeze({
+  ruleOffsetFromBottom: 28,
+  contentGapAboveRule: 8,
+});
+
+export function modernFooterRuleY(box) {
+  return box.bottom - MODERN_REPORT_FOOTER_LAYOUT.ruleOffsetFromBottom;
+}
+
 export function registerModernReportFonts(doc) {
   doc.registerFont(MODERN_REPORT_FONTS.regular, path.join(FONT_DIR, 'Montserrat-Regular.ttf'));
   doc.registerFont(MODERN_REPORT_FONTS.bold, path.join(FONT_DIR, 'Montserrat-Bold.ttf'));
@@ -143,7 +153,7 @@ export function drawModernReportFooter(doc, box, { page, total, contact = PDF_FR
   registerModernReportFonts(doc);
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
-  const ruleY = box.bottom - 28;
+  const ruleY = modernFooterRuleY(box);
   const textY = box.bottom - 16;
   const website = String(contact?.website || PDF_FRAME_CONTACT.website).toUpperCase();
   const email = String(contact?.email || PDF_FRAME_CONTACT.email).toUpperCase();

@@ -7,6 +7,8 @@ import { begin1982Page } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
+  MODERN_REPORT_FOOTER_LAYOUT,
+  modernFooterRuleY,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
 import { SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL } from '../../js/sampleDayMenuPrintoutData.js';
@@ -41,7 +43,7 @@ const LAYOUT = Object.freeze({
   calloutPad: 10,
   calloutTitleSize: 9,
   calloutBodySize: 8.5,
-  footerReserve: 36,
+  calloutGapAboveFooter: MODERN_REPORT_FOOTER_LAYOUT.contentGapAboveRule,
 });
 
 function registerHandwritingFont(doc) {
@@ -211,9 +213,8 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
   return sectionBottom;
 }
 
-function drawCalloutBox(doc, x, y, width, note) {
+function measureCalloutBoxHeight(doc, width, note) {
   const fonts = MODERN_REPORT_FONTS;
-  const colors = MODERN_REPORT_COLORS;
   const pad = LAYOUT.calloutPad;
   const innerW = width - pad * 2;
 
@@ -224,7 +225,15 @@ function drawCalloutBox(doc, x, y, width, note) {
     `${note.lead || ''} ${note.linkLabel || ''}`,
     { width: innerW, lineGap: 2 },
   );
-  const boxH = pad * 2 + titleH + 4 + bodyH;
+  return pad * 2 + titleH + 4 + bodyH;
+}
+
+function drawCalloutBox(doc, x, y, width, note) {
+  const fonts = MODERN_REPORT_FONTS;
+  const colors = MODERN_REPORT_COLORS;
+  const pad = LAYOUT.calloutPad;
+  const innerW = width - pad * 2;
+  const boxH = measureCalloutBoxHeight(doc, width, note);
 
   doc
     .strokeColor(colors.gold)
@@ -238,6 +247,8 @@ function drawCalloutBox(doc, x, y, width, note) {
     .fillColor(colors.body)
     .text(String(note.calloutTitle || ''), x + pad, y + pad, { width: innerW, lineGap: 0 });
 
+  doc.font(fonts.bold).fontSize(LAYOUT.calloutTitleSize);
+  const titleH = doc.heightOfString(note.calloutTitle || '', { width: innerW });
   const bodyY = y + pad + titleH + 4;
   doc
     .font(fonts.regular)
@@ -260,6 +271,23 @@ function drawCalloutBox(doc, x, y, width, note) {
   return y + boxH;
 }
 
+/** Bottom edge of the Menu Plan timeline/content band (top of callout when present). */
+export function menuPlanContentBottomY(page, menu, doc) {
+  const footerRuleY = modernFooterRuleY(page.box);
+  if (!menu?.worksheetNote) {
+    return footerRuleY - LAYOUT.calloutGapAboveFooter;
+  }
+  const calloutH = measureCalloutBoxHeight(doc, page.width, menu.worksheetNote);
+  return footerRuleY - LAYOUT.calloutGapAboveFooter - calloutH;
+}
+
+export function menuPlanCalloutY(page, menu, doc) {
+  if (!menu?.worksheetNote) return null;
+  const calloutH = measureCalloutBoxHeight(doc, page.width, menu.worksheetNote);
+  const footerRuleY = modernFooterRuleY(page.box);
+  return footerRuleY - LAYOUT.calloutGapAboveFooter - calloutH;
+}
+
 export function drawModernMenuPlanPage(doc, payload) {
   const menu = payload.sampleDayMenu;
   if (!menu?.sections?.length) return;
@@ -272,8 +300,8 @@ export function drawModernMenuPlanPage(doc, payload) {
 
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
-  const maxY = page.bottom - LAYOUT.footerReserve;
-  const calloutH = menu.worksheetNote ? 58 : 0;
+  const contentBottom = menuPlanContentBottomY(page, menu, doc);
+  const calloutY = menuPlanCalloutY(page, menu, doc);
   const timelineX = page.x + LAYOUT.timeColWidth + LAYOUT.timelineGap;
   const contentX = timelineX + LAYOUT.contentPadLeft;
   const contentWidth = page.width - (contentX - page.x);
@@ -291,13 +319,12 @@ export function drawModernMenuPlanPage(doc, payload) {
     y = doc.y + LAYOUT.introGap;
   }
 
-  const contentBottom = maxY - calloutH;
   menu.sections.forEach((section) => {
     if (y >= contentBottom) return;
     y = drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth);
   });
 
-  if (menu.worksheetNote) {
-    drawCalloutBox(doc, page.x, maxY - calloutH + 4, page.width, menu.worksheetNote);
+  if (calloutY != null) {
+    drawCalloutBox(doc, page.x, calloutY, page.width, menu.worksheetNote);
   }
 }
