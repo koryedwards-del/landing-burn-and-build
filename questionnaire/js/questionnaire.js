@@ -1081,7 +1081,7 @@ function validateExerciseField(fieldId, values) {
     case 'age': {
       const age = values.age;
       if (age == null || !Number.isFinite(age)) return 'Enter your age in years.';
-      if (age < 16 || age > 99) return 'Enter an age between 16 and 99.';
+      if (age < 18 || age > 99) return 'Enter an age between 18 and 99.';
       return '';
     }
     case 'weightTrainingHours':
