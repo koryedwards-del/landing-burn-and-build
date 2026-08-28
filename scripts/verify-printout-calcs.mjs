@@ -210,6 +210,16 @@ function verifyStapleServingScale() {
     scaleStapleServingLabel('1 whole egg (yolks optional) / 1 egg white', 5),
     '5 whole eggs (yolks optional) / 5 egg whites',
   );
+  expect(
+    'scaleStapleServingLabel rounds eggs up',
+    scaleStapleServingLabel('1 whole egg (yolks optional) / 1 egg white', 3.7),
+    '4 whole eggs (yolks optional) / 4 egg whites',
+  );
+  expect(
+    'scaleStapleServingLabel rounds eggs down',
+    scaleStapleServingLabel('1 whole egg (yolks optional) / 1 egg white', 3.4),
+    '3 whole eggs (yolks optional) / 3 egg whites',
+  );
   expect('stapleCategoryServings protein 15 meal slot', stapleCategoryServings({ protein: 15 }, 'protein'), 5);
 
   const plan = { protein: 9, grainsStarches: 9, vegetables: 1, fruits: 3 };

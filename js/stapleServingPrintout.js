@@ -1,19 +1,13 @@
 /** Scale food-list staple serving labels by plan servings (servings × unit weight). */
 
-/** @param {number} scaled */
-function formatScaledCount(scaled) {
-  if (Math.abs(scaled - Math.round(scaled)) < 0.05) return String(Math.round(scaled));
-  return scaled.toFixed(1);
-}
-
 /**
  * @param {number} scaled
  * @param {string} singular — e.g. "whole egg", "egg white"
  */
 function scaleEggUnitPhrase(scaled, singular) {
-  const countText = formatScaledCount(scaled);
-  const plural = Math.abs(scaled - 1) < 0.05 ? singular : `${singular}s`;
-  return `${countText} ${plural}`;
+  const rounded = Math.round(scaled);
+  const plural = rounded === 1 ? singular : `${singular}s`;
+  return `${rounded} ${plural}`;
 }
 
 /**
