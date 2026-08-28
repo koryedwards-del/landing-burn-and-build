@@ -20,6 +20,9 @@ const HANDWRITING_FONT_SIZE = 16;
 const HANDWRITING_INK_COLOR = '#184A94';
 const HANDWRITING_BASELINE_NUDGE = 1.5;
 const TIME_LINE_WIDTH = 42;
+const SERVING_SIZE_LABEL = 'Serving size';
+/** Food write line ends where the serving-size label begins (legacy ~48% row split). */
+const SERVING_LABEL_COL_RATIO = 0.48;
 
 const LAYOUT = Object.freeze({
   introSize: 9.5,
@@ -135,8 +138,10 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
   const category = rowCategoryLabel(row);
   const food = simplifyFoodName(row.food);
   const serving = String(row.servingSize || '');
-  const lineEndX = page.x + page.width * 0.5;
-  const lineY = y + LAYOUT.categorySize + 2;
+  const marginRight = page.x + page.width;
+  const sizeLabelX = contentX + contentWidth * SERVING_LABEL_COL_RATIO;
+  const lineY = y + LAYOUT.rowSize + 2;
+  const lineGap = 5;
 
   doc
     .font(fonts.bold)
@@ -145,10 +150,28 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
     .text(category, contentX, y, { lineBreak: false });
 
   doc
+    .font(fonts.regular)
+    .fontSize(LAYOUT.rowSize)
+    .fillColor(colors.body)
+    .text(SERVING_SIZE_LABEL, sizeLabelX, y, { lineBreak: false });
+
+  doc.font(fonts.regular).fontSize(LAYOUT.rowSize);
+  const sizeLabelW = doc.widthOfString(SERVING_SIZE_LABEL);
+  const foodLineEnd = sizeLabelX - lineGap;
+  const servingLineStart = sizeLabelX + sizeLabelW + lineGap;
+
+  doc
     .strokeColor(colors.gold)
     .lineWidth(0.75)
     .moveTo(contentX, lineY)
-    .lineTo(lineEndX, lineY)
+    .lineTo(foodLineEnd, lineY)
+    .stroke();
+
+  doc
+    .strokeColor(colors.gold)
+    .lineWidth(0.75)
+    .moveTo(servingLineStart, lineY)
+    .lineTo(marginRight, lineY)
     .stroke();
 
   const foodTop = lineY - LAYOUT.rowSize + 1;
@@ -157,16 +180,19 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
     .fontSize(LAYOUT.rowSize)
     .fillColor(colors.body)
     .text(food, contentX + 2, foodTop, {
-      width: lineEndX - contentX - 6,
+      width: foodLineEnd - contentX - 4,
       lineBreak: false,
     });
 
   if (serving) {
-    doc.font(fonts.bold).fontSize(LAYOUT.rowSize);
-    const servingW = doc.widthOfString(serving);
     doc
+      .font(fonts.regular)
+      .fontSize(LAYOUT.rowSize)
       .fillColor(colors.body)
-      .text(serving, contentX + contentWidth - servingW, foodTop, { lineBreak: false });
+      .text(serving, servingLineStart + 2, foodTop, {
+        width: marginRight - servingLineStart - 4,
+        lineBreak: false,
+      });
   }
 
   return lineY + LAYOUT.rowGap + 4;
