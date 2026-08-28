@@ -24,6 +24,7 @@ import {
 import { macroWorkdayRowLabel } from './profileDataEngine.js';
 import {
   SAMPLE_DIET_FOOD_PLAN,
+  SAMPLE_DIET_FOOD_LIST_INTRO,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
   SAMPLE_DIET_SERVINGS_NOTE,
@@ -175,6 +176,9 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       note: SAMPLE_DIET_SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
+    },
+    foodList: {
+      intro: SAMPLE_DIET_FOOD_LIST_INTRO,
     },
     sampleDayMenu: buildSampleDayMenu(pkg, { filled: true }),
     answersConfirmation: {

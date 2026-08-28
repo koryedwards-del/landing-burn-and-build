@@ -36,6 +36,10 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
 export const SAMPLE_DIET_SERVINGS_NOTE =
   'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
+/** Food List page 1 — user-authored; do not reauthor. */
+export const SAMPLE_DIET_FOOD_LIST_INTRO =
+  'Choose any food within a category. The amount shown equals one serving for your plan.';
+
 export const SAMPLE_DAY_MENU_PAGE_TITLE = 'Menu Plan for day or week of:';
 
 /** Modern Menu Plan page (sample diet page 2) — user-authored; do not reauthor. */

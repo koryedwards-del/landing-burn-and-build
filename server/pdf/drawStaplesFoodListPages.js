@@ -3,8 +3,11 @@
  * Shared by the Burn & Build Diet PDF template (sample + purchased).
  */
 import { PDF_FRAME_COLORS } from './drawFrame.js';
-import { SEMINAR_COLORS, SEMINAR_FONTS } from './drawSeminar.js';
-import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypographyData.js';
+import {
+  MODERN_REPORT_COLORS,
+  MODERN_REPORT_FONTS,
+  registerModernReportFonts,
+} from './drawModernReportFrame.js';
 import {
   CUTTING_STAPLES_FRUIT,
   CUTTING_STAPLES_GRAINS_STARCHES,
@@ -13,18 +16,22 @@ import {
 } from '../../data/cuttingStaplesPrintout.js';
 import { scaleStapleRows, stapleCategoryServings } from '../../js/stapleServingPrintout.js';
 
-const FONTS = SEMINAR_FONTS;
+const FONTS = MODERN_REPORT_FONTS;
+const COLORS = MODERN_REPORT_COLORS;
+
 const LAYOUT = Object.freeze({
-  bodySize: PT.body,
-  subsectionSize: PT.subsection,
-  lineGap: PT.lineGap,
-  sectionGap: PT.sectionGap,
-  headerGap: PT.headerGap,
+  bodySize: 10.5,
+  categorySize: 12,
+  introSize: 9.5,
+  introGap: 10,
+  headerGap: 8,
+  categoryRuleGap: 2,
+  categoryRuleWidth: 1.25,
 });
 
 const STAPLES_LIST = Object.freeze({
   columnGap: 20,
-  rowGap: 3,
+  rowGap: 5,
   leaderPad: 4,
   ruleWidth: 0.75,
 });
@@ -72,13 +79,33 @@ function drawStaplesColumnRule(doc, x, yTop, yBottom) {
     .stroke();
 }
 
+function drawFoodListIntro(doc, x, y, width, text) {
+  doc
+    .font(FONTS.regular)
+    .fontSize(LAYOUT.introSize)
+    .fillColor(COLORS.body)
+    .text(String(text || ''), x, y, { width, lineGap: 2 });
+  return doc.y + LAYOUT.introGap;
+}
+
 function drawSectionTitle(doc, title, x, y, width) {
+  const label = String(title || '');
   doc
     .font(FONTS.bold)
-    .fontSize(LAYOUT.subsectionSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(String(title || ''), x, y, { width, lineGap: 0 });
-  return doc.y + LAYOUT.headerGap;
+    .fontSize(LAYOUT.categorySize)
+    .fillColor(COLORS.body)
+    .text(label, x, y, { width, lineBreak: false });
+
+  const textW = doc.widthOfString(label);
+  const ruleY = y + LAYOUT.categorySize + LAYOUT.categoryRuleGap;
+  doc
+    .strokeColor(COLORS.gold)
+    .lineWidth(LAYOUT.categoryRuleWidth)
+    .moveTo(x, ruleY)
+    .lineTo(x + textW, ruleY)
+    .stroke();
+
+  return ruleY + LAYOUT.headerGap;
 }
 
 function drawStapleListRow(doc, item, x, y, width) {
@@ -87,17 +114,22 @@ function drawStapleListRow(doc, item, x, y, width) {
   const pad = STAPLES_LIST.leaderPad;
   const lineH = LAYOUT.bodySize;
 
-  doc.font(FONTS.regular).fontSize(lineH).fillColor(SEMINAR_COLORS.body);
+  doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
 
-  const servingW = doc.widthOfString(serving);
-  const servingX = x + width - servingW;
+  doc.font(FONTS.bold).fontSize(lineH);
+  const servingWBold = doc.widthOfString(serving);
+  doc.font(FONTS.regular).fontSize(lineH);
+
+  const servingX = x + width - servingWBold;
   const minLeader = doc.widthOfString(' . . .');
-  const nameMaxW = width - servingW - pad * 2 - minLeader;
+  const nameMaxW = width - servingWBold - pad * 2 - minLeader;
 
   if (doc.widthOfString(name) <= nameMaxW) {
     doc.text(name, x, y, { lineBreak: false });
     drawStapleDotLeaders(doc, x + doc.widthOfString(name) + pad, servingX - pad, y);
+    doc.font(FONTS.bold).fontSize(lineH).fillColor(COLORS.body);
     doc.text(serving, servingX, y, { lineBreak: false });
+    doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
     return y + lineH + STAPLES_LIST.rowGap;
   }
 
@@ -105,7 +137,9 @@ function drawStapleListRow(doc, item, x, y, width) {
   const firstW = doc.widthOfString(first);
   doc.text(first, x, y, { lineBreak: false });
   drawStapleDotLeaders(doc, x + firstW + pad, servingX - pad, y);
+  doc.font(FONTS.bold).fontSize(lineH).fillColor(COLORS.body);
   doc.text(serving, servingX, y, { lineBreak: false });
+  doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
 
   if (!rest) return y + lineH + STAPLES_LIST.rowGap;
 
@@ -136,16 +170,23 @@ function staplesForPayload(items, category, payload) {
  * @param {(doc, payload) => object} frame.continuePage
  */
 export function drawStaplesFoodListPage(doc, payload, frame) {
+  registerModernReportFonts(doc);
+
   const proteinItems = staplesForPayload(CUTTING_STAPLES_PROTEIN_DAIRY, 'protein', payload);
   const grainItems = staplesForPayload(CUTTING_STAPLES_GRAINS_STARCHES, 'grains', payload);
 
   let page = frame.startPage(doc, payload, 'Food List');
   let columns = staplesColumnLayout(page);
+  let contentY = page.y;
+  if (payload.foodList?.intro) {
+    contentY = drawFoodListIntro(doc, page.x, contentY, page.width, payload.foodList.intro);
+  }
+
   const ruleX = columns[0].x + columns[0].width + STAPLES_LIST.columnGap / 2;
-  drawStaplesColumnRule(doc, ruleX, page.y, page.bottom);
+  drawStaplesColumnRule(doc, ruleX, contentY, page.bottom);
 
   const proteinCol = columns[0];
-  let proteinY = drawSectionTitle(doc, 'Protein & Dairy', proteinCol.x, page.y, proteinCol.width);
+  let proteinY = drawSectionTitle(doc, 'Protein & Dairy', proteinCol.x, contentY, proteinCol.width);
   const proteinResult = drawStapleListItems(
     doc,
     proteinItems,
@@ -159,7 +200,7 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
   }
 
   let gsCol = columns[1];
-  let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, page.y, gsCol.width);
+  let gsY = drawSectionTitle(doc, 'Grains & Starches', gsCol.x, contentY, gsCol.width);
   let gsIndex = 0;
 
   while (gsIndex < grainItems.length) {
@@ -183,6 +224,8 @@ export function drawStaplesFoodListPage(doc, payload, frame) {
 }
 
 export function drawVegFruitFoodListPage(doc, payload, frame) {
+  registerModernReportFonts(doc);
+
   const vegetableItems = staplesForPayload(CUTTING_STAPLES_VEGETABLES, 'vegetable', payload);
   const fruitItems = staplesForPayload(CUTTING_STAPLES_FRUIT, 'fruit', payload);
 
