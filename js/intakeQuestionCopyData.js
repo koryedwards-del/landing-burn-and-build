@@ -42,4 +42,4 @@ export const INTAKE_FIELD_QUESTION_NUMBERS = Object.freeze({
 });
 
 export const INTAKE_WAIVER_SIGNED_QUESTION_NUMBER = 16;
-export const INTAKE_WAIVER_SIGNED_LABEL = 'Signed';
+export const INTAKE_WAIVER_SIGNED_LABEL = 'Approved';
