@@ -274,7 +274,7 @@ export function drawVegFruitFoodListPage(doc, payload, frame) {
     if (vegIndex < vegetableItems.length) {
       let y = page.y;
       if (vegIndex === 0) {
-        y = drawSectionTitle(doc, 'Vegetables', columns[0].x, y, columns[0].width);
+        y = drawSectionTitle(doc, 'Veggies', columns[0].x, y, columns[0].width);
       }
       const vegResult = drawStapleListItems(
         doc,
