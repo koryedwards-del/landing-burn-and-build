@@ -98,61 +98,31 @@ function parseExerciseParagraph(text) {
   ]];
 }
 
-function drawPersonIcon(doc, cx, cy, { variant = 'lean' } = {}) {
-  const r = 9;
-  const fill = variant === 'fat' ? MODERN_FOOD_PLAN_COLORS.white : MODERN_FOOD_PLAN_COLORS.body;
-  doc.save();
-  if (variant === 'fat') {
-    doc.circle(cx, cy, r).fill(MODERN_FOOD_PLAN_COLORS.gold);
-  } else {
-    doc.circle(cx, cy, r).fill('#E8E8E8');
-  }
-  const headR = variant === 'fat' ? 2.4 : 2.2;
-  const bodyW = variant === 'fat' ? 7 : 5;
-  doc.fillColor(fill);
-  doc.circle(cx, cy - 3.2, headR).fill();
-  doc.roundedRect(cx - bodyW / 2, cy - 0.5, bodyW, 7.5, 1.5).fill();
-  doc.restore();
-}
-
-function drawScaleIcon(doc, cx, cy) {
-  doc.save();
-  doc.circle(cx, cy, 9).fill('#E8E8E8');
-  doc.fillColor(MODERN_FOOD_PLAN_COLORS.body);
-  doc.roundedRect(cx - 6, cy + 1.5, 12, 2.2, 0.8).fill(MODERN_FOOD_PLAN_COLORS.body);
-  doc.roundedRect(cx - 0.8, cy - 4, 1.6, 6, 0.4).fill(MODERN_FOOD_PLAN_COLORS.body);
-  doc.circle(cx - 4.5, cy - 1.5, 2.2).strokeColor(MODERN_FOOD_PLAN_COLORS.body).lineWidth(0.8).stroke();
-  doc.circle(cx + 4.5, cy - 1.5, 2.2).stroke();
-  doc.restore();
-}
-
 function drawDashboardMetricRow(doc, {
-  x, y, width, label, pct, lbs, iconVariant,
+  x, y, width, label, pct, lbs,
 }) {
   const fonts = MODERN_FOOD_PLAN_FONTS;
   const colors = MODERN_FOOD_PLAN_COLORS;
-  const iconX = x + 14;
-  const textX = x + 32;
-  if (iconVariant === 'scale') drawScaleIcon(doc, iconX, y + 12);
-  else drawPersonIcon(doc, iconX, y + 12, { variant: iconVariant });
+  const textX = x + 12;
+  const textW = width - 24;
 
   doc
     .font(fonts.bold)
     .fontSize(LAYOUT.dashboardHeadSize)
     .fillColor(colors.body)
-    .text(label, textX, y + 2, { width: width - 36, lineBreak: false });
+    .text(label, textX, y + 2, { width: textW, lineBreak: false });
 
   doc
     .font(fonts.regular)
     .fontSize(LAYOUT.dashboardPctSize)
     .fillColor(colors.muted)
-    .text(pct, textX, y + 12, { width: width - 36, lineBreak: false });
+    .text(pct, textX, y + 12, { width: textW, lineBreak: false });
 
   doc
     .font(fonts.bold)
     .fontSize(LAYOUT.dashboardValueSize)
     .fillColor(colors.body)
-    .text(lbs, textX, y + 21, { width: width - 36, lineBreak: false });
+    .text(lbs, textX, y + 21, { width: textW, lineBreak: false });
 
   return y + 34;
 }
@@ -234,9 +204,9 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
 
   let rowY = y + pad + headH + 4;
   const metrics = [
-    { label: 'LEAN', todayPct: lean.todayPct, todayLbs: lean.todayLbs, goalPct: lean.goalB, goalLbs: lean.goalC, icon: 'lean' },
-    { label: 'FAT', todayPct: fat.todayPct, todayLbs: fat.todayLbs, goalPct: fat.goalB, goalLbs: fat.goalC, icon: 'fat' },
-    { label: 'TOTAL', todayPct: total.todayPct, todayLbs: total.todayLbs, goalPct: total.goalB, goalLbs: total.goalC, icon: 'scale' },
+    { label: 'LEAN', todayPct: lean.todayPct, todayLbs: lean.todayLbs, goalPct: lean.goalB, goalLbs: lean.goalC },
+    { label: 'FAT', todayPct: fat.todayPct, todayLbs: fat.todayLbs, goalPct: fat.goalB, goalLbs: fat.goalC },
+    { label: 'TOTAL', todayPct: total.todayPct, todayLbs: total.todayLbs, goalPct: total.goalB, goalLbs: total.goalC },
   ];
 
   metrics.forEach((metric) => {
@@ -247,7 +217,6 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
       label: metric.label,
       pct: metric.todayPct,
       lbs: metric.todayLbs,
-      iconVariant: metric.icon,
     });
     drawDashboardMetricRow(doc, {
       x: rightX,
@@ -256,7 +225,6 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
       label: metric.label,
       pct: metric.goalPct,
       lbs: metric.goalLbs,
-      iconVariant: metric.icon,
     });
     rowY += rowH;
   });
