@@ -20,8 +20,12 @@ const SLOT_COLUMNS = [
 export function formatServingCell(value) {
   const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) return '';
-  if (Math.abs(n - Math.round(n)) < 0.05) return String(Math.round(n));
-  return n.toFixed(1);
+  if (Math.abs(n - Math.round(n)) < 0.005) return String(Math.round(n));
+  const truncated = Math.floor(n * 100) / 100;
+  const two = truncated.toFixed(2);
+  if (two.endsWith('00')) return String(Math.round(truncated));
+  if (two.endsWith('0')) return truncated.toFixed(1);
+  return two;
 }
 
 /** Page 4 grid — daily total in the first column; meal/snack columns show daily ÷ 3. */

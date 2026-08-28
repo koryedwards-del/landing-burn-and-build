@@ -189,25 +189,30 @@ function verifyGoldenSampleServingsGrid() {
   expect('protein 10 daily thirds', proteinTen, {
     label: 'Protein',
     daily: '10',
-    breakfast: '3.3',
+    breakfast: '3.33',
     snack1: '',
-    lunch: '3.3',
+    lunch: '3.33',
     snack2: '',
-    dinner: '3.3',
+    dinner: '3.33',
     snack3: '',
   });
   const grainsEleven = divided.find((row) => row.label === 'Grains/Starches');
-  expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.7');
-  expect('grains 11 daily thirds lunch', grainsEleven?.lunch, '3.7');
+  expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.66');
+  expect('grains 11 daily thirds lunch', grainsEleven?.lunch, '3.66');
   const fruitsFour = divided.find((row) => row.label === 'Fruits');
-  expect('fruits 4 daily thirds', fruitsFour?.snack1, '1.3');
-  expect('fruits 4 daily thirds snack2', fruitsFour?.snack2, '1.3');
-  expect('fruits 4 daily thirds snack3', fruitsFour?.snack3, '1.3');
+  expect('fruits 4 daily thirds', fruitsFour?.snack1, '1.33');
+  expect('fruits 4 daily thirds snack2', fruitsFour?.snack2, '1.33');
+  expect('fruits 4 daily thirds snack3', fruitsFour?.snack3, '1.33');
+
+  const pkgElevenProtein = buildProgramPackage(GOLDEN_SAMPLE_FORM);
+  pkgElevenProtein.plan = { servings: { protein: 11, grainsStarches: 11, vegetables: 1, fruits: 4 } };
+  const proteinEleven = servingsGridRows(pkgElevenProtein).find((row) => row.label === 'Protein');
+  expect('protein 11 daily thirds', proteinEleven?.breakfast, '3.66');
 
   for (const row of rows) {
     for (const [key, value] of Object.entries(row)) {
       if (key === 'label' || value === '') continue;
-      if (/^\d+\.\d{2,}/.test(String(value))) {
+      if (/^\d+\.\d{3,}/.test(String(value))) {
         errors.push(`${row.label}.${key}: over-precise decimal "${value}"`);
       }
     }
