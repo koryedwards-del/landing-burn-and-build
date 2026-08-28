@@ -12,7 +12,7 @@ export const GOLDEN_SAMPLE_FORM = {
   age: 28,
   weightText: '184',
   fatPercentText: '38.22',
-  fatSource: 'skinfolds',
+  fatSource: 'calipers',
   workPhysical: 'sitting',
   workStress: 'comfortable',
   weightTrainingHours: 3,

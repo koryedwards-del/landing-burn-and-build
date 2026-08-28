@@ -1,3 +1,5 @@
+import { normalizeFatSourceValue } from './leanBodyAnalysisPrintout.js';
+
 export const WORK_PHYSICAL = [
   { id: 'sitting', label: 'Mostly sitting', sub: 'Desk, computer, driving, reception.' },
   { id: 'feet', label: 'On your feet', sub: 'Retail, teaching, nursing, restaurant.' },
@@ -151,6 +153,7 @@ export function profileFromForm(form) {
   const fatPercent = Number(form.fatPercentText);
   const lbm = Math.round(weight * (1 - fatPercent / 100) * 10) / 10;
   const intensity = computeWorkIntensity(form.workPhysical, form.workStress);
+  const fatSource = normalizeFatSourceValue(form.fatSource) || null;
   return {
     preferredName: form.preferredName.trim().replace(/\b\w/g, (c) => c.toUpperCase()),
     referrerName: (() => {
@@ -171,8 +174,8 @@ export function profileFromForm(form) {
     cardioHours: parseActivityHours(form.cardioHours, 15) ?? 0,
     fatBurningHours: parseActivityHours(form.fatBurningHours, 20) ?? 0,
     wakeTime: form.wakeTime,
-    fatSource: form.fatSource || null,
-    fatSourceOther: form.fatSource === 'other' ? String(form.fatSourceOther || '').trim() : '',
+    fatSource,
+    fatSourceOther: fatSource === 'other' ? String(form.fatSourceOther || '').trim() : '',
     waiverSignature: String(form.waiverSignature || form.signature || '').trim(),
     waiverSignedDate: String(form.waiverSignedDate || form.signatureDate || '').trim(),
   };

@@ -21,18 +21,24 @@ export const FAT_SOURCE_OPTIONS = Object.freeze([
   { value: 'tape', label: 'Tape measurements' },
   { value: 'bia', label: 'InBody/BIA' },
   { value: 'scan3d', label: '3D scanning (Styku and Fit3D)' },
-  { value: 'skinfolds', label: 'Calipers' },
+  { value: 'calipers', label: 'Calipers' },
   { value: 'bodpod', label: 'Bod Pod' },
   { value: 'dexa', label: 'DEXA' },
   { value: 'hydrostatic', label: 'Hydrostatic weighing' },
   { value: 'other', label: 'Other' },
 ]);
 
+export function normalizeFatSourceValue(value) {
+  if (value === 'skinfolds') return 'calipers';
+  return value;
+}
+
 export function formatFatSourceLabel(value, otherText = '') {
-  if (value === 'other') return otherText || 'Other';
-  const match = FAT_SOURCE_OPTIONS.find((option) => option.value === value);
+  const normalized = normalizeFatSourceValue(value);
+  if (normalized === 'other') return otherText || 'Other';
+  const match = FAT_SOURCE_OPTIONS.find((option) => option.value === normalized);
   if (match) return match.label;
-  if (value === 'recent') return 'Calipers / ultrasound / BodPod';
+  if (normalized === 'recent') return 'Calipers / ultrasound / BodPod';
   return '—';
 }
 
