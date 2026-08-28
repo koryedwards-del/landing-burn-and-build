@@ -49,7 +49,7 @@ export function servingsGridRows(pkg) {
       snack3: '',
     },
     {
-      label: 'Grains & Starches',
+      label: 'Grain & Starch',
       daily: formatServingCell(servings.grainsStarches),
       breakfast: grainThird,
       snack1: '',

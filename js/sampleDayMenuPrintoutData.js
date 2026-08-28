@@ -52,7 +52,7 @@ const MENU_SECTION_DEFS = Object.freeze([
     title: 'Breakfast',
     rows: [
       { label: 'Protein & Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains & Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Grain & Starch', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
@@ -65,7 +65,7 @@ const MENU_SECTION_DEFS = Object.freeze([
     title: 'Lunch',
     rows: [
       { label: 'Protein & Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains & Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Grain & Starch', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
@@ -78,7 +78,7 @@ const MENU_SECTION_DEFS = Object.freeze([
     title: 'Dinner',
     rows: [
       { label: 'Protein & Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains & Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Grain & Starch', pickKey: 'grains', staples: 'grains' },
       { label: 'Veggies', pickKey: 'veggies', staples: 'vegetables' },
     ],
   },

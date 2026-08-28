@@ -196,7 +196,7 @@ function verifyGoldenSampleServingsGrid() {
     dinner: '3.33',
     snack3: '',
   });
-  const grainsEleven = divided.find((row) => row.label === 'Grains & Starches');
+  const grainsEleven = divided.find((row) => row.label === 'Grain & Starch');
   expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.66');
   expect('grains 11 daily thirds lunch', grainsEleven?.lunch, '3.66');
   const fruitsFour = divided.find((row) => row.label === 'Fruit');
