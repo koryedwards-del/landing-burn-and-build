@@ -46,6 +46,72 @@ export function modernFooterRuleY(box) {
   return box.bottom - MODERN_REPORT_FOOTER_LAYOUT.ruleOffsetFromBottom;
 }
 
+const FOOTER_ICON = Object.freeze({
+  size: 7,
+  gap: 3,
+  textSize: 7.5,
+});
+
+function drawFooterGlobeIcon(doc, x, y, size, color) {
+  const r = size / 2;
+  const cx = x + r;
+  const cy = y + r;
+  doc.save();
+  doc.strokeColor(color).lineWidth(0.55);
+  doc.circle(cx, cy, r).stroke();
+  doc.moveTo(x, cy).lineTo(x + size, cy).stroke();
+  doc
+    .moveTo(cx, y)
+    .bezierCurveTo(cx + r * 0.55, y + r * 0.35, cx + r * 0.55, y + size - r * 0.35, cx, y + size)
+    .stroke();
+  doc
+    .moveTo(cx, y)
+    .bezierCurveTo(cx - r * 0.55, y + r * 0.35, cx - r * 0.55, y + size - r * 0.35, cx, y + size)
+    .stroke();
+  doc.restore();
+}
+
+function drawFooterMailIcon(doc, x, y, size, color) {
+  const w = size;
+  const h = size * 0.72;
+  const top = y + (size - h) / 2;
+  doc.save();
+  doc.strokeColor(color).lineWidth(0.55);
+  doc.rect(x, top + h * 0.28, w, h * 0.72).stroke();
+  doc.moveTo(x, top + h * 0.28).lineTo(x + w / 2, top + h).lineTo(x + w, top + h * 0.28).stroke();
+  doc.restore();
+}
+
+function footerIconY(textY) {
+  return textY + (FOOTER_ICON.textSize - FOOTER_ICON.size) / 2 + 0.5;
+}
+
+function drawFooterContactWithIcon(doc, {
+  box, textY, text, icon, align, fonts, colors,
+}) {
+  const iconSize = FOOTER_ICON.size;
+  const gap = FOOTER_ICON.gap;
+  doc.font(fonts.regular).fontSize(FOOTER_ICON.textSize).fillColor(colors.muted);
+  const textW = doc.widthOfString(text);
+  const groupW = iconSize + gap + textW;
+  const iconY = footerIconY(textY);
+
+  let startX = box.x;
+  if (align === 'center') {
+    startX = box.x + (box.width - groupW) / 2;
+  } else if (align === 'right') {
+    startX = box.x + box.width - groupW;
+  }
+
+  if (icon === 'globe') {
+    drawFooterGlobeIcon(doc, startX, iconY, iconSize, colors.muted);
+  } else if (icon === 'mail') {
+    drawFooterMailIcon(doc, startX, iconY, iconSize, colors.muted);
+  }
+
+  doc.text(text, startX + iconSize + gap, textY, { lineBreak: false });
+}
+
 export function registerModernReportFonts(doc) {
   doc.registerFont(MODERN_REPORT_FONTS.regular, path.join(FONT_DIR, 'Montserrat-Regular.ttf'));
   doc.registerFont(MODERN_REPORT_FONTS.bold, path.join(FONT_DIR, 'Montserrat-Bold.ttf'));
@@ -173,21 +239,29 @@ export function drawModernReportFooter(doc, box, { page, total, contact = PDF_FR
     .stroke();
 
   if (page != null && total != null) {
-    doc.font(fonts.regular).fontSize(7.5).fillColor(colors.muted);
+    doc.font(fonts.regular).fontSize(FOOTER_ICON.textSize).fillColor(colors.muted);
     doc.text('PAGE ', box.x, textY, { continued: true, lineGap: 0 });
     doc.font(fonts.bold).text(`${page} `, { continued: true });
     doc.font(fonts.regular).text(`OF ${total}`, { lineBreak: false });
   }
 
-  doc
-    .font(fonts.regular)
-    .fontSize(7.5)
-    .fillColor(colors.muted)
-    .text(website, box.x, textY, { width: box.width, align: 'center', lineGap: 0 });
+  drawFooterContactWithIcon(doc, {
+    box,
+    textY,
+    text: website,
+    icon: 'globe',
+    align: 'center',
+    fonts,
+    colors,
+  });
 
-  doc
-    .font(fonts.regular)
-    .fontSize(7.5)
-    .fillColor(colors.muted)
-    .text(email, box.x, textY, { width: box.width, align: 'right', lineGap: 0 });
+  drawFooterContactWithIcon(doc, {
+    box,
+    textY,
+    text: email,
+    icon: 'mail',
+    align: 'right',
+    fonts,
+    colors,
+  });
 }
