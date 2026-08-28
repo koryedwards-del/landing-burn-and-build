@@ -27,10 +27,13 @@ import {
   SAMPLE_DIET_FOOD_LIST_INTRO,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
-  SAMPLE_DIET_SERVINGS_DAILY_HEADING,
-  SAMPLE_DIET_SERVINGS_DIVIDE_HEADING,
-  SAMPLE_DIET_SERVINGS_INTRO,
+  SAMPLE_DIET_GETTING_STARTED_HEADING,
+  SAMPLE_DIET_GETTING_STARTED_RULES,
+  SAMPLE_DIET_HELPFUL_TIPS_BEVERAGES,
+  SAMPLE_DIET_HELPFUL_TIPS_HEADING,
+  SAMPLE_DIET_HELPFUL_TIPS_SALT,
   SAMPLE_DIET_SERVINGS_NOTE,
+  SAMPLE_DIET_SERVINGS_TAGLINE,
   SAMPLE_DIET_WELCOME,
 } from './sampleDietPrintoutCopyData.js';
 import { buildSampleDayMenu } from './sampleDayMenuPrintoutData.js';
@@ -176,12 +179,18 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       macroRows: buildMacroTableRows(formula, intake.workPhysical, intake),
     },
     servings: {
-      intro: SAMPLE_DIET_SERVINGS_INTRO,
-      dailyHeading: SAMPLE_DIET_SERVINGS_DAILY_HEADING,
-      divideHeading: SAMPLE_DIET_SERVINGS_DIVIDE_HEADING,
+      tagline: SAMPLE_DIET_SERVINGS_TAGLINE,
       note: SAMPLE_DIET_SERVINGS_NOTE,
       gridRows: servingsGridRows(pkg),
       planServings: pkg?.plan?.servings ? { ...pkg.plan.servings } : null,
+      gettingStarted: {
+        heading: SAMPLE_DIET_GETTING_STARTED_HEADING,
+        rules: [...SAMPLE_DIET_GETTING_STARTED_RULES],
+      },
+      helpfulTips: {
+        heading: SAMPLE_DIET_HELPFUL_TIPS_HEADING,
+        items: [SAMPLE_DIET_HELPFUL_TIPS_SALT, SAMPLE_DIET_HELPFUL_TIPS_BEVERAGES],
+      },
     },
     foodList: {
       intro: SAMPLE_DIET_FOOD_LIST_INTRO,

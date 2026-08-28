@@ -37,14 +37,30 @@ export const SAMPLE_DIET_SERVINGS_NOTE =
   'NOTE: Always consult your physician before starting this plan or making any change in your eating habits.';
 
 /** Servings page — user-authored; do not reauthor. */
-export const SAMPLE_DIET_SERVINGS_INTRO =
-  'This is how many servings you eat each day — and where they go.';
+export const SAMPLE_DIET_SERVINGS_TAGLINE = 'Your daily servings and how to use them.';
 
-export const SAMPLE_DIET_SERVINGS_DAILY_HEADING = 'YOUR DAILY SERVINGS';
+export const SAMPLE_DIET_GETTING_STARTED_HEADING = 'GETTING STARTED';
 
-export const SAMPLE_DIET_SERVINGS_DIVIDE_HEADING = 'HOW TO DIVIDE THEM THROUGH YOUR DAY';
+export const SAMPLE_DIET_GETTING_STARTED_RULES = Object.freeze([
+  'Eat all the servings recommended.',
+  'Alternate meals with fruit snacks.',
+  'Eat every two to three hours.',
+]);
 
-/** Food List page 1 — user-authored; do not reauthor. */
+export const SAMPLE_DIET_HELPFUL_TIPS_HEADING = 'Helpful Tips';
+
+export const SAMPLE_DIET_HELPFUL_TIPS_SALT = Object.freeze({
+  title: 'Salt',
+  body:
+    'Using salt is a personal choice. Most people find when they eat less fat, they also eat less salt (chips, cheese, margarine, bacon, sausage, fast food)—you get the point.',
+});
+
+export const SAMPLE_DIET_HELPFUL_TIPS_BEVERAGES = Object.freeze({
+  title: 'Beverages',
+  body:
+    'Coffee, tea, diet drinks and seltzer water are fine. Although they do not affect fat loss, you may want to avoid them for other health reasons. Water is the best drink in the house. A simple rule is to drink a glass with every meal and snack that you eat.',
+});
+
 export const SAMPLE_DIET_FOOD_LIST_INTRO =
   'The amount shown is calculated to match your servings. No math needed.';
 

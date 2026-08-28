@@ -1,5 +1,5 @@
 /**
- * Modern Servings page — daily hero summary + distribution table.
+ * Modern Servings page — daily table + getting started guidance.
  */
 import { begin1982Page, TABLE_1982 } from './draw1982Frame.js';
 import {
@@ -8,7 +8,6 @@ import {
   modernFooterRuleY,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
-import { formatServingCell } from '../../js/servingsPrintout.js';
 
 const FONTS = MODERN_REPORT_FONTS;
 const COLORS = MODERN_REPORT_COLORS;
@@ -28,13 +27,8 @@ const TABLE_COLUMNS = Object.freeze([
 ]);
 
 const LAYOUT = Object.freeze({
-  introSize: 10,
-  introGap: 14,
-  sectionHeadingSize: 9,
-  sectionHeadingGap: 8,
-  heroNumberSize: 15,
-  heroLabelSize: 10,
-  heroGap: 16,
+  taglineSize: 9.5,
+  taglineGap: 10,
   tableTopGap: 12,
   tableRowPad: 7,
   cellPad: 6,
@@ -43,16 +37,19 @@ const LAYOUT = Object.freeze({
   mealSize: 9,
   headerMealSize: 8,
   headerDailySize: 9,
+  sectionHeadingSize: 9,
+  sectionHeadingGap: 8,
+  sectionGap: 16,
+  bulletSize: 9.5,
+  bulletGap: 5,
+  bulletIndent: 12,
+  tipsHeadingGap: 10,
+  tipsTitleSize: 9,
+  tipsBodySize: 9,
+  tipsItemGap: 8,
   noteSize: 8,
   noteGapAboveFooter: 10,
 });
-
-const HERO_ITEMS = Object.freeze([
-  { key: 'protein', label: 'Protein' },
-  { key: 'grainsStarches', label: 'Grains/Starches' },
-  { key: 'vegetables', label: 'Veggie' },
-  { key: 'fruits', label: 'Fruit' },
-]);
 
 function columnWidths(columns, tableWidth) {
   return columns.map((col) => col.width * tableWidth);
@@ -231,30 +228,44 @@ function drawSectionHeading(doc, x, y, width, text) {
   return y + LAYOUT.sectionHeadingSize + LAYOUT.sectionHeadingGap;
 }
 
-function drawHeroDailySummary(doc, x, y, planServings) {
-  let cursorX = x;
-  const baseY = y;
+function drawBulletList(doc, x, y, width, items) {
+  let cursorY = y;
+  const bullet = '•';
+  doc.font(FONTS.regular).fontSize(LAYOUT.bulletSize).fillColor(COLORS.body);
 
-  HERO_ITEMS.forEach((item, index) => {
-    if (index > 0) {
-      doc.font(FONTS.regular).fontSize(LAYOUT.heroLabelSize).fillColor(COLORS.muted);
-      const sep = ' · ';
-      doc.text(sep, cursorX, baseY + 2, { lineBreak: false });
-      cursorX += doc.widthOfString(sep);
-    }
-
-    const amount = formatServingCell(planServings?.[item.key]);
-    doc.font(FONTS.bold).fontSize(LAYOUT.heroNumberSize).fillColor(COLORS.body);
-    doc.text(amount, cursorX, baseY, { lineBreak: false });
-    cursorX += doc.widthOfString(amount);
-
-    doc.font(FONTS.regular).fontSize(LAYOUT.heroLabelSize).fillColor(COLORS.body);
-    const label = ` ${item.label}`;
-    doc.text(label, cursorX, baseY + 2, { lineBreak: false });
-    cursorX += doc.widthOfString(label) + LAYOUT.heroGap;
+  (items || []).forEach((item) => {
+    const text = String(item || '');
+    if (!text) return;
+    const textX = x + LAYOUT.bulletIndent;
+    const textW = width - LAYOUT.bulletIndent;
+    doc.text(bullet, x, cursorY, { lineBreak: false });
+    doc.text(text, textX, cursorY, { width: textW, lineGap: 1 });
+    cursorY = doc.y + LAYOUT.bulletGap;
   });
 
-  return baseY + LAYOUT.heroNumberSize + LAYOUT.sectionHeadingGap;
+  return cursorY;
+}
+
+function drawHelpfulTips(doc, x, y, width, helpfulTips) {
+  if (!helpfulTips?.items?.length) return y;
+
+  let cursorY = y;
+  if (helpfulTips.heading) {
+    cursorY = drawSectionHeading(doc, x, cursorY, width, helpfulTips.heading);
+    cursorY += LAYOUT.tipsHeadingGap - LAYOUT.sectionHeadingGap;
+  }
+
+  helpfulTips.items.forEach((item, index) => {
+    if (!item?.title || !item?.body) return;
+    doc.font(FONTS.bold).fontSize(LAYOUT.tipsTitleSize).fillColor(COLORS.body);
+    doc.text(String(item.title), x, cursorY, { width, lineGap: 0 });
+    cursorY = doc.y + 2;
+    doc.font(FONTS.regular).fontSize(LAYOUT.tipsBodySize).fillColor(COLORS.body);
+    doc.text(String(item.body), x, cursorY, { width, lineGap: 1 });
+    cursorY = doc.y + (index < helpfulTips.items.length - 1 ? LAYOUT.tipsItemGap : 0);
+  });
+
+  return cursorY;
 }
 
 function drawPhysicianNote(doc, page, note) {
@@ -280,34 +291,35 @@ export function drawModernServingsPage(doc, payload) {
   const page = begin1982Page(doc, payload, 'Servings');
   let y = page.y;
 
-  if (servings.intro) {
+  if (servings.tagline) {
     doc
       .font(FONTS.regular)
-      .fontSize(LAYOUT.introSize)
+      .fontSize(LAYOUT.taglineSize)
       .fillColor(COLORS.body)
-      .text(String(servings.intro), page.x, y, { width: page.width, lineGap: 2 });
-    y = doc.y + LAYOUT.introGap;
-  }
-
-  if (servings.dailyHeading) {
-    y = drawSectionHeading(doc, page.x, y, page.width, servings.dailyHeading);
-  }
-
-  if (servings.planServings) {
-    y = drawHeroDailySummary(doc, page.x, y, servings.planServings);
-  }
-
-  if (servings.divideHeading) {
-    y = drawSectionHeading(doc, page.x, y, page.width, servings.divideHeading);
+      .text(String(servings.tagline), page.x, y, { width: page.width, lineGap: 1 });
+    y = doc.y + LAYOUT.taglineGap;
   }
 
   y += LAYOUT.tableTopGap;
-  drawServingsTable(doc, {
+  y = drawServingsTable(doc, {
     x: page.x,
     y,
     width: page.width,
     rows: buildServingsRows(servings.gridRows),
   });
+
+  if (servings.gettingStarted?.rules?.length) {
+    y += LAYOUT.sectionGap;
+    if (servings.gettingStarted.heading) {
+      y = drawSectionHeading(doc, page.x, y, page.width, servings.gettingStarted.heading);
+    }
+    y = drawBulletList(doc, page.x, y, page.width, servings.gettingStarted.rules);
+  }
+
+  if (servings.helpfulTips?.items?.length) {
+    y += LAYOUT.sectionGap;
+    y = drawHelpfulTips(doc, page.x, y, page.width, servings.helpfulTips);
+  }
 
   drawPhysicianNote(doc, page, servings.note);
 }
