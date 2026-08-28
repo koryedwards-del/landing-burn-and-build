@@ -1,5 +1,5 @@
 /**
- * Burn & Build Diet PDF — 8-page program report (purchased + landing sample).
+ * Burn & Build Diet PDF — 7-page program report (purchased + landing sample).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -151,26 +151,6 @@ function drawParagraphs(doc, page, paragraphs, {
     y = doc.y + paragraphGap;
   });
   return { ...page, y };
-}
-
-function drawSectionBlock(doc, page, title, body) {
-  const titleH = LAYOUT.sectionTitleSize + LAYOUT.headerGap;
-  const bodyH = measureText(doc, body, page.width, {
-    font: FONTS.regular,
-    fontSize: LAYOUT.bodySize,
-  });
-  doc
-    .font(FONTS.bold)
-    .fontSize(LAYOUT.sectionTitleSize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(String(title), page.x, page.y, { width: page.width, lineGap: 0 });
-  let y = doc.y + LAYOUT.headerGap;
-  doc
-    .font(FONTS.regular)
-    .fontSize(LAYOUT.bodySize)
-    .fillColor(SEMINAR_COLORS.body)
-    .text(String(body), page.x, y, { width: page.width, lineGap: LAYOUT.lineGap, align: 'left' });
-  return { ...page, y: doc.y + LAYOUT.paragraphGap + LAYOUT.sectionGap };
 }
 
 function layoutTableCellPads(col, defaultPad) {
@@ -399,16 +379,6 @@ function drawStatusParagraph(doc, page, paragraph) {
     .fillColor(SEMINAR_COLORS.body)
     .text(status.rest, { width: page.width, lineGap: LAYOUT.lineGap, align: 'left' });
   return { ...page, y: doc.y + LAYOUT.paragraphGap };
-}
-
-function drawWelcomePage(doc, payload) {
-  const page = begin1982Page(doc, payload, 'Welcome');
-  let current = drawParagraphs(doc, page, payload.welcome.intro);
-  current = drawSectionBlock(doc, current, 'Lean Body Analysis', payload.welcome.leanBodyAnalysis);
-  current = drawSectionBlock(doc, current, 'Food Plan', payload.welcome.foodPlan);
-  current = drawSectionBlock(doc, current, 'Servings', payload.welcome.servings);
-  current = drawSectionBlock(doc, current, 'Food List', payload.welcome.foodList);
-  current = drawSectionBlock(doc, current, 'Menu Plan', payload.welcome.menuPlan);
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
@@ -727,12 +697,6 @@ function drawMacroTable(doc, x, y, width, macroRows) {
 
   return y + totalH;
 }
-
-const FOOD_PLAN_TEXT_GAP = Object.freeze({
-  paragraphGap: 5,
-  lineGap: LAYOUT.lineGap,
-});
-const FOOD_PLAN_TABLE_GAP = 4;
 
 function drawFoodPlanPage(doc, payload) {
   drawModernFoodPlanPage(doc, payload);
@@ -1187,7 +1151,7 @@ function drawSampleDayMenuPage(doc, payload) {
   }
 }
 
-export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 8;
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 7;
 
 export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -1226,7 +1190,6 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
   drawLeanBodyAnalysisPage(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
-  drawWelcomePage(doc, payload);
 
   stamp1982Footers(doc, payload.header, { modernFooterPageIndex: 0 });
 

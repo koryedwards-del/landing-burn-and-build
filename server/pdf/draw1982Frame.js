@@ -1,10 +1,8 @@
 import { PDF_MARGIN } from './constants.js';
-import { drawWatermark } from './draw.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY } from '../../js/printTemplateTypographyData.js';
 import {
   PDF_FRAME_COLORS,
   pinnedContentBottomY,
-  stampPinnedProgramFooters,
   drawFrameHeader,
   drawContinuationHeader,
   framePageTitleStartY,
@@ -53,7 +51,6 @@ export function frame1982ContentBox(doc) {
 
 export function add1982Page(doc) {
   doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-  drawWatermark(doc);
   return frame1982ContentBox(doc);
 }
 

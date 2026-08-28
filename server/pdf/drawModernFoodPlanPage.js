@@ -5,7 +5,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { PDF_MARGIN } from './constants.js';
 import { logoPath } from './draw.js';
-import { drawWatermark } from './draw.js';
 import { PDF_FRAME_CONTACT } from './drawFrame.js';
 
 const FONT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fonts');
@@ -70,7 +69,6 @@ function modernContentBox(doc) {
 
 function addModernPage(doc) {
   doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-  drawWatermark(doc);
   return modernContentBox(doc);
 }
 
