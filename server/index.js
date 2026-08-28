@@ -174,7 +174,7 @@ app.get('/health', (_req, res) => {
     stripe: stripeConfigured(),
     dietEmail: dietEmailConfigured(),
     pdf: true,
-    publicSampleDiet: Boolean(readPublicSampleDietConfig()),
+    publicSampleDiet: Boolean(resolveSamplePdfPath(root, 'sample-diet') || readPublicSampleDietConfig()),
     commit: process.env.RENDER_GIT_COMMIT || null,
   });
 });
@@ -437,8 +437,20 @@ app.get('/api/samples/:slug', async (req, res) => {
   const slug = String(req.params.slug || '').trim();
 
   if (slug === 'sample-diet') {
+    const resolved = resolveSamplePdfPath(root, slug);
+    const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+    if (resolved) {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `${inline ? 'inline' : 'attachment'}; filename="${resolved.spec.filename}"`,
+      );
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.sendFile(resolved.filePath);
+      return;
+    }
+
     try {
-      const inline = req.query.inline === '1' || req.query.disposition === 'inline';
       const pdf = await renderPublicSampleDietPdf();
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(

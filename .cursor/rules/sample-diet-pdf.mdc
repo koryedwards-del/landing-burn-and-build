@@ -1,11 +1,11 @@
 ---
-description: Landing-page sample diet PDF — live program on Render, not a static repo file
+description: Landing-page sample diet PDF — static file in docs/samples
 alwaysApply: true
 ---
 
 # Landing-page sample diet PDF
 
-**Not a committed static file.** The sample on the landing page is rendered live from a real program created via questionnaire + Stripe.
+**Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — overwrite in place when the user supplies a new sample.
 
 **Download URL (unchanged for users):**
 
@@ -15,37 +15,27 @@ https://program-creator-3tzd.onrender.com/api/samples/sample-diet
 
 **Inline preview (landing embed):** same URL with `?inline=1`
 
-## Point Render at your sample program
+## Update the landing preview
 
-After you complete questionnaire + checkout with the program you want to showcase:
-
-```bash
-curl -X POST https://program-creator-3tzd.onrender.com/api/admin/public-sample-diet \
-  -H "Content-Type: application/json" \
-  -H "x-contacts-admin-key: $CONTACTS_ADMIN_KEY" \
-  -d '{"email":"you@example.com","programId":"<uuid>"}'
-```
-
-Or set Render env vars: `SAMPLE_DIET_EMAIL`, `SAMPLE_DIET_PROGRAM_ID`.
-
-Config is stored on the Render disk at `public-sample-diet.json` (next to `programs.db`) so you can swap programs without redeploying.
+1. Replace `docs/samples/b&bsamplediet.pdf` with the approved sample file.
+2. **Commit** the PDF.
+3. **`git push origin main`** (Render redeploys).
+4. **Then** give the download link.
 
 ## Code paths
 
 | Piece | Path |
 |-------|------|
-| Live sample config + render | `server/publicSampleDiet.js` |
-| API route | `GET /api/samples/sample-diet` |
-| Admin set sample | `POST /api/admin/public-sample-diet` |
-| PDF payload (same as purchased) | `js/sampleDietPrintoutData.js` → `buildSampleDietPrintoutPayload(pkg)` |
-| Purchased PDF | `GET /api/programs/diet-pdf` |
-| Landing page embed | `index.html` → API URLs |
+| Static file | `docs/samples/b&bsamplediet.pdf` |
+| API route | `GET /api/samples/sample-diet` (`server/samplePdfDownloads.js`) |
+| Live fallback (no static file) | `server/publicSampleDiet.js` |
+| Landing embed | `index.html` → API URLs |
+| Purchased PDF | `GET /api/programs/diet-pdf` (always live-rendered) |
 
 ## Do not
 
-- Commit `docs/samples/b&bsamplediet.pdf` — removed; sample is live.
-- Run `npm run render:sample-diet-preview` expecting a repo PDF — script only prints setup instructions.
-- Confuse the landing sample with `buildSampleDietPreviewPayload()` / golden fixtures — those are for local verify only.
+- Link before push — Render serves the previous file until deploy completes.
+- Confuse the landing sample with `buildSampleDietPreviewPayload()` — local verify only.
 
 ## Verify locally
 

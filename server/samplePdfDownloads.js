@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
-/** Public sample PDFs — menu worksheet is static; sample diet is live-rendered. */
+/** Public sample PDFs served from docs/samples/. */
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
+  'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf' },
   'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
 });
 

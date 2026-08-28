@@ -17,15 +17,13 @@ The user does **not** review pull requests. Do not use the PR workflow.
 
 ## Landing-page sample diet
 
-The sample on the landing page is **not** a static PDF in the repo. It is rendered live on Render from a program created via questionnaire + Stripe.
+The landing-page preview is **`docs/samples/b&bsamplediet.pdf`**, served by `GET /api/samples/sample-diet`.
 
-After PDF pipeline changes the user cares about on the landing page:
+When the user supplies a new sample PDF:
 
-1. Push code to `main` (Render redeploys).
-2. User updates the public sample program via `POST /api/admin/public-sample-diet` or Render env vars (`SAMPLE_DIET_EMAIL`, `SAMPLE_DIET_PROGRAM_ID`).
-3. Download link for users: `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`
-
-Do **not** commit `docs/samples/b&bsamplediet.pdf`. Do **not** run `render:sample-diet-preview` as a delivery step.
+1. Overwrite `docs/samples/b&bsamplediet.pdf`.
+2. **Commit** and **`git push origin main`**.
+3. Download link: `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`
 
 ## Housekeeping
 

@@ -89,7 +89,7 @@ Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `
 
 ## B&B Sample Diet PDF (landing page)
 
-Live-rendered on Render from a real questionnaire + Stripe program — **not** a static file in `docs/samples/`. Configure with `POST /api/admin/public-sample-diet` or `SAMPLE_DIET_EMAIL` + `SAMPLE_DIET_PROGRAM_ID` on Render. See `.cursor/rules/sample-diet-pdf.mdc`.
+Live-rendered on Render from `docs/samples/b&bsamplediet.pdf` (static). Live DB fallback via `publicSampleDiet.js` if the file is missing. See `.cursor/rules/sample-diet-pdf.mdc`.
 
 ## Locked paths
 
