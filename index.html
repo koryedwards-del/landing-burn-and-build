@@ -146,17 +146,9 @@
 
     .who { padding: 0 40px; background: var(--black); }
     .who-inner { max-width: 1100px; margin: 0 auto; }
-    .who-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .who-card { background: var(--gray); padding: 56px 48px; }
-    .who-card-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
-    .who-card-title { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 2.4rem; text-transform: uppercase; letter-spacing: 0.04em; color: #8A8A8A; margin-bottom: 20px; }
-    .who-card-body { color: #D4D4D4; font-size: 0.95rem; line-height: 1.7; }
-    .who-list { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .who-list li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; padding-left: 20px; position: relative; color: var(--yellow); }
-    .who-list li::before { content: '▶'; position: absolute; left: 0; color: var(--yellow); font-size: 0.6rem; top: 3px; }
 
     .who-proof {
-      margin-top: 72px;
+      margin-top: 0;
       text-align: center;
     }
 
@@ -406,13 +398,11 @@
 
     @media (max-width: 900px) {
       .sample-split { grid-template-columns: 1fr; }
-      .who-cards { grid-template-columns: 1fr; }
       .guide-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 0; }
       .filter, .search-faq, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
-      .who-card { padding: 40px 28px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
@@ -574,30 +564,6 @@
       <div class="section-head section-head--statement">
         <p class="section-label">Who It's For</p>
         <h2 class="section-title">Built for <span>Everyone</span> Who's Serious</h2>
-      </div>
-      <div class="who-cards">
-        <div class="who-card featured">
-          <div class="who-card-label">Competitor Track</div>
-          <h3 class="who-card-title">Contest Prep Athletes</h3>
-          <p class="who-card-body">Burn &amp; Build was built in the gym. This is the same precision approach used by competitive bodybuilders to peak on stage.</p>
-          <ul class="who-list">
-            <li>Bodybuilding &amp; Physique Competitors</li>
-            <li>Powerlifters Cutting for a Weight Class</li>
-            <li>Fitness &amp; Figure Athletes</li>
-            <li>Anyone Chasing a Competition Peak</li>
-          </ul>
-        </div>
-        <div class="who-card">
-          <div class="who-card-label">Everyday Track</div>
-          <h3 class="who-card-title">Joe &amp; Mary</h3>
-          <p class="who-card-body">You don't need to step on stage to want real results. Burn &amp; Build works for anyone willing to commit. The science doesn't care who you are — it just works.</p>
-          <ul class="who-list">
-            <li>Serious About Real Body Transformation</li>
-            <li>Tired of Plans That Don't Deliver</li>
-            <li>Ready to Follow a Proven System</li>
-            <li>Done Making Excuses</li>
-          </ul>
-        </div>
       </div>
       <p class="section-label who-proof">Real People. Real Results.</p>
       <div class="guide-row">
