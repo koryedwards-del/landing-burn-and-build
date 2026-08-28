@@ -28,7 +28,7 @@ export const MODERN_FOOD_PLAN_COLORS = Object.freeze({
 });
 
 const LAYOUT = Object.freeze({
-  logoWidth: 88,
+  logoWidth: 66,
   titleSize: 28,
   titleRule: 2.5,
   bodySize: 9,
@@ -43,6 +43,8 @@ const LAYOUT = Object.freeze({
   lossValueSize: 22,
   cellPad: 5,
   footerReserve: 36,
+  /** Center “you could lose” panel — low enough to let the page watermark show through. */
+  lossPanelFillOpacity: 0.35,
 });
 
 let fontsRegistered = false;
@@ -292,9 +294,12 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
       });
   });
 
+  doc.save();
+  doc.opacity(LAYOUT.lossPanelFillOpacity);
   doc
     .roundedRect(centerX + 4, y + pad, centerW - 8, bodyH - pad * 2, 6)
     .fill(colors.goldPale);
+  doc.restore();
 
   const lossText = fatLostLbs != null ? `-${Number(fatLostLbs).toFixed(1)}` : '—';
   doc
