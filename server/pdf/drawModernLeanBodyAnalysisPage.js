@@ -42,7 +42,9 @@ const LAYOUT = Object.freeze({
   tableValueSize: 8.5,
   tableValueActiveSize: 9.5,
   monitorSize: 8,
-  monitorGapAboveFooter: 10,
+  monitorLineGap: 1.5,
+  monitorGapAboveFooter: 14,
+  monitorSectionGap: 10,
 });
 
 function drawSectionHeading(doc, x, y, width, text) {
@@ -332,19 +334,23 @@ function drawBodyParagraph(doc, x, y, width, text) {
   return doc.y + LAYOUT.bodyGap;
 }
 
-function drawMonitorCopy(doc, page, text) {
-  if (!text) return;
+function drawMonitorCopy(doc, page, y, text) {
+  if (!text) return y;
   const ruleY = modernFooterRuleY(page.box);
-  const noteY = ruleY - LAYOUT.monitorGapAboveFooter - LAYOUT.monitorSize;
-  doc
-    .font(FONTS.regular)
-    .fontSize(LAYOUT.monitorSize)
-    .fillColor(COLORS.muted)
-    .text(String(text), page.x, noteY, {
-      width: page.width,
-      align: 'left',
-      lineGap: 0,
-    });
+  const maxBottom = ruleY - LAYOUT.monitorGapAboveFooter;
+  const body = String(text);
+  const startY = y + LAYOUT.monitorSectionGap;
+  const available = maxBottom - startY;
+  if (available <= 0) return y;
+
+  doc.font(FONTS.regular).fontSize(LAYOUT.monitorSize).fillColor(COLORS.muted);
+  doc.text(body, page.x, startY, {
+    width: page.width,
+    height: available,
+    lineGap: LAYOUT.monitorLineGap,
+    align: 'left',
+  });
+  return Math.min(doc.y, maxBottom);
 }
 
 export function drawModernLeanBodyAnalysisPage(doc, payload) {
@@ -438,5 +444,5 @@ export function drawModernLeanBodyAnalysisPage(doc, payload) {
     });
   }
 
-  drawMonitorCopy(doc, page, lba.monitorCopy);
+  drawMonitorCopy(doc, page, y, lba.monitorCopy);
 }
