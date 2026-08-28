@@ -18,8 +18,9 @@ import {
 } from './programClientDataHelpers.js';
 import {
   aceBodyFatCategories,
+  aceBodyFatClassificationMessage,
   aceBodyFatWeightRanges,
-  aceRiskMessage,
+  aceActiveBodyFatCategory,
 } from './sampleDietAceData.js';
 import { macroWorkdayRowLabel } from './profileDataEngine.js';
 import {
@@ -164,7 +165,8 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       todayRows: lbaTodayTableRows(today),
       bfRangeCategories: aceBodyFatCategories(gender),
       bfRangeWeightRanges: aceBodyFatWeightRanges(gender, intake.leanBodyMass),
-      aceRiskMessage: aceRiskMessage(gender, intake.fatPercent),
+      activeBfCategoryKey: aceActiveBodyFatCategory(gender, intake.fatPercent).key,
+      bodyFatClassificationMessage: aceBodyFatClassificationMessage(gender, intake.fatPercent),
       aceLead: SAMPLE_DIET_LBA.aceLead,
       lbmLead: lbmCopy.lead,
       lbmStatus: lbmCopy.congrats || lbmCopy.alert,

@@ -413,7 +413,7 @@ function drawLeanBodyAnalysisPage(doc, payload) {
     };
   }
 
-  page = drawParagraphs(doc, page, [lba.aceRiskMessage]);
+  page = drawParagraphs(doc, page, [lba.bodyFatClassificationMessage]);
   page = drawParagraphs(doc, page, [lba.aceLead]);
   if (lba.lbmLead) page = drawParagraphs(doc, page, [lba.lbmLead]);
   if (lba.lbmStatus) page = drawStatusParagraph(doc, page, lba.lbmStatus);
