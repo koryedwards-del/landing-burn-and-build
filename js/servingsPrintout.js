@@ -1,12 +1,9 @@
 /** Seminar page 4 — Servings grid printout. */
 
-import { stapleCategoryServings } from './stapleServingPrintout.js';
-
 /**
  * Split a daily total into whole-number servings across meal/snack slots.
  * For 3 slots (breakfast/lunch/dinner or 3 snacks), extras go to lunch then dinner —
  * not breakfast (e.g. 10 across 3 meals → 3, 4, 3).
- * @deprecated PDF grid uses daily ÷ 3 per slot via stapleCategoryServings instead.
  */
 export function distributeWholeServings(total, slotCount) {
   const daily = Math.round(Number(total));
@@ -29,10 +26,21 @@ export function distributeWholeServings(total, slotCount) {
   return parts;
 }
 
-function cellFromDailyThird(planServings, category) {
-  const count = stapleCategoryServings(planServings, category);
-  if (!Number.isFinite(count) || count <= 0) return '';
-  return formatServingCell(count);
+function cellFromWhole(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return '';
+  return String(Math.round(n));
+}
+
+/** Whole-number count for one grid cell (menu plan reads the same grid as page 4). */
+export function servingsGridSlotCount(gridRows, rowLabel, slotKey) {
+  const row = gridRows.find((entry) => entry.label === rowLabel);
+  if (slotKey === 'daily') {
+    const count = Number(row?.daily);
+    return Number.isFinite(count) && count > 0 ? Math.round(count) : 0;
+  }
+  const count = Number(row?.[slotKey]);
+  return Number.isFinite(count) && count > 0 ? count : 0;
 }
 
 const SLOT_COLUMNS = [
@@ -55,29 +63,29 @@ export function servingsGridRows(pkg) {
   const servings = pkg?.plan?.servings;
   if (!servings) return [];
 
-  const proteinThird = cellFromDailyThird(servings, 'protein');
-  const grainThird = cellFromDailyThird(servings, 'grains');
-  const fruitThird = cellFromDailyThird(servings, 'fruit');
+  const [proteinBreakfast, proteinLunch, proteinDinner] = distributeWholeServings(servings.protein, 3);
+  const [grainBreakfast, grainLunch, grainDinner] = distributeWholeServings(servings.grainsStarches, 3);
+  const [fruitSnack1, fruitSnack2, fruitSnack3] = distributeWholeServings(servings.fruits, 3);
 
   return [
     {
       label: 'Protein',
       daily: formatServingCell(servings.protein),
-      breakfast: proteinThird,
+      breakfast: cellFromWhole(proteinBreakfast),
       snack1: '',
-      lunch: proteinThird,
+      lunch: cellFromWhole(proteinLunch),
       snack2: '',
-      dinner: proteinThird,
+      dinner: cellFromWhole(proteinDinner),
       snack3: '',
     },
     {
       label: 'Grains/Starches',
       daily: formatServingCell(servings.grainsStarches),
-      breakfast: grainThird,
+      breakfast: cellFromWhole(grainBreakfast),
       snack1: '',
-      lunch: grainThird,
+      lunch: cellFromWhole(grainLunch),
       snack2: '',
-      dinner: grainThird,
+      dinner: cellFromWhole(grainDinner),
       snack3: '',
     },
     {
@@ -94,11 +102,11 @@ export function servingsGridRows(pkg) {
       label: 'Fruits',
       daily: formatServingCell(servings.fruits),
       breakfast: '',
-      snack1: fruitThird,
+      snack1: cellFromWhole(fruitSnack1),
       lunch: '',
-      snack2: fruitThird,
+      snack2: cellFromWhole(fruitSnack2),
       dinner: '',
-      snack3: fruitThird,
+      snack3: cellFromWhole(fruitSnack3),
     },
   ];
 }

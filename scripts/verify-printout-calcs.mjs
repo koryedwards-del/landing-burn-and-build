@@ -15,7 +15,6 @@ import {
 } from '../js/printoutVerifyFixtures.js';
 import {
   scaleStapleRows,
-  menuPlanServingCount,
   scaleStapleServingLabel,
   stapleCategoryServings,
 } from '../js/stapleServingPrintout.js';
@@ -188,26 +187,30 @@ function verifyGoldenSampleServingsGrid() {
   pkgTen.plan = { servings: { protein: 10, grainsStarches: 11, vegetables: 1, fruits: 4 } };
   const divided = servingsGridRows(pkgTen);
   const proteinTen = divided.find((row) => row.label === 'Protein');
-  expect('protein 10 daily thirds', proteinTen, {
+  expect('protein 10 distributed thirds', proteinTen, {
     label: 'Protein',
     daily: '10',
-    breakfast: '3.3',
+    breakfast: '3',
     snack1: '',
-    lunch: '3.3',
+    lunch: '4',
     snack2: '',
-    dinner: '3.3',
+    dinner: '3',
     snack3: '',
   });
   const grainsEleven = divided.find((row) => row.label === 'Grains/Starches');
-  expect('grains 11 daily thirds', grainsEleven?.breakfast, '3.7');
+  expect('grains 11 distributed thirds breakfast', grainsEleven?.breakfast, '3');
+  expect('grains 11 distributed thirds lunch', grainsEleven?.lunch, '4');
+  expect('grains 11 distributed thirds dinner', grainsEleven?.dinner, '4');
   const fruitsFour = divided.find((row) => row.label === 'Fruits');
-  expect('fruits 4 daily thirds', fruitsFour?.snack1, '1.3');
+  expect('fruits 4 distributed thirds', fruitsFour?.snack1, '1');
+  expect('fruits 4 distributed thirds snack2', fruitsFour?.snack2, '2');
+  expect('fruits 4 distributed thirds snack3', fruitsFour?.snack3, '1');
 
   for (const row of rows) {
     for (const [key, value] of Object.entries(row)) {
       if (key === 'label' || value === '') continue;
-      if (/^\d+\.\d{2,}/.test(String(value))) {
-        errors.push(`${row.label}.${key}: over-precise decimal "${value}"`);
+      if (String(value).includes('.')) {
+        errors.push(`${row.label}.${key}: decimal cell "${value}"`);
       }
     }
   }
@@ -343,18 +346,17 @@ function verifySampleDayMenuScale() {
   const snack1Four = menuFour.sections[1]?.rows[0];
   const snack2Four = menuFour.sections[3]?.rows[0];
   const snack3Four = menuFour.sections[5]?.rows[0];
-  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '173g');
-  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '173g');
-  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '173g');
+  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '130g');
+  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '260g');
+  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '130g');
 
   const pkgTen = buildGoldenSamplePackage();
   pkgTen.plan.servings.protein = 10;
   const menuTen = buildSampleDayMenu(pkgTen);
   const breakfastTen = menuTen.sections.find((section) => section.title === 'Breakfast');
   const lunchTen = menuTen.sections.find((section) => section.title === 'Lunch');
-  expect('menuPlanServingCount protein 10', menuPlanServingCount(pkgTen.plan.servings, 'protein'), 10 / 3);
   expect('menu breakfast eggs daily 10', breakfastTen?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
-  expect('menu lunch chicken daily 10', lunchTen?.rows[0]?.servingSize, '87g');
+  expect('menu lunch chicken daily 10', lunchTen?.rows[0]?.servingSize, '104g');
 
   if (errors.length) {
     console.error('FAIL sample day menu scale');

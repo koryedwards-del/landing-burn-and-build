@@ -12,7 +12,8 @@ import {
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
 import { MENU_PLAN_WORKSHEET_LINK_LABEL, MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
-import { menuPlanServingCount, scaleStapleServingLabel } from './stapleServingPrintout.js';
+import { scaleStapleServingLabel } from './stapleServingPrintout.js';
+import { servingsGridRows, servingsGridSlotCount } from './servingsPrintout.js';
 
 export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
 
@@ -115,8 +116,16 @@ function scaledServing(staple, servingCount) {
   return scaleStapleServingLabel(staple.serving, count);
 }
 
-function servingCountForRow(planServings, rowDef) {
-  return menuPlanServingCount(planServings, rowDef.staples);
+function servingCountForRow(gridRows, rowDef) {
+  if (rowDef.staples === 'vegetables' || rowDef.slot === 'daily') {
+    return servingsGridSlotCount(gridRows, 'Veggies', 'daily');
+  }
+  const rowLabel = rowDef.staples === 'fruit'
+    ? 'Fruits'
+    : rowDef.label === 'Grains/Starches'
+      ? 'Grains/Starches'
+      : 'Protein';
+  return servingsGridSlotCount(gridRows, rowLabel, rowDef.slot);
 }
 
 function pickNameForRow(rowDef, mealKey) {
@@ -138,29 +147,29 @@ export function formatMenuPlanForDate(isoDate) {
   return `${weekday}, ${dateLong}`;
 }
 
-function buildRow(rowDef, mealKey, planServings, filled) {
+function buildRow(rowDef, mealKey, gridRows, filled) {
   const row = { label: rowDef.label };
   if (rowDef.labelBold) row.labelBold = true;
   if (!filled) return row;
 
   const stapleName = pickNameForRow(rowDef, mealKey);
   const staple = findStaple(stapleListFor(rowDef.staples), stapleName);
-  const servingCount = servingCountForRow(planServings, rowDef);
+  const servingCount = servingCountForRow(gridRows, rowDef);
   row.food = staple.name;
   row.servingSize = scaledServing(staple, servingCount);
   return row;
 }
 
-function buildMenuSections(planServings, { filled = false } = {}) {
+function buildMenuSections(gridRows, { filled = false } = {}) {
   return MENU_SECTION_DEFS.map((sectionDef, index) => ({
     title: sectionDef.title,
     time: filled ? { ...EXAMPLE_SECTION_TIMES[index] } : null,
-    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, planServings, filled)),
+    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, gridRows, filled)),
   }));
 }
 
 export function buildSampleDayMenu(pkg, { filled = true } = {}) {
-  const planServings = pkg?.plan?.servings ?? null;
+  const gridRows = servingsGridRows(pkg);
   const dateIso = pkg?.program?.issuedAt
     || pkg?.program?.foodPlanCreatedDate
     || pkg?.program?.issuedAtLocalDate;
@@ -176,7 +185,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
       url: MENU_PLAN_WORKSHEET_URL,
       linkLabel: MENU_PLAN_WORKSHEET_LINK_LABEL,
     } : null,
-    sections: buildMenuSections(planServings, { filled }),
+    sections: buildMenuSections(gridRows, { filled }),
   };
 }
 
@@ -195,7 +204,7 @@ export function buildMenuPlanWorksheetPayload() {
       planFor: {
         value: '',
       },
-      sections: buildMenuSections(null, { filled: false }),
+      sections: buildMenuSections([], { filled: false }),
     },
   };
 }
