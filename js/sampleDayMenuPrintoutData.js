@@ -16,7 +16,7 @@ import {
 import { MENU_PLAN_WORKSHEET_LINK_LABEL, MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
 import { menuPlanServingCount, scaleStapleServingLabel } from './stapleServingPrintout.js';
 
-export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
+export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit';
 
 /** Illustrative food picks — serving sizes scale from the customer's plan. */
 const FOOD_PICKS = Object.freeze({
@@ -51,8 +51,8 @@ const MENU_SECTION_DEFS = Object.freeze([
     key: 'breakfast',
     title: 'Breakfast',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Protein/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grain/Starch', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
@@ -64,8 +64,8 @@ const MENU_SECTION_DEFS = Object.freeze([
     key: 'lunch',
     title: 'Lunch',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Protein/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grain/Starch', pickKey: 'grains', staples: 'grains' },
     ],
   },
   {
@@ -77,8 +77,8 @@ const MENU_SECTION_DEFS = Object.freeze([
     key: 'dinner',
     title: 'Dinner',
     rows: [
-      { label: 'Proteins/Dairy', pickKey: 'protein', staples: 'protein' },
-      { label: 'Grains/Starches', pickKey: 'grains', staples: 'grains' },
+      { label: 'Protein/Dairy', pickKey: 'protein', staples: 'protein' },
+      { label: 'Grain/Starch', pickKey: 'grains', staples: 'grains' },
       { label: 'Veggies', pickKey: 'veggies', staples: 'vegetables' },
     ],
   },

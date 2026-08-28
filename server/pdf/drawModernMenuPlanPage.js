@@ -133,7 +133,7 @@ function drawFilledTimeColumn(doc, x, y, time) {
 function sectionHeading(section) {
   if (section.title) return String(section.title).toUpperCase();
   const snackRow = section.rows?.find((row) => row.label === SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL);
-  if (snackRow) return 'FRUIT SNACK';
+  if (snackRow) return 'FRUIT';
   return '';
 }
 
