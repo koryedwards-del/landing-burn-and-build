@@ -261,7 +261,7 @@ function drawLayoutTable(doc, {
         padRight,
         tableRowPad: rowPad,
         style,
-        fillColor: row._colors?.[col.key] || SEMINAR_COLORS.body,
+        fillColor: row._colors?.[col.key] || (isHeader ? SAMPLE_DIET_BLUE : SEMINAR_COLORS.body),
         align,
         lineBreak,
         valign: row._valign || 'top',
