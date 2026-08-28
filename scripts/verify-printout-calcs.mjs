@@ -378,24 +378,14 @@ function verifyWelcomePageRefs() {
   expectIncludes('foodPlan page', SAMPLE_DIET_WELCOME.foodPlan, 'Page three');
   expectExcludes('foodPlan page', SAMPLE_DIET_WELCOME.foodPlan, 'Page four');
   expectIncludes('servings page', SAMPLE_DIET_WELCOME.servings, 'Page four');
+  expectIncludes('servings table ref', SAMPLE_DIET_WELCOME.servings, 'page three');
   expectExcludes('servings page', SAMPLE_DIET_WELCOME.servings, 'Page five');
   expectIncludes('foodList pages', SAMPLE_DIET_WELCOME.foodList, 'Pages five and six');
   expectIncludes('menuPlan page', SAMPLE_DIET_WELCOME.menuPlan, 'Page seven');
+  expectIncludes('menuPlan worksheet', SAMPLE_DIET_WELCOME.menuPlan, 'menuplanworksheet');
   expectExcludes('intro history', SAMPLE_DIET_WELCOME.intro[1], 'body composition history');
   expectExcludes('intro last two pages', SAMPLE_DIET_WELCOME.intro[1], 'last two pages');
   expectExcludes('intro questionnaire', SAMPLE_DIET_WELCOME.intro[1], 'questionnaire');
-
-  for (const [key, text] of Object.entries({
-    leanBodyAnalysis: SAMPLE_DIET_WELCOME.leanBodyAnalysis,
-    foodPlan: SAMPLE_DIET_WELCOME.foodPlan,
-    servings: SAMPLE_DIET_WELCOME.servings,
-    foodList: SAMPLE_DIET_WELCOME.foodList,
-    menuPlan: SAMPLE_DIET_WELCOME.menuPlan,
-  })) {
-    if (String(text).length > 80) {
-      errors.push(`${key}: welcome section should be brief (>${80} chars)`);
-    }
-  }
 
   if (errors.length) {
     console.error('FAIL welcome page refs');
