@@ -50,7 +50,7 @@ const STEP_HEADING_NOTES = {
 };
 
 const INFO_FIELDS = [
-  'fullName',
+  'preferredName',
   'sex',
   'email',
   'emailConfirm',
@@ -58,8 +58,8 @@ const INFO_FIELDS = [
 ];
 
 const INFO_FIELD_META = {
-  fullName: {
-    question: INTAKE_FIELD_QUESTIONS.fullName,
+  preferredName: {
+    question: INTAKE_FIELD_QUESTIONS.preferredName,
     guide: 'First and last name as it should appear on your program printout.',
     example: 'Example: Kory Edwards',
   },
@@ -87,9 +87,9 @@ const INFO_FIELD_META = {
 
 const EXERCISE_FIELDS = [
   'age',
-  'sag',
-  'cardio',
-  'moderate',
+  'weightTrainingHours',
+  'cardioHours',
+  'fatBurningHours',
 ];
 
 const EXERCISE_HOURS_BREAKDOWN = 'Enter hours in decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min, 1.25 = 1 hr 15 min.';
@@ -100,18 +100,18 @@ const EXERCISE_FIELD_META = {
     guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
     sub: 'Example: 45',
   },
-  sag: {
-    question: INTAKE_FIELD_QUESTIONS.sag,
+  weightTrainingHours: {
+    question: INTAKE_FIELD_QUESTIONS.weightTrainingHours,
     guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
     sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.',
   },
-  cardio: {
-    question: INTAKE_FIELD_QUESTIONS.cardio,
+  cardioHours: {
+    question: INTAKE_FIELD_QUESTIONS.cardioHours,
     guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
     sub: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
-  moderate: {
-    question: INTAKE_FIELD_QUESTIONS.moderate,
+  fatBurningHours: {
+    question: INTAKE_FIELD_QUESTIONS.fatBurningHours,
     guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
     sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.',
   },
@@ -119,7 +119,7 @@ const EXERCISE_FIELD_META = {
 
 const BODY_FIELDS = [
   'height',
-  'weight',
+  'totalWeight',
   'fatPercent',
   'fatSource',
 ];
@@ -130,8 +130,8 @@ const BODY_FIELD_META = {
     guide: 'Enter feet and inches in separate boxes.',
     example: 'Example: 5 ft 10 in (enter 5 and 10)',
   },
-  weight: {
-    question: INTAKE_FIELD_QUESTIONS.weight,
+  totalWeight: {
+    question: INTAKE_FIELD_QUESTIONS.totalWeight,
     guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
     example: 'Example: 168 lbs',
     alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $279 for this program. The program will only be as beneficial as your answers are accurate.',
@@ -377,7 +377,7 @@ function readForm() {
     heightInchesPart: data.get('heightInchesPart'),
     sex: data.get('sex'),
     age,
-    weight: data.get('weight'),
+    totalWeight: data.get('totalWeight'),
     fatSource: data.get('fatSource'),
     fatSourceOther: String(data.get('fatSourceOther') || '').trim(),
     fatPercent: data.get('fatPercent'),
@@ -404,7 +404,7 @@ function toOnboardingForm(values) {
     age: values.age,
     birthDate: '',
     birthDateText: '',
-    weightText: String(values.weight || ''),
+    weightText: String(values.totalWeight || ''),
     fatPercentText: String(values.fatPercent || ''),
     fatSource: values.fatSource,
     fatSourceOther: values.fatSource === 'other' ? values.fatSourceOther : '',
@@ -428,7 +428,7 @@ function buildProgramFromValues(values) {
 
 function infoFieldSummary(fieldId, values) {
   switch (fieldId) {
-    case 'fullName':
+    case 'preferredName':
       return values.preferredName || '';
     case 'sex':
       if (values.sex === 'female') return 'Female';
@@ -449,7 +449,7 @@ function infoFieldSummary(fieldId, values) {
 
 function validateInfoField(fieldId, values) {
   switch (fieldId) {
-    case 'fullName':
+    case 'preferredName':
       if (!values.preferredName) return 'Enter your full name.';
       return '';
     case 'sex':
@@ -825,8 +825,8 @@ function bodyFieldSummary(fieldId, values) {
   switch (fieldId) {
     case 'height':
       return heightLabel(values) !== '—' ? heightLabel(values) : '';
-    case 'weight':
-      return values.weight ? `${values.weight} lbs` : '';
+    case 'totalWeight':
+      return values.totalWeight ? `${values.totalWeight} lbs` : '';
     case 'fatSource':
       return values.fatSource ? formatFatSourceLabel(values.fatSource, values.fatSourceOther) : '';
     case 'fatPercent':
@@ -850,9 +850,9 @@ function validateBodyField(fieldId, values) {
       }
       return '';
     }
-    case 'weight': {
-      const weight = Number(values.weight);
-      if (!values.weight || !Number.isFinite(weight) || weight < 80 || weight > 500) {
+    case 'totalWeight': {
+      const weight = Number(values.totalWeight);
+      if (!values.totalWeight || !Number.isFinite(weight) || weight < 80 || weight > 500) {
         return 'Enter your weight in pounds.';
       }
       return '';
@@ -1059,25 +1059,16 @@ function bindBodyAccordion() {
 }
 
 function exerciseHoursValue(fieldId, values) {
-  switch (fieldId) {
-    case 'sag':
-      return values.weightTrainingHours;
-    case 'cardio':
-      return values.cardioHours;
-    case 'moderate':
-      return values.fatBurningHours;
-    default:
-      return '';
-  }
+  return values[fieldId] ?? '';
 }
 
 function exerciseFieldSummary(fieldId, values) {
   switch (fieldId) {
     case 'age':
       return values.age != null ? String(values.age) : '';
-    case 'sag':
-    case 'cardio':
-    case 'moderate': {
+    case 'weightTrainingHours':
+    case 'cardioHours':
+    case 'fatBurningHours': {
       const hours = exerciseHoursValue(fieldId, values);
       return hours !== '' && hours != null ? `${hours} hrs` : '';
     }
@@ -1094,9 +1085,9 @@ function validateExerciseField(fieldId, values) {
       if (age < 16 || age > 99) return 'Enter an age between 16 and 99.';
       return '';
     }
-    case 'sag':
-    case 'cardio':
-    case 'moderate': {
+    case 'weightTrainingHours':
+    case 'cardioHours':
+    case 'fatBurningHours': {
       const hoursRaw = exerciseHoursValue(fieldId, values);
       if (hoursRaw === '' || hoursRaw == null) return 'Enter hours per week (0 if none).';
       const hours = Number(hoursRaw);
@@ -1179,7 +1170,7 @@ function initExerciseFieldCopy() {
 }
 
 function collapseExerciseIfComplete() {
-  if (exerciseFieldIndex < 0 || EXERCISE_FIELDS[exerciseFieldIndex] !== 'moderate') return false;
+  if (exerciseFieldIndex < 0 || EXERCISE_FIELDS[exerciseFieldIndex] !== 'fatBurningHours') return false;
   const values = readForm();
   if (!exerciseSectionComplete(values)) return false;
   exerciseFieldIndex = -1;

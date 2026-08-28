@@ -1,7 +1,7 @@
 /** User-facing question text for numbered intake fields (questionnaire + confirmation). */
 
 export const INTAKE_FIELD_QUESTIONS = Object.freeze({
-  fullName: 'What is your full name?',
+  preferredName: 'What is your full name?',
   sex: 'What is your gender?',
   email: 'What is your email address?',
   emailConfirm: 'Confirm your email address',
@@ -9,22 +9,22 @@ export const INTAKE_FIELD_QUESTIONS = Object.freeze({
   workPhysical: 'How physically active is your job?',
   workStress: 'Your life outside work & training hours',
   age: 'How young are you?',
-  sag: 'How many hours per week of Weights/Racquet Sports?',
-  cardio: 'How many hours per week in your cardio training range?',
-  moderate: 'How many hours per week in your fat burning training range?',
+  weightTrainingHours: 'How many hours per week of Weights/Racquet Sports?',
+  cardioHours: 'How many hours per week in your cardio training range?',
+  fatBurningHours: 'How many hours per week in your fat burning training range?',
   height: 'What is your height?',
-  weight: 'What is your weight?',
+  totalWeight: 'What is your weight?',
   fatPercent: 'What is your body fat percentage?',
   fatSource: 'How do you know?',
 });
 
-/** User-facing name for weightTrainingHours (questionnaire field sag). */
+/** User-facing name for weightTrainingHours (macro table + projections). */
 export const INTAKE_WEIGHTS_RACQUET_SPORTS = 'weights/racquet sports';
 export const INTAKE_WEIGHTS_RACQUET_SPORTS_TITLE = 'Weights/Racquet Sports';
 
 /** Continuous question numbers across intake steps (email confirm = 4, omitted from PDF confirmation). */
 export const INTAKE_FIELD_QUESTION_NUMBERS = Object.freeze({
-  fullName: 1,
+  preferredName: 1,
   sex: 2,
   email: 3,
   emailConfirm: 4,
@@ -32,11 +32,11 @@ export const INTAKE_FIELD_QUESTION_NUMBERS = Object.freeze({
   workPhysical: 6,
   workStress: 7,
   age: 8,
-  sag: 9,
-  cardio: 10,
-  moderate: 11,
+  weightTrainingHours: 9,
+  cardioHours: 10,
+  fatBurningHours: 11,
   height: 12,
-  weight: 13,
+  totalWeight: 13,
   fatPercent: 14,
   fatSource: 15,
 });

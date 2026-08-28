@@ -77,18 +77,18 @@ export function buildAnswersConfirmationRows(source) {
   const intake = source?.intake || source || {};
 
   return [
-    confirmationRow('fullName', displayValue(intake.preferredName)),
+    confirmationRow('preferredName', displayValue(intake.preferredName)),
     confirmationRow('sex', displayValue(intake.sex)),
     confirmationRow('email', displayValue(intake.email)),
     confirmationRow('referrerName', displayValue(intake.referrerName)),
     confirmationRow('workPhysical', workPhysicalLabel(intake.workPhysical)),
     confirmationRow('workStress', workStressLabel(intake.workStress)),
     confirmationRow('age', intake.age > 0 ? String(intake.age) : '—'),
-    confirmationRow('sag', displayValue(intake.weightTrainingHours)),
-    confirmationRow('cardio', displayValue(intake.cardioHours)),
-    confirmationRow('moderate', displayValue(intake.fatBurningHours)),
+    confirmationRow('weightTrainingHours', displayValue(intake.weightTrainingHours)),
+    confirmationRow('cardioHours', displayValue(intake.cardioHours)),
+    confirmationRow('fatBurningHours', displayValue(intake.fatBurningHours)),
     confirmationRow('height', formatConfirmationHeight(intake.heightInches)),
-    confirmationRow('weight', intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—'),
+    confirmationRow('totalWeight', intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—'),
     confirmationRow('fatPercent', bodyFatPercentValue(intake)),
     confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
     {
