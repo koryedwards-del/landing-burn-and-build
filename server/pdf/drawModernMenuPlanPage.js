@@ -29,21 +29,22 @@ const SERVING_LABEL_COL_RATIO = 0.48;
 
 const LAYOUT = Object.freeze({
   introSize: 9.5,
-  introGap: 10,
+  introGap: 6,
   timeColWidth: 58,
   timelineGap: 8,
   timelineWidth: 1.5,
   contentPadLeft: 10,
-  mainMealBarH: 16,
+  mainMealBarH: 14,
   mainMealBarSize: 8,
   rowSize: 8.5,
   categorySize: 7.5,
-  rowTail: 4,
-  minPostBarGap: 4,
-  minCategoryPadAfterBar: 10,
-  minCategoryRowGap: 7,
-  minMealSectionGap: 14,
-  timeColumnHeight: 30,
+  rowTail: 2,
+  minPostBarGap: 2,
+  minCategoryPadAfterBar: 4,
+  minCategoryRowGap: 3,
+  minMealSectionGap: 4,
+  lastMealSectionGap: 2,
+  timeColumnHeight: 28,
   calloutPad: 10,
   calloutTitleSize: 9,
   calloutBodySize: 8.5,
@@ -155,25 +156,26 @@ function drawMealBar(doc, contentX, y, contentWidth, heading) {
 
 function measureMenuRowHeight(doc, contentX, contentWidth, row, filled, categoryRowGap) {
   const lineY = LAYOUT.rowSize + 2;
-  let bottom = lineY + categoryRowGap + LAYOUT.rowTail;
-  if (!filled || !doc) return bottom;
+  let bottom = lineY + LAYOUT.rowTail;
+  if (!filled || !doc) return bottom + categoryRowGap;
 
   const category = rowCategoryLabel(row);
   const layout = menuRowLayout(doc, contentX, contentWidth, category);
-  const foodTextX = layout.foodLineStart + 2;
   const foodTextW = layout.foodLineEnd - layout.foodLineStart - 4;
   const servingWidth = contentX + contentWidth - layout.servingLineStart;
 
+  let inkBottom = lineY;
   if (row.food) {
+    const foodTop = handwritingTopForLine(doc, lineY);
     const foodH = measureHandwritingBandHeight(doc, row.food, foodTextW);
-    bottom = Math.max(bottom, lineY + foodH + categoryRowGap + LAYOUT.rowTail);
+    inkBottom = Math.max(inkBottom, foodTop + foodH);
   }
   if (row.servingSize) {
     const servingTop = handwritingTopForLine(doc, lineY);
     const servingH = measureHandwritingBandHeight(doc, row.servingSize, servingWidth - 4);
-    bottom = Math.max(bottom, servingTop + servingH + categoryRowGap);
+    inkBottom = Math.max(inkBottom, servingTop + servingH);
   }
-  return bottom;
+  return inkBottom + categoryRowGap;
 }
 
 function menuRowStride(categoryRowGap, rowHeight) {
@@ -200,88 +202,102 @@ function measureSectionBlockHeight(doc, section, spacing, filled, contentX, cont
 
 function measureMenuPlanHeight(sections, spacing, measureOpts = {}) {
   const { doc, filled = false, contentX = 0, contentWidth = 1 } = measureOpts;
-  return sections.reduce(
-    (total, section) => total + measureSectionBlockHeight(
+  return sections.reduce((total, section, index) => {
+    const sectionH = measureSectionBlockHeight(
       doc,
       section,
       spacing,
       filled,
       contentX,
       contentWidth,
-    ) + spacing.mealSectionGap,
-    0,
-  );
+    );
+    const gap = index < sections.length - 1
+      ? spacing.mealSectionGap
+      : spacing.lastMealSectionGap;
+    return total + sectionH + gap;
+  }, 0);
 }
 
 function clampSpacing(value, floor) {
   return Math.max(floor, value);
 }
 
-/** Distribute vertical space: roomy between meals, grouped categories within each meal. */
+/** Distribute vertical space: grouped categories within each meal; shrink to fit callout. */
 export function computeMenuPlanSpacing(sections, contentTop, contentBottom, measureOpts = {}) {
-  const min = {
+  const absoluteMin = {
     postBarGap: LAYOUT.minPostBarGap,
     categoryPadAfterBar: LAYOUT.minCategoryPadAfterBar,
     categoryRowGap: LAYOUT.minCategoryRowGap,
     mealSectionGap: LAYOUT.minMealSectionGap,
+    lastMealSectionGap: LAYOUT.lastMealSectionGap,
   };
-  if (!sections?.length) return { ...min };
+  if (!sections?.length) return { ...absoluteMin };
 
   const available = Math.max(0, contentBottom - contentTop);
-  let spacing = { ...min };
+  let spacing = { ...absoluteMin };
   let height = measureMenuPlanHeight(sections, spacing, measureOpts);
 
   if (height < available) {
     let extra = available - height;
     const rowCount = sections.reduce((sum, section) => sum + (section.rows?.length || 0), 0);
-    const mealShare = extra * 0.62;
-    spacing.mealSectionGap += mealShare / sections.length;
+    const interSectionCount = Math.max(1, sections.length - 1);
+
+    const mealShare = extra * 0.55;
+    spacing.mealSectionGap += mealShare / interSectionCount;
     extra -= mealShare;
 
-    const categoryPadShare = extra * 0.72;
+    const categoryPadShare = extra * 0.65;
     spacing.categoryPadAfterBar += categoryPadShare / sections.length;
     extra -= categoryPadShare;
 
     if (rowCount > 0) {
       spacing.categoryRowGap += extra / rowCount;
     } else {
-      spacing.mealSectionGap += extra / sections.length;
+      spacing.mealSectionGap += extra / interSectionCount;
     }
 
     height = measureMenuPlanHeight(sections, spacing, measureOpts);
     const remainder = available - height;
     if (remainder > 0.5) {
-      spacing.mealSectionGap += remainder / sections.length;
-    }
-  } else if (height > available) {
-    let overflow = height - available;
-    const rowCount = sections.reduce((sum, section) => sum + (section.rows?.length || 0), 0);
-
-    const mealReducible = Math.max(0, spacing.mealSectionGap - 8) * sections.length;
-    const mealTake = Math.min(overflow, mealReducible);
-    spacing.mealSectionGap -= mealTake / sections.length;
-    overflow -= mealTake;
-
-    if (overflow > 0) {
-      const padReducible = Math.max(0, spacing.categoryPadAfterBar - 6) * sections.length;
-      const padTake = Math.min(overflow, padReducible);
-      spacing.categoryPadAfterBar -= padTake / sections.length;
-      overflow -= padTake;
-    }
-
-    if (overflow > 0 && rowCount > 0) {
-      const rowReducible = Math.max(0, spacing.categoryRowGap - 4) * rowCount;
-      const rowTake = Math.min(overflow, rowReducible);
-      spacing.categoryRowGap -= rowTake / rowCount;
+      spacing.mealSectionGap += remainder / interSectionCount;
     }
   }
 
-  return {
-    postBarGap: clampSpacing(spacing.postBarGap, LAYOUT.minPostBarGap),
-    categoryPadAfterBar: clampSpacing(spacing.categoryPadAfterBar, 6),
-    categoryRowGap: clampSpacing(spacing.categoryRowGap, 4),
-    mealSectionGap: clampSpacing(spacing.mealSectionGap, 8),
-  };
+  for (let pass = 0; pass < 24 && height > available + 0.5; pass += 1) {
+    const overflow = height - available;
+    const rowCount = sections.reduce((sum, section) => sum + (section.rows?.length || 0), 0);
+    const interSectionCount = Math.max(1, sections.length - 1);
+
+    const reducible = {
+      mealSectionGap: Math.max(0, spacing.mealSectionGap - absoluteMin.mealSectionGap) * interSectionCount,
+      categoryPadAfterBar: Math.max(0, spacing.categoryPadAfterBar - absoluteMin.categoryPadAfterBar) * sections.length,
+      categoryRowGap: Math.max(0, spacing.categoryRowGap - absoluteMin.categoryRowGap) * rowCount,
+      postBarGap: Math.max(0, spacing.postBarGap - absoluteMin.postBarGap) * sections.length,
+      lastMealSectionGap: Math.max(0, spacing.lastMealSectionGap - absoluteMin.lastMealSectionGap),
+    };
+    const totalReducible = Object.values(reducible).reduce((sum, value) => sum + value, 0);
+    if (totalReducible <= 0) break;
+
+    const take = Math.min(overflow, totalReducible);
+    spacing.mealSectionGap -= take * (reducible.mealSectionGap / totalReducible) / interSectionCount;
+    spacing.categoryPadAfterBar -= take * (reducible.categoryPadAfterBar / totalReducible) / sections.length;
+    if (rowCount > 0) {
+      spacing.categoryRowGap -= take * (reducible.categoryRowGap / totalReducible) / rowCount;
+    }
+    spacing.postBarGap -= take * (reducible.postBarGap / totalReducible) / sections.length;
+    spacing.lastMealSectionGap -= take * (reducible.lastMealSectionGap / totalReducible);
+
+    spacing = {
+      postBarGap: clampSpacing(spacing.postBarGap, absoluteMin.postBarGap),
+      categoryPadAfterBar: clampSpacing(spacing.categoryPadAfterBar, absoluteMin.categoryPadAfterBar),
+      categoryRowGap: clampSpacing(spacing.categoryRowGap, absoluteMin.categoryRowGap),
+      mealSectionGap: clampSpacing(spacing.mealSectionGap, absoluteMin.mealSectionGap),
+      lastMealSectionGap: clampSpacing(spacing.lastMealSectionGap, absoluteMin.lastMealSectionGap),
+    };
+    height = measureMenuPlanHeight(sections, spacing, measureOpts);
+  }
+
+  return spacing;
 }
 
 function rowCategoryLabel(row) {
@@ -373,7 +389,7 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap, 
   return y + rowH;
 }
 
-function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth, spacing, filled) {
+function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth, spacing, filled, isLastSection) {
   const colors = MODERN_REPORT_COLORS;
   const sectionTop = y;
   const heading = sectionHeading(section);
@@ -400,7 +416,8 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
     );
   });
 
-  const sectionBottom = mealY + spacing.mealSectionGap;
+  const sectionGap = isLastSection ? spacing.lastMealSectionGap : spacing.mealSectionGap;
+  const sectionBottom = mealY + sectionGap;
   doc
     .strokeColor(colors.gold)
     .lineWidth(LAYOUT.timelineWidth)
@@ -525,7 +542,7 @@ export function drawModernMenuPlanPage(doc, payload) {
     contentWidth,
   });
 
-  menu.sections.forEach((section) => {
+  menu.sections.forEach((section, index) => {
     y = drawModernMenuSection(
       doc,
       page,
@@ -536,6 +553,7 @@ export function drawModernMenuPlanPage(doc, payload) {
       contentWidth,
       spacing,
       filled,
+      index === menu.sections.length - 1,
     );
   });
 
