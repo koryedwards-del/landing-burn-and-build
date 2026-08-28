@@ -1,0 +1,138 @@
+/**
+ * Questionnaire confirmation page — administrative answer record.
+ */
+import { begin1982Page, TABLE_1982 } from './draw1982Frame.js';
+import {
+  MODERN_REPORT_COLORS,
+  MODERN_REPORT_FONTS,
+  MODERN_HEADER_LAYOUT,
+  registerModernReportFonts,
+} from './drawModernReportFrame.js';
+import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
+
+const FONTS = MODERN_REPORT_FONTS;
+const COLORS = MODERN_REPORT_COLORS;
+
+const LAYOUT = Object.freeze({
+  introSize: 9.5,
+  introGap: 10,
+  questionSize: 9.5,
+  answerSize: 10,
+  tableRowPad: 7,
+  cellPad: 6,
+});
+
+const TABLE_COLUMNS = Object.freeze([
+  { key: 'label', width: 0.5 },
+  { key: 'value', width: 0.5 },
+]);
+
+function columnWidths(columns, tableWidth) {
+  return columns.map((col) => col.width * tableWidth);
+}
+
+function measureRowHeights(doc, rows, columns, tableWidth) {
+  const colWidths = columnWidths(columns, tableWidth);
+  return rows.map((row) => {
+    let maxH = LAYOUT.tableRowPad * 2;
+    columns.forEach((col, index) => {
+      const style = row._styles?.[col.key] || {};
+      doc.font(style.font || FONTS.regular).fontSize(style.fontSize || LAYOUT.questionSize);
+      const innerW = colWidths[index] - LAYOUT.cellPad * 2;
+      maxH = Math.max(
+        maxH,
+        doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 })
+          + LAYOUT.tableRowPad * 2,
+      );
+    });
+    return maxH;
+  });
+}
+
+function drawConfirmationTable(doc, { x, y, width, rows }) {
+  const rowHeights = measureRowHeights(doc, rows, TABLE_COLUMNS, width);
+  const totalH = rowHeights.reduce((sum, height) => sum + height, 0);
+  const colWidths = columnWidths(TABLE_COLUMNS, width);
+
+  doc
+    .strokeColor(TABLE_1982.stroke)
+    .lineWidth(1.25)
+    .roundedRect(x, y, width, totalH, TABLE_1982.radius)
+    .stroke();
+
+  let cy = y;
+  rows.forEach((row, rowIndex) => {
+    const rowH = rowHeights[rowIndex];
+    let cx = x;
+    TABLE_COLUMNS.forEach((col, index) => {
+      const cellW = colWidths[index];
+      const style = row._styles?.[col.key] || {};
+      const fillColor = row._colors?.[col.key] || COLORS.body;
+      doc
+        .font(style.font || FONTS.regular)
+        .fontSize(style.fontSize || LAYOUT.questionSize)
+        .fillColor(fillColor)
+        .text(String(row[col.key] ?? ''), cx + LAYOUT.cellPad, cy + LAYOUT.tableRowPad, {
+          width: cellW - LAYOUT.cellPad * 2,
+          lineGap: 0,
+        });
+      cx += cellW;
+    });
+
+    cy += rowH;
+    if (rowIndex < rows.length - 1) {
+      doc
+        .strokeColor(TABLE_1982.stroke)
+        .lineWidth(0.75)
+        .moveTo(x, cy)
+        .lineTo(x + width, cy)
+        .stroke();
+    }
+  });
+
+  return y + totalH;
+}
+
+export function drawAnswersConfirmationPage(doc, payload) {
+  const confirmation = payload.answersConfirmation;
+  if (!confirmation?.rows?.length) return;
+
+  registerModernReportFonts(doc);
+  const page = begin1982Page(doc, payload, 'Questionnaire confirmation', {
+    titleLeadSize: MODERN_HEADER_LAYOUT.titleSize - 6,
+    titleAccentSize: MODERN_HEADER_LAYOUT.titleSize,
+  });
+
+  let y = page.y;
+  if (confirmation.intro) {
+    doc
+      .font(FONTS.regular)
+      .fontSize(LAYOUT.introSize)
+      .fillColor(COLORS.body)
+      .text(String(confirmation.intro), page.x, y, {
+        width: page.width,
+        lineGap: 2,
+      });
+    y = doc.y + LAYOUT.introGap;
+  }
+
+  const rows = confirmation.rows.map((row) => ({
+    label: formatAnswersConfirmationLabel(row),
+    value: row.value,
+    _styles: {
+      label: { font: FONTS.regular, fontSize: LAYOUT.questionSize },
+      value: { font: FONTS.bold, fontSize: LAYOUT.answerSize },
+    },
+    _colors: {
+      label: COLORS.muted,
+      value: COLORS.body,
+    },
+  }));
+
+  drawConfirmationTable(doc, {
+    x: page.x,
+    y,
+    width: page.width,
+    rows,
+  });
+}

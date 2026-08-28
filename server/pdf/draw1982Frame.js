@@ -47,13 +47,18 @@ export function add1982Page(doc) {
   return frame1982ContentBox(doc);
 }
 
-export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {}) {
+export function begin1982Page(doc, payload, pageTitle, {
+  fullHeader = true,
+  titleLeadSize,
+  titleAccentSize,
+} = {}) {
   const box = add1982Page(doc);
   const y = drawModernReportHeader(
     doc,
     box,
     payload,
     fullHeader ? (pageTitle || null) : null,
+    { leadSize: titleLeadSize, accentSize: titleAccentSize },
   );
   return {
     box,

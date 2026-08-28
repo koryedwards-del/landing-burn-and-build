@@ -13,7 +13,7 @@ import {
 import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
 
 export const ANSWERS_CONFIRMATION_INTRO =
-  'Answers submitted for this Burn & Build Diet program.';
+  'These are the answers used to build your personalized food plan.';
 
 function displayValue(value) {
   if (value === '' || value == null) return '—';

@@ -12,13 +12,13 @@ import {
   stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
+import { drawAnswersConfirmationPage } from './drawAnswersConfirmationPage.js';
 import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
 import { drawModernMenuPlanPage } from './drawModernMenuPlanPage.js';
 import {
   drawStaplesFoodListPage,
   drawVegFruitFoodListPage,
 } from './drawStaplesFoodListPages.js';
-import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
 import { buildMenuPlanWorksheetPayload } from '../../js/sampleDayMenuPrintoutData.js';
 import { SAMPLE_DAY_MENU_PAGE_TITLE } from '../../js/sampleDietPrintoutCopyData.js';
 
@@ -758,42 +758,6 @@ function drawServingsPage(doc, payload) {
   });
 }
 
-const CONFIRMATION_TABLE_COLUMNS = Object.freeze([
-  { key: 'label', width: 0.5 },
-  { key: 'value', width: 0.5 },
-]);
-
-function drawAnswersConfirmationPage(doc, payload) {
-  const confirmation = payload.answersConfirmation;
-  if (!confirmation?.rows?.length) return;
-
-  let page = begin1982Page(doc, payload, 'Questionnaire confirmation');
-
-  if (confirmation.intro) {
-    doc
-      .font(FONTS.regular)
-      .fontSize(LAYOUT.bodySize)
-      .fillColor(SEMINAR_COLORS.body)
-      .text(String(confirmation.intro), page.x, page.y, {
-        width: page.width,
-        lineGap: LAYOUT.lineGap,
-      });
-    page = { ...page, y: doc.y + LAYOUT.headerGap };
-  }
-
-  drawLayoutTable(doc, {
-    x: page.x,
-    y: page.y,
-    width: page.width,
-    columns: CONFIRMATION_TABLE_COLUMNS,
-    rows: confirmation.rows.map((row) => ({
-      label: formatAnswersConfirmationLabel(row),
-      value: row.value,
-    })),
-    headerRows: 0,
-    tableRowPad: LAYOUT.tableRowPad + 1,
-  });
-}
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
 /** Serving-size label column — left edge as fraction of meal row width (room for food names). */
 const SAMPLE_DAY_MENU_SERVING_COL_RATIO = 0.48;

@@ -84,34 +84,41 @@ function formatPreparedDateUpper(value) {
   return String(value).toUpperCase();
 }
 
-function drawAccentPageTitle(doc, x, y, width, title) {
+function drawAccentPageTitle(doc, x, y, width, title, { leadSize, accentSize } = {}) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
+  const layout = MODERN_HEADER_LAYOUT;
   const words = String(title || '').trim().split(/\s+/).filter(Boolean);
   if (!words.length) {
     return y;
   }
 
+  const accentFontSize = accentSize ?? layout.titleSize;
+  const leadFontSize = leadSize ?? accentFontSize;
   const upper = words.map((word) => word.toUpperCase());
-  doc.font(fonts.bold).fontSize(MODERN_HEADER_LAYOUT.titleSize).fillColor(colors.body);
 
   if (upper.length === 1) {
+    doc.font(fonts.bold).fontSize(accentFontSize).fillColor(colors.body);
     doc.text(upper[0], x, y, { lineBreak: false });
   } else {
     const lead = `${upper.slice(0, -1).join(' ')} `;
     const accent = upper[upper.length - 1];
+    doc.font(fonts.bold).fontSize(leadFontSize).fillColor(colors.body);
     doc.text(lead, x, y, { continued: true, lineGap: 0 });
-    doc.fillColor(colors.gold).text(accent, { continued: false, lineBreak: false });
+    doc.font(fonts.bold).fontSize(accentFontSize).fillColor(colors.gold).text(accent, {
+      continued: false,
+      lineBreak: false,
+    });
   }
 
-  return y + MODERN_HEADER_LAYOUT.titleSize + 6;
+  return y + Math.max(leadFontSize, accentFontSize) + 6;
 }
 
 /**
  * Logo left, personalization right, accent page title, gold rule.
  * @returns {number} body start y
  */
-export function drawModernReportHeader(doc, box, payload, pageTitle) {
+export function drawModernReportHeader(doc, box, payload, pageTitle, titleStyle = {}) {
   registerModernReportFonts(doc);
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
@@ -135,7 +142,7 @@ export function drawModernReportHeader(doc, box, payload, pageTitle) {
 
   const titleY = logoY + layout.logoWidth + layout.titleGap;
   const ruleY = pageTitle
-    ? drawAccentPageTitle(doc, box.x, titleY, box.width, pageTitle)
+    ? drawAccentPageTitle(doc, box.x, titleY, box.width, pageTitle, titleStyle)
     : titleY;
 
   doc
