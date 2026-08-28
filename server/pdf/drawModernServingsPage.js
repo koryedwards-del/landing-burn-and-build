@@ -37,8 +37,12 @@ const LAYOUT = Object.freeze({
   mealSize: 9,
   headerMealSize: 8,
   headerDailySize: 9,
-  sectionHeadingSize: 9,
   sectionHeadingGap: 8,
+  gettingStartedHeadingSize: 10.5,
+  gettingStartedRuleGap: 3,
+  gettingStartedRuleWidth: 1.25,
+  gettingStartedHeadingGap: 10,
+  tipsHeadingSize: 9,
   sectionGap: 16,
   bulletSize: 9.5,
   bulletGap: 5,
@@ -219,13 +223,33 @@ function drawServingsTable(doc, { x, y, width, rows }) {
   return y + totalH;
 }
 
-function drawSectionHeading(doc, x, y, width, text) {
+function drawGettingStartedHeading(doc, x, y, width, text) {
+  const label = String(text || '');
   doc
     .font(FONTS.bold)
-    .fontSize(LAYOUT.sectionHeadingSize)
+    .fontSize(LAYOUT.gettingStartedHeadingSize)
     .fillColor(COLORS.body)
+    .text(label, x, y, { width, lineBreak: false });
+
+  const textW = doc.widthOfString(label);
+  const ruleY = y + LAYOUT.gettingStartedHeadingSize + LAYOUT.gettingStartedRuleGap;
+  doc
+    .strokeColor(COLORS.gold)
+    .lineWidth(LAYOUT.gettingStartedRuleWidth)
+    .moveTo(x, ruleY)
+    .lineTo(x + textW, ruleY)
+    .stroke();
+
+  return ruleY + LAYOUT.gettingStartedHeadingGap;
+}
+
+function drawQuietSectionHeading(doc, x, y, width, text) {
+  doc
+    .font(FONTS.bold)
+    .fontSize(LAYOUT.tipsHeadingSize)
+    .fillColor(COLORS.muted)
     .text(String(text || ''), x, y, { width, lineBreak: false });
-  return y + LAYOUT.sectionHeadingSize + LAYOUT.sectionHeadingGap;
+  return y + LAYOUT.tipsHeadingSize + LAYOUT.sectionHeadingGap;
 }
 
 function drawBulletList(doc, x, y, width, items) {
@@ -251,7 +275,7 @@ function drawHelpfulTips(doc, x, y, width, helpfulTips) {
 
   let cursorY = y;
   if (helpfulTips.heading) {
-    cursorY = drawSectionHeading(doc, x, cursorY, width, helpfulTips.heading);
+    cursorY = drawQuietSectionHeading(doc, x, cursorY, width, helpfulTips.heading);
     cursorY += LAYOUT.tipsHeadingGap - LAYOUT.sectionHeadingGap;
   }
 
@@ -311,7 +335,7 @@ export function drawModernServingsPage(doc, payload) {
   if (servings.gettingStarted?.rules?.length) {
     y += LAYOUT.sectionGap;
     if (servings.gettingStarted.heading) {
-      y = drawSectionHeading(doc, page.x, y, page.width, servings.gettingStarted.heading);
+      y = drawGettingStartedHeading(doc, page.x, y, page.width, servings.gettingStarted.heading);
     }
     y = drawBulletList(doc, page.x, y, page.width, servings.gettingStarted.rules);
   }
