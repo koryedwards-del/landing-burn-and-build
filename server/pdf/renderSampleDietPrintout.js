@@ -9,7 +9,6 @@ import { SEMINAR_COLORS } from './drawSeminar.js';
 import {
   begin1982Page,
   FRAME_1982,
-  SAMPLE_DIET_BLUE,
   stamp1982Footers,
   TABLE_1982,
 } from './draw1982Frame.js';
@@ -347,7 +346,7 @@ function drawLbaTodayBlock(doc, x, y, width, todayRows) {
   doc
     .font(FONTS.bold)
     .fontSize(titleH)
-    .fillColor(SAMPLE_DIET_BLUE)
+    .fillColor(SEMINAR_COLORS.body)
     .text('--TODAY--', x, cy, { width, align: 'center', lineGap: 0 });
   cy += titleH + 4;
 
@@ -497,10 +496,6 @@ function drawGoalTable(doc, x, y, width, goalTable) {
       { from: 'todayPct', to: 'todayLbs' },
       { from: 'goalB', to: 'goalC' },
     ],
-    _colors: {
-      todayPct: SAMPLE_DIET_BLUE,
-      goalB: SAMPLE_DIET_BLUE,
-    },
   };
   return drawLayoutTable(doc, {
     x,
@@ -660,7 +655,7 @@ function drawMacroTable(doc, x, y, width, macroRows) {
 
   let cy = y;
 
-  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SAMPLE_DIET_BLUE);
+  doc.font(FONTS.bold).fontSize(LAYOUT.tableHeadSize).fillColor(SEMINAR_COLORS.body);
   macroTableGroupHeaders().forEach((group) => {
     const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
     const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
@@ -1088,7 +1083,7 @@ function drawMenuPlanWorksheetNote(doc, x, y, width, note) {
     });
 
   doc
-    .fillColor(SAMPLE_DIET_BLUE)
+    .fillColor(SEMINAR_COLORS.body)
     .text(String(note.linkLabel || note.url), {
       link: note.url,
       underline: true,

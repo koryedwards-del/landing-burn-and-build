@@ -13,7 +13,7 @@ import {
 
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
-/** Matches --TODAY-- accent; sample diet headers, footers, and table titles. */
+/** Matches --TODAY-- accent in legacy layouts; sample diet header/footer divider rules only. */
 export const SAMPLE_DIET_BLUE = PDF_FRAME_COLORS.accentBlue;
 
 export const FRAME_1982 = Object.freeze({
