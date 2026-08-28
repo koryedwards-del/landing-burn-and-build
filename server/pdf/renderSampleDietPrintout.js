@@ -847,6 +847,8 @@ function drawAnswersConfirmationPage(doc, payload) {
   });
 }
 const SAMPLE_DAY_MENU_SERVING_SIZE_LABEL = 'serving size';
+/** Serving-size label column — left edge as fraction of meal row width (room for food names). */
+const SAMPLE_DAY_MENU_SERVING_COL_RATIO = 0.48;
 const SAMPLE_DAY_MENU_ROW_GAP = 10;
 const SAMPLE_DAY_MENU_SECTION_GAP = 16;
 const SAMPLE_DAY_MENU_TITLE_SECTION_GAP = 28;
@@ -928,11 +930,17 @@ function measureMenuPlanTitleHeight() {
   return LAYOUT.pageTitleSize + 2 + SAMPLE_DAY_MENU_TITLE_SECTION_GAP;
 }
 
-function measureMenuSectionHeight(section, rowGap) {
-  const rowH = menuPlanRowHeight(rowGap);
+function measureMenuSectionHeight(section, rowGap, { doc, mealX, mealWidth, filled } = {}) {
   let height = 0;
   if (section.title) height += LAYOUT.sectionTitleSize + LAYOUT.headerGap;
-  height += (section.rows?.length || 0) * rowH;
+  const rows = section.rows || [];
+  if (filled && doc && Number.isFinite(mealX) && Number.isFinite(mealWidth)) {
+    rows.forEach((row) => {
+      height += measureMenuPlanRowHeight(doc, mealX, mealWidth, row, rowGap, filled);
+    });
+  } else {
+    height += rows.length * menuPlanRowHeight(rowGap);
+  }
   const hasTimeLine = Boolean(section.time?.value) || !section.title;
   return Math.max(height, hasTimeLine ? 40 : 34);
 }
@@ -948,11 +956,13 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
   const sections = menu.sections || [];
   const baseSectionGap = SAMPLE_DAY_MENU_SECTION_GAP;
   const baseRowGap = SAMPLE_DAY_MENU_ROW_GAP;
+  const mealX = page.x + SAMPLE_DAY_MENU_TIME_COL_WIDTH + SAMPLE_DAY_MENU_TIME_MEAL_GAP;
+  const mealWidth = page.width - SAMPLE_DAY_MENU_TIME_COL_WIDTH - SAMPLE_DAY_MENU_TIME_MEAL_GAP;
 
   let baseHeight = measureMenuPlanTitleHeight();
 
   sections.forEach((section) => {
-    baseHeight += measureMenuSectionHeight(section, baseRowGap);
+    baseHeight += measureMenuSectionHeight(section, baseRowGap, { doc, mealX, mealWidth, filled });
     baseHeight += baseSectionGap;
   });
 
@@ -976,48 +986,100 @@ function computeMenuPlanLayout(doc, menu, page, filled) {
   };
 }
 
-function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
+function menuPlanRowLayout(doc, x, width, row) {
   const fontSize = LAYOUT.bodySize;
-  const lineYOffset = fontSize + 2;
-  const labelText = String(row.label);
-  const labelFont = row.labelBold ? FONTS.bold : FONTS.regular;
-  doc.font(labelFont).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-
   const gap = 5;
   const sizeLabel = SAMPLE_DAY_MENU_SERVING_SIZE_LABEL;
+  const labelText = String(row.label);
+  const labelFont = row.labelBold ? FONTS.bold : FONTS.regular;
+  doc.font(labelFont).fontSize(fontSize);
   const labelW = doc.widthOfString(labelText);
   doc.font(FONTS.regular).fontSize(fontSize);
   const sizeLabelW = doc.widthOfString(sizeLabel);
-  doc.font(labelFont).fontSize(fontSize);
 
+  const sizeTextX = x + width * SAMPLE_DAY_MENU_SERVING_COL_RATIO;
   const foodLineStart = x + labelW + gap;
-  const sizeTextX = x + width * 0.62;
   const foodLineEnd = sizeTextX - gap;
   const sizeLineStart = sizeTextX + sizeLabelW + gap;
   const sizeLineEnd = x + width;
 
+  return {
+    fontSize,
+    gap,
+    labelText,
+    labelFont,
+    labelW,
+    sizeLabel,
+    sizeLabelW,
+    sizeTextX,
+    foodLineStart,
+    foodLineEnd,
+    sizeLineStart,
+    sizeLineEnd,
+  };
+}
+
+function measureMenuPlanRowHeight(doc, mealX, mealWidth, row, rowGap, filled) {
+  const base = menuPlanRowHeight(rowGap);
+  if (!filled || !row?.servingSize) return base;
+
+  const layout = menuPlanRowLayout(doc, mealX, mealWidth, row);
+  const servingWidth = layout.sizeLineEnd - layout.sizeLineStart - 4;
+  doc.font(HANDWRITING_FONT).fontSize(HANDWRITING_FONT_SIZE);
+  const textH = doc.heightOfString(String(row.servingSize), { width: servingWidth, lineGap: 2 });
+  const lineBand = layout.fontSize + 2;
+  return Math.max(base, lineBand + textH + 6);
+}
+
+function drawHandwritingInBand(doc, text, x, topY, width) {
+  if (!text) return topY;
+  doc
+    .font(HANDWRITING_FONT)
+    .fontSize(HANDWRITING_FONT_SIZE)
+    .fillColor(HANDWRITING_INK_COLOR)
+    .text(String(text), x, topY, { width, lineBreak: true, lineGap: 2 });
+  return doc.y;
+}
+
+function drawSampleDayMenuFillInRow(doc, x, y, width, row, filled, rowGap) {
+  const layout = menuPlanRowLayout(doc, x, width, row);
+  const lineYOffset = layout.fontSize + 2;
   const lineY = y + lineYOffset;
 
-  doc.text(labelText, x, y, { lineBreak: false });
-  doc.font(FONTS.regular).fontSize(fontSize).fillColor(SEMINAR_COLORS.body);
-  doc.text(sizeLabel, sizeTextX, y, { lineBreak: false });
+  doc.font(layout.labelFont).fontSize(layout.fontSize).fillColor(SEMINAR_COLORS.body);
+  doc.text(layout.labelText, x, y, { lineBreak: false });
+  doc.font(FONTS.regular).fontSize(layout.fontSize).fillColor(SEMINAR_COLORS.body);
+  doc.text(layout.sizeLabel, layout.sizeTextX, y, { lineBreak: false });
 
   doc
     .strokeColor(TABLE_1982.stroke)
     .lineWidth(0.75)
-    .moveTo(foodLineStart, lineY)
-    .lineTo(foodLineEnd, lineY)
+    .moveTo(layout.foodLineStart, lineY)
+    .lineTo(layout.foodLineEnd, lineY)
     .stroke()
-    .moveTo(sizeLineStart, lineY)
-    .lineTo(sizeLineEnd, lineY)
+    .moveTo(layout.sizeLineStart, lineY)
+    .lineTo(layout.sizeLineEnd, lineY)
     .stroke();
 
+  let contentBottom = lineY;
+
   if (filled) {
-    drawHandwritingOnLine(doc, row.food, foodLineStart + 2, lineY, foodLineEnd - foodLineStart - 4);
-    drawHandwritingOnLine(doc, row.servingSize, sizeLineStart + 2, lineY, sizeLineEnd - sizeLineStart - 4);
+    drawHandwritingOnLine(
+      doc,
+      row.food,
+      layout.foodLineStart + 2,
+      lineY,
+      layout.foodLineEnd - layout.foodLineStart - 4,
+    );
+    const servingTop = handwritingTopForLine(doc, lineY);
+    const servingWidth = layout.sizeLineEnd - layout.sizeLineStart - 4;
+    contentBottom = Math.max(
+      contentBottom,
+      drawHandwritingInBand(doc, row.servingSize, layout.sizeLineStart + 2, servingTop, servingWidth),
+    );
   }
 
-  return lineY + rowGap;
+  return Math.max(y + rowGap + lineYOffset, contentBottom + 4);
 }
 
 function drawMenuPlanTitleRow(doc, x, y, width, title, value, filled) {
@@ -1050,7 +1112,12 @@ function drawMenuPlanTitleRow(doc, x, y, width, title, value, filled) {
 function drawMenuSection(doc, page, y, section, filled, layout) {
   const mealX = page.x + SAMPLE_DAY_MENU_TIME_COL_WIDTH + SAMPLE_DAY_MENU_TIME_MEAL_GAP;
   const mealWidth = page.width - SAMPLE_DAY_MENU_TIME_COL_WIDTH - SAMPLE_DAY_MENU_TIME_MEAL_GAP;
-  const sectionHeight = measureMenuSectionHeight(section, layout.rowGap);
+  const sectionHeight = measureMenuSectionHeight(section, layout.rowGap, {
+    doc,
+    mealX,
+    mealWidth,
+    filled,
+  });
 
   drawTimeColumn(doc, page.x, y, section.time, filled);
 
