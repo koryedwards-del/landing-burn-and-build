@@ -116,9 +116,24 @@
     .pricing-inner { max-width: 560px; margin: 0 auto; }
     .price-box { border: 2px solid var(--yellow); padding: 64px 48px 48px; margin: 48px 0; overflow: hidden; }
     .price-amount { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 6rem; color: var(--yellow); line-height: 1; margin-bottom: 8px; }
-    .price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 40px; }
-    .price-includes { list-style: none; margin-bottom: 8px; display: flex; flex-direction: column; gap: 12px; }
-    .price-includes li { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #D4D4D4; padding: 10px 0; border-bottom: 1px solid var(--gray-mid); }
+    .price-period { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-light); margin-bottom: 36px; }
+    .price-pledges {
+      list-style: none;
+      margin: 0 0 40px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .price-pledges li {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1.35;
+      color: var(--yellow);
+    }
     .price-box .nav-cta {
       display: inline-block;
       margin-top: 24px;
@@ -618,11 +633,10 @@
       <div class="price-box">
         <div class="price-amount">$279</div>
         <div class="price-period">The Burn &amp; Build Diet</div>
-        <ul class="price-includes">
-          <li>Lean Body Analysis</li>
-          <li>Food Plan</li>
-          <li>Servings</li>
-          <li>Food List</li>
+        <ul class="price-pledges">
+          <li>Personalized to you</li>
+          <li>One-time purchase</li>
+          <li>Yours forever</li>
         </ul>
         <a class="nav-cta" href="/questionnaire/">Get the Diet</a>
       </div>
