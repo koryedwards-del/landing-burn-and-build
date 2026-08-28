@@ -408,7 +408,6 @@ function drawWelcomePage(doc, payload) {
   current = drawSectionBlock(doc, current, 'Servings', payload.welcome.servings);
   current = drawSectionBlock(doc, current, 'Food List', payload.welcome.foodList);
   current = drawSectionBlock(doc, current, 'Menu Plan', payload.welcome.menuPlan);
-  drawSectionBlock(doc, current, 'Questionnaire confirmation', payload.welcome.questionnaireConfirmation);
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {

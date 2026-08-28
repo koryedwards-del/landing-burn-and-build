@@ -9,16 +9,15 @@ export const SAMPLE_DIET_HEADER = Object.freeze({
 export const SAMPLE_DIET_WELCOME = Object.freeze({
   intro: [
     'Congratulations! You have in your hands the most advanced diet available anywhere, at any price. It is the most individualized program available for losing fat. This diet will not work effectively for anyone else because it has been created just for you, using your LBM, your job, your lifestyle and your daily plan for exercise & activities.',
-    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, lifestyle, exercise and activities. With this information, the computer generated this report. Included is your ultrasound body composition report that I call your Lean Body Analysis, your food plan, daily servings, food list, a sample menu plan, and a confirmation of the answers you gave on the program questionnaire.',
+    'How we did it. We determined your lean weight using sophisticated body composition testing. Then you told us about your job, lifestyle, exercise and activities. With this information, the computer generated this report. Included is your ultrasound body composition report that I call your Lean Body Analysis, your food plan, daily servings, food list, and a sample menu plan.',
   ],
-  leanBodyAnalysis: 'Page two is the results of your body composition test. Although very few people want to know how fat they are, all of them want to how to lose fat. Our Lean Body Analysis page includes a breakdown of your current body composition with an emphasis on the good stuff. LBM (lean body mass) is used by the computer to calculate your metabolic rate (RMR). In addition, the Lean Body Analysis projects appropriate weight goals based on your current lean body mass.',
+  leanBodyAnalysis: 'Page two is the results of your body composition test.',
   /** Not rendered in the 8-page sample diet; kept for copy continuity. */
   history: 'Page three is a record of your body composition history with me. Having a history of body compositions can give you valuable information about how your eating habits are affecting your weight loss. That\'s why I recommend having your body composition checked every 6-8 weeks. I call it a check-in.',
-  foodPlan: 'Page three is your custom-designed diet. How much food you need each day depends on how much LBM you have, your job, lifestyle and the type and amount of exercise you participate in. Based on the information you provide, this diet gives you the amount of protein, carbohydrates and fat you need per day to lose fat. It also tells you how much fat you can lose in eight weeks. And it shows you what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.',
-  servings: 'Page four is the servings page. No need to count calories or macros in this diet. The computer breaks down all the information from the table on page three and shows you the number of servings you need daily to have maximum strength & energy and to lose fat as fast as possible.',
-  foodList: 'Pages five and six are your food list. Page five lists protein & dairy along with grains & starches. Page six lists the veggies and fruits. The gram weights on your list are scaled to your daily servings from page four.',
-  menuPlan: 'Page seven is a sample menu plan for one day, showing how to build meals from your servings and food list.',
-  questionnaireConfirmation: 'Page eight confirms the answers you submitted on the program questionnaire.',
+  foodPlan: 'Page three is your custom-designed food plan.',
+  servings: 'Page four is the servings page.',
+  foodList: 'Pages five and six are your food list.',
+  menuPlan: 'Page seven is a filled sample menu plan for one day.',
 });
 
 export const SAMPLE_DIET_LBA = Object.freeze({
