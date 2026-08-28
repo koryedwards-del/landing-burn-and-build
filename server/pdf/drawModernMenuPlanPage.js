@@ -1,6 +1,8 @@
 /**
  * Modern Menu Plan page — vertical day timeline with category teaching rows.
  */
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { begin1982Page } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
@@ -9,14 +11,23 @@ import {
 } from './drawModernReportFrame.js';
 import { SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL } from '../../js/sampleDayMenuPrintoutData.js';
 
+const HANDWRITING_FONT = 'Caveat';
+const HANDWRITING_FONT_PATH = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  'fonts/Caveat-Regular.ttf',
+);
+const HANDWRITING_FONT_SIZE = 16;
+const HANDWRITING_INK_COLOR = '#184A94';
+const HANDWRITING_BASELINE_NUDGE = 1.5;
+const TIME_LINE_WIDTH = 42;
+
 const LAYOUT = Object.freeze({
   introSize: 9.5,
   introGap: 10,
-  timeColWidth: 56,
+  timeColWidth: 58,
   timelineGap: 8,
   timelineWidth: 1.5,
   contentPadLeft: 10,
-  timeSize: 10.5,
   mainMealBarH: 16,
   mainMealBarSize: 8,
   snackTitleSize: 8,
@@ -31,10 +42,67 @@ const LAYOUT = Object.freeze({
   footerReserve: 36,
 });
 
-function formatTimeLabel(time) {
-  if (!time?.value) return '';
-  const period = String(time.period || '').toUpperCase();
-  return `${time.value} ${period}`.trim();
+function registerHandwritingFont(doc) {
+  doc.registerFont(HANDWRITING_FONT, HANDWRITING_FONT_PATH);
+}
+
+function handwritingTopForLine(doc, lineY) {
+  doc.font(HANDWRITING_FONT).fontSize(HANDWRITING_FONT_SIZE);
+  const ascent = doc.heightOfString('Ag', { lineGap: 0 });
+  return lineY - ascent + HANDWRITING_BASELINE_NUDGE;
+}
+
+function drawHandwritingOnLine(doc, text, x, lineY, width, { align = 'left' } = {}) {
+  if (!text) return;
+  const textY = handwritingTopForLine(doc, lineY);
+  doc
+    .font(HANDWRITING_FONT)
+    .fontSize(HANDWRITING_FONT_SIZE)
+    .fillColor(HANDWRITING_INK_COLOR)
+    .text(String(text), x, textY, { width, align, lineBreak: false });
+}
+
+function drawPeriodLabel(doc, x, y, label, selected) {
+  const fonts = MODERN_REPORT_FONTS;
+  const colors = MODERN_REPORT_COLORS;
+  doc
+    .font(fonts.regular)
+    .fontSize(8)
+    .fillColor(colors.body)
+    .text(label, x, y, { lineBreak: false });
+
+  if (!selected) return;
+
+  const labelW = doc.widthOfString(label);
+  const centerX = x + labelW / 2;
+  const centerY = y + 4;
+  doc
+    .strokeColor(HANDWRITING_INK_COLOR)
+    .lineWidth(0.85)
+    .ellipse(centerX, centerY, labelW / 2 + 3, 5.5, 0)
+    .stroke();
+}
+
+/** Filled-in time: short gold line, handwriting time, AM/PM stacked below. */
+function drawFilledTimeColumn(doc, x, y, time) {
+  const colors = MODERN_REPORT_COLORS;
+  const lineY = y + 10;
+  doc
+    .strokeColor(colors.gold)
+    .lineWidth(0.75)
+    .moveTo(x, lineY)
+    .lineTo(x + TIME_LINE_WIDTH, lineY)
+    .stroke();
+
+  if (time?.value) {
+    drawHandwritingOnLine(doc, time.value, x + 1, lineY, TIME_LINE_WIDTH - 2, { align: 'center' });
+  }
+
+  const periodY = lineY + 8;
+  drawPeriodLabel(doc, x, periodY, 'AM', time?.period === 'AM');
+  drawPeriodLabel(doc, x + 22, periodY, 'PM', time?.period === 'PM');
+
+  return periodY + 12;
 }
 
 function sectionHeading(section) {
@@ -94,17 +162,8 @@ function drawModernMenuSection(doc, page, y, section, timelineX, contentX, conte
   const sectionTop = y;
   const mainMeal = isMainMeal(section);
   const heading = sectionHeading(section);
-  const timeLabel = formatTimeLabel(section.time);
 
-  doc
-    .font(fonts.bold)
-    .fontSize(LAYOUT.timeSize)
-    .fillColor(colors.body)
-    .text(timeLabel, page.x, y, {
-      width: LAYOUT.timeColWidth,
-      align: 'right',
-      lineBreak: false,
-    });
+  drawFilledTimeColumn(doc, page.x, y, section.time);
 
   let mealY = y;
   if (mainMeal) {
@@ -199,6 +258,7 @@ export function drawModernMenuPlanPage(doc, payload) {
   if (!menu?.sections?.length) return;
 
   registerModernReportFonts(doc);
+  registerHandwritingFont(doc);
   const page = begin1982Page(doc, payload, 'Menu Plan', {
     personalized: !payload.worksheet,
   });
