@@ -90,8 +90,7 @@ const MENU_PLAN_STAPLES_CATEGORY = Object.freeze({
 });
 
 /**
- * Menu plan: base single serving × daily ÷ 3 (protein, grains, fruit) or daily veggies.
- * Same multiplier at every breakfast/lunch/dinner or fruit snack for that category.
+ * Menu plan: base single serving × page 4 per-slot count (daily ÷ 3 for protein, grains, fruit).
  * @param {Record<string, number>|null|undefined} planServings
  * @param {'protein'|'grains'|'vegetables'|'fruit'} staplesKey
  */
