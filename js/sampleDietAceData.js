@@ -63,6 +63,7 @@ export function aceBodyFatCategories(gender) {
 export function aceBodyFatWeightRanges(gender, lbm) {
   const categories = aceBodyFatCategories(gender);
   return categories.map((category, index) => ({
+    key: category.key,
     label: category.label,
     weightRangeLabel: aceWeightRangeLabel(lbm, category, index),
   }));

@@ -15,6 +15,7 @@ import {
 import { drawAnswersConfirmationPage } from './drawAnswersConfirmationPage.js';
 import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
 import { drawModernMenuPlanPage } from './drawModernMenuPlanPage.js';
+import { drawModernLeanBodyAnalysisPage } from './drawModernLeanBodyAnalysisPage.js';
 import { drawModernServingsPage } from './drawModernServingsPage.js';
 import {
   drawStaplesFoodListPage,
@@ -382,69 +383,7 @@ function drawStatusParagraph(doc, page, paragraph) {
 }
 
 function drawLeanBodyAnalysisPage(doc, payload) {
-  const lba = payload.leanBodyAnalysis;
-  let page = begin1982Page(doc, payload, 'Lean Body Analysis');
-
-  page = { ...page, y: drawLbaTodayBlock(doc, page.x, page.y, page.width, lba.todayRows) + LAYOUT.sectionGap };
-
-  const bfCategories = lba.bfRangeCategories || [];
-  if (bfCategories.length) {
-    const bfCols = bfCategories.map((cat, index) => ({
-      key: `c${index}`,
-      width: 1 / bfCategories.length,
-      align: 'center',
-    }));
-    const bfRow = Object.fromEntries(
-      bfCategories.map((cat, index) => [`c${index}`, cat.label.toUpperCase()]),
-    );
-    const rangeRow = Object.fromEntries(
-      bfCategories.map((cat, index) => [`c${index}`, cat.bfRangeLabel]),
-    );
-    page = {
-      ...page,
-      y: drawLayoutTable(doc, {
-        x: page.x,
-        y: page.y,
-        width: page.width,
-        columns: bfCols,
-        rows: [bfRow, rangeRow],
-        headerRows: 1,
-      }) + LAYOUT.sectionGap,
-    };
-  }
-
-  page = drawParagraphs(doc, page, [lba.bodyFatClassificationMessage]);
-  page = drawParagraphs(doc, page, [lba.aceLead]);
-  if (lba.lbmLead) page = drawParagraphs(doc, page, [lba.lbmLead]);
-  if (lba.lbmStatus) page = drawStatusParagraph(doc, page, lba.lbmStatus);
-
-  const weightRanges = lba.bfRangeWeightRanges || [];
-  if (weightRanges.length) {
-    const wtCols = weightRanges.map((_, index) => ({
-      key: `c${index}`,
-      width: 1 / weightRanges.length,
-      align: 'center',
-    }));
-    const labelRow = Object.fromEntries(
-      weightRanges.map((row, index) => [`c${index}`, row.label.toUpperCase()]),
-    );
-    const valueRow = Object.fromEntries(
-      weightRanges.map((row, index) => [`c${index}`, row.weightRangeLabel]),
-    );
-    page = {
-      ...page,
-      y: drawLayoutTable(doc, {
-        x: page.x,
-        y: page.y + LAYOUT.sectionGap,
-        width: page.width,
-        columns: wtCols,
-        rows: [labelRow, valueRow],
-        headerRows: 1,
-      }) + LAYOUT.sectionGap,
-    };
-  }
-
-  drawParagraphs(doc, page, [lba.monitorCopy]);
+  drawModernLeanBodyAnalysisPage(doc, payload);
 }
 
 function drawGoalTable(doc, x, y, width, goalTable) {

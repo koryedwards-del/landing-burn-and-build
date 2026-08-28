@@ -18,7 +18,6 @@ import {
 } from './programClientDataHelpers.js';
 import {
   aceBodyFatCategories,
-  aceBodyFatClassificationMessage,
   aceBodyFatWeightRanges,
   aceActiveBodyFatCategory,
 } from './sampleDietAceData.js';
@@ -28,6 +27,8 @@ import {
   SAMPLE_DIET_FOOD_LIST_INTRO,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
+  SAMPLE_DIET_LBA_SECTIONS,
+  sampleDietLbaWeightRangesHeading,
   SAMPLE_DIET_GETTING_STARTED_HEADING,
   SAMPLE_DIET_GETTING_STARTED_RULES,
   SAMPLE_DIET_HELPFUL_TIPS_BEVERAGES,
@@ -44,6 +45,29 @@ const rnd = (x) => Math.round(Number(x));
 
 function formatCalories(n) {
   return rnd(n).toLocaleString('en-US');
+}
+
+function buildLbmCallout({ gender, heightInches, leanBodyMass, today }) {
+  const analysis = analyzeLeanBodyMass({ gender, heightInches, leanBodyMass });
+  const leanLbs = today?.leanLbs ?? String(leanBodyMass ?? '—');
+  const leanDisplay = String(leanLbs).replace(/\s*lbs\.?$/i, '').trim();
+  if (!analysis.desirableLbm) {
+    return null;
+  }
+  const statusLine = analysis.atOrAbove
+    ? 'Your LBM is at or above the desirable amount for your height.'
+    : 'Your LBM is below the desirable amount for your height.';
+  const detailBody = analysis.atOrAbove
+    ? SAMPLE_DIET_LBA.congratsSuffix
+    : SAMPLE_DIET_LBA.alertSuffix;
+  return { leanLbs: leanDisplay, statusLine, detailBody };
+}
+
+function formatLbaBodyFatPercent(value) {
+  const raw = String(value ?? '').trim().replace(/%$/, '');
+  if (!raw) return '—';
+  const n = Number(raw);
+  return Number.isFinite(n) ? `${n.toFixed(2)}%` : `${raw}%`;
 }
 
 function lbmStatusCopy1982({ gender, heightInches, leanBodyMass }) {
@@ -152,6 +176,8 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
     ? `You project to lose an average of ${projection.weeklyFatLossLbs.toFixed(1)} pounds of fat per week. ${SAMPLE_DIET_FOOD_PLAN.projectionSuffix}`
     : '';
 
+  const activeBfCategory = aceActiveBodyFatCategory(gender, intake.fatPercent);
+
   return {
     view: 'samplediet',
     title: `B&B Sample Diet - ${programClientName(pkg)}`,
@@ -162,14 +188,22 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
     header: { ...SAMPLE_DIET_HEADER },
     welcome: { ...SAMPLE_DIET_WELCOME },
     leanBodyAnalysis: {
+      sections: { ...SAMPLE_DIET_LBA_SECTIONS },
       todayRows: lbaTodayTableRows(today),
+      bodyFatPercent: formatLbaBodyFatPercent(today?.fatPct ?? intake.fatPercent),
+      activeBfCategoryKey: activeBfCategory.key,
+      activeBfCategoryLabel: activeBfCategory.label,
       bfRangeCategories: aceBodyFatCategories(gender),
       bfRangeWeightRanges: aceBodyFatWeightRanges(gender, intake.leanBodyMass),
-      activeBfCategoryKey: aceActiveBodyFatCategory(gender, intake.fatPercent).key,
-      bodyFatClassificationMessage: aceBodyFatClassificationMessage(gender, intake.fatPercent),
+      weightRangesHeading: sampleDietLbaWeightRangesHeading(today?.leanLbs ?? intake.leanBodyMass),
       aceLead: SAMPLE_DIET_LBA.aceLead,
       lbmLead: lbmCopy.lead,
-      lbmStatus: lbmCopy.congrats || lbmCopy.alert,
+      lbmCallout: buildLbmCallout({
+        gender,
+        heightInches: intake.heightInches,
+        leanBodyMass: intake.leanBodyMass,
+        today,
+      }),
       monitorCopy: SAMPLE_DIET_LBA.monitor,
     },
     foodPlan: {

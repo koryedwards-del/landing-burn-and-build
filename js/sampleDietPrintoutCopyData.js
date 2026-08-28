@@ -27,6 +27,20 @@ export const SAMPLE_DIET_LBA = Object.freeze({
   alertSuffix: 'Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass.',
 });
 
+/** Lean Body Analysis page — section headings (user-authored). */
+export const SAMPLE_DIET_LBA_SECTIONS = Object.freeze({
+  todayHeading: 'TODAY',
+  bodyFatRangeHeading: 'YOUR BODY FAT RANGE',
+  weightRangesIntro: 'Here are the body weights corresponding to the different body-fat ranges.',
+});
+
+export function sampleDietLbaWeightRangesHeading(leanLbs) {
+  const raw = String(leanLbs ?? '').replace(/\s*lbs\.?$/i, '').trim();
+  const n = Number(raw);
+  const display = Number.isFinite(n) ? n.toFixed(1) : (raw || '—');
+  return `AT YOUR CURRENT ${display} LBS OF LEAN MASS`;
+}
+
 export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
   lead: 'The following food program contains a sophisticated calculation that is based on your individual lean body mass (LBM), and on your activities. This is the most individualized food program available for losing fat and getting more energy.',
   projectionSuffix: 'In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.',
