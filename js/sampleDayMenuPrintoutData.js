@@ -12,8 +12,7 @@ import {
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
 import { MENU_PLAN_WORKSHEET_LINK_LABEL, MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
-import { scaleStapleServingLabel } from './stapleServingPrintout.js';
-import { servingsGridRows } from './servingsPrintout.js';
+import { menuPlanServingCount, scaleStapleServingLabel } from './stapleServingPrintout.js';
 
 export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
 
@@ -116,26 +115,8 @@ function scaledServing(staple, servingCount) {
   return scaleStapleServingLabel(staple.serving, count);
 }
 
-function gridSlotCount(gridRows, rowLabel, slotKey) {
-  const row = gridRows.find((entry) => entry.label === rowLabel);
-  const count = Number(row?.[slotKey]);
-  return Number.isFinite(count) && count > 0 ? count : 0;
-}
-
-function gridDailyCount(gridRows, rowLabel) {
-  const row = gridRows.find((entry) => entry.label === rowLabel);
-  const count = Number(row?.daily);
-  return Number.isFinite(count) && count > 0 ? Math.round(count) : 0;
-}
-
-function servingCountForRow(gridRows, rowDef) {
-  if (rowDef.slot === 'daily') return gridDailyCount(gridRows, 'Veggies');
-  const rowLabel = rowDef.staples === 'fruit'
-    ? 'Fruits'
-    : rowDef.label === 'Grains/Starches'
-      ? 'Grains/Starches'
-      : 'Protein';
-  return gridSlotCount(gridRows, rowLabel, rowDef.slot);
+function servingCountForRow(planServings, rowDef) {
+  return menuPlanServingCount(planServings, rowDef.staples);
 }
 
 function pickNameForRow(rowDef, mealKey) {
@@ -157,29 +138,29 @@ export function formatMenuPlanForDate(isoDate) {
   return `${weekday}, ${dateLong}`;
 }
 
-function buildRow(rowDef, mealKey, gridRows, filled) {
+function buildRow(rowDef, mealKey, planServings, filled) {
   const row = { label: rowDef.label };
   if (rowDef.labelBold) row.labelBold = true;
   if (!filled) return row;
 
   const stapleName = pickNameForRow(rowDef, mealKey);
   const staple = findStaple(stapleListFor(rowDef.staples), stapleName);
-  const servingCount = servingCountForRow(gridRows, rowDef);
+  const servingCount = servingCountForRow(planServings, rowDef);
   row.food = staple.name;
   row.servingSize = scaledServing(staple, servingCount);
   return row;
 }
 
-function buildMenuSections(gridRows, { filled = false } = {}) {
+function buildMenuSections(planServings, { filled = false } = {}) {
   return MENU_SECTION_DEFS.map((sectionDef, index) => ({
     title: sectionDef.title,
     time: filled ? { ...EXAMPLE_SECTION_TIMES[index] } : null,
-    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, gridRows, filled)),
+    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, planServings, filled)),
   }));
 }
 
 export function buildSampleDayMenu(pkg, { filled = true } = {}) {
-  const gridRows = servingsGridRows(pkg);
+  const planServings = pkg?.plan?.servings ?? null;
   const dateIso = pkg?.program?.issuedAt
     || pkg?.program?.foodPlanCreatedDate
     || pkg?.program?.issuedAtLocalDate;
@@ -195,7 +176,7 @@ export function buildSampleDayMenu(pkg, { filled = true } = {}) {
       url: MENU_PLAN_WORKSHEET_URL,
       linkLabel: MENU_PLAN_WORKSHEET_LINK_LABEL,
     } : null,
-    sections: buildMenuSections(gridRows, { filled }),
+    sections: buildMenuSections(planServings, { filled }),
   };
 }
 
@@ -214,7 +195,7 @@ export function buildMenuPlanWorksheetPayload() {
       planFor: {
         value: '',
       },
-      sections: buildMenuSections([], { filled: false }),
+      sections: buildMenuSections(null, { filled: false }),
     },
   };
 }

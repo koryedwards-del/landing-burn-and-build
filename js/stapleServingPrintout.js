@@ -56,7 +56,8 @@ export function scaleStapleServingLabel(servingLabel, servings) {
 }
 
 /**
- * Servings multiplier for each food-list section — matches meal/snack slots on the Servings page.
+ * Daily servings ÷ 3 for protein, grains, and fruit (one meal/snack slot each).
+ * Vegetables use the full daily count (all at dinner). Shared by food-list pages and menu plan.
  * @param {Record<string, number>|null|undefined} planServings
  * @param {'protein'|'grains'|'vegetable'|'fruit'} category
  */
@@ -79,6 +80,25 @@ export function stapleCategoryServings(planServings, category) {
     default:
       return 1;
   }
+}
+
+const MENU_PLAN_STAPLES_CATEGORY = Object.freeze({
+  protein: 'protein',
+  grains: 'grains',
+  vegetables: 'vegetable',
+  fruit: 'fruit',
+});
+
+/**
+ * Menu plan: base single serving × daily ÷ 3 (protein, grains, fruit) or daily veggies.
+ * Same multiplier at every breakfast/lunch/dinner or fruit snack for that category.
+ * @param {Record<string, number>|null|undefined} planServings
+ * @param {'protein'|'grains'|'vegetables'|'fruit'} staplesKey
+ */
+export function menuPlanServingCount(planServings, staplesKey) {
+  const category = MENU_PLAN_STAPLES_CATEGORY[staplesKey];
+  if (!category) return 0;
+  return stapleCategoryServings(planServings, category);
 }
 
 /** @param {ReadonlyArray<{ name: string, serving?: string }>} rows */

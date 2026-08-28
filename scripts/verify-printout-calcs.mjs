@@ -15,6 +15,7 @@ import {
 } from '../js/printoutVerifyFixtures.js';
 import {
   scaleStapleRows,
+  menuPlanServingCount,
   scaleStapleServingLabel,
   stapleCategoryServings,
 } from '../js/stapleServingPrintout.js';
@@ -323,9 +324,18 @@ function verifySampleDayMenuScale() {
   const snack1Four = menuFour.sections[1]?.rows[0];
   const snack2Four = menuFour.sections[3]?.rows[0];
   const snack3Four = menuFour.sections[5]?.rows[0];
-  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '130g');
-  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '260g');
-  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '130g');
+  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '173g');
+  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '173g');
+  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '173g');
+
+  const pkgTen = buildGoldenSamplePackage();
+  pkgTen.plan.servings.protein = 10;
+  const menuTen = buildSampleDayMenu(pkgTen);
+  const breakfastTen = menuTen.sections.find((section) => section.title === 'Breakfast');
+  const lunchTen = menuTen.sections.find((section) => section.title === 'Lunch');
+  expect('menuPlanServingCount protein 10', menuPlanServingCount(pkgTen.plan.servings, 'protein'), 10 / 3);
+  expect('menu breakfast eggs daily 10', breakfastTen?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
+  expect('menu lunch chicken daily 10', lunchTen?.rows[0]?.servingSize, '87g');
 
   if (errors.length) {
     console.error('FAIL sample day menu scale');
