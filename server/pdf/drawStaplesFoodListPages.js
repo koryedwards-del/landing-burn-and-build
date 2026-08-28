@@ -20,13 +20,14 @@ const FONTS = MODERN_REPORT_FONTS;
 const COLORS = MODERN_REPORT_COLORS;
 
 const LAYOUT = Object.freeze({
-  bodySize: 10.5,
-  categorySize: 12,
+  bodySize: 9.5,
+  categorySize: 11.5,
   introSize: 9.5,
   introGap: 10,
   headerGap: 8,
   categoryRuleGap: 2,
   categoryRuleWidth: 1.25,
+  stackedServingGap: 2,
 });
 
 const STAPLES_LIST = Object.freeze({
@@ -115,18 +116,30 @@ function drawStapleListRow(doc, item, x, y, width) {
   const lineH = LAYOUT.bodySize;
 
   doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
-
+  const nameW = doc.widthOfString(name);
   doc.font(FONTS.bold).fontSize(lineH);
   const servingWBold = doc.widthOfString(serving);
   doc.font(FONTS.regular).fontSize(lineH);
 
-  const servingX = x + width - servingWBold;
   const minLeader = doc.widthOfString(' . . .');
+  const singleLineFits = nameW + pad * 2 + minLeader + servingWBold <= width;
+
+  if (!singleLineFits) {
+    doc.text(name, x, y, { lineBreak: false });
+    drawStapleDotLeaders(doc, x + nameW + pad, x + width, y);
+    const servingY = y + lineH + LAYOUT.stackedServingGap;
+    doc.font(FONTS.bold).fontSize(lineH).fillColor(COLORS.body);
+    doc.text(serving, x, servingY, { width, align: 'right', lineBreak: false });
+    doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
+    return servingY + lineH + STAPLES_LIST.rowGap;
+  }
+
+  const servingX = x + width - servingWBold;
   const nameMaxW = width - servingWBold - pad * 2 - minLeader;
 
-  if (doc.widthOfString(name) <= nameMaxW) {
+  if (nameW <= nameMaxW) {
     doc.text(name, x, y, { lineBreak: false });
-    drawStapleDotLeaders(doc, x + doc.widthOfString(name) + pad, servingX - pad, y);
+    drawStapleDotLeaders(doc, x + nameW + pad, servingX - pad, y);
     doc.font(FONTS.bold).fontSize(lineH).fillColor(COLORS.body);
     doc.text(serving, servingX, y, { lineBreak: false });
     doc.font(FONTS.regular).fontSize(lineH).fillColor(COLORS.body);
@@ -148,12 +161,28 @@ function drawStapleListRow(doc, item, x, y, width) {
   return y + lineH + restH + STAPLES_LIST.rowGap;
 }
 
+function stapleRowReserve(doc, item, width) {
+  const name = String(item.name);
+  const serving = String(item.serving);
+  const lineH = LAYOUT.bodySize;
+  doc.font(FONTS.regular).fontSize(lineH);
+  const nameW = doc.widthOfString(name);
+  doc.font(FONTS.bold).fontSize(lineH);
+  const servingWBold = doc.widthOfString(serving);
+  doc.font(FONTS.regular).fontSize(lineH);
+  const minLeader = doc.widthOfString(' . . .');
+  if (nameW + STAPLES_LIST.leaderPad * 2 + minLeader + servingWBold > width) {
+    return lineH * 2 + LAYOUT.stackedServingGap + STAPLES_LIST.rowGap;
+  }
+  return lineH + STAPLES_LIST.rowGap;
+}
+
 function drawStapleListItems(doc, items, col, yStart, bottomY, startIndex = 0) {
   let y = yStart;
   let index = startIndex;
-  const lineH = LAYOUT.bodySize + STAPLES_LIST.rowGap;
   for (; index < items.length; index += 1) {
-    if (y + lineH > bottomY) break;
+    const rowReserve = stapleRowReserve(doc, items[index], col.width);
+    if (y + rowReserve > bottomY) break;
     y = drawStapleListRow(doc, items[index], col.x, y, col.width);
   }
   return { y, nextIndex: index };
