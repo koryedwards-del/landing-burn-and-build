@@ -37,9 +37,12 @@ const LAYOUT = Object.freeze({
   mainMealBarSize: 8,
   rowSize: 8.5,
   categorySize: 7.5,
-  rowGap: 5,
-  sectionGap: 14,
-  snackSectionGap: 10,
+  rowTail: 4,
+  minPostBarGap: 4,
+  minCategoryPadAfterBar: 10,
+  minCategoryRowGap: 7,
+  minMealSectionGap: 14,
+  timeColumnHeight: 30,
   calloutPad: 10,
   calloutTitleSize: 9,
   calloutBodySize: 8.5,
@@ -116,10 +119,6 @@ function sectionHeading(section) {
   return '';
 }
 
-function isMainMeal(section) {
-  return Boolean(section.title);
-}
-
 function drawMealBar(doc, contentX, y, contentWidth, heading) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
@@ -134,7 +133,102 @@ function drawMealBar(doc, contentX, y, contentWidth, heading) {
       width: contentWidth - 16,
       lineBreak: false,
     });
-  return y + LAYOUT.mainMealBarH + 6;
+  return y + LAYOUT.mainMealBarH;
+}
+
+function menuRowStride(categoryRowGap) {
+  return LAYOUT.rowSize + 2 + categoryRowGap + LAYOUT.rowTail;
+}
+
+function measureSectionBlockHeight(section, spacing) {
+  const heading = sectionHeading(section);
+  const rowCount = section.rows?.length || 0;
+  let mealH = 0;
+  if (heading) {
+    mealH = LAYOUT.mainMealBarH + spacing.postBarGap + spacing.categoryPadAfterBar;
+  }
+  if (rowCount > 0) {
+    mealH += rowCount * menuRowStride(spacing.categoryRowGap);
+  }
+  return Math.max(LAYOUT.timeColumnHeight, mealH);
+}
+
+function measureMenuPlanHeight(sections, spacing) {
+  return sections.reduce(
+    (total, section) => total + measureSectionBlockHeight(section, spacing) + spacing.mealSectionGap,
+    0,
+  );
+}
+
+function clampSpacing(value, floor) {
+  return Math.max(floor, value);
+}
+
+/** Distribute vertical space: roomy between meals, grouped categories within each meal. */
+export function computeMenuPlanSpacing(sections, contentTop, contentBottom) {
+  const min = {
+    postBarGap: LAYOUT.minPostBarGap,
+    categoryPadAfterBar: LAYOUT.minCategoryPadAfterBar,
+    categoryRowGap: LAYOUT.minCategoryRowGap,
+    mealSectionGap: LAYOUT.minMealSectionGap,
+  };
+  if (!sections?.length) return { ...min };
+
+  const available = Math.max(0, contentBottom - contentTop);
+  let spacing = { ...min };
+  let height = measureMenuPlanHeight(sections, spacing);
+
+  if (height < available) {
+    let extra = available - height;
+    const rowCount = sections.reduce((sum, section) => sum + (section.rows?.length || 0), 0);
+    const mealShare = extra * 0.62;
+    spacing.mealSectionGap += mealShare / sections.length;
+    extra -= mealShare;
+
+    const categoryPadShare = extra * 0.72;
+    spacing.categoryPadAfterBar += categoryPadShare / sections.length;
+    extra -= categoryPadShare;
+
+    if (rowCount > 0) {
+      spacing.categoryRowGap += extra / rowCount;
+    } else {
+      spacing.mealSectionGap += extra / sections.length;
+    }
+
+    height = measureMenuPlanHeight(sections, spacing);
+    const remainder = available - height;
+    if (remainder > 0.5) {
+      spacing.mealSectionGap += remainder / sections.length;
+    }
+  } else if (height > available) {
+    let overflow = height - available;
+    const rowCount = sections.reduce((sum, section) => sum + (section.rows?.length || 0), 0);
+
+    const mealReducible = Math.max(0, spacing.mealSectionGap - 8) * sections.length;
+    const mealTake = Math.min(overflow, mealReducible);
+    spacing.mealSectionGap -= mealTake / sections.length;
+    overflow -= mealTake;
+
+    if (overflow > 0) {
+      const padReducible = Math.max(0, spacing.categoryPadAfterBar - 6) * sections.length;
+      const padTake = Math.min(overflow, padReducible);
+      spacing.categoryPadAfterBar -= padTake / sections.length;
+      overflow -= padTake;
+    }
+
+    if (overflow > 0 && rowCount > 0) {
+      const rowReducible = Math.max(0, spacing.categoryRowGap - 4) * rowCount;
+      const rowTake = Math.min(overflow, rowReducible);
+      spacing.categoryRowGap -= rowTake / rowCount;
+    }
+  }
+
+  return {
+    postBarGap: clampSpacing(spacing.postBarGap, LAYOUT.minPostBarGap),
+    categoryPadAfterBar: clampSpacing(spacing.categoryPadAfterBar, 6),
+    categoryRowGap: clampSpacing(spacing.categoryRowGap, 4),
+    mealSectionGap: clampSpacing(spacing.mealSectionGap, 8),
+  };
 }
 
 function rowCategoryLabel(row) {
@@ -142,7 +236,7 @@ function rowCategoryLabel(row) {
   return String(row.label || '');
 }
 
-function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
+function drawMenuRow(doc, page, contentX, y, contentWidth, row, categoryRowGap) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
   const category = rowCategoryLabel(row);
@@ -182,27 +276,28 @@ function drawMenuRow(doc, page, contentX, y, contentWidth, row) {
     .lineTo(marginRight, lineY)
     .stroke();
 
-  return lineY + LAYOUT.rowGap + 4;
+  return lineY + categoryRowGap + LAYOUT.rowTail;
 }
 
-function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth) {
+function drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth, spacing) {
   const colors = MODERN_REPORT_COLORS;
   const sectionTop = y;
-  const mainMeal = isMainMeal(section);
   const heading = sectionHeading(section);
 
   drawFilledTimeColumn(doc, page.x, y, section.time);
 
   let mealY = y;
   if (heading) {
-    mealY = drawMealBar(doc, contentX, mealY, contentWidth, heading);
+    mealY = drawMealBar(doc, contentX, mealY, contentWidth, heading)
+      + spacing.postBarGap
+      + spacing.categoryPadAfterBar;
   }
 
   (section.rows || []).forEach((row) => {
-    mealY = drawMenuRow(doc, page, contentX, mealY, contentWidth, row);
+    mealY = drawMenuRow(doc, page, contentX, mealY, contentWidth, row, spacing.categoryRowGap);
   });
 
-  const sectionBottom = mealY + (mainMeal ? LAYOUT.sectionGap : LAYOUT.snackSectionGap);
+  const sectionBottom = mealY + spacing.mealSectionGap;
   doc
     .strokeColor(colors.gold)
     .lineWidth(LAYOUT.timelineWidth)
@@ -319,9 +414,10 @@ export function drawModernMenuPlanPage(doc, payload) {
     y = doc.y + LAYOUT.introGap;
   }
 
+  const spacing = computeMenuPlanSpacing(menu.sections, y, contentBottom);
+
   menu.sections.forEach((section) => {
-    if (y >= contentBottom) return;
-    y = drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth);
+    y = drawModernMenuSection(doc, page, y, section, timelineX, contentX, contentWidth, spacing);
   });
 
   if (calloutY != null) {
