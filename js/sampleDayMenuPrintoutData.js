@@ -1,6 +1,12 @@
 /** Sample Day Menu — teaching layout for sample diet PDF (page 2). */
 
 import {
+  CUTTING_STAPLES_FRUIT,
+  CUTTING_STAPLES_GRAINS_STARCHES,
+  CUTTING_STAPLES_PROTEIN_DAIRY,
+  CUTTING_STAPLES_VEGETABLES,
+} from '../data/cuttingStaplesPrintout.js';
+import {
   SAMPLE_DAY_MENU_CALLOUT_LEAD,
   SAMPLE_DAY_MENU_CALLOUT_TITLE,
   SAMPLE_DAY_MENU_INTRO,
@@ -8,8 +14,27 @@ import {
   SAMPLE_DIET_HEADER,
 } from './sampleDietPrintoutCopyData.js';
 import { MENU_PLAN_WORKSHEET_LINK_LABEL, MENU_PLAN_WORKSHEET_URL } from './siteUrls.js';
+import { menuPlanServingCount, scaleStapleServingLabel } from './stapleServingPrintout.js';
 
 export const SAMPLE_DAY_MENU_FRUIT_SNACK_LABEL = 'Fruit Snack';
+
+/** Illustrative food picks — serving sizes scale from the customer's plan. */
+const FOOD_PICKS = Object.freeze({
+  breakfast: {
+    protein: 'Eggs',
+    grains: 'Oatmeal (dry)',
+  },
+  lunch: {
+    protein: 'Chicken breast',
+    grains: 'Rice, white (cooked)',
+  },
+  dinner: {
+    protein: 'Sirloin steak',
+    grains: 'Sweet potato',
+    veggies: 'Broccoli (cooked)',
+  },
+  fruit: 'Apples',
+});
 
 /** Filled sample only — meals every 3 hours from 7:00 AM. */
 const EXAMPLE_SECTION_TIMES = Object.freeze([
@@ -64,6 +89,41 @@ const MENU_SECTION_DEFS = Object.freeze([
   },
 ]);
 
+function findStaple(staples, name) {
+  const row = staples.find((item) => item.name === name)
+    || staples.find((item) => item.name.startsWith(`${name} (`));
+  if (!row) throw new Error(`Missing cutting staple: ${name}`);
+  return row;
+}
+
+function stapleListFor(key) {
+  switch (key) {
+    case 'protein':
+      return CUTTING_STAPLES_PROTEIN_DAIRY;
+    case 'grains':
+      return CUTTING_STAPLES_GRAINS_STARCHES;
+    case 'vegetables':
+      return CUTTING_STAPLES_VEGETABLES;
+    case 'fruit':
+      return CUTTING_STAPLES_FRUIT;
+    default:
+      throw new Error(`Unknown staple list: ${key}`);
+  }
+}
+
+function scaledServing(staple, servingCount) {
+  const count = Number(servingCount);
+  if (!Number.isFinite(count) || count <= 0) return '';
+  return scaleStapleServingLabel(staple.serving, count);
+}
+
+function pickNameForRow(rowDef, mealKey) {
+  if (rowDef.staples === 'fruit') return FOOD_PICKS.fruit;
+  if (rowDef.staples === 'vegetables') return FOOD_PICKS.dinner.veggies;
+  const meal = FOOD_PICKS[mealKey];
+  return meal?.[rowDef.pickKey] || '';
+}
+
 export function formatMenuPlanForDate(isoDate) {
   const date = isoDate ? new Date(isoDate) : new Date();
   if (Number.isNaN(date.getTime())) return '';
@@ -76,17 +136,24 @@ export function formatMenuPlanForDate(isoDate) {
   return `${weekday}, ${dateLong}`;
 }
 
-function buildRow(rowDef) {
+function buildRow(rowDef, mealKey, planServings, filled) {
   const row = { label: rowDef.label };
   if (rowDef.labelBold) row.labelBold = true;
+  if (!filled) return row;
+
+  const stapleName = pickNameForRow(rowDef, mealKey);
+  const staple = findStaple(stapleListFor(rowDef.staples), stapleName);
+  const servingCount = menuPlanServingCount(planServings, rowDef.staples);
+  row.food = staple.name;
+  row.servingSize = scaledServing(staple, servingCount);
   return row;
 }
 
-function buildMenuSections(_planServings, { filled = false } = {}) {
+function buildMenuSections(planServings, { filled = false } = {}) {
   return MENU_SECTION_DEFS.map((sectionDef, index) => ({
     title: sectionDef.title,
     time: filled ? { ...EXAMPLE_SECTION_TIMES[index] } : null,
-    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef)),
+    rows: sectionDef.rows.map((rowDef) => buildRow(rowDef, sectionDef.key, planServings, filled)),
   }));
 }
 

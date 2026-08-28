@@ -332,8 +332,12 @@ function verifySampleDayMenuScale() {
   expect('menu breakfast row count', menu.sections.find((section) => section.title === 'Breakfast')?.rows.length, 2);
   expect('menu dinner row count', menu.sections.find((section) => section.title === 'Dinner')?.rows.length, 3);
   expect('menu breakfast time', menu.sections[0]?.time?.value, '7:00');
-  expect('menu breakfast no prefilled food', menu.sections[0]?.rows[0]?.food, undefined);
-  expect('menu breakfast no prefilled serving', menu.sections[0]?.rows[0]?.servingSize, undefined);
+  expect('menu breakfast has prefilled food', menu.sections[0]?.rows[0]?.food, 'Eggs');
+  expect(
+    'menu breakfast has prefilled serving',
+    menu.sections[0]?.rows[0]?.servingSize,
+    '3 whole eggs (yolks optional) / 3 egg whites',
+  );
 
   const pkgTen = buildGoldenSamplePackage();
   pkgTen.plan.servings.protein = 10;
