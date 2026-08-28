@@ -292,29 +292,47 @@ function verifyProgramDates() {
   return true;
 }
 
-function verifySampleDayMenuFruitScale() {
+function verifySampleDayMenuScale() {
   const errors = [];
   const expect = (label, actual, expected) => {
     if (actual !== expected) errors.push(`${label}: got ${actual}, want ${expected}`);
   };
 
   const pkg = buildGoldenSamplePackage();
-  const menuThree = buildSampleDayMenu(pkg);
-  const snackThree = menuThree.sections.find((section) => section.rows[0]?.label === 'Fruit Snack')?.rows[0];
-  expect('menu fruit servings daily 3', snackThree?.servingSize, '130g');
+  const menu = buildSampleDayMenu(pkg);
+
+  const breakfast = menu.sections.find((section) => section.title === 'Breakfast');
+  expect('menu breakfast eggs', breakfast?.rows[0]?.servingSize, '3 whole eggs (yolks optional) / 3 egg whites');
+  expect('menu breakfast oatmeal', breakfast?.rows[1]?.servingSize, '63g');
+
+  const snack1 = menu.sections[1]?.rows[0];
+  expect('menu snack1 apples', snack1?.servingSize, '130g');
+
+  const lunch = menu.sections.find((section) => section.title === 'Lunch');
+  expect('menu lunch chicken', lunch?.rows[0]?.servingSize, '78g');
+  expect('menu lunch rice', lunch?.rows[1]?.servingSize, '150g');
+
+  const dinner = menu.sections.find((section) => section.title === 'Dinner');
+  expect('menu dinner sirloin', dinner?.rows[0]?.servingSize, '81g');
+  expect('menu dinner sweet potato', dinner?.rows[1]?.servingSize, '204g');
+  expect('menu dinner broccoli', dinner?.rows[2]?.servingSize, '139g');
 
   const pkgFour = buildGoldenSamplePackage();
   pkgFour.plan.servings.fruits = 4;
   const menuFour = buildSampleDayMenu(pkgFour);
-  const snackFour = menuFour.sections.find((section) => section.rows[0]?.label === 'Fruit Snack')?.rows[0];
-  expect('menu fruit servings daily 4 matches food list', snackFour?.servingSize, '173g');
+  const snack1Four = menuFour.sections[1]?.rows[0];
+  const snack2Four = menuFour.sections[3]?.rows[0];
+  const snack3Four = menuFour.sections[5]?.rows[0];
+  expect('menu snack1 apples daily 4', snack1Four?.servingSize, '130g');
+  expect('menu snack2 apples daily 4', snack2Four?.servingSize, '260g');
+  expect('menu snack3 apples daily 4', snack3Four?.servingSize, '130g');
 
   if (errors.length) {
-    console.error('FAIL sample day menu fruit scale');
+    console.error('FAIL sample day menu scale');
     errors.forEach((e) => console.error(`  ${e}`));
     return false;
   }
-  console.log('OK sample day menu fruit scale');
+  console.log('OK sample day menu scale');
   return true;
 }
 
@@ -323,7 +341,7 @@ const ok = [
   verifyGoldenSampleServingsGrid(),
   verifyStapleServingScale(),
   verifyProgramDates(),
-  verifySampleDayMenuFruitScale(),
+  verifySampleDayMenuScale(),
   verifyCase('Golden sample female', GOLDEN_SAMPLE_INTAKE, GOLDEN_SAMPLE_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,
