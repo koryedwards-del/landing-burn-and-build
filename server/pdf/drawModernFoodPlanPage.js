@@ -1,35 +1,19 @@
 /**
  * Modern Food Plan page — gold/black layout matching the 2026 mockup.
  */
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { PDF_MARGIN } from './constants.js';
-import { logoPath } from './draw.js';
-import { PDF_FRAME_CONTACT } from './drawFrame.js';
+import { begin1982Page } from './draw1982Frame.js';
+import {
+  MODERN_REPORT_COLORS,
+  MODERN_REPORT_FONTS,
+  modernReportContentBox,
+} from './drawModernReportFrame.js';
 
-const FONT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fonts');
+export { drawModernReportFooter as drawModernFoodPlanFooter } from './drawModernReportFrame.js';
 
-export const MODERN_FOOD_PLAN_FONTS = Object.freeze({
-  regular: 'Montserrat',
-  bold: 'Montserrat-Bold',
-  italic: 'Montserrat-Italic',
-  boldItalic: 'Montserrat-BoldItalic',
-});
-
-export const MODERN_FOOD_PLAN_COLORS = Object.freeze({
-  body: '#111111',
-  muted: '#5C5C5C',
-  gold: '#C9A227',
-  goldLight: '#F3E4B8',
-  goldPale: '#FBF6E8',
-  white: '#FFFFFF',
-  rule: '#D8D8D8',
-});
+export const MODERN_FOOD_PLAN_FONTS = MODERN_REPORT_FONTS;
+export const MODERN_FOOD_PLAN_COLORS = MODERN_REPORT_COLORS;
 
 const LAYOUT = Object.freeze({
-  logoWidth: 66,
-  titleSize: 28,
-  titleRule: 2.5,
   bodySize: 9,
   bodyLineGap: 2,
   paragraphGap: 5,
@@ -42,91 +26,11 @@ const LAYOUT = Object.freeze({
   lossValueSize: 22,
   cellPad: 5,
   footerReserve: 36,
-  /** Center “you could lose” panel — low enough to let the page watermark show through. */
   lossPanelFillOpacity: 0.35,
 });
 
-let fontsRegistered = false;
-
-export function registerModernFoodPlanFonts(doc) {
-  if (fontsRegistered) return;
-  doc.registerFont(MODERN_FOOD_PLAN_FONTS.regular, path.join(FONT_DIR, 'Montserrat-Regular.ttf'));
-  doc.registerFont(MODERN_FOOD_PLAN_FONTS.bold, path.join(FONT_DIR, 'Montserrat-Bold.ttf'));
-  doc.registerFont(MODERN_FOOD_PLAN_FONTS.italic, path.join(FONT_DIR, 'Montserrat-Italic.ttf'));
-  doc.registerFont(MODERN_FOOD_PLAN_FONTS.boldItalic, path.join(FONT_DIR, 'Montserrat-BoldItalic.ttf'));
-  fontsRegistered = true;
-}
-
 function modernContentBox(doc) {
-  const { width, height } = doc.page;
-  return {
-    x: PDF_MARGIN.left,
-    y: PDF_MARGIN.top,
-    width: width - PDF_MARGIN.left - PDF_MARGIN.right,
-    bottom: height - PDF_MARGIN.bottom,
-  };
-}
-
-function addModernPage(doc) {
-  doc.addPage({ size: 'LETTER', layout: 'portrait', margin: 0 });
-  return modernContentBox(doc);
-}
-
-function titleCaseWords(text) {
-  return String(text || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-}
-
-function formatPreparedDateUpper(value) {
-  if (!value) return '';
-  const isoMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) {
-    const year = Number(isoMatch[1]);
-    const monthIndex = Number(isoMatch[2]) - 1;
-    const day = Number(isoMatch[3]);
-    const month = new Date(year, monthIndex, 1).toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
-    return `${month} ${day}, ${year}`;
-  }
-  return String(value).toUpperCase();
-}
-
-function drawModernHeader(doc, box, payload) {
-  const fonts = MODERN_FOOD_PLAN_FONTS;
-  const colors = MODERN_FOOD_PLAN_COLORS;
-  const logoY = box.y;
-  doc.image(logoPath, box.x, logoY, { width: LAYOUT.logoWidth });
-
-  const name = titleCaseWords(payload.clientName);
-  const date = formatPreparedDateUpper(payload.preparedDateLong || payload.preparedDate);
-  const personalLine = `PERSONALIZED FOR: ${name.toUpperCase()}  •  ${date}`;
-  doc
-    .font(fonts.regular)
-    .fontSize(7.5)
-    .fillColor(colors.muted)
-    .text(personalLine, box.x, logoY + 6, {
-      width: box.width,
-      align: 'right',
-      lineGap: 0,
-    });
-
-  const titleY = logoY + LAYOUT.logoWidth + 14;
-  doc.font(fonts.bold).fontSize(LAYOUT.titleSize).fillColor(colors.body);
-  const foodW = doc.widthOfString('FOOD ');
-  doc.text('FOOD ', box.x, titleY, { continued: true, lineGap: 0 });
-  doc.fillColor(colors.gold).text('PLAN', { continued: false, lineGap: 0 });
-
-  const ruleY = titleY + LAYOUT.titleSize + 6;
-  doc
-    .strokeColor(colors.gold)
-    .lineWidth(LAYOUT.titleRule)
-    .moveTo(box.x, ruleY)
-    .lineTo(box.x + box.width, ruleY)
-    .stroke();
-
-  return ruleY + 12;
+  return modernReportContentBox(doc);
 }
 
 function drawMixedParagraph(doc, x, y, width, parts, { fontSize, lineGap, paragraphGap } = {}) {
@@ -537,67 +441,30 @@ function drawModernMacroTable(doc, x, y, width, macroRows = []) {
   return y + totalH;
 }
 
-/** Three-column footer used on the modern Food Plan page. */
-export function drawModernFoodPlanFooter(doc, box, { page, total, contact = PDF_FRAME_CONTACT } = {}) {
-  const fonts = MODERN_FOOD_PLAN_FONTS;
-  const colors = MODERN_FOOD_PLAN_COLORS;
-  const ruleY = box.bottom - 28;
-  const textY = box.bottom - 16;
-  const website = String(contact?.website || PDF_FRAME_CONTACT.website).toUpperCase();
-  const email = String(contact?.email || PDF_FRAME_CONTACT.email).toUpperCase();
-
-  doc
-    .strokeColor(colors.rule)
-    .lineWidth(0.75)
-    .moveTo(box.x, ruleY)
-    .lineTo(box.x + box.width, ruleY)
-    .stroke();
-
-  if (page != null && total != null) {
-    doc.font(fonts.regular).fontSize(7.5).fillColor(colors.muted);
-    doc.text('PAGE ', box.x, textY, { continued: true, lineGap: 0 });
-    doc.font(fonts.bold).text(`${page} `, { continued: true });
-    doc.font(fonts.regular).text(`OF ${total}`, { lineBreak: false });
-  }
-
-  doc
-    .font(fonts.regular)
-    .fontSize(7.5)
-    .fillColor(colors.muted)
-    .text(website, box.x, textY, { width: box.width, align: 'center', lineGap: 0 });
-
-  doc
-    .font(fonts.regular)
-    .fontSize(7.5)
-    .fillColor(colors.muted)
-    .text(email, box.x, textY, { width: box.width, align: 'right', lineGap: 0 });
-}
-
 export function drawModernFoodPlanPage(doc, payload) {
-  registerModernFoodPlanFonts(doc);
-  const box = addModernPage(doc);
+  const page = begin1982Page(doc, payload, 'Food Plan');
   const fp = payload.foodPlan || {};
-  let y = drawModernHeader(doc, box, payload);
+  let y = page.y;
 
-  y = drawBodyParagraph(doc, box.x, y, box.width, fp.lead);
+  y = drawBodyParagraph(doc, page.x, y, page.width, fp.lead);
 
   if (fp.exerciseParagraph) {
     const mixed = parseExerciseParagraph(fp.exerciseParagraph);
     y = mixed
-      ? drawMixedParagraph(doc, box.x, y, box.width, mixed)
-      : drawBodyParagraph(doc, box.x, y, box.width, fp.exerciseParagraph);
+      ? drawMixedParagraph(doc, page.x, y, page.width, mixed)
+      : drawBodyParagraph(doc, page.x, y, page.width, fp.exerciseParagraph);
   }
 
   if (fp.goalTable) {
     const fatRow = fp.goalTable.rows?.find((row) => row.label === 'FAT');
     const fatLost = fatRow?.goalA?.match(/-([\d.]+)/)?.[1] ?? null;
-    y = drawModernGoalDashboard(doc, box.x, y + LAYOUT.sectionGap, box.width, fp.goalTable, fatLost) + LAYOUT.sectionGap;
+    y = drawModernGoalDashboard(doc, page.x, y + LAYOUT.sectionGap, page.width, fp.goalTable, fatLost) + LAYOUT.sectionGap;
   }
 
-  if (fp.weeklyLine) y = drawBodyParagraph(doc, box.x, y, box.width, fp.weeklyLine);
-  if (fp.macroIntro) y = drawBodyParagraph(doc, box.x, y, box.width, fp.macroIntro);
+  if (fp.weeklyLine) y = drawBodyParagraph(doc, page.x, y, page.width, fp.weeklyLine);
+  if (fp.macroIntro) y = drawBodyParagraph(doc, page.x, y, page.width, fp.macroIntro);
 
   if (fp.macroRows?.length) {
-    drawModernMacroTable(doc, box.x, y + LAYOUT.sectionGap, box.width, fp.macroRows);
+    drawModernMacroTable(doc, page.x, y + LAYOUT.sectionGap, page.width, fp.macroRows);
   }
 }

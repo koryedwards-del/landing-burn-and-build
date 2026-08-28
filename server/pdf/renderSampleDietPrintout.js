@@ -1127,7 +1127,7 @@ function drawSampleDayMenuPage(doc, payload) {
   const filled = Boolean(menu.filled);
   if (filled) registerHandwritingFont(doc);
 
-  const page = begin1982Page(doc, payload, null, {
+  const page = begin1982Page(doc, payload, 'Menu Plan', {
     personalized: !payload.worksheet,
   });
   const layout = computeMenuPlanLayout(doc, menu, page, filled);

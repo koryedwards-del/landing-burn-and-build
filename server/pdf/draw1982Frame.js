@@ -3,18 +3,18 @@ import { PRINT_TEMPLATE_TYPOGRAPHY } from '../../js/printTemplateTypographyData.
 import {
   PDF_FRAME_COLORS,
   pinnedContentBottomY,
-  drawFrameHeader,
-  drawContinuationHeader,
-  framePageTitleStartY,
   PDF_FRAME_FONTS,
   frameContentBox,
   drawPinnedProgramFooter,
 } from './drawFrame.js';
-import { drawModernFoodPlanFooter } from './drawModernFoodPlanPage.js';
+import {
+  drawModernReportFooter,
+  drawModernReportHeader,
+} from './drawModernReportFrame.js';
 
 const FRAME_FONTS = PDF_FRAME_FONTS;
 
-/** Matches --TODAY-- accent in legacy layouts; sample diet header/footer divider rules only. */
+/** Matches --TODAY-- accent in legacy layouts; table borders stay gold. */
 export const SAMPLE_DIET_BLUE = PDF_FRAME_COLORS.accentBlue;
 
 export const FRAME_1982 = Object.freeze({
@@ -33,7 +33,7 @@ export const FRAME_1982 = Object.freeze({
 });
 
 export const TABLE_1982 = Object.freeze({
-  stroke: PDF_FRAME_COLORS.gold, // table borders stay gold; header/footer rules use SAMPLE_DIET_BLUE
+  stroke: PDF_FRAME_COLORS.gold,
   radius: 4,
   cellPad: 6,
 });
@@ -54,37 +54,14 @@ export function add1982Page(doc) {
   return frame1982ContentBox(doc);
 }
 
-export function draw1982PageTitle(doc, box, y, title, fonts = FRAME_FONTS) {
-  doc
-    .font(fonts.bold)
-    .fontSize(FRAME_1982.pageTitleSize)
-    .fillColor(PDF_FRAME_COLORS.body)
-    .text(String(title || ''), box.x, y, { width: box.width, align: 'left', lineGap: 0 });
-  return doc.y + FRAME_1982.titleBottomGap;
-}
-
-export function begin1982Page(doc, payload, pageTitle, {
-  fullHeader = true,
-  personalized,
-  fonts = FRAME_FONTS,
-} = {}) {
+export function begin1982Page(doc, payload, pageTitle, { fullHeader = true } = {}) {
   const box = add1982Page(doc);
-  const usePersonalized = personalized ?? !payload?.worksheet;
-  const topRuleY = fullHeader
-    ? drawFrameHeader(doc, box, {
-      personalized: usePersonalized,
-      clientName: payload.clientName,
-      preparedDateLong: payload.preparedDateLong,
-      preparedDate: payload.preparedDate,
-      fonts,
-      ruleColor: SAMPLE_DIET_BLUE,
-    })
-    : drawContinuationHeader(doc, box, { ruleColor: SAMPLE_DIET_BLUE });
-
-  let y = fullHeader ? framePageTitleStartY(topRuleY) : topRuleY + 16;
-  if (pageTitle) {
-    y = draw1982PageTitle(doc, box, y, pageTitle, fonts);
-  }
+  const y = drawModernReportHeader(
+    doc,
+    box,
+    payload,
+    fullHeader ? (pageTitle || null) : null,
+  );
   return {
     box,
     x: box.x,
@@ -101,18 +78,17 @@ export function stamp1982Footers(doc, contact, { fonts = FRAME_FONTS, pageNumber
   for (let index = 0; index < total; index += 1) {
     doc.switchToPage(range.start + index);
     const box = frameContentBox(doc);
-    if (modernFooterPageIndex != null && index === modernFooterPageIndex) {
-      drawModernFoodPlanFooter(doc, box, {
-        page: pageNumbers ? index + 1 : null,
-        total: pageNumbers ? total : null,
-        contact,
-      });
-      continue;
-    }
-    drawPinnedProgramFooter(doc, box, {
+    const footerArgs = {
       page: pageNumbers ? index + 1 : null,
       total: pageNumbers ? total : null,
       contact,
+    };
+    if (modernFooterPageIndex != null && index === modernFooterPageIndex) {
+      drawModernReportFooter(doc, box, footerArgs);
+      continue;
+    }
+    drawPinnedProgramFooter(doc, box, {
+      ...footerArgs,
       fonts,
       ruleColor: SAMPLE_DIET_BLUE,
     });
