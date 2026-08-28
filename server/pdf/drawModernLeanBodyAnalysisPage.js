@@ -43,8 +43,8 @@ const LAYOUT = Object.freeze({
   tableValueActiveSize: 9.5,
   monitorSize: 8,
   monitorLineGap: 1.5,
-  monitorGapAboveFooter: 14,
-  monitorSectionGap: 10,
+  monitorGapAboveFooter: 18,
+  monitorSectionGap: 8,
 });
 
 function drawSectionHeading(doc, x, y, width, text) {
@@ -339,14 +339,17 @@ function drawMonitorCopy(doc, page, y, text) {
   const ruleY = modernFooterRuleY(page.box);
   const maxBottom = ruleY - LAYOUT.monitorGapAboveFooter;
   const body = String(text);
-  const startY = y + LAYOUT.monitorSectionGap;
-  const available = maxBottom - startY;
-  if (available <= 0) return y;
-
-  doc.font(FONTS.regular).fontSize(LAYOUT.monitorSize).fillColor(COLORS.muted);
-  doc.text(body, page.x, startY, {
+  doc.font(FONTS.regular).fontSize(LAYOUT.monitorSize);
+  const textH = doc.heightOfString(body, {
     width: page.width,
-    height: available,
+    lineGap: LAYOUT.monitorLineGap,
+  });
+  const flowStartY = y + LAYOUT.monitorSectionGap;
+  const startY = Math.min(flowStartY, maxBottom - textH);
+  if (startY + textH > maxBottom) return y;
+
+  doc.fillColor(COLORS.muted).text(body, page.x, startY, {
+    width: page.width,
     lineGap: LAYOUT.monitorLineGap,
     align: 'left',
   });

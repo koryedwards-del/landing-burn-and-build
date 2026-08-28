@@ -58,8 +58,8 @@ function buildLbmCallout({ gender, heightInches, leanBodyMass, today }) {
     ? 'Your LBM is at or above the desirable amount for your height.'
     : 'Your LBM is below the desirable amount for your height.';
   const detailBody = analysis.atOrAbove
-    ? SAMPLE_DIET_LBA.congratsSuffix
-    : SAMPLE_DIET_LBA.alertSuffix;
+    ? SAMPLE_DIET_LBA.lbmDetailAtOrAbove
+    : SAMPLE_DIET_LBA.lbmDetailBelow;
   return { leanLbs: leanDisplay, statusLine, detailBody };
 }
 
