@@ -287,11 +287,15 @@ function drawLbmCallout(doc, x, y, width, callout) {
   if (!callout?.leanLbs) return y;
 
   const lbs = String(callout.leanLbs);
-  doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.body);
-  doc.text(`${lbs} lbs`, x, y, { continued: true, lineBreak: false });
+  const headlineSize = 14;
+  doc.font(FONTS.bold).fontSize(headlineSize).fillColor(COLORS.body);
+  const lbsText = `${lbs} lbs`;
+  doc.text(lbsText, x, y, { lineBreak: false });
+  const lbsW = doc.widthOfString(lbsText);
   doc.font(FONTS.regular).fontSize(LAYOUT.lbmBodySize).fillColor(COLORS.muted);
-  doc.text(' lean body mass', { continued: false, lineBreak: false });
-  let cursorY = doc.y + LAYOUT.lbmGap;
+  doc.text(' lean body mass', x + lbsW, y + 2, { lineBreak: false });
+
+  let cursorY = y + headlineSize + LAYOUT.lbmGap;
 
   if (callout.statusLine) {
     doc
