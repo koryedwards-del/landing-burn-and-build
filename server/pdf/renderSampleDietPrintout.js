@@ -785,13 +785,13 @@ function servingsAnytimeRow(row) {
 function buildServingsRows(gridRows) {
   const header = {
     label: '',
-    daily: 'Daily',
-    breakfast: 'Breakfast',
-    snack1: 'Snack',
-    lunch: 'Lunch',
-    snack2: 'Snack',
-    dinner: 'Dinner',
-    snack3: 'Snack',
+    daily: 'DAILY',
+    breakfast: 'BREAKFAST',
+    snack1: 'FRUIT',
+    lunch: 'LUNCH',
+    snack2: 'FRUIT',
+    dinner: 'DINNER',
+    snack3: 'FRUIT',
   };
   const bodyRows = (gridRows || []).map((row) => (
     row.label === 'Veggies' ? servingsAnytimeRow(row) : row
