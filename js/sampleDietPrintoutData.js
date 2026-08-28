@@ -57,10 +57,7 @@ function buildLbmCallout({ gender, heightInches, leanBodyMass, today }) {
   const statusLine = analysis.atOrAbove
     ? 'Your LBM is at or above the desirable amount for your height.'
     : 'Your LBM is below the desirable amount for your height.';
-  const detailBody = analysis.atOrAbove
-    ? SAMPLE_DIET_LBA.lbmDetailAtOrAbove
-    : SAMPLE_DIET_LBA.lbmDetailBelow;
-  return { leanLbs: leanDisplay, statusLine, detailBody };
+  return { leanLbs: leanDisplay, statusLine };
 }
 
 function formatLbaBodyFatPercent(value) {
@@ -204,6 +201,12 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
         leanBodyMass: intake.leanBodyMass,
         today,
       }),
+      lbmWhy: {
+        heading: SAMPLE_DIET_LBA.lbmWhyHeading,
+        lead: SAMPLE_DIET_LBA.lbmWhyLead,
+        punchline: SAMPLE_DIET_LBA.lbmWhyPunchline,
+        closing: SAMPLE_DIET_LBA.lbmWhyClosing,
+      },
       monitorCopy: SAMPLE_DIET_LBA.monitor,
     },
     foodPlan: {

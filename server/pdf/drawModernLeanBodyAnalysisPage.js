@@ -33,6 +33,7 @@ const LAYOUT = Object.freeze({
   calloutGap: 10,
   lbmBodySize: 9,
   lbmGap: 6,
+  lbmWhyPunchlineGap: 6,
   introSize: 9,
   introGap: 6,
   tableRowPad: 6,
@@ -308,15 +309,52 @@ function drawLbmCallout(doc, x, y, width, callout) {
     cursorY = doc.y + LAYOUT.bodyGap;
   }
 
-  if (callout.detailBody) {
+  return cursorY;
+}
+
+function drawLbmWhySection(doc, x, y, width, lbmWhy) {
+  if (!lbmWhy?.heading) return y;
+
+  let cursorY = y + LAYOUT.sectionGap - LAYOUT.bodyGap;
+  cursorY = drawSectionHeading(doc, x, cursorY, width, lbmWhy.heading);
+
+  if (lbmWhy.lead) {
     doc
       .font(FONTS.regular)
       .fontSize(LAYOUT.lbmBodySize)
       .fillColor(COLORS.body)
-      .text(String(callout.detailBody), x, cursorY, {
-        width,
+      .text(String(lbmWhy.lead), x, cursorY, { width, lineGap: LAYOUT.bodyLineGap });
+    cursorY = doc.y + LAYOUT.bodyGap;
+  }
+
+  if (lbmWhy.punchline) {
+    doc
+      .font(FONTS.bold)
+      .fontSize(LAYOUT.lbmBodySize)
+      .fillColor(COLORS.body)
+      .text(String(lbmWhy.punchline), x, cursorY, { width, lineGap: 0 });
+    cursorY = doc.y + LAYOUT.lbmWhyPunchlineGap;
+  }
+
+  if (lbmWhy.closing) {
+    const closing = String(lbmWhy.closing);
+    const youToken = ' you ';
+    const youIndex = closing.indexOf(youToken);
+    doc.font(FONTS.regular).fontSize(LAYOUT.lbmBodySize).fillColor(COLORS.body);
+    if (youIndex > 0) {
+      const beforeYou = closing.slice(0, youIndex + 1);
+      const afterYou = closing.slice(youIndex + 1);
+      doc.text(beforeYou, x, cursorY, { lineBreak: false });
+      const beforeW = doc.widthOfString(beforeYou);
+      doc.font(FONTS.italic).text('you', x + beforeW, cursorY, { lineBreak: false });
+      const youW = doc.widthOfString('you');
+      doc.font(FONTS.regular).text(afterYou, x + beforeW + youW, cursorY, {
+        width: width - beforeW - youW,
         lineGap: LAYOUT.bodyLineGap,
       });
+    } else {
+      doc.text(closing, x, cursorY, { width, lineGap: LAYOUT.bodyLineGap });
+    }
     cursorY = doc.y + LAYOUT.bodyGap;
   }
 
@@ -414,6 +452,10 @@ export function drawModernLeanBodyAnalysisPage(doc, payload) {
 
   if (lba.lbmCallout) {
     y = drawLbmCallout(doc, page.x, y, page.width, lba.lbmCallout);
+  }
+
+  if (lba.lbmWhy) {
+    y = drawLbmWhySection(doc, page.x, y, page.width, lba.lbmWhy);
   }
 
   if (lba.weightRangesHeading) {

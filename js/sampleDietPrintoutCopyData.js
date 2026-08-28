@@ -25,9 +25,11 @@ export const SAMPLE_DIET_LBA = Object.freeze({
   monitor: 'Continue to monitor your body composition using Lean Body Analysis every 6 to 8 weeks to make sure you are losing only fat and not lean! If you want to lose fat, do so by following this diet as closely as you can. This plan allows you to lose all the fat you want to lose while increasing your strength & energy.',
   congratsSuffix: 'Even so, it\'s a good idea to exercise at least twice a week. If you want to gain lean or maybe just tone and shape your body, do so by participating in a weight-training program two to three times a week under the guidance of an experienced trainer. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass. Increasing or decreasing your LBM would increase or decrease the suggested body weight accordingly. For maximum success, feed your body properly. This diet will show you how much food you need daily for maximum results.',
   alertSuffix: 'Exercise at least twice a week and follow this diet to support lean gain while losing fat. The table below tells us what you would weigh for the different health categories based on your current Lean Body Mass.',
-  /** LBA page — connects lean mass to the weight-range table (user-directed; replaces congratsSuffix on printout). */
-  lbmDetailAtOrAbove: 'Lean body mass is what your metabolism and daily food needs are built on. The table below shows what you would weigh at each body-fat range if that lean mass stayed the same. Maintaining lean mass while losing fat protects your strength and energy.',
-  lbmDetailBelow: 'Lean body mass is what your metabolism and daily food needs are built on. The table below shows what you would weigh at each body-fat range at your current lean mass. Protecting and building lean mass supports strength and energy as you lose fat.',
+  /** LBA page — connects lean mass to the weight-range table. */
+  lbmWhyHeading: 'Why Lean Body Mass Matters',
+  lbmWhyLead: 'Lean body mass is predominantly muscle. It\'s your strength, your energy, and your true body shape underneath the fat. It also includes your bones, organs, skin, hair, and more.',
+  lbmWhyPunchline: 'Actually, it\'s you.',
+  lbmWhyClosing: 'Keeping your lean body mass means keeping as much of you as possible—strong, energetic and vibrant.',
 });
 
 /** Lean Body Analysis page — section headings (user-authored). */
