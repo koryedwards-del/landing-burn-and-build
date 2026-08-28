@@ -30,8 +30,14 @@ export function scaleStapleServingLabel(servingLabel, servings) {
     return `${Math.round(Number(gramMatch[1]) * count)}g`;
   }
 
-  const eggServingMatch = label.match(/^1 egg white \/ 1 whole egg \(yolks optional\)$/);
+  const eggServingMatch = label.match(/^1 whole egg \(yolks optional\) \/ 1 egg white$/);
   if (eggServingMatch) {
+    const scaled = count;
+    return `${scaleEggUnitPhrase(scaled, 'whole egg')} (yolks optional) / ${scaleEggUnitPhrase(scaled, 'egg white')}`;
+  }
+
+  const eggServingLegacyMatch = label.match(/^1 egg white \/ 1 whole egg \(yolks optional\)$/);
+  if (eggServingLegacyMatch) {
     const scaled = count;
     return `${scaleEggUnitPhrase(scaled, 'egg white')} / ${scaleEggUnitPhrase(scaled, 'whole egg')} (yolks optional)`;
   }

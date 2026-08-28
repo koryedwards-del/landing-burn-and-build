@@ -106,7 +106,7 @@ export const CUTTING_STAPLES_PROTEIN_DAIRY = Object.freeze([
   { name: 'Cottage cheese, nonfat', serving: '78g' },
   { name: 'Egg whites (extra large)', serving: '2 whites' },
   { name: 'Egg whites (small)', serving: '3 whites' },
-  { name: 'Eggs', serving: '1 egg white / 1 whole egg (yolks optional)' },
+  { name: 'Eggs', serving: '1 whole egg (yolks optional) / 1 egg white' },
   { name: 'Eye of round', serving: '27g' },
   { name: 'Greek yogurt, lowfat', serving: '80g' },
   { name: 'Lean ground beef (ground round)', serving: '27g' },
