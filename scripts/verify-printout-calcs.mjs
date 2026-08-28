@@ -22,6 +22,7 @@ import { CUTTING_STAPLES_PROTEIN_DAIRY } from '../data/cuttingStaplesPrintout.js
 import { formatProgramDateLong, programPreparedDate } from '../js/programClientDataHelpers.js';
 import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
 import { buildGoldenSamplePackage } from '../js/printoutVerifyFixtures.js';
+import { buildSampleDayMenu } from '../js/sampleDayMenuPrintoutData.js';
 
 const rnd = (x) => Math.round(x);
 
@@ -291,11 +292,38 @@ function verifyProgramDates() {
   return true;
 }
 
+function verifySampleDayMenuFruitScale() {
+  const errors = [];
+  const expect = (label, actual, expected) => {
+    if (actual !== expected) errors.push(`${label}: got ${actual}, want ${expected}`);
+  };
+
+  const pkg = buildGoldenSamplePackage();
+  const menuThree = buildSampleDayMenu(pkg);
+  const snackThree = menuThree.sections.find((section) => section.rows[0]?.label === 'Fruit Snack')?.rows[0];
+  expect('menu fruit servings daily 3', snackThree?.servingSize, '130g');
+
+  const pkgFour = buildGoldenSamplePackage();
+  pkgFour.plan.servings.fruits = 4;
+  const menuFour = buildSampleDayMenu(pkgFour);
+  const snackFour = menuFour.sections.find((section) => section.rows[0]?.label === 'Fruit Snack')?.rows[0];
+  expect('menu fruit servings daily 4 matches food list', snackFour?.servingSize, '173g');
+
+  if (errors.length) {
+    console.error('FAIL sample day menu fruit scale');
+    errors.forEach((e) => console.error(`  ${e}`));
+    return false;
+  }
+  console.log('OK sample day menu fruit scale');
+  return true;
+}
+
 const ok = [
   verifyGoldenSamplePackage(),
   verifyGoldenSampleServingsGrid(),
   verifyStapleServingScale(),
   verifyProgramDates(),
+  verifySampleDayMenuFruitScale(),
   verifyCase('Golden sample female', GOLDEN_SAMPLE_INTAKE, GOLDEN_SAMPLE_GOLDEN),
   verifyCase('Dustin Kinzler', {
     lbm: 175.3, weight: 253, bf: 30.72, gender: 'male', heightIn: 68,
