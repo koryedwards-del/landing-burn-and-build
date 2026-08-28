@@ -26,7 +26,6 @@ const LAYOUT = Object.freeze({
   lossValueSize: 22,
   cellPad: 5,
   footerReserve: 36,
-  lossPanelFillOpacity: 0.35,
 });
 
 function modernContentBox(doc) {
@@ -196,12 +195,9 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
       });
   });
 
-  doc.save();
-  doc.opacity(LAYOUT.lossPanelFillOpacity);
   doc
     .roundedRect(centerX + 4, y + pad, centerW - 8, bodyH - pad * 2, 6)
     .fill(colors.goldPale);
-  doc.restore();
 
   const lossText = fatLostLbs != null ? `-${Number(fatLostLbs).toFixed(1)}` : '—';
   doc
