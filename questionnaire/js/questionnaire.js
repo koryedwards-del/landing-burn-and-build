@@ -1502,6 +1502,9 @@ function showStep(index) {
     }
     renderOccupationAccordionState();
   }
+  if (step === 4) {
+    syncLocalTodayDates();
+  }
   if (step === 3) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
       bodyFieldIndex = 0;
@@ -1519,14 +1522,18 @@ function showStep(index) {
   updateStepNav();
 }
 
-function initDefaults() {
+function syncLocalTodayDates() {
   const today = localDateKey(new Date());
   if (form.elements.intakeDate) {
     form.elements.intakeDate.value = today;
   }
-  if (form.elements.signatureDate && !form.elements.signatureDate.value) {
+  if (form.elements.signatureDate) {
     form.elements.signatureDate.value = today;
   }
+}
+
+function initDefaults() {
+  syncLocalTodayDates();
   if (form.elements.fatBurningHours && !form.elements.fatBurningHours.value) {
     form.elements.fatBurningHours.value = '3';
   }
@@ -1579,6 +1586,10 @@ function bindEvents() {
   document.addEventListener('click', closeExerciseHoursInfoPanels);
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeExerciseHoursInfoPanels();
+  });
+
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) syncLocalTodayDates();
   });
 
   navList.addEventListener('click', (event) => {
