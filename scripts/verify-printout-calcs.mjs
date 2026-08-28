@@ -205,6 +205,12 @@ function verifyStapleServingScale() {
 
   expect('scaleStapleServingLabel 3×26g', scaleStapleServingLabel('26g', 3), '78g');
   expect('scaleStapleServingLabel 3×2 whites', scaleStapleServingLabel('2 whites', 3), '6 whites');
+  expect(
+    'scaleStapleServingLabel 5×1 whole egg / 1 egg white',
+    scaleStapleServingLabel('1 whole egg / 1 egg white', 5),
+    '5 whole eggs / 5 egg whites',
+  );
+  expect('stapleCategoryServings protein 15 meal slot', stapleCategoryServings({ protein: 15 }, 'protein'), 5);
 
   const plan = { protein: 9, grainsStarches: 9, vegetables: 1, fruits: 3 };
   expect('protein meal servings', stapleCategoryServings(plan, 'protein'), 3);
@@ -213,6 +219,18 @@ function verifyStapleServingScale() {
     stapleCategoryServings(plan, 'protein'),
   ).find((row) => row.name === 'Chicken breast');
   expect('golden sample chicken food list', chicken?.serving, '78g');
+  const eggs = scaleStapleRows(
+    CUTTING_STAPLES_PROTEIN_DAIRY,
+    stapleCategoryServings(plan, 'protein'),
+  ).find((row) => row.name === 'Eggs');
+  expect('golden sample eggs food list', eggs?.serving, '3 whole eggs / 3 egg whites');
+
+  const plan15 = { protein: 15, grainsStarches: 9, vegetables: 1, fruits: 3 };
+  const eggsFive = scaleStapleRows(
+    CUTTING_STAPLES_PROTEIN_DAIRY,
+    stapleCategoryServings(plan15, 'protein'),
+  ).find((row) => row.name === 'Eggs');
+  expect('protein 15 eggs food list', eggsFive?.serving, '5 whole eggs / 5 egg whites');
 
   if (errors.length) {
     console.error('FAIL staple serving scale');

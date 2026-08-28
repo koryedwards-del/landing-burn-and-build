@@ -1,5 +1,21 @@
 /** Scale food-list staple serving labels by plan servings (servings × unit weight). */
 
+/** @param {number} scaled */
+function formatScaledCount(scaled) {
+  if (Math.abs(scaled - Math.round(scaled)) < 0.05) return String(Math.round(scaled));
+  return scaled.toFixed(1);
+}
+
+/**
+ * @param {number} scaled
+ * @param {string} singular — e.g. "whole egg", "egg white"
+ */
+function scaleEggUnitPhrase(scaled, singular) {
+  const countText = formatScaledCount(scaled);
+  const plural = Math.abs(scaled - 1) < 0.05 ? singular : `${singular}s`;
+  return `${countText} ${plural}`;
+}
+
 /**
  * @param {string} servingLabel — per-serving label from cutting staples (e.g. "26g", "2 whites")
  * @param {number} servings — multiplier from the user's plan for this food category
@@ -12,6 +28,12 @@ export function scaleStapleServingLabel(servingLabel, servings) {
   const gramMatch = label.match(/^([\d.]+)g$/);
   if (gramMatch) {
     return `${Math.round(Number(gramMatch[1]) * count)}g`;
+  }
+
+  const wholeEggMatch = label.match(/^1 whole egg \/ 1 egg white$/);
+  if (wholeEggMatch) {
+    const scaled = count;
+    return `${scaleEggUnitPhrase(scaled, 'whole egg')} / ${scaleEggUnitPhrase(scaled, 'egg white')}`;
   }
 
   const countMatch = label.match(/^([\d.]+)\s+(.+)$/);
