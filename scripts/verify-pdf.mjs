@@ -71,7 +71,7 @@ console.log('ok  golden sample diet payload');
 assertPdf('menu plan worksheet (blank)', await renderMenuPlanWorksheet(), { minPages: 1 });
 
 const faqPayload = buildHandbookFaqPayload();
-assertPdf('FAQ handbook (standalone)', await renderHandbookFaqPrintout(faqPayload), {
+assertPdf('Burn & Build FAQ (standalone)', await renderHandbookFaqPrintout(faqPayload), {
   minPages: HANDBOOK_FAQ_PRINTOUT_MIN_PAGES,
 });
 

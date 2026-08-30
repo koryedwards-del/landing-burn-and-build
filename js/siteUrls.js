@@ -1,6 +1,7 @@
 /** Canonical site URLs — burnandbuilddiet.com */
 
 import { RENDER_API_ORIGIN } from './apiConfig.js';
+import { BURN_AND_BUILD_FAQ_API_SLUG } from './faqPdfNamingHelpers.js';
 
 export const CREATOR_HOST_ORIGIN = 'https://burnandbuilddiet.com';
 
@@ -17,7 +18,7 @@ export const MENU_PLAN_WORKSHEET_PATH = '/menuplanworksheet/';
 export const MENU_PLAN_WORKSHEET_PUBLIC_URL = `${CREATOR_HOST_ORIGIN}${MENU_PLAN_WORKSHEET_PATH}`;
 export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'burnandbuilddiet.com/menuplanworksheet';
 export const MENU_PLAN_WORKSHEET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/menu-plan-worksheet`;
-export const HANDBOOK_FAQ_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/handbook-faq`;
+export const BURN_AND_BUILD_FAQ_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/${BURN_AND_BUILD_FAQ_API_SLUG}`;
 
 /** User-facing short link — redirects to the API attachment download. */
 export const MENU_PLAN_WORKSHEET_URL = MENU_PLAN_WORKSHEET_PUBLIC_URL;

@@ -31,6 +31,10 @@ import {
 } from './publicSampleDiet.js';
 import { renderHandbookFaqPrintout } from './pdf/renderHandbookFaqPrintout.js';
 import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
+import {
+  BURN_AND_BUILD_FAQ_API_SLUG,
+  BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME,
+} from '../js/faqPdfNamingHelpers.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -471,7 +475,7 @@ app.get('/api/samples/:slug', async (req, res) => {
     return;
   }
 
-  if (slug === 'handbook-faq') {
+  if (slug === BURN_AND_BUILD_FAQ_API_SLUG) {
     const resolved = resolveSamplePdfPath(root, slug);
     const inline = req.query.inline === '1' || req.query.disposition === 'inline';
     if (resolved) {
@@ -490,15 +494,15 @@ app.get('/api/samples/:slug', async (req, res) => {
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
-        `${inline ? 'inline' : 'attachment'}; filename="handbook-faq.pdf"`,
+        `${inline ? 'inline' : 'attachment'}; filename="${BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME}"`,
       );
       res.setHeader('Cache-Control', 'public, max-age=60');
       res.send(pdf);
     } catch (err) {
-      console.error('Handbook FAQ PDF error:', err.message);
+      console.error('Burn & Build FAQ PDF error:', err.message);
       res.status(500).json({
         ok: false,
-        message: err.message || 'Could not render the FAQ handbook PDF.',
+        message: err.message || 'Could not render the Burn & Build FAQ PDF.',
       });
     }
     return;

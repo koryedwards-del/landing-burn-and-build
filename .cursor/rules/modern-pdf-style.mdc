@@ -7,7 +7,17 @@ alwaysApply: true
 
 **From August 2026 forward, every Burn & Build PDF uses the modern report style.** The **Food Plan** page is the design reference — gold/black Montserrat layout with personalized header and three-column footer.
 
-The **Burn & Build Diet PDF** (7 pages) and the **FAQ handbook PDF** (standalone) are separate deliverables. FAQ is **not** bundled inside the diet PDF.
+The **Burn & Build Diet PDF** (7 pages) and **Burn & Build FAQ** (standalone) are separate deliverables. FAQ is **not** bundled inside the diet PDF.
+
+## PDF deliverables (naming)
+
+| Product | User-facing name | Download filename | Repo file | API slug |
+|---------|------------------|-------------------|-----------|----------|
+| Personalized diet | Burn & Build Diet | `Burn&Build-{Name}-{date}.pdf` | `docs/samples/b&bsamplediet.pdf` (sample only) | `sample-diet` / `programs/diet-pdf` |
+| Menu Plan worksheet | Burn & Build Menu Plan | `menu-plan-worksheet.pdf` | `docs/samples/menu-plan-worksheet.pdf` | `menu-plan-worksheet` |
+| FAQ support doc | **Burn & Build FAQ** | `Burn & Build FAQ.pdf` | `docs/samples/burn-and-build-faq.pdf` | `burn-and-build-faq` |
+
+FAQ rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`. Sample diet: `.cursor/rules/sample-diet-pdf.mdc`.
 
 Do not add new pages in the legacy seminar wireframe (`SEMINAR_COLORS`, old locked-preview tables, HTML print paths). Extend the modern family instead.
 
@@ -50,7 +60,7 @@ When in doubt, match Food Plan: typography scale, gold accents, table treatment,
 
 | Product | Renderer | Download |
 |---------|----------|----------|
-| FAQ handbook | `renderHandbookFaqPrintout.js` → `drawModernFaqPage.js` | `GET /api/samples/handbook-faq` |
+| **Burn & Build FAQ** | `renderHandbookFaqPrintout.js` → `drawModernFaqPage.js` | `GET /api/samples/burn-and-build-faq` |
 
 New diet PDF sections: create `server/pdf/drawModern<Section>Page.js` and wire through `renderSampleDietPrintout.js`. New standalone PDFs: separate renderer + `GET /api/samples/<slug>`.
 
@@ -62,7 +72,7 @@ New diet PDF sections: create `server/pdf/drawModern<Section>Page.js` and wire t
 4. **Copy** — user-authored text stays verbatim (see `.cursor/rules/user-authored-copy.mdc`); change layout only.
 5. **Cache bust** — layout/copy-pipeline changes → bump `DIET_PDF_GENERATION_VERSION` in `js/assetVersionData.js`.
 6. **Verify** — `npm run verify:pdf` and `npm run verify:printout-calcs`.
-7. **Review PDFs** — run `npm run render:handbook-faq` (or the matching render script), commit `docs/samples/<file>.pdf`, push to `main`, then share the live `GET /api/samples/<slug>` URL. Never give users `/opt/cursor/artifacts/` paths — they do not download.
+7. **Review PDFs** — run the matching `npm run render:*` script, commit `docs/samples/<repo-file>.pdf`, push to `main`, then share the live API URL (see deliverables table above). Never give users `/opt/cursor/artifacts/` paths.
 
 ## Do not reintroduce
 

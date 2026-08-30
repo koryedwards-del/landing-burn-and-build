@@ -1,0 +1,55 @@
+---
+description: Burn & Build FAQ PDF — standalone support document naming and paths
+alwaysApply: true
+---
+
+# Burn & Build FAQ PDF
+
+Standalone support PDF — **not** part of the 7-page Burn & Build Diet. Linked from purchase email when wired (exact copy from user only).
+
+**Visual style:** modern B&B report frame; Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
+
+## Naming (locked)
+
+| Layer | Name | Example |
+|-------|------|---------|
+| **Product** (user-facing) | **Burn & Build FAQ** | Email, support, page title |
+| **Download filename** | `Burn & Build FAQ.pdf` | `Content-Disposition` attachment |
+| **Repo static file** | `docs/samples/burn-and-build-faq.pdf` | Commit after `npm run render:burn-and-build-faq` |
+| **API slug** | `burn-and-build-faq` | `GET /api/samples/burn-and-build-faq` |
+| **npm script** | `render:burn-and-build-faq` | Regenerates repo static file |
+
+Constants: `js/faqPdfNamingHelpers.js` — single source for product name, filename, repo file, slug.
+
+**Do not call it** “handbook,” “FAQ handbook,” or `handbook-faq.pdf` in user-facing copy or new paths.
+
+## Download URL (after push to `main`)
+
+```
+https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-faq
+```
+
+Inline preview: same URL with `?inline=1`
+
+## Code paths
+
+| Piece | Path |
+|-------|------|
+| Q&A copy | `data/handbookFaqPrintout.js` |
+| Payload | `js/handbookFaqPrintoutData.js` |
+| Renderer | `server/pdf/renderHandbookFaqPrintout.js` |
+| Page draw | `server/pdf/drawModernFaqPage.js` |
+| Static file | `docs/samples/burn-and-build-faq.pdf` |
+| API route | `GET /api/samples/burn-and-build-faq` (`server/samplePdfDownloads.js`) |
+| Render script | `scripts/render-burn-and-build-faq.mjs` |
+
+Internal `handbookFaq*` module names are legacy code paths only — **product name is always Burn & Build FAQ**.
+
+## Verify
+
+```
+npm run verify:pdf
+npm run render:burn-and-build-faq
+```
+
+Commit `docs/samples/burn-and-build-faq.pdf`, push to `main`, then share the API URL. Never use `/opt/cursor/artifacts/` for user downloads.

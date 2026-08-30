@@ -3,6 +3,7 @@
  */
 import { createPrintPdf } from './creator.js';
 import { stamp1982Footers } from './draw1982Frame.js';
+import { BURN_AND_BUILD_FAQ_PDF_NAME } from '../../js/faqPdfNamingHelpers.js';
 import { drawModernFaqPages } from './drawModernFaqPage.js';
 
 export const HANDBOOK_FAQ_PRINTOUT_MIN_PAGES = 4;
@@ -24,7 +25,7 @@ export async function renderHandbookFaqPrintout(payload) {
   validateHandbookFaqPayload(payload);
 
   const creator = createPrintPdf({
-    title: payload.title || 'Burn & Build FAQ Handbook',
+    title: payload.title || BURN_AND_BUILD_FAQ_PDF_NAME,
     author: 'Burn & Build Diet',
   });
   const doc = creator.doc;
