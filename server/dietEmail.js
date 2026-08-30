@@ -22,6 +22,8 @@ const EMAIL_COLORS = Object.freeze({
 });
 
 const EMAIL_SUBJECT = 'Your Burn & Build Diet + Resources';
+const SIGNATURE_FONT = 'Caveat';
+const SIGNATURE_FONT_URL = 'https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap';
 
 export function dietEmailConfigured() {
   return !!String(process.env.RESEND_API_KEY || '').trim();
@@ -72,10 +74,9 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
     'Questions or need help getting started?',
     SUPPORT_EMAIL,
     '',
-    'Kory Edwards',
-    'Creator, Burn & Build',
+    '— Kory',
+    'Burn & Build',
     'Athlete-tested since 1982',
-    siteOrigin(),
   ].join('\n');
 }
 
@@ -96,6 +97,9 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
   <title>Your Burn &amp; Build Diet + Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="${SIGNATURE_FONT_URL}" rel="stylesheet">
 </head>
 <body style="margin:0;padding:0;background-color:${c.pageBg};font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:${c.black};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:32px 16px;">
@@ -144,10 +148,9 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
           <tr>
             <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
               <p style="margin:0 0 20px;color:${c.black};font-weight:bold;">Questions or need help getting started?<br>${supportLink}</p>
-              <p style="margin:0 0 4px;font-weight:bold;color:${c.black};">Kory Edwards</p>
-              <p style="margin:0 0 4px;color:${c.black};">Creator, Burn &amp; Build</p>
-              <p style="margin:0 0 8px;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
-              <p style="margin:0;font-size:14px;"><a href="${site}" style="color:${c.muted};text-decoration:none;">www.burnandbuilddiet.com</a></p>
+              <p style="margin:0 0 6px;font-family:'${SIGNATURE_FONT}',cursive;font-size:30px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
+              <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
+              <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
             </td>
           </tr>
         </table>
