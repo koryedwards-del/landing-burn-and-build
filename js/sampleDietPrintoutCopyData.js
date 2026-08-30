@@ -48,7 +48,7 @@ export function sampleDietLbaWeightRangesHeading(leanLbs) {
 }
 
 export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
-  lead: 'The following food program contains a sophisticated calculation that is based on your individual lean body mass (LBM), and on your activities. This is the most individualized food program available for losing fat and getting more energy.',
+  lead: 'The following food program is calculated from your individual lean body mass (LBM) and your activities. Your food plan is calculated specifically for you.',
   projectionSuffix: 'In addition, you could gain lean weight. Gaining lean weight will increase your strength and energy and offset your fat loss.',
   macroIntro: 'How much food you need each day depends on how much LBM you have. Also, it depends on your activity level and the type and amount of exercise you participate in. Based on the information you provided, the following table gives you the number of calories and the amount of protein, carbohydrates and fat you need per day to maintain your fat or to reduce body fat. Also listed is what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.',
 });
