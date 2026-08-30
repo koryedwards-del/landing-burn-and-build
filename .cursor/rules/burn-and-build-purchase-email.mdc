@@ -58,7 +58,7 @@ Links use gold or black with gold underline — **never default blue**. Safari o
 1. Logo → greeting → purchase confirmation
 2. **KEEP THIS EMAIL** — portal return link (not a giant CTA); diet PDF attached
 3. **Free Resources** — Menu Plan Worksheet + Burn & Build FAQ (equal weight, gold download links)
-4. **Questions? Just email me.** → kory@burnandbuilddiet.com → **— Kory** (Caveat signature, ~30px, dark gray) → Burn & Build → *Athlete-tested since 1982*
+4. **Questions? Just email me.** → **kory@burnandbuilddiet.com** (Caveat) → **— Kory** (Caveat) → Burn & Build → *Athlete-tested since 1982*
 
 ## Code paths
 
@@ -80,3 +80,5 @@ npm run preview:diet-email
 ```
 
 Writes both `purchase-email-preview/index.html` and `docs/samples/burn-and-build-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.
+
+**Signature display font (Caveat):** purchaser approval name on questionnaire + PDF page 8; parent approval name when under-18 consent applies. Constants: `js/signatureDisplayData.js`.
