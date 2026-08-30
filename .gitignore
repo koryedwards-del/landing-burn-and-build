@@ -3,4 +3,5 @@
 node_modules/
 server/data/*.db
 server/data/diet-pdfs/
+docs/previews/
 .DS_Store
