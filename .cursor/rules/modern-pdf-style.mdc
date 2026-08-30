@@ -62,6 +62,7 @@ New diet PDF sections: create `server/pdf/drawModern<Section>Page.js` and wire t
 4. **Copy** — user-authored text stays verbatim (see `.cursor/rules/user-authored-copy.mdc`); change layout only.
 5. **Cache bust** — layout/copy-pipeline changes → bump `DIET_PDF_GENERATION_VERSION` in `js/assetVersionData.js`.
 6. **Verify** — `npm run verify:pdf` and `npm run verify:printout-calcs`.
+7. **Review PDFs** — run `npm run render:handbook-faq` (or the matching render script), commit `docs/samples/<file>.pdf`, push to `main`, then share the live `GET /api/samples/<slug>` URL. Never give users `/opt/cursor/artifacts/` paths — they do not download.
 
 ## Do not reintroduce
 

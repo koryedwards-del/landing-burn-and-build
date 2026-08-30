@@ -29,8 +29,8 @@ import {
   renderPublicSampleDietPdf,
   writePublicSampleDietConfig,
 } from './publicSampleDiet.js';
-import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
 import { renderHandbookFaqPrintout } from './pdf/renderHandbookFaqPrintout.js';
+import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -472,15 +472,27 @@ app.get('/api/samples/:slug', async (req, res) => {
   }
 
   if (slug === 'handbook-faq') {
-    try {
-      const pdf = await renderHandbookFaqPrintout(buildHandbookFaqPayload());
-      const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+    const resolved = resolveSamplePdfPath(root, slug);
+    const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+    if (resolved) {
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
-        `${inline ? 'inline' : 'attachment'}; filename="burn-build-faq-handbook.pdf"`,
+        `${inline ? 'inline' : 'attachment'}; filename="${resolved.spec.filename}"`,
       );
       res.setHeader('Cache-Control', 'public, max-age=300');
+      res.sendFile(resolved.filePath);
+      return;
+    }
+
+    try {
+      const pdf = await renderHandbookFaqPrintout(buildHandbookFaqPayload());
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `${inline ? 'inline' : 'attachment'}; filename="handbook-faq.pdf"`,
+      );
+      res.setHeader('Cache-Control', 'public, max-age=60');
       res.send(pdf);
     } catch (err) {
       console.error('Handbook FAQ PDF error:', err.message);
