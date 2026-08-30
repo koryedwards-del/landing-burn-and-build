@@ -2,6 +2,10 @@
 
 import { RENDER_API_ORIGIN } from './apiConfig.js';
 import { BURN_AND_BUILD_FAQ_API_SLUG } from './faqPdfNamingHelpers.js';
+import {
+  BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_API_SLUG,
+  BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_PATH,
+} from './dietEmailPreviewNamingHelpers.js';
 
 export const CREATOR_HOST_ORIGIN = 'https://burnandbuilddiet.com';
 
@@ -19,6 +23,8 @@ export const MENU_PLAN_WORKSHEET_PUBLIC_URL = `${CREATOR_HOST_ORIGIN}${MENU_PLAN
 export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'burnandbuilddiet.com/menuplanworksheet';
 export const MENU_PLAN_WORKSHEET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/menu-plan-worksheet`;
 export const BURN_AND_BUILD_FAQ_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/${BURN_AND_BUILD_FAQ_API_SLUG}`;
+export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_URL = `${CREATOR_HOST_ORIGIN}${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_PATH}`;
+export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_API_SLUG}`;
 
 /** User-facing short link — redirects to the API attachment download. */
 export const MENU_PLAN_WORKSHEET_URL = MENU_PLAN_WORKSHEET_PUBLIC_URL;
