@@ -1458,6 +1458,25 @@ function renderNav() {
   }).join('');
 }
 
+function escapeHtml(text) {
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatReviewValue(row) {
+  if (row.signatureDisplay?.name) {
+    const name = escapeHtml(row.signatureDisplay.name);
+    const date = row.signatureDisplay.date ? escapeHtml(row.signatureDisplay.date) : '';
+    return date
+      ? `<span class="intake-signature-display">${name}</span><span class="intake-signature-date"> — ${date}</span>`
+      : `<span class="intake-signature-display">${name}</span>`;
+  }
+  return escapeHtml(row.value);
+}
+
 function renderReview() {
   const values = readForm();
   const pkg = buildProgramFromValues(values);
@@ -1471,7 +1490,7 @@ function renderReview() {
       <dt>
         <button type="button" class="intake-review__link" data-review-field="${fieldId}">${label}</button>
       </dt>
-      <dd>${row.value}</dd>
+      <dd>${formatReviewValue(row)}</dd>
     </div>
   `;
   }).join('');

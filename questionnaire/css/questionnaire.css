@@ -768,6 +768,20 @@ body.q-app--workroom {
   letter-spacing: normal;
 }
 
+.intake-signature-input,
+.intake-signature-display {
+  font-family: 'Caveat', cursive;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.intake-signature-date {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
 .intake-review {
   margin: 0;
   border: 1px solid var(--border);

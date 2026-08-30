@@ -18,6 +18,7 @@ const LAYOUT = Object.freeze({
   introGap: 10,
   questionSize: 9.5,
   answerSize: 10,
+  signatureSize: 22,
   tableRowPad: 7,
   cellPad: 6,
 });
@@ -31,17 +32,72 @@ function columnWidths(columns, tableWidth) {
   return columns.map((col) => col.width * tableWidth);
 }
 
+function formatValueText(row) {
+  if (row.signatureDisplay?.name) {
+    const date = row.signatureDisplay.date;
+    return date ? `${row.signatureDisplay.name} — ${date}` : row.signatureDisplay.name;
+  }
+  return String(row.value ?? '');
+}
+
+function valueStyle(row) {
+  if (row.signatureDisplay?.name) {
+    return { font: FONTS.signature, fontSize: LAYOUT.signatureSize };
+  }
+  return { font: FONTS.bold, fontSize: LAYOUT.answerSize };
+}
+
+function drawValueCell(doc, row, x, y, cellW) {
+  const innerW = cellW - LAYOUT.cellPad * 2;
+  const textX = x + LAYOUT.cellPad;
+  const textY = y + LAYOUT.tableRowPad;
+  const fillColor = row._colors?.value || COLORS.body;
+
+  if (row.signatureDisplay?.name) {
+    doc.font(FONTS.signature).fontSize(LAYOUT.signatureSize).fillColor(fillColor);
+    const name = row.signatureDisplay.name;
+    const date = row.signatureDisplay.date;
+    if (date) {
+      const nameWidth = doc.widthOfString(name);
+      doc.text(name, textX, textY, { lineBreak: false });
+      doc
+        .font(FONTS.regular)
+        .fontSize(LAYOUT.answerSize)
+        .text(` — ${date}`, textX + nameWidth, textY + 4, {
+          width: Math.max(0, innerW - nameWidth),
+          lineGap: 0,
+        });
+      return;
+    }
+    doc.text(name, textX, textY, { width: innerW, lineGap: 0 });
+    return;
+  }
+
+  const style = row._styles?.value || valueStyle(row);
+  doc
+    .font(style.font || FONTS.bold)
+    .fontSize(style.fontSize || LAYOUT.answerSize)
+    .fillColor(fillColor)
+    .text(String(row.value ?? ''), textX, textY, {
+      width: innerW,
+      lineGap: 0,
+    });
+}
+
 function measureRowHeights(doc, rows, columns, tableWidth) {
   const colWidths = columnWidths(columns, tableWidth);
   return rows.map((row) => {
     let maxH = LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
-      const style = row._styles?.[col.key] || {};
+      const style = col.key === 'value' && row.signatureDisplay?.name
+        ? { font: FONTS.signature, fontSize: LAYOUT.signatureSize }
+        : (row._styles?.[col.key] || {});
       doc.font(style.font || FONTS.regular).fontSize(style.fontSize || LAYOUT.questionSize);
       const innerW = colWidths[index] - LAYOUT.cellPad * 2;
+      const text = col.key === 'value' ? formatValueText(row) : String(row[col.key] ?? '');
       maxH = Math.max(
         maxH,
-        doc.heightOfString(String(row[col.key] ?? ''), { width: innerW, lineGap: 0 })
+        doc.heightOfString(text, { width: innerW, lineGap: 0 })
           + LAYOUT.tableRowPad * 2,
       );
     });
@@ -68,14 +124,18 @@ function drawConfirmationTable(doc, { x, y, width, rows }) {
       const cellW = colWidths[index];
       const style = row._styles?.[col.key] || {};
       const fillColor = row._colors?.[col.key] || COLORS.body;
-      doc
-        .font(style.font || FONTS.regular)
-        .fontSize(style.fontSize || LAYOUT.questionSize)
-        .fillColor(fillColor)
-        .text(String(row[col.key] ?? ''), cx + LAYOUT.cellPad, cy + LAYOUT.tableRowPad, {
-          width: cellW - LAYOUT.cellPad * 2,
-          lineGap: 0,
-        });
+      if (col.key === 'value' && row.signatureDisplay?.name) {
+        drawValueCell(doc, row, cx, cy, cellW);
+      } else {
+        doc
+          .font(style.font || FONTS.regular)
+          .fontSize(style.fontSize || LAYOUT.questionSize)
+          .fillColor(fillColor)
+          .text(String(row[col.key] ?? ''), cx + LAYOUT.cellPad, cy + LAYOUT.tableRowPad, {
+            width: cellW - LAYOUT.cellPad * 2,
+            lineGap: 0,
+          });
+      }
       cx += cellW;
     });
 
@@ -119,9 +179,10 @@ export function drawAnswersConfirmationPage(doc, payload) {
   const rows = confirmation.rows.map((row) => ({
     label: formatAnswersConfirmationLabel(row),
     value: row.value,
+    signatureDisplay: row.signatureDisplay || null,
     _styles: {
       label: { font: FONTS.regular, fontSize: LAYOUT.questionSize },
-      value: { font: FONTS.bold, fontSize: LAYOUT.answerSize },
+      value: valueStyle(row),
     },
     _colors: {
       label: COLORS.muted,

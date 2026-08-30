@@ -15,6 +15,7 @@ export const MODERN_REPORT_FONTS = Object.freeze({
   bold: 'Montserrat-Bold',
   italic: 'Montserrat-Italic',
   boldItalic: 'Montserrat-BoldItalic',
+  signature: 'Caveat',
 });
 
 export const MODERN_REPORT_COLORS = Object.freeze({
@@ -117,6 +118,7 @@ export function registerModernReportFonts(doc) {
   doc.registerFont(MODERN_REPORT_FONTS.bold, path.join(FONT_DIR, 'Montserrat-Bold.ttf'));
   doc.registerFont(MODERN_REPORT_FONTS.italic, path.join(FONT_DIR, 'Montserrat-Italic.ttf'));
   doc.registerFont(MODERN_REPORT_FONTS.boldItalic, path.join(FONT_DIR, 'Montserrat-BoldItalic.ttf'));
+  doc.registerFont(MODERN_REPORT_FONTS.signature, path.join(FONT_DIR, 'Caveat-Regular.ttf'));
 }
 
 export function modernReportContentBox(doc) {

@@ -49,6 +49,19 @@ function waiverSignedLabel(signature, signatureDate) {
   return date && date !== '—' ? `${name} — ${date}` : name;
 }
 
+function signatureDisplayRow(fieldId, label, signatureName, signatureDate) {
+  const name = String(signatureName || '').trim();
+  const date = formatConfirmationDate(signatureDate);
+  return {
+    fieldId,
+    label,
+    value: waiverSignedLabel(signatureName, signatureDate),
+    signatureDisplay: name
+      ? { name, date: date !== '—' ? date : '' }
+      : null,
+  };
+}
+
 function bodyFatPercentValue(intake) {
   const fatPct = Number(intake.fatPercent);
   if (!Number.isFinite(fatPct) || fatPct <= 0) return '—';
@@ -90,11 +103,7 @@ export function buildAnswersConfirmationRows(source) {
     confirmationRow('totalWeight', intake.totalWeight > 0 ? `${intake.totalWeight} lbs` : '—'),
     confirmationRow('fatPercent', bodyFatPercentValue(intake)),
     confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
-    {
-      fieldId: 'waiver',
-      label: INTAKE_WAIVER_SIGNED_LABEL,
-      value: waiverSignedLabel(intake.waiverSignature, intake.waiverSignedDate),
-    },
+    signatureDisplayRow('waiver', INTAKE_WAIVER_SIGNED_LABEL, intake.waiverSignature, intake.waiverSignedDate),
   ];
 
   return rows.map((row, index) => ({
