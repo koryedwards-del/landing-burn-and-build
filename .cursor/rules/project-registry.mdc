@@ -94,7 +94,7 @@ Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `
 
 **Visual style:** modern gold/black Montserrat report — Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
 
-**Standalone FAQ handbook:** `GET /api/samples/handbook-faq` — linked from purchase email, not included in the diet PDF.
+**Standalone FAQ handbook:** `GET /api/samples/handbook-faq` — separate from the diet PDF. Email link wiring waits for exact user copy.
 
 ## B&B Sample Diet PDF (landing page)
 

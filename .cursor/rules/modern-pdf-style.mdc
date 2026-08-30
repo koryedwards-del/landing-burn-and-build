@@ -7,7 +7,7 @@ alwaysApply: true
 
 **From August 2026 forward, every Burn & Build PDF uses the modern report style.** The **Food Plan** page is the design reference — gold/black Montserrat layout with personalized header and three-column footer.
 
-The **Burn & Build Diet PDF** (7 pages) and the **FAQ handbook PDF** (standalone) are separate deliverables. FAQ is linked from the purchase email — it is **not** bundled inside the diet PDF.
+The **Burn & Build Diet PDF** (7 pages) and the **FAQ handbook PDF** (standalone) are separate deliverables. FAQ is **not** bundled inside the diet PDF.
 
 Do not add new pages in the legacy seminar wireframe (`SEMINAR_COLORS`, old locked-preview tables, HTML print paths). Extend the modern family instead.
 
