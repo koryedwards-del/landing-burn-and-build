@@ -771,12 +771,17 @@ body.q-app--workroom {
 .intake-signature-input,
 .intake-signature-display {
   font-family: 'Caveat', cursive;
-  font-size: 2.25em;
-  line-height: 1.1;
+  font-size: 1.45em;
+  line-height: 1;
+  vertical-align: baseline;
 }
 
 .intake-signature-date {
+  font-family: inherit;
+  font-size: 0.9em;
+  font-weight: 400;
   color: var(--muted);
+  vertical-align: baseline;
 }
 
 .intake-review {

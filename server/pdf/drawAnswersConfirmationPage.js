@@ -9,6 +9,10 @@ import {
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
 import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
+import {
+  SIGNATURE_DISPLAY_DATE_SIZE_PT,
+  SIGNATURE_DISPLAY_NAME_SIZE_PT,
+} from '../../js/signatureDisplayData.js';
 
 const FONTS = MODERN_REPORT_FONTS;
 const COLORS = MODERN_REPORT_COLORS;
@@ -18,14 +22,16 @@ const LAYOUT = Object.freeze({
   introGap: 10,
   questionSize: 9.5,
   answerSize: 10,
-  signatureNameScale: 2.25,
   tableRowPad: 7,
   cellPad: 6,
 });
 
-function signatureNameSize() {
-  return LAYOUT.answerSize * LAYOUT.signatureNameScale;
-}
+const SIGNATURE_LAYOUT = Object.freeze({
+  nameSize: SIGNATURE_DISPLAY_NAME_SIZE_PT,
+  dateSize: SIGNATURE_DISPLAY_DATE_SIZE_PT,
+  baselineNudge: 1.5,
+  emDash: ' — ',
+});
 
 const TABLE_COLUMNS = Object.freeze([
   { key: 'label', width: 0.5 },
@@ -34,6 +40,46 @@ const TABLE_COLUMNS = Object.freeze([
 
 function columnWidths(columns, tableWidth) {
   return columns.map((col) => col.width * tableWidth);
+}
+
+function textTopForBaseline(doc, font, fontSize, baselineY, nudge = 0) {
+  doc.font(font).fontSize(fontSize);
+  const ascent = doc.heightOfString('Ag', { lineGap: 0 });
+  return baselineY - ascent + nudge;
+}
+
+function measureSignatureContentHeight(doc, name, date) {
+  const { nameSize, dateSize } = SIGNATURE_LAYOUT;
+  doc.font(FONTS.signature).fontSize(nameSize);
+  const nameH = doc.heightOfString(name, { lineBreak: false });
+  let contentH = nameH;
+  if (date) {
+    doc.font(FONTS.regular).fontSize(dateSize);
+    contentH = Math.max(contentH, doc.heightOfString(date, { lineBreak: false }));
+  }
+  return contentH + 1;
+}
+
+function drawSignatureWithDate(doc, { name, date, x, y, maxWidth, nameColor }) {
+  const { nameSize, dateSize, baselineNudge, emDash } = SIGNATURE_LAYOUT;
+
+  doc.font(FONTS.signature).fontSize(nameSize);
+  const nameH = doc.heightOfString(name, { lineBreak: false });
+  const baselineY = y + nameH - 1;
+
+  const nameTop = textTopForBaseline(doc, FONTS.signature, nameSize, baselineY, baselineNudge);
+  doc.font(FONTS.signature).fontSize(nameSize).fillColor(nameColor);
+  doc.text(name, x, nameTop, { lineBreak: false });
+
+  if (!date) return;
+
+  const nameWidth = doc.widthOfString(name);
+  const dateTop = textTopForBaseline(doc, FONTS.regular, dateSize, baselineY, 0);
+  doc.font(FONTS.regular).fontSize(dateSize).fillColor(COLORS.muted);
+  doc.text(`${emDash}${date}`, x + nameWidth, dateTop, {
+    width: Math.max(0, maxWidth - nameWidth),
+    lineBreak: false,
+  });
 }
 
 function formatValueText(row) {
@@ -55,24 +101,14 @@ function drawValueCell(doc, row, x, y, cellW) {
   const fillColor = row._colors?.value || COLORS.body;
 
   if (row.signatureDisplay?.name) {
-    const name = row.signatureDisplay.name;
-    const date = row.signatureDisplay.date;
-    const nameSize = signatureNameSize();
-    doc.font(FONTS.signature).fontSize(nameSize).fillColor(fillColor);
-    if (date) {
-      const nameWidth = doc.widthOfString(name);
-      doc.text(name, textX, textY, { lineBreak: false });
-      const dateY = textY + (nameSize - LAYOUT.answerSize) * 0.35;
-      doc
-        .font(FONTS.regular)
-        .fontSize(LAYOUT.answerSize)
-        .text(` — ${date}`, textX + nameWidth, dateY, {
-          width: Math.max(0, innerW - nameWidth),
-          lineGap: 0,
-        });
-      return;
-    }
-    doc.text(name, textX, textY, { width: innerW, lineGap: 0 });
+    drawSignatureWithDate(doc, {
+      name: row.signatureDisplay.name,
+      date: row.signatureDisplay.date,
+      x: textX,
+      y: textY,
+      maxWidth: innerW,
+      nameColor: fillColor,
+    });
     return;
   }
 
@@ -93,15 +129,12 @@ function measureRowHeights(doc, rows, columns, tableWidth) {
     let maxH = LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
       if (col.key === 'value' && row.signatureDisplay?.name) {
-        const nameSize = signatureNameSize();
-        doc.font(FONTS.signature).fontSize(nameSize);
-        const nameH = doc.heightOfString(row.signatureDisplay.name, { lineBreak: false });
-        let rowTextH = nameH;
-        if (row.signatureDisplay.date) {
-          doc.font(FONTS.regular).fontSize(LAYOUT.answerSize);
-          rowTextH = Math.max(nameH, doc.heightOfString(` — ${row.signatureDisplay.date}`, { lineBreak: false }));
-        }
-        maxH = Math.max(maxH, rowTextH + LAYOUT.tableRowPad * 2);
+        const contentH = measureSignatureContentHeight(
+          doc,
+          row.signatureDisplay.name,
+          row.signatureDisplay.date,
+        );
+        maxH = Math.max(maxH, contentH + LAYOUT.tableRowPad * 2);
         return;
       }
       const style = row._styles?.[col.key] || {};
