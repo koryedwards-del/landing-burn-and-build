@@ -71,7 +71,7 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
     'Practical answers to questions that come up while following Burn & Build.',
     `Download FAQ: ${faqUrl}`,
     '',
-    'Questions or need help getting started?',
+    'Questions? Just email me.',
     PURCHASE_EMAIL_CONTACT,
     '',
     '— Kory',
