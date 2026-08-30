@@ -48,7 +48,7 @@ npm run verify:pdf
 
 ## Sample / purchased PDF
 
-Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.pdf`. Purchased diet: `GET /api/programs/diet-pdf` (live-rendered). Purchase email preview: `https://burnandbuilddiet.com/purchase-email-preview/` (GitHub Pages) · API `GET /api/samples/burn-and-build-purchase-email`.
+Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.pdf` (**download:** `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`). Purchased diet: `GET /api/programs/diet-pdf` (live-rendered). Purchase email preview download: `https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-purchase-email`.
 
 ## Questionnaire
 

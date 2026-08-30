@@ -27,19 +27,15 @@ Constants: `js/dietEmailPreviewNamingHelpers.js`, public URLs in `js/siteUrls.js
 
 ## Preview URL (after push to `main`)
 
-**Review in Safari** — paste in address bar:
+**Review in browser** (GitHub Pages): `https://burnandbuilddiet.com/purchase-email-preview/`
 
-```
-https://burnandbuilddiet.com/purchase-email-preview/
-```
-
-**API download** (attachment):
+**Download** (Render — use this when sharing a file):
 
 ```
 https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-purchase-email
 ```
 
-Inline in browser: same API URL with `?inline=1`
+Inline in browser: same Render URL with `?inline=1`
 
 ## Visual system (no blue)
 

@@ -25,5 +25,5 @@ fs.writeFileSync(siteFile, html);
 const stat = fs.statSync(siteFile);
 console.log(`OK ${siteFile} (${stat.size} bytes)`);
 console.log(`SUBJECT ${preview.subject}`);
-console.log(`VIEW ${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_URL}`);
 console.log(`DOWNLOAD ${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_DOWNLOAD_URL}`);
+console.log(`VIEW ${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_URL}`);
