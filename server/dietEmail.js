@@ -72,7 +72,9 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
     'Questions or need help getting started?',
     SUPPORT_EMAIL,
     '',
-    '— Burn & Build',
+    'Kory Edwards',
+    'Creator, Burn & Build',
+    'Athlete-tested since 1982',
     siteOrigin(),
   ].join('\n');
 }
@@ -141,8 +143,11 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
           </tr>
           <tr>
             <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
-              <p style="margin:0 0 12px;color:${c.black};">Questions or need help getting started?<br>${supportLink}</p>
-              <p style="margin:0;font-size:14px;">&mdash; Burn &amp; Build<br><a href="${site}" style="color:${c.muted};text-decoration:none;">www.burnandbuilddiet.com</a></p>
+              <p style="margin:0 0 20px;color:${c.black};font-weight:bold;">Questions or need help getting started?<br>${supportLink}</p>
+              <p style="margin:0 0 4px;font-weight:bold;color:${c.black};">Kory Edwards</p>
+              <p style="margin:0 0 4px;color:${c.black};">Creator, Burn &amp; Build</p>
+              <p style="margin:0 0 8px;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
+              <p style="margin:0;font-size:14px;"><a href="${site}" style="color:${c.muted};text-decoration:none;">www.burnandbuilddiet.com</a></p>
             </td>
           </tr>
         </table>
