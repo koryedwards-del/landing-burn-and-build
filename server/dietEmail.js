@@ -2,14 +2,26 @@ import { dietPdfAttachmentFilename } from '../js/dietPdfNamingHelpers.js';
 import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
   brandLogoUrl,
-  dietPdfDownloadUrl,
-  menuPlanWorksheetUrl,
+  burnAndBuildFaqUrl,
+  menuPlanWorksheetDownloadUrl,
   purchaserPortalUrl,
   siteOrigin,
   SUPPORT_EMAIL,
 } from './dietPdfUrls.js';
 
 const RESEND_API = 'https://api.resend.com/emails';
+
+const EMAIL_COLORS = Object.freeze({
+  pageBg: '#F3F3F3',
+  card: '#FFFFFF',
+  black: '#0A0A0A',
+  gold: '#FDC500',
+  keepTint: '#FFFBE6',
+  muted: '#5C5C5C',
+  rule: '#E5E5E5',
+});
+
+const EMAIL_SUBJECT = 'Your Burn & Build Diet + Resources';
 
 export function dietEmailConfigured() {
   return !!String(process.env.RESEND_API_KEY || '').trim();
@@ -31,7 +43,7 @@ function firstNameFromPreferredName(preferredName) {
   return String(preferredName || '').trim().split(/\s+/)[0] || 'there';
 }
 
-function buildDietEmailText({ firstName, downloadUrl, portalUrl, worksheetUrl }) {
+function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
   return [
     `Hi ${firstName},`,
     '',
@@ -39,25 +51,41 @@ function buildDietEmailText({ firstName, downloadUrl, portalUrl, worksheetUrl })
     '',
     'Your payment is confirmed and your personalized program is ready.',
     '',
-    `Download your Burn & Build Diet: ${downloadUrl}`,
+    'KEEP THIS EMAIL',
     '',
-    `Need it again later? Open your download page: ${portalUrl}`,
-    'Your program opens automatically when you return.',
+    'This email is your link back to your Burn & Build download page. If you ever need another copy of your diet, return here:',
     '',
-    'A copy of your Burn & Build Diet is attached to this email.',
+    `Open your Burn & Build download page: ${portalUrl}`,
     '',
-    'Resources',
-    `Print a blank Menu Plan worksheet: ${worksheetUrl}`,
+    'A copy of your Burn & Build Diet is also attached to this email.',
     '',
-    `Questions or need help getting started? Contact us at ${SUPPORT_EMAIL} — we are happy to help.`,
+    'FREE RESOURCES',
+    '',
+    'Menu Plan Worksheet',
+    'A blank worksheet for building your weekly menu.',
+    `Download Menu Plan Worksheet: ${worksheetUrl}`,
+    '',
+    'Frequently Asked Questions',
+    'Practical answers to questions that come up while following Burn & Build.',
+    `Download FAQ: ${faqUrl}`,
+    '',
+    'Questions or need help getting started?',
+    SUPPORT_EMAIL,
     '',
     '— Burn & Build',
     siteOrigin(),
   ].join('\n');
 }
 
-function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, worksheetUrl, logoUrl }) {
+function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUrl }) {
+  const c = EMAIL_COLORS;
   const supportMailto = `mailto:${SUPPORT_EMAIL}`;
+  const site = siteOrigin();
+  const portalLink = `<a href="${portalUrl}" style="color:${c.black};font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold};">&#8594;</span></a>`;
+  const worksheetLink = `<a href="${worksheetUrl}" style="color:${c.gold};font-weight:bold;text-decoration:underline;">Download Menu Plan Worksheet</a>`;
+  const faqLink = `<a href="${faqUrl}" style="color:${c.gold};font-weight:bold;text-decoration:underline;">Download FAQ</a>`;
+  const supportLink = `<a href="${supportMailto}" style="color:${c.black};font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">${SUPPORT_EMAIL}</a>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,44 +93,56 @@ function buildDietEmailHtml({ firstName, downloadUrl, portalUrl, worksheetUrl, l
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <title>Your Burn &amp; Build Diet</title>
+  <title>Your Burn &amp; Build Diet + Resources</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:Georgia,'Times New Roman',Times,serif;color:#111111;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5;padding:32px 16px;">
+<body style="margin:0;padding:0;background-color:${c.pageBg};font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:${c.black};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:32px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border:1px solid #e5e5e5;border-radius:8px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:${c.card};border:1px solid ${c.rule};border-radius:8px;">
           <tr>
-            <td align="center" style="padding:32px 32px 8px;">
-              <a href="${siteOrigin()}" style="text-decoration:none;">
-                <img src="${logoUrl}" alt="Burn &amp; Build" width="120" height="120" style="display:block;border:0;height:auto;max-width:120px;">
+            <td align="center" style="padding:32px 32px 16px;">
+              <a href="${site}" style="text-decoration:none;">
+                <img src="${logoUrl}" alt="Burn &amp; Build" width="96" height="96" style="display:block;border:0;height:auto;max-width:96px;">
               </a>
             </td>
           </tr>
           <tr>
-            <td style="padding:8px 32px 0;font-size:16px;line-height:1.6;">
+            <td style="padding:0 32px 8px;font-size:16px;line-height:1.6;color:${c.black};">
               <p style="margin:0 0 16px;">Hi ${firstName},</p>
-              <p style="margin:0 0 16px;">Thank you for purchasing the <strong>Burn &amp; Build Diet</strong>.</p>
+              <p style="margin:0 0 16px;">Thank you for purchasing the <strong>Burn &amp; Build Diet.</strong></p>
               <p style="margin:0 0 24px;">Your payment is confirmed and your personalized program is ready.</p>
             </td>
           </tr>
           <tr>
-            <td align="center" style="padding:0 32px 24px;">
-              <a href="${downloadUrl}" style="display:inline-block;background-color:#2F6FA8;color:#ffffff;text-decoration:none;font-family:Georgia,'Times New Roman',Times,serif;font-size:16px;font-weight:bold;padding:14px 28px;border-radius:6px;">Download your Burn &amp; Build Diet</a>
+            <td style="padding:0 32px 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-left:3px solid ${c.gold};background-color:${c.keepTint};">
+                <tr>
+                  <td style="padding:16px 20px;font-size:16px;line-height:1.6;color:${c.black};">
+                    <p style="margin:0 0 12px;font-size:11px;font-weight:bold;letter-spacing:0.08em;color:${c.gold};">KEEP THIS EMAIL</p>
+                    <p style="margin:0 0 16px;">This email is your link back to your Burn &amp; Build download page. If you ever need another copy of your diet, return here:</p>
+                    <p style="margin:0 0 16px;">${portalLink}</p>
+                    <p style="margin:0;">A copy of your Burn & Build Diet is also attached to this email.</p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
-            <td style="padding:0 32px 24px;font-size:16px;line-height:1.6;">
-              <p style="margin:0 0 16px;">Need it again later? <a href="${portalUrl}" style="color:#2F6FA8;">Open your download page</a> — your program opens automatically.</p>
-              <p style="margin:0 0 24px;">A copy of your Burn &amp; Build Diet is attached to this email.</p>
-              <p style="margin:0 0 8px;font-weight:bold;">Resources</p>
-              <p style="margin:0;"><a href="${worksheetUrl}" style="color:#2F6FA8;">Print a blank Menu Plan worksheet</a></p>
+            <td style="padding:0 32px 24px;font-size:16px;line-height:1.6;color:${c.black};">
+              <p style="margin:0 0 16px;font-size:18px;font-weight:bold;color:${c.black};">Free Resources</p>
+              <p style="margin:0 0 4px;font-weight:bold;">Menu Plan Worksheet</p>
+              <p style="margin:0 0 8px;color:${c.muted};">A blank worksheet for building your weekly menu.</p>
+              <p style="margin:0 0 20px;">${worksheetLink}</p>
+              <p style="margin:0 0 4px;font-weight:bold;">Frequently Asked Questions</p>
+              <p style="margin:0 0 8px;color:${c.muted};">Practical answers to questions that come up while following Burn &amp; Build.</p>
+              <p style="margin:0;">${faqLink}</p>
             </td>
           </tr>
           <tr>
-            <td style="padding:8px 32px 32px;border-top:1px solid #e5e5e5;font-size:15px;line-height:1.6;color:#444444;">
-              <p style="margin:0 0 12px;">Questions or need help getting started? Contact Burn &amp; Build at <a href="${supportMailto}" style="color:#2F6FA8;">${SUPPORT_EMAIL}</a> — we&rsquo;re happy to help.</p>
-              <p style="margin:0;font-size:14px;color:#666666;">— Burn &amp; Build<br><a href="${siteOrigin()}" style="color:#666666;text-decoration:none;">www.burnandbuilddiet.com</a></p>
+            <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
+              <p style="margin:0 0 12px;color:${c.black};">Questions or need help getting started?<br>${supportLink}</p>
+              <p style="margin:0;font-size:14px;">&mdash; Burn &amp; Build<br><a href="${site}" style="color:${c.muted};text-decoration:none;">www.burnandbuilddiet.com</a></p>
             </td>
           </tr>
         </table>
@@ -131,15 +171,15 @@ export async function sendDietPdfEmail({
   const filename = dietPdfAttachmentFilename({ preferredName, pkg });
   const firstNameRaw = firstNameFromPreferredName(preferredName);
   const firstName = escapeHtml(firstNameRaw);
-  const downloadUrl = dietPdfDownloadUrl(to, programId);
   const portalUrl = purchaserPortalUrl(to, programId);
-  const worksheetUrl = menuPlanWorksheetUrl();
+  const worksheetUrl = menuPlanWorksheetDownloadUrl();
+  const faqUrl = burnAndBuildFaqUrl();
   const logoUrl = brandLogoUrl();
   const emailContent = {
     firstName: firstNameRaw,
-    downloadUrl,
     portalUrl,
     worksheetUrl,
+    faqUrl,
     logoUrl,
   };
 
@@ -160,7 +200,7 @@ export async function sendDietPdfEmail({
       from: emailFrom(),
       reply_to: SUPPORT_EMAIL,
       to: [to],
-      subject: 'Your Burn & Build Diet',
+      subject: EMAIL_SUBJECT,
       html: buildDietEmailHtml({ ...emailContent, firstName }),
       text: buildDietEmailText(emailContent),
       attachments: [{

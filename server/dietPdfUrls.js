@@ -1,5 +1,5 @@
 import { normalizeEmail } from './db.js';
-import { BURN_AND_BUILD_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
+import { BURN_AND_BUILD_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
 
 const RENDER_API_ORIGIN = String(
   process.env.DIET_PDF_DOWNLOAD_ORIGIN || 'https://program-creator-3tzd.onrender.com',
@@ -40,6 +40,10 @@ export function brandLogoUrl() {
 
 export function menuPlanWorksheetUrl() {
   return MENU_PLAN_WORKSHEET_URL;
+}
+
+export function menuPlanWorksheetDownloadUrl() {
+  return MENU_PLAN_WORKSHEET_DOWNLOAD_URL;
 }
 
 export function burnAndBuildFaqUrl() {
