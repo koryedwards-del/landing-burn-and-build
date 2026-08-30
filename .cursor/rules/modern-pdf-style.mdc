@@ -16,8 +16,9 @@ The **Burn & Build Diet PDF** (7 pages) and **Burn & Build FAQ** (standalone) ar
 | Personalized diet | Burn & Build Diet | `Burn&Build-{Name}-{date}.pdf` | `docs/samples/b&bsamplediet.pdf` (sample only) | `sample-diet` / `programs/diet-pdf` |
 | Menu Plan worksheet | Burn & Build Menu Plan | `menu-plan-worksheet.pdf` | `docs/samples/menu-plan-worksheet.pdf` | `menu-plan-worksheet` |
 | FAQ support doc | **Burn & Build FAQ** | `Burn & Build FAQ.pdf` | `docs/samples/burn-and-build-faq.pdf` | `burn-and-build-faq` |
+| Purchase email preview | Burn & Build Purchase Email | `burn-and-build-purchase-email.html` | `docs/samples/burn-and-build-purchase-email.html` | `burn-and-build-purchase-email` |
 
-FAQ rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`. Sample diet: `.cursor/rules/sample-diet-pdf.mdc`.
+FAQ rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`. Purchase email: `.cursor/rules/burn-and-build-purchase-email.mdc`. Sample diet: `.cursor/rules/sample-diet-pdf.mdc`.
 
 Do not add new pages in the legacy seminar wireframe (`SEMINAR_COLORS`, old locked-preview tables, HTML print paths). Extend the modern family instead.
 

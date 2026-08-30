@@ -1,0 +1,82 @@
+---
+description: Burn & Build purchase autosend email — naming, preview, and paths
+alwaysApply: true
+---
+
+# Burn & Build purchase email
+
+Transactional email sent after diet purchase (Resend). Attaches the personalized Burn & Build Diet PDF and links to the download portal + free resources.
+
+**User-facing copy is locked** — do not reauthor. See `.cursor/rules/user-authored-copy.mdc`.
+
+## Naming (locked)
+
+| Layer | Name | Example |
+|-------|------|---------|
+| **Subject** | `Your Burn & Build Diet + Resources` | Resend `subject` |
+| **Preview label** | Burn & Build Purchase Email | Docs, agent context |
+| **Download filename** | `burn-and-build-purchase-email.html` | `Content-Disposition` attachment |
+| **Repo static file** | `docs/samples/burn-and-build-purchase-email.html` | Commit after `npm run preview:diet-email` |
+| **GitHub Pages preview** | `/purchase-email-preview/` | Safari-safe review URL |
+| **API slug** | `burn-and-build-purchase-email` | `GET /api/samples/burn-and-build-purchase-email` |
+| **npm script** | `preview:diet-email` | Regenerates preview HTML |
+
+Constants: `js/dietEmailPreviewNamingHelpers.js`, public URLs in `js/siteUrls.js`.
+
+**Do not create** alternate preview paths (`previews/diet-email/`, `diet-email-preview` API slug, `/opt/cursor/artifacts/` for user downloads).
+
+## Preview URL (after push to `main`)
+
+**Review in Safari** — paste in address bar:
+
+```
+https://burnandbuilddiet.com/purchase-email-preview/
+```
+
+**API download** (attachment):
+
+```
+https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-purchase-email
+```
+
+Inline in browser: same API URL with `?inline=1`
+
+## Visual system (no blue)
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| Page background | `#F3F3F3` | Outside the card |
+| Card | `#FFFFFF` | Reading area |
+| Black | `#0A0A0A` | Body, headings, portal link |
+| Gold | `#FDC500` | KEEP THIS EMAIL, resource links, accents |
+| Keep tint | `#FFFBE6` | Keep-this callout background |
+
+Links use gold or black with gold underline — **never default blue**. Safari overrides require `!important` and `-webkit-text-fill-color` on `<a>` tags.
+
+## Email structure
+
+1. Logo → greeting → purchase confirmation
+2. **KEEP THIS EMAIL** — portal return link (not a giant CTA); diet PDF attached
+3. **Free Resources** — Menu Plan Worksheet + Burn & Build FAQ (equal weight, gold download links)
+4. Support → **— Kory** (Caveat signature, ~30px, dark gray) → Burn & Build → *Athlete-tested since 1982*
+
+## Code paths
+
+| Piece | Path |
+|-------|------|
+| Email builder + send | `server/dietEmail.js` |
+| Fulfillment trigger | `server/dietFulfillment.js` |
+| Portal / resource URLs | `server/dietPdfUrls.js` |
+| Naming constants | `js/dietEmailPreviewNamingHelpers.js` |
+| GitHub Pages preview | `purchase-email-preview/index.html` |
+| API static file | `docs/samples/burn-and-build-purchase-email.html` |
+| API route | `GET /api/samples/burn-and-build-purchase-email` (`server/samplePdfDownloads.js`) |
+| Regenerate preview | `scripts/preview-diet-email.mjs` |
+
+## Regenerate preview
+
+```
+npm run preview:diet-email
+```
+
+Writes both `purchase-email-preview/index.html` and `docs/samples/burn-and-build-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.

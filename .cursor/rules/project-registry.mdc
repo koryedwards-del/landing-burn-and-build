@@ -17,6 +17,7 @@ Push to `main` deploys the static site via GitHub Pages.
 | `/` (`index.html`) | Marketing landing |
 | `/questionnaire/` | Program questionnaire → Burn Engine (checkout not wired yet) |
 | `/createyourfoodplan/` | Stripe checkout + purchaser download portal (to reconnect) |
+| `/purchase-email-preview/` | Purchase autosend email HTML preview (Safari review) |
 | `server/pdf/` | PDFKit Burn & Build Diet renderer (`renderSampleDietPrintout.js`) |
 | `js/` | Burn Engine, printout payloads, program package data |
 
@@ -67,8 +68,9 @@ Every `js/` file name ends with its job:
 | Burn & Build Diet | Burn & Build Diet | `Burn&Build-{Name}-{date}.pdf` | `b&bsamplediet.pdf` (sample) | `sample-diet` |
 | Menu Plan worksheet | Burn & Build Menu Plan | `menu-plan-worksheet.pdf` | `menu-plan-worksheet.pdf` | `menu-plan-worksheet` |
 | **Burn & Build FAQ** | **Burn & Build FAQ** | `Burn & Build FAQ.pdf` | `burn-and-build-faq.pdf` | `burn-and-build-faq` |
+| Purchase email preview | Burn & Build Purchase Email | `burn-and-build-purchase-email.html` | `burn-and-build-purchase-email.html` | `burn-and-build-purchase-email` |
 
-Constants: `js/faqPdfNamingHelpers.js`, `js/dietPdfNamingHelpers.js`. Rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`, `.cursor/rules/sample-diet-pdf.mdc`, `.cursor/rules/modern-pdf-style.mdc`.
+Constants: `js/faqPdfNamingHelpers.js`, `js/dietPdfNamingHelpers.js`, `js/dietEmailPreviewNamingHelpers.js`. Rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`, `.cursor/rules/burn-and-build-purchase-email.mdc`, `.cursor/rules/sample-diet-pdf.mdc`, `.cursor/rules/modern-pdf-style.mdc`.
 
 ## Key files
 
@@ -84,6 +86,8 @@ Constants: `js/faqPdfNamingHelpers.js`, `js/dietPdfNamingHelpers.js`. Rules: `.c
 | `js/faqPdfNamingHelpers.js` | Burn & Build FAQ product name, filename, slug |
 | `js/handbookFaqPrintoutData.js` | Burn & Build FAQ PDF payload |
 | `server/pdf/renderHandbookFaqPrintout.js` | Burn & Build FAQ renderer |
+| `server/dietEmail.js` | Purchase autosend email (HTML + Resend) |
+| `js/dietEmailPreviewNamingHelpers.js` | Purchase email preview paths + API slug |
 | `server/pdf/drawModernReportFrame.js` | Modern PDF frame (header, footer, tokens) |
 | `server/pdf/drawModernFoodPlanPage.js` | Food Plan page — canonical modern style reference |
 | `js/leanBodyAnalysisPrintout.js` | LBA table row helper |
@@ -106,6 +110,8 @@ Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `
 **Visual style:** modern gold/black Montserrat report — Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
 
 **Burn & Build FAQ:** `GET /api/samples/burn-and-build-faq` — separate from the diet PDF. See `.cursor/rules/burn-and-build-faq-pdf.mdc`.
+
+**Purchase email:** sent via Resend after checkout; preview at `/purchase-email-preview/`. See `.cursor/rules/burn-and-build-purchase-email.mdc`.
 
 ## B&B Sample Diet PDF (landing page)
 

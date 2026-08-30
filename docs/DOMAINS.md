@@ -36,7 +36,8 @@ Three standalone pieces:
 | `server/pdf/renderSampleDietPrintout.js` | Burn & Build Diet PDF renderer |
 | `server/pdf/` | PDFKit renderer |
 | `server/publicSampleDiet.js` | Live sample fallback when static PDF missing |
-| `docs/samples/` | `b&bsamplediet.pdf` (landing preview), `menu-plan-worksheet.pdf`, `burn-and-build-faq.pdf` |
+| `docs/samples/` | `b&bsamplediet.pdf` (landing preview), `menu-plan-worksheet.pdf`, `burn-and-build-faq.pdf`, `burn-and-build-purchase-email.html` |
+| `purchase-email-preview/` | Purchase autosend email HTML preview (`index.html`) |
 
 ## Verify
 
@@ -47,7 +48,7 @@ npm run verify:pdf
 
 ## Sample / purchased PDF
 
-Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.pdf`. Purchased diet: `GET /api/programs/diet-pdf` (live-rendered).
+Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.pdf`. Purchased diet: `GET /api/programs/diet-pdf` (live-rendered). Purchase email preview: `https://burnandbuilddiet.com/purchase-email-preview/` (GitHub Pages) · API `GET /api/samples/burn-and-build-purchase-email`.
 
 ## Questionnaire
 
