@@ -1,4 +1,4 @@
-/** PDF page 7 — rows that list the customer's submitted answers. */
+/** PDF questionnaire confirmation — rows that list the customer's submitted answers. */
 
 import {
   INTAKE_FIELD_QUESTIONS,

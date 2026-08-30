@@ -1,5 +1,5 @@
 /**
- * Burn & Build Diet PDF — 7-page program report (purchased + landing sample).
+ * Burn & Build Diet PDF — program report (purchased + landing sample).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,6 +13,7 @@ import {
   TABLE_1982,
 } from './draw1982Frame.js';
 import { drawAnswersConfirmationPage } from './drawAnswersConfirmationPage.js';
+import { drawModernFaqPages } from './drawModernFaqPage.js';
 import { drawModernFoodPlanPage } from './drawModernFoodPlanPage.js';
 import { drawModernMenuPlanPage } from './drawModernMenuPlanPage.js';
 import { drawModernLeanBodyAnalysisPage } from './drawModernLeanBodyAnalysisPage.js';
@@ -1008,7 +1009,7 @@ function drawSampleDayMenuPage(doc, payload) {
   }
 }
 
-export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 7;
+export const SAMPLE_DIET_PRINTOUT_MIN_PAGES = 10;
 
 export function validateSampleDietPayload(payload) {
   if (!payload || typeof payload !== 'object') {
@@ -1046,6 +1047,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
   drawLeanBodyAnalysisPage(doc, payload);
+  drawModernFaqPages(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
 
   stamp1982Footers(doc, payload.header);
