@@ -1,6 +1,7 @@
 /** Parent/guardian approval for athletes age 17 and under — questionnaire, intake, purchase. */
 
 export const PARENT_APPROVAL_MAX_AGE = 17;
+export const MIN_ATHLETE_AGE = 16;
 export const MAX_ATHLETE_AGE = 99;
 
 export const INTAKE_AGE_PARENT_NOTE =
@@ -39,8 +40,8 @@ export function parentRelationshipLabel(value) {
 export function validateAthleteAge(age) {
   if (age == null || !Number.isFinite(age)) return 'Enter your age in years.';
   if (!Number.isInteger(age)) return 'Enter your age in whole years.';
-  if (age < 0 || age > MAX_ATHLETE_AGE) {
-    return `Enter an age between 0 and ${MAX_ATHLETE_AGE}.`;
+  if (age < MIN_ATHLETE_AGE || age > MAX_ATHLETE_AGE) {
+    return `Enter an age between ${MIN_ATHLETE_AGE} and ${MAX_ATHLETE_AGE}.`;
   }
   return '';
 }
