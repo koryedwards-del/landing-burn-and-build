@@ -51,3 +51,6 @@ export function burnAndBuildFaqUrl() {
 }
 
 export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';
+
+/** Purchase autosend email — footer contact + Resend reply_to. */
+export const PURCHASE_EMAIL_CONTACT = 'kory@burnandbuilddiet.com';

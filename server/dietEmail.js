@@ -5,8 +5,8 @@ import {
   burnAndBuildFaqUrl,
   menuPlanWorksheetDownloadUrl,
   purchaserPortalUrl,
+  PURCHASE_EMAIL_CONTACT,
   siteOrigin,
-  SUPPORT_EMAIL,
 } from './dietPdfUrls.js';
 
 const RESEND_API = 'https://api.resend.com/emails';
@@ -72,7 +72,7 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
     `Download FAQ: ${faqUrl}`,
     '',
     'Questions or need help getting started?',
-    SUPPORT_EMAIL,
+    PURCHASE_EMAIL_CONTACT,
     '',
     '— Kory',
     'Burn & Build',
@@ -82,12 +82,12 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
 
 function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUrl }) {
   const c = EMAIL_COLORS;
-  const supportMailto = `mailto:${SUPPORT_EMAIL}`;
+  const supportMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
   const site = siteOrigin();
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const worksheetLink = `<a class="gold-link" href="${worksheetUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download Menu Plan Worksheet</a>`;
   const faqLink = `<a class="gold-link" href="${faqUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download FAQ</a>`;
-  const supportLink = `<a class="support-link" href="${supportMailto}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};text-underline-offset:2px;">${SUPPORT_EMAIL}</a>`;
+  const supportLink = `<a class="support-link" href="${supportMailto}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};text-underline-offset:2px;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -229,7 +229,7 @@ export async function sendDietPdfEmail({
     headers,
     body: JSON.stringify({
       from: emailFrom(),
-      reply_to: SUPPORT_EMAIL,
+      reply_to: PURCHASE_EMAIL_CONTACT,
       to: [to],
       subject: EMAIL_SUBJECT,
       html,
