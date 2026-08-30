@@ -29,6 +29,8 @@ import {
   renderPublicSampleDietPdf,
   writePublicSampleDietConfig,
 } from './publicSampleDiet.js';
+import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
+import { renderHandbookFaqPrintout } from './pdf/renderHandbookFaqPrintout.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -464,6 +466,27 @@ app.get('/api/samples/:slug', async (req, res) => {
       res.status(err.message.includes('not configured') ? 503 : 500).json({
         ok: false,
         message: err.message || 'Could not render the sample diet PDF.',
+      });
+    }
+    return;
+  }
+
+  if (slug === 'handbook-faq') {
+    try {
+      const pdf = await renderHandbookFaqPrintout(buildHandbookFaqPayload());
+      const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `${inline ? 'inline' : 'attachment'}; filename="burn-build-faq-handbook.pdf"`,
+      );
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.send(pdf);
+    } catch (err) {
+      console.error('Handbook FAQ PDF error:', err.message);
+      res.status(500).json({
+        ok: false,
+        message: err.message || 'Could not render the FAQ handbook PDF.',
       });
     }
     return;

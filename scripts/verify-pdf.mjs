@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /** Burn & Build Diet PDF verification — run: npm run verify:pdf */
 
+import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
 import {
+  HANDBOOK_FAQ_PRINTOUT_MIN_PAGES,
+  renderHandbookFaqPrintout,
   renderMenuPlanWorksheet,
   renderSampleDietPrintout,
   SAMPLE_DIET_PRINTOUT_MIN_PAGES,
   validateSampleDietPayload,
-} from '../server/pdf/renderSampleDietPrintout.js';
+} from '../server/pdf/index.js';
 import { assertPdfBuffer, sanitizePdfFilename } from '../server/pdf/http.js';
 
 function pageCount(pdf) {
@@ -66,5 +69,10 @@ if (samplePayload.servings.gridRows?.[0]?.daily !== '9') {
 console.log('ok  golden sample diet payload');
 
 assertPdf('menu plan worksheet (blank)', await renderMenuPlanWorksheet(), { minPages: 1 });
+
+const faqPayload = buildHandbookFaqPayload();
+assertPdf('FAQ handbook (standalone)', await renderHandbookFaqPrintout(faqPayload), {
+  minPages: HANDBOOK_FAQ_PRINTOUT_MIN_PAGES,
+});
 
 console.log('\nPDF checks passed.');

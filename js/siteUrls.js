@@ -17,6 +17,7 @@ export const MENU_PLAN_WORKSHEET_PATH = '/menuplanworksheet/';
 export const MENU_PLAN_WORKSHEET_PUBLIC_URL = `${CREATOR_HOST_ORIGIN}${MENU_PLAN_WORKSHEET_PATH}`;
 export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'burnandbuilddiet.com/menuplanworksheet';
 export const MENU_PLAN_WORKSHEET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/menu-plan-worksheet`;
+export const HANDBOOK_FAQ_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/handbook-faq`;
 
 /** User-facing short link — redirects to the API attachment download. */
 export const MENU_PLAN_WORKSHEET_URL = MENU_PLAN_WORKSHEET_PUBLIC_URL;

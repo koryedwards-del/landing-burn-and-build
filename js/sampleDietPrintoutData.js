@@ -40,7 +40,6 @@ import {
 } from './sampleDietPrintoutCopyData.js';
 import { buildSampleDayMenu } from './sampleDayMenuPrintoutData.js';
 import { buildSampleDietPreviewPackage } from './sampleDietPreviewFixtures.js';
-import { HANDBOOK_FAQ_ITEMS } from '../data/handbookFaqPrintout.js';
 
 const rnd = (x) => Math.round(Number(x));
 
@@ -238,9 +237,6 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       intro: SAMPLE_DIET_FOOD_LIST_INTRO,
     },
     sampleDayMenu: buildSampleDayMenu(pkg, { filled: true }),
-    faq: {
-      items: HANDBOOK_FAQ_ITEMS,
-    },
     answersConfirmation: {
       intro: ANSWERS_CONFIRMATION_INTRO,
       rows: buildAnswersConfirmationRows(pkg),

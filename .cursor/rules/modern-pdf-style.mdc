@@ -5,7 +5,9 @@ alwaysApply: true
 
 # Modern B&B PDF style
 
-**From August 2026 forward, every Burn & Build Diet PDF page uses the modern report style.** The **Food Plan** page is the design reference — gold/black Montserrat layout with personalized header and three-column footer.
+**From August 2026 forward, every Burn & Build PDF uses the modern report style.** The **Food Plan** page is the design reference — gold/black Montserrat layout with personalized header and three-column footer.
+
+The **Burn & Build Diet PDF** (7 pages) and the **FAQ handbook PDF** (standalone) are separate deliverables. FAQ is linked from the purchase email — it is **not** bundled inside the diet PDF.
 
 Do not add new pages in the legacy seminar wireframe (`SEMINAR_COLORS`, old locked-preview tables, HTML print paths). Extend the modern family instead.
 
@@ -42,10 +44,15 @@ When in doubt, match Food Plan: typography scale, gold accents, table treatment,
 | Servings | `drawModernServingsPage.js` |
 | Food List | `drawStaplesFoodListPages.js` |
 | Lean Body Analysis | `drawModernLeanBodyAnalysisPage.js` |
-| Frequently Asked Questions | `drawModernFaqPage.js` |
 | Questionnaire confirmation | `drawAnswersConfirmationPage.js` |
 
-New PDF sections: create `server/pdf/drawModern<Section>Page.js`, import `begin1982Page` + `MODERN_REPORT_*` from the frame, and wire through `renderSampleDietPrintout.js`.
+**Standalone (not in diet PDF):**
+
+| Product | Renderer | Download |
+|---------|----------|----------|
+| FAQ handbook | `renderHandbookFaqPrintout.js` → `drawModernFaqPage.js` | `GET /api/samples/handbook-faq` |
+
+New diet PDF sections: create `server/pdf/drawModern<Section>Page.js` and wire through `renderSampleDietPrintout.js`. New standalone PDFs: separate renderer + `GET /api/samples/<slug>`.
 
 ## Agent checklist
 

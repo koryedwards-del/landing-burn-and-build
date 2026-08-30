@@ -193,18 +193,22 @@ export function drawModernReportHeader(doc, box, payload, pageTitle, titleStyle 
 
   doc.image(logoPath, box.x, logoY, { width: layout.logoWidth });
 
-  const name = titleCaseWords(payload?.clientName);
-  const date = formatPreparedDateUpper(payload?.preparedDateLong || payload?.preparedDate);
-  const personalLine = `PERSONALIZED FOR: ${name.toUpperCase()}  ·  ${date}`;
-  doc
-    .font(fonts.regular)
-    .fontSize(layout.personalSize)
-    .fillColor(colors.muted)
-    .text(personalLine, box.x, logoY + 6, {
-      width: box.width,
-      align: 'right',
-      lineGap: 0,
-    });
+  const showPersonalization = payload?.handbook !== true
+    && (payload?.clientName || payload?.preparedDate || payload?.preparedDateLong);
+  if (showPersonalization) {
+    const name = titleCaseWords(payload?.clientName);
+    const date = formatPreparedDateUpper(payload?.preparedDateLong || payload?.preparedDate);
+    const personalLine = `PERSONALIZED FOR: ${name.toUpperCase()}  ·  ${date}`;
+    doc
+      .font(fonts.regular)
+      .fontSize(layout.personalSize)
+      .fillColor(colors.muted)
+      .text(personalLine, box.x, logoY + 6, {
+        width: box.width,
+        align: 'right',
+        lineGap: 0,
+      });
+  }
 
   const titleY = logoY + layout.logoWidth + layout.titleGap;
   const ruleY = pageTitle

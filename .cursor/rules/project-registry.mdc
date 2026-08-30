@@ -70,7 +70,9 @@ Every `js/` file name ends with its job:
 | `js/intakeQuestionCopyData.js` | Shared questionnaire question text + numbering |
 | `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload |
 | `js/answersConfirmationPrintout.js` | Questionnaire confirmation rows |
-| `data/handbookFaqPrintout.js` | Handbook FAQ Q&A copy |
+| `data/handbookFaqPrintout.js` | Handbook FAQ Q&A copy (standalone PDF) |
+| `js/handbookFaqPrintoutData.js` | FAQ handbook PDF payload |
+| `server/pdf/renderHandbookFaqPrintout.js` | Standalone FAQ handbook renderer |
 | `server/pdf/drawModernReportFrame.js` | Modern PDF frame (header, footer, tokens) |
 | `server/pdf/drawModernFoodPlanPage.js` | Food Plan page — canonical modern style reference |
 | `js/leanBodyAnalysisPrintout.js` | LBA table row helper |
@@ -91,6 +93,8 @@ npm run verify:pdf
 Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf`; landing sample via `GET /api/samples/sample-diet`.
 
 **Visual style:** modern gold/black Montserrat report — Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
+
+**Standalone FAQ handbook:** `GET /api/samples/handbook-faq` — linked from purchase email, not included in the diet PDF.
 
 ## B&B Sample Diet PDF (landing page)
 
