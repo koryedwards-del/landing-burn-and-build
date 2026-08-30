@@ -5,7 +5,10 @@ import { fileURLToPath } from 'url';
 import { buildDietEmailPreview } from '../server/dietEmail.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const deliverable = path.join(root, 'docs/previews/diet-email-preview.html');
+const deliverable = path.join(root, 'previews/diet-email/index.html');
+const siteOrigin = String(
+  process.env.WEBPAGE_URL || process.env.CREATOR_BASE_URL || 'https://burnandbuilddiet.com',
+).replace(/\/$/, '');
 const renderOrigin = String(
   process.env.DIET_PDF_DOWNLOAD_ORIGIN || 'https://program-creator-3tzd.onrender.com',
 ).replace(/\/$/, '');
@@ -17,5 +20,5 @@ fs.writeFileSync(deliverable, preview.html);
 const stat = fs.statSync(deliverable);
 console.log(`OK ${deliverable} (${stat.size} bytes)`);
 console.log(`SUBJECT ${preview.subject}`);
-console.log(`FILE file://${deliverable}`);
-console.log(`LIVE ${renderOrigin}/api/samples/diet-email-preview`);
+console.log(`SITE ${siteOrigin}/previews/diet-email/`);
+console.log(`API ${renderOrigin}/api/samples/diet-email-preview`);
