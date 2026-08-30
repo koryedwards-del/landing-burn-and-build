@@ -22,6 +22,7 @@ const EMAIL_COLORS = Object.freeze({
 });
 
 const EMAIL_SUBJECT = 'Your Burn & Build Diet + Resources';
+export const DIET_EMAIL_PREVIEW_FILENAME = 'burn-and-build-purchase-email.html';
 const SIGNATURE_FONT = 'Caveat';
 const SIGNATURE_FONT_URL = 'https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap';
 

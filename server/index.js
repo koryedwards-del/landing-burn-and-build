@@ -20,7 +20,7 @@ import {
   verifyCheckoutSession,
 } from './stripe.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
-import { buildDietEmailPreview, dietEmailConfigured } from './dietEmail.js';
+import { buildDietEmailPreview, dietEmailConfigured, DIET_EMAIL_PREVIEW_FILENAME } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
 import { resolveSamplePdfPath } from './samplePdfDownloads.js';
 import {
@@ -448,8 +448,15 @@ app.get('/api/samples/:slug', async (req, res) => {
       email: req.query.email || 'sample@example.com',
       programId: req.query.program_id || 'preview-program',
     });
+    const download = req.query.download === '1' || req.query.disposition === 'attachment';
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache');
+    if (download) {
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${DIET_EMAIL_PREVIEW_FILENAME}"`,
+      );
+    }
     res.send(preview.html);
     return;
   }
