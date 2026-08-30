@@ -65,6 +65,7 @@ export const SAMPLE_DIET_GETTING_STARTED_RULES = Object.freeze([
   'Eat all the servings recommended.',
   'Alternate meals with fruit snacks.',
   'Eat every two to three hours.',
+  'Eliminate extra fats, sugar and alcohol. They slow down your fat loss.',
 ]);
 
 export const SAMPLE_DIET_HELPFUL_TIPS_HEADING = 'Helpful Tips';
