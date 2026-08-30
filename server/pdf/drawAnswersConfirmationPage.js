@@ -18,7 +18,6 @@ const LAYOUT = Object.freeze({
   introGap: 10,
   questionSize: 9.5,
   answerSize: 10,
-  signatureSize: 22,
   tableRowPad: 7,
   cellPad: 6,
 });
@@ -41,9 +40,6 @@ function formatValueText(row) {
 }
 
 function valueStyle(row) {
-  if (row.signatureDisplay?.name) {
-    return { font: FONTS.signature, fontSize: LAYOUT.signatureSize };
-  }
   return { font: FONTS.bold, fontSize: LAYOUT.answerSize };
 }
 
@@ -54,16 +50,16 @@ function drawValueCell(doc, row, x, y, cellW) {
   const fillColor = row._colors?.value || COLORS.body;
 
   if (row.signatureDisplay?.name) {
-    doc.font(FONTS.signature).fontSize(LAYOUT.signatureSize).fillColor(fillColor);
     const name = row.signatureDisplay.name;
     const date = row.signatureDisplay.date;
+    doc.font(FONTS.bold).fontSize(LAYOUT.answerSize).fillColor(fillColor);
     if (date) {
       const nameWidth = doc.widthOfString(name);
       doc.text(name, textX, textY, { lineBreak: false });
       doc
         .font(FONTS.regular)
         .fontSize(LAYOUT.answerSize)
-        .text(` — ${date}`, textX + nameWidth, textY + 4, {
+        .text(` — ${date}`, textX + nameWidth, textY, {
           width: Math.max(0, innerW - nameWidth),
           lineGap: 0,
         });
@@ -90,7 +86,7 @@ function measureRowHeights(doc, rows, columns, tableWidth) {
     let maxH = LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
       const style = col.key === 'value' && row.signatureDisplay?.name
-        ? { font: FONTS.signature, fontSize: LAYOUT.signatureSize }
+        ? { font: FONTS.bold, fontSize: LAYOUT.answerSize }
         : (row._styles?.[col.key] || {});
       doc.font(style.font || FONTS.regular).fontSize(style.fontSize || LAYOUT.questionSize);
       const innerW = colWidths[index] - LAYOUT.cellPad * 2;

@@ -25,6 +25,8 @@ Constants: `js/dietEmailPreviewNamingHelpers.js`, public URLs in `js/siteUrls.js
 
 **Do not create** alternate preview paths (`previews/diet-email/`, `diet-email-preview` API slug, `/opt/cursor/artifacts/` for user downloads).
 
+**User downloads always come from Render** (`program-creator-3tzd.onrender.com/api/samples/...`), not GitHub Pages paths.
+
 ## Preview URL (after push to `main`)
 
 **Review in browser** (GitHub Pages): `https://burnandbuilddiet.com/purchase-email-preview/`
