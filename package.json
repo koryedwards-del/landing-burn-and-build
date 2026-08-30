@@ -12,7 +12,8 @@
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "render:sample-diet-preview": "node scripts/render-sample-diet-preview.mjs",
     "render:menu-plan-worksheet": "node scripts/render-menu-plan-worksheet.mjs",
-    "render:burn-and-build-faq": "node scripts/render-burn-and-build-faq.mjs"
+    "render:burn-and-build-faq": "node scripts/render-burn-and-build-faq.mjs",
+    "preview:diet-email": "node scripts/preview-diet-email.mjs"
   },
   "engines": {
     "node": ">=20"

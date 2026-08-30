@@ -122,7 +122,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
                     <p style="margin:0 0 12px;font-size:11px;font-weight:bold;letter-spacing:0.08em;color:${c.gold};">KEEP THIS EMAIL</p>
                     <p style="margin:0 0 16px;">This email is your link back to your Burn &amp; Build download page. If you ever need another copy of your diet, return here:</p>
                     <p style="margin:0 0 16px;">${portalLink}</p>
-                    <p style="margin:0;">A copy of your Burn & Build Diet is also attached to this email.</p>
+                    <p style="margin:0;">A copy of your Burn &amp; Build Diet is also attached to this email.</p>
                   </td>
                 </tr>
               </table>
@@ -153,6 +153,31 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
 </html>`;
 }
 
+export function buildDietEmailPreview({
+  preferredName = 'Sample',
+  email = 'sample@example.com',
+  programId = 'preview-program',
+} = {}) {
+  const firstNameRaw = firstNameFromPreferredName(preferredName);
+  const firstName = escapeHtml(firstNameRaw);
+  const portalUrl = purchaserPortalUrl(email, programId);
+  const worksheetUrl = menuPlanWorksheetDownloadUrl();
+  const faqUrl = burnAndBuildFaqUrl();
+  const logoUrl = brandLogoUrl();
+  const emailContent = {
+    firstName: firstNameRaw,
+    portalUrl,
+    worksheetUrl,
+    faqUrl,
+    logoUrl,
+  };
+  return {
+    subject: EMAIL_SUBJECT,
+    html: buildDietEmailHtml({ ...emailContent, firstName }),
+    text: buildDietEmailText(emailContent),
+  };
+}
+
 export async function sendDietPdfEmail({
   to,
   preferredName,
@@ -169,19 +194,11 @@ export async function sendDietPdfEmail({
   }
 
   const filename = dietPdfAttachmentFilename({ preferredName, pkg });
-  const firstNameRaw = firstNameFromPreferredName(preferredName);
-  const firstName = escapeHtml(firstNameRaw);
-  const portalUrl = purchaserPortalUrl(to, programId);
-  const worksheetUrl = menuPlanWorksheetDownloadUrl();
-  const faqUrl = burnAndBuildFaqUrl();
-  const logoUrl = brandLogoUrl();
-  const emailContent = {
-    firstName: firstNameRaw,
-    portalUrl,
-    worksheetUrl,
-    faqUrl,
-    logoUrl,
-  };
+  const { html, text } = buildDietEmailPreview({
+    preferredName,
+    email: to,
+    programId,
+  });
 
   const headers = {
     Authorization: `Bearer ${apiKey}`,
@@ -201,8 +218,8 @@ export async function sendDietPdfEmail({
       reply_to: SUPPORT_EMAIL,
       to: [to],
       subject: EMAIL_SUBJECT,
-      html: buildDietEmailHtml({ ...emailContent, firstName }),
-      text: buildDietEmailText(emailContent),
+      html,
+      text,
       attachments: [{
         filename,
         content: Buffer.from(pdfBuffer).toString('base64'),

@@ -20,7 +20,7 @@ import {
   verifyCheckoutSession,
 } from './stripe.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
-import { dietEmailConfigured } from './dietEmail.js';
+import { buildDietEmailPreview, dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
 import { resolveSamplePdfPath } from './samplePdfDownloads.js';
 import {
@@ -441,6 +441,18 @@ app.get('/api/programs/payment-status', (req, res) => {
 
 app.get('/api/samples/:slug', async (req, res) => {
   const slug = String(req.params.slug || '').trim();
+
+  if (slug === 'diet-email-preview') {
+    const preview = buildDietEmailPreview({
+      preferredName: req.query.name || 'Sample',
+      email: req.query.email || 'sample@example.com',
+      programId: req.query.program_id || 'preview-program',
+    });
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.send(preview.html);
+    return;
+  }
 
   if (slug === 'sample-diet') {
     const resolved = resolveSamplePdfPath(root, slug);
