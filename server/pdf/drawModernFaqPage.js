@@ -20,6 +20,10 @@ const FAT_CAN_3LB_IMAGE = path.join(PDF_ROOT, 'img/print/fat-can-3lb.png');
 const FAQ_FAT_LOSS_QUESTION_NUMBER = 29;
 
 const LAYOUT = Object.freeze({
+  categorySize: 8,
+  categoryRuleGap: 2,
+  categoryRuleWidth: 1,
+  categoryGapAfter: 8,
   questionSize: 9.5,
   answerSize: 9,
   lineGap: 2,
@@ -35,6 +39,36 @@ const LAYOUT = Object.freeze({
 
 function contentBottom(page) {
   return Math.min(page.bottom, modernFooterRuleY(page.box) - LAYOUT.footerReserve);
+}
+
+function measureCategoryMarker(doc, category, width) {
+  const label = String(category || '').toUpperCase();
+  if (!label) return 0;
+  doc.font(FONTS.bold).fontSize(LAYOUT.categorySize);
+  const textH = doc.heightOfString(label, { width, lineBreak: false });
+  return textH + LAYOUT.categoryRuleGap + LAYOUT.categoryRuleWidth + LAYOUT.categoryGapAfter;
+}
+
+function drawCategoryMarker(doc, page, category) {
+  const label = String(category || '').toUpperCase();
+  if (!label) return page.y;
+
+  doc
+    .font(FONTS.bold)
+    .fontSize(LAYOUT.categorySize)
+    .fillColor(COLORS.muted)
+    .text(label, page.x, page.y, { width: page.width, lineBreak: false });
+
+  const textW = doc.widthOfString(label);
+  const ruleY = doc.y + LAYOUT.categoryRuleGap;
+  doc
+    .strokeColor(COLORS.gold)
+    .lineWidth(LAYOUT.categoryRuleWidth)
+    .moveTo(page.x, ruleY)
+    .lineTo(page.x + textW, ruleY)
+    .stroke();
+
+  return ruleY + LAYOUT.categoryRuleWidth + LAYOUT.categoryGapAfter;
 }
 
 function measureFaqItem(doc, { q, a }, width, questionNumber) {
@@ -110,15 +144,27 @@ export function drawModernFaqPages(doc, payload) {
 
   registerModernReportFonts(doc);
   let page = beginFaqPage(doc, payload, 'Frequently Asked Questions');
+  let currentCategory = null;
 
   items.forEach((item, index) => {
     const questionNumber = index + 1;
-    let blockH = measureFaqItem(doc, item, page.width, questionNumber);
+    const showCategory = item.category && item.category !== currentCategory;
+    let blockH = 0;
+    if (showCategory) {
+      blockH += measureCategoryMarker(doc, item.category, page.width);
+    }
+    blockH += measureFaqItem(doc, item, page.width, questionNumber);
     if (questionNumber === FAQ_FAT_LOSS_QUESTION_NUMBER) {
       blockH += measureFatCanRow(doc, page.width);
     }
 
     page = ensureFaqSpace(doc, payload, page, blockH);
+
+    if (showCategory) {
+      page = { ...page, y: drawCategoryMarker(doc, page, item.category) };
+      currentCategory = item.category;
+    }
+
     page = { ...page, y: drawFaqItem(doc, page, item, questionNumber) };
 
     if (questionNumber === FAQ_FAT_LOSS_QUESTION_NUMBER) {
