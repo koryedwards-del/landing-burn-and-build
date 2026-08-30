@@ -36,7 +36,7 @@ Three standalone pieces:
 | `server/pdf/renderSampleDietPrintout.js` | Burn & Build Diet PDF renderer |
 | `server/pdf/` | PDFKit renderer |
 | `server/publicSampleDiet.js` | Live sample fallback when static PDF missing |
-| `docs/samples/` | `b&bsamplediet.pdf` (landing preview) + menu-plan-worksheet PDF |
+| `docs/samples/` | `b&bsamplediet.pdf` (landing preview), `menu-plan-worksheet.pdf`, `burn-and-build-faq.pdf` |
 
 ## Verify
 
