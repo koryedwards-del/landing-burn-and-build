@@ -18,9 +18,14 @@ const LAYOUT = Object.freeze({
   introGap: 10,
   questionSize: 9.5,
   answerSize: 10,
+  signatureNameScale: 2.25,
   tableRowPad: 7,
   cellPad: 6,
 });
+
+function signatureNameSize() {
+  return LAYOUT.answerSize * LAYOUT.signatureNameScale;
+}
 
 const TABLE_COLUMNS = Object.freeze([
   { key: 'label', width: 0.5 },
@@ -52,14 +57,16 @@ function drawValueCell(doc, row, x, y, cellW) {
   if (row.signatureDisplay?.name) {
     const name = row.signatureDisplay.name;
     const date = row.signatureDisplay.date;
-    doc.font(FONTS.signature).fontSize(LAYOUT.answerSize).fillColor(fillColor);
+    const nameSize = signatureNameSize();
+    doc.font(FONTS.signature).fontSize(nameSize).fillColor(fillColor);
     if (date) {
       const nameWidth = doc.widthOfString(name);
       doc.text(name, textX, textY, { lineBreak: false });
+      const dateY = textY + (nameSize - LAYOUT.answerSize) * 0.35;
       doc
         .font(FONTS.regular)
         .fontSize(LAYOUT.answerSize)
-        .text(` — ${date}`, textX + nameWidth, textY, {
+        .text(` — ${date}`, textX + nameWidth, dateY, {
           width: Math.max(0, innerW - nameWidth),
           lineGap: 0,
         });
@@ -85,9 +92,19 @@ function measureRowHeights(doc, rows, columns, tableWidth) {
   return rows.map((row) => {
     let maxH = LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
-      const style = col.key === 'value' && row.signatureDisplay?.name
-        ? { font: FONTS.signature, fontSize: LAYOUT.answerSize }
-        : (row._styles?.[col.key] || {});
+      if (col.key === 'value' && row.signatureDisplay?.name) {
+        const nameSize = signatureNameSize();
+        doc.font(FONTS.signature).fontSize(nameSize);
+        const nameH = doc.heightOfString(row.signatureDisplay.name, { lineBreak: false });
+        let rowTextH = nameH;
+        if (row.signatureDisplay.date) {
+          doc.font(FONTS.regular).fontSize(LAYOUT.answerSize);
+          rowTextH = Math.max(nameH, doc.heightOfString(` — ${row.signatureDisplay.date}`, { lineBreak: false }));
+        }
+        maxH = Math.max(maxH, rowTextH + LAYOUT.tableRowPad * 2);
+        return;
+      }
+      const style = row._styles?.[col.key] || {};
       doc.font(style.font || FONTS.regular).fontSize(style.fontSize || LAYOUT.questionSize);
       const innerW = colWidths[index] - LAYOUT.cellPad * 2;
       const text = col.key === 'value' ? formatValueText(row) : String(row[col.key] ?? '');

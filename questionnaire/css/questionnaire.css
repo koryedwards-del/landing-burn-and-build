@@ -771,8 +771,8 @@ body.q-app--workroom {
 .intake-signature-input,
 .intake-signature-display {
   font-family: 'Caveat', cursive;
-  font-size: inherit;
-  line-height: inherit;
+  font-size: 2.25em;
+  line-height: 1.1;
 }
 
 .intake-signature-date {
