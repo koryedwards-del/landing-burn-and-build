@@ -11,6 +11,7 @@ import {
 import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js';
 import { cleanPurchaserPortalQuery, readPurchaserPortalParams } from './purchaserPortal.js';
 import { QUESTIONNAIRE_WELCOME_URL } from './siteUrls.js';
+import { CONTACT_EMAIL } from './contactEmailData.js';
 
 const store = {
   builtPackage: null,
@@ -128,7 +129,7 @@ async function restorePurchaseByEmail(rawEmail) {
   }
 
   if (!resume.programPaid) {
-    store.restoreError = 'Payment is not complete for this email. Email kory@burnandbuilddiet.com if you were charged.';
+    store.restoreError = `Payment is not complete for this email. Email ${CONTACT_EMAIL} if you were charged.`;
     renderPurchaserPortal();
     return false;
   }
@@ -374,7 +375,7 @@ function renderPlanReady() {
           <p class="unlock-hint">Secure checkout · One-time $279 · Yours for life</p>
           ${store.checkoutTestBypass ? '<button type="button" class="btn-secondary unlock-cta-secondary" data-test-checkout>Skip payment (local test)</button>' : ''}`
       : `
-          <p class="unlock-hint">Checkout is not available yet. Email kory@burnandbuilddiet.com if you need help.</p>
+          <p class="unlock-hint">Checkout is not available yet. Email ${CONTACT_EMAIL} if you need help.</p>
           ${store.checkoutTestBypass ? '<button type="button" class="btn-secondary unlock-cta-secondary" data-test-checkout>Skip payment (local test)</button>' : ''}`
     : '';
 
@@ -573,7 +574,7 @@ async function handleCheckoutReturn() {
 
   const sessionId = params.get('session_id');
   if (!sessionId) {
-    store.checkoutError = 'Missing checkout session. Email kory@burnandbuilddiet.com if you were charged.';
+    store.checkoutError = `Missing checkout session. Email ${CONTACT_EMAIL} if you were charged.`;
     cleanCheckoutQuery();
     return;
   }
