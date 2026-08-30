@@ -17,7 +17,7 @@ const COLORS = MODERN_REPORT_COLORS;
 const PDF_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FAT_CAN_3LB_IMAGE = path.join(PDF_ROOT, 'img/print/fat-can-3lb.png');
 
-const FAQ_FAT_LOSS_QUESTION_NUMBER = 29;
+const FAQ_FAT_LOSS_QUESTION_NUMBER = 28;
 
 const LAYOUT = Object.freeze({
   questionSize: 9.5,
