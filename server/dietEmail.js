@@ -85,10 +85,10 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   const c = EMAIL_COLORS;
   const supportMailto = `mailto:${SUPPORT_EMAIL}`;
   const site = siteOrigin();
-  const portalLink = `<a href="${portalUrl}" style="color:${c.black};font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold};">&#8594;</span></a>`;
-  const worksheetLink = `<a href="${worksheetUrl}" style="color:${c.gold};font-weight:bold;text-decoration:underline;">Download Menu Plan Worksheet</a>`;
-  const faqLink = `<a href="${faqUrl}" style="color:${c.gold};font-weight:bold;text-decoration:underline;">Download FAQ</a>`;
-  const supportLink = `<a href="${supportMailto}" style="color:${c.black};font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">${SUPPORT_EMAIL}</a>`;
+  const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
+  const worksheetLink = `<a class="gold-link" href="${worksheetUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download Menu Plan Worksheet</a>`;
+  const faqLink = `<a class="gold-link" href="${faqUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download FAQ</a>`;
+  const supportLink = `<a class="support-link" href="${supportMailto}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};text-underline-offset:2px;">${SUPPORT_EMAIL}</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -101,6 +101,12 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${SIGNATURE_FONT_URL}" rel="stylesheet">
+  <style>
+    a { text-decoration-skip-ink: none; }
+    a.portal-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
+    a.gold-link { color: ${c.gold} !important; -webkit-text-fill-color: ${c.gold} !important; }
+    a.support-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
+  </style>
 </head>
 <body style="margin:0;padding:0;background-color:${c.pageBg};font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:${c.black};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:32px 16px;">
