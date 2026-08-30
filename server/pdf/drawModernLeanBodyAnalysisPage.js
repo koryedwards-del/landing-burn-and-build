@@ -5,6 +5,7 @@ import { begin1982Page, TABLE_1982 } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
+  centeredBandTextY,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
 
@@ -87,14 +88,21 @@ function drawTodayPanel(doc, x, y, width, todayRows, heading) {
     .stroke();
 
   const badgeW = 52;
+  const badgeTop = y + pad;
   doc
-    .roundedRect(x + pad, y + pad, badgeW, badgeH, 3)
+    .roundedRect(x + pad, badgeTop, badgeW, badgeH, 3)
     .fill(COLORS.body);
+  const badgeText = String(heading || 'TODAY');
+  const badgeTextY = centeredBandTextY(doc, badgeTop, badgeH, {
+    font: FONTS.bold,
+    fontSize: LAYOUT.todayLabelSize,
+    text: badgeText,
+  });
   doc
     .font(FONTS.bold)
     .fontSize(LAYOUT.todayLabelSize)
     .fillColor(COLORS.white)
-    .text(String(heading || 'TODAY'), x + pad, y + pad + 4, {
+    .text(badgeText, x + pad, badgeTextY, {
       width: badgeW,
       align: 'center',
       lineBreak: false,

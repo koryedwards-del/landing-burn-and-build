@@ -8,6 +8,7 @@ import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
   MODERN_REPORT_FOOTER_LAYOUT,
+  centeredBandTextY,
   modernFooterRuleY,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
@@ -140,18 +141,25 @@ function sectionHeading(section) {
 function drawMealBar(doc, contentX, y, contentWidth, heading) {
   const fonts = MODERN_REPORT_FONTS;
   const colors = MODERN_REPORT_COLORS;
+  const barH = LAYOUT.mainMealBarH;
   doc
-    .roundedRect(contentX, y, contentWidth, LAYOUT.mainMealBarH, 3)
+    .roundedRect(contentX, y, contentWidth, barH, 3)
     .fill(colors.body);
+  const label = String(heading || '');
+  const textY = centeredBandTextY(doc, y, barH, {
+    font: fonts.bold,
+    fontSize: LAYOUT.mainMealBarSize,
+    text: label,
+  });
   doc
     .font(fonts.bold)
     .fontSize(LAYOUT.mainMealBarSize)
     .fillColor(colors.white)
-    .text(heading, contentX + 8, y + 4, {
+    .text(label, contentX + 8, textY, {
       width: contentWidth - 16,
       lineBreak: false,
     });
-  return y + LAYOUT.mainMealBarH;
+  return y + barH;
 }
 
 function measureMenuRowHeight(doc, contentX, contentWidth, row, filled, categoryRowGap) {

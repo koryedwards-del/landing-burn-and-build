@@ -121,6 +121,13 @@ export function registerModernReportFonts(doc) {
   doc.registerFont(MODERN_REPORT_FONTS.signature, path.join(FONT_DIR, 'Caveat-Regular.ttf'));
 }
 
+/** Single-line white label Y inside a filled band — optical vertical center, band size unchanged. */
+export function centeredBandTextY(doc, bandTop, bandHeight, { font, fontSize, text = 'Ag' }) {
+  doc.font(font).fontSize(fontSize);
+  const textHeight = doc.heightOfString(String(text), { lineBreak: false });
+  return bandTop + (bandHeight - textHeight) / 2;
+}
+
 export function modernReportContentBox(doc) {
   const { width, height } = doc.page;
   return {

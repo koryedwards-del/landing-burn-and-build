@@ -5,6 +5,7 @@ import { begin1982Page } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
+  centeredBandTextY,
   modernReportContentBox,
 } from './drawModernReportFrame.js';
 
@@ -151,15 +152,22 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
 
   [leftX, rightX].forEach((colX, index) => {
     const title = index === 0 ? 'TODAY' : '8-WEEK GOAL';
+    const bandTop = y + pad;
+    const bandW = sideW - pad * 2;
     doc
-      .roundedRect(colX + pad, y + pad, sideW - pad * 2, headH, 4)
+      .roundedRect(colX + pad, bandTop, bandW, headH, 4)
       .fill(colors.body);
+    const titleY = centeredBandTextY(doc, bandTop, headH, {
+      font: fonts.bold,
+      fontSize: LAYOUT.dashboardHeadSize,
+      text: title,
+    });
     doc
       .font(fonts.bold)
       .fontSize(LAYOUT.dashboardHeadSize)
       .fillColor(colors.white)
-      .text(title, colX + pad, y + pad + 5, {
-        width: sideW - pad * 2,
+      .text(title, colX + pad, titleY, {
+        width: bandW,
         align: 'center',
         lineGap: 0,
       });
@@ -327,11 +335,17 @@ function drawModernMacroTable(doc, x, y, width, macroRows = []) {
   doc
     .roundedRect(x, y, width, titleH, 4)
     .fill(colors.body);
+  const requirementsTitle = 'YOUR DAILY FOOD REQUIREMENTS';
+  const requirementsTitleY = centeredBandTextY(doc, y, titleH, {
+    font: fonts.bold,
+    fontSize: LAYOUT.tableHeadSize,
+    text: requirementsTitle,
+  });
   doc
     .font(fonts.bold)
     .fontSize(LAYOUT.tableHeadSize)
     .fillColor(colors.white)
-    .text('YOUR DAILY FOOD REQUIREMENTS', x, y + 6, {
+    .text(requirementsTitle, x, requirementsTitleY, {
       width,
       align: 'center',
       lineGap: 0,
