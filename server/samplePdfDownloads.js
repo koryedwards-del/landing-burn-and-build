@@ -6,14 +6,21 @@ import {
   BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME,
   BURN_AND_BUILD_FAQ_REPO_FILE,
 } from '../js/faqPdfNamingHelpers.js';
+import { DIET_EMAIL_PREVIEW_FILENAME } from './dietEmail.js';
 
-/** Public sample PDFs served from docs/samples/. */
+/** Public sample files served from docs/samples/. */
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
-  'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf' },
-  'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf' },
+  'sample-diet': { file: 'b&bsamplediet.pdf', filename: 'b&bsamplediet.pdf', contentType: 'application/pdf' },
+  'menu-plan-worksheet': { file: 'menu-plan-worksheet.pdf', filename: 'menu-plan-worksheet.pdf', contentType: 'application/pdf' },
   [BURN_AND_BUILD_FAQ_API_SLUG]: {
     file: BURN_AND_BUILD_FAQ_REPO_FILE,
     filename: BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME,
+    contentType: 'application/pdf',
+  },
+  'purchase-email': {
+    file: DIET_EMAIL_PREVIEW_FILENAME,
+    filename: DIET_EMAIL_PREVIEW_FILENAME,
+    contentType: 'text/html; charset=utf-8',
   },
 });
 

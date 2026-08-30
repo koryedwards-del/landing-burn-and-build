@@ -6,6 +6,8 @@ import { buildDietEmailPreview, DIET_EMAIL_PREVIEW_FILENAME } from '../server/di
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const previewDir = path.join(root, 'previews/diet-email');
+const sampleFile = path.join(root, 'docs/samples', DIET_EMAIL_PREVIEW_FILENAME);
+const artifactFile = '/opt/cursor/artifacts/burn-and-build-purchase-email.html';
 const viewFile = path.join(previewDir, 'index.html');
 const downloadFile = path.join(previewDir, DIET_EMAIL_PREVIEW_FILENAME);
 const siteOrigin = String(
@@ -16,13 +18,16 @@ const renderOrigin = String(
 ).replace(/\/$/, '');
 
 const preview = buildDietEmailPreview();
+const html = preview.html;
 fs.mkdirSync(previewDir, { recursive: true });
-fs.writeFileSync(viewFile, preview.html);
-fs.writeFileSync(downloadFile, preview.html);
+fs.mkdirSync(path.dirname(sampleFile), { recursive: true });
+fs.mkdirSync(path.dirname(artifactFile), { recursive: true });
+for (const file of [viewFile, downloadFile, sampleFile, artifactFile]) {
+  fs.writeFileSync(file, html);
+}
 
-const stat = fs.statSync(downloadFile);
-console.log(`OK ${downloadFile} (${stat.size} bytes)`);
+const stat = fs.statSync(sampleFile);
+console.log(`OK ${sampleFile} (${stat.size} bytes)`);
 console.log(`SUBJECT ${preview.subject}`);
-console.log(`VIEW ${siteOrigin}/previews/diet-email/`);
-console.log(`DOWNLOAD ${siteOrigin}/previews/diet-email/${DIET_EMAIL_PREVIEW_FILENAME}`);
-console.log(`API_DOWNLOAD ${renderOrigin}/api/samples/diet-email-preview?download=1`);
+console.log(`ARTIFACT ${artifactFile}`);
+console.log(`DOWNLOAD ${renderOrigin}/api/samples/purchase-email`);

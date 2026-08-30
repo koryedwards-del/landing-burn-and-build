@@ -529,12 +529,17 @@ app.get('/api/samples/:slug', async (req, res) => {
 
   const resolved = resolveSamplePdfPath(root, slug);
   if (!resolved) {
-    res.status(404).json({ ok: false, message: 'Sample PDF not found.' });
+    res.status(404).json({ ok: false, message: 'Sample file not found.' });
     return;
   }
   const { spec, filePath } = resolved;
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="${spec.filename}"`);
+  const inline = req.query.inline === '1' || req.query.disposition === 'inline';
+  const contentType = spec.contentType || 'application/pdf';
+  res.setHeader('Content-Type', contentType);
+  res.setHeader(
+    'Content-Disposition',
+    `${inline ? 'inline' : 'attachment'}; filename="${spec.filename}"`,
+  );
   res.setHeader('Cache-Control', 'public, max-age=300');
   res.sendFile(filePath);
 });
