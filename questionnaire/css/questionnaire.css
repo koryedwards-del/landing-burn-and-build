@@ -741,9 +741,8 @@ body.q-app--workroom {
   margin-top: 1rem;
 }
 
-.intake-parent-consent--age {
-  margin-top: 0.875rem;
-  padding-top: 0.875rem;
+.intake-parent-consent--waiver {
+  margin-top: 0;
   border-top: 1px solid var(--border);
 }
 

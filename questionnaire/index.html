@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=106" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=107" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -263,40 +263,6 @@
                       </label>
                       <p class="intake-acc__note" data-age-parent-note></p>
                     </div>
-
-                    <div class="intake-parent-consent intake-parent-consent--age" id="parent-consent-block" hidden>
-                      <p class="intake-parent-consent__lead" data-parent-consent-text></p>
-                      <div class="intake-parent-consent__fields">
-                        <label class="intake-parent-consent__field">
-                          <span class="intake-parent-consent__label"><span data-parent-name-label></span></span>
-                          <input class="intake-input" name="parentGuardianName" autocomplete="name" />
-                        </label>
-                        <label class="intake-parent-consent__field">
-                          <span class="intake-parent-consent__label"><span data-parent-email-label></span></span>
-                          <input class="intake-input" name="parentGuardianEmail" type="email" autocomplete="email" />
-                        </label>
-                        <label class="intake-parent-consent__field">
-                          <span class="intake-parent-consent__label"><span data-parent-relationship-label></span></span>
-                          <select class="intake-input" name="parentGuardianRelationship">
-                            <option value="">Select relationship</option>
-                          </select>
-                        </label>
-                        <label class="intake-parent-consent__checkbox intake-radio">
-                          <input type="checkbox" name="parentConsentAccepted" />
-                          <span data-parent-checkbox-label></span>
-                        </label>
-                      </div>
-                      <div class="intake-parent-consent__sign">
-                        <label class="intake-parent-consent__field intake-parent-consent__field--signed">
-                          <span class="intake-parent-consent__label"><span data-parent-approved-label></span></span>
-                          <input class="intake-input intake-signature-input" name="parentGuardianSignature" autocomplete="name" placeholder="type full legal name" />
-                        </label>
-                        <label class="intake-parent-consent__field intake-parent-consent__field--date">
-                          <span class="intake-parent-consent__label">Date</span>
-                          <input class="intake-input" type="date" name="parentGuardianSignedDate" autocomplete="off" />
-                        </label>
-                      </div>
-                    </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
                 </div>
@@ -486,6 +452,40 @@
                     <input class="intake-input intake-waiver__input" type="date" name="signatureDate" autocomplete="off" required />
                   </label>
                 </div>
+
+                <div class="intake-parent-consent intake-parent-consent--waiver" id="parent-consent-block" hidden>
+                  <p class="intake-parent-consent__lead" data-parent-consent-text></p>
+                  <div class="intake-parent-consent__fields">
+                    <label class="intake-parent-consent__field">
+                      <span class="intake-parent-consent__label"><span data-parent-name-label></span></span>
+                      <input class="intake-input" name="parentGuardianName" autocomplete="name" />
+                    </label>
+                    <label class="intake-parent-consent__field">
+                      <span class="intake-parent-consent__label"><span data-parent-email-label></span></span>
+                      <input class="intake-input" name="parentGuardianEmail" type="email" autocomplete="email" />
+                    </label>
+                    <label class="intake-parent-consent__field">
+                      <span class="intake-parent-consent__label"><span data-parent-relationship-label></span></span>
+                      <select class="intake-input" name="parentGuardianRelationship">
+                        <option value="">Select relationship</option>
+                      </select>
+                    </label>
+                    <label class="intake-parent-consent__checkbox intake-radio">
+                      <input type="checkbox" name="parentConsentAccepted" />
+                      <span data-parent-checkbox-label></span>
+                    </label>
+                  </div>
+                  <div class="intake-parent-consent__sign">
+                    <label class="intake-parent-consent__field intake-parent-consent__field--signed">
+                      <span class="intake-parent-consent__label"><span data-parent-approved-label></span></span>
+                      <input class="intake-input intake-signature-input" name="parentGuardianSignature" autocomplete="name" placeholder="type full legal name" />
+                    </label>
+                    <label class="intake-parent-consent__field intake-parent-consent__field--date">
+                      <span class="intake-parent-consent__label">Date</span>
+                      <input class="intake-input" type="date" name="parentGuardianSignedDate" autocomplete="off" />
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -514,6 +514,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=163"></script>
+  <script type="module" src="js/questionnaire.js?v=164"></script>
 </body>
 </html>

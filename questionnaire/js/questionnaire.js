@@ -1114,9 +1114,7 @@ function exerciseFieldSummary(fieldId, values) {
 function validateExerciseField(fieldId, values) {
   switch (fieldId) {
     case 'age': {
-      const ageError = validateAthleteAge(values.age);
-      if (ageError) return ageError;
-      return validateParentConsentFields(values);
+      return validateAthleteAge(values.age);
     }
     case 'weightTrainingHours':
     case 'cardioHours':
@@ -1340,7 +1338,7 @@ function clearParentConsentInvalidState() {
   });
 }
 
-function highlightAgeParentValidationErrors(values) {
+function highlightParentConsentValidationErrors(values) {
   clearParentConsentInvalidState();
   if (!requiresParentApproval(values.age)) return null;
 
@@ -1444,7 +1442,8 @@ function canProceed(stepIndex) {
     case 3:
       return bodySectionComplete(values);
     case 4:
-      return Boolean(values.signature && values.signatureDate);
+      return Boolean(values.signature && values.signatureDate)
+        && !validateParentConsentFields(values);
     default:
       return true;
   }
@@ -1458,6 +1457,7 @@ function clearWaiverInvalidState() {
 
 function highlightWaiverValidationErrors(values) {
   clearWaiverInvalidState();
+  clearParentConsentInvalidState();
   let focusTarget = null;
   if (!values.signature) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--signed')?.classList.add('is-invalid');
@@ -1467,6 +1467,8 @@ function highlightWaiverValidationErrors(values) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--date')?.classList.add('is-invalid');
     if (!focusTarget) focusTarget = form.elements.signatureDate;
   }
+  const parentFocus = highlightParentConsentValidationErrors(values);
+  if (!focusTarget) focusTarget = parentFocus;
   focusTarget?.focus();
 }
 
@@ -1508,10 +1510,6 @@ function highlightStepValidationErrors(stepIndex) {
       });
       if (firstInvalidIndex >= 0) {
         openExerciseField(firstInvalidIndex);
-        if (EXERCISE_FIELDS[firstInvalidIndex] === 'age') {
-          const parentFocus = highlightAgeParentValidationErrors(values);
-          parentFocus?.focus();
-        }
       } else {
         renderExerciseAccordionState();
       }
@@ -1549,8 +1547,8 @@ function navigateToIntakeField(fieldId) {
   }
 
   if (fieldId === 'parentConsent' || fieldId.startsWith('parentGuardian')) {
-    showStep(2);
-    openExerciseField(0);
+    showStep(4);
+    syncParentConsentVisibility();
     if (fieldId === 'parentConsent' || fieldId === 'parentGuardianSignature') {
       form.elements.parentGuardianSignature?.focus();
     } else if (fieldId === 'parentGuardianName') {
@@ -1686,6 +1684,7 @@ function showStep(index) {
   }
   if (step === 4) {
     syncLocalTodayDates();
+    syncParentConsentVisibility();
   }
   if (step === 3) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
