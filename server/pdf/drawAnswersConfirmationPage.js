@@ -52,7 +52,7 @@ function drawValueCell(doc, row, x, y, cellW) {
   if (row.signatureDisplay?.name) {
     const name = row.signatureDisplay.name;
     const date = row.signatureDisplay.date;
-    doc.font(FONTS.bold).fontSize(LAYOUT.answerSize).fillColor(fillColor);
+    doc.font(FONTS.signature).fontSize(LAYOUT.answerSize).fillColor(fillColor);
     if (date) {
       const nameWidth = doc.widthOfString(name);
       doc.text(name, textX, textY, { lineBreak: false });
@@ -86,7 +86,7 @@ function measureRowHeights(doc, rows, columns, tableWidth) {
     let maxH = LAYOUT.tableRowPad * 2;
     columns.forEach((col, index) => {
       const style = col.key === 'value' && row.signatureDisplay?.name
-        ? { font: FONTS.bold, fontSize: LAYOUT.answerSize }
+        ? { font: FONTS.signature, fontSize: LAYOUT.answerSize }
         : (row._styles?.[col.key] || {});
       doc.font(style.font || FONTS.regular).fontSize(style.fontSize || LAYOUT.questionSize);
       const innerW = colWidths[index] - LAYOUT.cellPad * 2;

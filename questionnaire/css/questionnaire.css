@@ -768,6 +768,13 @@ body.q-app--workroom {
   letter-spacing: normal;
 }
 
+.intake-signature-input,
+.intake-signature-display {
+  font-family: 'Caveat', cursive;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .intake-signature-date {
   color: var(--muted);
 }

@@ -79,4 +79,4 @@ npm run preview:diet-email
 
 Writes both `purchase-email-preview/index.html` and `docs/samples/burn-and-build-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.
 
-**Signature display font (Caveat):** purchaser approval name on questionnaire + PDF page 8; parent approval name when under-18 consent applies. Constants: `js/signatureDisplayData.js`.
+**Approval signatures on PDF page 8** use Caveat at the same size as the date (answer row typography). Purchase email **— Kory** close uses larger Caveat. Constants: `js/signatureDisplayData.js`.
