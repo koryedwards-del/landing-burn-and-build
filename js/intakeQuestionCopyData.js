@@ -8,7 +8,7 @@ export const INTAKE_FIELD_QUESTIONS = Object.freeze({
   referrerName: 'Who do we thank?',
   workPhysical: 'How physically active is your job?',
   workStress: 'Your life outside work & training hours',
-  age: 'How young are you?',
+  age: 'Age?',
   weightTrainingHours: 'How many hours per week of Weights/Racquet Sports?',
   cardioHours: 'How many hours per week in your cardio training range?',
   fatBurningHours: 'How many hours per week in your fat burning training range?',
