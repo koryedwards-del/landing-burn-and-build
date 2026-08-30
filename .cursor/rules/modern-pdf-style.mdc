@@ -1,0 +1,64 @@
+---
+description: Modern Burn & Build Diet PDF visual system — canonical style for all B&B PDFs
+alwaysApply: true
+---
+
+# Modern B&B PDF style
+
+**From August 2026 forward, every Burn & Build Diet PDF page uses the modern report style.** The **Food Plan** page is the design reference — gold/black Montserrat layout with personalized header and three-column footer.
+
+Do not add new pages in the legacy seminar wireframe (`SEMINAR_COLORS`, old locked-preview tables, HTML print paths). Extend the modern family instead.
+
+## Canonical reference
+
+| What | Path |
+|------|------|
+| **Design anchor** | `server/pdf/drawModernFoodPlanPage.js` — Food Plan page |
+| **Shared frame** | `server/pdf/drawModernReportFrame.js` — fonts, colors, header, footer |
+| **Page bootstrap** | `server/pdf/draw1982Frame.js` → `begin1982Page()` |
+| **Renderer entry** | `server/pdf/renderSampleDietPrintout.js` |
+
+When in doubt, match Food Plan: typography scale, gold accents, table treatment, and content padding above the footer.
+
+## Visual system
+
+| Token | Value / rule |
+|-------|----------------|
+| **Fonts** | Montserrat (`MODERN_REPORT_FONTS` in `drawModernReportFrame.js`) |
+| **Body text** | `#111111` |
+| **Muted text** | `#5C5C5C` |
+| **Brand gold** | `#FFCC00` — page-title accent word, section rules, table borders |
+| **Gold panels** | `#FFFBE6` (`goldPale`) — highlighted table rows, dashboard center |
+| **Page title** | Last word gold, preceding words black; gold rule beneath |
+| **Header** | Logo left · `PERSONALIZED FOR: NAME · DATE` right |
+| **Footer** | Page X of Y left · website center · email right |
+
+## Modern page renderers (use these)
+
+| Page | Renderer |
+|------|----------|
+| Food Plan | `drawModernFoodPlanPage.js` |
+| Menu Plan | `drawModernMenuPlanPage.js` |
+| Servings | `drawModernServingsPage.js` |
+| Food List | `drawStaplesFoodListPages.js` |
+| Lean Body Analysis | `drawModernLeanBodyAnalysisPage.js` |
+| Frequently Asked Questions | `drawModernFaqPage.js` |
+| Questionnaire confirmation | `drawAnswersConfirmationPage.js` |
+
+New PDF sections: create `server/pdf/drawModern<Section>Page.js`, import `begin1982Page` + `MODERN_REPORT_*` from the frame, and wire through `renderSampleDietPrintout.js`.
+
+## Agent checklist
+
+1. **Frame** — start every page with `begin1982Page(doc, payload, pageTitle)`; continuation pages pass `null` for `pageTitle`.
+2. **Fonts** — call `registerModernReportFonts(doc)` before drawing body content.
+3. **Footer reserve** — pin body content above `modernFooterRuleY()` (typically 36pt reserve).
+4. **Copy** — user-authored text stays verbatim (see `.cursor/rules/user-authored-copy.mdc`); change layout only.
+5. **Cache bust** — layout/copy-pipeline changes → bump `DIET_PDF_GENERATION_VERSION` in `js/assetVersionData.js`.
+6. **Verify** — `npm run verify:pdf` and `npm run verify:printout-calcs`.
+
+## Do not reintroduce
+
+- Legacy seminar PDF styling (`drawSeminar.js` colors as primary page design)
+- Old 12-page program report renderer (`renderProgramReportLockedPreview.js` — deleted)
+- HTML print-shop PDF paths
+- Non-Montserrat fonts on report pages (Barlow, Caveat except Menu Plan handwriting fill-ins)

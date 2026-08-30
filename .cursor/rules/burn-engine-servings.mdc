@@ -309,7 +309,7 @@ Page 4 (`servingsGridRows` in `js/servingsPrintout.js`) and the menu plan (`menu
 
 ### Burn & Build Diet PDF
 
-Renderer: `server/pdf/renderSampleDietPrintout.js`. Preview: `.cursor/rules/sample-diet-pdf.mdc`.
+Renderer: `server/pdf/renderSampleDietPrintout.js`. Modern visual system: `.cursor/rules/modern-pdf-style.mdc`. Preview: `.cursor/rules/sample-diet-pdf.mdc`.
 
 | Page | Grams? |
 |------|--------|

@@ -5,6 +5,8 @@ alwaysApply: true
 
 # Landing-page sample diet PDF
 
+**Visual style:** all pages use the modern B&B report look (Food Plan page is the reference). See `.cursor/rules/modern-pdf-style.mdc`.
+
 **Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — overwrite in place when the user supplies a new sample.
 
 **Download URL (unchanged for users):**

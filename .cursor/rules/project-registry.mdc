@@ -69,12 +69,15 @@ Every `js/` file name ends with its job:
 | `js/programPackageData.js` | Full program object (`pkg.intake` + plan) |
 | `js/intakeQuestionCopyData.js` | Shared questionnaire question text + numbering |
 | `js/sampleDietPrintoutData.js` | Burn & Build Diet PDF payload |
-| `js/answersConfirmationPrintout.js` | PDF page 8 — answer list |
+| `js/answersConfirmationPrintout.js` | Questionnaire confirmation rows |
+| `data/handbookFaqPrintout.js` | Handbook FAQ Q&A copy |
+| `server/pdf/drawModernReportFrame.js` | Modern PDF frame (header, footer, tokens) |
+| `server/pdf/drawModernFoodPlanPage.js` | Food Plan page — canonical modern style reference |
 | `js/leanBodyAnalysisPrintout.js` | LBA table row helper |
 | `js/programClientDataHelpers.js` | Client name + date on PDF |
 | `questionnaire/js/questionnaire.js` | Questionnaire UI + `buildProgram()` |
 
-There is **no** separate questionnaire PDF — answers appear on page 8 of the Burn & Build Diet PDF.
+There is **no** separate questionnaire PDF — answers appear on the final page of the Burn & Build Diet PDF.
 
 ## Verify (engine + PDF)
 
@@ -86,6 +89,8 @@ npm run verify:pdf
 ## Burn & Build Diet PDF
 
 Renderer: `server/pdf/renderSampleDietPrintout.js` (PDFKit). Purchased PDF via `GET /api/programs/diet-pdf`; landing sample via `GET /api/samples/sample-diet`.
+
+**Visual style:** modern gold/black Montserrat report — Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
 
 ## B&B Sample Diet PDF (landing page)
 
