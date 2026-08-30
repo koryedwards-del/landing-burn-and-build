@@ -14,7 +14,7 @@ export const QUESTIONNAIRE_START_PATH = '/questionnaire/';
 export const QUESTIONNAIRE_WELCOME_URL = `${CREATOR_HOST_ORIGIN}${QUESTIONNAIRE_START_PATH}`;
 export const CREATOR_CHECKOUT_URL = `${CREATOR_HOST_ORIGIN}/createyourfoodplan/`;
 export const PRIVACY_POLICY_URL = `${CREATOR_HOST_ORIGIN}/privacypolicy/`;
-export const SUPPORT_URL = `${CREATOR_HOST_ORIGIN}/support/`;
+export const CONTACT_URL = `${CREATOR_HOST_ORIGIN}/contact/`;
 /** Direct download — static sample on Render (see docs/samples/b&bsamplediet.pdf). */
 export const SAMPLE_DIET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/sample-diet`;
 export const SAMPLE_DIET_INLINE_URL = `${SAMPLE_DIET_DOWNLOAD_URL}?inline=1`;

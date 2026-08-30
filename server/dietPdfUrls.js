@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL } from '../js/contactEmailData.js';
 import { normalizeEmail } from './db.js';
 import { BURN_AND_BUILD_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
 
@@ -50,7 +51,5 @@ export function burnAndBuildFaqUrl() {
   return BURN_AND_BUILD_FAQ_DOWNLOAD_URL;
 }
 
-export const SUPPORT_EMAIL = 'support@burnandbuilddiet.com';
-
 /** Purchase autosend email — footer contact + Resend reply_to. */
-export const PURCHASE_EMAIL_CONTACT = 'kory@burnandbuilddiet.com';
+export const PURCHASE_EMAIL_CONTACT = CONTACT_EMAIL;

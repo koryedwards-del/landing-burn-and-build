@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL } from '../../js/contactEmailData.js';
 import { PDF_MARGIN } from './constants.js';
 import { drawWatermark, logoPath } from './draw.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypographyData.js';
@@ -7,7 +8,7 @@ export const PDF_FRAME_TAGLINE = 'Burn & Build — Stronger Today. Leaner Tomorr
 
 export const PDF_FRAME_CONTACT = Object.freeze({
   website: 'www.burnandbuilddiet.com',
-  email: 'support@burnandbuilddiet.com',
+  email: CONTACT_EMAIL,
 });
 
 export const PDF_FRAME_FONTS = Object.freeze({

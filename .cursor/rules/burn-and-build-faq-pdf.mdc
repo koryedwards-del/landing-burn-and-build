@@ -1,11 +1,11 @@
 ---
-description: Burn & Build FAQ PDF — standalone support document naming and paths
+description: Burn & Build FAQ PDF — standalone document naming and paths
 alwaysApply: true
 ---
 
 # Burn & Build FAQ PDF
 
-Standalone support PDF — **not** part of the 7-page Burn & Build Diet. Linked from purchase email when wired (exact copy from user only).
+Standalone FAQ PDF — **not** part of the 7-page Burn & Build Diet. Linked from purchase email when wired (exact copy from user only).
 
 **Visual style:** modern B&B report frame; Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
 
@@ -13,7 +13,7 @@ Standalone support PDF — **not** part of the 7-page Burn & Build Diet. Linked 
 
 | Layer | Name | Example |
 |-------|------|---------|
-| **Product** (user-facing) | **Burn & Build FAQ** | Email, support, page title |
+| **Product** (user-facing) | **Burn & Build FAQ** | Email, contact, page title |
 | **Download filename** | `Burn & Build FAQ.pdf` | `Content-Disposition` attachment |
 | **Repo static file** | `docs/samples/burn-and-build-faq.pdf` | Commit after `npm run render:burn-and-build-faq` |
 | **API slug** | `burn-and-build-faq` | `GET /api/samples/burn-and-build-faq` |

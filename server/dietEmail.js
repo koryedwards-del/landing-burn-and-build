@@ -85,12 +85,12 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
 
 function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUrl }) {
   const c = EMAIL_COLORS;
-  const supportMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
+  const contactMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
   const site = siteOrigin();
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const worksheetLink = `<a class="gold-link" href="${worksheetUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download Menu Plan Worksheet</a>`;
   const faqLink = `<a class="gold-link" href="${faqUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download FAQ</a>`;
-  const supportLink = `<a class="support-link" href="${supportMailto}" style="font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:30px;line-height:1.1;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:400;text-decoration:none;">${PURCHASE_EMAIL_CONTACT}</a>`;
+  const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:30px;line-height:1.1;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:400;text-decoration:none;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -107,7 +107,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
     a { text-decoration-skip-ink: none; }
     a.portal-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
     a.gold-link { color: ${c.gold} !important; -webkit-text-fill-color: ${c.gold} !important; }
-    a.support-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
+    a.contact-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
   </style>
 </head>
 <body style="margin:0;padding:0;background-color:${c.pageBg};font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:${c.black};">
@@ -157,7 +157,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
           <tr>
             <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
               <p style="margin:0 0 8px;color:${c.black};font-weight:bold;">Questions? Just email me.</p>
-              <p style="margin:0 0 20px;">${supportLink}</p>
+              <p style="margin:0 0 20px;">${contactLink}</p>
               <p style="margin:0 0 6px;font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:30px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
               <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
               <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>

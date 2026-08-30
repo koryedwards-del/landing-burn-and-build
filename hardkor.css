@@ -254,7 +254,7 @@ nav {
   font-size: var(--text-body);
 }
 
-/* Page hero headline used on inner pages (privacy, support, affiliates) */
+/* Page hero headline used on inner pages (privacy, contact, affiliates) */
 .page-h1 {
   font-family: var(--font-heading);
   font-weight: 900;
@@ -337,7 +337,7 @@ footer {
 }
 
 /* ------------------------------------------------------------
-   INNER PAGE LAYOUT (privacy, support, affiliates)
+   INNER PAGE LAYOUT (privacy, contact, affiliates)
    ------------------------------------------------------------ */
 .page {
   max-width: var(--page-max-narrow);

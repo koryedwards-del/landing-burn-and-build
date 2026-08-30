@@ -128,7 +128,7 @@ async function restorePurchaseByEmail(rawEmail) {
   }
 
   if (!resume.programPaid) {
-    store.restoreError = 'Payment is not complete for this email. Contact support@burnandbuilddiet.com if you were charged.';
+    store.restoreError = 'Payment is not complete for this email. Email kory@burnandbuilddiet.com if you were charged.';
     renderPurchaserPortal();
     return false;
   }
@@ -374,7 +374,7 @@ function renderPlanReady() {
           <p class="unlock-hint">Secure checkout · One-time $279 · Yours for life</p>
           ${store.checkoutTestBypass ? '<button type="button" class="btn-secondary unlock-cta-secondary" data-test-checkout>Skip payment (local test)</button>' : ''}`
       : `
-          <p class="unlock-hint">Checkout is not available yet. Contact support@burnandbuilddiet.com if you need help.</p>
+          <p class="unlock-hint">Checkout is not available yet. Email kory@burnandbuilddiet.com if you need help.</p>
           ${store.checkoutTestBypass ? '<button type="button" class="btn-secondary unlock-cta-secondary" data-test-checkout>Skip payment (local test)</button>' : ''}`
     : '';
 
@@ -573,7 +573,7 @@ async function handleCheckoutReturn() {
 
   const sessionId = params.get('session_id');
   if (!sessionId) {
-    store.checkoutError = 'Missing checkout session. Contact support if you were charged.';
+    store.checkoutError = 'Missing checkout session. Email kory@burnandbuilddiet.com if you were charged.';
     cleanCheckoutQuery();
     return;
   }

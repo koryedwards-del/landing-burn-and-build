@@ -1,6 +1,6 @@
 /** Burn & Build FAQ PDF — product name, download filename, repo path, API slug. */
 
-/** User-facing product name (PDF title, email links, support copy). */
+/** User-facing product name (PDF title, email links, contact copy). */
 export const BURN_AND_BUILD_FAQ_PDF_NAME = 'Burn & Build FAQ';
 
 /** Attachment / browser download filename. */
