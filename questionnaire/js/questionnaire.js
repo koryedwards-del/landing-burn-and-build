@@ -21,8 +21,9 @@ import {
   INTAKE_PARENT_NAME_LABEL,
   INTAKE_PARENT_RELATIONSHIP_LABEL,
   INTAKE_PARENT_RELATIONSHIP_OPTIONS,
-  isMinorAthlete,
+  requiresParentApproval,
   validateAthleteAge,
+  validateParentConsentFields,
 } from '../../js/parentConsentData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
@@ -175,22 +176,9 @@ const INTAKE_QUESTION_SECTIONS = [
 ];
 
 const WAIVER_QUESTION_NUM_SELECTORS = [
-  '.intake-waiver__cell--signed .intake-acc__num',
-  '.intake-waiver__cell--date .intake-acc__num',
+  '#athlete-waiver-block .intake-waiver__cell--signed .intake-acc__num',
+  '#athlete-waiver-block .intake-waiver__cell--date .intake-acc__num',
 ];
-
-const PARENT_CONSENT_QUESTION_NUM_SELECTORS = [
-  '.intake-parent-consent__field:nth-of-type(1) .intake-acc__num',
-  '.intake-parent-consent__field:nth-of-type(2) .intake-acc__num',
-  '.intake-parent-consent__field:nth-of-type(3) .intake-acc__num',
-  '.intake-parent-consent__cell--signed .intake-acc__num',
-  '.intake-parent-consent__cell--date .intake-acc__num',
-];
-
-function waiverQuestionNumSelectors() {
-  if (!isMinorAthlete(readForm().age)) return WAIVER_QUESTION_NUM_SELECTORS;
-  return WAIVER_QUESTION_NUM_SELECTORS.concat(PARENT_CONSENT_QUESTION_NUM_SELECTORS);
-}
 
 function syncIntakeQuestionNumbers() {
   let n = 1;
@@ -206,7 +194,7 @@ function syncIntakeQuestionNumbers() {
       n += 1;
     });
   });
-  waiverQuestionNumSelectors().forEach((selector) => {
+  WAIVER_QUESTION_NUM_SELECTORS.forEach((selector) => {
     const numEl = document.querySelector(selector);
     if (!numEl) return;
     numEl.textContent = String(n);
@@ -425,7 +413,7 @@ function readForm() {
 }
 
 function buildParentConsentRecord(values) {
-  if (!isMinorAthlete(values.age)) return null;
+  if (!requiresParentApproval(values.age)) return null;
   return {
     version: INTAKE_PARENT_CONSENT_VERSION,
     guardianName: values.parentGuardianName,
@@ -1126,7 +1114,9 @@ function exerciseFieldSummary(fieldId, values) {
 function validateExerciseField(fieldId, values) {
   switch (fieldId) {
     case 'age': {
-      return validateAthleteAge(values.age);
+      const ageError = validateAthleteAge(values.age);
+      if (ageError) return ageError;
+      return validateParentConsentFields(values);
     }
     case 'weightTrainingHours':
     case 'cardioHours':
@@ -1331,33 +1321,55 @@ function clearParentConsentFields() {
 function syncParentConsentVisibility() {
   const block = document.getElementById('parent-consent-block');
   if (!block) return;
-  const minor = isMinorAthlete(readForm().age);
-  if (!minor) {
+  const needsParent = requiresParentApproval(readForm().age);
+  if (!needsParent) {
     if (!block.hidden) clearParentConsentFields();
     block.hidden = true;
   } else {
     block.hidden = false;
+    const today = localDateKey(new Date());
+    if (form.elements.parentGuardianSignedDate && !form.elements.parentGuardianSignedDate.value) {
+      form.elements.parentGuardianSignedDate.value = today;
+    }
   }
-  syncIntakeQuestionNumbers();
 }
 
-function parentConsentComplete(values) {
-  if (!isMinorAthlete(values.age)) return true;
-  return !validateParentConsent(values);
+function clearParentConsentInvalidState() {
+  document.querySelectorAll('.intake-parent-consent__field.is-invalid, .intake-parent-consent__checkbox.is-invalid').forEach((cell) => {
+    cell.classList.remove('is-invalid');
+  });
 }
 
-function validateParentConsent(values) {
-  if (!isMinorAthlete(values.age)) return '';
-  if (!values.parentGuardianName) return 'Enter parent/guardian name.';
-  if (!values.parentGuardianEmail) return 'Enter parent/guardian email.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.parentGuardianEmail)) {
-    return 'Enter a valid parent/guardian email.';
+function highlightAgeParentValidationErrors(values) {
+  clearParentConsentInvalidState();
+  if (!requiresParentApproval(values.age)) return null;
+
+  let focusTarget = null;
+  if (!values.parentGuardianName) {
+    document.querySelector('[name="parentGuardianName"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
+    focusTarget = form.elements.parentGuardianName;
   }
-  if (!values.parentGuardianRelationship) return 'Select relationship to athlete.';
-  if (!values.parentConsentAccepted) return 'Confirm parent/guardian approval.';
-  if (!values.parentGuardianSignature) return 'Type parent/guardian full legal name.';
-  if (!values.parentGuardianSignedDate) return 'Enter parent/guardian approval date.';
-  return '';
+  if (!values.parentGuardianEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.parentGuardianEmail)) {
+    document.querySelector('[name="parentGuardianEmail"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.parentGuardianEmail;
+  }
+  if (!values.parentGuardianRelationship) {
+    document.querySelector('[name="parentGuardianRelationship"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.parentGuardianRelationship;
+  }
+  if (!values.parentConsentAccepted) {
+    document.querySelector('.intake-parent-consent__checkbox')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.parentConsentAccepted;
+  }
+  if (!values.parentGuardianSignature) {
+    document.querySelector('.intake-parent-consent__field--signed')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.parentGuardianSignature;
+  }
+  if (!values.parentGuardianSignedDate) {
+    document.querySelector('.intake-parent-consent__field--date')?.classList.add('is-invalid');
+    if (!focusTarget) focusTarget = form.elements.parentGuardianSignedDate;
+  }
+  return focusTarget;
 }
 
 function initParentConsentCopy() {
@@ -1432,14 +1444,14 @@ function canProceed(stepIndex) {
     case 3:
       return bodySectionComplete(values);
     case 4:
-      return Boolean(values.signature && values.signatureDate) && parentConsentComplete(values);
+      return Boolean(values.signature && values.signatureDate);
     default:
       return true;
   }
 }
 
 function clearWaiverInvalidState() {
-  document.querySelectorAll('.intake-waiver__cell.is-invalid, .intake-parent-consent__field.is-invalid, .intake-parent-consent__checkbox.is-invalid').forEach((cell) => {
+  document.querySelectorAll('#athlete-waiver-block .intake-waiver__cell.is-invalid').forEach((cell) => {
     cell.classList.remove('is-invalid');
   });
 }
@@ -1455,37 +1467,6 @@ function highlightWaiverValidationErrors(values) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--date')?.classList.add('is-invalid');
     if (!focusTarget) focusTarget = form.elements.signatureDate;
   }
-
-  if (!isMinorAthlete(values.age)) {
-    focusTarget?.focus();
-    return;
-  }
-
-  if (!values.parentGuardianName) {
-    document.querySelector('[name="parentGuardianName"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianName;
-  }
-  if (!values.parentGuardianEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.parentGuardianEmail)) {
-    document.querySelector('[name="parentGuardianEmail"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianEmail;
-  }
-  if (!values.parentGuardianRelationship) {
-    document.querySelector('[name="parentGuardianRelationship"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianRelationship;
-  }
-  if (!values.parentConsentAccepted) {
-    document.querySelector('.intake-parent-consent__checkbox')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentConsentAccepted;
-  }
-  if (!values.parentGuardianSignature) {
-    document.querySelector('.intake-parent-consent__cell--signed')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianSignature;
-  }
-  if (!values.parentGuardianSignedDate) {
-    document.querySelector('.intake-parent-consent__cell--date')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianSignedDate;
-  }
-
   focusTarget?.focus();
 }
 
@@ -1525,8 +1506,15 @@ function highlightStepValidationErrors(stepIndex) {
         setExerciseFieldError(item, error);
         if (error && firstInvalidIndex < 0) firstInvalidIndex = index;
       });
-      if (firstInvalidIndex >= 0) openExerciseField(firstInvalidIndex);
-      else renderExerciseAccordionState();
+      if (firstInvalidIndex >= 0) {
+        openExerciseField(firstInvalidIndex);
+        if (EXERCISE_FIELDS[firstInvalidIndex] === 'age') {
+          const parentFocus = highlightAgeParentValidationErrors(values);
+          parentFocus?.focus();
+        }
+      } else {
+        renderExerciseAccordionState();
+      }
       break;
     }
     case 3: {
@@ -1554,12 +1542,23 @@ function intakeFieldStepIndex(fieldId) {
 }
 
 function navigateToIntakeField(fieldId) {
-  if (fieldId === 'waiver' || fieldId === 'parentConsent' || fieldId.startsWith('parentGuardian')) {
+  if (fieldId === 'waiver') {
     showStep(4);
-    if (fieldId === 'parentConsent' || fieldId.startsWith('parentGuardian')) {
+    form.elements.signature?.focus();
+    return;
+  }
+
+  if (fieldId === 'parentConsent' || fieldId.startsWith('parentGuardian')) {
+    showStep(2);
+    openExerciseField(0);
+    if (fieldId === 'parentConsent' || fieldId === 'parentGuardianSignature') {
       form.elements.parentGuardianSignature?.focus();
-    } else {
-      form.elements.signature?.focus();
+    } else if (fieldId === 'parentGuardianName') {
+      form.elements.parentGuardianName?.focus();
+    } else if (fieldId === 'parentGuardianEmail') {
+      form.elements.parentGuardianEmail?.focus();
+    } else if (fieldId === 'parentGuardianRelationship') {
+      form.elements.parentGuardianRelationship?.focus();
     }
     return;
   }
@@ -1687,7 +1686,6 @@ function showStep(index) {
   }
   if (step === 4) {
     syncLocalTodayDates();
-    syncParentConsentVisibility();
   }
   if (step === 3) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
@@ -1713,9 +1711,6 @@ function syncLocalTodayDates() {
   }
   if (form.elements.signatureDate) {
     form.elements.signatureDate.value = today;
-  }
-  if (isMinorAthlete(readForm().age) && form.elements.parentGuardianSignedDate) {
-    form.elements.parentGuardianSignedDate.value = today;
   }
 }
 
@@ -1807,12 +1802,14 @@ function bindEvents() {
   form.addEventListener('input', () => {
     syncAgeField();
     clearWaiverInvalidState();
+    clearParentConsentInvalidState();
     updateStepNav();
   });
 
   form.addEventListener('change', () => {
     syncAgeField();
     clearWaiverInvalidState();
+    clearParentConsentInvalidState();
     updateStepNav();
   });
 

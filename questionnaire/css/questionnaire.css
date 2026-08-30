@@ -741,10 +741,22 @@ body.q-app--workroom {
   margin-top: 1rem;
 }
 
+.intake-parent-consent--age {
+  margin-top: 0.875rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--border);
+}
+
+.intake-parent-consent__lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 .intake-parent-consent__fields {
   display: grid;
   gap: 0;
-  border-bottom: 1px solid var(--border);
 }
 
 .intake-parent-consent__field {
@@ -773,6 +785,17 @@ body.q-app--workroom {
   padding: 0.875rem 1rem 1rem;
   font-size: 0.9375rem;
   line-height: 1.45;
+}
+
+.intake-parent-consent__sign {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.intake-parent-consent__field--signed,
+.intake-parent-consent__field--date {
+  padding-top: 0.875rem;
 }
 
 .intake-acc__note {

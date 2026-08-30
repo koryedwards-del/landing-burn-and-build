@@ -15,7 +15,7 @@ import {
   INTAKE_PARENT_EMAIL_LABEL,
   INTAKE_PARENT_NAME_LABEL,
   INTAKE_PARENT_RELATIONSHIP_LABEL,
-  isMinorAthlete,
+  requiresParentApproval,
   parentRelationshipLabel,
 } from './parentConsentData.js';
 
@@ -115,7 +115,7 @@ export function buildAnswersConfirmationRows(source) {
   ];
 
   const parent = intake.parentConsent;
-  if (isMinorAthlete(intake.age) && parent) {
+  if (requiresParentApproval(intake.age) && parent) {
     rows.push(
       { fieldId: 'parentGuardianName', label: INTAKE_PARENT_NAME_LABEL, value: displayValue(parent.guardianName) },
       { fieldId: 'parentGuardianEmail', label: INTAKE_PARENT_EMAIL_LABEL, value: displayValue(parent.guardianEmail) },
