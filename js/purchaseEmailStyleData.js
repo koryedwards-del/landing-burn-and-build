@@ -5,3 +5,6 @@ export const PURCHASE_EMAIL_FONT_URL =
 
 export const PURCHASE_EMAIL_CSS_FAMILY =
   "'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+/** Handwritten close — Caveat signature line only. */
+export const PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX = 30;

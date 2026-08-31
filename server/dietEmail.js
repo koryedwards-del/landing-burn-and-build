@@ -3,7 +3,12 @@ import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
   PURCHASE_EMAIL_CSS_FAMILY,
   PURCHASE_EMAIL_FONT_URL,
+  PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX,
 } from '../js/purchaseEmailStyleData.js';
+import {
+  SIGNATURE_DISPLAY_CSS_FAMILY,
+  SIGNATURE_DISPLAY_FONT_URL,
+} from '../js/signatureDisplayData.js';
 import {
   brandLogoUrl,
   burnAndBuildFaqUrl,
