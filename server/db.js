@@ -238,6 +238,27 @@ export function wasDietEmailSent(email, programId) {
   return !!row?.diet_email_sent_at;
 }
 
+/** Atomically reserve the first autosend — prevents webhook + verify double-send races. */
+export function tryClaimDietEmailSend(email, programId, { staleAfterMs = 180000 } = {}) {
+  const now = new Date().toISOString();
+  const staleCutoff = new Date(Date.now() - staleAfterMs).toISOString();
+  const result = db.prepare(`
+    UPDATE programs
+    SET diet_email_sent_at = ?
+    WHERE id = ? AND email = ?
+      AND (diet_email_sent_at IS NULL OR diet_email_sent_at < ?)
+  `).run(now, String(programId || '').trim(), normalizeEmail(email), staleCutoff);
+  return result.changes > 0;
+}
+
+export function releaseDietEmailSendClaim(email, programId) {
+  db.prepare(`
+    UPDATE programs
+    SET diet_email_sent_at = NULL
+    WHERE id = ? AND email = ? AND diet_email_sent_at IS NOT NULL
+  `).run(String(programId || '').trim(), normalizeEmail(email));
+}
+
 export function markDietEmailSent(email, programId) {
   const now = new Date().toISOString();
   db.prepare(`

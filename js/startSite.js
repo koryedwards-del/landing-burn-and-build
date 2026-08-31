@@ -603,7 +603,9 @@ async function handleCheckoutReturn() {
   store.programPaid = true;
   applyFulfillmentResult(result);
   render();
-  startPostPaymentEmail();
+  if (!isDietEmailDeliverySuccess(result)) {
+    startPostPaymentEmail();
+  }
 }
 
 async function retrySavePlan() {
@@ -679,7 +681,9 @@ async function completeTestCheckout() {
   store.programPaid = true;
   applyFulfillmentResult(result);
   render();
-  startPostPaymentEmail();
+  if (!isDietEmailDeliverySuccess(result)) {
+    startPostPaymentEmail();
+  }
 }
 
 async function preparePlanReadyState() {

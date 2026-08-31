@@ -1,7 +1,7 @@
 import { dietPdfDocumentLabel } from '../js/dietPdfNamingHelpers.js';
 import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
 import { renderSampleDietPrintout } from './pdf/renderSampleDietPrintout.js';
-import { getProgramById, isProgramPaid, markDietEmailSent, wasDietEmailSent, getProgramPaidAt } from './db.js';
+import { getProgramById, isProgramPaid, releaseDietEmailSendClaim, tryClaimDietEmailSend, wasDietEmailSent, getProgramPaidAt } from './db.js';
 import { writeStoredDietPdf } from './dietPdfStorage.js';
 import { dietEmailConfigured, sendDietPdfEmail } from './dietEmail.js';
 
@@ -78,6 +78,21 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
     };
   }
 
+  let claimedSend = false;
+  if (!forceEmail) {
+    claimedSend = tryClaimDietEmailSend(email, programId);
+    if (!claimedSend) {
+      return {
+        pdfReady: true,
+        emailSent: false,
+        emailSkipped: true,
+        emailAlreadySent: true,
+        emailError: null,
+        forced: false,
+      };
+    }
+  }
+
   const emailResult = await sendDietPdfEmail({
     to: email,
     preferredName,
@@ -89,9 +104,11 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
   });
 
   if (emailResult.ok) {
-    markDietEmailSent(email, programId);
     console.info('[diet-email] Delivery complete', { email, programId, resendId: emailResult.id, forced: forceEmail });
   } else {
+    if (claimedSend) {
+      releaseDietEmailSendClaim(email, programId);
+    }
     console.error('[diet-email] Delivery failed', {
       email,
       programId,
@@ -109,6 +126,7 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
     pdfReady: true,
     emailSent: !!emailResult.ok,
     emailSkipped: !!emailResult.skipped,
+    emailAlreadySent: !emailResult.ok && claimedSend === false && !forceEmail,
     emailError,
     forced: forceEmail,
   };
