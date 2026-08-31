@@ -451,7 +451,7 @@ app.get('/api/samples/:slug', async (req, res) => {
         'Content-Disposition',
         `${inline ? 'inline' : 'attachment'}; filename="${resolved.spec.filename}"`,
       );
-      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.setHeader('Cache-Control', inline ? 'no-store' : 'public, max-age=300');
       res.sendFile(resolved.filePath);
       return;
     }
@@ -463,7 +463,7 @@ app.get('/api/samples/:slug', async (req, res) => {
         'Content-Disposition',
         `${inline ? 'inline' : 'attachment'}; filename="${publicSampleDietFilename()}"`,
       );
-      res.setHeader('Cache-Control', 'public, max-age=60');
+      res.setHeader('Cache-Control', inline ? 'no-store' : 'public, max-age=60');
       res.send(pdf);
     } catch (err) {
       console.error('Public sample diet error:', err.message);
