@@ -79,4 +79,4 @@ npm run preview:diet-email
 
 Writes both `purchase-email-preview/index.html` and `docs/samples/burn-and-build-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.
 
-**Approval signatures on PDF page 8** use Caveat at the same size as the date (answer row typography). Purchase email uses **Montserrat** (`js/purchaseEmailStyleData.js`).
+**Approval signatures on PDF page 8** use Caveat at the same size as the date (answer row typography). Purchase email body and contact use **Montserrat**; **— Kory** close uses **Caveat** (`js/purchaseEmailStyleData.js`, `js/signatureDisplayData.js`).

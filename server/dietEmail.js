@@ -107,6 +107,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${PURCHASE_EMAIL_FONT_URL}" rel="stylesheet">
+  <link href="${SIGNATURE_DISPLAY_FONT_URL}" rel="stylesheet">
   <style>
     a { text-decoration-skip-ink: none; }
     a.portal-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
@@ -162,7 +163,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
             <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
               <p style="margin:0 0 8px;color:${c.black};font-weight:bold;">Questions? Just email me.</p>
               <p style="margin:0 0 20px;">${contactLink}</p>
-              <p style="margin:0 0 6px;font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:15px;line-height:1.5;color:#1A1A1A;">&mdash; Kory</p>
+              <p style="margin:0 0 6px;font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:${PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX}px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
               <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
               <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
             </td>
