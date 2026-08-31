@@ -1,10 +1,9 @@
 import { dietPdfAttachmentFilename } from '../js/dietPdfNamingHelpers.js';
 import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
-  SIGNATURE_DISPLAY_CSS_FAMILY,
-  SIGNATURE_DISPLAY_FONT,
-  SIGNATURE_DISPLAY_FONT_URL,
-} from '../js/signatureDisplayData.js';
+  PURCHASE_EMAIL_CSS_FAMILY,
+  PURCHASE_EMAIL_FONT_URL,
+} from '../js/purchaseEmailStyleData.js';
 import {
   brandLogoUrl,
   burnAndBuildFaqUrl,
@@ -90,7 +89,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const worksheetLink = `<a class="gold-link" href="${worksheetUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download Menu Plan Worksheet</a>`;
   const faqLink = `<a class="gold-link" href="${faqUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download FAQ</a>`;
-  const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:30px;line-height:1.1;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:400;text-decoration:none;">${PURCHASE_EMAIL_CONTACT}</a>`;
+  const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:none;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -102,7 +101,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   <title>Your Burn &amp; Build Diet + Resources</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="${SIGNATURE_DISPLAY_FONT_URL}" rel="stylesheet">
+  <link href="${PURCHASE_EMAIL_FONT_URL}" rel="stylesheet">
   <style>
     a { text-decoration-skip-ink: none; }
     a.portal-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
@@ -110,7 +109,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
     a.contact-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:${c.pageBg};font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:${c.black};">
+<body style="margin:0;padding:0;background-color:${c.pageBg};font-family:${PURCHASE_EMAIL_CSS_FAMILY};color:${c.black};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:32px 16px;">
     <tr>
       <td align="center">
@@ -158,7 +157,7 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
             <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
               <p style="margin:0 0 8px;color:${c.black};font-weight:bold;">Questions? Just email me.</p>
               <p style="margin:0 0 20px;">${contactLink}</p>
-              <p style="margin:0 0 6px;font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:30px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
+              <p style="margin:0 0 6px;font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:15px;line-height:1.5;color:#1A1A1A;">&mdash; Kory</p>
               <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
               <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
             </td>
