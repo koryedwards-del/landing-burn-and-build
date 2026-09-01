@@ -301,23 +301,14 @@ async function syncDietEmailSentFromServer() {
   return false;
 }
 
-function renderDietEmailSpamHint() {
-  if (!store.dietEmailAvailable || !store.dietEmailSent) return '';
-  return '<p class="unlock-receipt__hint">Check your spam folder if you do not see the email.</p>';
-}
-
-function renderDietEmailNote() {
-  if (!store.dietEmailAvailable) return '';
-  if (store.dietEmailSent) {
-    return '<p class="unlock-receipt__note unlock-receipt__note--sent">A copy is also sent to your email.</p>';
+function renderPaidEmailLead() {
+  if (!store.dietEmailAvailable) {
+    return 'Use the download below to get your Burn &amp; Build Diet PDF.';
   }
-  if (store.dietEmailBusy) {
-    return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
+  if (store.dietEmailBusy || (!store.dietEmailSent && !store.dietEmailError)) {
+    return 'Sending your Burn &amp; Build Diet to your email…';
   }
-  if (store.dietEmailError) {
-    return '<p class="unlock-receipt__note">Email is on the way — use the download button above.</p>';
-  }
-  return '<p class="unlock-receipt__note unlock-receipt__note--sending">Sending a copy to your email…</p>';
+  return 'Your Burn &amp; Build Diet has been sent to your email.';
 }
 
 function renderPaidDirections() {
@@ -325,14 +316,22 @@ function renderPaidDirections() {
     ? 'PREPARING YOUR PDF…'
     : 'DOWNLOAD YOUR BURN & BUILD DIET';
 
-  const downloadLine = `<button type="button" class="unlock-receipt__download${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
+  const downloadBtn = `<button type="button" class="unlock-receipt__download unlock-receipt__download--secondary${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
+
+  const emailSection = store.dietEmailAvailable
+    ? `<h2 class="unlock-receipt__email-heading">CHECK YOUR EMAIL</h2>
+            <p class="unlock-receipt__email-lead">${renderPaidEmailLead()}</p>
+            <p class="unlock-receipt__hint">Check your spam folder if you don't see it.</p>`
+    : '';
 
   return `
           <div class="unlock-receipt">
             <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
-            ${downloadLine}
-            ${renderDietEmailNote()}
-            ${renderDietEmailSpamHint()}
+            ${emailSection}
+            <div class="unlock-receipt__download-block">
+              <p class="unlock-receipt__download-prompt">Want a copy now?</p>
+              ${downloadBtn}
+            </div>
           </div>
           ${store.dietFulfillmentError ? `<div class="unlock-error">${escapeHtml(store.dietFulfillmentError)}</div>` : ''}`;
 }
@@ -382,8 +381,8 @@ function renderPlanReady() {
     : '';
 
   const successLines = hasPaidAccess
-    ? `<div class="ob-welcome-line1">DOWNLOAD YOUR</div>
-          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>`
+    ? `<div class="ob-welcome-line1">YOUR BURN &amp; BUILD DIET</div>
+          <div class="ob-welcome-line2">IS READY</div>`
     : `<div class="ob-welcome-line1">YOUR DIET</div>
           <div class="ob-welcome-line2">IS READY</div>`;
 

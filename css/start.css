@@ -150,12 +150,43 @@
 }
 
 .unlock-receipt__line {
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   font-size: 15px;
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: 0.04em;
   color: #fff;
+}
+
+.unlock-receipt__email-heading {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+
+.unlock-receipt__email-lead {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.unlock-receipt__download-block {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.unlock-receipt__download-prompt {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--muted);
 }
 
 .unlock-receipt__download {
@@ -208,8 +239,30 @@
   font-style: italic;
 }
 
+.unlock-receipt__download--secondary {
+  margin-bottom: 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+}
+
+.unlock-receipt__download--secondary:hover:not(:disabled) {
+  filter: none;
+  border-color: var(--flame);
+  color: var(--flame);
+}
+
+.unlock-receipt__download--secondary.unlock-receipt__download--done {
+  background: rgba(110, 207, 138, 0.12);
+  color: var(--green);
+  border-color: rgba(110, 207, 138, 0.45);
+}
+
 .unlock-receipt__hint {
-  margin: 0.35rem 0 0;
+  margin: 10px 0 0;
   font-size: 12px;
   line-height: 1.45;
   color: var(--muted);
