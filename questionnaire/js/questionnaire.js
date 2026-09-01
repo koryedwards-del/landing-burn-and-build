@@ -109,7 +109,6 @@ const EXERCISE_FIELD_META = {
   age: {
     question: INTAKE_FIELD_QUESTIONS.age,
     guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
-    hint: 'Example: 45',
     sub: 'Example: 45',
   },
   weightTrainingHours: {
@@ -122,13 +121,13 @@ const EXERCISE_FIELD_META = {
     question: INTAKE_FIELD_QUESTIONS.cardioHours,
     guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
     hint: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none.',
-    sub: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
+    sub: 'Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
   fatBurningHours: {
     question: INTAKE_FIELD_QUESTIONS.fatBurningHours,
     guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
     hint: '3 hrs/week is typical — about 30 minutes a day. Enter 0 if none.',
-    sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.',
+    sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. Lower it if that is not realistic for you.',
   },
 };
 
@@ -205,6 +204,17 @@ function syncIntakeQuestionNumbers() {
   });
 }
 
+function accDetailWithoutHintRepeat(hintText, detailText) {
+  const hint = String(hintText || '').trim();
+  let detail = String(detailText || '').trim();
+  if (!detail) return '';
+  if (!hint || detail === hint) return '';
+  if (detail.startsWith(hint)) {
+    detail = detail.slice(hint.length).replace(/^[\s.,;—–-]+/, '').trim();
+  }
+  return detail === hint ? '' : detail;
+}
+
 function populateAccFieldCopy(item, meta, { hintFrom = 'guide', detailFrom = 'sub' } = {}) {
   if (!item || !meta) return;
   const label = item.querySelector('[data-acc-label]');
@@ -216,11 +226,16 @@ function populateAccFieldCopy(item, meta, { hintFrom = 'guide', detailFrom = 'su
   const alert = item.querySelector('[data-acc-alert]');
   const hoursNote = item.querySelector('[data-acc-hours-note]');
 
+  const hintText = meta.hint || meta[hintFrom] || '';
+
   if (label) label.textContent = meta.question;
   if (question) question.textContent = meta.question;
-  if (hint) hint.textContent = meta.hint || meta[hintFrom] || '';
-  if (guide) guide.textContent = meta.guide || '';
-  if (detail) detail.textContent = meta[detailFrom] || '';
+  if (hint) hint.textContent = hintText;
+  if (guide) {
+    const guideText = meta.guide || '';
+    guide.textContent = guideText && guideText !== hintText ? guideText : '';
+  }
+  if (detail) detail.textContent = accDetailWithoutHintRepeat(hintText, meta[detailFrom] || '');
   if (example) example.textContent = meta.example || '';
   if (alert) {
     if (meta.alert) {
@@ -1343,7 +1358,9 @@ function initExerciseFieldCopy() {
     populateAccFieldCopy(item, {
       ...meta,
       hoursNote: fieldId === 'age' ? '' : EXERCISE_HOURS_BREAKDOWN,
-    }, { hintFrom: 'hint', detailFrom: 'sub' });
+    }, fieldId === 'age'
+      ? { hintFrom: 'guide', detailFrom: 'sub' }
+      : { hintFrom: 'hint', detailFrom: 'sub' });
   });
 }
 
