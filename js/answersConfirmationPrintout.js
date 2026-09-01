@@ -1,15 +1,12 @@
 /** PDF questionnaire confirmation — rows that list the customer's submitted answers. */
 
+import { formatBirthDateText, JOB_ACTIVITY_OPTIONS, WORK_STRESS } from './profileDataEngine.js';
+import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
 import {
   INTAKE_FIELD_QUESTIONS,
   INTAKE_FIELD_QUESTION_NUMBERS,
   INTAKE_WAIVER_SIGNED_LABEL,
 } from './intakeQuestionCopyData.js';
-import {
-  JOB_ACTIVITY_OPTIONS,
-  WORK_STRESS,
-} from './profileDataEngine.js';
-import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
 
 export const ANSWERS_CONFIRMATION_INTRO =
   'These are the answers used to build your personalized food plan.';
@@ -95,7 +92,7 @@ export function buildAnswersConfirmationRows(source) {
     confirmationRow('referrerName', displayValue(intake.referrerName)),
     confirmationRow('workPhysical', workPhysicalLabel(intake.workPhysical)),
     confirmationRow('workStress', workStressLabel(intake.workStress)),
-    confirmationRow('age', intake.age > 0 ? String(intake.age) : '—'),
+    confirmationRow('birthDate', intake.birthDateText || formatBirthDateText(intake.birthDate) || '—'),
     confirmationRow('weightTrainingHours', displayValue(intake.weightTrainingHours)),
     confirmationRow('cardioHours', displayValue(intake.cardioHours)),
     confirmationRow('fatBurningHours', displayValue(intake.fatBurningHours)),

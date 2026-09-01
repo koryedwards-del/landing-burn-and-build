@@ -154,6 +154,9 @@ export function profileFromForm(form) {
   const lbm = Math.round(weight * (1 - fatPercent / 100) * 10) / 10;
   const intensity = computeWorkIntensity(form.workPhysical, form.workStress);
   const fatSource = normalizeFatSourceValue(form.fatSource) || null;
+  const birthDate = String(form.birthDate || '').trim();
+  const ageFromBirth = birthDate ? ageFromBirthDate(birthDate) : null;
+  const age = ageFromBirth != null ? ageFromBirth : Number(form.age);
   return {
     preferredName: form.preferredName.trim().replace(/\b\w/g, (c) => c.toUpperCase()),
     referrerName: (() => {
@@ -162,7 +165,9 @@ export function profileFromForm(form) {
     })(),
     email: String(form.email || '').trim().toLowerCase(),
     sex: form.sex,
-    age: Number(form.age),
+    birthDate,
+    birthDateText: formatBirthDateText(birthDate),
+    age,
     heightInches: resolvedHeightInches(form.heightFeet, form.heightInchesPart) || Number(form.heightInches) || 0,
     totalWeight: weight,
     fatPercent,

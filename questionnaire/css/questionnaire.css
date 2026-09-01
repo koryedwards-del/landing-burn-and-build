@@ -1312,9 +1312,9 @@ body.q-keyboard-open.q-app--workroom .q-header {
   margin-bottom: 0.5rem;
 }
 
-.intake-acc--qa-mobile .intake-acc__qa-answer .intake-input:not(.intake-input--short) {
+.intake-acc--qa-mobile .intake-acc__qa-answer input[type="date"].intake-input {
   width: 100%;
-  max-width: none;
+  max-width: 11.5rem;
 }
 
 .intake-waiver--qa-mobile .intake-waiver__qa-row {

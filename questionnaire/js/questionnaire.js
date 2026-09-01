@@ -1,4 +1,6 @@
 import {
+  ageFromBirthDate,
+  formatBirthDateText,
   heartRates,
   WORK_PHYSICAL,
   WORK_STRESS,
@@ -11,7 +13,7 @@ import {
 } from '../../js/answersConfirmationPrintout.js';
 import { FAT_SOURCE_OPTIONS, formatFatSourceLabel } from '../../js/leanBodyAnalysisPrintout.js';
 import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
-import { validateAthleteAge } from '../../js/athleteAgeData.js';
+import { validateBirthDate } from '../../js/athleteAgeData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
 import {
@@ -96,7 +98,7 @@ const INFO_FIELD_META = {
 };
 
 const EXERCISE_FIELDS = [
-  'age',
+  'birthDate',
   'weightTrainingHours',
   'cardioHours',
   'fatBurningHours',
@@ -105,10 +107,9 @@ const EXERCISE_FIELDS = [
 const EXERCISE_HOURS_BREAKDOWN = 'Enter hours in decimals: 0.25 = 15 min, 0.5 = 30 min, 0.75 = 45 min, 1.25 = 1 hr 15 min.';
 
 const EXERCISE_FIELD_META = {
-  age: {
-    question: INTAKE_FIELD_QUESTIONS.age,
-    guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
-    sub: 'Example: 45',
+  birthDate: {
+    question: INTAKE_FIELD_QUESTIONS.birthDate,
+    guide: 'Your birthdate is used to calculate your cardio training range and your fat burning training range.',
   },
   weightTrainingHours: {
     question: INTAKE_FIELD_QUESTIONS.weightTrainingHours,
@@ -470,8 +471,8 @@ function initFatSourceRadios() {
 
 function readForm() {
   const data = new FormData(form);
-  const ageRaw = data.get('age');
-  const age = ageRaw !== '' && ageRaw != null ? Number(ageRaw) : null;
+  const birthDate = String(data.get('birthDate') || '').trim();
+  const age = ageFromBirthDate(birthDate);
   return {
     preferredName: String(data.get('preferredName') || '').trim(),
     referrerName: String(data.get('referrerName') || '').trim(),
@@ -482,6 +483,7 @@ function readForm() {
     heightFeet: data.get('heightFeet'),
     heightInchesPart: data.get('heightInchesPart'),
     sex: data.get('sex'),
+    birthDate,
     age,
     totalWeight: data.get('totalWeight'),
     fatSource: data.get('fatSource'),
@@ -543,7 +545,7 @@ function writeFormValues(values) {
   setFormControlValue('heightFeet', values.heightFeet);
   setFormControlValue('heightInchesPart', values.heightInchesPart);
   setFormControlValue('sex', values.sex);
-  setFormControlValue('age', values.age == null ? '' : values.age);
+  setFormControlValue('birthDate', values.birthDate || '');
   setFormControlValue('totalWeight', values.totalWeight);
   setFormControlValue('fatSource', values.fatSource);
   setFormControlValue('fatSourceOther', values.fatSourceOther);
@@ -623,8 +625,8 @@ function toOnboardingForm(values) {
     heightInchesPart: String(values.heightInchesPart || ''),
     heightInches: '',
     age: values.age,
-    birthDate: '',
-    birthDateText: '',
+    birthDate: values.birthDate || '',
+    birthDateText: formatBirthDateText(values.birthDate || ''),
     weightText: String(values.totalWeight || ''),
     fatPercentText: String(values.fatPercent || ''),
     fatSource: values.fatSource,
@@ -1268,8 +1270,8 @@ function exerciseHoursValue(fieldId, values) {
 
 function exerciseFieldSummary(fieldId, values) {
   switch (fieldId) {
-    case 'age':
-      return values.age != null ? String(values.age) : '';
+    case 'birthDate':
+      return values.birthDate ? formatBirthDateText(values.birthDate) : '';
     case 'weightTrainingHours':
     case 'cardioHours':
     case 'fatBurningHours': {
@@ -1283,8 +1285,8 @@ function exerciseFieldSummary(fieldId, values) {
 
 function validateExerciseField(fieldId, values) {
   switch (fieldId) {
-    case 'age': {
-      return validateAthleteAge(values.age);
+    case 'birthDate': {
+      return validateBirthDate(values.birthDate);
     }
     case 'weightTrainingHours':
     case 'cardioHours':
@@ -1349,7 +1351,7 @@ function initExerciseFieldCopy() {
     const item = exerciseAccordion.querySelector(`[data-ex-field="${fieldId}"]`);
     const meta = EXERCISE_FIELD_META[fieldId];
     if (!item || !meta) return;
-    populateAccFieldCopy(item, meta, fieldId === 'age'
+    populateAccFieldCopy(item, meta, fieldId === 'birthDate'
       ? { hintFrom: 'guide', detailFrom: 'sub' }
       : { hintFrom: 'hint', detailFrom: 'sub' });
   });
@@ -1374,7 +1376,7 @@ function advanceExerciseField() {
 
   setExerciseFieldError(item, '');
 
-  if (fieldId === 'age') {
+  if (fieldId === 'birthDate') {
     syncAgeField();
   }
 
@@ -1451,17 +1453,16 @@ function bindExerciseAccordion() {
 }
 
 function syncAgeField() {
-  const ageInput = form.elements.age;
-  const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
-  syncHeartRateHints(Number.isFinite(age) ? age : null);
+  const values = readForm();
+  syncHeartRateHints(values.age);
 }
 
 function syncHeartRateHints(age) {
   const cardio = document.querySelector('[data-hr-cardio]');
   const fat = document.querySelector('[data-hr-fat]');
   if (!age) {
-    if (cardio) cardio.textContent = 'Your cardio training range: enter age above';
-    if (fat) fat.textContent = 'Your fat-burning range: enter age above';
+    if (cardio) cardio.textContent = 'Your cardio training range: enter birthdate above';
+    if (fat) fat.textContent = 'Your fat-burning range: enter birthdate above';
     return;
   }
   const hr = heartRates(age);
@@ -1767,8 +1768,9 @@ function syncLocalTodayDates() {
 
 function initDefaults() {
   syncLocalTodayDates();
-  if (form.elements.fatBurningHours && !form.elements.fatBurningHours.value) {
-    form.elements.fatBurningHours.value = '3';
+  const birthDateInput = form.elements.birthDate;
+  if (birthDateInput) {
+    birthDateInput.max = localDateKey(new Date());
   }
 }
 

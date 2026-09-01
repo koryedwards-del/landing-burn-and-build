@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=123" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=124" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -294,7 +294,7 @@
           <section class="q-panel q-panel--intake" data-step="2" hidden>
             <div class="intake-form" id="exercise-form">
               <div class="intake-acc intake-acc--qa-mobile intake-acc--paper" id="exercise-accordion">
-                <div class="intake-acc__item is-open" data-ex-field="age">
+                <div class="intake-acc__item is-open" data-ex-field="birthDate">
                   <button type="button" class="intake-acc__trigger" aria-expanded="true">
                     <span class="intake-acc__num" aria-hidden="true"></span>
                     <span class="intake-acc__label" data-acc-label></span>
@@ -306,19 +306,12 @@
                       <p class="intake-acc__qa-question" data-acc-question></p>
                       <div class="intake-acc__qa-answer">
                         <label class="intake-choice__field">
-                          <span class="sr-only">Age</span>
-                          <input class="intake-input intake-input--short" name="age" type="number" inputmode="numeric" min="16" max="99" step="1" required />
+                          <span class="sr-only">Birthdate</span>
+                          <input class="intake-input" name="birthDate" type="date" required />
                         </label>
                       </div>
                     </div>
                     <p class="intake-acc__hint" data-acc-hint></p>
-                    <div class="intake-acc__more">
-                      <button type="button" class="intake-acc__more-toggle" data-acc-more-toggle aria-expanded="false">More info</button>
-                      <div class="intake-acc__more-panel" data-acc-more-panel hidden>
-                        <p class="intake-acc__guide" data-acc-guide></p>
-                        <p class="intake-acc__detail" data-acc-detail></p>
-                      </div>
-                    </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
                 </div>
@@ -370,7 +363,7 @@
                         </div>
                       </div>
                     </div>
-                    <p class="intake-acc__meta intake-acc__hr-range" data-hr-cardio>Your cardio training range: enter age above</p>
+                    <p class="intake-acc__meta intake-acc__hr-range" data-hr-cardio>Your cardio training range: enter birthdate above</p>
                     <p class="intake-acc__hint" data-acc-hint></p>
                     <div class="intake-acc__more">
                       <button type="button" class="intake-acc__more-toggle" data-acc-more-toggle aria-expanded="false">More info</button>
@@ -396,12 +389,12 @@
                       <p class="intake-acc__qa-question" data-acc-question></p>
                       <div class="intake-acc__qa-answer">
                         <div class="intake-inline intake-inline--qa">
-                          <input class="intake-input intake-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" aria-label="Fat burning training range hours per week" />
+                          <input class="intake-input intake-input--short" name="fatBurningHours" inputmode="decimal" placeholder="?" aria-label="Fat burning training range hours per week" />
                           <span class="intake-unit intake-unit--qa">hrs / week</span>
                         </div>
                       </div>
                     </div>
-                    <p class="intake-acc__meta intake-acc__hr-range" data-hr-fat>Your fat-burning range: enter age above</p>
+                    <p class="intake-acc__meta intake-acc__hr-range" data-hr-fat>Your fat-burning range: enter birthdate above</p>
                     <p class="intake-acc__hint" data-acc-hint></p>
                     <div class="intake-acc__more">
                       <button type="button" class="intake-acc__more-toggle" data-acc-more-toggle aria-expanded="false">More info</button>
@@ -590,6 +583,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=180"></script>
+  <script type="module" src="js/questionnaire.js?v=181"></script>
 </body>
 </html>
