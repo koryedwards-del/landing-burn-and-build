@@ -76,8 +76,7 @@ const INFO_FIELD_META = {
   },
   sex: {
     question: INTAKE_FIELD_QUESTIONS.sex,
-    guide: 'Select the option used in the calorie formulas.',
-    example: 'Example: Male or Female',
+    guide: 'Select female or male.',
   },
   email: {
     question: INTAKE_FIELD_QUESTIONS.email,
@@ -700,7 +699,7 @@ function infoSectionComplete(values) {
   return INFO_FIELDS.every((fieldId) => infoFieldIsValid(fieldId, values));
 }
 
-function setInfoFieldError(item, message) {
+function setAccordionFieldError(item, message) {
   const errorEl = item?.querySelector('.intake-acc__error');
   if (!errorEl) return;
   if (message) {
@@ -712,6 +711,20 @@ function setInfoFieldError(item, message) {
     errorEl.hidden = true;
     item.classList.remove('is-invalid');
   }
+}
+
+function syncAccordionFieldValidation(item, isOpen, isDone, message) {
+  if (!isOpen) {
+    setAccordionFieldError(item, isDone ? '' : message);
+    return;
+  }
+  if (item.classList.contains('is-invalid')) {
+    setAccordionFieldError(item, message);
+  }
+}
+
+function setInfoFieldError(item, message) {
+  setAccordionFieldError(item, message);
 }
 
 function renderInfoAccordionState() {
@@ -740,10 +753,8 @@ function renderInfoAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) {
-      const error = validateInfoField(fieldId, values);
-      setInfoFieldError(item, isDone ? '' : error);
-    }
+    const error = validateInfoField(fieldId, values);
+    syncAccordionFieldValidation(item, isOpen, isDone, error);
   });
 }
 
@@ -879,17 +890,7 @@ function occupationSectionComplete(values) {
 }
 
 function setOccupationFieldError(item, message) {
-  const errorEl = item?.querySelector('.intake-acc__error');
-  if (!errorEl) return;
-  if (message) {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-    item.classList.add('is-invalid');
-  } else {
-    errorEl.textContent = '';
-    errorEl.hidden = true;
-    item.classList.remove('is-invalid');
-  }
+  setAccordionFieldError(item, message);
 }
 
 function renderOccupationAccordionState() {
@@ -918,10 +919,8 @@ function renderOccupationAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) {
-      const error = validateOccupationField(fieldId, values);
-      setOccupationFieldError(item, isDone ? '' : error);
-    }
+    const error = validateOccupationField(fieldId, values);
+    syncAccordionFieldValidation(item, isOpen, isDone, error);
   });
 }
 
@@ -1096,17 +1095,7 @@ function bodySectionComplete(values) {
 }
 
 function setBodyFieldError(item, message) {
-  const errorEl = item?.querySelector('.intake-acc__error');
-  if (!errorEl) return;
-  if (message) {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-    item.classList.add('is-invalid');
-  } else {
-    errorEl.textContent = '';
-    errorEl.hidden = true;
-    item.classList.remove('is-invalid');
-  }
+  setAccordionFieldError(item, message);
 }
 
 function renderBodyAccordionState() {
@@ -1135,10 +1124,8 @@ function renderBodyAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) {
-      const error = validateBodyField(fieldId, values);
-      setBodyFieldError(item, isDone ? '' : error);
-    }
+    const error = validateBodyField(fieldId, values);
+    syncAccordionFieldValidation(item, isOpen, isDone, error);
   });
 }
 
@@ -1303,17 +1290,7 @@ function exerciseSectionComplete(values) {
 }
 
 function setExerciseFieldError(item, message) {
-  const errorEl = item?.querySelector('.intake-acc__error');
-  if (!errorEl) return;
-  if (message) {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-    item.classList.add('is-invalid');
-  } else {
-    errorEl.textContent = '';
-    errorEl.hidden = true;
-    item.classList.remove('is-invalid');
-  }
+  setAccordionFieldError(item, message);
 }
 
 function renderExerciseAccordionState() {
@@ -1342,10 +1319,8 @@ function renderExerciseAccordionState() {
       setAccordionTriggerTabOrder(trigger);
     }
 
-    if (!isOpen) {
-      const error = validateExerciseField(fieldId, values);
-      setExerciseFieldError(item, isDone ? '' : error);
-    }
+    const error = validateExerciseField(fieldId, values);
+    syncAccordionFieldValidation(item, isOpen, isDone, error);
   });
 }
 
@@ -1506,14 +1481,21 @@ function canProceed(stepIndex) {
   }
 }
 
-function clearWaiverInvalidState() {
-  document.querySelectorAll('#athlete-waiver-block .intake-waiver__cell.is-invalid').forEach((cell) => {
-    cell.classList.remove('is-invalid');
-  });
+function syncWaiverValidationState(values = readForm()) {
+  const signedCell = document.querySelector('#athlete-waiver-block .intake-waiver__cell--signed');
+  if (signedCell?.classList.contains('is-invalid') && values.signature) {
+    signedCell.classList.remove('is-invalid');
+  }
+  const dateCell = document.querySelector('#athlete-waiver-block .intake-waiver__cell--date');
+  if (dateCell?.classList.contains('is-invalid') && values.signatureDate) {
+    dateCell.classList.remove('is-invalid');
+  }
 }
 
 function highlightWaiverValidationErrors(values) {
-  clearWaiverInvalidState();
+  document.querySelectorAll('#athlete-waiver-block .intake-waiver__cell.is-invalid').forEach((cell) => {
+    cell.classList.remove('is-invalid');
+  });
   let focusTarget = null;
   if (!values.signature) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--signed')?.classList.add('is-invalid');
@@ -1849,14 +1831,14 @@ function bindEvents() {
 
   form.addEventListener('input', () => {
     syncAgeField();
-    clearWaiverInvalidState();
+    syncWaiverValidationState();
     updateStepNav();
     scheduleQuestionnaireDraftSave();
   });
 
   form.addEventListener('change', () => {
     syncAgeField();
-    clearWaiverInvalidState();
+    syncWaiverValidationState();
     updateStepNav();
     scheduleQuestionnaireDraftSave();
   });
