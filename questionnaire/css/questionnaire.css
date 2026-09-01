@@ -28,6 +28,13 @@ body.q-app--workroom,
   --touch: 44px;
 }
 
+/* Questionnaire layout: tablet/desktop = min-width 48rem and min-height 36rem.
+   Wide-but-short viewports (landscape phones) stay on the phone presentation. */
+
+.q-mobile-progress {
+  display: none;
+}
+
 /* —— Mobile / tablet (default) —— */
 body.q-app--workroom {
   background: var(--bg);
@@ -332,8 +339,8 @@ body.q-keyboard-open.q-app--workroom .q-header {
   text-transform: uppercase;
 }
 
-/* —— Desktop —— */
-@media (min-width: 48rem) {
+/* —— Tablet / desktop questionnaire —— */
+@media (min-width: 48rem) and (min-height: 36rem) {
   body.q-app--workroom {
     align-items: center;
     padding: 1rem;
@@ -1056,7 +1063,7 @@ body.q-keyboard-open.q-app--workroom .q-header {
   color: var(--muted);
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 48rem) and (min-height: 36rem) {
   .intake-input:not(.intake-input--short) {
     max-width: 20rem;
   }
@@ -1159,10 +1166,14 @@ body.q-keyboard-open.q-app--workroom .q-header {
   }
 }
 
-/* —— Mobile visual cleanup (C) — iPhone-class widths only —— */
-@media (max-width: 47.99rem) {
+/* —— Phone questionnaire (portrait and landscape) —— */
+@media not ((min-width: 48rem) and (min-height: 36rem)) {
   .q-app--workroom .q-site-footer {
     display: none !important;
+  }
+
+  .q-mobile-progress {
+    display: block;
   }
 
   .q-app--workroom {
@@ -1491,5 +1502,84 @@ body.q-keyboard-open.q-app--workroom .q-header {
   .intake-waiver--qa-mobile .intake-waiver__cell {
     padding: 0.5625rem 0.875rem;
     min-height: auto;
+  }
+
+  /* Step 1 — loose white-paper rows (not boxed cells) */
+  .intake-acc--paper {
+    border: none;
+    background: transparent;
+  }
+
+  .intake-acc--paper .intake-acc__item {
+    padding: 0.875rem 0;
+    border: none;
+    border-bottom: 1px solid #e3e3e3;
+  }
+
+  .intake-acc--paper .intake-acc__item + .intake-acc__item {
+    border-top: none;
+  }
+
+  .intake-acc--paper .intake-acc__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .intake-acc--paper .intake-acc__item:first-child {
+    padding-top: 0.25rem;
+  }
+
+  .intake-acc--paper .intake-acc__trigger {
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+  }
+
+  .intake-acc--paper .intake-acc__item.is-open .intake-acc__trigger {
+    border-bottom: none;
+  }
+
+  .intake-acc--paper .intake-acc__item.is-done .intake-acc__trigger:hover {
+    background: transparent;
+  }
+
+  .intake-acc--paper .intake-acc__panel {
+    padding: 0;
+  }
+
+  .intake-acc--paper .intake-acc__item.is-invalid {
+    box-shadow: none;
+  }
+
+  .intake-acc--paper .intake-acc__qa-row:not(.intake-acc__qa-row--stacked) {
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-bottom: 0.25rem;
+  }
+
+  .intake-acc--paper .intake-acc__qa-row:not(.intake-acc__qa-row--stacked) .intake-acc__qa-answer {
+    flex: 1 1 100%;
+    max-width: none;
+    margin-top: 0.375rem;
+    padding-left: 1.375rem;
+  }
+
+  .intake-acc--paper .intake-acc__qa-row--stacked + .intake-radios,
+  .intake-acc--paper .intake-acc__qa-row--stacked + .intake-acc__field {
+    padding-left: 1.375rem;
+    margin-top: 0.25rem;
+  }
+
+  .intake-acc--paper .intake-acc__hint,
+  .intake-acc--paper .intake-acc__more,
+  .intake-acc--paper .intake-acc__error {
+    padding-left: 1.375rem;
+  }
+
+  .intake-acc--paper .intake-acc__more-panel {
+    margin-top: 0.375rem;
+    padding: 0;
+    border: none;
+    background: transparent;
   }
 }

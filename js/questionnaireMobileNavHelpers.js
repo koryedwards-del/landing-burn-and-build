@@ -1,9 +1,10 @@
 /** Mobile questionnaire navigation — keyboard-safe step bar + focus scroll. */
 
-const MOBILE_MQ = '(max-width: 47.99rem)';
+/** Phone questionnaire — portrait and landscape (wide-but-short stays phone). */
+const DESKTOP_QUESTIONNAIRE_MQ = '(min-width: 48rem) and (min-height: 36rem)';
 
 export function isMobileNav() {
-  return window.matchMedia(MOBILE_MQ).matches;
+  return !window.matchMedia(DESKTOP_QUESTIONNAIRE_MQ).matches;
 }
 
 export function refreshQuestionnaireMobileNavLayout(stepNavEl) {
@@ -59,7 +60,7 @@ export function scrollFieldIntoView(field, stepNavEl) {
 export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
   if (!stepNavEl || !formEl) return () => {};
 
-  const mq = window.matchMedia(MOBILE_MQ);
+  const mq = window.matchMedia(DESKTOP_QUESTIONNAIRE_MQ);
   let teardownViewport = () => {};
 
   const onViewportChange = () => {
@@ -99,7 +100,7 @@ export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
   const bind = () => {
     teardownViewport();
 
-    if (!mq.matches) {
+    if (mq.matches) {
       document.body.classList.remove('q-keyboard-open');
       document.documentElement.style.removeProperty('--q-step-nav-height');
       document.documentElement.style.removeProperty('--keyboard-inset');
