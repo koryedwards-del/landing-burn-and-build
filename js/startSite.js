@@ -343,9 +343,7 @@ function isNonRetryableEmailError(message) {
 }
 
 function renderPlanReadyAppHandoff(unlocked) {
-  if (!unlocked) {
-    return '<p class="unlock-tagline">Complete purchase to download your Burn &amp; Build Diet PDF.</p>';
-  }
+  if (!unlocked) return '';
   return renderPaidDirections();
 }
 
