@@ -146,8 +146,7 @@ const BODY_FIELD_META = {
   },
   totalWeight: {
     question: INTAKE_FIELD_QUESTIONS.totalWeight,
-    guide: 'Enter your current body weight.',
-    example: 'Use a recent, accurate scale weight rather than an estimate.',
+    guide: 'Enter your current body weight in pounds.',
   },
   fatPercent: {
     question: INTAKE_FIELD_QUESTIONS.fatPercent,
