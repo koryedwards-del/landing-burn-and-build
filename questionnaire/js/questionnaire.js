@@ -46,6 +46,16 @@ const STEP_NAV_SHORT = [
   'Review',
 ];
 
+/** Mobile-only one-line progress labels (actual step order). */
+const MOBILE_STEP_LABELS = [
+  'About You',
+  'Occupation',
+  'Exercise',
+  'Body Composition',
+  'Agreement',
+  'Review',
+];
+
 const STEP_HEADINGS = [
   'Contact Information',
   'Occupation',
@@ -243,6 +253,9 @@ const OCCUPATION_CHOICE_COPY = {
 
 const form = document.getElementById('q-form');
 const navList = document.getElementById('q-nav-list');
+const mobileProgressLabelEl = document.getElementById('q-mobile-progress-label');
+const mobileProgressTrackEl = document.getElementById('q-mobile-progress-track');
+const mobileProgressFillEl = document.getElementById('q-mobile-progress-fill');
 const stepHeadingEl = document.getElementById('q-step-heading');
 const stepHeadingNoteEl = document.getElementById('q-step-heading-note');
 const reviewEl = document.getElementById('q-review');
@@ -1555,6 +1568,25 @@ function renderStepHeading() {
     stepHeadingNoteEl.textContent = note;
     stepHeadingNoteEl.hidden = !note;
   }
+  renderMobileProgress();
+}
+
+function renderMobileProgress() {
+  const stepNum = step + 1;
+  const total = STEPS.length;
+  const label = MOBILE_STEP_LABELS[step] || STEPS[step]?.label || '';
+
+  if (mobileProgressLabelEl) {
+    mobileProgressLabelEl.textContent = `Step ${stepNum} of ${total} — ${label}`;
+  }
+  if (mobileProgressTrackEl) {
+    mobileProgressTrackEl.setAttribute('aria-valuenow', String(stepNum));
+    mobileProgressTrackEl.setAttribute('aria-valuemax', String(total));
+    mobileProgressTrackEl.setAttribute('aria-label', `Questionnaire progress, step ${stepNum} of ${total}`);
+  }
+  if (mobileProgressFillEl) {
+    mobileProgressFillEl.style.width = `${(stepNum / total) * 100}%`;
+  }
 }
 
 function renderNav() {
@@ -1722,6 +1754,12 @@ function bindEvents() {
   bindBodyAccordion();
   bindExerciseAccordion();
   bindExerciseHoursInfo();
+
+  document.querySelector('[data-intro-start]')?.addEventListener('click', () => {
+    const accordion = document.getElementById('info-accordion');
+    accordion?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    form.elements.preferredName?.focus();
+  });
 
   document.addEventListener('click', closeExerciseHoursInfoPanels);
   document.addEventListener('keydown', (event) => {

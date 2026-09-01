@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=108" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=110" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -32,6 +32,13 @@
           </ol>
         </nav>
 
+        <div class="q-mobile-progress" id="q-mobile-progress">
+          <p class="q-mobile-progress__label" id="q-mobile-progress-label">Step 1 of 6 — About You</p>
+          <div class="q-mobile-progress__track" id="q-mobile-progress-track" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="6" aria-label="Questionnaire progress">
+            <span class="q-mobile-progress__fill" id="q-mobile-progress-fill"></span>
+          </div>
+        </div>
+
         <div class="q-step-heading">
           <h2 class="q-step-heading__title" id="q-step-heading">Contact Information</h2>
           <p class="q-step-heading__note" id="q-step-heading-note" hidden></p>
@@ -41,12 +48,11 @@
           <section class="q-panel q-panel--intake" data-step="0">
             <div class="intake-form" id="info-form">
               <div class="intake-form__intro">
-                <p class="intake-form__lede">Help us help you build the most sophisticated diet available at any cost. Then the Burn Engine builds your program and delivers a PDF document for immediate download and sends a copy to the email address you provide on this screen.</p>
-                <p class="intake-form__note">Before you begin, know that you'll need to provide your weight, body fat percentage, total exercise hours per week. Having this info before you start the questionnaire will save you some time and probably frustration.</p>
-                <div class="intake-form__pricing">
-                  <p class="intake-form__price"><strong>$279</strong> one-time purchase.</p>
-                  <p class="intake-form__checkout">When you have answered these questions to your satisfaction, your program will be created and you will complete the transaction through Stripe.</p>
-                </div>
+                <p class="intake-form__hook">Can you show me how much food I need to eat?</p>
+                <p class="intake-form__yes"><strong>Yes.</strong></p>
+                <p class="intake-form__lede">Answer a few questions about your body and what you do. Burn &amp; Build will calculate how much food you need and build your personal food plan.</p>
+                <p class="intake-form__price"><strong>$279</strong> one-time</p>
+                <button type="button" class="intake-form__start" data-intro-start>START</button>
               </div>
               <input type="hidden" name="intakeDate" />
 
@@ -479,6 +485,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=167"></script>
+  <script type="module" src="js/questionnaire.js?v=169"></script>
 </body>
 </html>
