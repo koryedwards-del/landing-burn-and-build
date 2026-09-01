@@ -19,6 +19,10 @@ import {
   loadQuestionnaireDraft,
   saveQuestionnaireDraft,
 } from '../../js/questionnaireDraftHelpers.js';
+import {
+  initQuestionnaireMobileNav,
+  refreshQuestionnaireMobileNavLayout,
+} from '../../js/questionnaireMobileNavHelpers.js';
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
@@ -644,6 +648,7 @@ function updateStepNav() {
     stepNextBtn.textContent = step === panels.length - 1 ? 'Build my program' : 'Next';
     stepNextBtn.disabled = step === panels.length - 1 && programBuilt;
   }
+  refreshQuestionnaireMobileNavLayout(stepNav);
 }
 
 function initInfoFieldCopy() {
@@ -1628,6 +1633,7 @@ function showStep(index) {
   renderNav();
   renderStepHeading();
   if (step === 5) renderReview();
+  refreshQuestionnaireMobileNavLayout(stepNav);
   if (step === 0) renderInfoAccordionState();
   if (step === 1) {
     if (occupationFieldIndex < 0 && !occupationSectionComplete(readForm())) {
@@ -1763,7 +1769,6 @@ function bindEvents() {
   form.addEventListener('input', () => {
     syncAgeField();
     clearWaiverInvalidState();
-    clearParentConsentInvalidState();
     updateStepNav();
     scheduleQuestionnaireDraftSave();
   });
@@ -1771,7 +1776,6 @@ function bindEvents() {
   form.addEventListener('change', () => {
     syncAgeField();
     clearWaiverInvalidState();
-    clearParentConsentInvalidState();
     updateStepNav();
     scheduleQuestionnaireDraftSave();
   });
@@ -1846,6 +1850,7 @@ function boot() {
   try {
     syncIntakeQuestionNumbers();
     bindEvents();
+    initQuestionnaireMobileNav({ stepNavEl: stepNav, formEl: form });
     initDefaults();
     if (!tryRestoreQuestionnaireDraft()) {
       syncAgeField();
