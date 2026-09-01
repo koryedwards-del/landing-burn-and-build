@@ -714,13 +714,40 @@ function setAccordionFieldError(item, message) {
   }
 }
 
-function syncAccordionFieldValidation(item, isOpen, isDone, message) {
-  if (!isOpen) {
-    setAccordionFieldError(item, isDone ? '' : message);
-    return;
-  }
-  if (item.classList.contains('is-invalid')) {
-    setAccordionFieldError(item, message);
+function syncAccordionFieldValidation(item, message) {
+  if (!item?.classList.contains('is-invalid')) return;
+  setAccordionFieldError(item, message);
+}
+
+function clearAccordionStepValidation(accordion, fieldAttr, fields) {
+  if (!accordion) return;
+  fields.forEach((fieldId) => {
+    const item = accordion.querySelector(`[${fieldAttr}="${fieldId}"]`);
+    setAccordionFieldError(item, '');
+  });
+}
+
+function clearStepValidationVisuals(stepIndex) {
+  switch (stepIndex) {
+    case 0:
+      clearAccordionStepValidation(infoAccordion, 'data-info-field', INFO_FIELDS);
+      break;
+    case 1:
+      clearAccordionStepValidation(occupationAccordion, 'data-occ-field', OCCUPATION_FIELDS);
+      break;
+    case 2:
+      clearAccordionStepValidation(exerciseAccordion, 'data-ex-field', EXERCISE_FIELDS);
+      break;
+    case 3:
+      clearAccordionStepValidation(bodyAccordion, 'data-body-field', BODY_FIELDS);
+      break;
+    case 4:
+      document.querySelectorAll('#athlete-waiver-block .intake-waiver__cell.is-invalid').forEach((cell) => {
+        cell.classList.remove('is-invalid');
+      });
+      break;
+    default:
+      break;
   }
 }
 
@@ -755,7 +782,7 @@ function renderInfoAccordionState() {
     }
 
     const error = validateInfoField(fieldId, values);
-    syncAccordionFieldValidation(item, isOpen, isDone, error);
+    syncAccordionFieldValidation(item, error);
   });
 }
 
@@ -783,10 +810,7 @@ function advanceInfoField() {
   const values = readForm();
   const item = infoAccordion?.querySelector(`[data-info-field="${fieldId}"]`);
   const error = validateInfoField(fieldId, values);
-  if (error) {
-    setInfoFieldError(item, error);
-    return false;
-  }
+  if (error) return false;
 
   setInfoFieldError(item, '');
 
@@ -921,7 +945,7 @@ function renderOccupationAccordionState() {
     }
 
     const error = validateOccupationField(fieldId, values);
-    syncAccordionFieldValidation(item, isOpen, isDone, error);
+    syncAccordionFieldValidation(item, error);
   });
 }
 
@@ -962,10 +986,7 @@ function advanceOccupationField() {
   const values = readForm();
   const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
   const error = validateOccupationField(fieldId, values);
-  if (error) {
-    setOccupationFieldError(item, error);
-    return false;
-  }
+  if (error) return false;
 
   setOccupationFieldError(item, '');
 
@@ -1126,7 +1147,7 @@ function renderBodyAccordionState() {
     }
 
     const error = validateBodyField(fieldId, values);
-    syncAccordionFieldValidation(item, isOpen, isDone, error);
+    syncAccordionFieldValidation(item, error);
   });
 }
 
@@ -1153,10 +1174,7 @@ function advanceBodyField() {
   const values = readForm();
   const item = bodyAccordion?.querySelector(`[data-body-field="${fieldId}"]`);
   const error = validateBodyField(fieldId, values);
-  if (error) {
-    setBodyFieldError(item, error);
-    return false;
-  }
+  if (error) return false;
 
   setBodyFieldError(item, '');
 
@@ -1321,7 +1339,7 @@ function renderExerciseAccordionState() {
     }
 
     const error = validateExerciseField(fieldId, values);
-    syncAccordionFieldValidation(item, isOpen, isDone, error);
+    syncAccordionFieldValidation(item, error);
   });
 }
 
@@ -1352,10 +1370,7 @@ function advanceExerciseField() {
   const values = readForm();
   const item = exerciseAccordion?.querySelector(`[data-ex-field="${fieldId}"]`);
   const error = validateExerciseField(fieldId, values);
-  if (error) {
-    setExerciseFieldError(item, error);
-    return false;
-  }
+  if (error) return false;
 
   setExerciseFieldError(item, '');
 
@@ -1700,7 +1715,11 @@ function beginQuestionnaire() {
 }
 
 function showStep(index) {
-  step = Math.max(0, Math.min(index, panels.length - 1));
+  const nextStep = Math.max(0, Math.min(index, panels.length - 1));
+  if (nextStep !== step) {
+    clearStepValidationVisuals(step);
+  }
+  step = nextStep;
   panels.forEach((panel, i) => {
     panel.hidden = i !== step;
   });
