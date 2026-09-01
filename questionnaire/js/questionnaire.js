@@ -142,24 +142,21 @@ const BODY_FIELDS = [
 const BODY_FIELD_META = {
   height: {
     question: INTAKE_FIELD_QUESTIONS.height,
-    guide: 'Enter feet and inches in separate boxes.',
-    example: 'Example: 5 ft 10 in (enter 5 and 10)',
+    guide: 'Enter feet and inches.',
   },
   totalWeight: {
     question: INTAKE_FIELD_QUESTIONS.totalWeight,
-    guide: 'Morning weight in pounds, before eating, after bathroom, same scale each time.',
-    example: 'Example: 168 lbs',
-    alert: 'Your weight and your body composition are used to determine your LBM. LBM, predominantly muscle, is your metabolism. A five pound error in LBM mass will be a one serving difference in daily protein servings. Just a reminder here. You\'re paying $279 for this program. The program will only be as beneficial as your answers are accurate.',
-  },
-  fatSource: {
-    question: INTAKE_FIELD_QUESTIONS.fatSource,
-    guide: 'Your food plan is built from lean body mass (weight minus fat). Wrong body fat % = wrong servings from day one. Pick the most accurate source you actually have — not the one you wish you had.',
-    example: 'Listed least to most involved: I\'m estimating · smart scales · tape measurements · InBody/BIA · 3D scanning (Styku and Fit3D) · calipers · Bod Pod · DEXA · hydrostatic weighing.',
+    guide: 'Enter your current body weight.',
+    example: 'Use a recent, accurate scale weight rather than an estimate.',
   },
   fatPercent: {
     question: INTAKE_FIELD_QUESTIONS.fatPercent,
-    guide: 'Enter body fat as a percentage (not BMI). One decimal is fine — e.g. 24.5. A professional test is worth it if you can get one.',
-    example: 'Rough reference if you are estimating: many men fall 18–28%; many women 25–35%. When unsure, estimate slightly higher rather than lower. Options: DEXA at a clinic, BodPod or calipers at a gym, or a coach/trainer measurement.',
+    guide: 'Enter your body fat percentage — not BMI.',
+    example: 'One decimal is fine — for example, 12.5%.',
+  },
+  fatSource: {
+    question: INTAKE_FIELD_QUESTIONS.fatSource,
+    guide: 'Choose how your body fat percentage was measured or estimated.',
   },
 };
 
