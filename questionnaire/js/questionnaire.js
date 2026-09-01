@@ -27,6 +27,11 @@ import {
 } from '../../js/parentConsentData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
+import {
+  clearQuestionnaireDraft,
+  loadQuestionnaireDraft,
+  saveQuestionnaireDraft,
+} from '../../js/questionnaireDraftHelpers.js';
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
@@ -265,6 +270,10 @@ let infoFieldIndex = 0;
 let occupationFieldIndex = 0;
 let bodyFieldIndex = 0;
 let exerciseFieldIndex = 0;
+let draftSaveTimer = null;
+let draftRestoreActive = false;
+
+const DRAFT_SAVE_DEBOUNCE_MS = 400;
 
 function accordionItemFocusables(item) {
   if (!item?.classList.contains('is-open')) return [];
@@ -410,6 +419,112 @@ function readForm() {
     parentGuardianSignature: String(data.get('parentGuardianSignature') || '').trim(),
     parentGuardianSignedDate: data.get('parentGuardianSignedDate'),
   };
+}
+
+function restoreFieldIndex(index, length) {
+  const n = Number(index);
+  if (!Number.isFinite(n)) return 0;
+  if (n < 0) return -1;
+  return Math.max(0, Math.min(n, length - 1));
+}
+
+function restoreStepIndex(index) {
+  const n = Number(index);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(n, panels.length - 1));
+}
+
+function setFormControlValue(name, value) {
+  const el = form.elements[name];
+  if (!el) return;
+
+  if (el instanceof RadioNodeList) {
+    const selected = value == null ? '' : String(value);
+    [...el].forEach((radio) => {
+      radio.checked = radio.value === selected;
+    });
+    return;
+  }
+
+  if (el.type === 'checkbox') {
+    el.checked = Boolean(value);
+    return;
+  }
+
+  el.value = value == null ? '' : String(value);
+}
+
+function writeFormValues(values) {
+  if (!values) return;
+
+  setFormControlValue('preferredName', values.preferredName);
+  setFormControlValue('referrerName', values.referrerName);
+  setFormControlValue('email', values.email);
+  setFormControlValue('emailConfirm', values.emailConfirm);
+  setFormControlValue('phone', values.phone);
+  setFormControlValue('intakeDate', values.intakeDate);
+  setFormControlValue('heightFeet', values.heightFeet);
+  setFormControlValue('heightInchesPart', values.heightInchesPart);
+  setFormControlValue('sex', values.sex);
+  setFormControlValue('age', values.age == null ? '' : values.age);
+  setFormControlValue('totalWeight', values.totalWeight);
+  setFormControlValue('fatSource', values.fatSource);
+  setFormControlValue('fatSourceOther', values.fatSourceOther);
+  setFormControlValue('fatPercent', values.fatPercent);
+  setFormControlValue('workPhysical', values.workPhysical);
+  setFormControlValue('workStress', values.workStress);
+  setFormControlValue('weightTrainingHours', values.weightTrainingHours);
+  setFormControlValue('cardioHours', values.cardioHours);
+  setFormControlValue('fatBurningHours', values.fatBurningHours);
+  setFormControlValue('signature', values.signature);
+  setFormControlValue('signatureDate', values.signatureDate);
+  setFormControlValue('parentGuardianName', values.parentGuardianName);
+  setFormControlValue('parentGuardianEmail', values.parentGuardianEmail);
+  setFormControlValue('parentGuardianRelationship', values.parentGuardianRelationship);
+  setFormControlValue('parentConsentAccepted', values.parentConsentAccepted);
+  setFormControlValue('parentGuardianSignature', values.parentGuardianSignature);
+  setFormControlValue('parentGuardianSignedDate', values.parentGuardianSignedDate);
+
+  syncFatSourceOtherField();
+}
+
+function buildQuestionnaireDraftSnapshot() {
+  return {
+    step,
+    infoFieldIndex,
+    occupationFieldIndex,
+    bodyFieldIndex,
+    exerciseFieldIndex,
+    values: readForm(),
+  };
+}
+
+function scheduleQuestionnaireDraftSave() {
+  if (draftRestoreActive) return;
+  if (draftSaveTimer) clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(() => {
+    draftSaveTimer = null;
+    saveQuestionnaireDraft(buildQuestionnaireDraftSnapshot());
+  }, DRAFT_SAVE_DEBOUNCE_MS);
+}
+
+function tryRestoreQuestionnaireDraft() {
+  const draft = loadQuestionnaireDraft();
+  if (!draft?.values) return false;
+
+  draftRestoreActive = true;
+  writeFormValues(draft.values);
+
+  infoFieldIndex = restoreFieldIndex(draft.infoFieldIndex, INFO_FIELDS.length);
+  occupationFieldIndex = restoreFieldIndex(draft.occupationFieldIndex, OCCUPATION_FIELDS.length);
+  bodyFieldIndex = restoreFieldIndex(draft.bodyFieldIndex, BODY_FIELDS.length);
+  exerciseFieldIndex = restoreFieldIndex(draft.exerciseFieldIndex, EXERCISE_FIELDS.length);
+
+  syncAgeField();
+  showStep(restoreStepIndex(draft.step));
+  draftRestoreActive = false;
+  scheduleQuestionnaireDraftSave();
+  return true;
 }
 
 function buildParentConsentRecord(values) {
@@ -617,6 +732,7 @@ function openInfoField(index) {
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
+  scheduleQuestionnaireDraftSave();
 }
 
 function bindInfoAccordion() {
@@ -808,6 +924,7 @@ function openOccupationField(index) {
   const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
   const focusTarget = item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
+  scheduleQuestionnaireDraftSave();
 }
 
 function bindOccupationAccordion() {
@@ -1028,6 +1145,7 @@ function openBodyField(index) {
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
+  scheduleQuestionnaireDraftSave();
 }
 
 function syncFatSourceOtherField() {
@@ -1245,6 +1363,7 @@ function openExerciseField(index) {
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
   focusTarget?.focus();
+  scheduleQuestionnaireDraftSave();
 }
 
 function bindExerciseAccordion() {
@@ -1701,6 +1820,7 @@ function showStep(index) {
     syncAgeField();
   }
   updateStepNav();
+  scheduleQuestionnaireDraftSave();
 }
 
 function syncLocalTodayDates() {
@@ -1708,7 +1828,7 @@ function syncLocalTodayDates() {
   if (form.elements.intakeDate) {
     form.elements.intakeDate.value = today;
   }
-  if (form.elements.signatureDate) {
+  if (form.elements.signatureDate && !String(form.elements.signatureDate.value || '').trim()) {
     form.elements.signatureDate.value = today;
   }
 }
@@ -1773,6 +1893,15 @@ function bindEvents() {
     if (event.persisted) syncLocalTodayDates();
   });
 
+  window.addEventListener('pagehide', () => {
+    if (draftRestoreActive) return;
+    if (draftSaveTimer) {
+      clearTimeout(draftSaveTimer);
+      draftSaveTimer = null;
+    }
+    saveQuestionnaireDraft(buildQuestionnaireDraftSnapshot());
+  });
+
   navList.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-nav-step]');
     if (!btn) return;
@@ -1803,6 +1932,7 @@ function bindEvents() {
     clearWaiverInvalidState();
     clearParentConsentInvalidState();
     updateStepNav();
+    scheduleQuestionnaireDraftSave();
   });
 
   form.addEventListener('change', () => {
@@ -1810,6 +1940,7 @@ function bindEvents() {
     clearWaiverInvalidState();
     clearParentConsentInvalidState();
     updateStepNav();
+    scheduleQuestionnaireDraftSave();
   });
 
   stepBackBtn?.addEventListener('click', () => {
@@ -1854,6 +1985,7 @@ function buildProgram(triggerBtn) {
     sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
     persistProgramBridge(pkg);
     programBuilt = true;
+    clearQuestionnaireDraft();
     triggerBtn.textContent = 'Program built';
     updateStepNav();
     window.location.assign('/createyourfoodplan/');
@@ -1883,8 +2015,10 @@ function boot() {
     syncIntakeQuestionNumbers();
     bindEvents();
     initDefaults();
-    syncAgeField();
-    showStep(0);
+    if (!tryRestoreQuestionnaireDraft()) {
+      syncAgeField();
+      showStep(0);
+    }
   } catch (error) {
     console.error(error);
     showBootError('Could not start the questionnaire. Hard refresh and try again.');
