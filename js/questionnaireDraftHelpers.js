@@ -45,6 +45,7 @@ export function saveQuestionnaireDraft(snapshot) {
       v: QUESTIONNAIRE_DRAFT_VERSION,
       savedAt: new Date().toISOString(),
       step: snapshot.step,
+      started: Boolean(snapshot.started),
       infoFieldIndex: snapshot.infoFieldIndex,
       occupationFieldIndex: snapshot.occupationFieldIndex,
       bodyFieldIndex: snapshot.bodyFieldIndex,

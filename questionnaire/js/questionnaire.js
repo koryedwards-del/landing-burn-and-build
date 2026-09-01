@@ -252,6 +252,8 @@ const OCCUPATION_CHOICE_COPY = {
 };
 
 const form = document.getElementById('q-form');
+const introGateEl = document.getElementById('q-intro-gate');
+const questionnaireShellEl = document.getElementById('q-questionnaire');
 const navList = document.getElementById('q-nav-list');
 const mobileProgressLabelEl = document.getElementById('q-mobile-progress-label');
 const mobileProgressTrackEl = document.getElementById('q-mobile-progress-track');
@@ -269,6 +271,7 @@ const bodyAccordion = document.getElementById('body-accordion');
 const exerciseAccordion = document.getElementById('exercise-accordion');
 
 let step = 0;
+let questionnaireStarted = false;
 let programBuilt = false;
 let infoFieldIndex = 0;
 let occupationFieldIndex = 0;
@@ -480,8 +483,21 @@ function writeFormValues(values) {
   syncFatSourceOtherField();
 }
 
+function draftHasQuestionnaireProgress(draft) {
+  if (!draft) return false;
+  if (draft.started) return true;
+  if (Number(draft.step) > 0) return true;
+  const values = draft.values || {};
+  return Boolean(
+    String(values.preferredName || '').trim()
+    || String(values.email || '').trim()
+    || String(values.sex || '').trim(),
+  );
+}
+
 function buildQuestionnaireDraftSnapshot() {
   return {
+    started: questionnaireStarted,
     step,
     infoFieldIndex,
     occupationFieldIndex,
@@ -492,7 +508,7 @@ function buildQuestionnaireDraftSnapshot() {
 }
 
 function scheduleQuestionnaireDraftSave() {
-  if (draftRestoreActive) return;
+  if (draftRestoreActive || !questionnaireStarted) return;
   if (draftSaveTimer) clearTimeout(draftSaveTimer);
   draftSaveTimer = setTimeout(() => {
     draftSaveTimer = null;
@@ -502,9 +518,11 @@ function scheduleQuestionnaireDraftSave() {
 
 function tryRestoreQuestionnaireDraft() {
   const draft = loadQuestionnaireDraft();
-  if (!draft?.values) return false;
+  if (!draft?.values || !draftHasQuestionnaireProgress(draft)) return false;
 
   draftRestoreActive = true;
+  questionnaireStarted = true;
+  showQuestionnaireShell({ focus: false });
   writeFormValues(draft.values);
 
   infoFieldIndex = restoreFieldIndex(draft.infoFieldIndex, INFO_FIELDS.length);
@@ -1657,6 +1675,28 @@ function canReachStep(target) {
   return true;
 }
 
+function showIntroGate() {
+  questionnaireStarted = false;
+  if (introGateEl) introGateEl.hidden = false;
+  if (questionnaireShellEl) questionnaireShellEl.hidden = true;
+}
+
+function showQuestionnaireShell({ focus = true } = {}) {
+  questionnaireStarted = true;
+  if (introGateEl) introGateEl.hidden = true;
+  if (questionnaireShellEl) questionnaireShellEl.hidden = false;
+  refreshQuestionnaireMobileNavLayout(stepNav);
+  if (focus) {
+    form.elements.preferredName?.focus();
+  }
+}
+
+function beginQuestionnaire() {
+  showQuestionnaireShell();
+  showStep(0);
+  saveQuestionnaireDraft(buildQuestionnaireDraftSnapshot());
+}
+
 function showStep(index) {
   step = Math.max(0, Math.min(index, panels.length - 1));
   panels.forEach((panel, i) => {
@@ -1756,9 +1796,7 @@ function bindEvents() {
   bindExerciseHoursInfo();
 
   document.querySelector('[data-intro-start]')?.addEventListener('click', () => {
-    const accordion = document.getElementById('info-accordion');
-    accordion?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    form.elements.preferredName?.focus();
+    beginQuestionnaire();
   });
 
   document.addEventListener('click', closeExerciseHoursInfoPanels);
@@ -1771,7 +1809,7 @@ function bindEvents() {
   });
 
   window.addEventListener('pagehide', () => {
-    if (draftRestoreActive) return;
+    if (draftRestoreActive || !questionnaireStarted) return;
     if (draftSaveTimer) {
       clearTimeout(draftSaveTimer);
       draftSaveTimer = null;
@@ -1891,8 +1929,7 @@ function boot() {
     initQuestionnaireMobileNav({ stepNavEl: stepNav, formEl: form });
     initDefaults();
     if (!tryRestoreQuestionnaireDraft()) {
-      syncAgeField();
-      showStep(0);
+      showIntroGate();
     }
   } catch (error) {
     console.error(error);

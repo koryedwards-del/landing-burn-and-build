@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=111" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=112" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -26,6 +26,16 @@
 
     <div class="q-layout">
       <main class="q-main">
+        <section class="q-intro-gate" id="q-intro-gate" aria-label="Get started">
+          <div class="q-intro-gate__inner">
+            <p class="intake-form__hook">Show me how much food I need to eat.</p>
+            <p class="intake-form__lede">Tell us a little about yourself so Burn &amp; Build can answer that for you personally.</p>
+            <p class="intake-form__price"><strong>$279</strong> one-time</p>
+            <button type="button" class="intake-form__start" data-intro-start>START</button>
+          </div>
+        </section>
+
+        <div class="q-questionnaire" id="q-questionnaire" hidden>
         <nav class="q-nav" aria-label="Questionnaire steps">
           <ol class="q-nav__list" id="q-nav-list">
             <li><span class="q-nav__item is-active">1. Contact Information</span></li>
@@ -47,12 +57,6 @@
         <form class="q-form" id="q-form" novalidate>
           <section class="q-panel q-panel--intake" data-step="0">
             <div class="intake-form" id="info-form">
-              <div class="intake-form__intro">
-                <p class="intake-form__hook">Show me how much food I need to eat.</p>
-                <p class="intake-form__lede">Tell us a little about yourself so Burn &amp; Build can answer that for you personally.</p>
-                <p class="intake-form__price"><strong>$279</strong> one-time</p>
-                <button type="button" class="intake-form__start" data-intro-start>START</button>
-              </div>
               <input type="hidden" name="intakeDate" />
 
               <div class="intake-acc" id="info-accordion">
@@ -471,6 +475,7 @@
           <button type="button" class="intake-nav-btn" data-q-step-back disabled>Back</button>
           <button type="button" class="intake-nav-btn intake-nav-btn--primary" data-q-step-next>Next</button>
         </footer>
+        </div>
       </main>
     </div>
 
@@ -484,6 +489,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=169"></script>
+  <script type="module" src="js/questionnaire.js?v=170"></script>
 </body>
 </html>
