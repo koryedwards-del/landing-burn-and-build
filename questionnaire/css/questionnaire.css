@@ -315,6 +315,11 @@ body.q-app--workroom {
   display: none;
 }
 
+/* Intro screen only — no footer once the questionnaire has started. */
+.q-app--workroom:has(#q-intro-gate:not([hidden])) .q-site-footer {
+  display: block;
+}
+
 body.q-keyboard-open.q-app--workroom .q-header {
   border-bottom-color: transparent;
 }
@@ -433,8 +438,6 @@ body.q-keyboard-open.q-app--workroom .q-header {
     padding-top: 0.875rem;
     padding-bottom: 0.875rem;
   }
-
-  /* Footer visibility handled below — tablet/desktop breakpoint with min-height gate. */
 
   body.q-keyboard-open.q-app--workroom .q-header {
     border-bottom-color: var(--border);
@@ -1051,13 +1054,6 @@ body.q-keyboard-open.q-app--workroom .q-header {
   margin: 0;
   font-size: 0.6875rem;
   color: var(--muted);
-}
-
-/* Questionnaire site footer: hidden below tablet/desktop breakpoint (portrait and landscape). */
-@media (min-width: 48rem) and (min-height: 36rem) {
-  .q-app--workroom .q-site-footer {
-    display: block;
-  }
 }
 
 @media (min-width: 48rem) {
