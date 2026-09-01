@@ -178,6 +178,5 @@ export function profileFromForm(form) {
     fatSourceOther: fatSource === 'other' ? String(form.fatSourceOther || '').trim() : '',
     waiverSignature: String(form.waiverSignature || form.signature || '').trim(),
     waiverSignedDate: String(form.waiverSignedDate || form.signatureDate || '').trim(),
-    ...(form.parentConsent && { parentConsent: form.parentConsent }),
   };
 }

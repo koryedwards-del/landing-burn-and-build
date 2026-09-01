@@ -10,14 +10,6 @@ import {
   WORK_STRESS,
 } from './profileDataEngine.js';
 import { formatFatSourceLabel } from './leanBodyAnalysisPrintout.js';
-import {
-  INTAKE_PARENT_APPROVED_LABEL,
-  INTAKE_PARENT_EMAIL_LABEL,
-  INTAKE_PARENT_NAME_LABEL,
-  INTAKE_PARENT_RELATIONSHIP_LABEL,
-  requiresParentApproval,
-  parentRelationshipLabel,
-} from './parentConsentData.js';
 
 export const ANSWERS_CONFIRMATION_INTRO =
   'These are the answers used to build your personalized food plan.';
@@ -113,21 +105,6 @@ export function buildAnswersConfirmationRows(source) {
     confirmationRow('fatSource', formatFatSourceLabel(intake.fatSource, intake.fatSourceOther)),
     signatureDisplayRow('waiver', INTAKE_WAIVER_SIGNED_LABEL, intake.waiverSignature, intake.waiverSignedDate),
   ];
-
-  const parent = intake.parentConsent;
-  if (requiresParentApproval(intake.age) && parent) {
-    rows.push(
-      { fieldId: 'parentGuardianName', label: INTAKE_PARENT_NAME_LABEL, value: displayValue(parent.guardianName) },
-      { fieldId: 'parentGuardianEmail', label: INTAKE_PARENT_EMAIL_LABEL, value: displayValue(parent.guardianEmail) },
-      { fieldId: 'parentGuardianRelationship', label: INTAKE_PARENT_RELATIONSHIP_LABEL, value: parentRelationshipLabel(parent.relationship) },
-      signatureDisplayRow(
-        'parentConsent',
-        INTAKE_PARENT_APPROVED_LABEL,
-        parent.signature,
-        parent.signedDate,
-      ),
-    );
-  }
 
   return rows.map((row, index) => ({
     ...row,

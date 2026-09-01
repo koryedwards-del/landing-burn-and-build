@@ -11,20 +11,7 @@ import {
 } from '../../js/answersConfirmationPrintout.js';
 import { FAT_SOURCE_OPTIONS, formatFatSourceLabel } from '../../js/leanBodyAnalysisPrintout.js';
 import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
-import {
-  INTAKE_AGE_PARENT_NOTE,
-  INTAKE_PARENT_APPROVED_LABEL,
-  INTAKE_PARENT_CONSENT_CHECKBOX_LABEL,
-  INTAKE_PARENT_CONSENT_TEXT,
-  INTAKE_PARENT_CONSENT_VERSION,
-  INTAKE_PARENT_EMAIL_LABEL,
-  INTAKE_PARENT_NAME_LABEL,
-  INTAKE_PARENT_RELATIONSHIP_LABEL,
-  INTAKE_PARENT_RELATIONSHIP_OPTIONS,
-  requiresParentApproval,
-  validateAthleteAge,
-  validateParentConsentFields,
-} from '../../js/parentConsentData.js';
+import { validateAthleteAge } from '../../js/athleteAgeData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
 import {
@@ -412,12 +399,6 @@ function readForm() {
     waiverAccepted: Boolean(String(data.get('signature') || '').trim()),
     signature: String(data.get('signature') || '').trim(),
     signatureDate: data.get('signatureDate'),
-    parentGuardianName: String(data.get('parentGuardianName') || '').trim(),
-    parentGuardianEmail: String(data.get('parentGuardianEmail') || '').trim(),
-    parentGuardianRelationship: String(data.get('parentGuardianRelationship') || '').trim(),
-    parentConsentAccepted: Boolean(data.get('parentConsentAccepted')),
-    parentGuardianSignature: String(data.get('parentGuardianSignature') || '').trim(),
-    parentGuardianSignedDate: data.get('parentGuardianSignedDate'),
   };
 }
 
@@ -478,12 +459,6 @@ function writeFormValues(values) {
   setFormControlValue('fatBurningHours', values.fatBurningHours);
   setFormControlValue('signature', values.signature);
   setFormControlValue('signatureDate', values.signatureDate);
-  setFormControlValue('parentGuardianName', values.parentGuardianName);
-  setFormControlValue('parentGuardianEmail', values.parentGuardianEmail);
-  setFormControlValue('parentGuardianRelationship', values.parentGuardianRelationship);
-  setFormControlValue('parentConsentAccepted', values.parentConsentAccepted);
-  setFormControlValue('parentGuardianSignature', values.parentGuardianSignature);
-  setFormControlValue('parentGuardianSignedDate', values.parentGuardianSignedDate);
 
   syncFatSourceOtherField();
 }
@@ -527,20 +502,6 @@ function tryRestoreQuestionnaireDraft() {
   return true;
 }
 
-function buildParentConsentRecord(values) {
-  if (!requiresParentApproval(values.age)) return null;
-  return {
-    version: INTAKE_PARENT_CONSENT_VERSION,
-    guardianName: values.parentGuardianName,
-    guardianEmail: values.parentGuardianEmail.toLowerCase(),
-    relationship: values.parentGuardianRelationship,
-    accepted: values.parentConsentAccepted,
-    signature: values.parentGuardianSignature,
-    signedDate: String(values.parentGuardianSignedDate || '').trim(),
-    recordedAt: new Date().toISOString(),
-  };
-}
-
 function toOnboardingForm(values) {
   return {
     preferredName: values.preferredName,
@@ -565,7 +526,6 @@ function toOnboardingForm(values) {
     wakeTime: '06:00',
     waiverSignature: values.signature,
     waiverSignedDate: values.signatureDate,
-    parentConsent: buildParentConsentRecord(values),
   };
 }
 
@@ -1416,117 +1376,10 @@ function bindExerciseAccordion() {
   renderExerciseAccordionState();
 }
 
-function clearParentConsentFields() {
-  const fields = [
-    'parentGuardianName',
-    'parentGuardianEmail',
-    'parentGuardianRelationship',
-    'parentGuardianSignature',
-    'parentGuardianSignedDate',
-  ];
-  fields.forEach((name) => {
-    const el = form.elements[name];
-    if (!el) return;
-    if (el.type === 'checkbox') el.checked = false;
-    else el.value = '';
-  });
-  if (form.elements.parentConsentAccepted) {
-    form.elements.parentConsentAccepted.checked = false;
-  }
-}
-
-function syncParentConsentVisibility() {
-  const block = document.getElementById('parent-consent-block');
-  if (!block) return;
-  const needsParent = requiresParentApproval(readForm().age);
-  if (!needsParent) {
-    if (!block.hidden) clearParentConsentFields();
-    block.hidden = true;
-  } else {
-    block.hidden = false;
-    const today = localDateKey(new Date());
-    if (form.elements.parentGuardianSignedDate && !form.elements.parentGuardianSignedDate.value) {
-      form.elements.parentGuardianSignedDate.value = today;
-    }
-  }
-}
-
-function clearParentConsentInvalidState() {
-  document.querySelectorAll('.intake-parent-consent__field.is-invalid, .intake-parent-consent__checkbox.is-invalid').forEach((cell) => {
-    cell.classList.remove('is-invalid');
-  });
-}
-
-function highlightParentConsentValidationErrors(values) {
-  clearParentConsentInvalidState();
-  if (!requiresParentApproval(values.age)) return null;
-
-  let focusTarget = null;
-  if (!values.parentGuardianName) {
-    document.querySelector('[name="parentGuardianName"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    focusTarget = form.elements.parentGuardianName;
-  }
-  if (!values.parentGuardianEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.parentGuardianEmail)) {
-    document.querySelector('[name="parentGuardianEmail"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianEmail;
-  }
-  if (!values.parentGuardianRelationship) {
-    document.querySelector('[name="parentGuardianRelationship"]')?.closest('.intake-parent-consent__field')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianRelationship;
-  }
-  if (!values.parentConsentAccepted) {
-    document.querySelector('.intake-parent-consent__checkbox')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentConsentAccepted;
-  }
-  if (!values.parentGuardianSignature) {
-    document.querySelector('.intake-parent-consent__field--signed')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianSignature;
-  }
-  if (!values.parentGuardianSignedDate) {
-    document.querySelector('.intake-parent-consent__field--date')?.classList.add('is-invalid');
-    if (!focusTarget) focusTarget = form.elements.parentGuardianSignedDate;
-  }
-  return focusTarget;
-}
-
-function initParentConsentCopy() {
-  const note = document.querySelector('[data-age-parent-note]');
-  if (note) note.textContent = INTAKE_AGE_PARENT_NOTE;
-
-  const text = document.querySelector('[data-parent-consent-text]');
-  if (text) text.textContent = INTAKE_PARENT_CONSENT_TEXT;
-
-  const nameLabel = document.querySelector('[data-parent-name-label]');
-  if (nameLabel) nameLabel.textContent = INTAKE_PARENT_NAME_LABEL;
-
-  const emailLabel = document.querySelector('[data-parent-email-label]');
-  if (emailLabel) emailLabel.textContent = INTAKE_PARENT_EMAIL_LABEL;
-
-  const relationshipLabel = document.querySelector('[data-parent-relationship-label]');
-  if (relationshipLabel) relationshipLabel.textContent = INTAKE_PARENT_RELATIONSHIP_LABEL;
-
-  const checkboxLabel = document.querySelector('[data-parent-checkbox-label]');
-  if (checkboxLabel) checkboxLabel.textContent = INTAKE_PARENT_CONSENT_CHECKBOX_LABEL;
-
-  const approvedLabel = document.querySelector('[data-parent-approved-label]');
-  if (approvedLabel) approvedLabel.textContent = INTAKE_PARENT_APPROVED_LABEL;
-
-  const relationshipSelect = form.elements.parentGuardianRelationship;
-  if (relationshipSelect && relationshipSelect.options.length <= 1) {
-    INTAKE_PARENT_RELATIONSHIP_OPTIONS.forEach((option) => {
-      const el = document.createElement('option');
-      el.value = option.value;
-      el.textContent = option.label;
-      relationshipSelect.appendChild(el);
-    });
-  }
-}
-
 function syncAgeField() {
   const ageInput = form.elements.age;
   const age = ageInput?.value !== '' && ageInput?.value != null ? Number(ageInput.value) : null;
   syncHeartRateHints(Number.isFinite(age) ? age : null);
-  syncParentConsentVisibility();
 }
 
 function syncHeartRateHints(age) {
@@ -1561,8 +1414,7 @@ function canProceed(stepIndex) {
     case 3:
       return bodySectionComplete(values);
     case 4:
-      return Boolean(values.signature && values.signatureDate)
-        && !validateParentConsentFields(values);
+      return Boolean(values.signature && values.signatureDate);
     default:
       return true;
   }
@@ -1576,7 +1428,6 @@ function clearWaiverInvalidState() {
 
 function highlightWaiverValidationErrors(values) {
   clearWaiverInvalidState();
-  clearParentConsentInvalidState();
   let focusTarget = null;
   if (!values.signature) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--signed')?.classList.add('is-invalid');
@@ -1586,8 +1437,6 @@ function highlightWaiverValidationErrors(values) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--date')?.classList.add('is-invalid');
     if (!focusTarget) focusTarget = form.elements.signatureDate;
   }
-  const parentFocus = highlightParentConsentValidationErrors(values);
-  if (!focusTarget) focusTarget = parentFocus;
   focusTarget?.focus();
 }
 
@@ -1662,21 +1511,6 @@ function navigateToIntakeField(fieldId) {
   if (fieldId === 'waiver') {
     showStep(4);
     form.elements.signature?.focus();
-    return;
-  }
-
-  if (fieldId === 'parentConsent' || fieldId.startsWith('parentGuardian')) {
-    showStep(4);
-    syncParentConsentVisibility();
-    if (fieldId === 'parentConsent' || fieldId === 'parentGuardianSignature') {
-      form.elements.parentGuardianSignature?.focus();
-    } else if (fieldId === 'parentGuardianName') {
-      form.elements.parentGuardianName?.focus();
-    } else if (fieldId === 'parentGuardianEmail') {
-      form.elements.parentGuardianEmail?.focus();
-    } else if (fieldId === 'parentGuardianRelationship') {
-      form.elements.parentGuardianRelationship?.focus();
-    }
     return;
   }
 
@@ -1803,7 +1637,6 @@ function showStep(index) {
   }
   if (step === 4) {
     syncLocalTodayDates();
-    syncParentConsentVisibility();
   }
   if (step === 3) {
     if (bodyFieldIndex < 0 && !bodySectionComplete(readForm())) {
@@ -2011,7 +1844,6 @@ function showBootError(message) {
 
 function boot() {
   try {
-    initParentConsentCopy();
     syncIntakeQuestionNumbers();
     bindEvents();
     initDefaults();

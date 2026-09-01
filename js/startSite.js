@@ -12,7 +12,6 @@ import { downloadDietPdfWithRetry, resendDietEmail } from './dietDeliveryApi.js'
 import { cleanPurchaserPortalQuery, readPurchaserPortalParams } from './purchaserPortal.js';
 import { QUESTIONNAIRE_WELCOME_URL } from './siteUrls.js';
 import { CONTACT_EMAIL } from './contactEmailData.js';
-import { parentConsentReadyForPurchase } from './parentConsentData.js';
 
 const store = {
   builtPackage: null,
@@ -622,11 +621,6 @@ async function startCheckout() {
     render();
     return;
   }
-  if (!parentConsentReadyForPurchase(store.builtPackage?.intake)) {
-    store.checkoutError = 'Parent/guardian approval is required before purchase for athletes age 17 and under. Return to the questionnaire Age question to complete it.';
-    render();
-    return;
-  }
   store.checkoutError = '';
   store.checkoutMessage = '';
   store.checkoutBusy = true;
@@ -659,11 +653,6 @@ async function startCheckout() {
 
 async function completeTestCheckout() {
   const email = ensurePlanReadyEmail();
-  if (!parentConsentReadyForPurchase(store.builtPackage?.intake)) {
-    store.checkoutError = 'Parent/guardian approval is required before purchase for athletes age 17 and under.';
-    render();
-    return;
-  }
   store.checkoutError = '';
   store.checkoutMessage = '';
   const result = await completeCheckoutForTest(email, currentProgramId());

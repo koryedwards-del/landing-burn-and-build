@@ -737,78 +737,11 @@ body.q-app--workroom {
   border-bottom: 1px solid var(--border);
 }
 
-.intake-parent-consent {
-  margin-top: 1rem;
-}
-
-.intake-parent-consent--waiver {
-  margin-top: 0;
-  border-top: 1px solid var(--border);
-}
-
-.intake-parent-consent__lead {
-  margin: 0 0 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.intake-parent-consent__fields {
-  display: grid;
-  gap: 0;
-}
-
-.intake-parent-consent__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.intake-parent-consent__field:last-of-type {
-  border-bottom: none;
-}
-
-.intake-parent-consent__label {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.intake-parent-consent__checkbox {
-  margin: 0;
-  padding: 0.875rem 1rem 1rem;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-}
-
-.intake-parent-consent__sign {
-  display: grid;
-  gap: 0;
-  border-top: 1px solid var(--border);
-}
-
-.intake-parent-consent__field--signed,
-.intake-parent-consent__field--date {
-  padding-top: 0.875rem;
-}
-
 .intake-acc__note {
   margin: 0.625rem 0 0;
   font-size: 0.8125rem;
   line-height: 1.45;
   color: var(--muted);
-}
-
-.intake-parent-consent__field.is-invalid .intake-input,
-.intake-parent-consent__field.is-invalid .intake-waiver__input,
-.intake-parent-consent__checkbox.is-invalid {
-  outline: 1px solid var(--danger, #c62828);
-  outline-offset: 2px;
 }
 
 .intake-waiver__label {
