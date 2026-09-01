@@ -112,21 +112,22 @@ const EXERCISE_FIELD_META = {
   },
   weightTrainingHours: {
     question: INTAKE_FIELD_QUESTIONS.weightTrainingHours,
-    guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
-    hint: 'Count actual time exercising, not total time at the gym.',
-    sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.',
+    hint: 'For weight training, count only the time you have weights in hand.',
+    sub: 'A 1-hour weight workout might only be 30 minutes of actual lifting. Don’t count rest between sets.',
   },
   cardioHours: {
     question: INTAKE_FIELD_QUESTIONS.cardioHours,
-    guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
-    hint: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none.',
-    sub: 'Overstating exercise lowers your fat servings and makes the plan harder to follow.',
+    hint: 'Count only the time you’re in this heart-rate range.',
+    guide: 'This is your hard push—breathing hard and breaking a sweat.',
+    sub: 'Calling something “cardio” doesn’t automatically make it cardio for this question. You could walk, bike, run or use a cardio machine and never reach your cardio training range.',
+    hoursNote: 'Your heart rate is the divider. Count the time you’re actually in the range shown above.',
   },
   fatBurningHours: {
     question: INTAKE_FIELD_QUESTIONS.fatBurningHours,
-    guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
-    hint: '3 hrs/week is typical — about 30 minutes a day. Enter 0 if none.',
-    sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. Lower it if that is not realistic for you.',
+    hint: 'Include normal daily activities, not just workouts.',
+    guide: 'You may be more active than you think. Walking, shopping, mowing the lawn, yard work, walking the dog, plus warm-ups and cool-downs can all count when they put you in your fat-burning range.',
+    sub: 'For many people, those activities add up to about 30 minutes a day—or roughly 3 hours per week.',
+    hoursNote: 'What’s the difference between mowing the lawn and going for a walk? The lawn gets mowed.\n\nStart with 3 hours and adjust it up or down to better match your typical week.',
   },
 };
 
@@ -245,7 +246,7 @@ function populateAccFieldCopy(item, meta, { hintFrom = 'guide', detailFrom = 'su
       alert.hidden = true;
     }
   }
-  if (hoursNote && meta.hoursNote) hoursNote.textContent = meta.hoursNote;
+  if (hoursNote) hoursNote.textContent = meta.hoursNote || '';
 
   syncAccMoreInfoVisibility(item);
 }
@@ -1330,10 +1331,7 @@ function initExerciseFieldCopy() {
     const item = exerciseAccordion.querySelector(`[data-ex-field="${fieldId}"]`);
     const meta = EXERCISE_FIELD_META[fieldId];
     if (!item || !meta) return;
-    populateAccFieldCopy(item, {
-      ...meta,
-      hoursNote: fieldId === 'age' ? '' : EXERCISE_HOURS_BREAKDOWN,
-    }, fieldId === 'age'
+    populateAccFieldCopy(item, meta, fieldId === 'age'
       ? { hintFrom: 'guide', detailFrom: 'sub' }
       : { hintFrom: 'hint', detailFrom: 'sub' });
   });

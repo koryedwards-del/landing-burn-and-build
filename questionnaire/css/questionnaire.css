@@ -1281,6 +1281,10 @@ body.q-keyboard-open.q-app--workroom .q-header {
   color: var(--text);
 }
 
+.intake-acc--qa-mobile .intake-acc__more-panel [data-acc-hours-note]:not(:empty) {
+  white-space: pre-line;
+}
+
 .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__meta {
   color: var(--muted);
 }
