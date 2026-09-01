@@ -195,8 +195,9 @@ function syncIntakeQuestionNumbers() {
       const item = root.querySelector(`[${attr}="${fieldId}"]`);
       if (!item) return;
       item.dataset.questionNumber = String(n);
-      const numEl = item.querySelector('.intake-acc__num');
-      if (numEl) numEl.textContent = String(n);
+      item.querySelectorAll('.intake-acc__num').forEach((numEl) => {
+        numEl.textContent = String(n);
+      });
       n += 1;
     });
   });
@@ -1306,9 +1307,11 @@ function initExerciseFieldCopy() {
     const meta = EXERCISE_FIELD_META[fieldId];
     if (!item || !meta) return;
     const label = item.querySelector('[data-ex-label]');
+    const question = item.querySelector('[data-ex-question]');
     const guide = item.querySelector('[data-ex-guide]');
     const sub = item.querySelector('[data-ex-sub]');
     if (label) label.textContent = meta.question;
+    if (question) question.textContent = meta.question;
     if (guide) guide.textContent = meta.guide;
     if (sub) sub.textContent = meta.sub || '';
   });

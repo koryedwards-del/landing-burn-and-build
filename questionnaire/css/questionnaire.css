@@ -1087,6 +1087,33 @@ body.q-keyboard-open.q-app--workroom .q-header {
   .q-mobile-progress {
     display: none !important;
   }
+
+  .intake-acc--qa-mobile .intake-acc__panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__help {
+    order: 1;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-row {
+    order: 2;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-row > .intake-acc__num,
+  .intake-acc--qa-mobile .intake-acc__qa-question {
+    display: none;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-row {
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .intake-acc--qa-mobile .intake-unit--qa {
+    display: inline;
+  }
 }
 
 /* —— Mobile visual cleanup (C) — iPhone-class widths only —— */
@@ -1264,5 +1291,76 @@ body.q-keyboard-open.q-app--workroom .q-header {
   .q-app--workroom .q-step-nav {
     padding: 0.5625rem var(--q-inset-x);
     padding-bottom: max(0.5625rem, env(safe-area-inset-bottom));
+  }
+
+  .intake-acc--qa-mobile .intake-acc__item.is-open > .intake-acc__trigger {
+    display: none;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.375rem 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-row > .intake-acc__num {
+    flex: 0 0 auto;
+    min-width: 1rem;
+    padding-top: 0.125rem;
+    font-size: 0.75rem;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-question {
+    flex: 1 1 auto;
+    margin: 0;
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text);
+  }
+
+  .intake-acc--qa-mobile .intake-acc__qa-answer {
+    flex: 0 0 auto;
+    max-width: 42%;
+  }
+
+  .intake-acc--qa-mobile .intake-inline--qa {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+  }
+
+  .intake-acc--qa-mobile .intake-input--short {
+    width: 3.25rem;
+    min-width: 3.25rem;
+  }
+
+  .intake-acc--qa-mobile .intake-unit--qa {
+    display: none;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__help {
+    margin-top: 0;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__help .intake-acc__howto {
+    margin-bottom: 0.375rem;
+    padding: 0.4375rem 0.5625rem;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__help .intake-choice__sub {
+    margin: 0 0 0.375rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .intake-acc--qa-mobile .intake-acc__help .intake-acc__meta {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted);
   }
 }
