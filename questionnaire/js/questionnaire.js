@@ -118,21 +118,25 @@ const EXERCISE_FIELD_META = {
   age: {
     question: INTAKE_FIELD_QUESTIONS.age,
     guide: 'Your age is used to calculate your cardio training range and your fat burning training range. Enter your age in whole years.',
+    hint: 'Example: 45',
     sub: 'Example: 45',
   },
   weightTrainingHours: {
     question: INTAKE_FIELD_QUESTIONS.weightTrainingHours,
     guide: 'Plan for what you will actually do for the next 8 weeks — not what you wish you would do. Count only time moving or under load — not rest between sets, scrolling on the treadmill, or driving to the gym.',
+    hint: 'Count actual time exercising, not total time at the gym.',
     sub: 'Weight training, CrossFit, racquet sports, intervals — work bursts with rest. Three 1-hour sessions with ~45 min of actual lifting = about 2.25 hrs, not 3. Enter 0 if none.',
   },
   cardioHours: {
     question: INTAKE_FIELD_QUESTIONS.cardioHours,
     guide: 'Sustained cardio where your heart rate stays in your cardio training range. Use the cardio training range (BPM) shown below as a guideline.',
+    hint: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none.',
     sub: 'Running, cycling hard, rowing, stair climbing — not a casual walk. Enter 0 if none. Overstating exercise lowers your fat servings and makes the plan harder to follow.',
   },
   fatBurningHours: {
     question: INTAKE_FIELD_QUESTIONS.fatBurningHours,
     guide: 'A lower heart rate for a longer period of time actually burns more fat calories per minute. Not to be confused with total calories, which are carbs and fat combined. Use the fat burning training range (BPM) shown below as a guideline.',
+    hint: '3 hrs/week is typical — about 30 minutes a day. Enter 0 if none.',
     sub: 'Brisk walking, easy bike, groceries, lawn work, dog walking, etc. 3 hrs/week is typical — about 30 minutes a day. Lower it if that is not realistic for you. Enter 0 if none.',
   },
 };
@@ -1308,12 +1312,31 @@ function initExerciseFieldCopy() {
     if (!item || !meta) return;
     const label = item.querySelector('[data-ex-label]');
     const question = item.querySelector('[data-ex-question]');
+    const hint = item.querySelector('[data-ex-hint]');
     const guide = item.querySelector('[data-ex-guide]');
     const sub = item.querySelector('[data-ex-sub]');
+    const hoursNote = item.querySelector('[data-ex-hours-note]');
     if (label) label.textContent = meta.question;
     if (question) question.textContent = meta.question;
+    if (hint) hint.textContent = meta.hint || '';
     if (guide) guide.textContent = meta.guide;
     if (sub) sub.textContent = meta.sub || '';
+    if (hoursNote) hoursNote.textContent = EXERCISE_HOURS_BREAKDOWN;
+  });
+}
+
+function bindExerciseMoreInfo() {
+  if (!exerciseAccordion) return;
+
+  exerciseAccordion.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-ex-more-toggle]');
+    if (!toggle) return;
+    const item = toggle.closest('[data-ex-field]');
+    const panel = item?.querySelector('[data-ex-more-panel]');
+    if (!panel) return;
+    const opening = panel.hidden;
+    toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    panel.hidden = !opening;
   });
 }
 
@@ -1796,7 +1819,7 @@ function bindEvents() {
   bindOccupationAccordion();
   bindBodyAccordion();
   bindExerciseAccordion();
-  bindExerciseHoursInfo();
+  bindExerciseMoreInfo();
 
   document.querySelector('[data-intro-start]')?.addEventListener('click', () => {
     beginQuestionnaire();

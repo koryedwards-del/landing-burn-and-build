@@ -1097,6 +1097,28 @@ body.q-keyboard-open.q-app--workroom .q-header {
     order: 1;
   }
 
+  .intake-acc--qa-mobile .intake-acc__hint {
+    order: 2;
+    display: none;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more {
+    order: 1;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-toggle {
+    display: none;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-panel,
+  .intake-acc--qa-mobile .intake-acc__more-panel[hidden] {
+    display: block !important;
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
   .intake-acc--qa-mobile .intake-acc__qa-row {
     order: 2;
   }
@@ -1345,22 +1367,60 @@ body.q-keyboard-open.q-app--workroom .q-header {
     margin-top: 0;
   }
 
-  .intake-acc--qa-mobile .intake-acc__help .intake-acc__howto {
-    margin-bottom: 0.375rem;
-    padding: 0.4375rem 0.5625rem;
-  }
-
-  .intake-acc--qa-mobile .intake-acc__help .intake-choice__sub {
+  .intake-acc--qa-mobile .intake-acc__hint {
     margin: 0 0 0.375rem;
     font-size: 0.75rem;
     line-height: 1.4;
+    font-style: italic;
     color: var(--muted);
   }
 
-  .intake-acc--qa-mobile .intake-acc__help .intake-acc__meta {
+  .intake-acc--qa-mobile .intake-acc__more {
+    margin-bottom: 0.25rem;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-toggle {
+    display: inline;
     margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-toggle:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-panel {
+    margin-top: 0.5rem;
+    padding: 0.4375rem 0.5625rem;
+    border: 1px solid var(--border);
+    background: #fafafa;
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__guide,
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__detail,
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__meta {
+    margin: 0 0 0.375rem;
     font-size: 0.75rem;
     line-height: 1.4;
+    color: var(--text);
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__meta {
     color: var(--muted);
+  }
+
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__guide:last-child,
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__detail:last-child,
+  .intake-acc--qa-mobile .intake-acc__more-panel .intake-acc__meta:last-child {
+    margin-bottom: 0;
   }
 }

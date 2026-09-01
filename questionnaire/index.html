@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=113" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=114" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -271,11 +271,13 @@
                         </label>
                       </div>
                     </div>
-                    <div class="intake-acc__help">
-                      <div class="intake-acc__howto">
+                    <p class="intake-acc__hint" data-ex-hint></p>
+                    <div class="intake-acc__more">
+                      <button type="button" class="intake-acc__more-toggle" data-ex-more-toggle aria-expanded="false">More info</button>
+                      <div class="intake-acc__more-panel" data-ex-more-panel hidden>
                         <p class="intake-acc__guide" data-ex-guide></p>
+                        <p class="intake-acc__detail" data-ex-sub></p>
                       </div>
-                      <p class="intake-choice__sub" data-ex-sub></p>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -295,20 +297,17 @@
                         <div class="intake-inline intake-inline--qa">
                           <input class="intake-input intake-input--short" name="weightTrainingHours" inputmode="decimal" placeholder="?" aria-label="Weights/Racquet Sports hours per week" />
                           <span class="intake-unit intake-unit--qa">hrs / week</span>
-                          <span class="intake-hours-help">
-                            <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
-                              <span class="intake-info-btn__icon" aria-hidden="true">i</span>
-                            </button>
-                            <span class="intake-hours-popover" hidden data-hours-info-panel></span>
-                          </span>
                         </div>
                       </div>
                     </div>
-                    <div class="intake-acc__help">
-                      <div class="intake-acc__howto">
+                    <p class="intake-acc__hint" data-ex-hint></p>
+                    <div class="intake-acc__more">
+                      <button type="button" class="intake-acc__more-toggle" data-ex-more-toggle aria-expanded="false">More info</button>
+                      <div class="intake-acc__more-panel" data-ex-more-panel hidden>
                         <p class="intake-acc__guide" data-ex-guide></p>
+                        <p class="intake-acc__detail" data-ex-sub></p>
+                        <p class="intake-acc__detail" data-ex-hours-note></p>
                       </div>
-                      <p class="intake-choice__sub" data-ex-sub></p>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -328,21 +327,18 @@
                         <div class="intake-inline intake-inline--qa">
                           <input class="intake-input intake-input--short" name="cardioHours" inputmode="decimal" placeholder="?" aria-label="Cardio training range hours per week" />
                           <span class="intake-unit intake-unit--qa">hrs / week</span>
-                          <span class="intake-hours-help">
-                            <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
-                              <span class="intake-info-btn__icon" aria-hidden="true">i</span>
-                            </button>
-                            <span class="intake-hours-popover" hidden data-hours-info-panel></span>
-                          </span>
                         </div>
                       </div>
                     </div>
-                    <div class="intake-acc__help">
-                      <div class="intake-acc__howto">
+                    <p class="intake-acc__hint" data-ex-hint></p>
+                    <div class="intake-acc__more">
+                      <button type="button" class="intake-acc__more-toggle" data-ex-more-toggle aria-expanded="false">More info</button>
+                      <div class="intake-acc__more-panel" data-ex-more-panel hidden>
                         <p class="intake-acc__guide" data-ex-guide></p>
+                        <p class="intake-acc__detail" data-ex-sub></p>
+                        <p class="intake-acc__detail" data-ex-hours-note></p>
+                        <p class="intake-acc__meta" data-hr-cardio>Cardio training range (BPM) — enter age above</p>
                       </div>
-                      <p class="intake-choice__sub" data-ex-sub></p>
-                      <p class="intake-acc__meta" data-hr-cardio>Cardio training range (BPM) — enter age above</p>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -362,21 +358,18 @@
                         <div class="intake-inline intake-inline--qa">
                           <input class="intake-input intake-input--short" name="fatBurningHours" inputmode="decimal" placeholder="3" aria-label="Fat burning training range hours per week" />
                           <span class="intake-unit intake-unit--qa">hrs / week</span>
-                          <span class="intake-hours-help">
-                            <button type="button" class="intake-info-btn intake-info-btn--icon" aria-label="Hour breakdown" aria-expanded="false" data-hours-info-btn>
-                              <span class="intake-info-btn__icon" aria-hidden="true">i</span>
-                            </button>
-                            <span class="intake-hours-popover" hidden data-hours-info-panel></span>
-                          </span>
                         </div>
                       </div>
                     </div>
-                    <div class="intake-acc__help">
-                      <div class="intake-acc__howto">
+                    <p class="intake-acc__hint" data-ex-hint></p>
+                    <div class="intake-acc__more">
+                      <button type="button" class="intake-acc__more-toggle" data-ex-more-toggle aria-expanded="false">More info</button>
+                      <div class="intake-acc__more-panel" data-ex-more-panel hidden>
                         <p class="intake-acc__guide" data-ex-guide></p>
+                        <p class="intake-acc__detail" data-ex-sub></p>
+                        <p class="intake-acc__detail" data-ex-hours-note></p>
+                        <p class="intake-acc__meta" data-hr-fat>Fat burning training range (BPM) — enter age above</p>
                       </div>
-                      <p class="intake-choice__sub" data-ex-sub></p>
-                      <p class="intake-acc__meta" data-hr-fat>Fat burning training range (BPM) — enter age above</p>
                     </div>
                     <p class="intake-acc__error" hidden></p>
                   </div>
@@ -513,6 +506,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=171"></script>
+  <script type="module" src="js/questionnaire.js?v=172"></script>
 </body>
 </html>
