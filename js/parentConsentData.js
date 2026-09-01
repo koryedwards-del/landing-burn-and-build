@@ -24,11 +24,10 @@ export const INTAKE_PARENT_RELATIONSHIP_OPTIONS = Object.freeze([
   { value: 'legal_guardian', label: 'Legal Guardian' },
 ]);
 
-/** Age 16–17 requires parent/guardian approval before purchase. */
+/** Age 17 and under requires parent/guardian approval before purchase. */
 export function requiresParentApproval(age) {
-  if (age == null || age === '') return false;
   const n = Number(age);
-  return Number.isInteger(n) && n >= MIN_ATHLETE_AGE && n <= PARENT_APPROVAL_MAX_AGE;
+  return Number.isFinite(n) && n >= 0 && n <= PARENT_APPROVAL_MAX_AGE;
 }
 
 /** @deprecated Use requiresParentApproval */
