@@ -2,7 +2,7 @@
 
 const MOBILE_MQ = '(max-width: 47.99rem)';
 
-function isMobileNav() {
+export function isMobileNav() {
   return window.matchMedia(MOBILE_MQ).matches;
 }
 

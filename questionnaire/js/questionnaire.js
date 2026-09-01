@@ -21,6 +21,7 @@ import {
 } from '../../js/questionnaireDraftHelpers.js';
 import {
   initQuestionnaireMobileNav,
+  isMobileNav,
   refreshQuestionnaireMobileNavLayout,
 } from '../../js/questionnaireMobileNavHelpers.js';
 
@@ -348,6 +349,11 @@ let draftRestoreActive = false;
 
 const DRAFT_SAVE_DEBOUNCE_MS = 400;
 
+function focusFieldIfAllowed(el) {
+  if (!el || isMobileNav()) return;
+  el.focus();
+}
+
 function accordionItemFocusables(item) {
   if (!item?.classList.contains('is-open')) return [];
   const panel = item.querySelector('.intake-acc__panel');
@@ -395,7 +401,7 @@ function bindAccordionTabFlow({
       openField(index - 1);
       const prevItem = accordion.querySelector(`[${fieldAttr}="${fields[index - 1]}"]`);
       const prevFocusables = accordionItemFocusables(prevItem);
-      prevFocusables[prevFocusables.length - 1]?.focus();
+      focusFieldIfAllowed(prevFocusables[prevFocusables.length - 1]);
     }
   });
 }
@@ -588,7 +594,7 @@ function tryRestoreQuestionnaireDraft() {
 
   draftRestoreActive = true;
   questionnaireStarted = true;
-  showQuestionnaireShell({ focus: false });
+  showQuestionnaireShell();
   writeFormValues(draft.values);
 
   infoFieldIndex = restoreFieldIndex(draft.infoFieldIndex, INFO_FIELDS.length);
@@ -786,7 +792,7 @@ function openInfoField(index) {
   const focusTarget = item?.querySelector(
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
-  focusTarget?.focus();
+  focusFieldIfAllowed(focusTarget);
   scheduleQuestionnaireDraftSave();
 }
 
@@ -975,7 +981,7 @@ function openOccupationField(index) {
   const fieldId = OCCUPATION_FIELDS[occupationFieldIndex];
   const item = occupationAccordion?.querySelector(`[data-occ-field="${fieldId}"]`);
   const focusTarget = item?.querySelector('input[type="radio"]');
-  focusTarget?.focus();
+  focusFieldIfAllowed(focusTarget);
   scheduleQuestionnaireDraftSave();
 }
 
@@ -1180,7 +1186,7 @@ function openBodyField(index) {
   const focusTarget = item?.querySelector(
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
-  focusTarget?.focus();
+  focusFieldIfAllowed(focusTarget);
   scheduleQuestionnaireDraftSave();
 }
 
@@ -1219,7 +1225,7 @@ function bindBodyAccordion() {
   bodyAccordion.addEventListener('change', (event) => {
     syncFatSourceOtherField();
     if (event.target instanceof HTMLInputElement && event.target.name === 'fatSource' && event.target.value === 'other') {
-      form.elements.fatSourceOther?.focus();
+      focusFieldIfAllowed(form.elements.fatSourceOther);
     }
     renderBodyAccordionState();
     collapseBodyIfComplete();
@@ -1396,7 +1402,7 @@ function openExerciseField(index) {
   const focusTarget = item?.querySelector(
     'input:not([type="hidden"]):not([type="radio"]), select, textarea',
   ) || item?.querySelector('input[type="radio"]');
-  focusTarget?.focus();
+  focusFieldIfAllowed(focusTarget);
   scheduleQuestionnaireDraftSave();
 }
 
@@ -1511,7 +1517,7 @@ function highlightWaiverValidationErrors(values) {
     document.querySelector('#athlete-waiver-block .intake-waiver__cell--date')?.classList.add('is-invalid');
     if (!focusTarget) focusTarget = form.elements.signatureDate;
   }
-  focusTarget?.focus();
+  focusFieldIfAllowed(focusTarget);
 }
 
 function highlightStepValidationErrors(stepIndex) {
@@ -1584,7 +1590,7 @@ function intakeFieldStepIndex(fieldId) {
 function navigateToIntakeField(fieldId) {
   if (fieldId === 'waiver') {
     showStep(4);
-    form.elements.signature?.focus();
+    focusFieldIfAllowed(form.elements.signature);
     return;
   }
 
@@ -1719,14 +1725,11 @@ function showIntroGate() {
   if (questionnaireShellEl) questionnaireShellEl.hidden = true;
 }
 
-function showQuestionnaireShell({ focus = true } = {}) {
+function showQuestionnaireShell() {
   questionnaireStarted = true;
   if (introGateEl) introGateEl.hidden = true;
   if (questionnaireShellEl) questionnaireShellEl.hidden = false;
   refreshQuestionnaireMobileNavLayout(stepNav);
-  if (focus) {
-    form.elements.preferredName?.focus();
-  }
 }
 
 function beginQuestionnaire() {
