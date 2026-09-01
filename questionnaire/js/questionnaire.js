@@ -38,16 +38,6 @@ const STEPS = [
   { id: 'review', label: 'Review' },
 ];
 
-const STEP_NAV_SHORT = [
-  'Contact',
-  'Occupation',
-  'Exercise',
-  'Body comp',
-  'Agreement',
-  'Review',
-];
-
-/** Mobile-only one-line progress labels (actual step order). */
 const MOBILE_STEP_LABELS = [
   'About You',
   'Occupation',
@@ -321,7 +311,6 @@ const OCCUPATION_CHOICE_COPY = {
 const form = document.getElementById('q-form');
 const introGateEl = document.getElementById('q-intro-gate');
 const questionnaireShellEl = document.getElementById('q-questionnaire');
-const navList = document.getElementById('q-nav-list');
 const mobileProgressLabelEl = document.getElementById('q-mobile-progress-label');
 const mobileProgressTrackEl = document.getElementById('q-mobile-progress-track');
 const mobileProgressFillEl = document.getElementById('q-mobile-progress-fill');
@@ -1652,23 +1641,7 @@ function renderMobileProgress() {
 }
 
 function renderNav() {
-  navList.innerHTML = STEPS.map((item, index) => {
-    const reachable = canReachStep(index);
-    const classes = [
-      'q-nav__item',
-      index === step ? 'is-active' : '',
-      index < step ? 'is-done' : '',
-      reachable && index !== step ? 'is-reachable' : '',
-    ].filter(Boolean).join(' ');
-    return `
-    <li>
-      <button type="button" class="${classes}" data-nav-step="${index}" aria-label="${index + 1}. ${item.label}"${reachable ? '' : ' disabled'}>
-        <span class="q-nav__text q-nav__text--full">${index + 1}. ${item.label}</span>
-        <span class="q-nav__text q-nav__text--short">${index + 1}. ${STEP_NAV_SHORT[index]}</span>
-      </button>
-    </li>
-  `;
-  }).join('');
+  renderMobileProgress();
 }
 
 function escapeHtml(text) {
@@ -1708,15 +1681,6 @@ function renderReview() {
   `;
   }).join('');
   return pkg;
-}
-
-function canReachStep(target) {
-  if (target < 0 || target >= panels.length) return false;
-  if (target <= step) return true;
-  for (let i = 0; i < target; i += 1) {
-    if (!canProceed(i)) return false;
-  }
-  return true;
 }
 
 function showIntroGate() {
@@ -1826,7 +1790,7 @@ function closeExerciseHoursInfoPanels() {
 }
 
 function bindEvents() {
-  if (!form || !navList) {
+  if (!form) {
     throw new Error('Questionnaire markup is missing required elements.');
   }
 
@@ -1856,23 +1820,6 @@ function bindEvents() {
       draftSaveTimer = null;
     }
     saveQuestionnaireDraft(buildQuestionnaireDraftSnapshot());
-  });
-
-  navList.addEventListener('click', (event) => {
-    const btn = event.target.closest('[data-nav-step]');
-    if (!btn) return;
-    const target = Number(btn.dataset.navStep);
-    if (!canReachStep(target)) {
-      for (let i = 0; i < target; i += 1) {
-        if (!canProceed(i)) {
-          showStep(i);
-          highlightStepValidationErrors(i);
-          return;
-        }
-      }
-      return;
-    }
-    showStep(target);
   });
 
   reviewEl?.addEventListener('click', (event) => {

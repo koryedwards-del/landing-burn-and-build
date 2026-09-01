@@ -1,25 +1,16 @@
-/** Mobile questionnaire navigation — keyboard-safe step bar + focus scroll. */
-
-/** Phone questionnaire — portrait and landscape (wide-but-short stays phone). */
-const DESKTOP_QUESTIONNAIRE_MQ = '(min-width: 48rem) and (min-height: 36rem)';
+/** Questionnaire navigation — keyboard-safe fixed step bar + focus scroll (all viewports). */
 
 export function isMobileNav() {
-  return !window.matchMedia(DESKTOP_QUESTIONNAIRE_MQ).matches;
+  return true;
 }
 
 export function refreshQuestionnaireMobileNavLayout(stepNavEl) {
-  if (!stepNavEl || !isMobileNav()) return;
+  if (!stepNavEl) return;
   const height = Math.ceil(stepNavEl.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--q-step-nav-height', `${height}px`);
 }
 
 function syncKeyboardInset() {
-  if (!isMobileNav()) {
-    document.documentElement.style.removeProperty('--keyboard-inset');
-    document.documentElement.style.removeProperty('--visual-viewport-height');
-    return;
-  }
-
   const vv = window.visualViewport;
   if (!vv) {
     document.documentElement.style.setProperty('--keyboard-inset', '0px');
@@ -32,7 +23,7 @@ function syncKeyboardInset() {
 }
 
 export function scrollFieldIntoView(field, stepNavEl) {
-  if (!field || !isMobileNav()) return;
+  if (!field) return;
 
   const scrollParent = field.closest('.q-form');
   if (!scrollParent) return;
@@ -60,9 +51,6 @@ export function scrollFieldIntoView(field, stepNavEl) {
 export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
   if (!stepNavEl || !formEl) return () => {};
 
-  const mq = window.matchMedia(DESKTOP_QUESTIONNAIRE_MQ);
-  let teardownViewport = () => {};
-
   const onViewportChange = () => {
     syncKeyboardInset();
     refreshQuestionnaireMobileNavLayout(stepNavEl);
@@ -73,7 +61,6 @@ export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
   };
 
   const onFocusIn = (event) => {
-    if (!isMobileNav()) return;
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
     if (!target.matches('input, textarea, select')) return;
@@ -86,7 +73,6 @@ export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
   };
 
   const onFocusOut = (event) => {
-    if (!isMobileNav()) return;
     const related = event.relatedTarget;
     if (related instanceof HTMLElement && related.matches('input, textarea, select')) return;
 
@@ -97,46 +83,25 @@ export function initQuestionnaireMobileNav({ stepNavEl, formEl } = {}) {
     }, 100);
   };
 
-  const bind = () => {
-    teardownViewport();
+  refreshQuestionnaireMobileNavLayout(stepNavEl);
+  syncKeyboardInset();
 
-    if (mq.matches) {
-      document.body.classList.remove('q-keyboard-open');
-      document.documentElement.style.removeProperty('--q-step-nav-height');
-      document.documentElement.style.removeProperty('--keyboard-inset');
-      document.documentElement.style.removeProperty('--visual-viewport-height');
-      return;
-    }
-
-    refreshQuestionnaireMobileNavLayout(stepNavEl);
-    syncKeyboardInset();
-
-    const vv = window.visualViewport;
-    vv?.addEventListener('resize', onViewportChange);
-    vv?.addEventListener('scroll', onViewportChange);
-    window.addEventListener('resize', onViewportChange);
-    formEl.addEventListener('focusin', onFocusIn);
-    formEl.addEventListener('focusout', onFocusOut);
-
-    teardownViewport = () => {
-      vv?.removeEventListener('resize', onViewportChange);
-      vv?.removeEventListener('scroll', onViewportChange);
-      window.removeEventListener('resize', onViewportChange);
-      formEl.removeEventListener('focusin', onFocusIn);
-      formEl.removeEventListener('focusout', onFocusOut);
-      document.body.classList.remove('q-keyboard-open');
-      document.documentElement.style.removeProperty('--q-step-nav-height');
-      document.documentElement.style.removeProperty('--keyboard-inset');
-      document.documentElement.style.removeProperty('--visual-viewport-height');
-    };
-  };
-
-  const onMqChange = () => bind();
-  mq.addEventListener('change', onMqChange);
-  bind();
+  const vv = window.visualViewport;
+  vv?.addEventListener('resize', onViewportChange);
+  vv?.addEventListener('scroll', onViewportChange);
+  window.addEventListener('resize', onViewportChange);
+  formEl.addEventListener('focusin', onFocusIn);
+  formEl.addEventListener('focusout', onFocusOut);
 
   return () => {
-    mq.removeEventListener('change', onMqChange);
-    teardownViewport();
+    vv?.removeEventListener('resize', onViewportChange);
+    vv?.removeEventListener('scroll', onViewportChange);
+    window.removeEventListener('resize', onViewportChange);
+    formEl.removeEventListener('focusin', onFocusIn);
+    formEl.removeEventListener('focusout', onFocusOut);
+    document.body.classList.remove('q-keyboard-open');
+    document.documentElement.style.removeProperty('--q-step-nav-height');
+    document.documentElement.style.removeProperty('--keyboard-inset');
+    document.documentElement.style.removeProperty('--visual-viewport-height');
   };
 }
