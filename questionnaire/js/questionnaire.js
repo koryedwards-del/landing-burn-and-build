@@ -1445,13 +1445,13 @@ function syncHeartRateHints(age) {
   const cardio = document.querySelector('[data-hr-cardio]');
   const fat = document.querySelector('[data-hr-fat]');
   if (!age) {
-    if (cardio) cardio.textContent = 'Cardio training range (BPM) — enter age above';
-    if (fat) fat.textContent = 'Fat burning training range (BPM) — enter age above';
+    if (cardio) cardio.textContent = 'Your cardio training range: enter age above';
+    if (fat) fat.textContent = 'Your fat-burning range: enter age above';
     return;
   }
   const hr = heartRates(age);
-  if (cardio) cardio.textContent = `Cardio training range (BPM): ${hr.cardioLow}–${hr.cardioHigh}`;
-  if (fat) fat.textContent = `Fat burning training range (BPM): ${hr.fatBurnLow}–${hr.fatBurnHigh}`;
+  if (cardio) cardio.textContent = `Your cardio training range: ${hr.cardioLow}–${hr.cardioHigh} BPM`;
+  if (fat) fat.textContent = `Your fat-burning range: ${hr.fatBurnLow}–${hr.fatBurnHigh} BPM`;
 }
 
 function heightLabel(values) {
