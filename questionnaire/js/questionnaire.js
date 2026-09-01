@@ -214,6 +214,67 @@ function syncIntakeQuestionNumbers() {
   });
 }
 
+function populateAccFieldCopy(item, meta, { hintFrom = 'guide', detailFrom = 'sub' } = {}) {
+  if (!item || !meta) return;
+  const label = item.querySelector('[data-acc-label]');
+  const question = item.querySelector('[data-acc-question]');
+  const hint = item.querySelector('[data-acc-hint]');
+  const guide = item.querySelector('[data-acc-guide]');
+  const detail = item.querySelector('[data-acc-detail]');
+  const example = item.querySelector('[data-acc-example]');
+  const alert = item.querySelector('[data-acc-alert]');
+  const hoursNote = item.querySelector('[data-acc-hours-note]');
+
+  if (label) label.textContent = meta.question;
+  if (question) question.textContent = meta.question;
+  if (hint) hint.textContent = meta.hint || meta[hintFrom] || '';
+  if (guide) guide.textContent = meta.guide || '';
+  if (detail) detail.textContent = meta[detailFrom] || '';
+  if (example) example.textContent = meta.example || '';
+  if (alert) {
+    if (meta.alert) {
+      alert.textContent = meta.alert;
+      alert.hidden = false;
+    } else {
+      alert.textContent = '';
+      alert.hidden = true;
+    }
+  }
+  if (hoursNote && meta.hoursNote) hoursNote.textContent = meta.hoursNote;
+
+  syncAccMoreInfoVisibility(item);
+}
+
+function syncAccMoreInfoVisibility(item) {
+  const more = item?.querySelector('.intake-acc__more');
+  const panel = item?.querySelector('[data-acc-more-panel]');
+  if (!more) return;
+  if (!panel) {
+    more.hidden = true;
+    return;
+  }
+  const hasContent = [...panel.children].some((el) => {
+    if (el.hidden) return false;
+    return String(el.textContent || '').trim().length > 0;
+  });
+  more.hidden = !hasContent;
+}
+
+function bindAccordionMoreInfo(root) {
+  if (!root) return;
+
+  root.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-acc-more-toggle]');
+    if (!toggle) return;
+    const item = toggle.closest('.intake-acc__item');
+    const panel = item?.querySelector('[data-acc-more-panel]');
+    if (!panel) return;
+    const opening = panel.hidden;
+    toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    panel.hidden = !opening;
+  });
+}
+
 const OCCUPATION_FIELD_META = {
   workPhysical: {
     question: INTAKE_FIELD_QUESTIONS.workPhysical,
@@ -691,14 +752,7 @@ function initInfoFieldCopy() {
   if (!infoAccordion) return;
   INFO_FIELDS.forEach((fieldId) => {
     const item = infoAccordion.querySelector(`[data-info-field="${fieldId}"]`);
-    const meta = INFO_FIELD_META[fieldId];
-    if (!item || !meta) return;
-    const question = item.querySelector('[data-info-question]');
-    const guide = item.querySelector('[data-info-guide]');
-    const example = item.querySelector('[data-info-example]');
-    if (question) question.textContent = meta.question;
-    if (guide) guide.textContent = meta.guide;
-    if (example) example.textContent = meta.example;
+    populateAccFieldCopy(item, INFO_FIELD_META[fieldId]);
   });
 }
 
@@ -867,10 +921,7 @@ function initOccupationFieldCopy() {
     const item = occupationAccordion.querySelector(`[data-occ-field="${fieldId}"]`);
     const meta = OCCUPATION_FIELD_META[fieldId];
     if (!item || !meta) return;
-    const label = item.querySelector('[data-occ-label]');
-    const guide = item.querySelector('[data-occ-guide]');
-    if (label) label.textContent = meta.question;
-    if (guide) guide.textContent = meta.guide;
+    populateAccFieldCopy(item, meta);
 
     const choices = OCCUPATION_CHOICE_COPY[fieldId];
     if (!choices) return;
@@ -1085,23 +1136,7 @@ function initBodyFieldCopy() {
   if (!bodyAccordion) return;
   BODY_FIELDS.forEach((fieldId) => {
     const item = bodyAccordion.querySelector(`[data-body-field="${fieldId}"]`);
-    const meta = BODY_FIELD_META[fieldId];
-    if (!item || !meta) return;
-    const label = item.querySelector('[data-body-label]');
-    const guide = item.querySelector('[data-body-guide]');
-    const example = item.querySelector('[data-body-example]');
-    const alert = item.querySelector('[data-body-alert]');
-    if (label) label.textContent = meta.question;
-    if (guide) guide.textContent = meta.guide;
-    if (example) example.textContent = meta.example;
-    if (alert) {
-      if (meta.alert) {
-        alert.textContent = meta.alert;
-        alert.hidden = false;
-      } else {
-        alert.hidden = true;
-      }
-    }
+    populateAccFieldCopy(item, BODY_FIELD_META[fieldId]);
   });
 }
 
@@ -1310,33 +1345,10 @@ function initExerciseFieldCopy() {
     const item = exerciseAccordion.querySelector(`[data-ex-field="${fieldId}"]`);
     const meta = EXERCISE_FIELD_META[fieldId];
     if (!item || !meta) return;
-    const label = item.querySelector('[data-ex-label]');
-    const question = item.querySelector('[data-ex-question]');
-    const hint = item.querySelector('[data-ex-hint]');
-    const guide = item.querySelector('[data-ex-guide]');
-    const sub = item.querySelector('[data-ex-sub]');
-    const hoursNote = item.querySelector('[data-ex-hours-note]');
-    if (label) label.textContent = meta.question;
-    if (question) question.textContent = meta.question;
-    if (hint) hint.textContent = meta.hint || '';
-    if (guide) guide.textContent = meta.guide;
-    if (sub) sub.textContent = meta.sub || '';
-    if (hoursNote) hoursNote.textContent = EXERCISE_HOURS_BREAKDOWN;
-  });
-}
-
-function bindExerciseMoreInfo() {
-  if (!exerciseAccordion) return;
-
-  exerciseAccordion.addEventListener('click', (event) => {
-    const toggle = event.target.closest('[data-ex-more-toggle]');
-    if (!toggle) return;
-    const item = toggle.closest('[data-ex-field]');
-    const panel = item?.querySelector('[data-ex-more-panel]');
-    if (!panel) return;
-    const opening = panel.hidden;
-    toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
-    panel.hidden = !opening;
+    populateAccFieldCopy(item, {
+      ...meta,
+      hoursNote: fieldId === 'age' ? '' : EXERCISE_HOURS_BREAKDOWN,
+    }, { hintFrom: 'hint', detailFrom: 'sub' });
   });
 }
 
@@ -1819,7 +1831,7 @@ function bindEvents() {
   bindOccupationAccordion();
   bindBodyAccordion();
   bindExerciseAccordion();
-  bindExerciseMoreInfo();
+  bindAccordionMoreInfo(form);
 
   document.querySelector('[data-intro-start]')?.addEventListener('click', () => {
     beginQuestionnaire();
