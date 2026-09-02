@@ -33,6 +33,7 @@ const EMAIL_COLORS = Object.freeze({
 
 const BONUS_MENU_PLANNER_FILENAME = 'Burn&Build-Menu-Planner.pdf';
 const BONUS_FAQ_FILENAME = 'Burn&Build-FAQ.pdf';
+const PDF_ICON_COLOR = '#FFCC00';
 
 const EMAIL_SUBJECT = 'Your Burn & Build Diet is here';
 
@@ -65,21 +66,64 @@ function dietEmailPdfFilename({ preferredName, pkg, paidAt } = {}) {
   });
 }
 
-function pdfFileLink(href, filename) {
+function pdfDocumentIconDataUri({ width = 24, height = 28, color = PDF_ICON_COLOR } = {}) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 24 28" role="img" aria-hidden="true"><path fill="${color}" d="M0 3.5A3.5 3.5 0 0 1 3.5 0H14.5L24 9.5V24.5A3.5 3.5 0 0 1 20.5 28H3.5A3.5 3.5 0 0 1 0 24.5V3.5zm14.5-3.5L24 9.5h-6A3.5 3.5 0 0 1 14.5 0z"/><path fill="#FFFFFF" fill-opacity="0.3" d="M14.5 0L24 9.5H18A3.5 3.5 0 0 1 14.5 6V0z"/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+function pdfDocumentIconImg({ width = 24, height = 28, color = PDF_ICON_COLOR } = {}) {
+  const src = pdfDocumentIconDataUri({ width, height, color });
+  return `<img src="${src}" width="${width}" height="${height}" alt="" style="display:block;border:0;width:${width}px;height:${height}px;">`;
+}
+
+function pdfFileLink(href, filename, { fontSize = 16, fontWeight = 600 } = {}) {
   const c = EMAIL_COLORS;
   const safe = escapeHtml(filename);
-  return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:600;line-height:1.5;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
+  return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:${fontSize}px;font-weight:${fontWeight};line-height:1.5;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
+}
+
+function pdfFileRow(href, filename, {
+  iconWidth,
+  iconHeight,
+  fontSize,
+  fontWeight,
+  iconGap,
+} = {}) {
+  const link = pdfFileLink(href, filename, { fontSize, fontWeight });
+  const icon = pdfDocumentIconImg({ width: iconWidth, height: iconHeight });
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td style="vertical-align:middle;padding-right:${iconGap}px;line-height:0;font-size:0;">${icon}</td>
+      <td style="vertical-align:middle;">${link}</td>
+    </tr>
+  </table>`;
 }
 
 function dietPdfFileLink(href, filename) {
   const c = EMAIL_COLORS;
-  const link = pdfFileLink(href, filename);
+  const row = pdfFileRow(href, filename, {
+    iconWidth: 26,
+    iconHeight: 30,
+    fontSize: 16,
+    fontWeight: 600,
+    iconGap: 14,
+  });
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.dietHighlight};">
     <tr>
       <td style="width:3px;background-color:${c.gold};font-size:0;line-height:0;">&nbsp;</td>
-      <td style="padding:12px 16px;">${link}</td>
+      <td style="padding:12px 16px;">${row}</td>
     </tr>
   </table>`;
+}
+
+function bonusPdfFileLink(href, filename) {
+  return pdfFileRow(href, filename, {
+    iconWidth: 18,
+    iconHeight: 21,
+    fontSize: 14,
+    fontWeight: 600,
+    iconGap: 10,
+  });
 }
 
 function buildDietEmailText({
@@ -132,8 +176,8 @@ function buildDietEmailHtml({
   const contactMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
   const site = siteOrigin();
   const dietLink = dietPdfFileLink(dietDownloadUrl, dietPdfFilename);
-  const menuPlannerLink = pdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
-  const faqLink = pdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
+  const menuPlannerLink = bonusPdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
+  const faqLink = bonusPdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your Burn &amp; Build Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
