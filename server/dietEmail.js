@@ -139,6 +139,13 @@ function bonusResourcesBlock(menuPlannerRow, faqRow) {
   </table>`;
 }
 
+function emailContentRow(content, { paddingBottom = '0', extraStyle = '' } = {}) {
+  const c = EMAIL_COLORS;
+  return `<tr>
+    <td style="padding:0 0 ${paddingBottom} 0;font-size:16px;line-height:1.6;color:${c.black};${extraStyle}">${content}</td>
+  </tr>`;
+}
+
 function buildDietEmailText({
   firstName,
   dietPdfFilename,
@@ -236,23 +243,29 @@ function buildDietEmailHtml({
             </td>
           </tr>
           <tr>
-            <td style="padding:0 32px 8px;font-size:16px;line-height:1.6;color:${c.black};">
-              <p style="margin:0 0 20px;">Hi ${firstName},</p>
-              <p style="margin:0 0 28px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Your Burn &amp; Build Diet is here.</p>
-              <p style="margin:0 0 36px;">${dietLink}</p>
-              <p style="margin:0 0 10px;">${portalLink}</p>
-              <p style="margin:0 0 36px;font-size:15px;line-height:1.5;color:${c.muted};">Keep this email for future access.</p>
-              <p style="margin:0 0 20px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Bonus Resources</p>
-              ${bonusLinks}
+            <td style="padding:0 32px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${emailContentRow(`Hi ${firstName},`, { paddingBottom: '20px' })}
+                ${emailContentRow('Your Burn &amp; Build Diet is here.', { paddingBottom: '28px', extraStyle: 'font-weight:700;line-height:1.5;' })}
+                ${emailContentRow(dietLink, { paddingBottom: '36px' })}
+                ${emailContentRow(portalLink, { paddingBottom: '10px' })}
+                ${emailContentRow('Keep this email for future access.', { paddingBottom: '36px', extraStyle: `font-size:15px;line-height:1.5;color:${c.muted};` })}
+                ${emailContentRow('Bonus Resources', { paddingBottom: '20px', extraStyle: 'font-weight:700;line-height:1.5;' })}
+                <tr>
+                  <td style="padding:0;">${bonusLinks}</td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
-            <td style="padding:0 32px 40px;font-size:15px;line-height:1.6;color:${c.muted};">
-              <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:${c.black};">Questions? Just email me.</p>
-              <p style="margin:0 0 28px;">${contactLink}</p>
-              <p style="margin:0 0 6px;font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:${PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX}px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
-              <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
-              <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
+            <td style="padding:0 32px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${emailContentRow('Questions? Just email me.', { paddingBottom: '8px', extraStyle: 'font-weight:700;color:' + c.black + ';' })}
+                ${emailContentRow(contactLink, { paddingBottom: '28px' })}
+                ${emailContentRow(`<span style="font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:${PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX}px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</span>`, { paddingBottom: '6px' })}
+                ${emailContentRow('Burn &amp; Build', { paddingBottom: '4px', extraStyle: `color:${c.black};` })}
+                ${emailContentRow('<span style="font-style:italic;color:' + c.muted + ';">Athlete-tested since 1982</span>')}
+              </table>
             </td>
           </tr>
         </table>
