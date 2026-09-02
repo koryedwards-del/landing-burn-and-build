@@ -243,7 +243,7 @@ function buildDietEmailHtml({
               <p style="margin:0 0 10px;">${portalLink}</p>
               <p style="margin:0 0 36px;font-size:15px;line-height:1.5;color:${c.muted};">Keep this email for future access.</p>
               <p style="margin:0 0 20px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Bonus Resources</p>
-              <div style="margin:0 0 40px;">${bonusLinks}</div>
+              ${bonusLinks}
             </td>
           </tr>
           <tr>
