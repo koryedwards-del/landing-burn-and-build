@@ -198,12 +198,9 @@
   border-top: 1px solid var(--border);
 }
 
-.unlock-receipt__download-prompt {
-  margin: 0 0 10px;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.45;
-  color: var(--muted);
+.unlock-receipt__hint--spam {
+  margin: 0 0 18px;
+  font-style: italic;
 }
 
 .unlock-receipt__download {

@@ -219,7 +219,7 @@ export function markProgramPaid(email, programId) {
   if (!id) return false;
   const now = new Date().toISOString();
   const result = db.prepare(`
-    UPDATE programs SET paid_at = ?, diet_email_sent_at = NULL WHERE id = ? AND email = ?
+    UPDATE programs SET paid_at = ? WHERE id = ? AND email = ?
   `).run(now, id, key);
   return result.changes > 0;
 }

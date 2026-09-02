@@ -26,7 +26,7 @@ export function scheduleDietEmailRetries(email, programId, { attempts = 6, delay
     }
     attempt += 1;
     try {
-      const result = await fulfillDietDelivery(email, programId, { forceEmail: attempt > 1 });
+      const result = await fulfillDietDelivery(email, programId);
       if (result.emailSent || result.emailAlreadySent) {
         emailRetryTimers.delete(key);
         return;
@@ -63,11 +63,8 @@ export async function ensureDietPdf(email, programId) {
 
 /** Ensure PDF exists and email a copy (skips duplicate sends unless force). */
 export async function fulfillDietDelivery(email, programId, { forceEmail = false } = {}) {
-  const pdf = await ensureDietPdf(email, programId);
-  const pkg = getProgramById(email, programId);
-  const preferredName = pkg?.intake?.preferredName || 'Your';
-
   if (!forceEmail && wasDietEmailSent(email, programId)) {
+    await ensureDietPdf(email, programId);
     return {
       pdfReady: true,
       emailSent: false,
@@ -82,6 +79,7 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
   if (!forceEmail) {
     claimedSend = tryClaimDietEmailSend(email, programId);
     if (!claimedSend) {
+      await ensureDietPdf(email, programId);
       return {
         pdfReady: true,
         emailSent: false,
@@ -92,6 +90,19 @@ export async function fulfillDietDelivery(email, programId, { forceEmail = false
       };
     }
   }
+
+  let pdf;
+  try {
+    pdf = await ensureDietPdf(email, programId);
+  } catch (err) {
+    if (claimedSend) {
+      releaseDietEmailSendClaim(email, programId);
+    }
+    throw err;
+  }
+
+  const pkg = getProgramById(email, programId);
+  const preferredName = pkg?.intake?.preferredName || 'Your';
 
   const emailResult = await sendDietPdfEmail({
     to: email,

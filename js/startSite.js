@@ -161,6 +161,7 @@ async function finishPaidRestore({ autoDownload = false } = {}) {
   cleanPurchaserPortalQuery();
   await preparePlanReadyState();
   render();
+  await syncDietEmailSentFromServer();
   startPostPaymentEmail();
   if (autoDownload) {
     await triggerDietDownload();
@@ -392,8 +393,7 @@ function renderPlanReady() {
     : '';
 
   const successLines = hasPaidAccess
-    ? `<div class="ob-welcome-line1">YOUR BURN &amp; BUILD DIET</div>
-          <div class="ob-welcome-line2">IS READY</div>`
+    ? ''
     : `<div class="ob-welcome-line1">YOUR DIET</div>
           <div class="ob-welcome-line2">IS READY</div>`;
 
@@ -527,7 +527,7 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (store.dietEmailSent) break;
 
-    const result = await resendDietEmail(email, programId, { force: attempt > 0 });
+    const result = await resendDietEmail(email, programId);
     if (result.ok && isDietEmailDeliverySuccess(result)) {
       markDietEmailSent();
       store.dietEmailError = '';
