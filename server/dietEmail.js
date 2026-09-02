@@ -1,4 +1,4 @@
-import { dietPdfAttachmentFilename } from '../js/dietPdfNamingHelpers.js';
+import { dietPdfFilename } from '../js/dietPdfNamingHelpers.js';
 import { DIET_PDF_GENERATION_VERSION } from '../js/assetVersionData.js';
 import {
   PURCHASE_EMAIL_CSS_FAMILY,
@@ -12,6 +12,7 @@ import {
 import {
   brandLogoUrl,
   burnAndBuildFaqUrl,
+  dietPdfDownloadUrl,
   menuPlanWorksheetDownloadUrl,
   purchaserPortalUrl,
   PURCHASE_EMAIL_CONTACT,
@@ -25,12 +26,14 @@ const EMAIL_COLORS = Object.freeze({
   card: '#FFFFFF',
   black: '#0A0A0A',
   gold: '#FDC500',
-  keepTint: '#FFFBE6',
   muted: '#5C5C5C',
   rule: '#E5E5E5',
 });
 
-const EMAIL_SUBJECT = 'Your Burn & Build Diet + Resources';
+const BONUS_MENU_PLANNER_FILENAME = 'Burn&Build-Menu-Planner.pdf';
+const BONUS_FAQ_FILENAME = 'Burn&Build-FAQ.pdf';
+
+const EMAIL_SUBJECT = 'Your Burn & Build Diet is here';
 
 export function dietEmailConfigured() {
   return !!String(process.env.RESEND_API_KEY || '').trim();
@@ -52,31 +55,48 @@ function firstNameFromPreferredName(preferredName) {
   return String(preferredName || '').trim().split(/\s+/)[0] || 'there';
 }
 
-function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
+function dietEmailPdfFilename({ preferredName, pkg, paidAt } = {}) {
+  const firstName = firstNameFromPreferredName(preferredName);
+  return dietPdfFilename({
+    preferredName: firstName,
+    pkg,
+    createdAt: paidAt || pkg?.program?.issuedAt,
+  });
+}
+
+function pdfFileLink(href, filename) {
+  const c = EMAIL_COLORS;
+  const safe = escapeHtml(filename);
+  return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:600;line-height:1.5;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
+}
+
+function buildDietEmailText({
+  firstName,
+  dietPdfFilename,
+  dietDownloadUrl,
+  portalUrl,
+  worksheetUrl,
+  faqUrl,
+}) {
   return [
     `Hi ${firstName},`,
     '',
-    'Thank you for purchasing the Burn & Build Diet.',
+    'Your Burn & Build Diet is here.',
     '',
-    'Your payment is confirmed and your personalized program is ready.',
+    dietPdfFilename,
+    dietDownloadUrl,
     '',
-    'KEEP THIS EMAIL',
+    'Access Your Burn & Build Account →',
+    portalUrl,
+    'Keep this email for future access.',
     '',
-    'This email is your link back to your Burn & Build download page. If you ever need another copy of your diet, return here:',
+    'Bonus Resources',
     '',
-    `Open your Burn & Build download page: ${portalUrl}`,
+    BONUS_MENU_PLANNER_FILENAME,
+    worksheetUrl,
     '',
-    'A copy of your Burn & Build Diet is also attached to this email.',
-    '',
-    'FREE RESOURCES',
-    '',
-    'Menu Plan Worksheet',
-    'A blank worksheet for building your weekly menu.',
-    `Download Menu Plan Worksheet: ${worksheetUrl}`,
-    '',
-    'Frequently Asked Questions',
-    'Practical answers to questions that come up while following Burn & Build.',
-    `Download FAQ: ${faqUrl}`,
+    BONUS_FAQ_FILENAME,
+    faqUrl,
     '',
     'Questions? Just email me.',
     PURCHASE_EMAIL_CONTACT,
@@ -87,14 +107,23 @@ function buildDietEmailText({ firstName, portalUrl, worksheetUrl, faqUrl }) {
   ].join('\n');
 }
 
-function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUrl }) {
+function buildDietEmailHtml({
+  firstName,
+  dietPdfFilename,
+  dietDownloadUrl,
+  portalUrl,
+  worksheetUrl,
+  faqUrl,
+  logoUrl,
+}) {
   const c = EMAIL_COLORS;
   const contactMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
   const site = siteOrigin();
-  const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:bold;text-decoration:none;border-bottom:2px solid ${c.gold};">Open your Burn & Build download page <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
-  const worksheetLink = `<a class="gold-link" href="${worksheetUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download Menu Plan Worksheet</a>`;
-  const faqLink = `<a class="gold-link" href="${faqUrl}" style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;font-weight:bold;text-decoration:underline;text-decoration-color:${c.gold};">Download FAQ</a>`;
-  const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:none;">${PURCHASE_EMAIL_CONTACT}</a>`;
+  const dietLink = pdfFileLink(dietDownloadUrl, dietPdfFilename);
+  const menuPlannerLink = pdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
+  const faqLink = pdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
+  const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your Burn &amp; Build Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
+  const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -103,66 +132,46 @@ function buildDietEmailHtml({ firstName, portalUrl, worksheetUrl, faqUrl, logoUr
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <title>Your Burn &amp; Build Diet + Resources</title>
+  <title>Your Burn &amp; Build Diet is here</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${PURCHASE_EMAIL_FONT_URL}" rel="stylesheet">
   <link href="${SIGNATURE_DISPLAY_FONT_URL}" rel="stylesheet">
   <style>
     a { text-decoration-skip-ink: none; }
+    a.pdf-file-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
     a.portal-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
-    a.gold-link { color: ${c.gold} !important; -webkit-text-fill-color: ${c.gold} !important; }
     a.contact-link { color: ${c.black} !important; -webkit-text-fill-color: ${c.black} !important; }
   </style>
 </head>
 <body style="margin:0;padding:0;background-color:${c.pageBg};font-family:${PURCHASE_EMAIL_CSS_FAMILY};color:${c.black};">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:32px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.pageBg};padding:40px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:${c.card};border:1px solid ${c.rule};border-radius:8px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:${c.card};">
           <tr>
-            <td align="center" style="padding:32px 32px 16px;">
+            <td align="center" style="padding:0 32px 28px;">
               <a href="${site}" style="text-decoration:none;">
-                <img src="${logoUrl}" alt="Burn &amp; Build" width="96" height="96" style="display:block;border:0;height:auto;max-width:96px;">
+                <img src="${logoUrl}" alt="Burn &amp; Build" width="88" height="88" style="display:block;border:0;height:auto;max-width:88px;">
               </a>
             </td>
           </tr>
           <tr>
             <td style="padding:0 32px 8px;font-size:16px;line-height:1.6;color:${c.black};">
-              <p style="margin:0 0 16px;">Hi ${firstName},</p>
-              <p style="margin:0 0 16px;">Thank you for purchasing the <strong>Burn &amp; Build Diet.</strong></p>
-              <p style="margin:0 0 24px;">Your payment is confirmed and your personalized program is ready.</p>
+              <p style="margin:0 0 20px;">Hi ${firstName},</p>
+              <p style="margin:0 0 28px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Your Burn &amp; Build Diet is here.</p>
+              <p style="margin:0 0 36px;">${dietLink}</p>
+              <p style="margin:0 0 10px;">${portalLink}</p>
+              <p style="margin:0 0 36px;font-size:15px;line-height:1.5;color:${c.muted};">Keep this email for future access.</p>
+              <p style="margin:0 0 20px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Bonus Resources</p>
+              <p style="margin:0 0 14px;">${menuPlannerLink}</p>
+              <p style="margin:0 0 40px;">${faqLink}</p>
             </td>
           </tr>
           <tr>
-            <td style="padding:0 32px 24px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-left:3px solid ${c.gold};background-color:${c.keepTint};">
-                <tr>
-                  <td style="padding:16px 20px;font-size:16px;line-height:1.6;color:${c.black};">
-                    <p style="margin:0 0 12px;font-size:11px;font-weight:bold;letter-spacing:0.08em;color:${c.gold};">KEEP THIS EMAIL</p>
-                    <p style="margin:0 0 16px;">This email is your link back to your Burn &amp; Build download page. If you ever need another copy of your diet, return here:</p>
-                    <p style="margin:0 0 16px;">${portalLink}</p>
-                    <p style="margin:0;">A copy of your Burn &amp; Build Diet is also attached to this email.</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:0 32px 24px;font-size:16px;line-height:1.6;color:${c.black};">
-              <p style="margin:0 0 16px;font-size:18px;font-weight:bold;color:${c.black};">Free Resources</p>
-              <p style="margin:0 0 4px;font-weight:bold;">Menu Plan Worksheet</p>
-              <p style="margin:0 0 8px;color:${c.muted};">A blank worksheet for building your weekly menu.</p>
-              <p style="margin:0 0 20px;">${worksheetLink}</p>
-              <p style="margin:0 0 4px;font-weight:bold;">Frequently Asked Questions</p>
-              <p style="margin:0 0 8px;color:${c.muted};">Practical answers to questions that come up while following Burn &amp; Build.</p>
-              <p style="margin:0;">${faqLink}</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:8px 32px 32px;border-top:1px solid ${c.rule};font-size:15px;line-height:1.6;color:${c.muted};">
-              <p style="margin:0 0 8px;color:${c.black};font-weight:bold;">Questions? Just email me.</p>
-              <p style="margin:0 0 20px;">${contactLink}</p>
+            <td style="padding:0 32px 40px;font-size:15px;line-height:1.6;color:${c.muted};">
+              <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:${c.black};">Questions? Just email me.</p>
+              <p style="margin:0 0 28px;">${contactLink}</p>
               <p style="margin:0 0 6px;font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:${PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX}px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</p>
               <p style="margin:0 0 4px;color:${c.black};">Burn &amp; Build</p>
               <p style="margin:0;font-style:italic;color:${c.muted};">Athlete-tested since 1982</p>
@@ -180,15 +189,21 @@ export function buildDietEmailPreview({
   preferredName = 'Sample',
   email = 'sample@example.com',
   programId = 'preview-program',
+  pkg = null,
+  paidAt = null,
 } = {}) {
   const firstNameRaw = firstNameFromPreferredName(preferredName);
   const firstName = escapeHtml(firstNameRaw);
   const portalUrl = purchaserPortalUrl(email, programId);
+  const dietDownloadUrl = dietPdfDownloadUrl(email, programId);
   const worksheetUrl = menuPlanWorksheetDownloadUrl();
   const faqUrl = burnAndBuildFaqUrl();
   const logoUrl = brandLogoUrl();
+  const dietPdfFilename = dietEmailPdfFilename({ preferredName, pkg, paidAt });
   const emailContent = {
     firstName: firstNameRaw,
+    dietPdfFilename,
+    dietDownloadUrl,
     portalUrl,
     worksheetUrl,
     faqUrl,
@@ -216,11 +231,13 @@ export async function sendDietPdfEmail({
     return { ok: false, skipped: true, message: 'Diet email is not configured on the server.' };
   }
 
-  const filename = dietPdfAttachmentFilename({ preferredName, pkg });
+  const filename = dietEmailPdfFilename({ preferredName, pkg, paidAt });
   const { html, text } = buildDietEmailPreview({
     preferredName,
     email: to,
     programId,
+    pkg,
+    paidAt,
   });
 
   const headers = {
