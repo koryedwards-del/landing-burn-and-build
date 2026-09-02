@@ -76,10 +76,10 @@ function pdfDocumentIconImg({ width = 24, height = 28, color = PDF_ICON_COLOR } 
   return `<img src="${src}" width="${width}" height="${height}" alt="" style="display:block;border:0;width:${width}px;height:${height}px;">`;
 }
 
-function pdfFileLink(href, filename, { fontSize = 16, fontWeight = 600 } = {}) {
+function pdfFileLink(href, filename, { fontSize = 16, fontWeight = 600, lineHeight = 1.5 } = {}) {
   const c = EMAIL_COLORS;
   const safe = escapeHtml(filename);
-  return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:${fontSize}px;font-weight:${fontWeight};line-height:1.5;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
+  return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:${fontSize}px;font-weight:${fontWeight};line-height:${lineHeight};text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
 }
 
 function pdfFileRow(href, filename, {
@@ -88,8 +88,9 @@ function pdfFileRow(href, filename, {
   fontSize,
   fontWeight,
   iconGap,
+  lineHeight = 1.5,
 } = {}) {
-  const link = pdfFileLink(href, filename, { fontSize, fontWeight });
+  const link = pdfFileLink(href, filename, { fontSize, fontWeight, lineHeight });
   const icon = pdfDocumentIconImg({ width: iconWidth, height: iconHeight });
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -123,7 +124,19 @@ function bonusPdfFileLink(href, filename) {
     fontSize: 14,
     fontWeight: 600,
     iconGap: 10,
+    lineHeight: 1.2,
   });
+}
+
+function bonusResourcesBlock(menuPlannerRow, faqRow) {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 40px;">
+    <tr>
+      <td style="padding:0 0 2px 0;">${menuPlannerRow}</td>
+    </tr>
+    <tr>
+      <td style="padding:0;">${faqRow}</td>
+    </tr>
+  </table>`;
 }
 
 function buildDietEmailText({
@@ -178,6 +191,7 @@ function buildDietEmailHtml({
   const dietLink = dietPdfFileLink(dietDownloadUrl, dietPdfFilename);
   const menuPlannerLink = bonusPdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
   const faqLink = bonusPdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
+  const bonusLinks = bonusResourcesBlock(menuPlannerLink, faqLink);
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your Burn &amp; Build Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
@@ -229,8 +243,7 @@ function buildDietEmailHtml({
               <p style="margin:0 0 10px;">${portalLink}</p>
               <p style="margin:0 0 36px;font-size:15px;line-height:1.5;color:${c.muted};">Keep this email for future access.</p>
               <p style="margin:0 0 20px;font-size:16px;font-weight:700;line-height:1.5;color:${c.black};">Bonus Resources</p>
-              <p style="margin:0 0 6px;">${menuPlannerLink}</p>
-              <p style="margin:0 0 40px;">${faqLink}</p>
+              <div style="margin:0 0 40px;">${bonusLinks}</div>
             </td>
           </tr>
           <tr>
