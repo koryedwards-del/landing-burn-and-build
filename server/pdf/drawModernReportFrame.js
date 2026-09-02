@@ -20,7 +20,7 @@ export const MODERN_REPORT_FONTS = Object.freeze({
 
 export const MODERN_REPORT_COLORS = Object.freeze({
   body: '#111111',
-  muted: '#5C5C5C',
+  muted: '#666666',
   gold: BRAND_GOLD,
   goldLight: '#FFF0B3',
   goldPale: '#FFFBE6',

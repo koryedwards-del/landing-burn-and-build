@@ -43,7 +43,7 @@ export const PDF_FRAME = Object.freeze({
 
 export const PDF_FRAME_COLORS = Object.freeze({
   body: '#111111',
-  muted: '#444444',
+  muted: '#666666',
   gold: '#FFCC00',
   accentBlue: '#2F6FA8',
 });
