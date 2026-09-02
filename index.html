@@ -170,59 +170,58 @@
       color: var(--yellow);
     }
 
-    .search-faq { padding: 0 40px; background: var(--black); }
-    .search-faq-inner { max-width: 720px; margin: 0 auto; }
-
-    .wondering-list {
-      display: flex;
-      flex-direction: column;
+    .story-flow { padding: 0 40px; background: var(--black); }
+    .story-flow-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 0 var(--divider-gap);
+      text-align: center;
     }
 
-    .wondering-item {
-      border: none;
-      background: transparent;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 28px 0;
-    }
-
-    .wondering-item:first-child {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .wondering-question {
-      list-style: none;
-      display: block;
-      cursor: pointer;
+    .story-flow-statement {
+      margin: 0;
       font-family: 'Barlow', sans-serif;
       font-weight: 600;
-      font-size: clamp(1.05rem, 2.2vw, 1.2rem);
-      line-height: 1.45;
-      letter-spacing: 0.01em;
-      color: #fff;
-      padding: 0;
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      line-height: 1.55;
+      color: var(--gray-light);
     }
 
-    .wondering-question::-webkit-details-marker { display: none; }
+    .story-flow-statement + .story-flow-statement {
+      margin-top: 16px;
+    }
 
-    .wondering-answer {
-      padding: 18px 0 4px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.97rem;
-      line-height: 1.7;
+    .story-flow-arrow {
+      margin: 40px 0;
+      font-size: 1.15rem;
+      line-height: 1;
       color: var(--text-dim);
     }
 
-    .wondering-answer p {
+    .story-flow-step {
       margin: 0;
     }
 
-    .wondering-answer p + p {
-      margin-top: 1em;
+    .story-flow-step + .story-flow-arrow {
+      margin-top: 0;
     }
 
-    .wondering-answer strong {
+    .story-flow-label {
+      margin: 0 0 14px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    .story-flow-text {
+      margin: 0;
+      font-family: 'Barlow', sans-serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+      line-height: 1.55;
       color: var(--gray-light);
-      font-weight: 600;
     }
 
     #questions,
@@ -393,7 +392,7 @@
     }
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 0; }
-      .filter, .search-faq, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
+      .filter, .story-flow, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
@@ -440,71 +439,37 @@
 
   <div class="divider"></div>
 
-  <section class="search-faq" id="questions">
-    <div class="search-faq-inner">
-      <div class="section-head">
-        <p class="section-label">You might be wondering…</p>
+  <section class="story-flow" id="questions">
+    <div class="story-flow-inner">
+      <p class="story-flow-statement"><strong>If you&rsquo;re happy with your progress, you don&rsquo;t need Burn &amp; Build.</strong></p>
+      <p class="story-flow-statement"><strong>But if you&rsquo;re not happy with your progress, are you willing to try something different?</strong></p>
+
+      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+
+      <div class="story-flow-step">
+        <p class="story-flow-label">The Problem</p>
+        <p class="story-flow-text">You&rsquo;ve tried losing weight before, but you never ended up looking the way you wanted.</p>
       </div>
-      <div class="wondering-list" id="wondering-list">
-        <details class="wondering-item" open>
-          <summary class="wondering-question">Why aren't my workouts working?</summary>
-          <div class="wondering-answer">
-            <p>You train hard. You eat clean. You're paying a coach every month — and you're still not recomping—exchanging fat for muscle.</p>
-            <p><strong>You may not be eating enough.</strong></p>
-            <p>And I don't mean junk calories. I mean the good, clean, muscle-building, fat-burning foods.</p>
-            <p>Put hunger aside for a minute. Your body still needs enough food to support what you're asking it to do.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">How do I lose fat without losing muscle?</summary>
-          <div class="wondering-answer">
-            <p>You can't starve fat off and expect muscle to stay. You have to feed your lean body weight — enough protein to protect your metabolism, enough complex carbohydrates so muscle isn't burned for energy.</p>
-            <p>A typical low-cal diet? You might lose weight — but as much as 75% of that can be muscle.</p>
-            <p>The only way to lose fat and keep muscle is the right amount of protein and carbs, with fat, sugar, and alcohol kept as low as possible.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">Can I build muscle and lose fat at the same time?</summary>
-          <div class="wondering-answer">
-            <p>Yes — but only if your diet is set up for your LBM, your job, your lifestyle, and what you do in the gym.</p>
-            <p>Random eating gets random results. Specific eating gets specific results.</p>
-            <p>A perfect diet builds muscle and burns fat at the same time. What's perfect? The right food, at the right time, in the right amount.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">How much should I eat?</summary>
-          <div class="wondering-answer">
-            <p>The question isn't really what should you eat — it's how much of what.</p>
-            <p>You need enough protein to repair muscle. Enough carbs so muscle has energy to burn — so it doesn't burn itself. Muscle can easily be broken down and converted to blood sugar.</p>
-            <p>That's why low-cal diets cause massive muscle loss. And that's why everyone's talking about eating massive amounts of protein — it's not wrong, but protein is a lot more expensive than bread or rice as energy.</p>
-            <p>How much? That depends on your LBM, your job, and what you do in the gym — not a one-size template.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">Do I need all this protein?</summary>
-          <div class="wondering-answer">
-            <p>Enough protein to repair and protect lean mass — spread through the day. That's the starting point.</p>
-            <p>The trend right now is massive protein to build muscle and prevent loss. Not wrong — but what does the body do with the excess?</p>
-            <p>What isn't used for lean mass goes to fat. That's part of why getting to a low body fat % can be so hard.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">Should I count calories?</summary>
-          <div class="wondering-answer">
-            <p>Do you even know what a calorie is? It's the energy required to raise a gram of water one degree. Counting calories is backwards from how diets should be built.</p>
-            <p>You start with body comp — your muscle, your LBM — that sets protein. Protein you don't use for repair gets stored as fat.</p>
-            <p>Then you look at your job. A toll taker doesn't burn what a construction worker burns. Then your workouts — intensity, heart rate, all of it.</p>
-            <p>You can figure out calories from all that. But you don't need to count them — you've already got your protein and complex carbs. That's your prescription.</p>
-          </div>
-        </details>
-        <details class="wondering-item">
-          <summary class="wondering-question">What is recomp?</summary>
-          <div class="wondering-answer">
-            <p>Recomp is slang for recomposition — exchanging fat for muscle, or the other way around.</p>
-            <p>Add ten pounds of muscle, lose ten pounds of fat — same scale weight, completely different body.</p>
-            <p>The other path is losing fat and muscle together. You end up a smaller, softer version of your fat self. You didn't recomp — you just subtracted.</p>
-          </div>
-        </details>
+
+      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+
+      <div class="story-flow-step">
+        <p class="story-flow-label">What If?</p>
+        <p class="story-flow-text">What if the body you want is simply hidden under the body fat?</p>
+      </div>
+
+      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+
+      <div class="story-flow-step">
+        <p class="story-flow-label">The Solution</p>
+        <p class="story-flow-text">Lose the fat without destroying the muscle.</p>
+      </div>
+
+      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+
+      <div class="story-flow-step">
+        <p class="story-flow-label">The Result</p>
+        <p class="story-flow-text">Look great in the photos&mdash;and by the pool.</p>
       </div>
     </div>
   </section>
@@ -608,21 +573,6 @@
     <p class="footer-copy">&copy; 2026 Burn &amp; Build. All rights reserved.</p>
   </footer>
 
-  <script>
-    (function () {
-      var root = document.getElementById('wondering-list');
-      if (!root) return;
-      var items = root.querySelectorAll('.wondering-item');
-      items.forEach(function (item) {
-        item.addEventListener('toggle', function () {
-          if (!item.open) return;
-          items.forEach(function (other) {
-            if (other !== item) other.open = false;
-          });
-        });
-      });
-    })();
-  </script>
   <script src="js/siteNav.js"></script>
 </body>
 </html>
