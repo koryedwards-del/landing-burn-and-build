@@ -301,14 +301,24 @@ async function syncDietEmailSentFromServer() {
   return false;
 }
 
-function renderPaidEmailLead() {
+function renderPaidEmailSection() {
+  const email = ensurePlanReadyEmail();
+  const safeEmail = escapeHtml(email);
+  const mailto = isValidEmail(email) ? `mailto:${encodeURIComponent(email)}` : '#';
+
   if (!store.dietEmailAvailable) {
-    return 'Use the download below to get your Burn &amp; Build Diet PDF.';
+    return '<p class="unlock-receipt__email-lead">Use the download below to get your Burn &amp; Build Diet PDF.</p>';
   }
-  if (store.dietEmailBusy || (!store.dietEmailSent && !store.dietEmailError)) {
-    return 'Sending your Burn &amp; Build Diet to your email…';
-  }
-  return 'Your Burn &amp; Build Diet has been sent to your email.';
+
+  const lead = store.dietEmailBusy || (!store.dietEmailSent && !store.dietEmailError)
+    ? 'Sending your Burn &amp; Build Diet to:'
+    : 'Your Burn &amp; Build Diet has been sent to:';
+
+  const address = isValidEmail(email)
+    ? `<a class="unlock-receipt__email-address" href="${mailto}">${safeEmail}</a>`
+    : `<span class="unlock-receipt__email-address">${safeEmail || 'your email'}</span>`;
+
+  return `<p class="unlock-receipt__email-lead">${lead}</p>${address}`;
 }
 
 function renderPaidDirections() {
@@ -318,18 +328,19 @@ function renderPaidDirections() {
 
   const downloadBtn = `<button type="button" class="unlock-receipt__download unlock-receipt__download--secondary${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
 
-  const emailSection = store.dietEmailAvailable
-    ? `<h2 class="unlock-receipt__email-heading">CHECK YOUR EMAIL</h2>
-            <p class="unlock-receipt__email-lead">${renderPaidEmailLead()}</p>
-            <p class="unlock-receipt__hint">Check your spam folder if you don't see it.</p>`
+  const spamHint = store.dietEmailAvailable
+    ? '<p class="unlock-receipt__hint unlock-receipt__hint--spam">Check your spam folder if you don\'t see it.</p>'
     : '';
 
   return `
           <div class="unlock-receipt">
-            <p class="unlock-receipt__line">PAYMENT SUCCESSFUL</p>
-            ${emailSection}
+            <div class="unlock-receipt__title">
+              <div class="unlock-receipt__title-line1">YOUR BURN &amp; BUILD DIET</div>
+              <div class="unlock-receipt__title-line2">IS READY</div>
+            </div>
+            ${renderPaidEmailSection()}
+            ${spamHint}
             <div class="unlock-receipt__download-block">
-              <p class="unlock-receipt__download-prompt">Want a copy now?</p>
               ${downloadBtn}
             </div>
           </div>
