@@ -26,6 +26,7 @@ const EMAIL_COLORS = Object.freeze({
   card: '#FFFFFF',
   black: '#0A0A0A',
   gold: '#FDC500',
+  dietHighlight: '#FFFBE6',
   muted: '#5C5C5C',
   rule: '#E5E5E5',
 });
@@ -68,6 +69,17 @@ function pdfFileLink(href, filename) {
   const c = EMAIL_COLORS;
   const safe = escapeHtml(filename);
   return `<a class="pdf-file-link" href="${href}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:600;line-height:1.5;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${safe}</a>`;
+}
+
+function dietPdfFileLink(href, filename) {
+  const c = EMAIL_COLORS;
+  const link = pdfFileLink(href, filename);
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${c.dietHighlight};">
+    <tr>
+      <td style="width:3px;background-color:${c.gold};font-size:0;line-height:0;">&nbsp;</td>
+      <td style="padding:12px 16px;">${link}</td>
+    </tr>
+  </table>`;
 }
 
 function buildDietEmailText({
@@ -119,7 +131,7 @@ function buildDietEmailHtml({
   const c = EMAIL_COLORS;
   const contactMailto = `mailto:${PURCHASE_EMAIL_CONTACT}`;
   const site = siteOrigin();
-  const dietLink = pdfFileLink(dietDownloadUrl, dietPdfFilename);
+  const dietLink = dietPdfFileLink(dietDownloadUrl, dietPdfFilename);
   const menuPlannerLink = pdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
   const faqLink = pdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
   const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your Burn &amp; Build Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
@@ -150,10 +162,19 @@ function buildDietEmailHtml({
       <td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:${c.card};">
           <tr>
-            <td align="center" style="padding:0 32px 28px;">
+            <td align="center" style="padding:0 32px 20px;">
               <a href="${site}" style="text-decoration:none;">
                 <img src="${logoUrl}" alt="Burn &amp; Build" width="88" height="88" style="display:block;border:0;height:auto;max-width:88px;">
               </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 28px;line-height:0;font-size:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-top:1px solid ${c.gold};font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
