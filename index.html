@@ -172,56 +172,90 @@
 
     .story-flow { padding: 0 40px; background: var(--black); }
     .story-flow-inner {
-      max-width: 720px;
+      max-width: 640px;
       margin: 0 auto;
-      padding: 24px 0 var(--divider-gap);
+      padding: 8px 0 var(--divider-gap);
       text-align: center;
+    }
+
+    .story-flow-setup {
+      margin: 0 0 22px;
     }
 
     .story-flow-statement {
       margin: 0;
       font-family: 'Barlow', sans-serif;
-      font-weight: 600;
-      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-      line-height: 1.55;
+      font-weight: 500;
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      line-height: 1.42;
       color: var(--gray-light);
     }
 
-    .story-flow-statement + .story-flow-statement {
-      margin-top: 16px;
+    .story-flow-statement strong {
+      font-weight: 600;
     }
 
-    .story-flow-arrow {
-      margin: 40px 0;
-      font-size: 1.15rem;
-      line-height: 1;
-      color: var(--text-dim);
+    .story-flow-statement + .story-flow-statement {
+      margin-top: 6px;
+    }
+
+    .story-flow-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .story-flow-step {
       margin: 0;
     }
 
-    .story-flow-step + .story-flow-arrow {
-      margin-top: 0;
-    }
-
     .story-flow-label {
-      margin: 0 0 14px;
+      margin: 0 0 3px;
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: 0.78rem;
-      letter-spacing: 0.22em;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--yellow);
+      line-height: 1.1;
     }
 
     .story-flow-text {
       margin: 0;
       font-family: 'Barlow', sans-serif;
-      font-size: clamp(1.05rem, 2.2vw, 1.2rem);
-      line-height: 1.55;
+      font-size: clamp(1rem, 2vw, 1.08rem);
+      font-weight: 500;
+      line-height: 1.4;
       color: var(--gray-light);
+    }
+
+    .story-flow-step--solution .story-flow-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+    }
+
+    .story-flow-step--solution .story-flow-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.2rem, 2.6vw, 1.45rem);
+      line-height: 1.32;
+      letter-spacing: 0.02em;
+      color: var(--gray-heading);
+    }
+
+    .story-flow-step--result .story-flow-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      margin-bottom: 4px;
+    }
+
+    .story-flow-step--result .story-flow-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.4rem, 3.4vw, 1.85rem);
+      line-height: 1.22;
+      letter-spacing: 0.02em;
+      color: var(--yellow);
     }
 
     #questions,
@@ -393,6 +427,18 @@
     @media (max-width: 600px) {
       .hero { padding: 100px 20px 0; }
       .filter, .story-flow, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
+      .story-flow-setup {
+        margin-bottom: 18px;
+      }
+      .story-flow-body {
+        gap: 14px;
+      }
+      .story-flow-step--solution .story-flow-text {
+        font-size: 1.18rem;
+      }
+      .story-flow-step--result .story-flow-text {
+        font-size: 1.32rem;
+      }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
@@ -430,46 +476,33 @@
 
   <div class="divider"></div>
 
-  <section class="filter">
-    <div class="filter-inner">
-      <p>If you're happy with your progress, you don't need Burn &amp; Build.</p>
-      <p class="filter-hook">But if you think you're missing something like…</p>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
   <section class="story-flow" id="questions">
     <div class="story-flow-inner">
-      <p class="story-flow-statement"><strong>If you&rsquo;re happy with your progress, you don&rsquo;t need Burn &amp; Build.</strong></p>
-      <p class="story-flow-statement"><strong>But if you&rsquo;re not happy with your progress, are you willing to try something different?</strong></p>
-
-      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
-
-      <div class="story-flow-step">
-        <p class="story-flow-label">The Problem</p>
-        <p class="story-flow-text">You&rsquo;ve tried losing weight before, but you never ended up looking the way you wanted.</p>
+      <div class="story-flow-setup">
+        <p class="story-flow-statement"><strong>If you&rsquo;re happy with your progress, you don&rsquo;t need Burn &amp; Build.</strong></p>
+        <p class="story-flow-statement"><strong>But if you&rsquo;re not happy with your progress, are you willing to try something different?</strong></p>
       </div>
 
-      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+      <div class="story-flow-body">
+        <div class="story-flow-step">
+          <p class="story-flow-label">The Problem</p>
+          <p class="story-flow-text">You&rsquo;ve tried losing weight before, but you never ended up looking the way you wanted.</p>
+        </div>
 
-      <div class="story-flow-step">
-        <p class="story-flow-label">What If?</p>
-        <p class="story-flow-text">What if the body you want is simply hidden under the body fat?</p>
-      </div>
+        <div class="story-flow-step">
+          <p class="story-flow-label">What If?</p>
+          <p class="story-flow-text">What if the body you want is simply hidden under the body fat?</p>
+        </div>
 
-      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
+        <div class="story-flow-step story-flow-step--solution">
+          <p class="story-flow-label">The Solution</p>
+          <p class="story-flow-text">Lose the fat without destroying the muscle.</p>
+        </div>
 
-      <div class="story-flow-step">
-        <p class="story-flow-label">The Solution</p>
-        <p class="story-flow-text">Lose the fat without destroying the muscle.</p>
-      </div>
-
-      <p class="story-flow-arrow" aria-hidden="true">&darr;</p>
-
-      <div class="story-flow-step">
-        <p class="story-flow-label">The Result</p>
-        <p class="story-flow-text">Look great in the photos&mdash;and by the pool.</p>
+        <div class="story-flow-step story-flow-step--result">
+          <p class="story-flow-label">The Result</p>
+          <p class="story-flow-text">Look great in the photos&mdash;and by the pool.</p>
+        </div>
       </div>
     </div>
   </section>
