@@ -176,34 +176,26 @@
       margin: 0;
       padding: 8px 0 var(--divider-gap) 20px;
       text-align: left;
-      border-left: 1px solid rgba(255, 204, 0, 0.22);
+      border-left: 1px solid var(--gray-heading);
     }
 
     .story-flow-setup {
-      margin: 0 0 22px;
+      margin: 0 0 24px;
     }
 
-    .story-flow-statement {
+    .story-flow-opener {
       margin: 0;
       font-family: 'Barlow', sans-serif;
-      font-weight: 500;
-      font-size: clamp(1rem, 2vw, 1.1rem);
-      line-height: 1.42;
-      color: var(--gray-light);
-    }
-
-    .story-flow-statement strong {
-      font-weight: 600;
-    }
-
-    .story-flow-statement + .story-flow-statement {
-      margin-top: 6px;
+      font-weight: 400;
+      font-size: clamp(1rem, 2vw, 1.0625rem);
+      line-height: 1.6;
+      color: #fff;
     }
 
     .story-flow-body {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
     .story-flow-step {
@@ -211,52 +203,23 @@
     }
 
     .story-flow-label {
-      margin: 0 0 3px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
+      margin: 0 0 4px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 500;
+      font-size: 0.6875rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--yellow);
-      line-height: 1.1;
+      color: var(--gray-heading);
+      line-height: 1.2;
     }
 
     .story-flow-text {
       margin: 0;
       font-family: 'Barlow', sans-serif;
-      font-size: clamp(1rem, 2vw, 1.08rem);
-      font-weight: 500;
-      line-height: 1.4;
-      color: var(--gray-light);
-    }
-
-    .story-flow-step--solution .story-flow-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
-    }
-
-    .story-flow-step--solution .story-flow-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: clamp(1.2rem, 2.6vw, 1.45rem);
-      line-height: 1.32;
-      letter-spacing: 0.02em;
-      color: var(--gray-heading);
-    }
-
-    .story-flow-step--result .story-flow-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
-      margin-bottom: 4px;
-    }
-
-    .story-flow-step--result .story-flow-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: clamp(1.4rem, 3.4vw, 1.85rem);
-      line-height: 1.22;
-      letter-spacing: 0.02em;
-      color: var(--yellow);
+      font-weight: 400;
+      font-size: clamp(1rem, 2vw, 1.0625rem);
+      line-height: 1.6;
+      color: #fff;
     }
 
     #questions,
@@ -429,19 +392,13 @@
       .hero { padding: 100px 20px 0; }
       .filter, .story-flow, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
       .story-flow-setup {
-        margin-bottom: 18px;
+        margin-bottom: 20px;
       }
       .story-flow-inner {
         padding-left: 16px;
       }
       .story-flow-body {
-        gap: 14px;
-      }
-      .story-flow-step--solution .story-flow-text {
-        font-size: 1.18rem;
-      }
-      .story-flow-step--result .story-flow-text {
-        font-size: 1.32rem;
+        gap: 18px;
       }
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
@@ -483,8 +440,7 @@
   <section class="story-flow" id="questions">
     <div class="story-flow-inner">
       <div class="story-flow-setup">
-        <p class="story-flow-statement"><strong>If you&rsquo;re happy with your progress, you don&rsquo;t need Burn &amp; Build.</strong></p>
-        <p class="story-flow-statement"><strong>But if you&rsquo;re not happy with your progress, are you willing to try something different?</strong></p>
+        <p class="story-flow-opener">If you&rsquo;re happy with your progress, you don&rsquo;t need Burn &amp; Build. But if you&rsquo;re not happy with your progress, are you willing to try something different?</p>
       </div>
 
       <div class="story-flow-body">
@@ -498,12 +454,12 @@
           <p class="story-flow-text">What if the body you want is simply hidden under the body fat?</p>
         </div>
 
-        <div class="story-flow-step story-flow-step--solution">
+        <div class="story-flow-step">
           <p class="story-flow-label">The Solution</p>
           <p class="story-flow-text">Lose the fat without destroying the muscle.</p>
         </div>
 
-        <div class="story-flow-step story-flow-step--result">
+        <div class="story-flow-step">
           <p class="story-flow-label">The Result</p>
           <p class="story-flow-text">Look great in the photos&mdash;and by the pool.</p>
         </div>
