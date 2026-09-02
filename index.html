@@ -173,9 +173,10 @@
     .story-flow { padding: 0 40px; background: var(--black); }
     .story-flow-inner {
       max-width: 640px;
-      margin: 0 auto;
-      padding: 8px 0 var(--divider-gap);
-      text-align: center;
+      margin: 0;
+      padding: 8px 0 var(--divider-gap) 20px;
+      text-align: left;
+      border-left: 1px solid rgba(255, 204, 0, 0.22);
     }
 
     .story-flow-setup {
@@ -429,6 +430,9 @@
       .filter, .story-flow, .sample-split-wrap, .who, .pricing { padding-left: 20px; padding-right: 20px; }
       .story-flow-setup {
         margin-bottom: 18px;
+      }
+      .story-flow-inner {
+        padding-left: 16px;
       }
       .story-flow-body {
         gap: 14px;
