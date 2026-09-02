@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/questionnaire.css?v=124" />
+  <link rel="stylesheet" href="css/questionnaire.css?v=125" />
 </head>
 <body class="q-app--workroom">
   <div class="q-app q-app--workroom">
@@ -305,10 +305,43 @@
                       <span class="intake-acc__num" aria-hidden="true"></span>
                       <p class="intake-acc__qa-question" data-acc-question></p>
                       <div class="intake-acc__qa-answer">
-                        <label class="intake-choice__field">
-                          <span class="sr-only">Birthdate</span>
-                          <input class="intake-input" name="birthDate" type="date" required />
-                        </label>
+                        <div class="intake-birthdate" data-birthdate-input>
+                          <div class="intake-birthdate__fields" role="group" aria-label="Birthdate">
+                            <input
+                              class="intake-input intake-birthdate__part"
+                              data-birthdate-part="month"
+                              type="text"
+                              inputmode="numeric"
+                              autocomplete="bday-month"
+                              maxlength="2"
+                              placeholder="MM"
+                              aria-label="Month"
+                            />
+                            <span class="intake-birthdate__sep" aria-hidden="true">/</span>
+                            <input
+                              class="intake-input intake-birthdate__part"
+                              data-birthdate-part="day"
+                              type="text"
+                              inputmode="numeric"
+                              autocomplete="bday-day"
+                              maxlength="2"
+                              placeholder="DD"
+                              aria-label="Day"
+                            />
+                            <span class="intake-birthdate__sep" aria-hidden="true">/</span>
+                            <input
+                              class="intake-input intake-birthdate__part intake-birthdate__part--year"
+                              data-birthdate-part="year"
+                              type="text"
+                              inputmode="numeric"
+                              autocomplete="bday-year"
+                              maxlength="4"
+                              placeholder="YYYY"
+                              aria-label="Year"
+                            />
+                          </div>
+                          <input type="hidden" name="birthDate" required />
+                        </div>
                       </div>
                     </div>
                     <p class="intake-acc__hint" data-acc-hint></p>
@@ -583,6 +616,6 @@
     </footer>
   </div>
 
-  <script type="module" src="js/questionnaire.js?v=184"></script>
+  <script type="module" src="js/questionnaire.js?v=185"></script>
 </body>
 </html>

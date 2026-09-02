@@ -1317,6 +1317,33 @@ body.q-keyboard-open.q-app--workroom .q-header {
   max-width: 11.5rem;
 }
 
+.intake-birthdate__fields {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.intake-birthdate__part {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  text-align: center;
+}
+
+.intake-birthdate__part--year {
+  width: 4.25rem;
+  min-width: 4.25rem;
+}
+
+.intake-birthdate__sep {
+  flex: 0 0 auto;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--muted);
+  user-select: none;
+}
+
 .intake-waiver--qa-mobile .intake-waiver__qa-row {
   display: flex;
   align-items: center;

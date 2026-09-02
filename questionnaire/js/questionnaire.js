@@ -13,6 +13,7 @@ import {
 } from '../../js/answersConfirmationPrintout.js';
 import { FAT_SOURCE_OPTIONS, formatFatSourceLabel } from '../../js/leanBodyAnalysisPrintout.js';
 import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
+import { bindBirthDateInput, setBirthDateInputValue } from './birthDateInput.js';
 import { validateBirthDate } from '../../js/athleteAgeData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
 import { persistAppEmail } from '../../js/programApi.js';
@@ -146,7 +147,7 @@ const BODY_FIELD_META = {
   },
   totalWeight: {
     question: INTAKE_FIELD_QUESTIONS.totalWeight,
-    guide: 'Enter your current body weight in pounds.',
+    guide: 'Enter your current body weight.',
   },
   fatPercent: {
     question: INTAKE_FIELD_QUESTIONS.fatPercent,
@@ -542,6 +543,7 @@ function writeFormValues(values) {
   setFormControlValue('heightInchesPart', values.heightInchesPart);
   setFormControlValue('sex', values.sex);
   setFormControlValue('birthDate', values.birthDate || '');
+  setBirthDateInputValue(form.querySelector('[data-birthdate-input]'), values.birthDate || '');
   setFormControlValue('totalWeight', values.totalWeight);
   setFormControlValue('fatSource', values.fatSource);
   setFormControlValue('fatSourceOther', values.fatSourceOther);
@@ -1403,6 +1405,12 @@ function bindExerciseAccordion() {
 
   initExerciseFieldCopy();
 
+  const birthDateRoot = exerciseAccordion.querySelector('[data-birthdate-input]');
+  if (birthDateRoot) {
+    bindBirthDateInput(birthDateRoot);
+    setBirthDateInputValue(birthDateRoot, readForm().birthDate || '');
+  }
+
   exerciseAccordion.addEventListener('click', (event) => {
     const trigger = event.target.closest('.intake-acc__trigger');
     if (!trigger) return;
@@ -1764,10 +1772,6 @@ function syncLocalTodayDates() {
 
 function initDefaults() {
   syncLocalTodayDates();
-  const birthDateInput = form.elements.birthDate;
-  if (birthDateInput) {
-    birthDateInput.max = localDateKey(new Date());
-  }
 }
 
 function bindExerciseHoursInfo() {
