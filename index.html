@@ -167,10 +167,15 @@
       font-weight: 500;
       font-size: clamp(1.12rem, 2.35vw, 1.32rem);
       line-height: 1.3;
+    }
+    .filter-line-one {
+      display: block;
       color: var(--gray-heading);
     }
-    .filter-line-accent {
+    .filter-line-two {
+      display: block;
       color: var(--yellow);
+      font-size: 1.125em;
     }
     .filter p + p.filter-hook {
       margin-top: 12px;
@@ -449,7 +454,10 @@
 
   <section class="filter">
     <div class="filter-inner">
-      <p><span class="filter-line-accent">If you're happy with your progress,</span><br />you don't need Burn &amp; Build.</p>
+      <p>
+        <span class="filter-line-one">If you're happy with your progress,</span>
+        <span class="filter-line-two">you don't need Burn &amp; Build.</span>
+      </p>
     </div>
   </section>
 
