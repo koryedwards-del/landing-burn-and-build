@@ -234,7 +234,10 @@
       line-height: 1.2;
     }
 
-    #questions,
+    #questions {
+      scroll-margin-top: calc(var(--nav-height) - var(--scroll-anchor-offset));
+    }
+
     #sample,
     #who,
     #pricing {
