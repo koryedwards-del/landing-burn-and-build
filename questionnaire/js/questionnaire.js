@@ -1931,12 +1931,25 @@ function showBootError(message) {
   main.prepend(note);
 }
 
+function isFreshQuestionnaireEntry() {
+  try {
+    return new URLSearchParams(window.location.search).has('create');
+  } catch {
+    return false;
+  }
+}
+
 function boot() {
   try {
     syncIntakeQuestionNumbers();
     bindEvents();
     initQuestionnaireMobileNav({ stepNavEl: stepNav, formEl: form });
     initDefaults();
+    if (isFreshQuestionnaireEntry()) {
+      clearQuestionnaireDraft();
+      showIntroGate();
+      return;
+    }
     if (!tryRestoreQuestionnaireDraft()) {
       showIntroGate();
     }
