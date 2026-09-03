@@ -234,7 +234,10 @@
       line-height: 1.2;
     }
 
-    #questions,
+    #questions {
+      scroll-margin-top: var(--nav-height);
+    }
+
     #sample {
       scroll-margin-top: calc(var(--nav-height) - var(--scroll-anchor-offset));
     }
@@ -453,9 +456,9 @@
     <h1 class="hero-headline"><span class="hero-line-accent">Lose the Fat.</span><br />Keep the Muscle.</h1>
   </section>
 
-  <div class="divider"></div>
+  <div class="divider" id="questions"></div>
 
-  <section class="filter" id="questions">
+  <section class="filter">
     <div class="filter-inner">
       <p>
         <span class="filter-line-one">If you're happy with your progress,</span>
