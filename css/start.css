@@ -283,7 +283,7 @@
 }
 
 .checkout-site-footer {
-  max-width: 480px;
+  max-width: var(--layout-max);
   margin: 0 auto;
   padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
   text-align: center;
