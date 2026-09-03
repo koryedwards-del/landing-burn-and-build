@@ -789,7 +789,6 @@ function renderInfoAccordionState() {
 function updateStepNav() {
   if (!stepNav) return;
   stepNav.hidden = false;
-  if (stepBackBtn) stepBackBtn.disabled = step === 0;
   if (stepNextBtn) {
     stepNextBtn.textContent = step === panels.length - 1 ? 'Build my program' : 'Next';
     stepNextBtn.disabled = step === panels.length - 1 && programBuilt;
@@ -1863,7 +1862,11 @@ function bindEvents() {
   });
 
   stepBackBtn?.addEventListener('click', () => {
-    if (step > 0) showStep(step - 1);
+    if (step > 0) {
+      showStep(step - 1);
+      return;
+    }
+    showIntroGate();
   });
 
   stepNextBtn?.addEventListener('click', () => {
