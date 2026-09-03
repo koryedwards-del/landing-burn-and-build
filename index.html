@@ -174,9 +174,14 @@
     .story-flow-inner {
       max-width: 640px;
       margin: 0;
-      padding: 8px 0 var(--divider-gap) 20px;
+      padding: 8px 0;
       text-align: left;
+    }
+
+    .story-flow-content {
+      padding-left: 20px;
       border-left: 1px solid var(--gray-heading);
+      padding-bottom: 24px;
     }
 
     .story-flow-setup {
@@ -386,6 +391,9 @@
         margin-bottom: 24px;
       }
       .story-flow-inner {
+        padding-left: 0;
+      }
+      .story-flow-content {
         padding-left: 16px;
       }
       .story-flow-body {
@@ -438,6 +446,7 @@
 
   <section class="story-flow" id="questions">
     <div class="story-flow-inner">
+      <div class="story-flow-content">
       <div class="story-flow-setup">
         <p class="story-flow-text">But if you&rsquo;re not happy with your progress, are you willing to try something different?</p>
       </div>
@@ -462,6 +471,7 @@
           <p class="story-flow-label">The Result</p>
           <p class="story-flow-text">Look great in the photos&mdash;and by the pool.</p>
         </div>
+      </div>
       </div>
     </div>
   </section>
