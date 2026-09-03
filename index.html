@@ -152,12 +152,21 @@
       text-align: center;
     }
 
-    .filter { padding: 0 40px; background: var(--black); text-align: center; }
+    .filter {
+      padding: 20px 40px;
+      background: var(--black);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .filter-inner { max-width: 720px; margin: 0 auto; }
     .filter p {
+      margin: 0;
       font-family: 'Barlow', sans-serif;
-      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-      line-height: 1.6;
+      font-weight: 500;
+      font-size: clamp(1.12rem, 2.35vw, 1.32rem);
+      line-height: 1.3;
       color: var(--gray-light);
     }
     .filter p + p.filter-hook {
