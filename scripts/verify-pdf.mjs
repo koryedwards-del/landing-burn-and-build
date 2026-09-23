@@ -61,7 +61,7 @@ if (caloriesTable?.columns?.[0]?.label !== 'PROTEIN') {
 if (caloriesTable?.columns?.[2]?.label !== 'FAT') {
   throw new Error(`calories table fat header: got ${caloriesTable?.columns?.[2]?.label}`);
 }
-if (samplePayload.foodPlan.caloriesTableSummary?.heading !== 'Why Balance Matters') {
+if (samplePayload.foodPlan.caloriesTableSummary?.heading !== 'STRENGTH & ENERGY') {
   throw new Error(`calories table summary heading: got ${samplePayload.foodPlan.caloriesTableSummary?.heading}`);
 }
 if (caloriesTable?.rows?.[0]?.label !== 'TOO MUCH') {

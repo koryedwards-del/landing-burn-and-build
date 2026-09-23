@@ -57,9 +57,9 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
 
 /** Food Plan page — summary above calories table (user-authored; do not reauthor). */
 export const SAMPLE_DIET_CALORIES_TABLE_SUMMARY = Object.freeze({
-  heading: 'Why Balance Matters',
+  heading: 'STRENGTH & ENERGY',
   body:
-    'Protein helps protect lean body mass, while carbohydrates and fat provide energy. The goal is to provide enough of each to support strength and activity while allowing stored body fat to be used for energy.',
+    'Protein helps protect lean body mass. Carbohydrates and fat provide energy for activity. Your Burn & Build food plan is designed to support strength and energy while reducing body fat.',
 });
 
 /** Food Plan page — calories table (user-authored; do not reauthor). */
