@@ -1035,8 +1035,8 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
     doc.info.Subject = `B&B Sample Diet ${buildLabel}`;
   }
 
+  drawLeanBodyAnalysisPage(doc, payload);
   drawFoodPlanPage(doc, payload);
-  drawSampleDayMenuPage(doc, payload);
   drawServingsPage(doc, payload);
 
   const foodListFrame = {
@@ -1045,7 +1045,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel } = 
   };
   drawStaplesFoodListPage(doc, payload, foodListFrame);
   drawVegFruitFoodListPage(doc, payload, foodListFrame);
-  drawLeanBodyAnalysisPage(doc, payload);
+  drawSampleDayMenuPage(doc, payload);
   drawAnswersConfirmationPage(doc, payload);
 
   stamp1982Footers(doc, payload.header);
