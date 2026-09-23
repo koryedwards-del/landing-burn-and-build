@@ -55,12 +55,19 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
   macroIntro: 'How much food you need each day depends on how much LBM you have. Also, it depends on your activity level and the type and amount of exercise you participate in. Based on the information you provided, the following table gives you the number of calories and the amount of protein, carbohydrates and fat you need per day to maintain your fat or to reduce body fat. Also listed is what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.',
 });
 
+/** Food Plan page — summary above calories table (user-authored; do not reauthor). */
+export const SAMPLE_DIET_CALORIES_TABLE_SUMMARY = Object.freeze({
+  heading: 'Why Balance Matters',
+  body:
+    'Protein helps protect lean body mass, while carbohydrates and fat provide energy. The goal is to provide enough of each to support strength and activity while allowing stored body fat to be used for energy.',
+});
+
 /** Food Plan page — calories table (user-authored; do not reauthor). */
 export const SAMPLE_DIET_CALORIES_TABLE = Object.freeze({
   columns: Object.freeze([
-    { key: 'fat', label: 'FAT' },
-    { key: 'carbohydrates', label: 'CARBOHYDRATES' },
     { key: 'protein', label: 'PROTEIN' },
+    { key: 'carbohydrates', label: 'CARBOHYDRATES' },
+    { key: 'fat', label: 'FAT' },
   ]),
   rows: Object.freeze([
     Object.freeze({

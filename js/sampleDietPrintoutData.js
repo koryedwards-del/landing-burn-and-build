@@ -23,8 +23,9 @@ import {
 } from './sampleDietAceData.js';
 import {
   SAMPLE_DIET_CALORIES_TABLE,
-  SAMPLE_DIET_FOOD_PLAN,
+  SAMPLE_DIET_CALORIES_TABLE_SUMMARY,
   SAMPLE_DIET_FOOD_LIST_INTRO,
+  SAMPLE_DIET_FOOD_PLAN,
   SAMPLE_DIET_HEADER,
   SAMPLE_DIET_LBA,
   SAMPLE_DIET_LBA_SECTIONS,
@@ -176,8 +177,11 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       lead: SAMPLE_DIET_FOOD_PLAN.lead,
       exerciseParagraph,
       weeklyLine,
-      macroIntro: SAMPLE_DIET_FOOD_PLAN.macroIntro,
       goalTable: buildGoalTable(today, projection),
+      caloriesTableSummary: {
+        heading: SAMPLE_DIET_CALORIES_TABLE_SUMMARY.heading,
+        body: SAMPLE_DIET_CALORIES_TABLE_SUMMARY.body,
+      },
       caloriesTable: {
         columns: SAMPLE_DIET_CALORIES_TABLE.columns.map((col) => ({ ...col })),
         rows: SAMPLE_DIET_CALORIES_TABLE.rows.map((row) => ({ ...row })),

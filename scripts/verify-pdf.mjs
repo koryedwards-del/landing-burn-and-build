@@ -55,8 +55,14 @@ if (samplePayload.preparedDate !== '2024-01-15') {
   throw new Error(`preparedDate: got ${samplePayload.preparedDate}`);
 }
 const caloriesTable = samplePayload.foodPlan.caloriesTable;
-if (caloriesTable?.columns?.[0]?.label !== 'FAT') {
-  throw new Error(`calories table fat header: got ${caloriesTable?.columns?.[0]?.label}`);
+if (caloriesTable?.columns?.[0]?.label !== 'PROTEIN') {
+  throw new Error(`calories table protein header: got ${caloriesTable?.columns?.[0]?.label}`);
+}
+if (caloriesTable?.columns?.[2]?.label !== 'FAT') {
+  throw new Error(`calories table fat header: got ${caloriesTable?.columns?.[2]?.label}`);
+}
+if (samplePayload.foodPlan.caloriesTableSummary?.heading !== 'Why Balance Matters') {
+  throw new Error(`calories table summary heading: got ${samplePayload.foodPlan.caloriesTableSummary?.heading}`);
 }
 if (caloriesTable?.rows?.[0]?.label !== 'TOO MUCH') {
   throw new Error(`calories table row: got ${caloriesTable?.rows?.[0]?.label}`);

@@ -382,7 +382,25 @@ export function drawModernFoodPlanPage(doc, payload) {
   }
 
   if (fp.weeklyLine) y = drawBodyParagraph(doc, page.x, y, page.width, fp.weeklyLine);
-  if (fp.macroIntro) y = drawBodyParagraph(doc, page.x, y, page.width, fp.macroIntro);
+
+  const caloriesSummary = fp.caloriesTableSummary;
+  if (caloriesSummary?.heading || caloriesSummary?.body) {
+    y += LAYOUT.sectionGap;
+    if (caloriesSummary.heading) {
+      doc
+        .font(MODERN_FOOD_PLAN_FONTS.bold)
+        .fontSize(10)
+        .fillColor(MODERN_FOOD_PLAN_COLORS.body)
+        .text(String(caloriesSummary.heading), page.x, y, {
+          width: page.width,
+          lineGap: 0,
+        });
+      y = doc.y + LAYOUT.paragraphGap;
+    }
+    if (caloriesSummary.body) {
+      y = drawBodyParagraph(doc, page.x, y, page.width, caloriesSummary.body);
+    }
+  }
 
   if (fp.caloriesTable?.rows?.length) {
     drawModernCaloriesTable(doc, page.x, y + LAYOUT.sectionGap, page.width, fp.caloriesTable);
