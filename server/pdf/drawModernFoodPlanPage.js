@@ -362,7 +362,7 @@ function drawModernCaloriesTable(doc, x, y, width, caloriesTable) {
 }
 
 export function drawModernFoodPlanPage(doc, payload) {
-  const page = begin1982Page(doc, payload, 'Food Plan');
+  const page = begin1982Page(doc, payload, 'IN 8 WEEKS');
   const fp = payload.foodPlan || {};
   let y = page.y;
 
