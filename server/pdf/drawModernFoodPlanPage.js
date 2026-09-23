@@ -240,57 +240,41 @@ function drawModernGoalDashboard(doc, x, y, width, goalTable, fatLostLbs) {
   return y + bodyH;
 }
 
-const MACRO_VALUE_KEYS = Object.freeze([
-  'proteinG', 'proteinCal', 'carbsG', 'carbsCal', 'fatG', 'fatCal', 'totalCal',
-]);
+const CALORIES_TABLE_LABEL_WIDTH = 0.22;
 
-function macroColDefs() {
-  const labelW = 0.33;
-  const groupW = (1 - labelW) / 4;
-  const pairW = groupW / 2;
+function caloriesTableColDefs(columns = []) {
+  const dataW = (1 - CALORIES_TABLE_LABEL_WIDTH) / Math.max(columns.length, 1);
   return [
-    { key: 'label', width: labelW, align: 'left', singleLine: true },
-    { key: 'proteinG', width: pairW, align: 'right' },
-    { key: 'proteinCal', width: pairW, align: 'right' },
-    { key: 'carbsG', width: pairW, align: 'right' },
-    { key: 'carbsCal', width: pairW, align: 'right' },
-    { key: 'fatG', width: pairW, align: 'right' },
-    { key: 'fatCal', width: pairW, align: 'right' },
-    { key: 'totalCal', width: groupW, align: 'right' },
+    { key: 'label', width: CALORIES_TABLE_LABEL_WIDTH, align: 'left' },
+    ...columns.map((col) => ({ key: col.key, width: dataW, align: 'center' })),
   ];
 }
 
-function macroGroupHeaders() {
-  return [
-    { label: 'PROTEIN', keys: ['proteinG', 'proteinCal'] },
-    { label: 'CARBS', keys: ['carbsG', 'carbsCal'] },
-    { label: 'FATS', keys: ['fatG', 'fatCal'] },
-    { label: 'TOTAL', keys: ['totalCal'] },
-  ];
+function measureCaloriesTableRow(doc, row, colDefs, colWidths, { isHeader, rowPad, fonts }) {
+  let maxH = rowPad * 2;
+  colDefs.forEach((col, index) => {
+    const innerW = colWidths[index] - LAYOUT.cellPad * 2;
+    doc.font(isHeader || row._bold ? fonts.bold : fonts.regular).fontSize(
+      isHeader ? LAYOUT.tableHeadSize : LAYOUT.tableBodySize,
+    );
+    const text = String(row[col.key] ?? '');
+    maxH = Math.max(
+      maxH,
+      doc.heightOfString(text, { width: innerW, lineGap: 0 }) + rowPad * 2,
+    );
+  });
+  return maxH;
 }
 
-function macroSubHeaderRow() {
-  return {
-    label: '',
-    proteinG: 'grams',
-    proteinCal: 'calories',
-    carbsG: 'grams',
-    carbsCal: 'calories',
-    fatG: 'grams',
-    fatCal: 'calories',
-    totalCal: 'calories',
-  };
-}
-
-function isYourPlanRow(row) {
-  return String(row?.label || '').startsWith('Reduce current fat %');
-}
-
-function drawModernMacroTable(doc, x, y, width, macroRows = []) {
+function drawModernCaloriesTable(doc, x, y, width, caloriesTable) {
   const fonts = MODERN_FOOD_PLAN_FONTS;
   const colors = MODERN_FOOD_PLAN_COLORS;
+  const columns = caloriesTable?.columns || [];
+  const bodyRows = caloriesTable?.rows || [];
+  if (!columns.length || !bodyRows.length) return y;
+
   const maxY = modernContentBox(doc).bottom - LAYOUT.footerReserve;
-  const colDefs = macroColDefs();
+  const colDefs = caloriesTableColDefs(columns);
   const colWidths = colDefs.map((col) => col.width * width);
   const colXs = [];
   let cx = x;
@@ -299,120 +283,78 @@ function drawModernMacroTable(doc, x, y, width, macroRows = []) {
     cx += w;
   }
 
-  const titleH = 18;
-  const groupH = 15;
-  const subH = 14;
-  const rowPad = 4;
-  const bodyRows = macroRows.map((row) => (
-    isYourPlanRow(row) ? { ...row, label: 'Reduce current fat % (YOUR PLAN)' } : row
-  ));
-
-  doc.font(fonts.regular).fontSize(LAYOUT.tableBodySize);
-  const bodyHeights = bodyRows.map((row) => {
-    let maxH = rowPad * 2;
-    colDefs.forEach((col, index) => {
-      const innerW = colWidths[index] - 8;
-      doc.font(isYourPlanRow(row) ? fonts.bold : fonts.regular);
-      const text = String(row[col.key] ?? '');
-      const textH = col.singleLine
-        ? doc.heightOfString(text, { lineBreak: false })
-        : doc.heightOfString(text, { width: innerW, lineGap: 0 });
-      maxH = Math.max(maxH, textH + rowPad * 2);
-    });
-    return maxH;
+  const rowPad = LAYOUT.cellPad;
+  const headerRow = {
+    label: '',
+    ...Object.fromEntries(columns.map((col) => [col.key, col.label])),
+  };
+  const headerH = measureCaloriesTableRow(doc, headerRow, colDefs, colWidths, {
+    isHeader: true,
+    rowPad,
+    fonts,
   });
-  const totalH = titleH + groupH + subH + bodyHeights.reduce((sum, h) => sum + h, 0);
+  const bodyHeights = bodyRows.map((row) => measureCaloriesTableRow(doc, row, colDefs, colWidths, {
+    isHeader: false,
+    rowPad,
+    fonts,
+  }));
+  const totalH = headerH + bodyHeights.reduce((sum, h) => sum + h, 0);
   if (y + totalH > maxY) {
     return y;
   }
 
   doc
-    .strokeColor(colors.rule)
-    .lineWidth(0.75)
+    .strokeColor(colors.gold)
+    .lineWidth(1.25)
     .roundedRect(x, y, width, totalH, 4)
     .stroke();
 
-  doc
-    .roundedRect(x, y, width, titleH, 4)
-    .fill(colors.body);
-  const requirementsTitle = 'YOUR DAILY FOOD REQUIREMENTS';
-  const requirementsTitleY = centeredBandTextY(doc, y, titleH, {
-    font: fonts.bold,
-    fontSize: LAYOUT.tableHeadSize,
-    text: requirementsTitle,
-  });
-  doc
-    .font(fonts.bold)
-    .fontSize(LAYOUT.tableHeadSize)
-    .fillColor(colors.white)
-    .text(requirementsTitle, x, requirementsTitleY, {
-      width,
-      align: 'center',
-      lineGap: 0,
-    });
-
-  let cy = y + titleH;
-  doc
-    .strokeColor(colors.rule)
-    .lineWidth(0.5)
-    .moveTo(x, cy)
-    .lineTo(x + width, cy)
-    .stroke();
-
-  doc.font(fonts.bold).fontSize(LAYOUT.tableHeadSize).fillColor(colors.body);
-  macroGroupHeaders().forEach((group) => {
-    const startIndex = colDefs.findIndex((col) => col.key === group.keys[0]);
-    const endIndex = colDefs.findIndex((col) => col.key === group.keys[group.keys.length - 1]);
-    const groupX = colXs[startIndex];
-    const groupW = colXs[endIndex] + colWidths[endIndex] - groupX;
-    doc.text(group.label, groupX, cy + 4, {
-      width: groupW,
-      align: 'center',
-      lineGap: 0,
-    });
-  });
-  cy += groupH;
-  doc.moveTo(x, cy).lineTo(x + width, cy).stroke();
-
-  const subHeader = macroSubHeaderRow();
+  let cy = y;
+  doc.rect(x + 0.5, cy, width - 1, headerH).fill(colors.goldPale);
   colDefs.forEach((col, index) => {
-    const text = String(subHeader[col.key] ?? '');
+    const text = String(headerRow[col.key] ?? '');
     if (!text) return;
     doc
       .font(fonts.bold)
-      .fontSize(7.5)
-      .fillColor(colors.muted)
-      .text(text, colXs[index] + 4, cy + 4, {
-        width: colWidths[index] - 8,
+      .fontSize(LAYOUT.tableHeadSize)
+      .fillColor(colors.body)
+      .text(text, colXs[index] + LAYOUT.cellPad, cy + rowPad, {
+        width: colWidths[index] - LAYOUT.cellPad * 2,
         align: col.align || 'left',
         lineGap: 0,
       });
   });
-  cy += subH;
-  doc.moveTo(x, cy).lineTo(x + width, cy).stroke();
+  cy += headerH;
+  doc
+    .strokeColor(colors.gold)
+    .lineWidth(0.75)
+    .moveTo(x, cy)
+    .lineTo(x + width, cy)
+    .stroke();
 
   bodyRows.forEach((row, rowIndex) => {
     const rh = bodyHeights[rowIndex];
-    if (isYourPlanRow(row)) {
-      doc.rect(x + 0.5, cy, width - 1, rh).fill(colors.gold);
-    }
     colDefs.forEach((col, index) => {
-      const bold = isYourPlanRow(row);
       const cellText = String(row[col.key] ?? '');
+      const isLabel = col.key === 'label';
       doc
-        .font(bold ? fonts.bold : fonts.regular)
+        .font(isLabel ? fonts.bold : fonts.regular)
         .fontSize(LAYOUT.tableBodySize)
         .fillColor(colors.body)
-        .text(cellText, colXs[index] + 4, cy + rowPad, {
-          width: col.singleLine ? undefined : colWidths[index] - 8,
+        .text(cellText, colXs[index] + LAYOUT.cellPad, cy + rowPad, {
+          width: colWidths[index] - LAYOUT.cellPad * 2,
           align: col.align || 'left',
           lineGap: 0,
-          lineBreak: !col.singleLine,
         });
     });
     cy += rh;
     if (rowIndex < bodyRows.length - 1) {
-      doc.strokeColor(colors.rule).moveTo(x, cy).lineTo(x + width, cy).stroke();
+      doc
+        .strokeColor(colors.gold)
+        .lineWidth(0.75)
+        .moveTo(x, cy)
+        .lineTo(x + width, cy)
+        .stroke();
     }
   });
 
@@ -442,7 +384,7 @@ export function drawModernFoodPlanPage(doc, payload) {
   if (fp.weeklyLine) y = drawBodyParagraph(doc, page.x, y, page.width, fp.weeklyLine);
   if (fp.macroIntro) y = drawBodyParagraph(doc, page.x, y, page.width, fp.macroIntro);
 
-  if (fp.macroRows?.length) {
-    drawModernMacroTable(doc, page.x, y + LAYOUT.sectionGap, page.width, fp.macroRows);
+  if (fp.caloriesTable?.rows?.length) {
+    drawModernCaloriesTable(doc, page.x, y + LAYOUT.sectionGap, page.width, fp.caloriesTable);
   }
 }

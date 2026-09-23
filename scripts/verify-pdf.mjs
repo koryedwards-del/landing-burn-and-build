@@ -54,14 +54,15 @@ if (samplePayload.clientName !== 'SAMPLE FEMALE') {
 if (samplePayload.preparedDate !== '2024-01-15') {
   throw new Error(`preparedDate: got ${samplePayload.preparedDate}`);
 }
-if (samplePayload.foodPlan.macroRows?.[3]?.label !== 'Workday (Sitting)') {
-  throw new Error(`workday label: got ${samplePayload.foodPlan.macroRows?.[3]?.label}`);
+const caloriesTable = samplePayload.foodPlan.caloriesTable;
+if (caloriesTable?.columns?.[0]?.label !== 'FAT') {
+  throw new Error(`calories table fat header: got ${caloriesTable?.columns?.[0]?.label}`);
 }
-if (samplePayload.foodPlan.macroRows?.[4]?.label !== 'Weights/Racquet Sports (3 hours)') {
-  throw new Error(`weights/racquet sports label: got ${samplePayload.foodPlan.macroRows?.[4]?.label}`);
+if (caloriesTable?.rows?.[0]?.label !== 'TOO MUCH') {
+  throw new Error(`calories table row: got ${caloriesTable?.rows?.[0]?.label}`);
 }
-if (samplePayload.foodPlan.macroRows?.[0]?.totalCal !== '2,192') {
-  throw new Error(`macro total: got ${samplePayload.foodPlan.macroRows?.[0]?.totalCal}`);
+if (caloriesTable?.rows?.[1]?.protein !== 'Lose Strength') {
+  throw new Error(`calories table protein too little: got ${caloriesTable?.rows?.[1]?.protein}`);
 }
 if (samplePayload.servings.gridRows?.[0]?.daily !== '9') {
   throw new Error(`protein servings: got ${samplePayload.servings.gridRows?.[0]?.daily}`);
