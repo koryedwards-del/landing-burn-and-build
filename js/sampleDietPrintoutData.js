@@ -24,6 +24,7 @@ import {
 import {
   SAMPLE_DIET_CALORIES_TABLE,
   SAMPLE_DIET_CALORIES_TABLE_SUMMARY,
+  sampleDietCaloriesTableSummaryHeading,
   SAMPLE_DIET_FOOD_LIST_INTRO,
   SAMPLE_DIET_FOOD_PLAN,
   SAMPLE_DIET_HEADER,
@@ -179,7 +180,9 @@ export function buildSampleDietPrintoutPayload(pkg, options = {}) {
       weeklyLine,
       goalTable: buildGoalTable(today, projection),
       caloriesTableSummary: {
-        heading: SAMPLE_DIET_CALORIES_TABLE_SUMMARY.heading,
+        heading: projection
+          ? sampleDietCaloriesTableSummaryHeading(projection.fatLostLbs)
+          : SAMPLE_DIET_CALORIES_TABLE_SUMMARY.heading,
         body: SAMPLE_DIET_CALORIES_TABLE_SUMMARY.body,
       },
       caloriesTable: {

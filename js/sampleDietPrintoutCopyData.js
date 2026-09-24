@@ -56,10 +56,16 @@ export const SAMPLE_DIET_FOOD_PLAN = Object.freeze({
 });
 
 /** Food Plan page — summary above calories table (user-authored; do not reauthor). */
+export function sampleDietCaloriesTableSummaryHeading(fatLostLbs) {
+  const n = Number(fatLostLbs);
+  const lbs = Number.isFinite(n) ? n.toFixed(1) : '11.0';
+  return `OK, SO HOW DO I LOSE ${lbs} POUNDS OF FAT IN EIGHT WEEKS?`;
+}
+
 export const SAMPLE_DIET_CALORIES_TABLE_SUMMARY = Object.freeze({
-  heading: 'STRENGTH & ENERGY',
+  heading: sampleDietCaloriesTableSummaryHeading(11.0),
   body:
-    'Protein helps protect lean body mass. Carbohydrates and fat provide energy for activity. Your Burn & Build food plan is designed to support strength and energy while reducing body fat.',
+    'The table below shows what happens when you eat too much or too little protein, carbohydrates and fat. The key to having your strength and energy and losing fat is cutting the fine line between too much and too little.\n\nAnd that\'s what the servings on the next page do for you. No counting. No calculating. Just follow the servings and choose foods from the food ists.',
 });
 
 /** Food Plan page — calories table (user-authored; do not reauthor). */
