@@ -65,7 +65,7 @@ export function sampleDietCaloriesTableSummaryHeading(fatLostLbs) {
 export const SAMPLE_DIET_CALORIES_TABLE_SUMMARY = Object.freeze({
   heading: sampleDietCaloriesTableSummaryHeading(11.0),
   body:
-    'The table below shows what happens when you eat too much or too little protein, carbohydrates and fat. The key to having your strength and energy and losing fat is cutting the fine line between too much and too little.\n\nAnd that\'s what the servings on the next page do for you. No counting. No calculating. Just follow the servings and choose foods from the food ists.',
+    'The table below shows what happens when you eat too much or too little protein, carbohydrates and fat. The key to having your strength and energy and losing fat is cutting the fine line between too much and too little.\n\nAnd that\'s what the servings on the next page do for you. No counting. No calculating. Just follow the servings and choose foods from the food lists.',
 });
 
 /** Food Plan page — calories table (user-authored; do not reauthor). */
