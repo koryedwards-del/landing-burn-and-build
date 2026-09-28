@@ -3,6 +3,7 @@
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { clearHeaderLogoOverride, setHeaderLogoRel } from './draw.js';
 import { createPrintPdf } from './creator.js';
 import { PDF_FRAME_FONTS } from './drawFrame.js';
 import { SEMINAR_COLORS } from './drawSeminar.js';
@@ -1023,39 +1024,49 @@ export function validateSampleDietPayload(payload) {
   return payload;
 }
 
-export async function renderSampleDietPrintout(payload, { title, buildLabel } = {}) {
+export async function renderSampleDietPrintout(payload, { title, buildLabel, headerLogoRel } = {}) {
   validateSampleDietPayload(payload);
 
-  const creator = createPrintPdf({
-    title: title || payload.title || 'B&B Sample Diet',
-    author: 'Burn & Build Diet',
-  });
-  const doc = creator.doc;
-  if (buildLabel) {
-    doc.info.Subject = `B&B Sample Diet ${buildLabel}`;
+  if (headerLogoRel) {
+    setHeaderLogoRel(headerLogoRel);
   }
 
-  drawLeanBodyAnalysisPage(doc, payload);
-  drawFoodPlanPage(doc, payload);
-  drawServingsPage(doc, payload);
+  try {
+    const creator = createPrintPdf({
+      title: title || payload.title || 'B&B Sample Diet',
+      author: 'Burn & Build Diet',
+    });
+    const doc = creator.doc;
+    if (buildLabel) {
+      doc.info.Subject = `B&B Sample Diet ${buildLabel}`;
+    }
 
-  const foodListFrame = {
-    startPage: (doc, payload, pageTitle) => begin1982Page(doc, payload, pageTitle ?? null),
-    continuePage: (doc, payload) => begin1982Page(doc, payload, null),
-  };
-  drawStaplesFoodListPage(doc, payload, foodListFrame);
-  drawVegFruitFoodListPage(doc, payload, foodListFrame);
-  drawSampleDayMenuPage(doc, payload);
-  drawAnswersConfirmationPage(doc, payload);
+    drawLeanBodyAnalysisPage(doc, payload);
+    drawFoodPlanPage(doc, payload);
+    drawServingsPage(doc, payload);
 
-  stamp1982Footers(doc, payload.header);
+    const foodListFrame = {
+      startPage: (doc, payload, pageTitle) => begin1982Page(doc, payload, pageTitle ?? null),
+      continuePage: (doc, payload) => begin1982Page(doc, payload, null),
+    };
+    drawStaplesFoodListPage(doc, payload, foodListFrame);
+    drawVegFruitFoodListPage(doc, payload, foodListFrame);
+    drawSampleDayMenuPage(doc, payload);
+    drawAnswersConfirmationPage(doc, payload);
 
-  const buffer = await creator.finish({ stampPageNumbers: false });
-  const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (pages < SAMPLE_DIET_PRINTOUT_MIN_PAGES) {
-    throw new Error(`Sample diet printout expected at least ${SAMPLE_DIET_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
+    stamp1982Footers(doc, payload.header);
+
+    const buffer = await creator.finish({ stampPageNumbers: false });
+    const pages = (buffer.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+    if (pages < SAMPLE_DIET_PRINTOUT_MIN_PAGES) {
+      throw new Error(`Sample diet printout expected at least ${SAMPLE_DIET_PRINTOUT_MIN_PAGES} pages, got ${pages}`);
+    }
+    return buffer;
+  } finally {
+    if (headerLogoRel) {
+      clearHeaderLogoOverride();
+    }
   }
-  return buffer;
 }
 
 export async function renderMenuPlanWorksheet(payload = null) {

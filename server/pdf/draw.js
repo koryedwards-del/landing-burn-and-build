@@ -6,6 +6,25 @@ import { PDF_LOGO_REL } from './constants.js';
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const logoPath = path.join(root, PDF_LOGO_REL);
 
+/** Optional test/alternate header logo (relative to repo root). Cleared after render. */
+let headerLogoOverridePath = null;
+
+export function resolvePdfLogoPath(relPath) {
+  return path.join(root, relPath);
+}
+
+export function setHeaderLogoRel(relPath) {
+  headerLogoOverridePath = relPath ? resolvePdfLogoPath(relPath) : null;
+}
+
+export function getHeaderLogoPath() {
+  return headerLogoOverridePath || logoPath;
+}
+
+export function clearHeaderLogoOverride() {
+  headerLogoOverridePath = null;
+}
+
 const PDF_WATERMARK_OPACITY = 0.08;
 const PDF_WATERMARK_SIZE_PT = 180;
 

@@ -4,7 +4,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { PDF_MARGIN } from './constants.js';
-import { logoPath } from './draw.js';
+import { getHeaderLogoPath } from './draw.js';
 import { PDF_FRAME_COLORS, PDF_FRAME_CONTACT } from './drawFrame.js';
 
 const FONT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fonts');
@@ -200,7 +200,7 @@ export function drawModernReportHeader(doc, box, payload, pageTitle, titleStyle 
   const layout = MODERN_HEADER_LAYOUT;
   const logoY = box.y;
 
-  doc.image(logoPath, box.x, logoY, { width: layout.logoWidth });
+  doc.image(getHeaderLogoPath(), box.x, logoY, { width: layout.logoWidth });
 
   const showPersonalization = payload?.handbook !== true
     && (payload?.clientName || payload?.preparedDate || payload?.preparedDateLong);
