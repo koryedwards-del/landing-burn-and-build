@@ -22,22 +22,13 @@ const defaultOut = path.join(samplesDir, HARDKOR_SAMPLE_DIET_TEST_REPO_FILE);
 const outArg = process.argv.find((arg) => arg.startsWith('--out='));
 const deliverable = outArg ? path.resolve(outArg.slice('--out='.length)) : defaultOut;
 
-const FALLBACK_LOGO_REL = 'img/brand/hardkor-logo-pdf.png';
-
-function resolveHeaderLogoRel() {
-  const primaryPath = path.join(root, PDF_HARDKOR_LOGO_REL);
-  if (fs.existsSync(primaryPath)) return PDF_HARDKOR_LOGO_REL;
-  const fallbackPath = path.join(root, FALLBACK_LOGO_REL);
-  if (fs.existsSync(fallbackPath)) {
-    console.warn(`WARN Using ${FALLBACK_LOGO_REL} until ${PDF_HARDKOR_LOGO_REL} is committed.`);
-    return FALLBACK_LOGO_REL;
-  }
-  console.error(`Missing HARDKOR logo: ${primaryPath}`);
-  console.error(`Add ${PDF_HARDKOR_LOGO_REL} (transparent HARDKOR header mark).`);
+const logoPath = path.join(root, PDF_HARDKOR_LOGO_REL);
+if (!fs.existsSync(logoPath)) {
+  console.error(`Missing HARDKOR logo: ${logoPath}`);
   process.exit(1);
 }
 
-const headerLogoRel = resolveHeaderLogoRel();
+const headerLogoRel = PDF_HARDKOR_LOGO_REL;
 
 const payload = buildSampleDietPreviewPayload();
 const pdf = await renderSampleDietPrintout(payload, {
