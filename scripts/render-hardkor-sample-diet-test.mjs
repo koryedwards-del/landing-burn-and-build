@@ -17,7 +17,7 @@ const deliverable = outArg ? path.resolve(outArg.slice('--out='.length)) : defau
 const logoPath = path.join(root, PDF_HARDKOR_LOGO_REL);
 if (!fs.existsSync(logoPath)) {
   console.error(`Missing HARDKOR logo: ${logoPath}`);
-  console.error('Add img/brand/hardkor-logo-pdf.png (or run rsvg-convert on hardkor-logo-pdf.svg).');
+  console.error('Add img/brand/hardkor-logo-2026.png (transparent HARDKOR header mark).');
   process.exit(1);
 }
 
