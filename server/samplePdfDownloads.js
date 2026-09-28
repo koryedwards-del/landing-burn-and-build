@@ -11,6 +11,11 @@ import {
   BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_DOWNLOAD_FILENAME,
   BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_REPO_FILE,
 } from '../js/dietEmailPreviewNamingHelpers.js';
+import {
+  HARDKOR_SAMPLE_DIET_TEST_API_SLUG,
+  HARDKOR_SAMPLE_DIET_TEST_DOWNLOAD_FILENAME,
+  HARDKOR_SAMPLE_DIET_TEST_REPO_FILE,
+} from '../js/hardkorSampleDietTestPdfNamingHelpers.js';
 
 /** Public sample files served from docs/samples/. */
 export const PUBLIC_SAMPLE_FILES = Object.freeze({
@@ -25,6 +30,11 @@ export const PUBLIC_SAMPLE_FILES = Object.freeze({
     file: BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_REPO_FILE,
     filename: BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_DOWNLOAD_FILENAME,
     contentType: 'text/html; charset=utf-8',
+  },
+  [HARDKOR_SAMPLE_DIET_TEST_API_SLUG]: {
+    file: HARDKOR_SAMPLE_DIET_TEST_REPO_FILE,
+    filename: HARDKOR_SAMPLE_DIET_TEST_DOWNLOAD_FILENAME,
+    contentType: 'application/pdf',
   },
 });
 
