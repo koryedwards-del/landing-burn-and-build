@@ -1,7 +1,7 @@
 /** Burn & Build purchase email preview — product name, paths, API slug. */
 
 /** User-facing label (preview page title, docs). */
-export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_NAME = 'Burn & Build Purchase Email';
+export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_NAME = 'HARDKOR Diet Purchase Email';
 
 /** Browser download / attachment filename. */
 export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_DOWNLOAD_FILENAME = 'burn-and-build-purchase-email.html';

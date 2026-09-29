@@ -34,7 +34,7 @@ try {
   console.log('ok  validateSampleDietPayload rejects empty');
 }
 
-const filename = sanitizePdfFilename('Burn & Build Diet - Sample Female', 'samplediet');
+const filename = sanitizePdfFilename('The HARDKOR Diet - Sample Female', 'samplediet');
 if (!filename.endsWith('.pdf') || filename.includes('&')) {
   throw new Error(`sanitizePdfFilename failed: ${filename}`);
 }
@@ -42,7 +42,7 @@ console.log(`ok  sanitizePdfFilename — ${filename}`);
 
 const samplePayload = buildSampleDietPreviewPayload();
 validateSampleDietPayload(samplePayload);
-assertPdf('Burn & Build Diet (golden sample)', await renderSampleDietPrintout(samplePayload), {
+assertPdf('The HARDKOR Diet (golden sample)', await renderSampleDietPrintout(samplePayload), {
   minPages: SAMPLE_DIET_PRINTOUT_MIN_PAGES,
 });
 if (samplePayload.view !== 'samplediet') {
@@ -78,7 +78,7 @@ console.log('ok  golden sample diet payload');
 assertPdf('menu plan worksheet (blank)', await renderMenuPlanWorksheet(), { minPages: 1 });
 
 const faqPayload = buildHandbookFaqPayload();
-assertPdf('Burn & Build FAQ (standalone)', await renderHandbookFaqPrintout(faqPayload), {
+assertPdf('The HARDKOR Diet FAQ (standalone)', await renderHandbookFaqPrintout(faqPayload), {
   minPages: HANDBOOK_FAQ_PRINTOUT_MIN_PAGES,
 });
 

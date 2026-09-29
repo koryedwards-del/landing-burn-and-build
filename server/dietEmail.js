@@ -31,18 +31,18 @@ const EMAIL_COLORS = Object.freeze({
   rule: '#E5E5E5',
 });
 
-const BONUS_MENU_PLANNER_FILENAME = 'Burn&Build-Menu-Planner.pdf';
-const BONUS_FAQ_FILENAME = 'Burn&Build-FAQ.pdf';
+const BONUS_MENU_PLANNER_FILENAME = 'HARDKOR-Diet-Menu-Planner.pdf';
+const BONUS_FAQ_FILENAME = 'HARDKOR-Diet-FAQ.pdf';
 const PDF_ICON_COLOR = '#F6D65A';
 
-const EMAIL_SUBJECT = 'Your Burn & Build Diet is here';
+const EMAIL_SUBJECT = 'Your HARDKOR Diet is here';
 
 export function dietEmailConfigured() {
   return !!String(process.env.RESEND_API_KEY || '').trim();
 }
 
 function emailFrom() {
-  return process.env.DIET_EMAIL_FROM || 'Burn & Build <orders@burnandbuilddiet.com>';
+  return process.env.DIET_EMAIL_FROM || 'The HARDKOR Diet <orders@burnandbuilddiet.com>';
 }
 
 function escapeHtml(text) {
@@ -157,12 +157,12 @@ function buildDietEmailText({
   return [
     `Hi ${firstName},`,
     '',
-    'Your Burn & Build Diet is here.',
+    'Your HARDKOR Diet is here.',
     '',
     dietPdfFilename,
     dietDownloadUrl,
     '',
-    'Access Your Burn & Build Account →',
+    'Access Your HARDKOR Diet Account →',
     portalUrl,
     'Keep this email for future access.',
     '',
@@ -178,7 +178,7 @@ function buildDietEmailText({
     PURCHASE_EMAIL_CONTACT,
     '',
     '— Kory',
-    'Burn & Build',
+    'The HARDKOR Diet',
     'Athlete-tested since 1982',
   ].join('\n');
 }
@@ -199,7 +199,7 @@ function buildDietEmailHtml({
   const menuPlannerLink = bonusPdfFileLink(worksheetUrl, BONUS_MENU_PLANNER_FILENAME);
   const faqLink = bonusPdfFileLink(faqUrl, BONUS_FAQ_FILENAME);
   const bonusLinks = bonusResourcesBlock(menuPlannerLink, faqLink);
-  const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your Burn &amp; Build Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
+  const portalLink = `<a class="portal-link" href="${portalUrl}" style="color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-size:16px;font-weight:700;line-height:1.5;text-decoration:none;border-bottom:2px solid ${c.gold};">Access Your HARDKOR Diet Account <span style="color:${c.gold} !important;-webkit-text-fill-color:${c.gold} !important;">&#8594;</span></a>`;
   const contactLink = `<a class="contact-link" href="${contactMailto}" style="font-family:${PURCHASE_EMAIL_CSS_FAMILY};font-size:16px;line-height:1.5;color:${c.black} !important;-webkit-text-fill-color:${c.black} !important;font-weight:600;text-decoration:underline;text-decoration-color:${c.rule};text-underline-offset:3px;">${PURCHASE_EMAIL_CONTACT}</a>`;
 
   return `<!DOCTYPE html>
@@ -209,7 +209,7 @@ function buildDietEmailHtml({
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <title>Your Burn &amp; Build Diet is here</title>
+  <title>Your HARDKOR Diet is here</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${PURCHASE_EMAIL_FONT_URL}" rel="stylesheet">
@@ -229,7 +229,7 @@ function buildDietEmailHtml({
           <tr>
             <td align="center" style="padding:0 32px 20px;">
               <a href="${site}" style="text-decoration:none;">
-                <img src="${logoUrl}" alt="Burn &amp; Build" width="88" height="88" style="display:block;border:0;height:auto;max-width:88px;">
+                <img src="${logoUrl}" alt="The HARDKOR Diet" width="88" height="88" style="display:block;border:0;height:auto;max-width:88px;">
               </a>
             </td>
           </tr>
@@ -246,7 +246,7 @@ function buildDietEmailHtml({
             <td style="padding:0 32px 8px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 ${emailContentRow(`Hi ${firstName},`, { paddingBottom: '20px' })}
-                ${emailContentRow('Your Burn &amp; Build Diet is here.', { paddingBottom: '28px', extraStyle: 'font-weight:700;line-height:1.5;' })}
+                ${emailContentRow('Your HARDKOR Diet is here.', { paddingBottom: '28px', extraStyle: 'font-weight:700;line-height:1.5;' })}
                 ${emailContentRow(dietLink, { paddingBottom: '36px' })}
                 ${emailContentRow(portalLink, { paddingBottom: '10px' })}
                 ${emailContentRow('Keep this email for future access.', { paddingBottom: '36px', extraStyle: `font-size:15px;line-height:1.5;color:${c.muted};` })}
@@ -263,7 +263,7 @@ function buildDietEmailHtml({
                 ${emailContentRow('Questions? Just email me.', { paddingBottom: '8px', extraStyle: 'font-weight:700;color:' + c.black + ';' })}
                 ${emailContentRow(contactLink, { paddingBottom: '28px' })}
                 ${emailContentRow(`<span style="font-family:${SIGNATURE_DISPLAY_CSS_FAMILY};font-size:${PURCHASE_EMAIL_SIGNATURE_CLOSE_SIZE_PX}px;line-height:1.1;color:#1A1A1A;">&mdash; Kory</span>`, { paddingBottom: '6px' })}
-                ${emailContentRow('Burn &amp; Build', { paddingBottom: '4px', extraStyle: `color:${c.black};` })}
+                ${emailContentRow('The HARDKOR Diet', { paddingBottom: '4px', extraStyle: `color:${c.black};` })}
                 ${emailContentRow('<span style="font-style:italic;color:' + c.muted + ';">Athlete-tested since 1982</span>')}
               </table>
             </td>

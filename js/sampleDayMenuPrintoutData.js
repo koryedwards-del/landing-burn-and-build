@@ -185,7 +185,7 @@ export function buildMenuPlanWorksheetPayload() {
   return {
     view: 'menuplanworksheet',
     worksheet: true,
-    title: 'Burn & Build Menu Plan',
+    title: 'The HARDKOR Diet Menu Plan',
     clientName: '',
     preparedDate: '',
     header: { ...SAMPLE_DIET_HEADER },

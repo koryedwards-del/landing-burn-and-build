@@ -40,19 +40,19 @@ export async function downloadDietPdf(email, programId, { pkg } = {}) {
     const res = await fetch(dietPdfDownloadUrl(email, programId));
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      return { ok: false, message: data.message || 'Could not download your Burn & Build Diet PDF.' };
+      return { ok: false, message: data.message || 'Could not download your HARDKOR Diet PDF.' };
     }
     const blob = await res.blob();
     const filename = resolveDownloadFilename(res.headers.get('Content-Disposition'), pkg);
     triggerBrowserDownload(blob, filename);
     return { ok: true, filename };
   } catch {
-    return { ok: false, message: 'Network error downloading your Burn & Build Diet PDF.' };
+    return { ok: false, message: 'Network error downloading your HARDKOR Diet PDF.' };
   }
 }
 
 export async function downloadDietPdfWithRetry(email, programId, { pkg, attempts = 10, delayMs = 1500 } = {}) {
-  let lastMessage = 'Could not download your Burn & Build Diet PDF.';
+  let lastMessage = 'Could not download your HARDKOR Diet PDF.';
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     const result = await downloadDietPdf(email, programId, { pkg });
     if (result.ok) return result;

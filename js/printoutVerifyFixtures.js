@@ -62,7 +62,7 @@ export const GOLDEN_SAMPLE_GOLDEN = {
 
 export function buildGoldenSamplePackage() {
   const pkg = buildProgramPackage(GOLDEN_SAMPLE_FORM, {
-    label: '8-Week Burn & Build Program',
+    label: 'The HARDKOR Diet — 8-Week Program',
     meta: { source: 'verify' },
   });
   pkg.intake.leanBodyMass = 113.7;

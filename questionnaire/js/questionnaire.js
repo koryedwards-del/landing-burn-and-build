@@ -642,7 +642,7 @@ function toOnboardingForm(values) {
 
 function buildProgramFromValues(values) {
   return buildProgramPackage(toOnboardingForm(values), {
-    label: '8-Week Burn & Build Program',
+    label: 'The HARDKOR Diet — 8-Week Program',
     meta: { source: 'desktop-questionnaire' },
   });
 }

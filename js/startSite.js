@@ -308,12 +308,12 @@ function renderPaidEmailSection() {
   const mailto = isValidEmail(email) ? `mailto:${encodeURIComponent(email)}` : '#';
 
   if (!store.dietEmailAvailable) {
-    return '<p class="unlock-receipt__email-lead">Use the download below to get your Burn &amp; Build Diet PDF.</p>';
+    return '<p class="unlock-receipt__email-lead">Use the download below to get your HARDKOR Diet PDF.</p>';
   }
 
   const lead = store.dietEmailBusy || (!store.dietEmailSent && !store.dietEmailError)
-    ? 'Sending your Burn &amp; Build Diet to:'
-    : 'Your Burn &amp; Build Diet has been sent to:';
+    ? 'Sending your HARDKOR Diet to:'
+    : 'Your HARDKOR Diet has been sent to:';
 
   const address = isValidEmail(email)
     ? `<a class="unlock-receipt__email-address" href="${mailto}">${safeEmail}</a>`
@@ -370,12 +370,12 @@ function renderPlanReady() {
   } else if (store.saveError) {
     lead = 'Your program is ready on this device. Save it to your account, then complete checkout.';
   } else {
-    lead = 'Your program is saved. Complete checkout to download your Burn &amp; Build Diet PDF.';
+    lead = 'Your program is saved. Complete checkout to download your HARDKOR Diet PDF.';
   }
 
   const checkoutBlock = showPaywall
     ? !store.apiReachable ? `
-          <p class="unlock-hint">Could not reach the Burn &amp; Build server. Check your connection and try again.</p>
+          <p class="unlock-hint">Could not reach the server. Check your connection and try again.</p>
           ${store.saveError ? `<button type="button" class="btn-secondary unlock-cta-secondary" data-retry-save ${store.saveBusy ? 'disabled' : ''}>${store.saveBusy ? 'SAVING…' : 'Retry save'}</button>` : ''}`
       : store.stripeConfigured ? `
           <button type="button" class="btn-primary unlock-cta" data-start-checkout ${store.checkoutBusy ? 'disabled' : ''}>

@@ -504,7 +504,7 @@ app.get('/api/samples/:slug', async (req, res) => {
       console.error('Burn & Build FAQ PDF error:', err.message);
       res.status(500).json({
         ok: false,
-        message: err.message || 'Could not render the Burn & Build FAQ PDF.',
+        message: err.message || 'Could not render The HARDKOR Diet FAQ PDF.',
       });
     }
     return;
@@ -553,7 +553,7 @@ app.get('/api/programs/diet-pdf', async (req, res) => {
     res.send(pdf);
   } catch (err) {
     console.error('Diet PDF download error:', err.message);
-    res.status(500).json({ ok: false, message: err.message || 'Could not prepare your Burn & Build Diet PDF.' });
+    res.status(500).json({ ok: false, message: err.message || 'Could not prepare your HARDKOR Diet PDF.' });
   }
 });
 

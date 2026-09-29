@@ -32,7 +32,7 @@ export function buildProgramPackage(form, { startDate, programId, label, meta } 
       startDate: startDate || todayDateKey(),
       durationDays: PROGRAM_DURATION_DAYS,
       status: 'active',
-      label: label || '8-Week Burn & Build Program',
+      label: label || 'The HARDKOR Diet — 8-Week Program',
     },
     intake: {
       ...intake,

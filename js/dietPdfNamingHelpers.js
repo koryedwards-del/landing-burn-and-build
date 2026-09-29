@@ -3,10 +3,10 @@
 import { programClientName, programPreparedDate } from './programClientDataHelpers.js';
 import { localDateKey } from './programPackageData.js';
 
-const DIET_PDF_PREFIX = 'Burn&Build';
+const DIET_PDF_PREFIX = 'HARDKOR-Diet';
 
 /** Product name for the full personalized PDF deliverable. */
-export const BURN_AND_BUILD_DIET_PDF_NAME = 'Burn & Build Diet';
+export const BURN_AND_BUILD_DIET_PDF_NAME = 'The HARDKOR Diet';
 
 function sanitizeNamePart(preferredName) {
   return String(preferredName || 'Client')

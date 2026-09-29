@@ -12,7 +12,7 @@ export const BODY_FAT_PROGRESS_BAR_FOOTER = 'How much fat is right for you is a 
 
 export const DESIRABLE_LBM_BAR_TITLE = 'LEAN BODY MASS BAR';
 export const DESIRABLE_LBM_BAR_SUBTITLE = 'WHERE YOU ARE. WHERE YOU\'RE HEADED.';
-export const DESIRABLE_LBM_BAR_FOOTER = 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. Burn & Build is built to reduce fat while protecting that lean tissue.';
+export const DESIRABLE_LBM_BAR_FOOTER = 'Lean body mass is everything in your body that is not fat — muscle, bone, organs, and fluids. It drives metabolism. The HARDKOR Diet is built to reduce fat while protecting that lean tissue.';
 
 /** Body composition source options (questionnaire, profile, PDF confirmation). */
 export const FAT_SOURCE_OPTIONS = Object.freeze([

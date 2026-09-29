@@ -1034,7 +1034,7 @@ export async function renderSampleDietPrintout(payload, { title, buildLabel, hea
   try {
     const creator = createPrintPdf({
       title: title || payload.title || 'B&B Sample Diet',
-      author: 'Burn & Build Diet',
+      author: 'The HARDKOR Diet',
     });
     const doc = creator.doc;
     if (buildLabel) {
@@ -1073,8 +1073,8 @@ export async function renderMenuPlanWorksheet(payload = null) {
   const menuPayload = payload || buildMenuPlanWorksheetPayload();
 
   const creator = createPrintPdf({
-    title: menuPayload.title || 'Burn & Build Menu Plan',
-    author: 'Burn & Build Diet',
+    title: menuPayload.title || 'The HARDKOR Diet Menu Plan',
+    author: 'The HARDKOR Diet',
   });
   const doc = creator.doc;
 

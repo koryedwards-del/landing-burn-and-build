@@ -50,7 +50,7 @@ export function collectPdfBuffer(doc) {
   });
 }
 
-export function createPortraitPdf({ title, author = 'Burn & Build Diet', bufferPages = true } = {}) {
+export function createPortraitPdf({ title, author = 'The HARDKOR Diet', bufferPages = true } = {}) {
   return new PDFDocument({
     size: 'LETTER',
     layout: 'portrait',
@@ -58,7 +58,7 @@ export function createPortraitPdf({ title, author = 'Burn & Build Diet', bufferP
     autoFirstPage: false,
     bufferPages,
     info: {
-      Title: title || 'Burn & Build Diet',
+      Title: title || 'The HARDKOR Diet',
       Author: author,
     },
   });

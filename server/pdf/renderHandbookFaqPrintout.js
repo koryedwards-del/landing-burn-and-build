@@ -26,7 +26,7 @@ export async function renderHandbookFaqPrintout(payload) {
 
   const creator = createPrintPdf({
     title: payload.title || BURN_AND_BUILD_FAQ_PDF_NAME,
-    author: 'Burn & Build Diet',
+    author: 'The HARDKOR Diet',
   });
   const doc = creator.doc;
 

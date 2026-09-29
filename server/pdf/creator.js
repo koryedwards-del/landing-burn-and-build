@@ -9,7 +9,7 @@ export class PrintPdfCreator {
   #doc;
   #bufferPromise;
 
-  constructor({ title, author = 'Burn & Build Diet' } = {}) {
+  constructor({ title, author = 'The HARDKOR Diet' } = {}) {
     this.#doc = createPortraitPdf({ title, author });
     this.#bufferPromise = collectPdfBuffer(this.#doc);
   }

@@ -4,7 +4,7 @@ import { drawWatermark, logoPath } from './draw.js';
 import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypographyData.js';
 
 /** Generic row 2 — program report continuation headers. */
-export const PDF_FRAME_TAGLINE = 'Burn & Build — Stronger Today. Leaner Tomorrow.';
+export const PDF_FRAME_TAGLINE = 'The HARDKOR Diet — Stronger Today. Leaner Tomorrow.';
 
 export const PDF_FRAME_CONTACT = Object.freeze({
   website: 'www.thehardkordiet.com',
