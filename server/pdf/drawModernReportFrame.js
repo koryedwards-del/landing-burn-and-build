@@ -37,6 +37,12 @@ export const MODERN_HEADER_LAYOUT = Object.freeze({
   personalSize: 7.5,
 });
 
+/** Page-level accent titles (Questionnaire Confirmation reference). */
+export const MODERN_PAGE_TITLE_STYLE = Object.freeze({
+  leadSize: MODERN_HEADER_LAYOUT.titleSize - 6,
+  accentSize: MODERN_HEADER_LAYOUT.titleSize,
+});
+
 /** Shared with page bodies that pin content above the modern footer. */
 export const MODERN_REPORT_FOOTER_LAYOUT = Object.freeze({
   ruleOffsetFromBottom: 28,

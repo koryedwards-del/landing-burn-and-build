@@ -3,6 +3,7 @@ import { PRINT_TEMPLATE_TYPOGRAPHY } from '../../js/printTemplateTypographyData.
 import {
   drawModernReportFooter,
   drawModernReportHeader,
+  MODERN_PAGE_TITLE_STYLE,
 } from './drawModernReportFrame.js';
 
 import { PDF_FRAME_COLORS, frameContentBox, pinnedContentBottomY } from './drawFrame.js';
@@ -53,12 +54,18 @@ export function begin1982Page(doc, payload, pageTitle, {
   titleAccentSize,
 } = {}) {
   const box = add1982Page(doc);
+  const showTitle = fullHeader && pageTitle;
   const y = drawModernReportHeader(
     doc,
     box,
     payload,
-    fullHeader ? (pageTitle || null) : null,
-    { leadSize: titleLeadSize, accentSize: titleAccentSize },
+    showTitle ? pageTitle : null,
+    showTitle
+      ? {
+          leadSize: titleLeadSize ?? MODERN_PAGE_TITLE_STYLE.leadSize,
+          accentSize: titleAccentSize ?? MODERN_PAGE_TITLE_STYLE.accentSize,
+        }
+      : {},
   );
   return {
     box,

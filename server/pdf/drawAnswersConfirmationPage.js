@@ -5,7 +5,6 @@ import { begin1982Page, TABLE_1982 } from './draw1982Frame.js';
 import {
   MODERN_REPORT_COLORS,
   MODERN_REPORT_FONTS,
-  MODERN_HEADER_LAYOUT,
   registerModernReportFonts,
 } from './drawModernReportFrame.js';
 import { formatAnswersConfirmationLabel } from '../../js/answersConfirmationPrintout.js';
@@ -204,10 +203,7 @@ export function drawAnswersConfirmationPage(doc, payload) {
   if (!confirmation?.rows?.length) return;
 
   registerModernReportFonts(doc);
-  const page = begin1982Page(doc, payload, 'Questionnaire confirmation', {
-    titleLeadSize: MODERN_HEADER_LAYOUT.titleSize - 6,
-    titleAccentSize: MODERN_HEADER_LAYOUT.titleSize,
-  });
+  const page = begin1982Page(doc, payload, 'Questionnaire confirmation');
 
   let y = page.y;
   if (confirmation.intro) {
