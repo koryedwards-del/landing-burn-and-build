@@ -21,6 +21,7 @@ export async function createCheckoutSession(email, programId) {
       body: JSON.stringify({
         email: normalizeEmail(email),
         programId: programId || undefined,
+        siteOrigin: typeof window !== 'undefined' ? window.location.origin : undefined,
       }),
     });
     if (!res.ok) return { ok: false, message: data.message || 'Could not start checkout.' };

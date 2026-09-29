@@ -19,6 +19,7 @@ import {
   stripeConfigured,
   verifyCheckoutSession,
 } from './stripe.js';
+import { resolveCreatorSiteOrigin } from './creatorSiteOrigin.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
@@ -187,8 +188,8 @@ app.get('/health', (_req, res) => {
   });
 });
 
-function creatorBaseUrl(req) {
-  return process.env.CREATOR_BASE_URL || `${req.protocol}://${req.get('host')}`;
+function creatorBaseUrl(req, clientSiteOrigin) {
+  return resolveCreatorSiteOrigin(req, clientSiteOrigin);
 }
 
 app.get('/api/checkout/status', (_req, res) => {
@@ -215,7 +216,7 @@ app.post('/api/checkout', async (req, res) => {
     const session = await createCheckoutSession({
       email,
       programId: req.body?.programId,
-      baseUrl: creatorBaseUrl(req),
+      baseUrl: creatorBaseUrl(req, req.body?.siteOrigin),
     });
     res.json({ ok: true, ...session });
   } catch (err) {
