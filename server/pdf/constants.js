@@ -1,6 +1,7 @@
 /** Shared program report PDF settings. */
+/** Default program-report header (purchased diet PDF). */
 export const PDF_LOGO_REL = 'img/brand/bblogo-pdf.jpg';
-/** HARDKOR header mark for test renders only (see scripts/render-hardkor-sample-diet-test.mjs). */
+/** Landing sample diet + public sample fallback (see scripts/render-sample-diet-preview.mjs). */
 export const PDF_HARDKOR_LOGO_REL = 'img/brand/hardkor-logo-2026.png';
 
 /** Match program report sheet padding (0.35in vertical, 0.44in horizontal). */

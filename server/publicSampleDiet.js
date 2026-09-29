@@ -3,6 +3,7 @@ import path from 'path';
 import { buildSampleDietPrintoutPayload } from '../js/sampleDietPrintoutData.js';
 import { dietPdfDocumentLabel } from '../js/dietPdfNamingHelpers.js';
 import { getProgramById, normalizeEmail } from './db.js';
+import { PDF_HARDKOR_LOGO_REL } from './pdf/constants.js';
 import { renderSampleDietPrintout } from './pdf/renderSampleDietPrintout.js';
 
 const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
@@ -73,5 +74,5 @@ export async function renderPublicSampleDietPdf() {
 
   const payload = buildSampleDietPrintoutPayload(pkg);
   const title = dietPdfDocumentLabel({ preferredName: pkg?.intake?.preferredName, pkg });
-  return renderSampleDietPrintout(payload, { title });
+  return renderSampleDietPrintout(payload, { title, headerLogoRel: PDF_HARDKOR_LOGO_REL });
 }
