@@ -3,6 +3,8 @@
 export const RENDER_API_ORIGIN = 'https://program-creator-3tzd.onrender.com';
 
 const STATIC_SITE_HOSTS = new Set([
+  'thehardkordiet.com',
+  'www.thehardkordiet.com',
   'burnandbuilddiet.com',
   'www.burnandbuilddiet.com',
 ]);

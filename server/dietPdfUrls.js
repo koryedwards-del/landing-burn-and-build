@@ -7,7 +7,7 @@ const RENDER_API_ORIGIN = String(
 ).replace(/\/$/, '');
 
 const SITE_ORIGIN = String(
-  process.env.WEBPAGE_URL || process.env.CREATOR_BASE_URL || 'https://burnandbuilddiet.com',
+  process.env.WEBPAGE_URL || process.env.CREATOR_BASE_URL || 'https://thehardkordiet.com',
 ).replace(/\/$/, '');
 
 /** Direct download link — always renders the current Burn & Build Diet PDF. */

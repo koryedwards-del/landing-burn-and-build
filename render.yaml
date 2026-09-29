@@ -27,9 +27,9 @@ projects:
               - key: DATABASE_PATH
                 value: /var/data/programs.db
               - key: WEBPAGE_URL
-                value: https://burnandbuilddiet.com
+                value: https://thehardkordiet.com
               - key: CREATOR_BASE_URL
-                value: https://burnandbuilddiet.com
+                value: https://thehardkordiet.com
               - key: API_BASE_URL
                 value: https://program-creator-3tzd.onrender.com
               - key: CONTACTS_ADMIN_KEY

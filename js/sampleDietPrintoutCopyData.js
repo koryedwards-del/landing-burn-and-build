@@ -4,7 +4,7 @@ import { CONTACT_EMAIL } from './contactEmailData.js';
 
 /** Footer contact — pinned footer on every sample diet page. */
 export const SAMPLE_DIET_HEADER = Object.freeze({
-  website: 'www.burnandbuilddiet.com',
+  website: 'www.thehardkordiet.com',
   email: CONTACT_EMAIL,
 });
 
@@ -19,7 +19,7 @@ export const SAMPLE_DIET_WELCOME = Object.freeze({
   foodPlan: 'Page three is your custom-designed diet. How much food you need each day depends on how much LBM you have, your job, lifestyle and the type and amount of exercise you participate in. Based on the information you provide, this diet gives you the amount of protein, carbohydrates and fat you need per day to lose fat. It also tells you how much fat you can lose in eight weeks. And it shows you what your body requires at rest (your resting metabolic rate), for your workday and for one hour of each type of exercise.',
   servings: 'Page four is the servings page. No need to count calories or macros in this diet. The computer breaks down all the information from the table on page three and shows you the number of servings you need daily to have maximum strength & energy and to lose fat as fast as possible.',
   foodList: 'Pages five and six are your food list. Page five lists protein & dairy along with grains & starches. Page six lists the veggies and fruits. The gram weights on your list are scaled to your daily servings from page four.',
-  menuPlan: 'Page seven is a sample menu plan for one day, showing how to build meals from your servings and food list. You can download blank menu plans at burnandbuilddiet.com/menuplanworksheet and fill in each day or week yourself.',
+  menuPlan: 'Page seven is a sample menu plan for one day, showing how to build meals from your servings and food list. You can download blank menu plans at thehardkordiet.com/menuplanworksheet and fill in each day or week yourself.',
 });
 
 export const SAMPLE_DIET_LBA = Object.freeze({

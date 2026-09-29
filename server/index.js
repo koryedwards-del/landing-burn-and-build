@@ -43,6 +43,8 @@ const port = Number(process.env.PORT) || 3001;
 const isProd = process.env.NODE_ENV === 'production';
 
 const defaultCorsOrigins = [
+  'https://thehardkordiet.com',
+  'https://www.thehardkordiet.com',
   'https://burnandbuilddiet.com',
   'https://www.burnandbuilddiet.com',
   'http://localhost:3000',

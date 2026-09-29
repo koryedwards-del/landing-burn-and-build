@@ -7,7 +7,7 @@ import { PRINT_TEMPLATE_TYPOGRAPHY as PT } from '../../js/printTemplateTypograph
 export const PDF_FRAME_TAGLINE = 'Burn & Build — Stronger Today. Leaner Tomorrow.';
 
 export const PDF_FRAME_CONTACT = Object.freeze({
-  website: 'www.burnandbuilddiet.com',
+  website: 'www.thehardkordiet.com',
   email: CONTACT_EMAIL,
 });
 

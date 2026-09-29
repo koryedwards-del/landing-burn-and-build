@@ -62,4 +62,4 @@ Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.p
 
 ## Site
 
-**burnandbuilddiet.com** — GitHub Pages. Landing and questionnaire live; checkout to reconnect at `/createyourfoodplan/`.
+**thehardkordiet.com** — GitHub Pages (primary). Landing and questionnaire live; checkout to reconnect at `/createyourfoodplan/`. Legacy **burnandbuilddiet.com** should 301 to the same path on thehardkordiet.com (see domain migration external steps in project store).

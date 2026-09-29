@@ -64,7 +64,7 @@ export function buildProgramPackage(form, { startDate, programId, label, meta } 
       engineSource: 'burnEngine.js',
       foodsCatalogVersion: FOODS_CATALOG_VERSION,
       generatedBy: 'burn-engine-web',
-      websiteUrl: 'https://burnandbuilddiet.com',
+      websiteUrl: 'https://thehardkordiet.com',
     },
     meta: {
       customerRef: null,

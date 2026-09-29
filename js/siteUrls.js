@@ -1,4 +1,4 @@
-/** Canonical site URLs — burnandbuilddiet.com */
+/** Canonical site URLs — thehardkordiet.com */
 
 import { RENDER_API_ORIGIN } from './apiConfig.js';
 import { BURN_AND_BUILD_FAQ_API_SLUG } from './faqPdfNamingHelpers.js';
@@ -8,7 +8,7 @@ import {
 } from './dietEmailPreviewNamingHelpers.js';
 import { HARDKOR_SAMPLE_DIET_TEST_API_SLUG } from './hardkorSampleDietTestPdfNamingHelpers.js';
 
-export const CREATOR_HOST_ORIGIN = 'https://burnandbuilddiet.com';
+export const CREATOR_HOST_ORIGIN = 'https://thehardkordiet.com';
 
 /** New program — questionnaire. */
 export const QUESTIONNAIRE_START_PATH = '/questionnaire/';
@@ -21,7 +21,7 @@ export const SAMPLE_DIET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/sample
 export const SAMPLE_DIET_INLINE_URL = `${SAMPLE_DIET_DOWNLOAD_URL}?inline=1`;
 export const MENU_PLAN_WORKSHEET_PATH = '/menuplanworksheet/';
 export const MENU_PLAN_WORKSHEET_PUBLIC_URL = `${CREATOR_HOST_ORIGIN}${MENU_PLAN_WORKSHEET_PATH}`;
-export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'burnandbuilddiet.com/menuplanworksheet';
+export const MENU_PLAN_WORKSHEET_LINK_LABEL = 'thehardkordiet.com/menuplanworksheet';
 export const MENU_PLAN_WORKSHEET_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/menu-plan-worksheet`;
 export const BURN_AND_BUILD_FAQ_DOWNLOAD_URL = `${RENDER_API_ORIGIN}/api/samples/${BURN_AND_BUILD_FAQ_API_SLUG}`;
 export const BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_URL = `${CREATOR_HOST_ORIGIN}${BURN_AND_BUILD_PURCHASE_EMAIL_PREVIEW_PATH}`;
