@@ -77,7 +77,7 @@ function renderPurchaserPortal() {
         <div class="start-success">
           <div class="check">✓</div>
           <div class="ob-welcome-line1">DOWNLOAD YOUR</div>
-          <div class="ob-welcome-line2">BURN &amp; BUILD DIET</div>
+          <div class="ob-welcome-line2">HARDKOR DIET</div>
         </div>
         <div class="unlock-panel">
           <p class="unlock-lead">Enter the email you used at checkout.</p>
@@ -336,7 +336,7 @@ function renderPaidDirections() {
   return `
           <div class="unlock-receipt">
             <div class="unlock-receipt__title">
-              <div class="unlock-receipt__title-line1">YOUR BURN &amp; BUILD DIET</div>
+              <div class="unlock-receipt__title-line1">YOUR HARDKOR DIET</div>
               <div class="unlock-receipt__title-line2">IS READY</div>
             </div>
             ${renderPaidEmailSection()}
