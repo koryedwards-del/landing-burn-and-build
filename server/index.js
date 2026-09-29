@@ -121,7 +121,7 @@ app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), (req
       return;
     }
     if (result.ok && result.email && result.programId) {
-      fulfillPaidProgram(result.email, result.programId).catch((err) => {
+      fulfillPaidProgram(result.email, result.programId, { sendCustomerEmail: false }).catch((err) => {
         console.error('Stripe webhook diet fulfillment:', err.message);
       });
     }
@@ -138,14 +138,35 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
 }
 
-async function fulfillPaidProgram(email, programId) {
+/**
+ * Post-payment fulfillment. Checkout verify sends the customer email; the Stripe webhook
+ * only prepares PDF + schedules retries (avoids duplicate send with return-URL verify).
+ */
+async function fulfillPaidProgram(email, programId, { sendCustomerEmail = true } = {}) {
   if (!email || !programId) return { pdfReady: false };
   try {
-    const result = await fulfillDietDelivery(email, programId);
-    if (!result.emailSent && !result.emailAlreadySent && dietEmailConfigured()) {
-      scheduleDietEmailRetries(email, programId);
+    if (sendCustomerEmail) {
+      const result = await fulfillDietDelivery(email, programId);
+      if (!result.emailSent && !result.emailAlreadySent && dietEmailConfigured()) {
+        scheduleDietEmailRetries(email, programId);
+      }
+      return result;
     }
-    return result;
+
+    try {
+      await ensureDietPdf(email, programId);
+    } catch (err) {
+      console.error('Diet PDF prep (webhook):', err.message);
+    }
+    if (!wasDietEmailSent(email, programId) && dietEmailConfigured()) {
+      scheduleDietEmailRetries(email, programId, { attempts: 12, delayMs: 5000 });
+    }
+    return {
+      pdfReady: true,
+      emailSent: false,
+      emailDeferred: true,
+      emailAlreadySent: wasDietEmailSent(email, programId),
+    };
   } catch (err) {
     console.error('Diet fulfillment error:', err.message);
     if (dietEmailConfigured()) {

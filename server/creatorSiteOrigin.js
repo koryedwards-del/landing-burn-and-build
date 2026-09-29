@@ -57,3 +57,8 @@ export function resolveCreatorSiteOrigin(req, clientSiteOrigin) {
 
   return CREATOR_HOST_ORIGIN;
 }
+
+/** Public site origin for emails and portal links (no request context). */
+export function resolvePublicSiteOrigin() {
+  return resolveCreatorSiteOrigin(null, null);
+}

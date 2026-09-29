@@ -9,6 +9,7 @@
     "verify:cutting-servings": "node scripts/cutting-food-list-audit.mjs",
     "sync:cutting-servings": "node scripts/sync-cutting-servings.mjs",
     "verify:server": "node scripts/verify-server.mjs",
+    "verify:diet-email-flow": "node scripts/verify-diet-email-flow.mjs",
     "verify:contact-email": "node scripts/verify-contact-email.mjs",
     "verify:printout-calcs": "node scripts/verify-printout-calcs.mjs",
     "verify:questionnaire-draft": "node scripts/verify-questionnaire-draft.mjs",

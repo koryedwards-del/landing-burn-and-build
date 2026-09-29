@@ -336,9 +336,9 @@ export async function sendDietPdfEmail({
     'Content-Type': 'application/json',
   };
   const id = String(programId || '').trim();
-  if (id && !forceResend) {
-    const paidStamp = paidAt || pkg?.program?.issuedAt || 'unknown';
-    headers['Idempotency-Key'] = `diet-pdf/${id}/${paidStamp}/${DIET_PDF_GENERATION_VERSION}`;
+  const normalizedTo = String(to || '').trim().toLowerCase();
+  if (id && normalizedTo && !forceResend) {
+    headers['Idempotency-Key'] = `diet-pdf/${normalizedTo}/${id}/${DIET_PDF_GENERATION_VERSION}`;
   }
 
   const res = await fetch(RESEND_API, {

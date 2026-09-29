@@ -513,6 +513,9 @@ async function ensureDietEmailDelivered({ attempts = 8, delayMs = 2000 } = {}) {
   if (store.dietEmailSent || store.dietEmailBusy || store.dietEmailAttemptedThisVisit) return;
   if (!store.dietEmailAvailable) return;
 
+  await syncDietEmailSentFromServer();
+  if (store.dietEmailSent) return;
+
   const email = ensurePlanReadyEmail();
   const programId = activeProgramId();
   if (!isValidEmail(email) || !programId) return;

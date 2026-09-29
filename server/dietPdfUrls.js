@@ -1,14 +1,15 @@
 import { CONTACT_EMAIL } from '../js/contactEmailData.js';
 import { normalizeEmail } from './db.js';
 import { BURN_AND_BUILD_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
+import { resolvePublicSiteOrigin } from './creatorSiteOrigin.js';
 
 const RENDER_API_ORIGIN = String(
   process.env.DIET_PDF_DOWNLOAD_ORIGIN || 'https://program-creator-3tzd.onrender.com',
 ).replace(/\/$/, '');
 
-const SITE_ORIGIN = String(
-  process.env.WEBPAGE_URL || process.env.CREATOR_BASE_URL || 'https://thehardkordiet.com',
-).replace(/\/$/, '');
+function publicSiteOrigin() {
+  return resolvePublicSiteOrigin();
+}
 
 /** Direct download link — always renders the current Burn & Build Diet PDF. */
 export function dietPdfDownloadUrl(email, programId) {
@@ -27,16 +28,16 @@ export function purchaserPortalUrl(email, programId) {
   if (normalized) params.set('email', normalized);
   if (id) params.set('program_id', id);
   const query = params.toString();
-  return `${SITE_ORIGIN}/createyourfoodplan/${query ? `?${query}` : ''}`;
+  return `${publicSiteOrigin()}/createyourfoodplan/${query ? `?${query}` : ''}`;
 }
 
 export function siteOrigin() {
-  return SITE_ORIGIN;
+  return publicSiteOrigin();
 }
 
 /** Public logo URL for transactional email (hosted on GitHub Pages). */
 export function brandLogoUrl() {
-  return `${SITE_ORIGIN}/img/brand/hardkor-logo-2026.png`;
+  return `${publicSiteOrigin()}/img/brand/hardkor-logo-2026.png`;
 }
 
 export function menuPlanWorksheetUrl() {
