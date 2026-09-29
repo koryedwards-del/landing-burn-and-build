@@ -325,7 +325,7 @@ function renderPaidEmailSection() {
 function renderPaidDirections() {
   const downloadLabel = store.dietDownloadBusy
     ? 'PREPARING YOUR PDF…'
-    : 'DOWNLOAD YOUR BURN & BUILD DIET';
+    : 'DOWNLOAD YOUR HARDKOR DIET';
 
   const downloadBtn = `<button type="button" class="unlock-receipt__download unlock-receipt__download--secondary${store.dietDownloaded ? ' unlock-receipt__download--done' : ''}" data-download-diet ${store.dietDownloadBusy ? 'disabled' : ''}>${downloadLabel}</button>`;
 
