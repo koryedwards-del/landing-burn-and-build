@@ -40,7 +40,7 @@ When in doubt, match Food Plan: typography scale, gold accents, table treatment,
 | **Fonts** | Montserrat (`MODERN_REPORT_FONTS` in `drawModernReportFrame.js`) |
 | **Body text** | `#111111` |
 | **Muted text** | `#5C5C5C` |
-| **Brand gold** | `#FFCC00` — page-title accent word, section rules, table borders |
+| **Brand gold** | `#F6D65A` — page-title accent word, section rules, table borders |
 | **Gold panels** | `#FFFBE6` (`goldPale`) — highlighted table rows, dashboard center |
 | **Page title** | Last word gold, preceding words black; gold rule beneath |
 | **Header** | Logo left · `PERSONALIZED FOR: NAME · DATE` right |

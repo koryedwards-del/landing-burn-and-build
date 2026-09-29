@@ -25,7 +25,7 @@ const EMAIL_COLORS = Object.freeze({
   pageBg: '#F3F3F3',
   card: '#FFFFFF',
   black: '#0A0A0A',
-  gold: '#FDC500',
+  gold: '#F6D65A',
   dietHighlight: '#FFFBE6',
   muted: '#5C5C5C',
   rule: '#E5E5E5',
@@ -33,7 +33,7 @@ const EMAIL_COLORS = Object.freeze({
 
 const BONUS_MENU_PLANNER_FILENAME = 'Burn&Build-Menu-Planner.pdf';
 const BONUS_FAQ_FILENAME = 'Burn&Build-FAQ.pdf';
-const PDF_ICON_COLOR = '#FFCC00';
+const PDF_ICON_COLOR = '#F6D65A';
 
 const EMAIL_SUBJECT = 'Your Burn & Build Diet is here';
 

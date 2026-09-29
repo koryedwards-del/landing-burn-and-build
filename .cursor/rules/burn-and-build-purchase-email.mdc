@@ -46,7 +46,7 @@ Inline in browser: same Render URL with `?inline=1`
 | Page background | `#F3F3F3` | Outside the card |
 | Card | `#FFFFFF` | Reading area |
 | Black | `#0A0A0A` | Body, headings, portal link |
-| Gold | `#FDC500` | KEEP THIS EMAIL, resource links, accents |
+| Gold | `#F6D65A` | KEEP THIS EMAIL, resource links, accents |
 | Keep tint | `#FFFBE6` | Keep-this callout background |
 
 Links use gold or black with gold underline — **never default blue**. Safari overrides require `!important` and `-webkit-text-fill-color` on `<a>` tags.
