@@ -314,7 +314,7 @@ export function drawModernServingsPage(doc, payload) {
   if (!servings?.gridRows?.length) return;
 
   registerModernReportFonts(doc);
-  const page = begin1982Page(doc, payload, 'Servings');
+  const page = begin1982Page(doc, payload, 'Daily Servings');
   let y = page.y;
 
   if (servings.tagline) {
