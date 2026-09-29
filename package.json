@@ -18,7 +18,8 @@
     "render:menu-plan-worksheet": "node scripts/render-menu-plan-worksheet.mjs",
     "render:burn-and-build-faq": "node scripts/render-burn-and-build-faq.mjs",
     "preview:diet-email": "node scripts/preview-diet-email.mjs",
-    "preview:diet-email:serve": "node scripts/preview-diet-email.mjs --serve"
+    "preview:diet-email:serve": "node scripts/preview-diet-email.mjs --serve",
+    "generate:pwa-icons": "node scripts/generate-pwa-icons.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -29,5 +30,9 @@
     "express": "^4.21.2",
     "pdfkit": "^0.17.1",
     "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5",
+    "to-ico": "^1.1.5"
   }
 }
