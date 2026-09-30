@@ -119,7 +119,7 @@ async function restorePurchaseByEmail(rawEmail) {
   renderPurchaserPortal();
 
   store.email = persistAppEmail(email);
-  const resume = await fetchProgramResumeCheckout(email);
+  const resume = await fetchProgramResumeCheckout(email, activeProgramId() || undefined);
   store.restoreBusy = false;
 
   if (!resume.ok || !resume.package) {
@@ -173,7 +173,7 @@ async function tryRestorePaidSession() {
   const email = ensurePlanReadyEmail();
   if (!isValidEmail(email)) return false;
 
-  const resume = await fetchProgramResumeCheckout(email);
+  const resume = await fetchProgramResumeCheckout(email, activeProgramId() || undefined);
   if (!resume.ok || !resume.programPaid || !resume.package) return false;
 
   store.builtPackage = resume.package;
@@ -190,7 +190,7 @@ async function restoreBuiltPackageFromServer(email, { force = false, programId }
   }
   if (store.builtPackage && !force) return true;
   if (!isValidEmail(email)) return false;
-  const resume = await fetchProgramResumeCheckout(email);
+  const resume = await fetchProgramResumeCheckout(email, activeProgramId() || programId || undefined);
   if (!resume.ok || !resume.package || !resume.programPaid) return false;
   store.builtPackage = resume.package;
   if (resume.programId) {
@@ -766,7 +766,10 @@ bindGlobal();
   if (!store.builtPackage && returningFromStripe) {
     const email = ensurePlanReadyEmail();
     if (isValidEmail(email)) {
-      await restoreBuiltPackageFromServer(email, { force: true });
+      await restoreBuiltPackageFromServer(email, {
+        force: true,
+        programId: portalParams.programId || activeProgramId(),
+      });
     }
   }
 

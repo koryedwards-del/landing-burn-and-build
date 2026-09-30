@@ -86,10 +86,13 @@ export async function fetchProgramPaymentStatus(email, programId) {
   }
 }
 
-export async function fetchProgramResumeCheckout(email) {
+export async function fetchProgramResumeCheckout(email, programId) {
   try {
+    const params = new URLSearchParams({ email: normalizeEmail(email) });
+    const id = String(programId || '').trim();
+    if (id) params.set('program_id', id);
     const { res, data } = await fetchJson(
-      apiUrl(`/api/programs/resume-checkout?email=${encodeURIComponent(normalizeEmail(email))}`)
+      apiUrl(`/api/programs/resume-checkout?${params}`)
     );
     if (!res.ok) return apiFailure(res, data, 'Could not load your program for checkout.');
     return data;

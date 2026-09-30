@@ -13,11 +13,12 @@ export const WORK_STRESS = [
   { id: 'stressful', label: 'Stressful', sub: 'High demand most weeks — caregiving, tight schedules, little margin when things pile up.' },
 ];
 
-/** Job activity radios (3 choices) — used by engine and PDF answers page. */
+/** Job activity radios — used by engine and PDF answers page. */
 export const JOB_ACTIVITY_OPTIONS = Object.freeze([
   { id: 'sitting', label: 'Sitting' },
   { id: 'feet', label: 'Moving' },
   { id: 'carrying', label: 'Lifting' },
+  { id: 'heavy', label: 'Heavy labor' },
 ]);
 
 /** Macro table workday row — job activity word, not engine intensity (e.g. not "1.5a"). */

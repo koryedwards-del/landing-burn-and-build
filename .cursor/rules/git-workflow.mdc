@@ -38,4 +38,5 @@ The user is not responsible for repo hygiene. **Every agent session must leave t
 
 - Create pull requests (`ManagePullRequest`, `gh pr create`, draft PRs).
 - Leave work only on a feature branch without pushing to `main`.
-- Commit static sample diet PDFs to `docs/samples/`.
+
+Regenerate committed sample PDFs with the matching `npm run render:*` scripts when layout or copy changes — do not hand-edit binary PDFs.

@@ -16,7 +16,7 @@ import { INTAKE_FIELD_QUESTIONS } from '../../js/intakeQuestionCopyData.js';
 import { bindBirthDateInput, setBirthDateInputValue } from './birthDateInput.js';
 import { validateBirthDate } from '../../js/athleteAgeData.js';
 import { persistProgramBridge } from '../../js/programBridgeHandoff.js';
-import { persistAppEmail } from '../../js/programApi.js';
+import { persistAppEmail, saveProgramToServer, warmProgramApi } from '../../js/programApi.js';
 import {
   clearQuestionnaireDraft,
   loadQuestionnaireDraft,
@@ -304,6 +304,10 @@ const OCCUPATION_CHOICE_COPY = {
       label: 'Lifting',
       sub: 'Regular carrying, loading, or trades work — warehouse worker, construction laborer, delivery driver, material handler, electrician, plumber, carpenter, mover, landscaper, factory production worker.',
     },
+    heavy: {
+      label: 'Heavy labor',
+      sub: 'Moving heavy loads all day. Brick, concrete, roofing — masonry, concrete finisher, roofer, demolition laborer, steel worker.',
+    },
   },
   workStress: {
     comfortable: {
@@ -475,7 +479,6 @@ function readForm() {
     referrerName: String(data.get('referrerName') || '').trim(),
     email: String(data.get('email') || '').trim(),
     emailConfirm: String(data.get('emailConfirm') || '').trim(),
-    phone: String(data.get('phone') || '').trim(),
     intakeDate: data.get('intakeDate'),
     heightFeet: data.get('heightFeet'),
     heightInchesPart: data.get('heightInchesPart'),
@@ -537,7 +540,6 @@ function writeFormValues(values) {
   setFormControlValue('referrerName', values.referrerName);
   setFormControlValue('email', values.email);
   setFormControlValue('emailConfirm', values.emailConfirm);
-  setFormControlValue('phone', values.phone);
   setFormControlValue('intakeDate', values.intakeDate);
   setFormControlValue('heightFeet', values.heightFeet);
   setFormControlValue('heightInchesPart', values.heightInchesPart);
@@ -1871,7 +1873,7 @@ function bindEvents() {
 
   stepNextBtn?.addEventListener('click', () => {
     if (step === panels.length - 1) {
-      buildProgram(stepNextBtn);
+      void buildProgram(stepNextBtn);
       return;
     }
     if (!canProceed(step)) {
@@ -1882,7 +1884,7 @@ function bindEvents() {
   });
 }
 
-function buildProgram(triggerBtn) {
+async function buildProgram(triggerBtn) {
   if (!canProceed(4)) {
     showStep(4);
     highlightWaiverValidationErrors(readForm());
@@ -1906,6 +1908,19 @@ function buildProgram(triggerBtn) {
     persistAppEmail(email);
     sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
     persistProgramBridge(pkg);
+
+    triggerBtn.textContent = 'Saving…';
+    await warmProgramApi();
+    const saved = await saveProgramToServer(email, pkg);
+    if (!saved.ok || !saved.programId) {
+      throw new Error(saved.message || 'Could not save your program to the server.');
+    }
+    if (pkg.program) {
+      pkg.program.id = saved.programId;
+    }
+    sessionStorage.setItem('bnb_program_draft', JSON.stringify(pkg));
+    persistProgramBridge(pkg);
+
     programBuilt = true;
     clearQuestionnaireDraft();
     triggerBtn.textContent = 'Program built';
@@ -1913,7 +1928,7 @@ function buildProgram(triggerBtn) {
     window.location.assign('/createyourfoodplan/');
   } catch (error) {
     console.error(error);
-    window.alert('Could not build your program. Check your answers and try again.');
+    window.alert(error.message || 'Could not build your program. Check your answers and try again.');
     triggerBtn.disabled = false;
     triggerBtn.textContent = prevLabel;
     updateStepNav();

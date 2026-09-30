@@ -415,8 +415,25 @@ app.post('/api/programs', (req, res) => {
 
 app.get('/api/programs/resume-checkout', (req, res) => {
   const email = normalizeEmail(req.query.email);
+  const requestedProgramId = String(req.query.program_id || req.query.programId || '').trim();
   if (!isValidEmail(email)) {
     res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
+    return;
+  }
+
+  if (requestedProgramId) {
+    const pkg = getProgramById(email, requestedProgramId);
+    if (!pkg) {
+      res.status(404).json({ ok: false, message: 'No program saved for this email and program id.' });
+      return;
+    }
+    res.json({
+      ok: true,
+      email,
+      programId: requestedProgramId,
+      programPaid: isProgramPaid(email, requestedProgramId),
+      package: pkg,
+    });
     return;
   }
 
