@@ -25,6 +25,7 @@ export const FAT_SOURCE_OPTIONS = Object.freeze([
   { value: 'bodpod', label: 'Bod Pod' },
   { value: 'dexa', label: 'DEXA' },
   { value: 'hydrostatic', label: 'Hydrostatic weighing' },
+  { value: 'lba_ultrasound', label: 'LBA/ultrasound' },
   { value: 'other', label: 'Other' },
 ]);
 
