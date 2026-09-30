@@ -30,10 +30,11 @@ for (const file of walk(root)) {
   if (rel === 'scripts/verify-contact-email.mjs') continue;
   const text = fs.readFileSync(file, 'utf8');
   if (text.includes('support@')) offenders.push(rel);
+  if (text.includes('@burnandbuilddiet.com')) offenders.push(`${rel} (@burnandbuilddiet.com)`);
 }
 
 if (offenders.length) {
-  console.error('support@ found in:');
+  console.error('Disallowed email references found in:');
   offenders.forEach((file) => console.error(`  - ${file}`));
   process.exit(1);
 }

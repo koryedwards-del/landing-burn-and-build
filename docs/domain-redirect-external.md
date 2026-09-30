@@ -16,7 +16,7 @@ This repo **does not** configure DNS for `burnandbuilddiet.com`.
 
 1. **DNS** at the registrar for `burnandbuilddiet.com` (and `www`) — point to your redirect provider or hosting that issues **301** to `https://thehardkordiet.com$request_uri`.
 2. **GitHub Pages** — if legacy domain was a second custom domain on the same repo, remove or repoint it after 301 is live elsewhere.
-3. **Email (SPF/DKIM)** — `kory@` / `orders@` on `@burnandbuilddiet.com` remain operational until iCloud/Resend cutover (see Bucket 2 hold); redirects do not migrate mail.
+3. **Email (SPF/DKIM)** — configure **`kory@`** and **`orders@`** on **`@thehardkordiet.com`** in iCloud/Resend; redirects do not migrate mail.
 
 ## Verify after DNS change
 

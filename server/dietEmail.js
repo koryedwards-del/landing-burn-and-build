@@ -42,7 +42,7 @@ export function dietEmailConfigured() {
 }
 
 function emailFrom() {
-  return process.env.DIET_EMAIL_FROM || 'The HARDKOR Diet <orders@burnandbuilddiet.com>';
+  return process.env.DIET_EMAIL_FROM || 'The HARDKOR Diet <orders@thehardkordiet.com>';
 }
 
 function escapeHtml(text) {

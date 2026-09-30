@@ -74,4 +74,4 @@ Stripe webhooks: `POST /api/webhooks/stripe` (payment mark-paid, PDF prep, email
 
 ## Site
 
-**thehardkordiet.com** — GitHub Pages (landing + questionnaire + purchaser portal at `/createyourfoodplan/`). Legacy **burnandbuilddiet.com** remains in CORS and email infrastructure; public links canonicalize to thehardkordiet.com where applicable (see project store domain migration notes).
+**thehardkordiet.com** — GitHub Pages (landing + questionnaire + purchaser portal at `/createyourfoodplan/`). Legacy **burnandbuilddiet.com** remains in CORS for checkout compatibility; customer-facing mail uses **@thehardkordiet.com** (see `js/contactEmailData.js`, `server/dietEmail.js`). Public page links canonicalize to thehardkordiet.com where applicable (see `docs/domain-redirect-external.md`).

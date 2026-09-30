@@ -42,7 +42,11 @@ if (!preview.html.includes(CANONICAL)) {
 }
 
 if (!preview.html.includes('kory@thehardkordiet.com')) {
-  throw new Error('Contact mailto must remain on burnandbuilddiet.com (intentional)');
+  throw new Error('Contact mailto must use kory@thehardkordiet.com');
+}
+
+if (/@burnandbuilddiet\.com/i.test(preview.html) || /@burnandbuilddiet\.com/i.test(preview.text)) {
+  throw new Error('Diet email preview must not contain legacy Burn & Build mailbox addresses');
 }
 
 console.log('Diet email flow verification OK');
