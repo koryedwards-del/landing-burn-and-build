@@ -41,7 +41,7 @@ if (!preview.html.includes(CANONICAL)) {
   throw new Error('Preview HTML missing canonical site host');
 }
 
-if (!preview.html.includes('kory@burnandbuilddiet.com')) {
+if (!preview.html.includes('kory@thehardkordiet.com')) {
   throw new Error('Contact mailto must remain on burnandbuilddiet.com (intentional)');
 }
 
