@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * HARDKOR header logo test — writes docs/samples/hardkor-sample-diet-test.pdf.
- * Does not overwrite docs/samples/b&bsamplediet.pdf.
+ * Does not overwrite docs/samples/hardkor-sample-diet.pdf.
  */
 import crypto from 'crypto';
 import fs from 'fs';

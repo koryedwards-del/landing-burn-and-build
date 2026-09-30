@@ -5,7 +5,9 @@ import { dietPdfDocumentLabel } from '../js/dietPdfNamingHelpers.js';
 import { getProgramById, normalizeEmail } from './db.js';
 import { renderSampleDietPrintout } from './pdf/renderSampleDietPrintout.js';
 
-const SAMPLE_DIET_FILENAME = 'b&bsamplediet.pdf';
+import { HARDKOR_SAMPLE_DIET_DOWNLOAD_FILENAME } from '../js/sampleDietStaticNamingHelpers.js';
+
+const SAMPLE_DIET_FILENAME = HARDKOR_SAMPLE_DIET_DOWNLOAD_FILENAME;
 
 function configFilePath() {
   const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'data', 'programs.db');

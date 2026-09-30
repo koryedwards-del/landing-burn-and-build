@@ -332,7 +332,7 @@ displayed grams = stapleCategoryServings(planServings, category) × base one-ser
 
 Payload: `payload.servings.planServings` from `js/sampleDietPrintoutData.js`.
 
-Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf`. Landing sample uses `GET /api/samples/sample-diet` (live program on Render).
+Purchased **Burn & Build Diet** PDF uses `GET /api/programs/diet-pdf`. Landing sample uses `GET /api/samples/hardkor-sample-diet` (live program on Render).
 
 ---
 

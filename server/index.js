@@ -23,7 +23,7 @@ import { resolveCreatorSiteOrigin } from './creatorSiteOrigin.js';
 import { ensureDietPdf, fulfillDietDelivery, scheduleDietEmailRetries } from './dietFulfillment.js';
 import { dietEmailConfigured } from './dietEmail.js';
 import { dietPdfFilename } from './dietPdfStorage.js';
-import { resolveSamplePdfPath } from './samplePdfDownloads.js';
+import { normalizeSampleSlug, resolveSamplePdfPath } from './samplePdfDownloads.js';
 import {
   publicSampleDietFilename,
   readPublicSampleDietConfig,
@@ -33,9 +33,10 @@ import {
 import { renderHandbookFaqPrintout } from './pdf/renderHandbookFaqPrintout.js';
 import { buildHandbookFaqPayload } from '../js/handbookFaqPrintoutData.js';
 import {
-  BURN_AND_BUILD_FAQ_API_SLUG,
-  BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME,
+  HARDKOR_FAQ_API_SLUG,
+  HARDKOR_FAQ_DOWNLOAD_FILENAME,
 } from '../js/faqPdfNamingHelpers.js';
+import { HARDKOR_SAMPLE_DIET_API_SLUG } from '../js/sampleDietStaticNamingHelpers.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -197,14 +198,14 @@ function requireContactsAdmin(req, res, next) {
 app.get('/health', (_req, res) => {
   res.json({
     ok: true,
-    project: 'Burn & Build',
+    project: 'HARDKOR Diet',
     service: 'program-creator',
     env: isProd ? 'production' : 'development',
     database: dbPathForHealth(),
     stripe: stripeConfigured(),
     dietEmail: dietEmailConfigured(),
     pdf: true,
-    publicSampleDiet: Boolean(resolveSamplePdfPath(root, 'sample-diet') || readPublicSampleDietConfig()),
+    publicSampleDiet: Boolean(resolveSamplePdfPath(root, HARDKOR_SAMPLE_DIET_API_SLUG) || readPublicSampleDietConfig()),
     commit: process.env.RENDER_GIT_COMMIT || null,
   });
 });
@@ -349,7 +350,7 @@ app.get('/api/admin/public-sample-diet', requireContactsAdmin, (_req, res) => {
     ok: true,
     configured: Boolean(config),
     config: config ? { email: config.email, programId: config.programId, updatedAt: config.updatedAt } : null,
-    downloadUrl: '/api/samples/sample-diet',
+    downloadUrl: `/api/samples/${HARDKOR_SAMPLE_DIET_API_SLUG}`,
   });
 });
 
@@ -375,7 +376,7 @@ app.post('/api/admin/public-sample-diet', requireContactsAdmin, (req, res) => {
     res.json({
       ok: true,
       config,
-      downloadUrl: '/api/samples/sample-diet',
+      downloadUrl: `/api/samples/${HARDKOR_SAMPLE_DIET_API_SLUG}`,
       preferredName: pkg?.intake?.preferredName || null,
     });
   } catch (err) {
@@ -481,9 +482,9 @@ app.get('/api/programs/payment-status', (req, res) => {
 });
 
 app.get('/api/samples/:slug', async (req, res) => {
-  const slug = String(req.params.slug || '').trim();
+  const slug = normalizeSampleSlug(req.params.slug);
 
-  if (slug === 'sample-diet') {
+  if (slug === HARDKOR_SAMPLE_DIET_API_SLUG) {
     const resolved = resolveSamplePdfPath(root, slug);
     const inline = req.query.inline === '1' || req.query.disposition === 'inline';
     if (resolved) {
@@ -516,7 +517,7 @@ app.get('/api/samples/:slug', async (req, res) => {
     return;
   }
 
-  if (slug === BURN_AND_BUILD_FAQ_API_SLUG) {
+  if (slug === HARDKOR_FAQ_API_SLUG) {
     const resolved = resolveSamplePdfPath(root, slug);
     const inline = req.query.inline === '1' || req.query.disposition === 'inline';
     if (resolved) {
@@ -535,7 +536,7 @@ app.get('/api/samples/:slug', async (req, res) => {
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
-        `${inline ? 'inline' : 'attachment'}; filename="${BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME}"`,
+        `${inline ? 'inline' : 'attachment'}; filename="${HARDKOR_FAQ_DOWNLOAD_FILENAME}"`,
       );
       res.setHeader('Cache-Control', 'public, max-age=60');
       res.send(pdf);

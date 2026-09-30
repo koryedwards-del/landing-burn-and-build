@@ -1,6 +1,6 @@
 import { CONTACT_EMAIL } from '../js/contactEmailData.js';
 import { normalizeEmail } from './db.js';
-import { BURN_AND_BUILD_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
+import { HARDKOR_FAQ_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_DOWNLOAD_URL, MENU_PLAN_WORKSHEET_URL } from '../js/siteUrls.js';
 import { resolvePublicSiteOrigin } from './creatorSiteOrigin.js';
 
 const RENDER_API_ORIGIN = String(
@@ -49,7 +49,7 @@ export function menuPlanWorksheetDownloadUrl() {
 }
 
 export function burnAndBuildFaqUrl() {
-  return BURN_AND_BUILD_FAQ_DOWNLOAD_URL;
+  return HARDKOR_FAQ_DOWNLOAD_URL;
 }
 
 /** Purchase autosend email — footer contact + Resend reply_to. */

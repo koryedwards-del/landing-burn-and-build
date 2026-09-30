@@ -3,11 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { buildSampleDietPreviewPayload } from '../js/sampleDietPrintoutData.js';
+import { HARDKOR_SAMPLE_DIET_REPO_FILE } from '../js/sampleDietStaticNamingHelpers.js';
 import { SAMPLE_DIET_DOWNLOAD_URL } from '../js/siteUrls.js';
 import { renderSampleDietPrintout } from '../server/pdf/renderSampleDietPrintout.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const deliverable = path.join(root, 'docs/samples/b&bsamplediet.pdf');
+const deliverable = path.join(root, 'docs/samples', HARDKOR_SAMPLE_DIET_REPO_FILE);
 
 const payload = buildSampleDietPreviewPayload();
 const pdf = await renderSampleDietPrintout(payload, {

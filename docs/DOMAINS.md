@@ -36,7 +36,7 @@ Three standalone pieces:
 | `server/pdf/renderSampleDietPrintout.js` | HARDKOR Diet PDF renderer |
 | `server/pdf/` | PDFKit renderer |
 | `server/publicSampleDiet.js` | Live sample fallback when static PDF missing |
-| `docs/samples/` | `b&bsamplediet.pdf`, `menu-plan-worksheet.pdf`, `burn-and-build-faq.pdf`, purchase email HTML |
+| `docs/samples/` | `hardkor-sample-diet.pdf`, `hardkor-menu-plan-worksheet.pdf`, `hardkor-diet-faq.pdf`, `hardkor-purchase-email.html` |
 | `purchase-email-preview/` | Purchase autosend email HTML preview (`index.html`) |
 
 ## Verify
@@ -48,7 +48,7 @@ npm run verify:pdf
 
 ## Sample / purchased PDF
 
-Landing sample: `GET /api/samples/sample-diet` → `docs/samples/b&bsamplediet.pdf` when committed (**download:** `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`). Purchased diet: `GET /api/programs/diet-pdf` (live-rendered). Purchase email preview download: `https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-purchase-email`.
+Landing sample: `GET /api/samples/hardkor-sample-diet` → `docs/samples/hardkor-sample-diet.pdf` when committed (**download:** `https://program-creator-3tzd.onrender.com/api/samples/hardkor-sample-diet`). Purchased diet: `GET /api/programs/diet-pdf` (live-rendered). Purchase email preview download: `https://program-creator-3tzd.onrender.com/api/samples/hardkor-purchase-email`. Legacy domain redirect: `docs/domain-redirect-external.md`.
 
 ## Customer flow (wired)
 

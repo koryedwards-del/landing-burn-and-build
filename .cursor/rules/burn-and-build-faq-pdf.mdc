@@ -1,11 +1,11 @@
 ---
-description: Burn & Build FAQ PDF — standalone document naming and paths
+description: HARDKOR Diet FAQ PDF — standalone document naming and paths
 alwaysApply: true
 ---
 
-# Burn & Build FAQ PDF
+# HARDKOR Diet FAQ PDF
 
-Standalone FAQ PDF — **not** part of the 7-page Burn & Build Diet. Linked from purchase email when wired (exact copy from user only).
+Standalone FAQ PDF — **not** part of the 7-page HARDKOR Diet. Linked from purchase email (exact copy from user only).
 
 **Visual style:** modern B&B report frame; Food Plan page is the design reference. See `.cursor/rules/modern-pdf-style.mdc`.
 
@@ -13,20 +13,20 @@ Standalone FAQ PDF — **not** part of the 7-page Burn & Build Diet. Linked from
 
 | Layer | Name | Example |
 |-------|------|---------|
-| **Product** (user-facing) | **Burn & Build FAQ** | Email, contact, page title |
-| **Download filename** | `Burn & Build FAQ.pdf` | `Content-Disposition` attachment |
-| **Repo static file** | `docs/samples/burn-and-build-faq.pdf` | Commit after `npm run render:burn-and-build-faq` |
-| **API slug** | `burn-and-build-faq` | `GET /api/samples/burn-and-build-faq` |
-| **npm script** | `render:burn-and-build-faq` | Regenerates repo static file |
+| **Product** (user-facing) | **The HARDKOR Diet FAQ** | Email, contact, page title |
+| **Download filename** | `HARDKOR-Diet-FAQ.pdf` | `Content-Disposition` attachment |
+| **Repo static file** | `docs/samples/hardkor-diet-faq.pdf` | Commit after `npm run render:hardkor-diet-faq` |
+| **API slug** | `hardkor-diet-faq` | `GET /api/samples/hardkor-diet-faq` |
+| **npm script** | `render:hardkor-diet-faq` | Regenerates repo static file |
 
 Constants: `js/faqPdfNamingHelpers.js` — single source for product name, filename, repo file, slug.
 
-**Do not call it** “handbook,” “FAQ handbook,” or `handbook-faq.pdf` in user-facing copy or new paths.
+Legacy slug `burn-and-build-faq` redirects on the API (email bookmarks only).
 
 ## Download URL (after push to `main`)
 
 ```
-https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-faq
+https://program-creator-3tzd.onrender.com/api/samples/hardkor-diet-faq
 ```
 
 Inline preview: same URL with `?inline=1`
@@ -39,17 +39,18 @@ Inline preview: same URL with `?inline=1`
 | Payload | `js/handbookFaqPrintoutData.js` |
 | Renderer | `server/pdf/renderHandbookFaqPrintout.js` |
 | Page draw | `server/pdf/drawModernFaqPage.js` |
-| Static file | `docs/samples/burn-and-build-faq.pdf` |
-| API route | `GET /api/samples/burn-and-build-faq` (`server/samplePdfDownloads.js`) |
-| Render script | `scripts/render-burn-and-build-faq.mjs` |
+| Static file | `docs/samples/hardkor-diet-faq.pdf` |
+| API route | `GET /api/samples/hardkor-diet-faq` (`server/samplePdfDownloads.js`) |
+| Render script | `scripts/render-hardkor-diet-faq.mjs` |
 
-Internal `handbookFaq*` module names are legacy code paths only — **product name is always Burn & Build FAQ**.
+Internal `handbookFaq*` module names are legacy code paths only — **product name is always The HARDKOR Diet FAQ**.
 
 ## Verify
 
 ```
 npm run verify:pdf
-npm run render:burn-and-build-faq
+npm run render:hardkor-diet-faq
+npm run verify:hardkor-asset-slugs
 ```
 
-Commit `docs/samples/burn-and-build-faq.pdf`, push to `main`, then share the API URL. Never use `/opt/cursor/artifacts/` for user downloads.
+Commit `docs/samples/hardkor-diet-faq.pdf`, push to `main`, then share the API URL. Never use `/opt/cursor/artifacts/` for user downloads.

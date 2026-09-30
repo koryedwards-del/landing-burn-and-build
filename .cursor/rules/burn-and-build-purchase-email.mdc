@@ -15,10 +15,10 @@ Transactional email sent after diet purchase (Resend). Attaches the personalized
 |-------|------|---------|
 | **Subject** | `Your Burn & Build Diet + Resources` | Resend `subject` |
 | **Preview label** | Burn & Build Purchase Email | Docs, agent context |
-| **Download filename** | `burn-and-build-purchase-email.html` | `Content-Disposition` attachment |
-| **Repo static file** | `docs/samples/burn-and-build-purchase-email.html` | Commit after `npm run preview:diet-email` |
+| **Download filename** | `hardkor-purchase-email.html` | `Content-Disposition` attachment |
+| **Repo static file** | `docs/samples/hardkor-purchase-email.html` | Commit after `npm run preview:diet-email` |
 | **GitHub Pages preview** | `/purchase-email-preview/` | Safari-safe review URL |
-| **API slug** | `burn-and-build-purchase-email` | `GET /api/samples/burn-and-build-purchase-email` |
+| **API slug** | `hardkor-purchase-email` | `GET /api/samples/hardkor-purchase-email` |
 | **npm script** | `preview:diet-email` | Regenerates preview HTML |
 
 Constants: `js/dietEmailPreviewNamingHelpers.js`, public URLs in `js/siteUrls.js`.
@@ -29,12 +29,12 @@ Constants: `js/dietEmailPreviewNamingHelpers.js`, public URLs in `js/siteUrls.js
 
 ## Preview URL (after push to `main`)
 
-**Review in browser** (GitHub Pages): `https://burnandbuilddiet.com/purchase-email-preview/`
+**Review in browser** (GitHub Pages): `https://thehardkordiet.com/purchase-email-preview/`
 
 **Download** (Render — use this when sharing a file):
 
 ```
-https://program-creator-3tzd.onrender.com/api/samples/burn-and-build-purchase-email
+https://program-creator-3tzd.onrender.com/api/samples/hardkor-purchase-email
 ```
 
 Inline in browser: same Render URL with `?inline=1`
@@ -67,8 +67,8 @@ Links use gold or black with gold underline — **never default blue**. Safari o
 | Portal / resource URLs | `server/dietPdfUrls.js` |
 | Naming constants | `js/dietEmailPreviewNamingHelpers.js` |
 | GitHub Pages preview | `purchase-email-preview/index.html` |
-| API static file | `docs/samples/burn-and-build-purchase-email.html` |
-| API route | `GET /api/samples/burn-and-build-purchase-email` (`server/samplePdfDownloads.js`) |
+| API static file | `docs/samples/hardkor-purchase-email.html` |
+| API route | `GET /api/samples/hardkor-purchase-email` (`server/samplePdfDownloads.js`) |
 | Regenerate preview | `scripts/preview-diet-email.mjs` |
 
 ## Regenerate preview
@@ -77,6 +77,6 @@ Links use gold or black with gold underline — **never default blue**. Safari o
 npm run preview:diet-email
 ```
 
-Writes both `purchase-email-preview/index.html` and `docs/samples/burn-and-build-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.
+Writes both `purchase-email-preview/index.html` and `docs/samples/hardkor-purchase-email.html`. Commit both, push to `main`, then share the GitHub Pages preview URL.
 
 **Approval signatures on PDF page 7 (questionnaire confirmation)** use Caveat at the same size as the date (answer row typography). Purchase email body and contact use **Montserrat**; **— Kory** close uses **Caveat** (`js/purchaseEmailStyleData.js`, `js/signatureDisplayData.js`).

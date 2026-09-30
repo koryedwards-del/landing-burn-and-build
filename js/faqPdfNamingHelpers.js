@@ -1,13 +1,13 @@
-/** Burn & Build FAQ PDF — product name, download filename, repo path, API slug. */
+/** HARDKOR Diet FAQ PDF — product name, download filename, repo path, API slug. */
 
 /** User-facing product name (PDF title, email links, contact copy). */
-export const BURN_AND_BUILD_FAQ_PDF_NAME = 'The HARDKOR Diet FAQ';
+export const HARDKOR_FAQ_PDF_NAME = 'The HARDKOR Diet FAQ';
 
 /** Attachment / browser download filename. */
-export const BURN_AND_BUILD_FAQ_DOWNLOAD_FILENAME = 'HARDKOR-Diet-FAQ.pdf';
+export const HARDKOR_FAQ_DOWNLOAD_FILENAME = 'HARDKOR-Diet-FAQ.pdf';
 
 /** Static file in docs/samples/ (repo + API static serve). */
-export const BURN_AND_BUILD_FAQ_REPO_FILE = 'burn-and-build-faq.pdf';
+export const HARDKOR_FAQ_REPO_FILE = 'hardkor-diet-faq.pdf';
 
 /** GET /api/samples/<slug> */
-export const BURN_AND_BUILD_FAQ_API_SLUG = 'burn-and-build-faq';
+export const HARDKOR_FAQ_API_SLUG = 'hardkor-diet-faq';

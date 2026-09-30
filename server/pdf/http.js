@@ -1,11 +1,11 @@
 import { PdfError } from './errors.js';
 
 export function sanitizePdfFilename(title, view) {
-  const safeName = String(title || `burn-and-build-${view}`)
+  const safeName = String(title || `hardkor-${view}`)
     .replace(/[^\w\s.-]/g, '')
     .trim()
     .replace(/\s+/g, '-')
-    || `burn-and-build-${view}`;
+    || `hardkor-${view}`;
   return `${safeName}.pdf`;
 }
 

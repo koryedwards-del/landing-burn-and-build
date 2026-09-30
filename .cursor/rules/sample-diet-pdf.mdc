@@ -7,19 +7,21 @@ alwaysApply: true
 
 **Visual style:** all pages use the modern B&B report look (Food Plan page is the reference). See `.cursor/rules/modern-pdf-style.mdc`.
 
-**Deliverable filename:** `docs/samples/b&bsamplediet.pdf` — overwrite in place when the user supplies a new sample.
+**Deliverable filename:** `docs/samples/hardkor-sample-diet.pdf` — overwrite in place when the user supplies a new sample.
 
-**Download URL (unchanged for users):**
+**Download URL:**
 
 ```
-https://program-creator-3tzd.onrender.com/api/samples/sample-diet
+https://program-creator-3tzd.onrender.com/api/samples/hardkor-sample-diet
 ```
 
 **Inline preview (landing embed):** same URL with `?inline=1`
 
+Legacy slug `sample-diet` redirects on the API (email bookmarks only).
+
 ## Update the landing preview
 
-1. Replace `docs/samples/b&bsamplediet.pdf` with the approved sample file.
+1. Replace `docs/samples/hardkor-sample-diet.pdf` with the approved sample file.
 2. **Commit** the PDF.
 3. **`git push origin main`** (Render redeploys).
 4. **Then** give the download link.
@@ -28,8 +30,9 @@ https://program-creator-3tzd.onrender.com/api/samples/sample-diet
 
 | Piece | Path |
 |-------|------|
-| Static file | `docs/samples/b&bsamplediet.pdf` |
-| API route | `GET /api/samples/sample-diet` (`server/samplePdfDownloads.js`) |
+| Static file | `docs/samples/hardkor-sample-diet.pdf` |
+| Constants | `js/sampleDietStaticNamingHelpers.js` |
+| API route | `GET /api/samples/hardkor-sample-diet` (`server/samplePdfDownloads.js`) |
 | Live fallback (no static file) | `server/publicSampleDiet.js` |
 | Landing embed | `index.html` → API URLs |
 | Purchased PDF | `GET /api/programs/diet-pdf` (always live-rendered) |
@@ -44,4 +47,5 @@ https://program-creator-3tzd.onrender.com/api/samples/sample-diet
 ```
 npm run verify:printout-calcs
 npm run verify:pdf
+npm run verify:hardkor-asset-slugs
 ```

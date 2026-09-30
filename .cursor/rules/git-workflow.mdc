@@ -17,13 +17,13 @@ The user does **not** review pull requests. Do not use the PR workflow.
 
 ## Landing-page sample diet
 
-The landing-page preview is **`docs/samples/b&bsamplediet.pdf`**, served by `GET /api/samples/sample-diet`.
+The landing-page preview is **`docs/samples/hardkor-sample-diet.pdf`**, served by `GET /api/samples/hardkor-sample-diet`.
 
 When the user supplies a new sample PDF:
 
-1. Overwrite `docs/samples/b&bsamplediet.pdf`.
+1. Overwrite `docs/samples/hardkor-sample-diet.pdf`.
 2. **Commit** and **`git push origin main`**.
-3. Download link: `https://program-creator-3tzd.onrender.com/api/samples/sample-diet`
+3. Download link: `https://program-creator-3tzd.onrender.com/api/samples/hardkor-sample-diet`
 
 ## Housekeeping
 

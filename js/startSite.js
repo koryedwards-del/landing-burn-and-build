@@ -419,7 +419,9 @@ function renderPlanReady() {
 }
 
 function isTestMode() {
-  return location.hostname.includes('github.io') || location.hostname === 'localhost' || location.search.includes('test=1');
+  const host = location.hostname;
+  const local = host === 'localhost' || host === '127.0.0.1';
+  return local || location.search.includes('test=1');
 }
 
 async function refreshCheckoutConfig() {

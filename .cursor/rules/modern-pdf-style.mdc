@@ -13,10 +13,10 @@ The **Burn & Build Diet PDF** (7 pages) and **Burn & Build FAQ** (standalone) ar
 
 | Product | User-facing name | Download filename | Repo file | API slug |
 |---------|------------------|-------------------|-----------|----------|
-| Personalized diet | Burn & Build Diet | `Burn&Build-{Name}-{date}.pdf` | `docs/samples/b&bsamplediet.pdf` (sample only) | `sample-diet` / `programs/diet-pdf` |
-| Menu Plan worksheet | Burn & Build Menu Plan | `menu-plan-worksheet.pdf` | `docs/samples/menu-plan-worksheet.pdf` | `menu-plan-worksheet` |
-| FAQ PDF | **Burn & Build FAQ** | `Burn & Build FAQ.pdf` | `docs/samples/burn-and-build-faq.pdf` | `burn-and-build-faq` |
-| Purchase email preview | Burn & Build Purchase Email | `burn-and-build-purchase-email.html` | `docs/samples/burn-and-build-purchase-email.html` | `burn-and-build-purchase-email` |
+| Personalized diet | HARDKOR Diet | `Burn&Build-{Name}-{date}.pdf` (purchased) | `docs/samples/hardkor-sample-diet.pdf` (sample only) | `hardkor-sample-diet` / `programs/diet-pdf` |
+| Menu Plan worksheet | HARDKOR Menu Plan | `HARDKOR-Diet-Menu-Planner.pdf` | `docs/samples/hardkor-menu-plan-worksheet.pdf` | `hardkor-menu-plan-worksheet` |
+| FAQ PDF | **The HARDKOR Diet FAQ** | `HARDKOR-Diet-FAQ.pdf` | `docs/samples/hardkor-diet-faq.pdf` | `hardkor-diet-faq` |
+| Purchase email preview | HARDKOR Diet Purchase Email | `hardkor-purchase-email.html` | `docs/samples/hardkor-purchase-email.html` | `hardkor-purchase-email` |
 
 FAQ rules: `.cursor/rules/burn-and-build-faq-pdf.mdc`. Purchase email: `.cursor/rules/burn-and-build-purchase-email.mdc`. Sample diet: `.cursor/rules/sample-diet-pdf.mdc`.
 
@@ -61,7 +61,7 @@ When in doubt, match Food Plan: typography scale, gold accents, table treatment,
 
 | Product | Renderer | Download |
 |---------|----------|----------|
-| **Burn & Build FAQ** | `renderHandbookFaqPrintout.js` → `drawModernFaqPage.js` | `GET /api/samples/burn-and-build-faq` |
+| **HARDKOR Diet FAQ** | `renderHandbookFaqPrintout.js` → `drawModernFaqPage.js` | `GET /api/samples/hardkor-diet-faq` |
 
 New diet PDF sections: create `server/pdf/drawModern<Section>Page.js` and wire through `renderSampleDietPrintout.js`. New standalone PDFs: separate renderer + `GET /api/samples/<slug>`.
 
